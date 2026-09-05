@@ -1219,8 +1219,8 @@ echo "== compile the ordered app-facing Foundation facade into APPINC"
 # Overwrites the DTS identity shim's swiftmodule. DTS.o is already compiled.
 # Library/UIKit invocations above never had APPINC, so they stay Foundation-hidden.
 mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES < "$FOUNDATION_GUEST_MANIFEST"
-[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 38 ] \
-    || die "Foundation guest source manifest must contain exactly 38 lines"
+[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 41 ] \
+    || die "Foundation guest source manifest must contain exactly 41 lines"
 FOUNDATION_GUEST_SOURCES=()
 for relative in "${FOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
     FOUNDATION_GUEST_SOURCES+=("$W/$relative")
