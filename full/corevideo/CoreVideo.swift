@@ -7,9 +7,9 @@ import Foundation
 /// time structures, and the iOS 26 Swift overlay around those buffers.
 ///
 /// Fail-closed: Metal, OpenGL ES, IOSurface, DisplayLink, ColorSync, and
-/// Apple compressed (lossy/lossless) pixel formats. Those paths return
-/// `kCVReturnUnsupported` / nil / `false` rather than fabricating GPU or
-/// hardware objects.
+/// Apple compressed (lossy/lossless) pixel formats. GPU cache *create* and
+/// wrap APIs compile against module-local Metal/EAGL lookalikes and return
+/// `kCVReturnUnsupported` / nil / `0` rather than fabricating GPU objects.
 
 public let COREVIDEO_TRUE: Bool = true
 public let COREVIDEO_FALSE: Bool = false
@@ -88,6 +88,153 @@ public func CVMetalTextureGetCleanTexCoords(
         upperRight: upperRight,
         upperLeft: upperLeft
     )
+}
+
+public func CVOpenGLESTextureGetCleanTexCoords(
+    _ image: CVOpenGLESTexture,
+    _ lowerLeft: UnsafeMutablePointer<GLfloat>,
+    _ lowerRight: UnsafeMutablePointer<GLfloat>,
+    _ upperRight: UnsafeMutablePointer<GLfloat>,
+    _ upperLeft: UnsafeMutablePointer<GLfloat>
+) {
+    _cvFillCleanTexCoords(
+        image,
+        lowerLeft: lowerLeft,
+        lowerRight: lowerRight,
+        upperRight: upperRight,
+        upperLeft: upperLeft
+    )
+}
+
+/// Linux has no Metal device. Cache creation never fabricates a GPU object.
+public func CVMetalBufferCacheCreate(
+    _ allocator: CFAllocator?,
+    _ cacheAttributes: CFDictionary?,
+    _ metalDevice: any MTLDevice,
+    _ cacheOut: UnsafeMutablePointer<CVMetalBufferCache?>
+) -> CVReturn {
+    _ = allocator
+    _ = cacheAttributes
+    _ = metalDevice
+    cacheOut.pointee = nil
+    return kCVReturnUnsupported
+}
+
+public func CVMetalBufferCacheCreateBufferFromImage(
+    _ allocator: CFAllocator?,
+    _ bufferCache: CVMetalBufferCache,
+    _ imageBuffer: CVImageBuffer,
+    _ bufferOut: UnsafeMutablePointer<CVMetalBuffer?>
+) -> CVReturn {
+    _ = allocator
+    _ = bufferCache
+    _ = imageBuffer
+    bufferOut.pointee = nil
+    return kCVReturnUnsupported
+}
+
+public func CVMetalBufferGetBuffer(_ buffer: CVMetalBuffer) -> (any MTLBuffer)? {
+    _ = buffer
+    return nil
+}
+
+/// Linux has no Metal device. Texture-cache creation never fabricates a GPU object.
+public func CVMetalTextureCacheCreate(
+    _ allocator: CFAllocator?,
+    _ cacheAttributes: CFDictionary?,
+    _ metalDevice: any MTLDevice,
+    _ textureAttributes: CFDictionary?,
+    _ cacheOut: UnsafeMutablePointer<CVMetalTextureCache?>
+) -> CVReturn {
+    _ = allocator
+    _ = cacheAttributes
+    _ = metalDevice
+    _ = textureAttributes
+    cacheOut.pointee = nil
+    return kCVReturnUnsupported
+}
+
+public func CVMetalTextureCacheCreateTextureFromImage(
+    _ allocator: CFAllocator?,
+    _ textureCache: CVMetalTextureCache,
+    _ sourceImage: CVImageBuffer,
+    _ textureAttributes: CFDictionary?,
+    _ pixelFormat: MTLPixelFormat,
+    _ width: Int,
+    _ height: Int,
+    _ planeIndex: Int,
+    _ textureOut: UnsafeMutablePointer<CVMetalTexture?>
+) -> CVReturn {
+    _ = allocator
+    _ = textureCache
+    _ = sourceImage
+    _ = textureAttributes
+    _ = pixelFormat
+    _ = width
+    _ = height
+    _ = planeIndex
+    textureOut.pointee = nil
+    return kCVReturnUnsupported
+}
+
+public func CVMetalTextureGetTexture(_ image: CVMetalTexture) -> (any MTLTexture)? {
+    _ = image
+    return nil
+}
+
+/// Linux has no EAGL/OpenGL ES context. Cache creation never fabricates a GL name.
+public func CVOpenGLESTextureCacheCreate(
+    _ allocator: CFAllocator?,
+    _ cacheAttributes: CFDictionary?,
+    _ eaglContext: CVEAGLContext,
+    _ textureAttributes: CFDictionary?,
+    _ cacheOut: UnsafeMutablePointer<CVOpenGLESTextureCache?>
+) -> CVReturn {
+    _ = allocator
+    _ = cacheAttributes
+    _ = eaglContext
+    _ = textureAttributes
+    cacheOut.pointee = nil
+    return kCVReturnUnsupported
+}
+
+public func CVOpenGLESTextureCacheCreateTextureFromImage(
+    _ allocator: CFAllocator?,
+    _ textureCache: CVOpenGLESTextureCache,
+    _ sourceImage: CVImageBuffer,
+    _ textureAttributes: CFDictionary?,
+    _ target: GLenum,
+    _ internalFormat: GLint,
+    _ width: GLsizei,
+    _ height: GLsizei,
+    _ format: GLenum,
+    _ type: GLenum,
+    _ planeIndex: Int,
+    _ textureOut: UnsafeMutablePointer<CVOpenGLESTexture?>
+) -> CVReturn {
+    _ = allocator
+    _ = textureCache
+    _ = sourceImage
+    _ = textureAttributes
+    _ = target
+    _ = internalFormat
+    _ = width
+    _ = height
+    _ = format
+    _ = type
+    _ = planeIndex
+    textureOut.pointee = nil
+    return kCVReturnUnsupported
+}
+
+public func CVOpenGLESTextureGetName(_ image: CVOpenGLESTexture) -> GLuint {
+    _ = image
+    return 0
+}
+
+public func CVOpenGLESTextureGetTarget(_ image: CVOpenGLESTexture) -> GLenum {
+    _ = image
+    return 0
 }
 
 func _cvFillCleanTexCoords(

@@ -1,8 +1,40 @@
 import Foundation
 
-public final class CVMetalBufferCache: @unchecked Sendable {}
-public final class CVMetalTextureCache: @unchecked Sendable {}
-public final class CVOpenGLESTextureCache: @unchecked Sendable {}
+public final class CVMetalBufferCache: Hashable, @unchecked Sendable {
+    public init() {}
+
+    public static func == (lhs: CVMetalBufferCache, rhs: CVMetalBufferCache) -> Bool {
+        lhs === rhs
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+}
+
+public final class CVMetalTextureCache: Hashable, @unchecked Sendable {
+    public init() {}
+
+    public static func == (lhs: CVMetalTextureCache, rhs: CVMetalTextureCache) -> Bool {
+        lhs === rhs
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+}
+
+public final class CVOpenGLESTextureCache: Hashable, @unchecked Sendable {
+    public init() {}
+
+    public static func == (lhs: CVOpenGLESTextureCache, rhs: CVOpenGLESTextureCache) -> Bool {
+        lhs === rhs
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+}
 
 struct _CVPlane {
     var width: Int
