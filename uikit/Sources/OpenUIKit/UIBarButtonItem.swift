@@ -107,6 +107,16 @@ public class UIBarButtonItem {
     /// (Sources/ConformanceApps/NavFlow, docs/OBJC_RUNTIME.md).
     public var primaryAction: UIAction?
 
+    /// SwiftUI-installed image items (Hackers settings / search) keep their
+    /// own 44×44 platter. MEASURED realapp_hackers_feed_light, iPhone 16 @3x:
+    /// settings `[277, 0, 44, 44]` and search `[333, 0, 44, 44]`, gap 12,
+    /// trailing margin 16 — two platters, not one grouped run.
+    public var _isolatesPlatter = false
+    /// SwiftUI toolbar custom views (Hackers settings gear, Authentication
+    /// xmark) still sit in a 44×44 glass platter. Arbitrary UIKit
+    /// `init(customView:)` stays platter-free.
+    public var _showsPlatterWithCustomView = false
+
     /// Set by the bar that owns the item so a mutation can trigger a relayout.
     weak var _bar: _UIBarItemContainer?
     /// UIKit permits one assistant/navigation customization group association
@@ -437,7 +447,9 @@ final class _UIBarButtonItemView: UIControl {
             cv.frame = CGRect(x: (bounds.width - s.width) / 2,
                               y: (bounds.height - s.height) / 2,
                               width: s.width, height: s.height)
-            platter.isHidden = true
+            // UIKit `init(customView:)` has no platter. SwiftUI toolbar
+            // image items keep the measured 44×44 glass (Hackers settings).
+            platter.isHidden = !(showsPlatter && item._showsPlatterWithCustomView)
             return
         }
         let s = contentSize
@@ -527,7 +539,9 @@ enum _UIBarItemLayout {
     static func gapBefore(_ views: [_UIBarButtonItemView], _ i: Int) -> CGFloat {
         guard i > 0, !views[i - 1].item._isSpace else { return 0 }
         if OpenUIKitRuntime.systemFontCut == .iOS,
-           views[i - 1].isImageOnly, views[i].isImageOnly {
+           views[i - 1].isImageOnly, views[i].isImageOnly,
+           !views[i - 1].item._isolatesPlatter,
+           !views[i].item._isolatesPlatter {
             return _UIBarMetrics.groupedImageGap
         }
         return _UIBarMetrics.gap
@@ -550,7 +564,11 @@ enum _UIBarItemLayout {
             for v in run { v._platterHiddenByGroup = true }
         }
         for v in views {
-            if v.isImageOnly && !v.isHidden { run.append(v) } else { flush() }
+            if v.isImageOnly && !v.isHidden && !v.item._isolatesPlatter {
+                run.append(v)
+            } else {
+                flush()
+            }
         }
         flush()
         return frames

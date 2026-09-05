@@ -34,8 +34,10 @@ echo "==> $BR: $(git log --oneline -1 "$BR") — $ADDS commit(s) over main"
 [[ "$ADDS" -gt 0 ]] || { echo "REFUSED: $BR adds no commits over main (stale base branch?)"; exit 3; }
 echo "==> files changed vs main:"
 git diff --stat main..."$BR" | tail -15
-if git diff --name-only main..."$BR" | grep -vE '^uikit/' | grep -q .; then
-  echo "REFUSED: the branch touches files outside uikit/:"; git diff --name-only main..."$BR" | grep -vE '^uikit/'; exit 3
+# ALLOW_PATHS='^full/foundation/|^full/scripts/build_full\.sh$' widens the scope for
+# a named task (the guest Foundation, the guest builder); pin files stay refused.
+if git diff --name-only main..."$BR" | grep -vE '^uikit/' | grep -vE "${ALLOW_PATHS:-^$}" | grep -q .; then
+  echo "REFUSED: the branch touches files outside uikit/ (and outside ALLOW_PATHS):"; git diff --name-only main..."$BR" | grep -vE '^uikit/' | grep -vE "${ALLOW_PATHS:-^$}"; exit 3
 fi
 if git diff --name-only main..."$BR" | grep -qE '^(scripts/vendor_pins.sh|env/|scripts/env/)'; then
   echo "REFUSED: the branch touches the pin files"; exit 3
@@ -142,7 +144,11 @@ for d in sorted(glob.glob("/tmp/agent_merge_conf-*")):
         name = f"{s['app']}:{cap['name']}"; score = float(cap["score"]); row = board.get(name)
         if row is None: continue
         if row["status"] == "pass" and score < row["threshold"]: bad.append(f"{name} {score:.3f} < bar {row['threshold']} (was {row['score']:.3f})")
-        elif score < row["score"] - 0.5: bad.append(f"{name} {score:.3f} dropped from {row['score']:.3f}")
+        elif score < row["score"] - 0.5:
+            # ALLOW_DROP="Tabs:t6000 ..." names failing rows a merge may lower on purpose
+            # (a measured interaction another branch owns); it must be said in the merge.
+            if name in os.environ.get("ALLOW_DROP", "").split(): print(f"   {name}: {score:.3f} < {row['score']:.3f} ALLOWED (ALLOW_DROP)")
+            else: bad.append(f"{name} {score:.3f} dropped from {row['score']:.3f}")
         print(f"   {name}: {score:.3f} (board {row['score']:.3f})")
 if bad: raise SystemExit("CONFORMANCE DROPPED: " + "; ".join(bad))
 PY

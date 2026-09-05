@@ -171,7 +171,8 @@ open class UITableView: UIScrollView {
     // (scripts/ios_suite.sh tableview_grouped / tableview_plain, post-layout
     // dumps + pixels; a 375 pt table). Everything sits on 20 pt margins:
     //   plain:        header 28 pt (17 semibold at x 20, y 4, 21 pt box),
-    //                 rows 53, text at x 20, separators inset 20 / 20,
+    //                 content-config rows 53 / classic textLabel 52,
+    //                 text at x 20, separators inset 20 / 20,
     //                 chevron 10.333 x 14 with its right edge 20 in.
     //   insetGrouped: card inset 20 per side (radius 26 as on Catalyst),
     //                 the first section's header 55.333 (label y 28.667),
@@ -517,6 +518,14 @@ open class UITableView: UIScrollView {
         // 13-row viewport of Tests/…/TableViewTests' 10k-row table.
         if let measured = selfSizedRowHeights[path] { return measured }
         if estimatedRowHeight >= 0 { return estimatedRowHeight }
+        // MEASURED Tabs t200 + rowprobe, iPhone SE 2x / iOS 26.1: a
+        // plain-style classic `textLabel` cell is 52 pt (separator stride
+        // 52, contentSize 1560/30). `defaultContentConfiguration()` is 53
+        // and grouped/insetGrouped keep `defaultRowHeight` so those
+        // fixtures stay on the content-config number.
+        if UITableView.isIOSChrome, style == .plain {
+            return UITableViewCell.plainClassicRowHeight
+        }
         return UITableViewCell.defaultRowHeight
     }
 
@@ -1835,6 +1844,17 @@ open class UITableView: UIScrollView {
         return (cell.separatorInset.left, cell.separatorInset.right)
     }
 
+    /// Whether `path`'s cell draws the line above the row.
+    func showsTopSeparator(_ path: IndexPath) -> Bool {
+        if path.row != 0 { return false }
+        if style == .grouped { return true }
+        if UITableView.isIOSChrome, style == .plain,
+           path.section == 0, adjustedContentInset.top > 0 {
+            return true
+        }
+        return false
+    }
+
     /// Apply the measured separator visibility rules across visible cells:
     /// no separator on an inset-grouped section's last row, none on a
     /// selected/highlighted row, none on the row directly above one.
@@ -1861,8 +1881,15 @@ open class UITableView: UIScrollView {
                 hidden = true
             }
             cell.separatorView.isHidden = hidden
+            // `.grouped` first row of a section: MEASURED realapp_storage_light.
+            // iOS plain first row of the table when the table underlaps a
+            // bar: MEASURED Tabs t200, iPhone SE 2x / iOS 26.1 — extra
+            // `_UITableViewCellSeparatorView` at cell y=0 / abs [16, 64, 343, 1]
+            // RGB (232,232,232); rowprobe nav_tvc_plain_classic has 6 seps
+            // for 5 rows, tvc_plain_classic / plain_classic_noheader (no
+            // inset) have only the 5 bottoms.
             cell.topSeparatorView.isHidden = separatorStyle == .none
-                || style != .grouped || path.row != 0
+                || !showsTopSeparator(path)
         }
         applySeparatorColor()
     }
