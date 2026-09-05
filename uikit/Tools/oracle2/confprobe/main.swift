@@ -15,7 +15,9 @@
 //   <app>.t<ms>.png          light LTR capture (default)
 //   <app>.t<ms>.dark.png     dark capture (`"style":"dark"` or CONFPROBE_STYLE)
 //   <app>.t<ms>.rtl.png      RTL capture (`"direction":"rtl"` or CONFPROBE_DIRECTION)
-//   <app>.t<ms>.layout.json  {"name", "t", "style", "direction", "clock", "screen", "views"}
+//   <app>.t<ms>.ax1.png      `.accessibilityLarge` (`CONFPROBE_CONTENT_SIZE=ax1`)
+//   <app>.t<ms>.xxxl.png     `.extraExtraExtraLarge` (`CONFPROBE_CONTENT_SIZE=xxxl`)
+//   <app>.t<ms>.layout.json  {"name", "t", "style", "direction", "contentSize", "clock", "screen", "views"}
 //                            — absolute MODEL frames plus presentation-layer
 //                            geometry (pframe / pabs / popacity) and the
 //                            CADisplayLink timestamp of this capture
@@ -241,9 +243,11 @@ func dumpLayout(_ v: UIView, path: String, absOrigin: CGPoint,
 /// script.json (copied into the bundle by scripts/conformance_probe_sim.sh).
 /// `CONFPROBE_STYLE` / `CONFPROBE_DIRECTION` override the fields so
 /// `conformance_flow.sh --dark` / `--rtl` can replay a light LTR script
-/// without rewriting it.
+/// without rewriting it. `CONFPROBE_CONTENT_SIZE` (`ax1` / `xxxl`)
+/// pins `window.traitOverrides.preferredContentSizeCategory` the same
+/// way (`conformance_flow.sh --ax1` / `--xxxl`).
 func loadScript() -> (steps: [(t: Double, action: String)], captures: [Double],
-                       style: String, direction: String) {
+                       style: String, direction: String, contentSize: String) {
     guard let url = Bundle.main.url(forResource: "script", withExtension: "json"),
           let data = try? Data(contentsOf: url),
           let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
@@ -262,7 +266,9 @@ func loadScript() -> (steps: [(t: Double, action: String)], captures: [Double],
     let direction = ConformanceClock.resolvedDirection(
         script: (obj["direction"] as? String) ?? "ltr",
         environment: ProcessInfo.processInfo.environment["CONFPROBE_DIRECTION"])
-    return (steps, captures, style, direction)
+    let contentSize = ConformanceClock.resolvedContentSize(
+        environment: ProcessInfo.processInfo.environment["CONFPROBE_CONTENT_SIZE"])
+    return (steps, captures, style, direction, contentSize)
 }
 
     /// First CASpringAnimation.beginTime in the tree (absolute media time).
@@ -370,6 +376,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     /// `ltr` or `rtl`. Set on the window *before* `makeRoot()` so
     /// `semanticContentAttribute` is in place for the first layout.
     var direction: String = "ltr"
+    /// `large` / `ax1` / `xxxl`. Window `traitOverrides.preferredContentSizeCategory`
+    /// is pinned before `makeRoot()` (`conformance_flow.sh --ax1` / `--xxxl`).
+    var contentSize: String = "large"
     var performAction: ((String) -> Void)?
     var link: CADisplayLink?
     var frameIndex = 0
@@ -412,7 +421,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             }
             fatalError("confprobe: unknown app \"\(appName)\" (have \(have))")
         }
-        (steps, captures, style, direction) = loadScript()
+        (steps, captures, style, direction, contentSize) = loadScript()
         // RTL: `UIView.appearance()` BEFORE the window. MEASURED /tmp/rtlprobe,
         // iPhone SE 2x / iOS 26.1: window-only `semanticContentAttribute =
         // .forceRightToLeft` stamps the window (1/76 views `uiDir=rtl`,
@@ -437,6 +446,12 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         if direction == "rtl" {
             w.semanticContentAttribute = .forceRightToLeft
         }
+        // Content size BEFORE makeRoot so `UIFont.preferredFont(forTextStyle:)`
+        // at construction (Forms body labels, Feed headline/subheadline,
+        // TableEditor subtitle cells, bar-button titles) sees the category.
+        // Default `.large` is unsuffixed so existing goldens do not move.
+        w.traitOverrides.preferredContentSizeCategory =
+            ConformanceClock.contentSizeCategory(for: contentSize)
         // A dismissed alert or sheet leaves the process's tint dimmed
         // (docs/ORACLE_FLOW.md capture hazards); NavFlow dismisses a sheet
         // halfway through its script, so pin the tint for the whole run.
@@ -448,7 +463,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         if w.bounds.size != entry.windowSize {
             print("confprobe: WARNING device \(w.bounds.size) != app \(entry.windowSize)")
         }
-        print("confprobe: style=\(style) direction=\(direction)")
+        print("confprobe: style=\(style) direction=\(direction) contentSize=\(contentSize)")
         tracing = ProcessInfo.processInfo.environment["CONFPROBE_TRACE"] != nil
         // Let the first frame commit before the timeline starts: UIKit skips
         // presentation work for a hierarchy that has never been displayed,
@@ -745,7 +760,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         // PIXEL_TOL 6, 99.8 % of each generated card. compare.py / PIL read
         // PNG bytes without the ICC, so the golden has to be untagged sRGB.
         let suffix = ConformanceClock.captureSuffix(for: t, style: style,
-                                                    direction: direction)
+                                                    direction: direction,
+                                                    contentSize: contentSize)
         try! normalizedSRGB(img).pngData()!.write(
             to: URL(fileURLWithPath: "\(docsDir)/\(appName).\(suffix).png"))
 
@@ -779,6 +795,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             "t": round3(CGFloat(t)),
             "style": style,
             "direction": direction,
+            "contentSize": contentSize,
             "clock": clock,
             "screen": ["scale": Double(UIScreen.main.scale),
                        "bounds": [round3(w.bounds.width), round3(w.bounds.height)],

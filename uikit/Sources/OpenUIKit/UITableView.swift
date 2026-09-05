@@ -548,14 +548,10 @@ open class UITableView: UIScrollView {
             if UITableView.isIOSChrome, style == .plain,
                cell.style == .subtitle {
                 // MEASURED 2026-09-04, TableEditor t200, iPhone SE 2x,
-                // iOS 26.1: a plain subtitle cell is 62 pt (Alpha abs
-                // [0, 116, 375, 62], Bravo [0, 178, 375, 62]). Checked
-                // before the constraint fitter so a navigation bar's
-                // Auto Layout (which raises `installedConstraintCount`)
-                // cannot size a stock cell by its labels' intrinsic
-                // height. Grouped subtitle stays `subtitleRowHeight`;
-                // Catalyst automaticDimension stays `defaultRowHeight`.
-                height = UITableViewCell.plainSubtitleRowHeight
+                // iOS 26.1: a plain subtitle cell is 62 pt at `.large`.
+                // MEASURED TableEditor t200.ax1: **117** at
+                // `.accessibilityLarge` (33/30 pt labels, 15+39.5+6+36+20.5).
+                height = cell.iOSPlainSubtitleFittingHeight()
             } else if LayoutEngine.installedConstraintCount > 0,
                let fitted = constraintFittingHeight(of: cell.contentView) {
                 // Plus the separator. MEASURED (realapp_storage_light): the

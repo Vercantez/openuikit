@@ -173,6 +173,17 @@ public struct UITraitCollection: Equatable, Sendable {
     )
 }
 
+/// Host-facing iOS 17 trait-override bag. Real UIKit's `traitOverrides` is
+/// `UIMutableTraits`; OpenUIKit models the one field the conformance and
+/// real-app harnesses pin: Dynamic Type. Unspecified inherits
+/// `UITraitCollection.current`. Set on the window **before** `makeRoot()`
+/// so `UIFont.preferredFont(forTextStyle:)` at construction sees the
+/// category (confprobe / `conformance_flow.sh --ax1` / `--xxxl`).
+public final class UITraitOverrides {
+    public var preferredContentSizeCategory: UIContentSizeCategory = .unspecified
+    public init() {}
+}
+
 public class UIColor: Hashable, @unchecked Sendable {
     /// Static color, or a named semantic color resolved via traits.
     enum Storage {

@@ -240,6 +240,20 @@ public enum _UIBarMetrics {
     /// flexible space gets no extra gap at all.
     /// Item title font.
     public static let titleFontSize: CGFloat = 17
+
+    /// MEASURED TableEditor t200.ax1, iPhone SE 2x / iOS 26.1: the Edit
+    /// `UIButtonLabel` is **21 pt** (preferredFont `.body` at
+    /// `.extraExtraLarge`) inside a still-44 pt platter, not 33 pt
+    /// (uncapped ax1 body) and not `scaledValue(for: 17)` which is **20**
+    /// at extraExtraLarge (`dynamic_type.json` body scaled[17]). `.large`
+    /// stays 17. Cap via `UIContentSizeCategory.iOSBarCapped`.
+    static func iOSTitleFont(compatibleWith traits: UITraitCollection,
+                             weight: UIFont.Weight = .medium) -> UIFont {
+        let cap = UITraitCollection(
+            preferredContentSizeCategory: traits.preferredContentSizeCategory.iOSBarCapped)
+        let size = UIFont.preferredFont(forTextStyle: .body, compatibleWith: cap).pointSize
+        return .systemFont(ofSize: size, weight: weight)
+    }
     /// Measured platter shadow. Least-squares fit of (opacity, sigma,
     /// offset) to the golden's own falloff around the `navitem_buttons`
     /// leading platter (`python3 Tools/compare/fit_bar_shadow.py`):
@@ -425,6 +439,9 @@ final class _UIBarButtonItemView: UIControl {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            titleLabel.font = _UIBarMetrics.iOSTitleFont(compatibleWith: traitCollection)
+        }
         platter.frame = bounds
         refractionHost.frame = platter.bounds
         let band = _UIBarMetrics.platterRefractionHeight

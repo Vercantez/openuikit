@@ -133,6 +133,20 @@ for app in Sources/ConformanceApps/*(/:t); do
     SKIP_CAPTURE=$skipr zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-rtl $app --rtl > /tmp/agent_merge_conf-$app-rtl.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --rtl (see /tmp/agent_merge_conf-$app-rtl.log)"; exit 9; }
   fi
+  if [[ -d /tmp/hc-conformance-$app-ax1/golden ]]; then
+    rm -rf /tmp/agent_merge_conf-$app-ax1; cp -r /tmp/hc-conformance-$app-ax1 /tmp/agent_merge_conf-$app-ax1
+    skipax=1
+    for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" || "$r" == "$app-ax1" ]] && { skipax=""; rm -rf /tmp/agent_merge_conf-$app-ax1/golden; echo "   $app-ax1: recapturing goldens with the merged probe"; }; done
+    SKIP_CAPTURE=$skipax zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-ax1 $app --ax1 > /tmp/agent_merge_conf-$app-ax1.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --ax1 (see /tmp/agent_merge_conf-$app-ax1.log)"; exit 9; }
+  fi
+  if [[ -d /tmp/hc-conformance-$app-xxxl/golden ]]; then
+    rm -rf /tmp/agent_merge_conf-$app-xxxl; cp -r /tmp/hc-conformance-$app-xxxl /tmp/agent_merge_conf-$app-xxxl
+    skipxx=1
+    for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" || "$r" == "$app-xxxl" ]] && { skipxx=""; rm -rf /tmp/agent_merge_conf-$app-xxxl/golden; echo "   $app-xxxl: recapturing goldens with the merged probe"; }; done
+    SKIP_CAPTURE=$skipxx zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-xxxl $app --xxxl > /tmp/agent_merge_conf-$app-xxxl.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --xxxl (see /tmp/agent_merge_conf-$app-xxxl.log)"; exit 9; }
+  fi
 done
 python3 - <<'PY' || exit 9
 import json, os, glob
