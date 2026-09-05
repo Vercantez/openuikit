@@ -4,29 +4,29 @@ c:@E@CFHostInfoType@kCFHostAddresses	implemented	tests/agent/CFNetworkRuntime.sw
 c:@E@CFHostInfoType@kCFHostNames	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFHostInfoType@kCFHostReachability	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetDiagnosticStatusValues	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@E@CFNetDiagnosticStatusValues@kCFNetDiagnosticConnectionDown	declared	full/cfnetwork/CFNetDiagnostics.swift	declared Linux overlay member
+c:@E@CFNetDiagnosticStatusValues@kCFNetDiagnosticConnectionDown	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetDiagnosticStatusValues@kCFNetDiagnosticConnectionIndeterminate	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@E@CFNetDiagnosticStatusValues@kCFNetDiagnosticConnectionUp	declared	full/cfnetwork/CFNetDiagnostics.swift	declared Linux overlay member
+c:@E@CFNetDiagnosticStatusValues@kCFNetDiagnosticConnectionUp	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetDiagnosticStatusValues@kCFNetDiagnosticErr	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetDiagnosticStatusValues@kCFNetDiagnosticNoErr	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@E@CFNetServiceBrowserFlags@kCFNetServiceFlagIsDefault	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@E@CFNetServiceBrowserFlags@kCFNetServiceFlagIsDefault	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetServiceBrowserFlags@kCFNetServiceFlagIsDomain	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetServiceBrowserFlags@kCFNetServiceFlagMoreComing	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@E@CFNetServiceBrowserFlags@kCFNetServiceFlagRemove	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@E@CFNetServiceBrowserFlags@kCFNetServiceFlagRemove	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetServiceMonitorType	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetServiceMonitorType@kCFNetServiceMonitorTXT	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetServiceRegisterFlags@kCFNetServiceFlagNoAutoRename	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetServicesError	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetServicesError@kCFNetServicesErrorBadArgument	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@E@CFNetServicesError@kCFNetServicesErrorCancel	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
-c:@E@CFNetServicesError@kCFNetServicesErrorCollision	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
-c:@E@CFNetServicesError@kCFNetServicesErrorInProgress	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@E@CFNetServicesError@kCFNetServicesErrorCancel	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@E@CFNetServicesError@kCFNetServicesErrorCollision	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@E@CFNetServicesError@kCFNetServicesErrorInProgress	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetServicesError@kCFNetServicesErrorInvalid	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@E@CFNetServicesError@kCFNetServicesErrorMissingRequiredConfiguration	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
-c:@E@CFNetServicesError@kCFNetServicesErrorNotFound	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
-c:@E@CFNetServicesError@kCFNetServicesErrorTimeout	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@E@CFNetServicesError@kCFNetServicesErrorMissingRequiredConfiguration	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@E@CFNetServicesError@kCFNetServicesErrorNotFound	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@E@CFNetServicesError@kCFNetServicesErrorTimeout	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetServicesError@kCFNetServicesErrorUnknown	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetworkErrors	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetworkErrors@kCFErrorHTTPAuthenticationTypeUnsupported	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
@@ -114,40 +114,40 @@ c:@E@CFNetworkErrors@kCFURLErrorUserAuthenticationRequired	implemented	tests/age
 c:@E@CFNetworkErrors@kCFURLErrorUserCancelledAuthentication	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFNetworkErrors@kCFURLErrorZeroByteResource	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFStreamErrorHTTP	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@E@CFStreamErrorHTTP@kCFStreamErrorHTTPBadURL	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
+c:@E@CFStreamErrorHTTP@kCFStreamErrorHTTPBadURL	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFStreamErrorHTTP@kCFStreamErrorHTTPParseFailure	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@E@CFStreamErrorHTTP@kCFStreamErrorHTTPRedirectionLoop	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
+c:@E@CFStreamErrorHTTP@kCFStreamErrorHTTPRedirectionLoop	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFStreamErrorHTTPAuthentication	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFStreamErrorHTTPAuthentication@kCFStreamErrorHTTPAuthenticationBadPassword	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@E@CFStreamErrorHTTPAuthentication@kCFStreamErrorHTTPAuthenticationBadUserName	declared	full/cfnetwork/CFHTTPAuthentication.swift	declared Linux overlay member
+c:@E@CFStreamErrorHTTPAuthentication@kCFStreamErrorHTTPAuthenticationBadUserName	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@E@CFStreamErrorHTTPAuthentication@kCFStreamErrorHTTPAuthenticationTypeUnsupported	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@Ea@kCFStreamErrorSOCKS4RequestFailed@kCFStreamErrorSOCKS4IdConflict	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@Ea@kCFStreamErrorSOCKS4RequestFailed@kCFStreamErrorSOCKS4IdentdFailed	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
+c:@Ea@kCFStreamErrorSOCKS4RequestFailed@kCFStreamErrorSOCKS4IdConflict	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@Ea@kCFStreamErrorSOCKS4RequestFailed@kCFStreamErrorSOCKS4IdentdFailed	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@Ea@kCFStreamErrorSOCKS4RequestFailed@kCFStreamErrorSOCKS4RequestFailed	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@Ea@kCFStreamErrorSOCKS5BadResponseAddr@kCFStreamErrorSOCKS5BadResponseAddr	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@Ea@kCFStreamErrorSOCKS5BadResponseAddr@kCFStreamErrorSOCKS5BadState	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@Ea@kCFStreamErrorSOCKS5BadResponseAddr@kCFStreamErrorSOCKSUnknownClientVersion	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKS4SubDomainResponse	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKS5SubDomainMethod	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKS5SubDomainResponse	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKS5SubDomainUserPass	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
+c:@Ea@kCFStreamErrorSOCKS5BadResponseAddr@kCFStreamErrorSOCKS5BadResponseAddr	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@Ea@kCFStreamErrorSOCKS5BadResponseAddr@kCFStreamErrorSOCKS5BadState	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@Ea@kCFStreamErrorSOCKS5BadResponseAddr@kCFStreamErrorSOCKSUnknownClientVersion	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKS4SubDomainResponse	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKS5SubDomainMethod	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKS5SubDomainResponse	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKS5SubDomainUserPass	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKSSubDomainNone	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKSSubDomainVersionCode	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
+c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKSSubDomainVersionCode	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@Ea@kSOCKS5NoAcceptableMethod@kSOCKS5NoAcceptableMethod	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFFTPCreateParsedResourceListing	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHTTPAuthenticationAppliesToRequest	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFHTTPAuthenticationCopyDomains	declared	full/cfnetwork/CFHTTPAuthentication.swift	declared Linux overlay member
+c:@F@CFHTTPAuthenticationCopyDomains	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHTTPAuthenticationCopyMethod	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHTTPAuthenticationCopyRealm	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHTTPAuthenticationCreateFromResponse	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHTTPAuthenticationGetTypeID	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHTTPAuthenticationIsValid	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHTTPAuthenticationRequiresAccountDomain	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFHTTPAuthenticationRequiresOrderedRequests	declared	full/cfnetwork/CFHTTPAuthentication.swift	declared Linux overlay member
+c:@F@CFHTTPAuthenticationRequiresOrderedRequests	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHTTPAuthenticationRequiresUserNameAndPassword	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHTTPMessageAddAuthentication	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHTTPMessageAppendBytes	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFHTTPMessageApplyCredentialDictionary	declared	full/cfnetwork/CFHTTPMessage.swift	declared Linux overlay member
+c:@F@CFHTTPMessageApplyCredentialDictionary	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHTTPMessageApplyCredentials	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHTTPMessageCopyAllHeaderFields	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHTTPMessageCopyBody	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
@@ -169,7 +169,7 @@ c:@F@CFHTTPMessageSetBody	implemented	tests/agent/CFNetworkRuntime.swift	exercis
 c:@F@CFHTTPMessageSetHeaderFieldValue	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHostCancelInfoResolution	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHostCreateCopy	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFHostCreateWithAddress	declared	full/cfnetwork/CFHost.swift	declared Linux overlay member
+c:@F@CFHostCreateWithAddress	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHostCreateWithName	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHostGetAddressing	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHostGetNames	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
@@ -180,69 +180,69 @@ c:@F@CFHostSetClient	implemented	tests/agent/CFNetworkRuntime.swift	exercised by
 c:@F@CFHostStartInfoResolution	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFHostUnscheduleFromRunLoop	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetDiagnosticCopyNetworkStatusPassively	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFNetDiagnosticCreateWithStreams	declared	full/cfnetwork/CFNetDiagnostics.swift	declared Linux overlay member
+c:@F@CFNetDiagnosticCreateWithStreams	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetDiagnosticCreateWithURL	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetDiagnosticDiagnoseProblemInteractively	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetDiagnosticSetName	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceBrowserCreate	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFNetServiceBrowserGetTypeID	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@F@CFNetServiceBrowserGetTypeID	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceBrowserInvalidate	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFNetServiceBrowserScheduleWithRunLoop	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
-c:@F@CFNetServiceBrowserSearchForDomains	declared	full/cfnetwork/CFNetServices.swift	fail-closed Bonjour/mDNS
+c:@F@CFNetServiceBrowserScheduleWithRunLoop	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@F@CFNetServiceBrowserSearchForDomains	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceBrowserSearchForServices	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFNetServiceBrowserStopSearch	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
-c:@F@CFNetServiceBrowserUnscheduleFromRunLoop	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@F@CFNetServiceBrowserStopSearch	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@F@CFNetServiceBrowserUnscheduleFromRunLoop	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceCancel	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceCreate	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFNetServiceCreateCopy	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@F@CFNetServiceCreateCopy	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceCreateDictionaryWithTXTData	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceCreateTXTDataWithDictionary	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFNetServiceGetAddressing	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@F@CFNetServiceGetAddressing	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceGetDomain	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceGetName	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceGetPortNumber	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceGetTXTData	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFNetServiceGetTargetHost	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@F@CFNetServiceGetTargetHost	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceGetType	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceGetTypeID	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceMonitorCreate	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFNetServiceMonitorGetTypeID	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@F@CFNetServiceMonitorGetTypeID	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceMonitorInvalidate	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFNetServiceMonitorScheduleWithRunLoop	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@F@CFNetServiceMonitorScheduleWithRunLoop	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceMonitorStart	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFNetServiceMonitorStop	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
-c:@F@CFNetServiceMonitorUnscheduleFromRunLoop	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@F@CFNetServiceMonitorStop	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@F@CFNetServiceMonitorUnscheduleFromRunLoop	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceRegisterWithOptions	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceResolveWithTimeout	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFNetServiceScheduleWithRunLoop	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
-c:@F@CFNetServiceSetClient	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@F@CFNetServiceScheduleWithRunLoop	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@F@CFNetServiceSetClient	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetServiceSetTXTData	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFNetServiceUnscheduleFromRunLoop	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@F@CFNetServiceUnscheduleFromRunLoop	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetworkCopyProxiesForAutoConfigurationScript	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetworkCopyProxiesForURL	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetworkCopySystemProxySettings	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFNetworkExecuteProxyAutoConfigurationScript	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFNetworkExecuteProxyAutoConfigurationURL	declared	full/cfnetwork/CFProxySupport.swift	fail-closed PAC boundary compiles
+c:@F@CFNetworkExecuteProxyAutoConfigurationURL	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFReadStreamCreateForHTTPRequest	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFReadStreamCreateForStreamedHTTPRequest	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
+c:@F@CFReadStreamCreateForStreamedHTTPRequest	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFReadStreamCreateWithFTPURL	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFSocketStreamSOCKSGetError	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFSocketStreamSOCKSGetErrorSubdomain	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@F@CFStreamCreatePairWithSocketToCFHost	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@F@CFStreamCreatePairWithSocketToNetService	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
+c:@F@CFStreamCreatePairWithSocketToCFHost	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@F@CFStreamCreatePairWithSocketToNetService	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@F@CFWriteStreamCreateWithFTPURL	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@S@CFHostClientContext	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@S@CFHostClientContext@FI@copyDescription	declared	full/cfnetwork/CFHost.swift	Swift overlay member compiles with the declared type
-c:@S@CFHostClientContext@FI@info	declared	full/cfnetwork/CFHost.swift	Swift overlay member compiles with the declared type
-c:@S@CFHostClientContext@FI@release	declared	full/cfnetwork/CFHost.swift	Swift overlay member compiles with the declared type
-c:@S@CFHostClientContext@FI@retain	declared	full/cfnetwork/CFHost.swift	Swift overlay member compiles with the declared type
-c:@S@CFHostClientContext@FI@version	declared	full/cfnetwork/CFHost.swift	Swift overlay member compiles with the declared type
+c:@S@CFHostClientContext@FI@copyDescription	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@S@CFHostClientContext@FI@info	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@S@CFHostClientContext@FI@release	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@S@CFHostClientContext@FI@retain	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@S@CFHostClientContext@FI@version	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@S@CFNetServiceClientContext	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@S@CFNetServiceClientContext@FI@copyDescription	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-c:@S@CFNetServiceClientContext@FI@info	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-c:@S@CFNetServiceClientContext@FI@release	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-c:@S@CFNetServiceClientContext@FI@retain	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-c:@S@CFNetServiceClientContext@FI@version	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
+c:@S@CFNetServiceClientContext@FI@copyDescription	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@S@CFNetServiceClientContext@FI@info	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@S@CFNetServiceClientContext@FI@release	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@S@CFNetServiceClientContext@FI@retain	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@S@CFNetServiceClientContext@FI@version	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@T@CFHTTPAuthenticationRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@T@CFHTTPMessageRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@T@CFHostClientCallBack	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
@@ -256,29 +256,29 @@ c:@T@CFNetServiceMonitorClientCallBack	implemented	tests/agent/CFNetworkRuntime.
 c:@T@CFNetServiceMonitorRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@T@CFNetServiceRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@T@CFProxyAutoConfigurationResultCallback	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@kCFDNSServiceFailureKey	declared	full/cfnetwork/CFNetwork.swift	declared Linux overlay member
+c:@kCFDNSServiceFailureKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFErrorDomainCFNetwork	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@kCFErrorDomainWinSock	declared	full/cfnetwork/CFNetwork.swift	constant present; WinSock errors are not used on Linux
+c:@kCFErrorDomainWinSock	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFFTPResourceGroup	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@kCFFTPResourceLink	declared	full/cfnetwork/CFFTP.swift	declared Linux overlay member
-c:@kCFFTPResourceModDate	declared	full/cfnetwork/CFFTP.swift	declared Linux overlay member
+c:@kCFFTPResourceLink	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFFTPResourceModDate	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFFTPResourceMode	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFFTPResourceName	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFFTPResourceOwner	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFFTPResourceSize	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFFTPResourceType	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@kCFFTPStatusCodeKey	declared	full/cfnetwork/CFFTP.swift	declared Linux overlay member
-c:@kCFGetAddrInfoFailureKey	declared	full/cfnetwork/CFNetwork.swift	declared Linux overlay member
-c:@kCFHTTPAuthenticationAccountDomain	declared	full/cfnetwork/CFHTTPAuthentication.swift	declared Linux overlay member
-c:@kCFHTTPAuthenticationPassword	declared	full/cfnetwork/CFHTTPAuthentication.swift	declared Linux overlay member
+c:@kCFFTPStatusCodeKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFGetAddrInfoFailureKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFHTTPAuthenticationAccountDomain	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFHTTPAuthenticationPassword	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFHTTPAuthenticationSchemeBasic	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFHTTPAuthenticationSchemeDigest	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@kCFHTTPAuthenticationSchemeKerberos	declared	full/cfnetwork/CFHTTPAuthentication.swift	declared Linux overlay member
-c:@kCFHTTPAuthenticationSchemeNTLM	declared	full/cfnetwork/CFHTTPAuthentication.swift	declared Linux overlay member
-c:@kCFHTTPAuthenticationSchemeNegotiate	declared	full/cfnetwork/CFHTTPAuthentication.swift	declared Linux overlay member
-c:@kCFHTTPAuthenticationSchemeNegotiate2	declared	full/cfnetwork/CFHTTPAuthentication.swift	declared Linux overlay member
-c:@kCFHTTPAuthenticationSchemeXMobileMeAuthToken	declared	full/cfnetwork/CFHTTPAuthentication.swift	declared Linux overlay member
-c:@kCFHTTPAuthenticationUsername	declared	full/cfnetwork/CFHTTPAuthentication.swift	declared Linux overlay member
+c:@kCFHTTPAuthenticationSchemeKerberos	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFHTTPAuthenticationSchemeNTLM	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFHTTPAuthenticationSchemeNegotiate	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFHTTPAuthenticationSchemeNegotiate2	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFHTTPAuthenticationSchemeXMobileMeAuthToken	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFHTTPAuthenticationUsername	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFHTTPVersion1_0	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFHTTPVersion1_1	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFHTTPVersion2_0	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
@@ -286,188 +286,188 @@ c:@kCFHTTPVersion3_0	implemented	tests/agent/CFNetworkRuntime.swift	exercised by
 c:@kCFNetworkProxiesHTTPEnable	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFNetworkProxiesHTTPPort	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFNetworkProxiesHTTPProxy	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@kCFNetworkProxiesProxyAutoConfigEnable	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFNetworkProxiesProxyAutoConfigJavaScript	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFNetworkProxiesProxyAutoConfigURLString	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFProxyAutoConfigurationHTTPResponseKey	declared	full/cfnetwork/CFProxySupport.swift	fail-closed PAC boundary compiles
-c:@kCFProxyAutoConfigurationJavaScriptKey	declared	full/cfnetwork/CFProxySupport.swift	fail-closed PAC boundary compiles
-c:@kCFProxyAutoConfigurationURLKey	declared	full/cfnetwork/CFProxySupport.swift	fail-closed PAC boundary compiles
+c:@kCFNetworkProxiesProxyAutoConfigEnable	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFNetworkProxiesProxyAutoConfigJavaScript	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFNetworkProxiesProxyAutoConfigURLString	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFProxyAutoConfigurationHTTPResponseKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFProxyAutoConfigurationJavaScriptKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFProxyAutoConfigurationURLKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFProxyHostNameKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@kCFProxyPasswordKey	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
+c:@kCFProxyPasswordKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFProxyPortNumberKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@kCFProxyTypeAutoConfigurationJavaScript	declared	full/cfnetwork/CFProxySupport.swift	fail-closed PAC boundary compiles
-c:@kCFProxyTypeAutoConfigurationURL	declared	full/cfnetwork/CFProxySupport.swift	fail-closed PAC boundary compiles
-c:@kCFProxyTypeFTP	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
+c:@kCFProxyTypeAutoConfigurationJavaScript	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFProxyTypeAutoConfigurationURL	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFProxyTypeFTP	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFProxyTypeHTTP	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFProxyTypeHTTPS	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFProxyTypeKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFProxyTypeNone	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@kCFProxyTypeSOCKS	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFProxyUsernameKey	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFSOCKSNegotiationMethodKey	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFSOCKSStatusCodeKey	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFSOCKSVersionKey	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamErrorDomainFTP	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
+c:@kCFProxyTypeSOCKS	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFProxyUsernameKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFSOCKSNegotiationMethodKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFSOCKSStatusCodeKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFSOCKSVersionKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamErrorDomainFTP	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFStreamErrorDomainHTTP	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@kCFStreamErrorDomainMach	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamErrorDomainNetDB	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
+c:@kCFStreamErrorDomainMach	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamErrorDomainNetDB	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFStreamErrorDomainNetServices	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@kCFStreamErrorDomainSystemConfiguration	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamErrorDomainWinSock	declared	full/cfnetwork/CFStreams.swift	constant present; WinSock errors are not used on Linux
-c:@kCFStreamNetworkServiceType	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamNetworkServiceTypeAVStreaming	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamNetworkServiceTypeBackground	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamNetworkServiceTypeCallSignaling	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamNetworkServiceTypeResponsiveAV	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamNetworkServiceTypeResponsiveData	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamNetworkServiceTypeVideo	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamNetworkServiceTypeVoIP	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamNetworkServiceTypeVoice	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyAllowConstrainedNetworkAccess	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyAllowExpensiveNetworkAccess	declared	full/cfnetwork/CFStreams.swift	constant only; TLS/cellular path not claimed
-c:@kCFStreamPropertyConnectionIsCellular	declared	full/cfnetwork/CFStreams.swift	constant only; TLS/cellular path not claimed
-c:@kCFStreamPropertyConnectionIsExpensive	declared	full/cfnetwork/CFStreams.swift	constant only; TLS/cellular path not claimed
-c:@kCFStreamPropertyFTPAttemptPersistentConnection	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyFTPFetchResourceInfo	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyFTPFileTransferOffset	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyFTPPassword	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyFTPProxy	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFStreamPropertyFTPProxyHost	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFStreamPropertyFTPProxyPassword	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFStreamPropertyFTPProxyPort	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFStreamPropertyFTPProxyUser	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFStreamPropertyFTPResourceSize	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyFTPUsePassiveMode	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyFTPUserName	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyHTTPAttemptPersistentConnection	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyHTTPFinalRequest	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyHTTPFinalURL	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyHTTPProxy	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFStreamPropertyHTTPProxyHost	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFStreamPropertyHTTPProxyPort	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFStreamPropertyHTTPRequestBytesWrittenCount	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyHTTPResponseHeader	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyHTTPSProxyHost	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFStreamPropertyHTTPSProxyPort	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFStreamPropertyHTTPShouldAutoredirect	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertyNoCellular	declared	full/cfnetwork/CFStreams.swift	constant only; TLS/cellular path not claimed
-c:@kCFStreamPropertyProxyLocalBypass	declared	full/cfnetwork/CFProxySupport.swift	declared Linux overlay member
-c:@kCFStreamPropertySSLContext	declared	full/cfnetwork/CFStreams.swift	constant only; TLS/cellular path not claimed
-c:@kCFStreamPropertySSLPeerTrust	declared	full/cfnetwork/CFStreams.swift	constant only; TLS/cellular path not claimed
-c:@kCFStreamPropertySSLSettings	declared	full/cfnetwork/CFStreams.swift	constant only; TLS/cellular path not claimed
-c:@kCFStreamPropertySocketExtendedBackgroundIdleMode	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertySocketRemoteHost	declared	full/cfnetwork/CFStreams.swift	declared Linux overlay member
-c:@kCFStreamPropertySocketRemoteNetService	declared	full/cfnetwork/CFNetServices.swift	declared Linux overlay member
-c:@kCFStreamSSLCertificates	declared	full/cfnetwork/CFStreams.swift	constant only; TLS/cellular path not claimed
-c:@kCFStreamSSLIsServer	declared	full/cfnetwork/CFStreams.swift	constant only; TLS/cellular path not claimed
-c:@kCFStreamSSLLevel	declared	full/cfnetwork/CFStreams.swift	constant only; TLS/cellular path not claimed
-c:@kCFStreamSSLPeerName	declared	full/cfnetwork/CFStreams.swift	constant only; TLS/cellular path not claimed
-c:@kCFStreamSSLValidatesCertificateChain	declared	full/cfnetwork/CFStreams.swift	constant only; TLS/cellular path not claimed
+c:@kCFStreamErrorDomainSystemConfiguration	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamErrorDomainWinSock	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamNetworkServiceType	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamNetworkServiceTypeAVStreaming	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamNetworkServiceTypeBackground	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamNetworkServiceTypeCallSignaling	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamNetworkServiceTypeResponsiveAV	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamNetworkServiceTypeResponsiveData	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamNetworkServiceTypeVideo	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamNetworkServiceTypeVoIP	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamNetworkServiceTypeVoice	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyAllowConstrainedNetworkAccess	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyAllowExpensiveNetworkAccess	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyConnectionIsCellular	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyConnectionIsExpensive	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyFTPAttemptPersistentConnection	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyFTPFetchResourceInfo	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyFTPFileTransferOffset	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyFTPPassword	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyFTPProxy	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyFTPProxyHost	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyFTPProxyPassword	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyFTPProxyPort	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyFTPProxyUser	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyFTPResourceSize	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyFTPUsePassiveMode	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyFTPUserName	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyHTTPAttemptPersistentConnection	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyHTTPFinalRequest	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyHTTPFinalURL	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyHTTPProxy	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyHTTPProxyHost	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyHTTPProxyPort	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyHTTPRequestBytesWrittenCount	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyHTTPResponseHeader	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyHTTPSProxyHost	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyHTTPSProxyPort	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyHTTPShouldAutoredirect	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyNoCellular	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertyProxyLocalBypass	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertySSLContext	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertySSLPeerTrust	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertySSLSettings	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertySocketExtendedBackgroundIdleMode	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertySocketRemoteHost	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamPropertySocketRemoteNetService	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamSSLCertificates	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamSSLIsServer	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamSSLLevel	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamSSLPeerName	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+c:@kCFStreamSSLValidatesCertificateChain	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 c:@kCFURLErrorFailingURLErrorKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-c:@kCFURLErrorFailingURLStringErrorKey	declared	full/cfnetwork/CFNetwork.swift	declared Linux overlay member
-s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHTTPAuthenticationRef	declared	full/cfnetwork/CFHTTPAuthentication.swift	Swift overlay member compiles with the declared type
+c:@kCFURLErrorFailingURLStringErrorKey	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHTTPAuthenticationRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHTTPMessageRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHostRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetDiagnosticRef	declared	full/cfnetwork/CFNetDiagnostics.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceBrowserRef	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceMonitorRef	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceRef	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFHTTPAuthenticationRef	declared	full/cfnetwork/CFHTTPAuthentication.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFHTTPMessageRef	declared	full/cfnetwork/CFHTTPMessage.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFHostRef	declared	full/cfnetwork/CFHost.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFNetDiagnosticRef	declared	full/cfnetwork/CFNetDiagnostics.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFNetServiceBrowserRef	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFNetServiceMonitorRef	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFNetServiceRef	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFHTTPAuthenticationRef	declared	full/cfnetwork/CFHTTPAuthentication.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFHTTPMessageRef	declared	full/cfnetwork/CFHTTPMessage.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFHostRef	declared	full/cfnetwork/CFHost.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFNetDiagnosticRef	declared	full/cfnetwork/CFNetDiagnostics.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFNetServiceBrowserRef	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFNetServiceMonitorRef	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFNetServiceRef	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetDiagnosticRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceBrowserRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceMonitorRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFHTTPAuthenticationRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFHTTPMessageRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFHostRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFNetDiagnosticRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFNetServiceBrowserRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFNetServiceMonitorRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFNetServiceRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFHTTPAuthenticationRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFHTTPMessageRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFHostRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFNetDiagnosticRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFNetServiceBrowserRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFNetServiceMonitorRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFNetServiceRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFHostInfoType	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetDiagnosticStatusValues	declared	full/cfnetwork/CFNetDiagnostics.swift	Swift overlay member compiles with the declared type
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetServiceMonitorType	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetServicesError	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetDiagnosticStatusValues	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetServiceMonitorType	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetServicesError	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetworkErrors	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFStreamErrorHTTP	declared	full/cfnetwork/CFNetwork.swift	Swift overlay member compiles with the declared type
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFStreamErrorHTTPAuthentication	declared	full/cfnetwork/CFHTTPAuthentication.swift	Swift overlay member compiles with the declared type
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHTTPAuthenticationRef	declared	full/cfnetwork/CFHTTPAuthentication.swift	Swift overlay member compiles with the declared type
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHTTPMessageRef	declared	full/cfnetwork/CFHTTPMessage.swift	Swift overlay member compiles with the declared type
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHostRef	declared	full/cfnetwork/CFHost.swift	Swift overlay member compiles with the declared type
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetDiagnosticRef	declared	full/cfnetwork/CFNetDiagnostics.swift	Swift overlay member compiles with the declared type
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceBrowserRef	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceMonitorRef	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceRef	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFHostInfoType	declared	full/cfnetwork/CFHost.swift	Swift overlay member compiles with the declared type
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFNetDiagnosticStatusValues	declared	full/cfnetwork/CFNetDiagnostics.swift	Swift overlay member compiles with the declared type
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFNetServiceMonitorType	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFNetServicesError	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFStreamErrorHTTP	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFStreamErrorHTTPAuthentication	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHTTPAuthenticationRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHTTPMessageRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHostRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetDiagnosticRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceBrowserRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceMonitorRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceRef	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFHostInfoType	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFNetDiagnosticStatusValues	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFNetServiceMonitorType	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFNetServicesError	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFNetworkErrors	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFStreamErrorHTTP	declared	full/cfnetwork/CFNetwork.swift	Swift overlay member compiles with the declared type
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFStreamErrorHTTPAuthentication	declared	full/cfnetwork/CFHTTPAuthentication.swift	Swift overlay member compiles with the declared type
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFHostInfoType	declared	full/cfnetwork/CFHost.swift	Swift overlay member compiles with the declared type
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFNetDiagnosticStatusValues	declared	full/cfnetwork/CFNetDiagnostics.swift	Swift overlay member compiles with the declared type
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFNetServiceMonitorType	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFNetServicesError	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFStreamErrorHTTP	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFStreamErrorHTTPAuthentication	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFHostInfoType	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFNetDiagnosticStatusValues	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFNetServiceMonitorType	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFNetServicesError	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFNetworkErrors	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFStreamErrorHTTP	declared	full/cfnetwork/CFNetwork.swift	Swift overlay member compiles with the declared type
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFStreamErrorHTTPAuthentication	declared	full/cfnetwork/CFHTTPAuthentication.swift	Swift overlay member compiles with the declared type
-s:So14CFHostInfoTypeV8rawValueABSgs5Int32V_tcfc	declared	full/cfnetwork/CFHost.swift	Swift overlay member compiles with the declared type
-s:So15CFNetworkErrorsV8rawValueABSgs5Int32V_tcfc	declared	full/cfnetwork/CFNetwork.swift	Swift overlay member compiles with the declared type
-s:So17CFStreamErrorHTTPV8rawValueABSgs5Int32V_tcfc	declared	full/cfnetwork/CFNetwork.swift	Swift overlay member compiles with the declared type
-s:So18CFNetServicesErrorV8rawValueABSgs5Int32V_tcfc	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:So19CFHostClientContextV7version4info6retain7release15copyDescriptionABSi_SvSgSVSgAIXCSgyAIXCSgs9UnmanagedVySo11CFStringRefaGSgAIXCSgtcfc	declared	full/cfnetwork/CFHost.swift	Swift overlay member compiles with the declared type
-s:So19CFHostClientContextVABycfc	declared	full/cfnetwork/CFHost.swift	Swift overlay member compiles with the declared type
-s:So23CFNetServiceMonitorTypeV8rawValueABSgs5Int32V_tcfc	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:So24CFNetServiceBrowserFlagsV8rawValueABSu_tcfc	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:So25CFNetServiceClientContextV7version4info6retain7release15copyDescriptionABSi_SvSgSVSgAIXCSgyAIXCSgs9UnmanagedVySo11CFStringRefaGSgAIXCSgtcfc	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:So25CFNetServiceClientContextVABycfc	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:So25CFNetServiceRegisterFlagsV8rawValueABSu_tcfc	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:So27CFNetDiagnosticStatusValuesV8rawValueABSgs5Int32V_tcfc	declared	full/cfnetwork/CFNetDiagnostics.swift	Swift overlay member compiles with the declared type
-s:So31CFStreamErrorHTTPAuthenticationV8rawValueABSgs5Int32V_tcfc	declared	full/cfnetwork/CFHTTPAuthentication.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFStreamErrorHTTP	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFStreamErrorHTTPAuthentication	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:So14CFHostInfoTypeV8rawValueABSgs5Int32V_tcfc	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:So15CFNetworkErrorsV8rawValueABSgs5Int32V_tcfc	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:So17CFStreamErrorHTTPV8rawValueABSgs5Int32V_tcfc	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:So18CFNetServicesErrorV8rawValueABSgs5Int32V_tcfc	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:So19CFHostClientContextV7version4info6retain7release15copyDescriptionABSi_SvSgSVSgAIXCSgyAIXCSgs9UnmanagedVySo11CFStringRefaGSgAIXCSgtcfc	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:So19CFHostClientContextVABycfc	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:So23CFNetServiceMonitorTypeV8rawValueABSgs5Int32V_tcfc	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:So24CFNetServiceBrowserFlagsV8rawValueABSu_tcfc	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:So25CFNetServiceClientContextV7version4info6retain7release15copyDescriptionABSi_SvSgSVSgAIXCSgyAIXCSgs9UnmanagedVySo11CFStringRefaGSgAIXCSgtcfc	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:So25CFNetServiceClientContextVABycfc	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:So25CFNetServiceRegisterFlagsV8rawValueABSu_tcfc	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:So27CFNetDiagnosticStatusValuesV8rawValueABSgs5Int32V_tcfc	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:So31CFStreamErrorHTTPAuthenticationV8rawValueABSgs5Int32V_tcfc	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
 s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	declared	full/cfnetwork/CFNetServices.swift	Swift overlay member compiles with the declared type
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	implemented	tests/agent/CFNetworkRuntime.swift	exercised by guest runtime
