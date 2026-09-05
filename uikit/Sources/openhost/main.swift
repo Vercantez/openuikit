@@ -172,14 +172,19 @@ try MainActor.assumeIsolated {
         let style = ConformanceClock.resolvedStyle(
             script: parsed.style,
             environment: ProcessInfo.processInfo.environment["OPENUIKIT_APP_STYLE"])
+        let contentSize = ConformanceClock.resolvedContentSize(
+            environment: ProcessInfo.processInfo.environment["OPENUIKIT_APP_CONTENT_SIZE"])
         let uiStyle: UIUserInterfaceStyle = style == "dark" ? .dark : .light
-        let scene = buildAppScene(appName, scaleOverride: scale, style: uiStyle)
+        let category = ConformanceClock.contentSizeCategory(for: contentSize)
+        let scene = buildAppScene(appName, scaleOverride: scale, style: uiStyle,
+                                  contentSizeCategory: category)
         try FileManager.default.createDirectory(atPath: record,
                                                 withIntermediateDirectories: true)
         let written = try runConformanceScripted(scene, app: appName, steps: parsed.steps,
                                                  captures: parsed.captures, style: style,
+                                                 contentSize: contentSize,
                                                  outdir: record)
-        print("recorded \(written.count) captures to \(record) style=\(style)")
+        print("recorded \(written.count) captures to \(record) style=\(style) contentSize=\(contentSize)")
         exit(0)
     }
 

@@ -110,12 +110,17 @@ public enum ConformanceClock {
     /// Frame-file suffix. Light stays `t200` so existing goldens keep their
     /// names; dark appends `.dark` (`t200.dark`) so a dark timeline of the
     /// same app does not collide on the scoreboard (`NavFlow:t200` vs
-    /// `NavFlow:t200.dark`).
-    public static func captureSuffix(for t: Double, style: String = "light") -> String {
+    /// `NavFlow:t200.dark`). Content-size axis: `--ax1` / `--xxxl` append
+    /// `.ax1` / `.xxxl` (`t200.ax1`); default `.large` is unsuffixed.
+    public static func captureSuffix(for t: Double, style: String = "light",
+                                     contentSize: String = "large") -> String {
         var ms = "\(Int((t * 1000).rounded()))"
         while ms.count < 3 { ms = "0" + ms }
-        if style == "dark" { return "t" + ms + ".dark" }
-        return "t" + ms
+        var s = "t" + ms
+        if style == "dark" { s += ".dark" }
+        if contentSize == "ax1" { s += ".ax1" }
+        if contentSize == "xxxl" { s += ".xxxl" }
+        return s
     }
 
     /// Style a replay should use. `CONFPROBE_STYLE` / `OPENUIKIT_APP_STYLE`
@@ -126,5 +131,27 @@ public enum ConformanceClock {
         if let environment, environment == "dark" { return "dark" }
         if script == "dark" { return "dark" }
         return "light"
+    }
+
+    /// Content-size token a replay should use. `CONFPROBE_CONTENT_SIZE` /
+    /// `OPENUIKIT_APP_CONTENT_SIZE` (set by `conformance_flow.sh --ax1` /
+    /// `--xxxl`) win. Default `large` is a device's shipped category —
+    /// identity for every UIFontMetrics factor, so existing goldens do
+    /// not move. Equality only — no `String.contains`.
+    public static func resolvedContentSize(environment: String?) -> String {
+        if let environment {
+            if environment == "ax1" { return "ax1" }
+            if environment == "xxxl" { return "xxxl" }
+        }
+        return "large"
+    }
+
+    /// Map a suffix token onto `UIContentSizeCategory`. `ax1` is
+    /// `.accessibilityLarge` (the Settings `_ax1` row); `xxxl` is
+    /// `.extraExtraExtraLarge`.
+    public static func contentSizeCategory(for token: String) -> UIContentSizeCategory {
+        if token == "ax1" { return .accessibilityLarge }
+        if token == "xxxl" { return .extraExtraExtraLarge }
+        return .large
     }
 }

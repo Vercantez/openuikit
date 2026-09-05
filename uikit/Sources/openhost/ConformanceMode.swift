@@ -163,7 +163,8 @@ func rectJSON(_ r: CGRect) -> JSONValue {
 @MainActor
 func runConformanceScripted(_ scene: HostScene, app: String,
                             steps: [ConformanceStep], captures: [Double],
-                            style: String, outdir: String) throws -> [String] {
+                            style: String, contentSize: String,
+                            outdir: String) throws -> [String] {
     guard let perform = ConformanceApps.registry[app]?.perform else {
         fatalError("no conformance action table for app \"\(app)\"")
     }
@@ -190,6 +191,7 @@ func runConformanceScripted(_ scene: HostScene, app: String,
             let ct = sortedCaptures[nextCapture]
             written.append(try captureConformance(scene, app: app, t: ct,
                                                   frame: frame, style: style,
+                                                  contentSize: contentSize,
                                                   outdir: outdir))
             nextCapture += 1
         }
@@ -207,10 +209,12 @@ func runConformanceScripted(_ scene: HostScene, app: String,
 
 @MainActor
 func captureConformance(_ scene: HostScene, app: String, t: Double,
-                        frame: Int, style: String, outdir: String) throws -> String {
+                        frame: Int, style: String, contentSize: String,
+                        outdir: String) throws -> String {
     scene.window.layoutIfNeeded()
     let bmp = UIRenderer.render(scene.window, scale: scene.scale)
-    let suffix = ConformanceClock.captureSuffix(for: t, style: style)
+    let suffix = ConformanceClock.captureSuffix(for: t, style: style,
+                                                contentSize: contentSize)
     let png = "\(app).\(suffix).png"
     try writeBinaryFile(bmp.pngData(), path: "\(outdir)/\(png)")
 
@@ -220,6 +224,7 @@ func captureConformance(_ scene: HostScene, app: String, t: Double,
         "name": .string("\(app).\(suffix)"),
         "t": .number(round3(CGFloat(t))),
         "style": .string(style),
+        "contentSize": .string(contentSize),
         "clock": .object([
             "frame": .number(Double(frame)),
             "hz": .number(Double(ConformanceClock.hz)),

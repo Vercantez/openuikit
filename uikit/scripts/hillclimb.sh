@@ -3,7 +3,8 @@
 #
 #   1. score:  fresh iOS suite capture (scripts/ios_suite.sh), real-app
 #              screens, Catalyst gate, conformance-app flows under
-#              /tmp/hc-conformance-<App> and /tmp/hc-conformance-<App>-dark
+#              /tmp/hc-conformance-<App>, /tmp/hc-conformance-<App>-dark,
+#              /tmp/hc-conformance-<App>-ax1 and /tmp/hc-conformance-<App>-xxxl
 #              -> scoreboard/latest.{json,md} (committed by the operator
 #              with the round);
 #   2. pick:   the worst rows with status "fail" (below their bar, not listed
@@ -42,6 +43,12 @@ if [[ -z "${SKIP_CAPTURE:-}" ]]; then
     echo "==> conformance $app dark"
     zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app-dark $app --dark > /tmp/hc-conformance-$app-dark.flow.log 2>&1 \
       || echo "WARNING: conformance_flow.sh $app --dark rc=$? (see /tmp/hc-conformance-$app-dark.flow.log)"
+    echo "==> conformance $app --ax1"
+    zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app-ax1 $app --ax1 > /tmp/hc-conformance-$app-ax1.flow.log 2>&1 \
+      || echo "WARNING: conformance_flow.sh $app --ax1 rc=$? (see /tmp/hc-conformance-$app-ax1.flow.log)"
+    echo "==> conformance $app --xxxl"
+    zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app-xxxl $app --xxxl > /tmp/hc-conformance-$app-xxxl.flow.log 2>&1 \
+      || echo "WARNING: conformance_flow.sh $app --xxxl rc=$? (see /tmp/hc-conformance-$app-xxxl.flow.log)"
   done
 else
   SKIP_CAPTURE=1 zsh scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || echo "WARNING: ios_suite.sh (skip-capture) rc=$?"
@@ -60,6 +67,8 @@ for app in Sources/ConformanceApps/*(/:t); do
   [[ -d /tmp/hc-conformance-$app ]] && conf+=(/tmp/hc-conformance-$app)
   [[ -d /tmp/hc-conformance-$app-ipad ]] && conf+=(/tmp/hc-conformance-$app-ipad)
   [[ -d /tmp/hc-conformance-$app-dark ]] && conf+=(/tmp/hc-conformance-$app-dark)
+  [[ -d /tmp/hc-conformance-$app-ax1 ]] && conf+=(/tmp/hc-conformance-$app-ax1)
+  [[ -d /tmp/hc-conformance-$app-xxxl ]] && conf+=(/tmp/hc-conformance-$app-xxxl)
 done
 confargs=()
 (( ${#conf} > 0 )) && confargs=(--conformance "${conf[@]}")

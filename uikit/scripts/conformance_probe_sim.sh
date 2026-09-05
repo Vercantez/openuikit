@@ -94,7 +94,9 @@ CONTAINER=$(xcrun simctl get_app_container "$UDID" com.openuikit.confprobe data)
 rm -f "$CONTAINER"/Documents/* 2>/dev/null || true
 # CONFPROBE_TRACE=1 writes Documents/trace.json (per-tick presentation
 # geometry, no extra PNG). CONFPROBE_STYLE=dark pins the window dark
-# before makeRoot (scripts/conformance_flow.sh --dark). simctl forwards
+# before makeRoot (scripts/conformance_flow.sh --dark). CONFPROBE_CONTENT_SIZE
+# ax1/xxxl pins window.traitOverrides.preferredContentSizeCategory
+# (scripts/conformance_flow.sh --ax1 / --xxxl). simctl forwards
 # SIMCTL_CHILD_* into the app.
 typeset -a LAUNCH_ENV
 LAUNCH_ENV=(SIMCTL_CHILD_CONFPROBE_APP=$APPNAME)
@@ -104,6 +106,9 @@ fi
 if [[ -n "${CONFPROBE_STYLE:-}" ]]; then
   LAUNCH_ENV+=(SIMCTL_CHILD_CONFPROBE_STYLE=$CONFPROBE_STYLE)
 fi
+if [[ -n "${CONFPROBE_CONTENT_SIZE:-}" ]]; then
+  LAUNCH_ENV+=(SIMCTL_CHILD_CONFPROBE_CONTENT_SIZE=$CONFPROBE_CONTENT_SIZE)
+fi
 env $LAUNCH_ENV xcrun simctl launch --console-pty "$UDID" com.openuikit.confprobe || true
 for i in {1..90}; do [[ -f "$CONTAINER/Documents/DONE" ]] && break; sleep 1; done
 [[ -f "$CONTAINER/Documents/DONE" ]] || { echo "conformance_probe_sim: no DONE marker" >&2; exit 1 }
@@ -111,4 +116,4 @@ for i in {1..90}; do [[ -f "$CONTAINER/Documents/DONE" ]] && break; sleep 1; don
   || { echo "conformance_probe_sim: $(cat "$CONTAINER/Documents/DONE")" >&2; exit 1 }
 rm -f "$OUTDIR"/$APPNAME.* 2>/dev/null || true
 cp "$CONTAINER"/Documents/*.png "$CONTAINER"/Documents/*.json "$OUTDIR"/
-echo "captured $(ls "$OUTDIR"/$APPNAME.*.png | wc -l | tr -d ' ') frame(s) into $OUTDIR style=${CONFPROBE_STYLE:-light}"
+echo "captured $(ls "$OUTDIR"/$APPNAME.*.png | wc -l | tr -d ' ') frame(s) into $OUTDIR style=${CONFPROBE_STYLE:-light} contentSize=${CONFPROBE_CONTENT_SIZE:-large}"

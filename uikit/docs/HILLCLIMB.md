@@ -43,9 +43,13 @@ the reason). The climb only assigns `fail` rows.
    `scripts/conformance_flow.sh <workdir> <app>` runs one in light;
    `scripts/conformance_flow.sh <workdir> <app> --dark` replays the same
    script with `overrideUserInterfaceStyle = .dark` on the window before
-   the first capture and suffixes capture names `.dark`. A `"style"` field
-   in script.json is honoured by both confprobe and openhost. The round
-   scores `/tmp/hc-conformance-<App>` and `/tmp/hc-conformance-<App>-dark`.
+   the first capture and suffixes capture names `.dark`. `--ax1` /
+   `--xxxl` pin `window.traitOverrides.preferredContentSizeCategory` to
+   `.accessibilityLarge` / `.extraExtraExtraLarge` and suffix `.ax1` /
+   `.xxxl`. A `"style"` field in script.json is honoured by both confprobe
+   and openhost. The round scores `/tmp/hc-conformance-<App>`,
+   `/tmp/hc-conformance-<App>-dark`, `/tmp/hc-conformance-<App>-ax1` and
+   `/tmp/hc-conformance-<App>-xxxl`.
 
    Adding an app is one directory (`Sources/ConformanceApps/<Name>/` with
    `<Name>App.swift` exposing `windowSize` / `makeRoot()` / `perform(_:)`,
@@ -78,8 +82,9 @@ is always measured against the iOS simulator.
 ## What a round actually reads (the false greens it has had)
 
 - `scripts/hillclimb.sh N` recaptures the iOS suite AND every app under
-  `Sources/ConformanceApps/` into `/tmp/hc-conformance-<App>` (light) and
-  `/tmp/hc-conformance-<App>-dark` (the same script, window style dark) —
+  `Sources/ConformanceApps/` into `/tmp/hc-conformance-<App>` (light),
+  `/tmp/hc-conformance-<App>-dark` (window style dark) and
+  `/tmp/hc-conformance-<App>-ax1` / `-xxxl` (window content-size override) —
   its own directories. `/tmp/conformance-<App>` belongs to the agents; rounds 3–6
   once scored reports agents had left there and fanned out on rows the
   merged code had already fixed. The board stamps each app's capture time

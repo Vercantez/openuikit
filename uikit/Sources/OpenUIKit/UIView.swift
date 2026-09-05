@@ -750,6 +750,10 @@ open class UIView: UIResponder, CALayerDelegate {
 
     /// Trait override; `.unspecified` inherits from superview / current.
     public var overrideUserInterfaceStyle: UIUserInterfaceStyle = .unspecified
+    /// iOS 17 window/view trait overrides. Mutate in place
+    /// (`window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge`)
+    /// the way real UIKit does; unspecified inherits `UITraitCollection.current`.
+    public var traitOverrides = UITraitOverrides()
     /// `open`, as UIKit declares it: pocket-casts' TintableImageView overrides
     /// it to re-tint its image on assignment.
     open var tintColor: UIColor! {
@@ -1051,6 +1055,9 @@ open class UIView: UIResponder, CALayerDelegate {
         var t = superview?.traitCollection ?? UIScreen.main._currentTraitsResolvingSizeClasses
         if overrideUserInterfaceStyle != .unspecified {
             t.userInterfaceStyle = overrideUserInterfaceStyle
+        }
+        if traitOverrides.preferredContentSizeCategory != .unspecified {
+            t.preferredContentSizeCategory = traitOverrides.preferredContentSizeCategory
         }
         return t
     }

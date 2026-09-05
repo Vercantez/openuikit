@@ -140,6 +140,26 @@ final class ConformanceRegistryTests: XCTestCase {
         XCTAssertEqual(ConformanceClock.resolvedStyle(script: "dark", environment: "light"), "dark")
     }
 
+    /// Content-size captures append `.ax1` / `.xxxl` so default-size goldens
+    /// keep `t200`. Env `CONFPROBE_CONTENT_SIZE` / `OPENUIKIT_APP_CONTENT_SIZE`
+    /// drive `conformance_flow.sh --ax1` / `--xxxl`.
+    func testContentSizeCaptureSuffixAndResolution() {
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, contentSize: "large"), "t200")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, contentSize: "ax1"), "t200.ax1")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.08, contentSize: "xxxl"), "t080.xxxl")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, style: "dark",
+                                                     contentSize: "ax1"), "t200.dark.ax1")
+        XCTAssertEqual(ConformanceClock.resolvedContentSize(environment: nil), "large")
+        XCTAssertEqual(ConformanceClock.resolvedContentSize(environment: "ax1"), "ax1")
+        XCTAssertEqual(ConformanceClock.resolvedContentSize(environment: "xxxl"), "xxxl")
+        XCTAssertEqual(ConformanceClock.resolvedContentSize(environment: "other"), "large")
+        XCTAssertEqual(ConformanceClock.contentSizeCategory(for: "ax1"),
+                       .accessibilityLarge)
+        XCTAssertEqual(ConformanceClock.contentSizeCategory(for: "xxxl"),
+                       .extraExtraExtraLarge)
+        XCTAssertEqual(ConformanceClock.contentSizeCategory(for: "large"), .large)
+    }
+
     @MainActor
     func testRegistryHasEveryScannedApp() throws {
         let root = try Self.repoRoot()

@@ -1,6 +1,7 @@
 #!/bin/zsh
-# conformance_flow.sh <workdir> <app> [--dark] — the whole conformance-app
-# loop for one app, in one command (docs/HILLCLIMB.md, docs/ORACLE_FLOW.md).
+# conformance_flow.sh <workdir> <app> [--dark] [--ax1] [--xxxl] — the whole
+# conformance-app loop for one app, in one command (docs/HILLCLIMB.md,
+# docs/ORACLE_FLOW.md).
 #
 #   1. replay the app's script.json with REAL UIKit on the iOS 26 simulator
 #      (scripts/conformance_probe_sim.sh) into <workdir>/golden;
@@ -11,13 +12,14 @@
 #      premultiplied and straight are the same bytes) plus an absolute-frame
 #      layout diff, and write
 #        <workdir>/report/<t>/{sheet,diff,golden,ours}.png + report.txt
-#        <workdir>/summary.json  {app, style, captures: [{name, score, blob,
-#                                                  layout_issues}]}
+#        <workdir>/summary.json  {app, style, contentSize, captures: [{name,
+#                                                  score, blob, layout_issues}]}
 #      which scripts/scoreboard.py reads with --conformance <workdir>.
 #
 #   scripts/conformance_flow.sh /tmp/conf NavFlow
 #   scripts/conformance_flow.sh /tmp/conf NavFlow --ipad
 #   scripts/conformance_flow.sh /tmp/conf-dark NavFlow --dark
+#   scripts/conformance_flow.sh /tmp/conf-ax1 NavFlow --ax1
 #   SKIP_CAPTURE=1 scripts/conformance_flow.sh /tmp/conf NavFlow
 #
 # --ipad captures on a private "iPad (A16)" (820×1180 @2x portrait) and
@@ -29,20 +31,30 @@
 # capture on both sides and suffixes capture names `.dark` (`t200.dark`).
 # Light names stay `t200` so existing goldens do not move.
 #
+# `--ax1` / `--xxxl` pin `window.traitOverrides.preferredContentSizeCategory`
+# to `.accessibilityLarge` / `.extraExtraExtraLarge` before the first
+# capture on both sides and suffix capture names `.ax1` / `.xxxl`
+# (`t200.ax1`). Default `.large` is unsuffixed so existing goldens do
+# not move. Work dirs `/tmp/hc-conformance-<App>-ax1` (hillclimb.sh,
+# agent_merge.sh).
+#
 # SIM_DEVICE_SUFFIX gives the run its own simulator devices.
 set -e
 setopt null_glob
 cd "$(dirname "$0")/.."
-OUT=${1:?usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark]}
-APPNAME=${2:?usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark]}
+OUT=${1:?usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark] [--ax1] [--xxxl]}
+APPNAME=${2:?usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark] [--ax1] [--xxxl]}
 shift 2
 IPAD=0
 STYLE=light
+CONTENT_SIZE=large
 for arg in "$@"; do
   case $arg in
     --ipad) IPAD=1 ;;
     --dark) STYLE=dark ;;
-    *) echo "usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark]" >&2; exit 2 ;;
+    --ax1) CONTENT_SIZE=ax1 ;;
+    --xxxl) CONTENT_SIZE=xxxl ;;
+    *) echo "usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark] [--ax1] [--xxxl]" >&2; exit 2 ;;
   esac
 done
 SCRIPT="Sources/ConformanceApps/$APPNAME/script.json"
@@ -50,9 +62,11 @@ SCRIPT="Sources/ConformanceApps/$APPNAME/script.json"
 mkdir -p "$OUT/golden" "$OUT/ours" "$OUT/report"
 export CONFPROBE_STYLE=$STYLE
 export OPENUIKIT_APP_STYLE=$STYLE
+export CONFPROBE_CONTENT_SIZE=$CONTENT_SIZE
+export OPENUIKIT_APP_CONTENT_SIZE=$CONTENT_SIZE
 
 if [[ -z "${SKIP_CAPTURE:-}" ]]; then
-  echo "==> real iOS replay ($OUT/golden) style=$STYLE ipad=$IPAD"
+  echo "==> real iOS replay ($OUT/golden) style=$STYLE contentSize=$CONTENT_SIZE ipad=$IPAD"
   if [[ $IPAD -eq 1 ]]; then
     zsh scripts/conformance_probe_sim.sh "$APPNAME" "$OUT/golden" --ipad | tail -1
   else
@@ -60,7 +74,7 @@ if [[ -z "${SKIP_CAPTURE:-}" ]]; then
   fi
 fi
 
-echo "==> OpenUIKit replay, iOS cut ($OUT/ours) style=$STYLE"
+echo "==> OpenUIKit replay, iOS cut ($OUT/ours) style=$STYLE contentSize=$CONTENT_SIZE"
 swift build -c release --product openhost >/dev/null
 rm -rf "$OUT/ours"; mkdir -p "$OUT/ours"
 typeset -a HOST_ARGS
@@ -72,10 +86,10 @@ if [[ $IPAD -eq 1 ]]; then HOST_ARGS+=(--ipad); fi
 echo "==> compare"
 # File names stay <App>.t<ms>.png (confprobe / openhost). The summary's
 # "app" field is <App>-ipad so the scoreboard can register both rounds;
-# dark captures keep the app name and carry the `.dark` capture suffix.
+# dark / ax1 / xxxl captures keep the app name and carry the capture suffix.
 SUMMARY_APP="$APPNAME"
 if [[ $IPAD -eq 1 ]]; then SUMMARY_APP="${APPNAME}-ipad"; fi
-python3 - "$OUT" "$APPNAME" "$SCRIPT" "$STYLE" "$SUMMARY_APP" <<'PY'
+python3 - "$OUT" "$APPNAME" "$SCRIPT" "$STYLE" "$SUMMARY_APP" "$CONTENT_SIZE" <<'PY'
 import json, os, shutil, sys
 sys.path.insert(0, os.path.join(os.getcwd(), "Tools/compare"))
 import compare                                   # the suite's own pixel gate
@@ -83,6 +97,7 @@ from PIL import Image, ImageChops
 
 out, app, script_path, cli_style = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 summary_app = sys.argv[5] if len(sys.argv) > 5 else app
+content_size = sys.argv[6] if len(sys.argv) > 6 else "large"
 script = json.load(open(script_path))
 # CLI --dark / CONFPROBE_STYLE wins over the script field (same as both
 # probes): a light script.json can still drive a dark timeline.
@@ -91,7 +106,11 @@ scale = None
 
 def suffix(t):
     s = compare.capture_suffix(t)
-    return s + ".dark" if style == "dark" else s
+    if style == "dark":
+        s += ".dark"
+    if content_size in ("ax1", "xxxl"):
+        s += "." + content_size
+    return s
 
 def abs_rows(dump):
     """(text, abs-frame) for every view the two trees can be matched on.
@@ -196,10 +215,11 @@ for t in script["captures"]:
     captures.append(entry)
     print(lines[0])
 
-summary = {"app": summary_app, "style": style, "captures": captures}
+summary = {"app": summary_app, "style": style, "contentSize": content_size,
+           "captures": captures}
 json.dump(summary, open(f"{out}/summary.json", "w"), indent=1)
 scores = [c["score"] for c in captures]
-print(f"\n{app} ({style}): {len(captures)} capture(s), worst {min(scores):.3f}, "
+print(f"\n{app} ({style}, {content_size}): {len(captures)} capture(s), worst {min(scores):.3f}, "
       f"mean {sum(scores) / len(scores):.3f}")
 PY
 echo "reports: $OUT/report/<t>/{sheet,diff,golden,ours}.png + report.txt; $OUT/summary.json"
