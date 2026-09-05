@@ -1,0 +1,11 @@
+{
+  "comment": "Pager conformance timeline. Rest captures sit at least 0.5 s after the action that precedes them. page-next at t=0.40 = frame 24; frames 0/6/12/18 of the transition are t=0.40/0.50/0.60/0.70 (24/30/36/42) and rest at t=1.20. page-previous at t=1.70 = frame 102, same +0/+6/+12/+18/+rest. fling (setContentOffset animated) at t=3.00 = frame 180; frames 0/8/16/30 are t=3.00/3.133/3.267/3.50 and rest at t=4.00. spinner-frame-9 at t=4.50 = frame 270, capture at t=4.65 = frame 279 (named frame 9). Same file drives Tools/oracle2/confprobe (real UIKit, CADisplayLink frame index) and `openhost --app Pager` (the port, integer animationTime frames).",
+  "app": "Pager",
+  "events": [
+    { "t": 0.40, "action": "page-next" },
+    { "t": 1.70, "action": "page-previous" },
+    { "t": 3.00, "action": "fling" },
+    { "t": 4.50, "action": "spinner-frame-9" }
+  ],
+  "captures": [0.20, 0.40, 0.50, 0.60, 0.70, 1.20, 1.70, 1.80, 1.90, 2.00, 2.50, 3.00, 3.133, 3.267, 3.50, 4.00, 4.65]
+}

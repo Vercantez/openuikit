@@ -139,7 +139,9 @@ func dumpLayout(_ v: UIView, path: String, absOrigin: CGPoint,
     // `playing` is presentation != MODEL LAYER, not view.frame: UIButtonLabel
     // keeps view.frame.y=6 and layer.frame.y=0 at rest (TableEditor t200
     // Edit/Done). A GCD-era dump compared p.frame != v.layer.frame.
-    if let p, p.frame != v.layer.frame {
+    // Bounds-origin animations (UIScrollView contentOffset, Pager fling /
+    // page-next) do not move layer.frame, so compare presentation bounds too.
+    if let p, p.frame != v.layer.frame || p.bounds != v.layer.bounds {
         entry["playing"] = true
     }
     let sa = v.safeAreaInsets
@@ -158,7 +160,8 @@ func dumpLayout(_ v: UIView, path: String, absOrigin: CGPoint,
                                    round3(tr.m21), round3(tr.m22),
                                    round3(tr.m41), round3(tr.m42)]
         }
-        if let keys = v.layer.animationKeys(), !keys.isEmpty, pFrame != v.layer.frame {
+        if let keys = v.layer.animationKeys(), !keys.isEmpty,
+           pFrame != v.layer.frame || p.bounds != v.layer.bounds {
             entry["anims"] = keys.compactMap { k -> [String: Any]? in
                 guard let a = v.layer.animation(forKey: k) else { return nil }
                 var d: [String: Any] = [
@@ -209,6 +212,13 @@ func dumpLayout(_ v: UIView, path: String, absOrigin: CGPoint,
     }
     if let sv = v as? UIScrollView {
         entry["contentOffset"] = [round3(sv.contentOffset.x), round3(sv.contentOffset.y)]
+        // Presentation bounds.origin is the mid-flight paging offset
+        // (Pager fling / page-next). Model contentOffset has already
+        // snapped to the destination when UIView.animate commits.
+        if let p = v.layer.presentation() {
+            entry["pcontentOffset"] = [round3(p.bounds.origin.x),
+                                       round3(p.bounds.origin.y)]
+        }
         entry["contentSize"] = [round3(sv.contentSize.width), round3(sv.contentSize.height)]
         let ci = sv.contentInset, ai = sv.adjustedContentInset
         entry["contentInset"] = [round3(ci.top), round3(ci.left), round3(ci.bottom), round3(ci.right)]
@@ -246,25 +256,25 @@ func captureSuffix(_ t: Double) -> String {
     String(format: "t%03d", Int((t * 1000).rounded()))
 }
 
-/// First CASpringAnimation.beginTime in the tree (absolute media time).
-func firstSpringBegin(_ v: UIView) -> CFTimeInterval? {
-    if let keys = v.layer.animationKeys() {
-        for k in keys {
-            if let a = v.layer.animation(forKey: k) as? CASpringAnimation, a.beginTime > 1 {
-                return a.beginTime
+    /// First CASpringAnimation.beginTime in the tree (absolute media time).
+    /// Only springs: a fallback to any CAAnimation with duration > 0.05
+    /// sought Pager's bounds-tick page/fling curve to the wrong clock
+    /// (MEASURED iPhone SE 2x / iOS 26.1: live n=6 offset 469, but the
+    /// fallback freeze left every mid-flight capture at 378 = n=1).
+    /// TableEditor / Modal still match — they install CASpringAnimation.
+    func firstSpringBegin(_ v: UIView) -> CFTimeInterval? {
+        if let keys = v.layer.animationKeys() {
+            for k in keys {
+                if let a = v.layer.animation(forKey: k) as? CASpringAnimation, a.beginTime > 1 {
+                    return a.beginTime
+                }
             }
         }
-        for k in keys {
-            if let a = v.layer.animation(forKey: k), a.beginTime > 1, a.duration > 0.05 {
-                return a.beginTime
-            }
+        for s in v.subviews {
+            if let t = firstSpringBegin(s) { return t }
         }
+        return nil
     }
-    for s in v.subviews {
-        if let t = firstSpringBegin(s) { return t }
-    }
-    return nil
-}
 
 /// Seek the window's layer tree to absolute media time `media` and freeze
 /// it there so dumpLayout + drawHierarchy see one sample. MEASURED: five
@@ -432,29 +442,37 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             }
             cursor += 1
         }
-        // Post-action captures: seek mid-flight to begin+N/60, wait rest
-        // out on the display-link clock from the action's timestamp.
+        // Post-action captures: seek mid-flight to spring begin+N/60,
+        // wait rest (and non-spring mid-flight) on the display-link clock
+        // from the action's timestamp.
         if !armedAfterAction.isEmpty, frame > lastActionFrame, let w = window {
             while let next = armedAfterAction.first {
                 if next.seek {
                     if springBegin == nil { springBegin = firstSpringBegin(w) }
-                    let origin = springBegin ?? lastActionTimestamp
-                    let elapsed = Double(next.frames) / Double(ConformanceClock.hz)
-                    freezeLayer(w.layer, at: origin + elapsed)
-                    CATransaction.flush()
-                    capture(at: next.t, frame: lastActionFrame + next.frames, link: l,
-                            sampleElapsed: elapsed, springBegin: springBegin)
-                    unfreezeLayer(w.layer)
-                    springBegin = nil
-                    armedAfterAction.removeFirst()
-                } else {
-                    let due = lastActionTimestamp
-                        + Double(next.frames) / Double(ConformanceClock.hz)
-                    if l.timestamp + 1e-4 < due { break }
-                    capture(at: next.t, frame: frame, link: l,
-                            sampleElapsed: nil, springBegin: nil)
-                    armedAfterAction.removeFirst()
+                    if let origin = springBegin {
+                        let elapsed = Double(next.frames) / Double(ConformanceClock.hz)
+                        freezeLayer(w.layer, at: origin + elapsed)
+                        CATransaction.flush()
+                        capture(at: next.t, frame: lastActionFrame + next.frames, link: l,
+                                sampleElapsed: elapsed, springBegin: origin)
+                        unfreezeLayer(w.layer)
+                        springBegin = nil
+                        armedAfterAction.removeFirst()
+                        continue
+                    }
+                    // No CASpringAnimation in the tree: Pager page-next /
+                    // fling drive a tick-updated bounds origin, not a spring.
+                    // Seeking to lastActionTimestamp+N/60 froze every
+                    // mid-flight capture at the 1-frame state (offset 378 /
+                    // 3). Wait N display-link frames instead (TableEditor /
+                    // Modal still seek — they install CASpringAnimation).
                 }
+                let due = lastActionTimestamp
+                    + Double(next.frames) / Double(ConformanceClock.hz)
+                if l.timestamp + 1e-4 < due { break }
+                capture(at: next.t, frame: frame, link: l,
+                        sampleElapsed: nil, springBegin: nil)
+                armedAfterAction.removeFirst()
             }
         }
         if cursor >= timeline.count, armedAfterAction.isEmpty {

@@ -527,6 +527,101 @@ final class UIPageViewControllerTests: XCTestCase {
                        "iOS 26.1 calls outgoing willMove at staging and teardown")
     }
 
+    /// Pager t1200, iPhone SE 2x / iOS 26.1: after an animated
+    /// `setViewControllers` the model offset is the center slot with the
+    /// incoming page, but a finished bounds animation used to pin
+    /// presentation at the destination (empty trailing slot, white).
+    func testAnimatedReplacementClearsBoundsPresentationAtRest() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 480))
+        let a = UIViewController()
+        a.view.backgroundColor = UIColor(red: 0.85, green: 0.25, blue: 0.25, alpha: 1)
+        let b = UIViewController()
+        b.view.backgroundColor = UIColor(red: 0.20, green: 0.65, blue: 0.35, alpha: 1)
+        let source = PageSource([a, b], count: 2, index: 0)
+        let page = UIPageViewController(transitionStyle: .scroll,
+                                        navigationOrientation: .horizontal)
+        page.dataSource = source
+        page.view.frame = window.bounds
+        window.addSubview(page.view)
+        window.makeKeyAndVisible()
+        page.setViewControllers([a], direction: .forward, animated: false)
+        window.layoutIfNeeded()
+        let center = page.scrollView.bounds.width
+        XCTAssertEqual(page.scrollView.contentOffset.x, center, accuracy: 1e-6)
+
+        OpenUIKitRuntime.animationTime = 0
+        page.setViewControllers([b], direction: .forward, animated: true)
+        window.layoutIfNeeded()
+        let atStart = LayerBridge.presentationState(of: page.scrollView, at: 0)
+        XCTAssertEqual(atStart.bounds.origin.x, center, accuracy: 1,
+                       "frame 0 presentation stays on the outgoing page")
+
+        window.tick(timestamp: 0.32)
+        window.tick(timestamp: 0.80)
+        XCTAssertEqual(page.scrollView.contentOffset.x, center, accuracy: 1e-6)
+        let atRest = LayerBridge.presentationState(of: page.scrollView, at: 0.80)
+        XCTAssertEqual(atRest.bounds.origin.x, center, accuracy: 1e-6,
+                       "finished bounds animation must not pin the empty slot")
+        XCTAssertTrue(page.viewControllers?.first === b)
+    }
+
+    /// MEASURED Pager page-next, iPhone SE 2x / iOS 26.1, named 60 Hz
+    /// frames (confprobe wait): 375 → 750 then queue reset at n=18:
+    /// n=0:375 (t400) n=6:469 (t500) n=12:656.5 (t600) n=18:375 (t700).
+    /// Ease-in-out over 0.3 s, no extra delay (n=1 already 378 on a live
+    /// CADisplayLink probe of the same setter).
+    func testIOSProgrammaticScrollSamplesMatchPagerProbe() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 280))
+        let a = UIViewController()
+        a.view.backgroundColor = UIColor(red: 0.85, green: 0.25, blue: 0.25, alpha: 1)
+        let b = UIViewController()
+        b.view.backgroundColor = UIColor(red: 0.20, green: 0.65, blue: 0.35, alpha: 1)
+        let source = PageSource([a, b], count: 2, index: 0)
+        let page = UIPageViewController(transitionStyle: .scroll,
+                                        navigationOrientation: .horizontal)
+        page.dataSource = source
+        page.view.frame = window.bounds
+        window.addSubview(page.view)
+        window.makeKeyAndVisible()
+        page.setViewControllers([a], direction: .forward, animated: false)
+        window.layoutIfNeeded()
+        let center = page.scrollView.bounds.width
+        XCTAssertEqual(center, 375, accuracy: 1)
+
+        OpenUIKitRuntime.animationTime = 0
+        page.setViewControllers([b], direction: .forward, animated: true)
+        window.layoutIfNeeded()
+
+        func origin(at t: Double) -> CGFloat {
+            LayerBridge.presentationState(of: page.scrollView, at: t).bounds.origin.x
+        }
+        XCTAssertEqual(origin(at: 0), center, accuracy: 1)
+        XCTAssertEqual(origin(at: 1.0 / 60.0), 378, accuracy: 2)
+        XCTAssertEqual(origin(at: 6.0 / 60.0), 469, accuracy: 15)
+        XCTAssertEqual(origin(at: 8.0 / 60.0), 530, accuracy: 15)
+        XCTAssertEqual(origin(at: 12.0 / 60.0), 656.5, accuracy: 15)
+        XCTAssertEqual(origin(at: 17.0 / 60.0), 747, accuracy: 5)
+
+        let bmp = UIRenderer.render(window, scale: 1)
+        let o = (100 * bmp.width + 187) * 4
+        XCTAssertGreaterThan(Int(bmp.pixels[o]), 180,
+                             "frame 0 must paint the outgoing page, not the empty slot")
+
+        window.tick(timestamp: 0.29)
+        XCTAssertEqual(page.viewControllers?.first === b, true)
+        XCTAssertEqual(page.children.count, 2,
+                       "iOS duration 0.3 has not completed at n=17")
+        window.tick(timestamp: 0.30)
+        XCTAssertEqual(page.children.count, 1)
+        XCTAssertEqual(page.scrollView.contentOffset.x, center, accuracy: 1e-6)
+        XCTAssertEqual(origin(at: 0.30), center, accuracy: 1,
+                       "n=18 queue reset; presentation follows the model")
+    }
+
     func testAnimatedTransitionInterruptedByNonanimatedSetMatchesUIKit26() {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 480))
         let log = PageLog()

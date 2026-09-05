@@ -520,6 +520,29 @@ final class UIScrollViewInteractionTests: XCTestCase {
         XCTAssertEqual(Double(sv.contentOffset.y), Double(caughtAt), accuracy: 1e-9)
     }
 
+    /// MEASURED Pager fling, iPhone SE 2x / iOS 26.1, named 60 Hz frames:
+    /// `setContentOffset(400, animated: true)` from 0: n=0:0 n=8:165.5
+    /// n=16:388 n=30:400. Ease-in-out over 0.3 s, no extra delay.
+    func testIOSAnimatedContentOffsetSamplesMatchPagerFlingProbe() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+
+        let sv = UIScrollView(frame: CGRect(x: 0, y: 0, width: 200, height: 88))
+        sv.contentSize = CGSize(width: 800, height: 88)
+        OpenUIKitRuntime.animationTime = 0
+        sv.setContentOffset(CGPoint(x: 400, y: 0), animated: true)
+
+        func x(at t: Double) -> CGFloat {
+            LayerBridge.presentationState(of: sv, at: t).bounds.origin.x
+        }
+        XCTAssertEqual(x(at: 0), 0, accuracy: 0.5)
+        XCTAssertEqual(x(at: 8.0 / 60.0), 165.5, accuracy: 15)
+        XCTAssertEqual(x(at: 16.0 / 60.0), 388, accuracy: 15)
+        XCTAssertEqual(x(at: 19.0 / 60.0), 400, accuracy: 1)
+        XCTAssertEqual(sv.contentOffset.x, 400, accuracy: 1e-6)
+    }
+
     // MARK: Rendering (bounds.origin drives sublayer scroll)
 
     func testBothCompositorsRenderScrolledContent() {
