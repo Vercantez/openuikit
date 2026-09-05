@@ -118,6 +118,6 @@ func testDeviceActivityMonitoringErrorSurface() {
 func testDeviceActivityViewStubIdentity() {
     let report = DeviceActivityReport(DeviceActivityReport.Context("stub"))
     deviceActivityRequire(report.brightness(0.5).context == report.context, "brightness")
-    deviceActivityRequire(report.padding().context == report.context, "padding")
+    deviceActivityRequire(report.padding(0).context == report.context, "padding")
     deviceActivityRequire(report.navigationViewStyle(0).context == report.context, "nav")
 }

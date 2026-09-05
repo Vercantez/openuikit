@@ -119,6 +119,7 @@ func testDeviceActivityDataSegmentAndActivities() {
     let catIterator = segment.categories.makeAsyncIterator()
     deviceActivityRequire(catIterator.nextSynchronously() == category, "categories")
 
+    let device = DeviceActivityData.Device(name: "office", model: .mac)
     let data = DeviceActivityData(
         lastUpdatedDate: Date(timeIntervalSince1970: 50),
         segmentInterval: .daily(during: interval),
