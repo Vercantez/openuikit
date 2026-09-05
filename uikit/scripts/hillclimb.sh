@@ -5,7 +5,7 @@
 #              screens, Catalyst gate, conformance-app flows under
 #              /tmp/hc-conformance-<App> and /tmp/hc-conformance-<App>-dark
 #              /tmp/hc-conformance-<App>-rtl /tmp/hc-conformance-<App>-ax1
-#              and /tmp/hc-conformance-<App>-xxxl
+#              /tmp/hc-conformance-<App>-xxxl and /tmp/hc-conformance-<App>-landscape
 #              -> scoreboard/latest.{json,md} (committed by the operator
 #              with the round);
 #   2. pick:   the worst rows with status "fail" (below their bar, not listed
@@ -66,6 +66,9 @@ if [ -z "${SKIP_CAPTURE:-}" ]; then
     echo "==> conformance $app --xxxl"
     bash scripts/conformance_flow.sh /tmp/hc-conformance-$app-xxxl $app --xxxl > /tmp/hc-conformance-$app-xxxl.flow.log 2>&1 \
       || echo "WARNING: conformance_flow.sh $app --xxxl rc=$? (see /tmp/hc-conformance-$app-xxxl.flow.log)"
+    echo "==> conformance $app landscape"
+    bash scripts/conformance_flow.sh /tmp/hc-conformance-$app-landscape $app --landscape > /tmp/hc-conformance-$app-landscape.flow.log 2>&1 \
+      || echo "WARNING: conformance_flow.sh $app --landscape rc=$? (see /tmp/hc-conformance-$app-landscape.flow.log)"
   done
 else
   SKIP_CAPTURE=1 bash scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || echo "WARNING: ios_suite.sh (skip-capture) rc=$?"
@@ -89,6 +92,7 @@ for _appdir in Sources/ConformanceApps/*/; do
   [ -d /tmp/hc-conformance-$app-rtl ] && conf+=(/tmp/hc-conformance-$app-rtl)
   [ -d /tmp/hc-conformance-$app-ax1 ] && conf+=(/tmp/hc-conformance-$app-ax1)
   [ -d /tmp/hc-conformance-$app-xxxl ] && conf+=(/tmp/hc-conformance-$app-xxxl)
+  [ -d /tmp/hc-conformance-$app-landscape ] && conf+=(/tmp/hc-conformance-$app-landscape)
 done
 confargs=()
 if [ ${#conf[@]} -gt 0 ]; then confargs=(--conformance "${conf[@]}"); fi

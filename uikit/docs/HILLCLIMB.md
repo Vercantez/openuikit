@@ -53,10 +53,15 @@ the reason). The climb only assigns `fail` rows.
    is honoured the same way. `--ax1` / `--xxxl` pin
    `window.traitOverrides.preferredContentSizeCategory` to
    `.accessibilityLarge` / `.extraExtraExtraLarge` and suffix `.ax1` /
-   `.xxxl`. Combined suffixes: `.dark` then `.rtl` then `.ax1` / `.xxxl`.
-   The round scores `/tmp/hc-conformance-<App>`,
+   `.xxxl`. `--landscape` rotates the SE 2x device to landscapeLeft before
+   the first capture (window 667×375, compact height) and suffixes capture
+   names `.landscape`. openhost renders at that size with compact-height
+   traits. A `"orientation"` field in script.json is honoured the same way.
+   Combined suffixes: `.dark` then `.rtl` then `.ax1` / `.xxxl` then
+   `.landscape`. The round scores `/tmp/hc-conformance-<App>`,
    `/tmp/hc-conformance-<App>-dark`, `/tmp/hc-conformance-<App>-rtl`,
-   `/tmp/hc-conformance-<App>-ax1` and `/tmp/hc-conformance-<App>-xxxl`.
+   `/tmp/hc-conformance-<App>-ax1`, `/tmp/hc-conformance-<App>-xxxl` and
+   `/tmp/hc-conformance-<App>-landscape`.
 
    Adding an app is one directory (`Sources/ConformanceApps/<Name>/` with
    `<Name>App.swift` exposing `windowSize` / `makeRoot()` / `perform(_:)`,
@@ -96,7 +101,8 @@ agent can grade `SKIP_CAPTURE=1` without a simulator. `hillclimb.sh` and
   `Sources/ConformanceApps/` into `/tmp/hc-conformance-<App>` (light),
   `/tmp/hc-conformance-<App>-dark` (window style dark),
   `/tmp/hc-conformance-<App>-rtl` (appearance + window forceRightToLeft),
-  and `/tmp/hc-conformance-<App>-ax1` / `-xxxl` (window content-size override) —
+  `/tmp/hc-conformance-<App>-ax1` / `-xxxl` (window content-size override),
+  and `/tmp/hc-conformance-<App>-landscape` (SE 2x landscapeLeft) —
   its own directories. `/tmp/conformance-<App>` belongs to the agents; rounds 3–6
   once scored reports agents had left there and fanned out on rows the
   merged code had already fixed. The board stamps each app's capture time
