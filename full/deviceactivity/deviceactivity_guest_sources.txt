@@ -1,0 +1,5 @@
+full/deviceactivity/DeviceActivity.swift
+full/deviceactivity/DeviceActivityCenter.swift
+full/deviceactivity/DeviceActivityData.swift
+full/deviceactivity/DeviceActivityReport.swift
+full/deviceactivity/DeviceActivityViewStubs.swift
