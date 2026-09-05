@@ -613,9 +613,17 @@ extension AVPlayerItem {
   public func copy(with zone: NSZone? = nil) -> Any { self }
   public var status: AVPlayerItem.Status { .readyToPlay }
   public var error: (any Error)? { nil }
-  public var tracks: [AVPlayerItemTrack] { [] }
+  public var tracks: [AVPlayerItemTrack] {
+    asset.tracks.map { assetTrack in
+      let itemTrack = AVPlayerItemTrack()
+      itemTrack.portableAssetTrack = assetTrack
+      return itemTrack
+    }
+  }
   public var duration: CMTime { asset.duration }
-  public var presentationSize: CGSize { .zero }
+  public var presentationSize: CGSize {
+    asset.tracks.first(where: { $0.mediaType == .video })?.naturalSize ?? .zero
+  }
   public var timedMetadata: [AVMetadataItem]? { nil }
   public var automaticallyLoadedAssetKeys: [String] { [] }
   public var canPlayFastForward: Bool { false }
@@ -701,7 +709,11 @@ extension AVPlayerItem {
       get { nil }
       set { _ = newValue }
     }
-  public var loadedTimeRanges: [NSValue] { [] }
+  public var loadedTimeRanges: [NSValue] {
+    let duration = self.duration
+    guard duration.isValid, duration.seconds > 0 else { return [] }
+    return [AVCMTimeRangeValue.nsValue(for: CMTimeRange(start: .zero, duration: duration))]
+  }
   public var isPlaybackLikelyToKeepUp: Bool { false }
   public var isPlaybackBufferFull: Bool { false }
   public var isPlaybackBufferEmpty: Bool { false }
@@ -998,12 +1010,13 @@ open class AVPlayerItemSegment: NSObject, @unchecked Sendable {
 
 open class AVPlayerItemTrack: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public var assetTrack: AVAssetTrack? { nil }
+  var portableAssetTrack: AVAssetTrack?
+  public var assetTrack: AVAssetTrack? { portableAssetTrack }
   public var isEnabled: Bool {
-      get { false }
+      get { portableAssetTrack?.isEnabled ?? false }
       set { _ = newValue }
     }
-  public var currentVideoFrameRate: Float { 0 }
+  public var currentVideoFrameRate: Float { portableAssetTrack?.nominalFrameRate ?? 0 }
 }
 
 open class AVPlayerItemVideoOutput: AVPlayerItemOutput, @unchecked Sendable {
@@ -1032,14 +1045,44 @@ open class AVPlayerLooper: NSObject, @unchecked Sendable {
     case failed = 2
     case cancelled = 3
   }
-  convenience init(player: AVQueuePlayer, templateItem itemToLoop: AVPlayerItem) { self.init() }
-  convenience init(player: AVQueuePlayer, templateItem itemToLoop: AVPlayerItem, timeRange loopRange: CMTimeRange) { self.init() }
-  convenience init(player: AVQueuePlayer, templateItem itemToLoop: AVPlayerItem, timeRange loopRange: CMTimeRange, existingItemsOrdering itemOrdering: AVPlayerLooper.ItemOrdering) { self.init() }
-  public var status: AVPlayerLooper.Status { AVPlayerLooper.Status(rawValue: 0)! }
+  private weak var queuePlayer: AVQueuePlayer?
+  private var template: AVPlayerItem?
+  private var storedItems: [AVPlayerItem] = []
+  private var storedStatus = Status.unknown
+  private var storedLoopCount = 0
+
+  public convenience init(player: AVQueuePlayer, templateItem itemToLoop: AVPlayerItem) {
+    self.init(player: player, templateItem: itemToLoop, timeRange: .zero)
+  }
+  public convenience init(player: AVQueuePlayer, templateItem itemToLoop: AVPlayerItem, timeRange loopRange: CMTimeRange) {
+    self.init(player: player, templateItem: itemToLoop, timeRange: loopRange, existingItemsOrdering: .loopingItemsPrecedeExistingItems)
+  }
+  public convenience init(
+    player: AVQueuePlayer,
+    templateItem itemToLoop: AVPlayerItem,
+    timeRange loopRange: CMTimeRange,
+    existingItemsOrdering itemOrdering: AVPlayerLooper.ItemOrdering
+  ) {
+    self.init()
+    _ = loopRange
+    queuePlayer = player
+    template = itemToLoop
+    let copy = AVPlayerItem(asset: itemToLoop.asset)
+    storedItems = [copy]
+    storedStatus = .ready
+    if itemOrdering == .loopingItemsPrecedeExistingItems {
+      player.insert(copy, after: nil)
+    } else if let last = player.items().last {
+      player.insert(copy, after: last)
+    } else {
+      player.insert(copy, after: nil)
+    }
+  }
+  public var status: AVPlayerLooper.Status { storedStatus }
   public var error: (any Error)? { nil }
-  public func disableLooping() {}
-  public var loopCount: Int { 0 }
-  public var loopingPlayerItems: [AVPlayerItem] { [] }
+  public func disableLooping() { storedStatus = .cancelled }
+  public var loopCount: Int { storedLoopCount }
+  public var loopingPlayerItems: [AVPlayerItem] { storedItems }
 }
 
 open class AVPlayerMediaSelectionCriteria: NSObject, @unchecked Sendable {

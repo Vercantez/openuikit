@@ -247,6 +247,8 @@ final class AVAssetLoadState: @unchecked Sendable {
     let lock = NSLock()
     var loadedKeys: Set<String> = []
     var injectedDuration: Double?
+    var probe: AVLocalMediaProbe?
+    var storedTracks: [AVAssetTrack] = []
 
     func markLoaded(_ keys: [String]) {
         lock.lock()
@@ -335,6 +337,8 @@ extension AVAsset {
             return tracks as? T
         case "isPlayable", "isExportable", "isReadable", "isComposable":
             return false as? T
+        case "preferredTransform":
+            return preferredTransform as? T
         case "metadata", "commonMetadata":
             return ([] as [AVMetadataItem]) as? T
         case "lyrics":
@@ -342,5 +346,26 @@ extension AVAsset {
         default:
             return nil
         }
+    }
+}
+
+/// Box a `CMTimeRange` inside an `NSValue` identity for `loadedTimeRanges`.
+public enum AVCMTimeRangeValue {
+    private static let lock = NSLock()
+    private static var table: [ObjectIdentifier: CMTimeRange] = [:]
+
+    public static func nsValue(for range: CMTimeRange) -> NSValue {
+        let value = NSNumber(value: range.start.seconds + range.duration.seconds)
+        lock.lock()
+        table[ObjectIdentifier(value)] = range
+        lock.unlock()
+        return value
+    }
+
+    public static func range(from value: NSValue) -> CMTimeRange {
+        lock.lock()
+        let boxed = table[ObjectIdentifier(value)]
+        lock.unlock()
+        return boxed ?? .invalid
     }
 }
