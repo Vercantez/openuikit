@@ -1,10 +1,9 @@
-import Dispatch
 import Foundation
 import AVKit
 
 /// The sealed host runner calls `test*` from a nonisolated context. UIKit-shaped
 /// AVKit types are `@MainActor`; hop via assumeIsolated on the process main thread.
-private func avkitOnMain<T>(_ body: @MainActor () -> T) -> T {
+func avkitOnMain<T>(_ body: @MainActor () -> T) -> T {
     MainActor.assumeIsolated(body)
 }
 
@@ -306,6 +305,7 @@ func testPictureInPictureStartFailsClosed() {
     controller.startPictureInPicture()
     precondition(controller.isPictureInPictureActive == false)
     precondition(controller.isPictureInPicturePossible == false)
+    precondition(controller.isPictureInPictureSuspended == false)
     precondition(probe.events == ["failedToStart"])
     guard let startError = probe.startError else {
         preconditionFailure("startPictureInPicture must deliver failedToStart")
@@ -644,6 +644,10 @@ func testCaptureEventPhaseAndSounds() {
     let event = AVCaptureEvent()
     precondition(event.phase == .ended)
     precondition(event.shouldPlaySound == false)
+    precondition(AVCaptureEventPhase.began.hashValue != AVCaptureEventPhase.ended.hashValue)
+    var hasher = Hasher()
+    AVCaptureEventPhase.cancelled.hash(into: &hasher)
+    _ = hasher.finalize()
     _ = AVCaptureEventSound.beginVideoRecording
     _ = AVCaptureEventSound.endVideoRecording
     avkitOnMain {
@@ -683,23 +687,15 @@ func testPlayerItemAVKitAdditions() {
 
 func testPrepareRouteSelectionCallback() {
     let session = AVAudioSession()
-    let lock = NSLock()
     var called = 0
     var allowed = true
     var selection = AVAudioSession.RouteSelection.local
-    let semaphore = DispatchSemaphore(value: 0)
     session.prepareRouteSelectionForPlayback { nextAllowed, nextSelection in
-        lock.lock()
         called += 1
         allowed = nextAllowed
         selection = nextSelection
-        lock.unlock()
-        semaphore.signal()
     }
-    precondition(semaphore.wait(timeout: .now() + 2) == .success)
-    lock.lock()
     precondition(called == 1)
     precondition(allowed == false)
     precondition(selection == .none)
-    lock.unlock()
 }

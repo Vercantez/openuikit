@@ -37,17 +37,39 @@ open class AVPlayer: NSObject {
 }
 
 open class AVPlayerItem: NSObject {
+    /// Isolated-host overlay of AVFoundation.AVPlayerItem.Status
+    /// (unknown=0, readyToPlay=1, failed=2).
+    public enum Status: Int, Hashable, Sendable {
+        case unknown = 0
+        case readyToPlay = 1
+        case failed = 2
+    }
+
     public var url: URL?
+    /// Matches the AVFoundation lane: a URL item reports `.readyToPlay`;
+    /// an empty item stays `.unknown`. Not `@objc dynamic`.
+    public var status: Status
+    /// Matches the AVFoundation lane default (`.zero` until a host injects
+    /// a presentable size). Isolated-host KVO of this key is a runtime gap.
+    public var presentationSize: CGSize = .zero
     @MainActor public var externalMetadata: [AVMetadataItem] = []
     @MainActor public var interstitialTimeRanges: [AVInterstitialTimeRange] = []
 
     public override init() {
+        self.status = .unknown
         super.init()
     }
 
     public init(url: URL) {
         self.url = url
+        self.status = .readyToPlay
         super.init()
+    }
+
+    /// Host injection for AVPlayerViewController display-state tests.
+    /// Does not decode a frame.
+    public func openUIKitHostSetPresentationSize(_ size: CGSize) {
+        presentationSize = size
     }
 }
 
