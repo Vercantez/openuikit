@@ -188,3 +188,8 @@ relative-time (ld undefined Demand / `_openui_url_transport_v1_*`). Keep
 the DTS shim as `foundation.o`, facade as `foundation_guest.o`. Onboarding
 asserts `EXPECTED_INREPO_UIKIT_TREE` (exit 2); same HEAD:uikit override as
 the widget guest.
+
+x86 cycle 2: `5cda44776f4c73e6611ce3131db345a042d4162e`.
+`RUNG_SCOREBOARD a=PASS b=PASS c=PASS`
+(`a=PASS/smoke 14/14`; `b=PASS/widget+onboarding under X86_64 loader`;
+`c=PASS/windows=1 turns=3 paced=true`).
