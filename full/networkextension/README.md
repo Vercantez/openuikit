@@ -138,13 +138,19 @@ DNS-proxy/relay/hotspot activation, no Apple entitlements, simulated VPN
 only after a saved enabled configuration.
 
 **Tests run:** `bash full/networkextension/tests/acceptance/test_host.sh`
-directly on this Linux host (no docker).
+directly on this Linux host (no docker). Exact gate output:
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+NETWORKEXTENSION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=NetworkExtension dylib=libNetworkExtension.dylib
+```
 
 **Environment notes:** `git rev-parse HEAD` at start was
-`5cc42895aa4277d0ed2103050b64be03fe813c3e`. `swiftc` is Swift 6.2.4
+`5cc42895aa4277d0ed2103050b64be03fe813c3e`. `swiftc --version` is Swift 6.2.4
 (`x86_64-unknown-linux-gnu`). `.cursor/verify-cloud-environment.sh` failed
 on a missing `scratch/ladder-corpus/focus-ios` pin (unrelated to this
-isolated module). The campaign marker recorded for the gate is
+isolated module) and did not emit
 `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`.
 Boot build observed: `bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3`
 (campaign expected `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`).
