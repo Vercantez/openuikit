@@ -44,11 +44,11 @@ extension LocalizedStringResource {
 #endif
 
 func appIntentsString(_ resource: LocalizedStringResource) -> String {
-#if canImport(Darwin)
-    return "\(resource)"
-#else
-    return resource.key
-#endif
+    // Measured: Foundation.LocalizedStringResource("Adds a feed").key ==
+    // "Adds a feed" on Darwin; the lookalike stores the same field.
+    // String interpolation of the Apple type is a debug dump, not the key
+    // (testAppIntentStaticRequirements).
+    resource.key
 }
 
 // MARK: - SwiftUI lookalikes (isolated host has no SwiftUI module)

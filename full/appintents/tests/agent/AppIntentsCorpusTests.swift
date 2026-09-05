@@ -1,6 +1,9 @@
 import Foundation
 import AppIntents
 
+/// Focused Linux in-process checks. Each `test*` is cited only for identifiers
+/// it actually calls or asserts — not for a whole type's unused members.
+
 private final class WaitBox<T>: @unchecked Sendable {
     var value: T?
     var error: Error?
@@ -103,6 +106,20 @@ private struct AddFeedIntent: AppIntent {
     }
 }
 
+private struct ValueOnlyIntent: AppIntent {
+    static var title: LocalizedStringResource { "Value Only" }
+    func perform() async throws -> some IntentResult & ReturnsValue<String> {
+        .result(value: "payload")
+    }
+}
+
+private struct OpensURLIntent: AppIntent {
+    static var title: LocalizedStringResource { "Opens URL" }
+    func perform() async throws -> some IntentResult & OpensIntent {
+        .result(opensIntent: OpenURLIntent(URL(fileURLWithPath: "/tmp/opened")))
+    }
+}
+
 private struct CatalogProvider: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
@@ -124,12 +141,54 @@ func testAppIntentStaticRequirements() {
     precondition(AddFeedIntent.description?.resultValueName?.key == "Feed")
     precondition(AddFeedIntent.openAppWhenRun == false)
     precondition(AddFeedIntent.isDiscoverable == true)
-    precondition(AddFeedIntent.persistentIdentifier.hasPrefix("AddFeed") || AddFeedIntent.persistentIdentifier == "AddFeedIntent")
+    precondition(AddFeedIntent.supportedModes.contains(.background))
+    precondition(AddFeedIntent.authenticationPolicy == .alwaysAllowed)
+    let identifier = AddFeedIntent.persistentIdentifier
+    precondition(identifier.hasPrefix("AddFeed") || identifier == "AddFeedIntent")
 }
 
-func testIntentResultValueAndDialogFactories() {
-    let empty = IntentResultValue.result()
-    precondition(empty.dialog == nil)
+func testIntentPerformValueShape() {
+    let valued: IntentResultContainer<String, Never, Never, Never> = .result(value: "ok")
+    precondition(valued.value == "ok")
+    let performed = wait { try await ValueOnlyIntent().perform() }
+    let container = performed as? IntentResultContainer<String, Never, Never, Never>
+    precondition(container?.value == "payload")
+}
+
+func testIntentPerformValueDialogShape() {
+    let valuedDialog: IntentResultContainer<String, Never, Never, IntentDialog> =
+        .result(value: "ok", dialog: IntentDialog("done"))
+    precondition(valuedDialog.value == "ok")
+    precondition(valuedDialog.dialog?.text == "done")
+    let intent = AddFeedIntent()
+    intent.url = "https://example.test/rss"
+    let performed = wait { try await AppIntentRuntime.shared.perform(intent) }
+    let container = performed as? IntentResultContainer<String, Never, Never, IntentDialog>
+    precondition(container?.value == "https://example.test/rss")
+    precondition(container?.dialog?.text == "added=https://example.test/rss")
+}
+
+func testIntentPerformOpensIntentShape() {
+    let url = URL(fileURLWithPath: "/tmp/opened")
+    let opened: IntentResultContainer<Never, OpenURLIntent, Never, Never> =
+        .result(opensIntent: OpenURLIntent(url))
+    precondition(opened.opensIntent != nil)
+    let performed = wait { try await OpensURLIntent().perform() }
+    let container = performed as? IntentResultContainer<Never, OpenURLIntent, Never, Never>
+    precondition(container?.opensIntent != nil)
+}
+
+func testIntentPerformViewShape() {
+    let snippet: IntentResultContainer<Never, Never, _SnippetViewContainer, Never> =
+        .result(view: ShortcutsLink())
+    precondition(snippet.dialog == nil)
+    precondition(snippet.value == nil)
+    let content: IntentResultContainer<Never, Never, _SnippetViewContainer, Never> =
+        .result(content: { ShortcutsLink() })
+    precondition(content.value == nil)
+}
+
+func testIntentDialogInterpolationAndFullSupporting() {
     let dialog = IntentDialog(full: "Full text", supporting: "Support")
     precondition(dialog.full == "Full text")
     precondition(dialog.supporting == "Support")
@@ -142,33 +201,31 @@ func testIntentResultValueAndDialogFactories() {
     precondition(withImage.systemImageName == "star")
     let fromResource = IntentDialog(LocalizedStringResource("resource"))
     precondition(fromResource.text == "resource")
-    let withDialog = IntentResultValue.result(dialog: dialog)
-    precondition(withDialog.dialog?.text == "Full text")
+    let interpolated: IntentDialog = "added=\("feed")"
+    precondition(interpolated.text == "added=feed")
 }
 
-func testIntentResultValueContainerFactories() {
-    let valued: IntentResultContainer<String, Never, Never, Never> = .result(value: "ok")
-    precondition(valued.value == "ok")
-    let valuedDialog: IntentResultContainer<String, Never, Never, IntentDialog> =
-        .result(value: "ok", dialog: IntentDialog("done"))
-    precondition(valuedDialog.dialog?.text == "done")
-    let opened: IntentResultContainer<Never, OpenURLIntent, Never, Never> =
-        .result(opensIntent: OpenURLIntent(URL(fileURLWithPath: "/tmp")))
-    precondition(opened.opensIntent != nil)
-    let snippet: IntentResultContainer<Never, Never, _SnippetViewContainer, Never> =
-        .result(view: ShortcutsLink())
-    precondition(snippet.dialog == nil)
-    let content: IntentResultContainer<Never, Never, _SnippetViewContainer, Never> =
-        .result(content: { ShortcutsLink() })
-    precondition(content.value == nil)
-}
-
-func testParameterDefaultRangeAndProjectedValue() {
+func testParameterStorageDefaultsAndProjection() {
     let query = IntentParameter<String>(title: "Query", default: "search")
     precondition(query.wrappedValue == "search")
     query.wrappedValue = "typed"
     precondition(query.wrappedValue == "typed")
     precondition(query.projectedValue.metadata.title == "Query")
+    precondition(query.isOptional == false)
+    switch query.valueState {
+    case .set(let value):
+        precondition(value == "typed")
+    case .unset:
+        preconditionFailure("typed parameter must be set")
+    }
+    let optionalParam = IntentParameter<String?>(title: "Maybe")
+    precondition(optionalParam.isOptional == true)
+    precondition(optionalParam.wrappedValue == nil)
+}
+
+func testParameterControlStyleAndInclusiveRange() {
+    // Measured: Int inclusiveRange (1, 9) round-trips as lower=1 upper=9
+    // (testParameterControlStyleAndInclusiveRange, Linux swiftc).
     let count = IntentParameter<Int>(
         title: "Count",
         default: 3,
@@ -178,9 +235,10 @@ func testParameterDefaultRangeAndProjectedValue() {
     precondition(count.wrappedValue == 3)
     precondition(count.controlStyle == .field)
     precondition(count.inclusiveRange?.lowerBound == 1)
-    precondition(count.inclusiveRange?.upperBound == 10 || count.inclusiveRange?.upperBound == 9)
+    precondition(count.inclusiveRange?.upperBound == 9)
     precondition(IntentParameter<Int>.IntControlStyle.field != .stepper)
     precondition(IntentParameter<Double>.DoubleControlStyle.slider != .field)
+    precondition(IntentParameter<Double>.DoubleControlStyle.stepper != .slider)
     let amount = IntentParameter<Double>(
         title: "Amount",
         default: 1.5,
@@ -188,42 +246,62 @@ func testParameterDefaultRangeAndProjectedValue() {
         inclusiveRange: (0.0, 5.0)
     )
     precondition(amount.wrappedValue == 1.5)
-    precondition(amount.controlStyle == .stepper || amount.controlStyle == .slider)
-    let error = query.needsValueError(IntentDialog("need url"))
-    precondition(error.description == "entityNotFound")
-    precondition(query.isOptional == false)
-    switch query.valueState {
-    case .set(let value):
-        precondition(value == "typed")
-    case .unset:
-        preconditionFailure("typed parameter must be set")
-    }
-    precondition(query.dateKind == nil)
+    precondition(amount.controlStyle == .slider)
+    precondition(amount.inclusiveRange?.lowerBound == 0.0)
+    precondition(amount.inclusiveRange?.upperBound == 5.0)
     precondition(IntentParameter<Int>.DateKind.date != .time)
     precondition(IntentParameter<Int>.DateKind.dateTime != .date)
     precondition(IntentParameter<String>.PlacemarkDisplayStyle.city != .address)
-    let requestError = query.requestValue(IntentDialog("need"))
-    precondition(String(describing: requestError).hasPrefix("unsupported") || true)
-    let context = IntentParameterContext<String>(title: "Query", isOptional: false)
-    precondition(context.isOptional == false)
-    precondition(context.dateKind == nil)
-    let contextError = context.needsValueError(IntentDialog("need"))
-    precondition(contextError.description == "entityNotFound")
 }
 
-func testAppEntityEnumAndQueries() {
+func testParameterRequestValueDialogAndOptionsProvider() {
+    let dialog = IntentDialog("need site")
+    let parameter = IntentParameter<String>(
+        title: "Site",
+        default: "hn",
+        requestValueDialog: dialog,
+        optionsProvider: SiteQuery()
+    )
+    precondition(parameter.wrappedValue == "hn")
+    precondition(parameter.metadata.requestValueDialog?.text == "need site")
+    let results = wait { try await SiteQuery().results() }
+    precondition(results.count == 1)
+    precondition(results[0].id == "hn")
+    let need = parameter.needsValueError(IntentDialog("need url"))
+    precondition(need.description == "entityNotFound")
+    let request = parameter.requestValue(IntentDialog("need"))
+    precondition((request as? AppIntentError)?.description == "unsupportedOnDevice")
+    let context = IntentParameterContext<String>(title: "Query", isOptional: false)
+    precondition(context.isOptional == false)
+    precondition(context.needsValueError(IntentDialog("need")).description == "entityNotFound")
+}
+
+func testAppEnumCaseDisplayRepresentations() {
     precondition(SiteKind.news.rawValue == "news")
     precondition(SiteKind.caseDisplayRepresentations[.blog]?.title.key == "Blog")
+    precondition(SiteKind.typeDisplayRepresentation.name == "Site Kind")
+}
+
+func testAppEntityQuerySuggestedMatchingAndIdentifiers() {
+    precondition(SiteEntity.typeDisplayRepresentation.name == "Site")
     let site = SiteEntity(id: "hn", name: "Hacker News")
     precondition(site.displayRepresentation.title.key == "Hacker News")
-    precondition(SiteEntity.typeDisplayRepresentation.name == "Site")
     let query = SiteQuery()
     let suggested = wait { try await query.suggestedEntities() }
     precondition(suggested.count == 1)
+    precondition(suggested[0].id == "hn")
     let matched = wait { try await query.entities(matching: "Hack") }
     precondition(matched.count == 1)
+    let missed = wait { try await query.entities(matching: "zzz") }
+    precondition(missed.isEmpty)
     let byId = wait { try await query.entities(for: ["hn"]) }
     precondition(byId.count == 1)
+    let missingId = wait { try await query.entities(for: ["nope"]) }
+    precondition(missingId.isEmpty)
+}
+
+func testEntityPropertyQueryAndUniqueEntity() {
+    let query = SiteQuery()
     let comparators: [String] = ["hn"]
     let fromProperty = wait {
         try await query.entities(
@@ -241,7 +319,7 @@ func testAppEntityEnumAndQueries() {
     precondition(allUnique.count == 1)
 }
 
-func testDisplayRepresentationValueSemantics() {
+func testDisplayRepresentationImagesAndSynonyms() {
     let image = DisplayRepresentation.Image(systemName: "star", isTemplate: true)
     precondition(image.systemName == "star")
     precondition(image.isTemplate == true)
@@ -261,7 +339,10 @@ func testDisplayRepresentationValueSemantics() {
     )
     precondition(representation.title.key == "Site")
     precondition(representation.subtitle?.key == "News")
-    precondition(representation.synonyms.isEmpty == false || representation.synonyms.count == 1)
+    precondition(representation.synonyms.count == 1)
+}
+
+func testTypeDisplayRepresentationNameFormatAndSynonyms() {
     let typeRep = TypeDisplayRepresentation(
         name: LocalizedStringResource("Feed"),
         numericFormat: LocalizedStringResource("%lld feeds"),
@@ -272,7 +353,9 @@ func testDisplayRepresentationValueSemantics() {
     precondition(typeRep.synonyms.count == 1)
 }
 
-func testAppShortcutBuilderAndUpdateNoOp() {
+func testAppShortcutBuilderUpdateAndApplicationNameToken() {
+    // Measured: "Add feed with \(.applicationName)" → "Add feed with ${applicationName}"
+    // (testAppShortcutBuilderUpdateAndApplicationNameToken, Linux swiftc).
     precondition(CatalogProvider.appShortcuts.count == 1)
     precondition(CatalogProvider.appShortcuts[0].shortTitle == "Add Feed")
     precondition(CatalogProvider.appShortcuts[0].systemImageName == "plus")
@@ -327,38 +410,53 @@ func testEntityIdentifierAndPackage() {
     precondition(identifier.identifier == "hn")
     let typed = EntityIdentifier(for: SiteEntity.self, identifier: "hn")
     precondition(typed.identifier == "hn")
-    precondition(identifier != typed || identifier.identifier == typed.identifier)
     let activity = EntityIdentifier(activityIdentifier: "scene.1")
     precondition(activity?.identifier == "scene.1")
     precondition(EntityIdentifier(activityIdentifier: "") == nil)
     precondition(SamplePackage.includedPackages.isEmpty)
 }
 
-func testAppDependencyManagerFailClosed() {
+func testAppDependencyManagerRegisterGetFailClosed() {
+    // Measured: missing get() throws failedToRetrieveDependency (Linux);
+    // Apple crash-on-missing is unobserved (oracle-questions.tsv).
     let manager = AppDependencyManager()
     manager.reset()
     manager.add(key: "clock", dependency: "tick")
-    let value: String = (try? manager.get(String.self, key: "clock")) ?? ""
-    precondition(value == "tick")
+    do {
+        let value: String = try manager.get(String.self, key: "clock")
+        precondition(value == "tick")
+    } catch {
+        preconditionFailure("registered dependency must return: \(error)")
+    }
     do {
         let _: Int = try manager.get(Int.self, key: "missing")
         preconditionFailure("missing dependency should throw")
+    } catch let error as AppDependencyManager.Error<Int> {
+        switch error {
+        case .failedToRetrieveDependency:
+            break
+        default:
+            preconditionFailure("expected failedToRetrieveDependency, got \(error)")
+        }
     } catch {
-        let text = String(describing: error)
-        precondition(text.hasPrefix("failedToRetrieve") || true)
+        preconditionFailure("expected AppDependencyManager.Error, got \(error)")
     }
     let withDefault = AppDependency<String>(
         key: "unused",
         manager: manager,
         default: "fallback"
     )
-    precondition(withDefault.wrappedValue == "fallback" || withDefault.wrappedValue == "tick")
+    precondition(withDefault.wrappedValue == "fallback")
 }
 
-func testHostRegistryPerformsIntentByParameters() {
+func testHostRegistryEnumeratesShortcutsAndPerformsFromParameters() {
     AppIntentsHost.reset()
     AppIntentsHost.registerShortcuts(CatalogProvider.self)
     precondition(AppIntentsHost.registeredShortcuts().count == 1)
+    precondition(
+        AppIntentsHost.registeredShortcuts()[0].phrases[0].template ==
+            "Add feed with ${applicationName}"
+    )
     AppIntentsHost.registerIntent(AddFeedIntent.self) { parameters in
         let intent = AddFeedIntent()
         AppIntentsHost.applyParameters(intent, parameters: parameters)
@@ -380,7 +478,7 @@ func testIntentParameterDependencyAndProjection() {
     precondition(projection.intent.url.path.hasPrefix("/tmp"))
     let dependency = IntentParameterDependency<AddFeedIntent>(\AddFeedIntent.$url)
     precondition(dependency.wrappedValue == nil)
-    precondition(dependency.debugDescription.hasPrefix("AddFeed") || true)
+    precondition(dependency.debugDescription.hasPrefix("AddFeed"))
 }
 
 func testAppIntentErrorCatalog() {
@@ -397,14 +495,6 @@ func testAppIntentErrorCatalog() {
     precondition(AppIntentError.PermissionRequired.localNetwork.description == "localNetwork")
     precondition(AppIntentError.UserActionRequired.signin.description == "signin")
     precondition(AppIntentError.UserActionRequired.accountSetup.description == "accountSetup")
-}
-
-func testPerformAddFeedThroughRuntime() {
-    let intent = AddFeedIntent()
-    intent.url = "https://example.test/rss"
-    let result = wait { try await AppIntentRuntime.shared.perform(intent) }
-    let container = result as? IntentResultContainer<String, Never, Never, IntentDialog>
-    precondition(container?.value == "https://example.test/rss")
 }
 
 func testConfirmationAndForegroundStayFailClosed() {

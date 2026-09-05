@@ -40,6 +40,8 @@ public enum AppIntentsHost {
         for (label, child) in Mirror(reflecting: intent).children {
             guard let label else { continue }
             let name: String
+            // Measured: Mirror labels for `@Parameter` are `_url`; strip a
+            // leading `_` via hasPrefix (testHostRegistryEnumeratesShortcutsAndPerformsFromParameters).
             if label.hasPrefix("_") {
                 name = String(label.dropFirst())
             } else {

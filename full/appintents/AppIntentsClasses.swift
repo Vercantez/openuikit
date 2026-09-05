@@ -119,6 +119,9 @@ public class AppDependencyManager: NSObject, @unchecked Sendable {
     }
 
     /// Linux get() is the fail-closed substitute for Apple's crash-on-missing.
+    /// Measured: missing key throws `failedToRetrieveDependency`
+    /// (testAppDependencyManagerRegisterGetFailClosed). Associated values on
+    /// Apple's Error cases are unobserved.
     public func get<Dependency>(
         _ type: Dependency.Type = Dependency.self,
         key: AnyHashable? = nil

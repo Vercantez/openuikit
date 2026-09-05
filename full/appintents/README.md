@@ -13,6 +13,19 @@ registration (`AppIntentsPortable.supportsSystemRegistration == false`).
 Wave-6 adds schema-v2 coverage for the sealed 6586-ID public surface. The
 isolated Linux host compiles these sources with `swiftc` and Foundation only.
 
+## Coverage honesty (second pass)
+
+The first pass marked **1575** identifiers `implemented`, but **771** of them
+(713 non-enum) cited only `testIntentPerformEcho` — a bulk relabel.
+`implemented` evidence must be a focused test of that identifier. This pass
+keeps the original 49 implemented IDs, adds focused family tests, and
+reclassifies the bulk rows to `declared` (or `deferred` when there is still
+no host source). **299** implemented / **4552** declared / **1735** deferred.
+Nondeferred **4851** remains above the medium-full floor of 3293.
+
+No implemented test is cited by more than 29 rows (9.7% of implemented).
+`testIntentPerformEcho` cites **one** ID: `AppIntent.perform()`.
+
 ## What is real
 
 - `AppIntent.perform()` runs in-process. `AppIntentRuntime` records an
@@ -27,15 +40,19 @@ isolated Linux host compiles these sources with `swiftc` and Foundation only.
   on `IntentResult` / the SwiftUI overlay and return `IntentResultContainer`.
 - `@IntentParameter` (typealias `Parameter`) stores supplied values and
   applies a `default` when the wrapper is still unset. Int/Double inits
-  keep `controlStyle` and `inclusiveRange`. Reading an unset non-optional
-  parameter with no default traps rather than inventing a value.
-  `requestValue` / `requestDisambiguation` throw `unsupportedOnDevice`.
+  keep `controlStyle` and `inclusiveRange` (Int `(1, 9)` round-trips as
+  1…9). Reading an unset non-optional parameter with no default traps
+  rather than inventing a value. `requestValueDialog` is stored on
+  metadata. An `optionsProvider` argument is accepted and not consulted
+  for `wrappedValue` (no Shortcuts metadata extractor). `requestValue` /
+  `requestDisambiguation` throw or return `unsupportedOnDevice`.
 - `AppEntity` / `AppEnum` / `EntityStringQuery` / `EntityPropertyQuery` /
   `UniqueAppEntityProvider` run in-process: `entities(for:)`,
   `suggestedEntities()`, `entities(matching:)`, and `uniqueEntity()`.
 - `DisplayRepresentation` / `TypeDisplayRepresentation` / `IntentDialog`
   (`full`/`supporting`/`systemImageName`) are value types. Dialog string
-  interpolation is process-local.
+  interpolation is process-local. `LocalizedStringResource.key` is the
+  portable text (Darwin Foundation string-literal key equals the literal).
 - `AppShortcut` phrases interpolate `.applicationName` to
   `${applicationName}`. `AppShortcutsBuilder` concatenates shortcut lists.
   `AppShortcutsProvider.updateAppShortcutParameters()` is a documented
@@ -45,7 +62,8 @@ isolated Linux host compiles these sources with `swiftc` and Foundation only.
   prefix strip via `hasPrefix`), and `perform(identifier:parameters:)`.
 - `AppDependencyManager.add` stores a sync value. `get` throws
   `failedToRetrieveDependency` instead of Apple's crash-on-missing.
-  Async `add` providers register nothing.
+  Async `add` providers register nothing. `AppDependency` with a default
+  uses the default when `get` misses.
 - `IntentDonationManager` records process-local identifiers. It never claims
   that the Shortcuts daemon persisted a donation.
 - `AppIntentError` is a fail-closed catalog (`unsupportedOnDevice`,

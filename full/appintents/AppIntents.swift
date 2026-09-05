@@ -214,6 +214,10 @@ extension IntentResultContainer: OpensIntent {}
 extension IntentResultContainer: ReturnsValue {}
 
 public extension IntentResult where Self == IntentResultValue {
+    /// Portable empty / dialog-only factories stay on `IntentResultValue` so
+    /// `EchoIntent.perform()` still infers that type (testIntentPerformEcho,
+    /// testIntentDialogAndResultFactories). Apple's `IntentResultContainer`
+    /// overloads for the same spellings are not substituted in.
     static func result() -> Self {
         .init()
     }
@@ -1316,6 +1320,9 @@ public struct AppShortcutPhrase<Intent: AppIntent>: Sendable, Hashable,
         public mutating func appendLiteral(_ literal: String) { value += literal }
 
         public mutating func appendInterpolation(_ token: AppShortcutPhraseToken) {
+            // Measured: "Add feed with \(.applicationName)" →
+            // "Add feed with ${applicationName}"
+            // (testAppShortcutBuilderUpdateAndApplicationNameToken, Linux swiftc).
             value += token == .applicationName ? "${applicationName}" : ""
         }
 
