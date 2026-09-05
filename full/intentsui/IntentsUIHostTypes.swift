@@ -106,4 +106,15 @@ enum IntentsUIHostVoiceShortcuts {
         return removed
         #endif
     }
+
+    static func value(identifier: UUID) -> INVoiceShortcut? {
+        #if canImport(Intents)
+        return nil
+        #else
+        lock.lock()
+        let value = values[identifier]
+        lock.unlock()
+        return value
+        #endif
+    }
 }
