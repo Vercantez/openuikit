@@ -15,8 +15,13 @@
 //   image slot LPImageView 30×30 at (301, 11.5) — 12 pt from trailing
 //   title .SFUI-Semibold 15 at (16, 8, 269, 18) text "Example Article"
 //   host .SFUI-Regular 13 at (16, 28, 269, 16) text "example.com" (URL.host)
-//   no-image card fill (0.915, 0.915, 0.920, 1) = RGB (233, 233, 235)
-//     — not systemGray6
+//   no-image card fill is secondarySystemFill over systemBackground:
+//     light Present t200 card interior RGB (233, 233, 235)
+//     dark  Present t200.dark card interior RGB (38, 38, 41)
+//     (dump still stores LPFlippedView 0.915 — unresolved light; pixels
+//     are the oracle)
+//   host ink is .secondaryLabel over that fill:
+//     light (129, 129, 134); dark (156, 156, 163)
 //   with-image card fill (0.004, 0.48, 0.90, 1) ≈ RGB (1, 122, 230)
 //     (PresentProbe link.png before linkplain overwrote it)
 //
@@ -24,8 +29,6 @@
 //   - NSItemProvider image/icon pixels are async on Darwin and absent on
 //     Linux. A non-nil imageProvider selects the blue card + 30×30 slot;
 //     the bitmap itself is OPEN.
-//   - Host label grey RGB on the gray card was not dumped; `.secondaryLabel`
-//     is used (OPEN).
 import UIKit
 #if canImport(FoundationNetworking)
 import FoundationNetworking
@@ -195,8 +198,11 @@ open class LPLinkView: UIView {
             hostLabel.textColor = .white
             imageView.image = nil
         } else {
-            // MEASURED PresentProbe linkplain, iPhone SE 2x:
-            // card fill (0.915, 0.915, 0.920, 1) = RGB (233, 233, 235).
+            // MEASURED Present t200 / t200.dark, iPhone SE 2x / iOS 26.1:
+            // opaque secondarySystemFill over systemBackground.
+            // Light (233, 233, 235); dark (38, 38, 41). Title is .label
+            // (white on dark); host is .secondaryLabel over the fill
+            // (light 129,129,134 / dark 156,156,163).
             backgroundColor = LPLinkMetrics.plainFill
             titleLabel.textColor = .label
             hostLabel.textColor = .secondaryLabel
@@ -231,6 +237,14 @@ enum LPLinkMetrics {
     static let imageTrailing: CGFloat = 12
     static let imageY: CGFloat = 11.5
     static let imageCornerRadius: CGFloat = 3
-    static let plainFill = UIColor(red: 233 / 255, green: 233 / 255, blue: 235 / 255, alpha: 1)
+    /// Opaque `secondarySystemFill` over `systemBackground`.
+    /// MEASURED Present t200 / t200.dark card interior, iPhone SE 2x / iOS 26.1.
+    /// Light 0.16·(120,120,128)+0.84·white = (233,233,235);
+    /// dark  0.32·(120,120,128)+0.68·black = (38,38,41).
+    static let plainFill = UIColor(dynamicProvider: { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(red: 38 / 255, green: 38 / 255, blue: 41 / 255, alpha: 1)
+            : UIColor(red: 233 / 255, green: 233 / 255, blue: 235 / 255, alpha: 1)
+    })
     static let compactFill = UIColor(red: 1 / 255, green: 122 / 255, blue: 230 / 255, alpha: 1)
 }
