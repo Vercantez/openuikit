@@ -35,8 +35,12 @@ func eventKitWithIsolatedStore(_ body: () -> Void) {
 func eventKitFreshStore() {
     EKEventStore.denyAccessRequests = false
     if let directory = EventKitTestRoot.directory {
-        try? FileManager.default.removeItem(at: directory)
-        try! FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try? FileManager.default.removeItem(
+            at: directory.appendingPathComponent("store.json")
+        )
+        try? FileManager.default.removeItem(
+            at: directory.appendingPathComponent("store.json.tmp")
+        )
     }
     EKEventStore.resetIsolatedStore()
 }
@@ -74,7 +78,7 @@ func eventKitGMTDate(_ year: Int, _ month: Int, _ day: Int, hour: Int = 9) -> Da
 
 func eventKitWait<T>(_ work: (@escaping (T) -> Void) -> Void) -> T {
     let lock = DispatchSemaphore(value: 0)
-    var value: T?
+    nonisolated(unsafe) var value: T?
     var returned = false
     var reentrant = false
     work { result in
@@ -89,34 +93,73 @@ func eventKitWait<T>(_ work: (@escaping (T) -> Void) -> Void) -> T {
     return value
 }
 
-func eventKitRequestAccess(_ store: EKEventStore, to type: EKEntityType) -> Bool {
-    let lock = DispatchSemaphore(value: 0)
-    nonisolated(unsafe) var granted = false
-    nonisolated(unsafe) var failed = false
-    Task.detached {
-        do {
-            granted = try await store.requestAccess(to: type)
-        } catch {
-            failed = true
+func eventKitRequestAccessHandler(
+    _ work: (@escaping EKEventStoreRequestAccessCompletionHandler) -> Void
+) -> (Bool, (any Error)?) {
+    eventKitWait { (finish: @escaping ((Bool, (any Error)?)) -> Void) in
+        work { granted, error in
+            finish((granted, error))
         }
-        lock.signal()
     }
-    lock.wait()
-    precondition(!failed, "requestAccess must not throw on deny-or-grant")
-    return granted
+}
+
+func eventKitFetchReminders(
+    _ store: EKEventStore,
+    matching predicate: NSPredicate,
+    cancel: Bool = false
+) -> [EKReminder]? {
+    eventKitWait { (finish: @escaping ([EKReminder]?) -> Void) in
+        let token = store.fetchReminders(matching: predicate) { reminders in
+            finish(reminders)
+        }
+        if cancel {
+            store.cancelFetchRequest(token)
+        }
+    }
+}
+
+final class EventKitPostedCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value = 0
+    func increment() {
+        lock.lock()
+        value += 1
+        lock.unlock()
+    }
+    var current: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return value
+    }
+}
+
+func eventKitRequestAccess(_ store: EKEventStore, to type: EKEntityType) -> Bool {
+    eventKitWait { (finish: @escaping (Bool) -> Void) in
+        DispatchQueue.global(qos: .userInitiated).async {
+            Task {
+                do {
+                    finish(try await store.requestAccess(to: type))
+                } catch {
+                    finish(false)
+                }
+            }
+        }
+    }
 }
 
 func eventKitGrantFullAccess(_ store: EKEventStore) {
-    let events = eventKitWait { completion in
+    let events = eventKitRequestAccessHandler { completion in
         store.requestFullAccessToEvents(completion: completion)
     }
     precondition(events.0 == true)
     precondition(events.1 == nil)
-    let reminders = eventKitWait { completion in
+    let reminders = eventKitRequestAccessHandler { completion in
         store.requestFullAccessToReminders(completion: completion)
     }
     precondition(reminders.0 == true)
     precondition(reminders.1 == nil)
+    precondition(EKEventStore.authorizationStatus(for: .event) == .fullAccess)
+    precondition(EKEventStore.authorizationStatus(for: .reminder) == .fullAccess)
 }
 
 func testSpanThisEventDetachesOccurrence() {
