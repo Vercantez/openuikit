@@ -394,6 +394,17 @@ public actor WidgetTimelineRuntime {
     private func validate<Entry: TimelineEntry>(
         _ timeline: Timeline<Entry>
     ) throws -> WidgetTimelineEvaluation<Entry> {
+        try WidgetTimelineValidation.evaluate(timeline)
+    }
+}
+
+/// Synchronous timeline checks. Linux has no `chronod` queue; hosts and
+/// sealed tests call this directly instead of hopping through an actor.
+@_spi(OpenUIKitHost)
+public enum WidgetTimelineValidation {
+    public static func evaluate<Entry: TimelineEntry>(
+        _ timeline: Timeline<Entry>
+    ) throws -> WidgetTimelineEvaluation<Entry> {
         guard let first = timeline.entries.first,
               let last = timeline.entries.last else {
             throw WidgetTimelineRuntimeError.emptyTimeline
@@ -426,6 +437,24 @@ public actor WidgetTimelineRuntime {
             timeline: timeline,
             nextReload: nextReload
         )
+    }
+
+    /// Last entry with `date <= time`, or the first entry when `time` is
+    /// earlier than every date. Cited: Apple WidgetKit timeline rendering.
+    public static func entry<Entry: TimelineEntry>(
+        at time: Date,
+        in timeline: Timeline<Entry>
+    ) -> Entry? {
+        guard let first = timeline.entries.first else { return nil }
+        var chosen = first
+        for entry in timeline.entries {
+            if entry.date <= time {
+                chosen = entry
+            } else {
+                break
+            }
+        }
+        return chosen
     }
 }
 
@@ -595,6 +624,14 @@ public final class WidgetCenter: @unchecked Sendable {
         storage.lock.unlock()
     }
 
+    @_spi(OpenUIKitHost)
+    public func portableCurrentConfigurations() -> [WidgetInfo] {
+        currentConfigurationsSnapshot()
+    }
+
+    @_spi(OpenUIKitHost)
+    public var portableCurrentPushInfo: WidgetPushInfo? { nil }
+
     private func currentConfigurationsSnapshot() -> [WidgetInfo] {
         storage.lock.lock()
         let result = storage.configurations
@@ -624,6 +661,7 @@ public struct WidgetConfigurationDescriptor: Equatable, Sendable {
     public var supportedFamilies: [WidgetFamily]
     public var contentMarginsDisabled: Bool
     public var containerBackgroundRemovable: Bool
+    public var promptsForUserConfiguration: Bool
 
     public init(
         kind: String,
@@ -631,7 +669,8 @@ public struct WidgetConfigurationDescriptor: Equatable, Sendable {
         description: String? = nil,
         supportedFamilies: [WidgetFamily] = WidgetFamily.portableHomeScreenFamilies,
         contentMarginsDisabled: Bool = false,
-        containerBackgroundRemovable: Bool = true
+        containerBackgroundRemovable: Bool = true,
+        promptsForUserConfiguration: Bool = false
     ) {
         self.kind = kind
         self.displayName = displayName
@@ -639,6 +678,7 @@ public struct WidgetConfigurationDescriptor: Equatable, Sendable {
         self.supportedFamilies = supportedFamilies
         self.contentMarginsDisabled = contentMarginsDisabled
         self.containerBackgroundRemovable = containerBackgroundRemovable
+        self.promptsForUserConfiguration = promptsForUserConfiguration
     }
 }
 
@@ -656,7 +696,6 @@ public enum WidgetKitPortable {
     public static let reloadCapability = ReloadCapability.processLocal
 
     @_spi(OpenUIKitHost)
-    @MainActor
     public static func descriptor<T>(
         of configuration: T
     ) -> WidgetConfigurationDescriptor {
@@ -665,7 +704,6 @@ public enum WidgetKitPortable {
 }
 
 #if !canImport(SwiftUI) || OPENUIKIT_PORTABLE_SWIFTUI
-@MainActor
 public protocol WidgetConfiguration {
     associatedtype Body: WidgetConfiguration
     @WidgetConfigurationBuilder var body: Body { get }
@@ -673,7 +711,6 @@ public protocol WidgetConfiguration {
 
 extension Never: WidgetConfiguration {}
 
-@MainActor
 @resultBuilder
 public enum WidgetConfigurationBuilder {
     public static func buildExpression<Content: WidgetConfiguration>(
@@ -689,13 +726,11 @@ public enum WidgetConfigurationBuilder {
     }
 }
 
-@MainActor
 public protocol Widget {
     associatedtype Body: WidgetConfiguration
     @WidgetConfigurationBuilder var body: Body { get }
 }
 
-@MainActor
 public protocol WidgetBundle {
     associatedtype Body: Widget
     @WidgetBundleBuilder var body: Body { get }
@@ -710,7 +745,6 @@ public extension Widget {
     static func main() {}
 }
 
-@MainActor
 @resultBuilder
 public enum WidgetBundleBuilder {
     public static func buildExpression<Content: Widget>(_ content: Content) -> Content {
@@ -786,7 +820,6 @@ public enum WidgetBundleBuilder {
     }
 }
 
-@MainActor
 public struct _WidgetBundlePair<First: Widget, Second: Widget>: Widget {
     public let first: First
     public let second: Second
@@ -797,7 +830,6 @@ public struct _WidgetBundlePair<First: Widget, Second: Widget>: Widget {
 }
 #endif
 
-@MainActor
 public struct StaticConfiguration<Content: View>: @unchecked Sendable {
     @_spi(OpenUIKitHost) public let portableDescriptor: WidgetConfigurationDescriptor
     private let content: (Any) -> Content
@@ -813,7 +845,6 @@ public struct StaticConfiguration<Content: View>: @unchecked Sendable {
     }
 }
 
-@MainActor
 public struct AppIntentConfiguration<Intent, Content>: @unchecked Sendable
     where Intent: WidgetConfigurationIntent, Content: View
 {
@@ -833,7 +864,6 @@ public struct AppIntentConfiguration<Intent, Content>: @unchecked Sendable
     }
 }
 
-@MainActor
 public struct IntentConfiguration<Intent, Content>: @unchecked Sendable
     where Intent: INIntent, Content: View
 {
@@ -853,7 +883,6 @@ public struct IntentConfiguration<Intent, Content>: @unchecked Sendable
     }
 }
 
-@MainActor
 public struct _ModifiedWidgetConfiguration<Base>: @unchecked Sendable {
     public let base: Base
     @_spi(OpenUIKitHost) public let portableDescriptor: WidgetConfigurationDescriptor
@@ -949,7 +978,9 @@ public extension WidgetConfiguration {
     }
 
     func promptsForUserConfiguration() -> some WidgetConfiguration {
-        _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+        var descriptor = _portableWidgetDescriptor(self)
+        descriptor.promptsForUserConfiguration = true
+        return _ModifiedWidgetConfiguration(base: self, descriptor: descriptor)
     }
 
     func pushHandler(_ pushHandlerType: any WidgetPushHandler.Type) -> some WidgetConfiguration {
@@ -1093,7 +1124,9 @@ public extension SwiftUI.WidgetConfiguration {
     }
 
     func promptsForUserConfiguration() -> some SwiftUI.WidgetConfiguration {
-        _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+        var descriptor = _portableWidgetDescriptor(self)
+        descriptor.promptsForUserConfiguration = true
+        return _ModifiedWidgetConfiguration(base: self, descriptor: descriptor)
     }
 
     func pushHandler(_ pushHandlerType: any WidgetPushHandler.Type) -> some SwiftUI.WidgetConfiguration {
@@ -1162,7 +1195,6 @@ public extension SwiftUI.Widget {
 }
 #endif
 
-@MainActor
 private func _portableWidgetDescriptor<T>(_ value: T) -> WidgetConfigurationDescriptor {
     if let configuration = value as? any _PortableConfigurationDescriptorProvider {
         return configuration._portableDescriptor
@@ -1170,7 +1202,6 @@ private func _portableWidgetDescriptor<T>(_ value: T) -> WidgetConfigurationDesc
     return WidgetConfigurationDescriptor(kind: String(reflecting: T.self))
 }
 
-@MainActor
 protocol _PortableConfigurationDescriptorProvider {
     var _portableDescriptor: WidgetConfigurationDescriptor { get }
 }
@@ -1318,45 +1349,117 @@ private enum _SupportedActivityFamiliesEnvironmentKey: EnvironmentKey {
     static let defaultValue = Set<ActivityFamily>()
 }
 
+/// Host-visible chrome applied by WidgetKit `View` modifiers. Linux does not
+/// render widgets; these values are data a platform host can read.
+@_spi(OpenUIKitHost)
+public struct WidgetChromeAnnotations: Equatable, Sendable {
+    public var widgetURL: URL?
+    public var widgetLabel: String?
+    public var widgetAccentable: Bool?
+    public var widgetCurvesContent: Bool?
+
+    public init(
+        widgetURL: URL? = nil,
+        widgetLabel: String? = nil,
+        widgetAccentable: Bool? = nil,
+        widgetCurvesContent: Bool? = nil
+    ) {
+        self.widgetURL = widgetURL
+        self.widgetLabel = widgetLabel
+        self.widgetAccentable = widgetAccentable
+        self.widgetCurvesContent = widgetCurvesContent
+    }
+
+    public mutating func merge(_ other: WidgetChromeAnnotations) {
+        if other.widgetURL != nil { widgetURL = other.widgetURL }
+        if other.widgetLabel != nil { widgetLabel = other.widgetLabel }
+        if other.widgetAccentable != nil { widgetAccentable = other.widgetAccentable }
+        if other.widgetCurvesContent != nil { widgetCurvesContent = other.widgetCurvesContent }
+    }
+}
+
+protocol _WidgetChromeInspectable {
+    var _chromeAnnotations: WidgetChromeAnnotations { get }
+}
+
+@_spi(OpenUIKitHost)
+public struct _WidgetChromeView<Content: View>: View {
+    public var content: Content
+    public var annotations: WidgetChromeAnnotations
+
+    public init(content: Content, annotations: WidgetChromeAnnotations) {
+        self.content = content
+        self.annotations = annotations
+    }
+
+    public var body: some View { content }
+}
+
+extension _WidgetChromeView: _WidgetChromeInspectable {
+    var _chromeAnnotations: WidgetChromeAnnotations {
+        var combined = WidgetChrome.annotations(of: content)
+        combined.merge(annotations)
+        return combined
+    }
+}
+
+@_spi(OpenUIKitHost)
+public enum WidgetChrome {
+    public static func annotations<V: View>(of view: V) -> WidgetChromeAnnotations {
+        if let inspectable = view as? any _WidgetChromeInspectable {
+            return inspectable._chromeAnnotations
+        }
+        return WidgetChromeAnnotations()
+    }
+}
+
+private enum _WidgetChromeWriter {
+    static func wrapping<V: View>(
+        _ view: V,
+        _ annotations: WidgetChromeAnnotations
+    ) -> _WidgetChromeView<V> {
+        _WidgetChromeView(content: view, annotations: annotations)
+    }
+}
+
 public extension View {
     func widgetURL(_ url: URL?) -> some View {
-        _ = url
-        return self
+        _WidgetChromeWriter.wrapping(self, WidgetChromeAnnotations(widgetURL: url))
     }
 
     func widgetAccentable(_ accentable: Bool = true) -> some View {
-        _ = accentable
-        return self
+        _WidgetChromeWriter.wrapping(self, WidgetChromeAnnotations(widgetAccentable: accentable))
     }
 
     func widgetCurvesContent(_ curves: Bool = true) -> some View {
-        _ = curves
-        return self
+        _WidgetChromeWriter.wrapping(self, WidgetChromeAnnotations(widgetCurvesContent: curves))
     }
 
     func widgetLabel<Label: View>(@ViewBuilder label: () -> Label) -> some View {
-        _ = label
-        return self
+        let built = label()
+        let text: String
+        if let titled = built as? Text {
+            text = titled.content
+        } else {
+            text = String(describing: type(of: built))
+        }
+        return _WidgetChromeWriter.wrapping(self, WidgetChromeAnnotations(widgetLabel: text))
     }
 
     func widgetLabel(_ title: Text) -> some View {
-        _ = title
-        return self
+        _WidgetChromeWriter.wrapping(self, WidgetChromeAnnotations(widgetLabel: title.content))
     }
 
     func widgetLabel(_ titleKey: LocalizedStringKey) -> some View {
-        _ = titleKey
-        return self
+        _WidgetChromeWriter.wrapping(self, WidgetChromeAnnotations(widgetLabel: titleKey.key))
     }
 
     func widgetLabel(_ title: LocalizedStringResource) -> some View {
-        _ = title
-        return self
+        _WidgetChromeWriter.wrapping(self, WidgetChromeAnnotations(widgetLabel: title.key))
     }
 
     func widgetLabel<S: StringProtocol>(_ title: S) -> some View {
-        _ = title
-        return self
+        _WidgetChromeWriter.wrapping(self, WidgetChromeAnnotations(widgetLabel: String(title)))
     }
 
     func controlWidgetActionHint(_ hint: Text) -> some View {
