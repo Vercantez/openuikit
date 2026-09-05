@@ -89,10 +89,37 @@ compute/blit subset apps use. There is no GPU.
 - Value objects: samplers, heaps (bump allocator), fences, events,
   geometry helpers, pixel-format / resource-option semantics.
 
-Coverage after this pass (4547 public IDs): **implemented 1636** /
-**declared 573** / **deferred 2335** / **unavailable 3**. Device, buffer,
-texture, queue, command-buffer, blit, render-pass-clear, and descriptor
-families used by the CPU executor are nondeferred.
+Coverage ledger repair (merge evidence form): the refused revision at
+`49dd3e06` had **implemented 1636** / declared 573 / deferred 2335 /
+unavailable 3, but every implemented row cited `full/metal/*.swift` rather
+than a focused `test*` function.
+
+After splitting `tests/agent/*Tests.swift` and reciting the ledger:
+
+| Status | Before (`49dd3e06`) | After |
+| --- | ---: | ---: |
+| implemented | 1636 | 1991 |
+| declared | 573 | 389 |
+| deferred | 2335 | 2164 |
+| unavailable | 3 | 3 |
+
+Implemented rows now use `test:full/metal/tests/agent/<File>Tests.swift#testName`.
+Rows without a real test are `declared` with
+`source:full/metal/<file>.swift#Symbol` when the type exists in guest
+sources, otherwise deferred.
+
+Top-5 implemented evidence distribution (of 1991):
+
+1. `MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues` — 1313 (enum / option-set / C constant table)
+2. `MetalDescriptorTests.swift#testDescriptorValueSemantics` — 222
+3. `MetalGeometryTests.swift#testGeometryHelpers` — 95
+4. `MetalRenderTests.swift#testRenderPassClearAndLoad` — 61
+5. `MetalComputeTests.swift#testCPUBuiltinCompute` — 60
+
+No non-table test exceeds 40% of the remaining 678 implemented rows
+(cap 271; largest family test is 222). Device, buffer, texture, queue,
+command-buffer, blit, render-pass-clear, and descriptor families used by
+the CPU executor stay nondeferred where a focused test exercises them.
 
 ### Fail-closed boundaries (depth)
 
@@ -116,11 +143,12 @@ METAL_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=Metal dylib=libMetal.dylib
 ```
 
-Agent runtime (`tests/agent/MetalRuntime.swift`) exercises geometry, the six
-documented texture formats, box-filter mipgen (2×2 rgba8Unorm → level-1
-average 85), blit fill/copy, builtin fill/add/copy kernels, render-pass
-clear to red and load-preserve, heap/event/fence, library compileFailure,
-capture fail-closed, argument encoder, and ICB `nil`.
+Agent runtime (`tests/agent/MetalRuntime.swift`) is the sealed v1 runner: it
+inlines the `test*` functions from `*Tests.swift` and prints
+`METAL_AGENT_RUNTIME_OK`. Focused files cover geometry, enum/option-set
+raw values, the six documented texture formats, box-filter mipgen, blit
+fill/copy, builtin compute kernels, render-pass clear/load, heap/event/fence,
+library compileFailure, capture fail-closed, argument encoder, and ICB `nil`.
 
 The sealed gate does not print the Swift environment marker; that line is
 produced by `.cursor/verify-cloud-environment.sh` / the Swift 6.2.4 linux
