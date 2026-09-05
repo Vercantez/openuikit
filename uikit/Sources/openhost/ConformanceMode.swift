@@ -182,20 +182,21 @@ func runConformanceScripted(_ scene: HostScene, app: String,
         let t = ConformanceClock.time(of: frame)
         OpenUIKitRuntime.animationTime = t
         scene.window.tick(timestamp: t)
-        // At equal frames an action runs before a capture, as in runScripted
-        // and confprobe's display-link tick.
+        // At equal frames a capture runs before an action: Pager t400 is
+        // the rest tick (frame 0), then setViewControllers so the private
+        // updater's first motion is vsync 1 (pager-clock probe).
+        while nextCapture < sortedCaptures.count, captureFrames[nextCapture] <= frame {
+            let ct = sortedCaptures[nextCapture]
+            written.append(try captureConformance(scene, app: app, t: ct,
+                                                  frame: frame, outdir: outdir))
+            nextCapture += 1
+        }
         while nextStep < sortedSteps.count, stepFrames[nextStep] <= frame {
             let step = sortedSteps[nextStep]
             print("action: \(step.action) t=\(fmt3(step.t)) frame=\(frame)")
             perform(step.action)
             scene.window.layoutIfNeeded()
             nextStep += 1
-        }
-        while nextCapture < sortedCaptures.count, captureFrames[nextCapture] <= frame {
-            let ct = sortedCaptures[nextCapture]
-            written.append(try captureConformance(scene, app: app, t: ct,
-                                                  frame: frame, outdir: outdir))
-            nextCapture += 1
         }
         frame += 1
     }
