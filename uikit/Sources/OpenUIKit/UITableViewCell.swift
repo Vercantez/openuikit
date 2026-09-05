@@ -398,8 +398,13 @@ open class UITableViewCell: UIView, ReusableView {
     /// `SwitchCell.layoutMargins` and its content view's are [15, 20, 15, 20]
     /// on the iPhone 16 (393 pt) and [15, 16, 15, 16] on the SE (375 pt) —
     /// the same 390 pt threshold `UITableView.iOSSystemMargin` already
-    /// carries, confirmed here on a second view class. Pad (A16) 820 pt is
-    /// 16, not that 20 — see `iOSMargin`.
+    /// carries, confirmed here on a second view class. Pad (A16) 820 pt
+    /// stays **16** (`iOSPadCellMargin` / `iOSMargin`): SwitchCell switch
+    /// at x 741 = 820 − 16 − 63, `layoutMargins` `[15, 16, 15, 16]`.
+    /// Forms-ipad t200 fields sit at x 20 against `layoutMarginsGuide`;
+    /// flipping this default to 20 dropped `realapp_storage_light_ipad`
+    /// 99.689 → 99.554. Two samples disagree; the xib oracle wins and
+    /// Forms-ipad x=20 stays OPEN.
     override var _defaultBaseLayoutMargins: UIEdgeInsets {
         UIEdgeInsets(top: 15, left: trailingMargin, bottom: 15, right: trailingMargin)
     }
