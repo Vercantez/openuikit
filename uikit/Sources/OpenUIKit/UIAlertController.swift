@@ -59,6 +59,9 @@ public enum UIAlertMetrics {
     /// Card width. Constant across every probed configuration on a 393 pt
     /// window.
     public static let cardWidth: CGFloat = 320
+    /// MEASURED Modal-ipad t7200, iPad (A16) 820×1180 @2x / iOS 26.1:
+    /// `_UIPopoverView` width **288**; pills 256 = 288 − 2×16. Phone stays 320.
+    public static let iOSPadActionSheetPopoverWidth: CGFloat = 288
     public static let cardCornerRadius: CGFloat = 34
 
     /// Title/message inset from the card's sides (measured 30; label width
@@ -376,10 +379,25 @@ open class UIAlertController: UIViewController {
 
     // MARK: Layout (all constants measured — see the file header)
 
+    /// Pad regular-width action sheet is a popover, not the 320 pt phone card.
+    /// MEASURED Modal-ipad t7200, iPad (A16) 820×1180 @2x / iOS 26.1:
+    /// `_UIPopoverView [266, 466, 288, 248]`, cancel dropped (4 pills).
+    var isPadActionSheetPopover: Bool {
+        OpenUIKitRuntime.systemFontCut == .iOS
+            && preferredStyle == .actionSheet
+            && (UITraitCollection.current.userInterfaceIdiom == .pad
+                || UIDevice.current.userInterfaceIdiom == .pad)
+    }
+
     /// The order the pills are laid out in, which is NOT the order actions
     /// were added: MEASURED, the cancel action goes LEFT in a two-up row and
-    /// LAST in a vertical stack.
+    /// LAST in a vertical stack. Pad action-sheet popovers drop cancel
+    /// (Modal-ipad t7200; same as the phone probe that touched
+    /// `popoverPresentationController`).
     var _layoutOrderedActions: [UIAlertAction] {
+        if isPadActionSheetPopover {
+            return actions.filter { $0.style != .cancel }
+        }
         guard let cancelIndex = actions.firstIndex(where: { $0.style == .cancel })
         else { return actions }
         var rest = actions
@@ -388,8 +406,8 @@ open class UIAlertController: UIViewController {
     }
 
     /// Number of lines `text` wraps to inside the card's text column.
-    func _lineCount(_ text: String, font: UIFont) -> Int {
-        let width = UIAlertMetrics.cardWidth - 2 * UIAlertMetrics.textInsetX
+    func _lineCount(_ text: String, font: UIFont, cardWidth: CGFloat) -> Int {
+        let width = cardWidth - 2 * UIAlertMetrics.textInsetX
         return Swift.max(1, TextLayout.wrap(text, font: font, maxWidth: width,
                                             maxLines: 0).count)
     }
@@ -418,7 +436,8 @@ open class UIAlertController: UIViewController {
                 let text = hasTitle ? title! : message!
                 let f = UIAlertMetrics.soloFont
                 let h = UIAlertMetrics.titleLineHeight
-                    + CGFloat(_lineCount(text, font: f) - 1) * UIAlertMetrics.titleLinePitch
+                    + CGFloat(_lineCount(text, font: f, cardWidth: width) - 1)
+                    * UIAlertMetrics.titleLinePitch
                 card.addSubview(_makeLabel(text, font: f, color: .label,
                                            alignment: .center,
                                            frame: CGRect(x: inset, y: y,
@@ -427,7 +446,8 @@ open class UIAlertController: UIViewController {
             } else {
                 let tf = UIAlertMetrics.titleFont
                 let th = UIAlertMetrics.titleLineHeight
-                    + CGFloat(_lineCount(title!, font: tf) - 1) * UIAlertMetrics.titleLinePitch
+                    + CGFloat(_lineCount(title!, font: tf, cardWidth: width) - 1)
+                    * UIAlertMetrics.titleLinePitch
                 card.addSubview(_makeLabel(title!, font: tf, color: .label,
                                            alignment: .left,
                                            frame: CGRect(x: inset, y: y,
@@ -435,7 +455,8 @@ open class UIAlertController: UIViewController {
                 y += th + UIAlertMetrics.titleMessageGap
                 let mf = UIAlertMetrics.messageFont
                 let mh = UIAlertMetrics.messageLineHeight
-                    + CGFloat(_lineCount(message!, font: mf) - 1) * UIAlertMetrics.messageLinePitch
+                    + CGFloat(_lineCount(message!, font: mf, cardWidth: width) - 1)
+                    * UIAlertMetrics.messageLinePitch
                 card.addSubview(_makeLabel(message!, font: mf, color: .secondaryLabel,
                                            alignment: .left,
                                            frame: CGRect(x: inset, y: y,
@@ -561,6 +582,8 @@ final class _UIAlertPresentationController: UIPresentationController {
     /// are built once.
     private var cachedFrame: CGRect?
 
+    var isPadActionSheetPopover: Bool { alert?.isPadActionSheetPopover == true }
+
     /// Vertical band the card is centred in. MEASURED Modal t5200/t7200,
     /// iPhone SE 2x / iOS 26.1, window SA [0,0,0,0]: the 264-pt alert sits
     /// at y 201.5 and the 304-pt action sheet at y 181.5 — both centred
@@ -576,28 +599,61 @@ final class _UIAlertPresentationController: UIPresentationController {
         return (top, c.bounds.height - bottomInset)
     }
 
-    /// MEASURED: 320 wide, centred horizontally, centred in the SAFE AREA
+    /// Phone: 320 wide, centred horizontally, centred in the SAFE AREA
     /// vertically (not in the container) — except on a zero-SA SE window,
     /// where the band IS the container (see `verticalSafeBand`).
+    /// Pad action sheet: MEASURED Modal-ipad t7200, iPad (A16) 820×1180
+    /// @2x / iOS 26.1: `_UIPopoverView [266, 466, 288, 248]` centred on
+    /// `sourceRect` (view mid 410, 590), not the 320×304 phone card at
+    /// `[250, 441.5]`.
     override var frameOfPresentedViewInContainerView: CGRect {
         if let cachedFrame { return cachedFrame }
         guard let c = containerView, let alert else { return .zero }
-        let w = UIAlertMetrics.cardWidth
+        let w = isPadActionSheetPopover
+            ? UIAlertMetrics.iOSPadActionSheetPopoverWidth : UIAlertMetrics.cardWidth
         let h = alert._layoutCard(width: w)
-        let (top, bottom) = Self.verticalSafeBand(in: c)
-        let f = CGRect(x: ((c.bounds.width - w) / 2),
+        let f: CGRect
+        if isPadActionSheetPopover {
+            f = Self.padActionSheetFrame(alert: alert, in: c,
+                                         size: CGSize(width: w, height: h))
+        } else {
+            let (top, bottom) = Self.verticalSafeBand(in: c)
+            f = CGRect(x: ((c.bounds.width - w) / 2),
                        y: (top + bottom) / 2 - h / 2, width: w, height: h)
+        }
         cachedFrame = f
         return f
+    }
+
+    /// MEASURED Modal-ipad t7200: origin = sourceRect.origin − size/2
+    /// (410 − 144 = 266, 590 − 124 = 466). Modal stores the view mid as
+    /// a 1×1 `sourceRect` origin; using the 1×1's own mid is 0.5 pt off.
+    static func padActionSheetFrame(alert: UIAlertController, in c: UIView,
+                                    size: CGSize) -> CGRect {
+        var center = CGPoint(x: c.bounds.midX, y: c.bounds.midY)
+        if let popover = alert._popoverController, let source = popover.sourceView {
+            let origin = source.convert(popover.sourceRect.origin, to: c)
+            center = origin
+        }
+        return CGRect(x: center.x - size.width / 2,
+                      y: center.y - size.height / 2,
+                      width: size.width, height: size.height)
     }
 
     override func presentationTransitionWillBegin() {
         guard let container = containerView else { return }
         dim.frame = container.bounds
         dim.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        dim.backgroundColor = .black
-        dim.alpha = container.traitCollection.userInterfaceStyle == .dark
-            ? UIAlertMetrics.dimAlphaDark : UIAlertMetrics.dimAlphaLight
+        // MEASURED Modal-ipad t7200: `_UIPopoverDimmingView` bg `[0,0,0,0]`.
+        // Phone alerts keep black at 0.2 / 0.48.
+        if isPadActionSheetPopover {
+            dim.backgroundColor = .clear
+            dim.alpha = 0
+        } else {
+            dim.backgroundColor = .black
+            dim.alpha = container.traitCollection.userInterfaceStyle == .dark
+                ? UIAlertMetrics.dimAlphaDark : UIAlertMetrics.dimAlphaLight
+        }
         container.addSubview(dim)
 
         presentedViewController.loadViewIfNeeded()
@@ -607,13 +663,15 @@ final class _UIAlertPresentationController: UIPresentationController {
         card.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin,
                                  .flexibleTopMargin, .flexibleBottomMargin]
 
-        let spill = UIAlertMetrics.shadowSpill
-        shadow.frame = frame.insetBy(dx: -spill, dy: -spill)
-        shadow.cardRect = CGRect(x: spill, y: spill,
-                                 width: frame.width, height: frame.height)
-        shadow.autoresizingMask = card.autoresizingMask
-        shadow.setNeedsDisplay()
-        container.addSubview(shadow)
+        if !isPadActionSheetPopover {
+            let spill = UIAlertMetrics.shadowSpill
+            shadow.frame = frame.insetBy(dx: -spill, dy: -spill)
+            shadow.cardRect = CGRect(x: spill, y: spill,
+                                     width: frame.width, height: frame.height)
+            shadow.autoresizingMask = card.autoresizingMask
+            shadow.setNeedsDisplay()
+            container.addSubview(shadow)
+        }
         container.addSubview(card)
     }
 
