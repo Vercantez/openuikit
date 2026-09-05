@@ -39,6 +39,13 @@ open class HKSourceRevision: NSObject, NSCopying, NSSecureCoding, @unchecked Sen
     public let productType: String?
     public let operatingSystemVersion: OperatingSystemVersion
 
+    public convenience init(
+        source: HKSource,
+        version: String?
+    ) {
+        self.init(source: source, version: version, productType: nil)
+    }
+
     public init(
         source: HKSource,
         version: String?,
@@ -149,8 +156,8 @@ open class HKDevice: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
 
 open class HKObject: NSObject, NSSecureCoding, @unchecked Sendable {
     public static var supportsSecureCoding: Bool { true }
-    public let uuid: UUID
-    public let sourceRevision: HKSourceRevision
+    public private(set) var uuid: UUID
+    public private(set) var sourceRevision: HKSourceRevision
     public let device: HKDevice?
     public let metadata: [String: Any]?
 
@@ -165,6 +172,11 @@ open class HKObject: NSObject, NSSecureCoding, @unchecked Sendable {
         self.device = device
         self.metadata = metadata
         super.init()
+    }
+
+    func replaceIdentity(uuid: UUID, sourceRevision: HKSourceRevision) {
+        self.uuid = uuid
+        self.sourceRevision = sourceRevision
     }
 
     public var source: HKSource { sourceRevision.source }
@@ -216,6 +228,55 @@ open class HKQuantitySample: HKSample, @unchecked Sendable {
     public let quantity: HKQuantity
     public var count: Int { 1 }
 
+    public convenience init(
+        type quantityType: HKQuantityType,
+        quantity: HKQuantity,
+        start startDate: Date,
+        end endDate: Date
+    ) {
+        self.init(type: quantityType, quantity: quantity, start: startDate, end: endDate, device: nil, metadata: nil)
+    }
+
+    public convenience init(
+        type quantityType: HKQuantityType,
+        quantity: HKQuantity,
+        startDate: Date,
+        endDate: Date
+    ) {
+        self.init(type: quantityType, quantity: quantity, start: startDate, end: endDate)
+    }
+
+    public convenience init(
+        type quantityType: HKQuantityType,
+        quantity: HKQuantity,
+        start startDate: Date,
+        end endDate: Date,
+        metadata: [String: Any]?
+    ) {
+        self.init(type: quantityType, quantity: quantity, start: startDate, end: endDate, device: nil, metadata: metadata)
+    }
+
+    public convenience init(
+        type quantityType: HKQuantityType,
+        quantity: HKQuantity,
+        startDate: Date,
+        endDate: Date,
+        metadata: [String: Any]?
+    ) {
+        self.init(type: quantityType, quantity: quantity, start: startDate, end: endDate, metadata: metadata)
+    }
+
+    public convenience init(
+        type quantityType: HKQuantityType,
+        quantity: HKQuantity,
+        startDate: Date,
+        endDate: Date,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init(type: quantityType, quantity: quantity, start: startDate, end: endDate, device: device, metadata: metadata)
+    }
+
     public init(
         type: HKQuantityType,
         quantity: HKQuantity,
@@ -246,6 +307,46 @@ open class HKCategorySample: HKSample, @unchecked Sendable {
     public let categoryType: HKCategoryType
     public let value: Int
 
+    public convenience init(
+        type: HKCategoryType,
+        value: Int,
+        startDate: Date,
+        endDate: Date
+    ) {
+        self.init(type: type, value: value, start: startDate, end: endDate)
+    }
+
+    public convenience init(
+        type: HKCategoryType,
+        value: Int,
+        startDate: Date,
+        endDate: Date,
+        metadata: [String: Any]?
+    ) {
+        self.init(type: type, value: value, start: startDate, end: endDate, metadata: metadata)
+    }
+
+    public convenience init(
+        type: HKCategoryType,
+        value: Int,
+        start startDate: Date,
+        end endDate: Date,
+        metadata: [String: Any]?
+    ) {
+        self.init(type: type, value: value, start: startDate, end: endDate, device: nil, metadata: metadata)
+    }
+
+    public convenience init(
+        type: HKCategoryType,
+        value: Int,
+        startDate: Date,
+        endDate: Date,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init(type: type, value: value, start: startDate, end: endDate, device: device, metadata: metadata)
+    }
+
     public init(
         type: HKCategoryType,
         value: Int,
@@ -275,6 +376,46 @@ open class HKCategorySample: HKSample, @unchecked Sendable {
 open class HKCorrelation: HKSample, @unchecked Sendable {
     public let correlationType: HKCorrelationType
     public let objects: Set<HKSample>
+
+    public convenience init(
+        type correlationType: HKCorrelationType,
+        startDate: Date,
+        endDate: Date,
+        objects: Set<HKSample>
+    ) {
+        self.init(type: correlationType, start: startDate, end: endDate, objects: objects)
+    }
+
+    public convenience init(
+        type correlationType: HKCorrelationType,
+        startDate: Date,
+        endDate: Date,
+        objects: Set<HKSample>,
+        metadata: [String: Any]?
+    ) {
+        self.init(type: correlationType, start: startDate, end: endDate, objects: objects, metadata: metadata)
+    }
+
+    public convenience init(
+        type correlationType: HKCorrelationType,
+        start startDate: Date,
+        end endDate: Date,
+        objects: Set<HKSample>,
+        metadata: [String: Any]?
+    ) {
+        self.init(type: correlationType, start: startDate, end: endDate, objects: objects, device: nil, metadata: metadata)
+    }
+
+    public convenience init(
+        type correlationType: HKCorrelationType,
+        startDate: Date,
+        endDate: Date,
+        objects: Set<HKSample>,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init(type: correlationType, start: startDate, end: endDate, objects: objects, device: device, metadata: metadata)
+    }
 
     public init(
         type: HKCorrelationType,
@@ -328,6 +469,27 @@ open class HKDeletedObject: NSObject, NSSecureCoding, @unchecked Sendable {
 
 open class HKSeriesSample: HKSample, @unchecked Sendable {
     public var count: Int { 0 }
+
+    public override init(
+        type: HKSampleType,
+        start startDate: Date,
+        end endDate: Date,
+        uuid: UUID = UUID(),
+        sourceRevision: HKSourceRevision = HKSourceRevision(source: .default(), version: nil),
+        device: HKDevice? = nil,
+        metadata: [String: Any]? = nil
+    ) {
+        super.init(
+            type: type,
+            start: startDate,
+            end: endDate,
+            uuid: uuid,
+            sourceRevision: sourceRevision,
+            device: device,
+            metadata: metadata
+        )
+    }
+
     public required init?(coder: NSCoder) { super.init(coder: coder) }
 }
 
@@ -335,5 +497,17 @@ open class HKCumulativeQuantitySample: HKQuantitySample, @unchecked Sendable {}
 open class HKDiscreteQuantitySample: HKQuantitySample, @unchecked Sendable {}
 open class HKCumulativeQuantitySeriesSample: HKCumulativeQuantitySample, @unchecked Sendable {}
 open class HKDocumentSample: HKSample, @unchecked Sendable {
+    public override init(
+        type: HKSampleType,
+        start startDate: Date,
+        end endDate: Date,
+        uuid: UUID = UUID(),
+        sourceRevision: HKSourceRevision = HKSourceRevision(source: .default(), version: nil),
+        device: HKDevice? = nil,
+        metadata: [String: Any]? = nil
+    ) {
+        super.init(type: type, start: startDate, end: endDate, uuid: uuid, sourceRevision: sourceRevision, device: device, metadata: metadata)
+    }
+
     public required init?(coder: NSCoder) { super.init(coder: coder) }
 }

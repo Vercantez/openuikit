@@ -143,7 +143,7 @@ public let HKPredicateKeyPathWorkoutTotalSwimmingStrokeCount = "HKPredicateKeyPa
 public let HKPredicateKeyPathWorkoutType = "HKPredicateKeyPathWorkoutType"
 public let HKSampleSortIdentifierEndDate = "HKSampleSortIdentifierEndDate"
 public let HKSampleSortIdentifierStartDate = "HKSampleSortIdentifierStartDate"
-public let HKSourceRevisionAnyOperatingSystem = "HKSourceRevisionAnyOperatingSystem"
+public let HKSourceRevisionAnyOperatingSystem = OperatingSystemVersion(majorVersion: 0, minorVersion: 0, patchVersion: 0)
 public let HKSourceRevisionAnyProductType = "HKSourceRevisionAnyProductType"
 public let HKSourceRevisionAnyVersion = "HKSourceRevisionAnyVersion"
 public let HKUserAnnotatedMedicationPredicateKeyPathHasSchedule = "HKUserAnnotatedMedicationPredicateKeyPathHasSchedule"
@@ -156,5 +156,4 @@ public let HKWorkoutSortIdentifierTotalEnergyBurned = "HKWorkoutSortIdentifierTo
 public let HKWorkoutSortIdentifierTotalFlightsClimbed = "HKWorkoutSortIdentifierTotalFlightsClimbed"
 public let HKWorkoutSortIdentifierTotalSwimmingStrokeCount = "HKWorkoutSortIdentifierTotalSwimmingStrokeCount"
 public let HKWorkoutTypeIdentifier = "HKWorkoutTypeIdentifier"
-public let HKAnchoredObjectQueryNoAnchor = "HKAnchoredObjectQueryNoAnchor"
-public let HKUnitMolarMassBloodGlucose = "HKUnitMolarMassBloodGlucose"
+public var HKUnitMolarMassBloodGlucose: Double { 180.15588 }

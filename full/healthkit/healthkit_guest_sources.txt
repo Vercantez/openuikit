@@ -3,10 +3,14 @@ full/healthkit/HKDeclaredSurface.swift
 full/healthkit/HKEnums.swift
 full/healthkit/HKHealthStore.swift
 full/healthkit/HKIdentifiers.swift
+full/healthkit/HKPortable.swift
 full/healthkit/HKQuantity.swift
 full/healthkit/HKQuery.swift
+full/healthkit/HKQueryDescriptors.swift
 full/healthkit/HKSamples.swift
+full/healthkit/HKStatistics.swift
 full/healthkit/HKTypes.swift
 full/healthkit/HKUnit.swift
 full/healthkit/HKWorkout.swift
+full/healthkit/HKWorkoutBuilder.swift
 full/healthkit/HealthKit.swift
