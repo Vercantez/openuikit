@@ -218,7 +218,8 @@ func captureConformance(_ scene: HostScene, app: String, t: Double,
                         contentSize: String,
                         outdir: String) throws -> String {
     scene.window.layoutIfNeeded()
-    let bmp = UIRenderer.render(scene.window, scale: scene.scale)
+    let bmp = _UIKeyboardChrome.renderCapture(appWindow: scene.window,
+                                            scale: scene.scale)
     let suffix = ConformanceClock.captureSuffix(for: t, style: style,
                                                direction: direction,
                                                contentSize: contentSize)

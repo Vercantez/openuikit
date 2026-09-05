@@ -22,6 +22,14 @@
 //                            geometry (pframe / pabs / popacity) and the
 //                            CADisplayLink timestamp of this capture
 //
+// A capture whose window has a UIKeyInput first responder is a
+// `simctl io screenshot` (NEED_SHOT / GOT_SHOT), not drawHierarchy: the
+// software keyboard is a remote process and drawHierarchy of the app
+// window is blank there (kbprobe, iPhone SE 2x / iOS 26.1,
+// UITextEffectsWindow snapOpaquePixels=0). Unfocused captures stay
+// drawHierarchy so they do not move. Both paths re-encode through
+// normalizedSRGB.
+//
 // `openhost --app <app> --script ... --record ...` writes the same file names
 // with the same keys at the same 60 Hz FRAME INDEX and the same scale
 // (Sources/openhost/ConformanceMode.swift); scripts/conformance_flow.sh
@@ -732,26 +740,114 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         ])
     }
 
-    func capture(at t: Double, frame: Int, link: CADisplayLink,
+    func viewHasKeyInputFirstResponder(_ v: UIView) -> Bool {
+        if v.isFirstResponder, v is UIKeyInput { return true }
+        for s in v.subviews {
+            if viewHasKeyInputFirstResponder(s) { return true }
+        }
+        return false
+    }
+
+    /// Keyboard chrome lives in UITextEffectsWindow, not the app window.
+    /// Tabs t4000: UISearchBarTextField.isEditing is false while search is
+    /// active and the remote keyboard is up (drawHierarchy of the app window
+    /// is blank there — kbprobe snapOpaquePixels=0). Detect the container
+    /// rather than isEditing so focus-search captures screenshot.
+    func className(_ v: Any) -> String { String(describing: type(of: v)) }
+
+    func treeHasRemoteKeyboard(_ v: UIView) -> Bool {
+        let n = className(v)
+        if n == "UIKeyboardItemContainerView" || n == "_UIRemoteKeyboardPlaceholderView" {
+            return v.bounds.height > 1 && !v.isHidden
+        }
+        for s in v.subviews {
+            if treeHasRemoteKeyboard(s) { return true }
+        }
+        return false
+    }
+
+    func keyboardIsOnScreen() -> Bool {
+        if let w = window, viewHasKeyInputFirstResponder(w) { return true }
+        var seen: [ObjectIdentifier] = []
+        var list: [UIWindow] = UIApplication.shared.windows
+        for scene in UIApplication.shared.connectedScenes {
+            if let ws = scene as? UIWindowScene {
+                list.append(contentsOf: ws.windows)
+            }
+        }
+        for w in list {
+            let id = ObjectIdentifier(w)
+            var known = false
+            for s in seen { if s == id { known = true; break } }
+            if known { continue }
+            seen.append(id)
+            let n = className(w)
+            if n == "UITextEffectsWindow" || n == "UIRemoteKeyboardWindow" {
+                if treeHasRemoteKeyboard(w) { return true }
+            }
+            if treeHasRemoteKeyboard(w) { return true }
+        }
+        return false
+    }
+
+/// The software keyboard lives in a remote process (UITextEffectsWindow
+/// hosts `_UIRemoteKeyboardPlaceholderView`). drawHierarchy of the app
+/// window is blank there (kbprobe snapOpaquePixels=0). A focused
+/// UIKeyInput capture therefore takes a `simctl io screenshot` via the
+/// NEED_SHOT / GOT_SHOT handshake in conformance_probe_sim.sh, then the
+/// same sRGB re-encode. Unfocused captures stay drawHierarchy so they do
+/// not move.
+func waitForFramebufferShot(named pngName: String) -> UIImage? {
+    let needPath = docsDir + "/NEED_SHOT"
+    let gotPath = docsDir + "/GOT_SHOT"
+    let shotPath = docsDir + "/" + pngName
+    try? FileManager.default.removeItem(atPath: gotPath)
+    try? pngName.write(toFile: needPath, atomically: true, encoding: .utf8)
+    var img: UIImage?
+    for _ in 0..<200 {
+        if FileManager.default.fileExists(atPath: gotPath) {
+            img = UIImage(contentsOfFile: shotPath)
+            break
+        }
+        Thread.sleep(forTimeInterval: 0.05)
+    }
+    try? FileManager.default.removeItem(atPath: gotPath)
+    try? FileManager.default.removeItem(atPath: needPath)
+    return img
+}
+
+func capture(at t: Double, frame: Int, link: CADisplayLink,
                  sampleElapsed: Double?, springBegin: CFTimeInterval?) {
         guard let w = window else { return }
         // Layout dump FIRST: presentation() is this display-link tick.
         // drawHierarchy can stall ~40 ms and would otherwise sample a later
         // vsync (navprobe: stamp with link.timestamp, not CACurrentMediaTime).
+        // The dump stays the APP window: key-cap UILabels must not appear
+        // in views[] (compare matches on `text`).
         var views: [[String: Any]] = []
         dumpLayout(w, path: "", absOrigin: .zero, pAbsOrigin: .zero, into: &views)
 
-        let fmt = UIGraphicsImageRendererFormat()
-        fmt.scale = UIScreen.main.scale
-        // .extended keeps the private glass materials the bar platters and
-        // the sheet are made of; .standard drops them (measured, see
-        // Tools/oracle2/simscene). opaque: the window is fully covered, so
-        // alpha is 255 everywhere and premultiplied == straight — which is
-        // what lets compare.py read these as straight-alpha goldens.
-        fmt.preferredRange = .extended
-        fmt.opaque = true
-        let img = UIGraphicsImageRenderer(bounds: w.bounds, format: fmt).image { _ in
-            w.drawHierarchy(in: w.bounds, afterScreenUpdates: false)
+        let suffix = ConformanceClock.captureSuffix(for: t, style: style,
+                                                    direction: direction,
+                                                    contentSize: contentSize)
+        let pngName = "\(appName).\(suffix).png"
+        let img: UIImage
+        if keyboardIsOnScreen(),
+           let shot = waitForFramebufferShot(named: pngName) {
+            img = shot
+        } else {
+            let fmt = UIGraphicsImageRendererFormat()
+            fmt.scale = UIScreen.main.scale
+            // .extended keeps the private glass materials the bar platters and
+            // the sheet are made of; .standard drops them (measured, see
+            // Tools/oracle2/simscene). opaque: the window is fully covered, so
+            // alpha is 255 everywhere and premultiplied == straight — which is
+            // what lets compare.py read these as straight-alpha goldens.
+            fmt.preferredRange = .extended
+            fmt.opaque = true
+            img = UIGraphicsImageRenderer(bounds: w.bounds, format: fmt).image { _ in
+                w.drawHierarchy(in: w.bounds, afterScreenUpdates: false)
+            }
         }
         // Same re-encode SimScene uses (docs/ORACLE_FLOW.md): `.extended`
         // hands back Display-P3-tagged bitmaps. Feed t200, iPhone SE 2x:
@@ -759,11 +855,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         // conversion and P3-raw (78, 121, 211) without it — 14 counts, over
         // PIXEL_TOL 6, 99.8 % of each generated card. compare.py / PIL read
         // PNG bytes without the ICC, so the golden has to be untagged sRGB.
-        let suffix = ConformanceClock.captureSuffix(for: t, style: style,
-                                                    direction: direction,
-                                                    contentSize: contentSize)
         try! normalizedSRGB(img).pngData()!.write(
-            to: URL(fileURLWithPath: "\(docsDir)/\(appName).\(suffix).png"))
+            to: URL(fileURLWithPath: "\(docsDir)/\(pngName)"))
 
         var clock: [String: Any] = [
             "frame": frame,
