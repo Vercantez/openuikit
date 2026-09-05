@@ -40,8 +40,12 @@ the reason). The climb only assigns `fail` rows.
    They cover lifecycle and interaction, which scenes cannot:
    navigation flows, table editing, forms and keyboards, collection layouts,
    modal flows, settings at every Dynamic Type size and in dark mode.
-   `scripts/conformance_flow.sh <workdir> <app>` runs one; its
-   `summary.json` feeds the scoreboard.
+   `scripts/conformance_flow.sh <workdir> <app>` runs one in light;
+   `scripts/conformance_flow.sh <workdir> <app> --dark` replays the same
+   script with `overrideUserInterfaceStyle = .dark` on the window before
+   the first capture and suffixes capture names `.dark`. A `"style"` field
+   in script.json is honoured by both confprobe and openhost. The round
+   scores `/tmp/hc-conformance-<App>` and `/tmp/hc-conformance-<App>-dark`.
 
    Adding an app is one directory (`Sources/ConformanceApps/<Name>/` with
    `<Name>App.swift` exposing `windowSize` / `makeRoot()` / `perform(_:)`,
@@ -74,8 +78,9 @@ is always measured against the iOS simulator.
 ## What a round actually reads (the false greens it has had)
 
 - `scripts/hillclimb.sh N` recaptures the iOS suite AND every app under
-  `Sources/ConformanceApps/` into `/tmp/hc-conformance-<App>` — its own
-  directories. `/tmp/conformance-<App>` belongs to the agents; rounds 3–6
+  `Sources/ConformanceApps/` into `/tmp/hc-conformance-<App>` (light) and
+  `/tmp/hc-conformance-<App>-dark` (the same script, window style dark) —
+  its own directories. `/tmp/conformance-<App>` belongs to the agents; rounds 3–6
   once scored reports agents had left there and fanned out on rows the
   merged code had already fixed. The board stamps each app's capture time
   (`conformance captured:` line); a time older than the head is stale.

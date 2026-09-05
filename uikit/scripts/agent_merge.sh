@@ -102,6 +102,13 @@ for app in Sources/ConformanceApps/*(/:t); do
   for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" ]] && { skip=""; rm -rf /tmp/agent_merge_conf-$app/golden; echo "   $app: recapturing goldens with the merged probe"; }; done
   SKIP_CAPTURE=$skip zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app $app > /tmp/agent_merge_conf-$app.log 2>&1 \
     || { echo "CONFORMANCE FLOW FAILED: $app (see /tmp/agent_merge_conf-$app.log)"; exit 9; }
+  if [[ -d /tmp/hc-conformance-$app-dark/golden ]]; then
+    rm -rf /tmp/agent_merge_conf-$app-dark; cp -r /tmp/hc-conformance-$app-dark /tmp/agent_merge_conf-$app-dark
+    skipd=1
+    for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" ]] && { skipd=""; rm -rf /tmp/agent_merge_conf-$app-dark/golden; echo "   $app-dark: recapturing goldens with the merged probe"; }; done
+    SKIP_CAPTURE=$skipd zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-dark $app --dark > /tmp/agent_merge_conf-$app-dark.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --dark (see /tmp/agent_merge_conf-$app-dark.log)"; exit 9; }
+  fi
 done
 python3 - <<'PY' || exit 9
 import json, os, glob

@@ -157,13 +157,21 @@ try MainActor.assumeIsolated {
        ConformanceApps.isRegistered(appName) {
         OpenUIKitRuntime.systemFontCut = .iOS
         let scale = scaleOverride.map { CGFloat($0) } ?? appModeDefaultScale
-        let scene = buildAppScene(appName, scaleOverride: scale)
-        let (steps, captures) = parseConformanceScript(try loadSceneFile(script))
+        let parsed = parseConformanceScript(try loadSceneFile(script))
+        // OPENUIKIT_APP_STYLE (set by conformance_flow.sh --dark) wins over
+        // the script field so a light script.json can still drive a dark
+        // timeline. Probe honours CONFPROBE_STYLE the same way.
+        let style = ConformanceClock.resolvedStyle(
+            script: parsed.style,
+            environment: ProcessInfo.processInfo.environment["OPENUIKIT_APP_STYLE"])
+        let uiStyle: UIUserInterfaceStyle = style == "dark" ? .dark : .light
+        let scene = buildAppScene(appName, scaleOverride: scale, style: uiStyle)
         try FileManager.default.createDirectory(atPath: record,
                                                 withIntermediateDirectories: true)
-        let written = try runConformanceScripted(scene, app: appName, steps: steps,
-                                                 captures: captures, outdir: record)
-        print("recorded \(written.count) captures to \(record)")
+        let written = try runConformanceScripted(scene, app: appName, steps: parsed.steps,
+                                                 captures: parsed.captures, style: style,
+                                                 outdir: record)
+        print("recorded \(written.count) captures to \(record) style=\(style)")
         exit(0)
     }
 
