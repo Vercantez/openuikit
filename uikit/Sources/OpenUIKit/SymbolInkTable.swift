@@ -12,7 +12,7 @@
 // (`/tmp/symbolink-2x-symbols-harvest`, `/tmp/symbolink-3x-symbols-harvest`):
 //   - unconfigured UIImage(systemName:) size calendar 21×17.5 at 2x
 //     (42×35 px, CGImage 34×31 at ox,oy=4,2); byte-identical to
-//     pointSize=17, weight=Regular, scale=Unspecified (73/73 names)
+//     pointSize=17, weight=Regular, scale=Unspecified (74/74 names)
 //   - tab-bar UIImageView.preferredSymbolConfiguration dumps
 //     "pointSize=18, weight=Medium, scale=Large"; calendar 29×25
 //     (58×50 px, 46×42 at 6,4) — byte-identical to the previous
@@ -117,7 +117,7 @@ public enum SymbolInkTable {
     }
 
     /// MEASURED: unconfigured UIImage(systemName:) == 17|regular|unspecified
-    /// (73/73 names, symbolinkprobe SE 2x / iPhone 16 3x / iOS 26.1).
+    /// (74/74 names, symbolinkprobe SE 2x / iPhone 16 3x / iOS 26.1).
     static func configurationKey(_ configuration: UIImage.SymbolConfiguration?) -> String? {
         guard let configuration else { return "17|regular|unspecified" }
         let size = configuration._pointSize
