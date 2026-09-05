@@ -180,6 +180,11 @@ enum _NEHostBoundary {
     static func completeNilError(_ handler: @escaping ((any Error)?) -> Void) {
         _NEOnceDelivery(handler).schedule(nil)
     }
+
+    static func completeOptionalNil(_ handler: (((any Error)?) -> Void)?) {
+        guard let handler else { return }
+        completeNilError(handler)
+    }
 }
 
 @_spi(OpenUIKitHost)

@@ -1,5 +1,8 @@
 @_spi(OpenUIKitHost) import NetworkExtension
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 private func requireVPNError(_ error: Error?, code: NEVPNError.Code) {
     guard let error = error as? NEVPNError else {
@@ -116,13 +119,20 @@ private final class PushCallDelegate: NSObject, NEAppPushDelegate {
 
 struct NetworkExtensionRuntime {
     static func main() async {
+        let storeRoot = FileManager.default.temporaryDirectory
+            .appendingPathComponent("ne-vpn-\(UUID().uuidString)", isDirectory: true)
+        NetworkExtensionHostPreferences.resetForHostTesting(rootDirectory: storeRoot)
         exerciseConstantsAndNotifications()
         exerciseAuditedRawValues()
         exerciseVPNConfiguration()
         exerciseCopying()
+        await exerciseVPNPreferenceStoreAndStatusMachine()
         await exerciseFailClosedManagers()
         await exerciseFailClosedCompletions()
         exerciseRoutesAndSettings()
+        exerciseSecureCodingRoundTrip()
+        exerciseRemainingPublicSurface()
+        await exerciseMainActorTypes()
         exerciseFilterVerdicts()
         exerciseHotspotObjects()
         await exerciseLegacyNetworkAndPackets()
@@ -303,17 +313,17 @@ struct NetworkExtensionRuntime {
 
         do {
             try manager.connection.startVPNTunnel()
-            fatalError("startVPNTunnel must fail closed")
+            fatalError("startVPNTunnel must fail closed when nothing is saved")
         } catch {
-            requireVPNError(error, code: .connectionFailed)
+            requireVPNError(error, code: .configurationInvalid)
         }
         do {
             try manager.connection.startVPNTunnel(options: [
                 NEVPNConnectionStartOptionUsername: "user" as NSString
             ])
-            fatalError("startVPNTunnel(options:) must fail closed")
+            fatalError("startVPNTunnel(options:) must fail closed when nothing is saved")
         } catch {
-            requireVPNError(error, code: .connectionFailed)
+            requireVPNError(error, code: .configurationInvalid)
         }
         manager.connection.stopVPNTunnel()
 
@@ -614,18 +624,23 @@ struct NetworkExtensionRuntime {
     }
 
     static func exerciseFailClosedManagers() async {
+        NetworkExtensionHostPreferences.resetForHostTesting(
+            rootDirectory: FileManager.default.temporaryDirectory
+                .appendingPathComponent("ne-vpn-managers-\(UUID().uuidString)", isDirectory: true)
+        )
         let vpnLoad = await awaitHostCallback { handler in
             NEVPNManager.shared().loadFromPreferences(completionHandler: handler)
         }
-        requireVPNError(vpnLoad, code: .configurationReadWriteFailed)
+        precondition(vpnLoad == nil)
+        precondition(NEVPNManager.shared().connection.status == .invalid)
 
         let allTunnels = await awaitHostCallback { handler in
             NETunnelProviderManager.loadAllFromPreferences { managers, error in
                 handler((managers, error))
             }
         }
-        precondition(allTunnels.0 == nil)
-        requireVPNError(allTunnels.1, code: .configurationReadWriteFailed)
+        precondition(allTunnels.0?.isEmpty == true)
+        precondition(allTunnels.1 == nil)
 
         let filterLoad = await awaitHostCallback { handler in
             NEFilterManager.shared().loadFromPreferences(completionHandler: handler)
@@ -726,14 +741,26 @@ struct NetworkExtensionRuntime {
     }
 
     static func exerciseFailClosedCompletions() async {
-        let vpnSave = await awaitHostCallback { handler in
+        NetworkExtensionHostPreferences.resetForHostTesting(
+            rootDirectory: FileManager.default.temporaryDirectory
+                .appendingPathComponent("ne-vpn-failclosed-\(UUID().uuidString)", isDirectory: true)
+        )
+        let vpnSaveStale = await awaitHostCallback { handler in
             NEVPNManager.shared().saveToPreferences(completionHandler: handler)
         }
-        requireVPNError(vpnSave, code: .configurationReadWriteFailed)
+        requireVPNError(vpnSaveStale, code: .configurationStale)
+        let loaded = await awaitHostCallback { handler in
+            NEVPNManager.shared().loadFromPreferences(completionHandler: handler)
+        }
+        precondition(loaded == nil)
+        let vpnSaveInvalid = await awaitHostCallback { handler in
+            NEVPNManager.shared().saveToPreferences(completionHandler: handler)
+        }
+        requireVPNError(vpnSaveInvalid, code: .configurationInvalid)
         let vpnRemove = await awaitHostCallback { handler in
             NEVPNManager.shared().removeFromPreferences(completionHandler: handler)
         }
-        requireVPNError(vpnRemove, code: .configurationReadWriteFailed)
+        precondition(vpnRemove == nil)
 
         let filterSave = await awaitHostCallback { handler in
             NEFilterManager.shared().saveToPreferences(completionHandler: handler)
@@ -854,6 +881,140 @@ struct NetworkExtensionRuntime {
         }
         precondition(datagrams.0.isEmpty)
         precondition(datagrams.1.isEmpty)
+
+        do {
+            try await NEAppProxyTCPFlow().open(withLocalEndpoint: nil)
+            fatalError("app proxy open must fail closed")
+        } catch let error as NEAppProxyFlowError {
+            precondition(error.code == .notConnected)
+        } catch {
+            fatalError("unexpected app proxy open error \(error)")
+        }
+        do {
+            try await NEAppProxyTCPFlow().open(withLocalFlowEndpoint: nil)
+            fatalError("app proxy open flow endpoint must fail closed")
+        } catch let error as NEAppProxyFlowError {
+            precondition(error.code == .notConnected)
+        } catch {
+            fatalError("unexpected app proxy open flow error \(error)")
+        }
+
+        let tcpRead = await awaitHostCallback { handler in
+            NEAppProxyTCPFlow().readData { data, error in
+                handler((data, error))
+            }
+        }
+        precondition(tcpRead.0 == nil)
+        do {
+            try await NEAppProxyTCPFlow().write(Data([0x01]))
+            fatalError("app proxy write must fail closed")
+        } catch let error as NEAppProxyFlowError {
+            precondition(error.code == .notConnected)
+        } catch {
+            fatalError("unexpected app proxy write error \(error)")
+        }
+
+        let udpFlow = NEAppProxyUDPFlow()
+        let datagramRead = await udpFlow.readDatagrams()
+        precondition(datagramRead.0 == nil)
+        do {
+            try await udpFlow.writeDatagrams([(Data([0x01]), NWHostEndpoint(hostname: "h", port: "1"))])
+            fatalError("udp writeDatagrams must fail closed")
+        } catch let error as NEAppProxyFlowError {
+            precondition(error.code == .notConnected)
+        } catch {
+            fatalError("unexpected udp write error \(error)")
+        }
+        do {
+            try await udpFlow.writeDatagrams(
+                [Data([0x01])],
+                sentBy: [NWHostEndpoint(hostname: "h", port: "1")]
+            )
+            fatalError("udp writeDatagrams sentBy must fail closed")
+        } catch let error as NEAppProxyFlowError {
+            precondition(error.code == .notConnected)
+        } catch {
+            fatalError("unexpected udp write sentBy error \(error)")
+        }
+        let udpWrite = await awaitHostCallback { handler in
+            udpFlow.writeDatagrams(
+                [(Data([0x02]), NWHostEndpoint(hostname: "h", port: "1"))],
+                completionHandler: handler
+            )
+        }
+        precondition(udpWrite != nil)
+
+        await NEAppProxyProvider().stopProxy(with: .userInitiated)
+        do {
+            try await NEDNSProxyProvider().startProxy(options: nil)
+            fatalError("dns proxy start must fail closed")
+        } catch {
+            ()
+        }
+        await NEDNSProxyProvider().stopProxy(with: .providerDisabled)
+        await NEFilterProvider().stopFilter(with: .userInitiated)
+        let controlVerdict = await NEFilterControlProvider().handleNewFlow(NEFilterFlow())
+        _ = controlVerdict
+        let remediateVerdict = await NEFilterControlProvider().handleRemediation(for: NEFilterFlow())
+        _ = remediateVerdict
+        _ = await NETunnelProvider().handleAppMessage(Data([0x00]))
+
+        do {
+            try await NEHotspotManager.shared.saveToPreferences()
+            fatalError("hotspot manager save must fail closed")
+        } catch NEHotspotManager.Error.configurationInvalid {
+            ()
+        } catch {
+            fatalError("unexpected hotspot save error \(error)")
+        }
+        do {
+            try await NEHotspotManager.shared.removeFromPreferences()
+            fatalError("hotspot manager remove must fail closed")
+        } catch {
+            ()
+        }
+        do {
+            try await NEURLFilterManager.shared.resetPIRCache()
+            fatalError("reset PIR cache must fail closed")
+        } catch let error as NEURLFilterManager.Error {
+            precondition(error == .configurationInvalid)
+        } catch {
+            fatalError("unexpected reset PIR error \(error)")
+        }
+        do {
+            try await NEURLFilterManager.shared.saveToPreferences()
+            fatalError("url filter save must fail closed")
+        } catch {
+            ()
+        }
+        do {
+            try await NEURLFilterManager.shared.refreshPIRParameters()
+            fatalError("refresh PIR must fail closed")
+        } catch {
+            ()
+        }
+        do {
+            try await NEURLFilterManager.shared.removeFromPreferences()
+            fatalError("url filter remove must fail closed")
+        } catch {
+            ()
+        }
+        _ = NEURLFilterManager.shared.handleConfigChange()
+        _ = NEURLFilterManager.shared.handleStatusChange()
+        _ = await NEURLFilterManager.shared.lastDisconnectError
+
+        let multi = await awaitHostCallback { handler in
+            NWUDPSession(endpoint: NWHostEndpoint(hostname: "h", port: "1"))
+                .writeMultipleDatagrams([Data([0x01])], completionHandler: handler)
+        }
+        precondition(multi != nil)
+
+        let allProxyManagers = await awaitHostCallback { handler in
+            NEAppProxyProviderManager.loadAllFromPreferences { managers, error in
+                handler((managers, error))
+            }
+        }
+        _ = allProxyManagers
     }
 
     static func exerciseRoutesAndSettings() {
@@ -1021,6 +1182,16 @@ struct NetworkExtensionRuntime {
             requireVPNError(error, code: .connectionFailed)
         }
         do {
+            let invalidV4 = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "203.0.113.1")
+            invalidV4.ipv4Settings = NEIPv4Settings(addresses: ["10.0.0.1"], subnetMasks: [])
+            try await provider.setTunnelNetworkSettings(invalidV4)
+            fatalError("mismatched IPv4 settings must be invalid")
+        } catch let error as NETunnelProviderError {
+            precondition(error.code == .networkSettingsInvalid)
+        } catch {
+            fatalError("unexpected tunnel settings error \(error)")
+        }
+        do {
             try await provider.setTunnelNetworkSettings(
                 NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "203.0.113.1")
             )
@@ -1097,6 +1268,825 @@ struct NetworkExtensionRuntime {
         }
     }
 
+    static func roundTrip<T: NSObject & NSSecureCoding>(_ value: T) -> T {
+        let data: Data
+        do {
+            data = try NSKeyedArchiver.archivedData(
+                withRootObject: value,
+                requiringSecureCoding: true
+            )
+        } catch {
+            fatalError("archive failed: \(error)")
+        }
+        do {
+            guard let restored = try NSKeyedUnarchiver.unarchivedObject(ofClass: T.self, from: data)
+            else {
+                fatalError("expected restored \(T.self)")
+            }
+            return restored
+        } catch {
+            fatalError("unarchive failed: \(error)")
+        }
+    }
+
+    static func touchHashable<T: Hashable>(_ value: T) {
+        var hasher = Hasher()
+        value.hash(into: &hasher)
+        _ = hasher.finalize()
+        _ = value.hashValue
+        precondition(value == value)
+        _ = value != value
+    }
+
+    static func exerciseVPNPreferenceStoreAndStatusMachine() async {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("ne-vpn-store-\(UUID().uuidString)", isDirectory: true)
+        NetworkExtensionHostPreferences.resetForHostTesting(rootDirectory: root)
+
+        let manager = NEVPNManager.shared()
+        precondition(manager.connection.status == .invalid)
+        do {
+            try manager.connection.startVPNTunnel()
+            fatalError("unsaved start must throw configurationInvalid")
+        } catch {
+            requireVPNError(error, code: .configurationInvalid)
+        }
+
+        let loadedEmpty = await awaitHostCallback { handler in
+            manager.loadFromPreferences(completionHandler: handler)
+        }
+        precondition(loadedEmpty == nil)
+        precondition(manager.connection.status == .invalid)
+
+        let ike = NEVPNProtocolIKEv2()
+        ike.serverAddress = "vpn.example.invalid"
+        ike.username = "user"
+        ike.remoteIdentifier = "remote.example.invalid"
+        ike.localIdentifier = "local.example.invalid"
+        ike.authenticationMethod = .certificate
+        ike.includeAllNetworks = true
+        ike.excludeLocalNetworks = false
+        ike.sliceUUID = "slice"
+        ike.disconnectOnSleep = true
+        manager.protocolConfiguration = ike
+        manager.localizedDescription = "Simulated Linux VPN"
+        manager.isEnabled = true
+        manager.isOnDemandEnabled = true
+        let connect = NEOnDemandRuleConnect()
+        connect.interfaceTypeMatch = .wiFi
+        connect.ssidMatch = ["Cafe"]
+        connect.dnsSearchDomainMatch = ["lan"]
+        connect.dnsServerAddressMatch = ["1.1.1.1"]
+        connect.probeURL = URL(string: "https://captive.example.invalid")
+        manager.onDemandRules = [connect]
+
+        let seen = LockedState<[NEVPNStatus]>([])
+        let observer = NotificationCenter.default.addObserver(
+            forName: .NEVPNStatusDidChange,
+            object: manager.connection,
+            queue: nil
+        ) { notification in
+            precondition(notification.object as? NEVPNConnection === manager.connection)
+            seen.withLock { $0.append(manager.connection.status) }
+        }
+
+        let saved = await awaitHostCallback { handler in
+            manager.saveToPreferences(completionHandler: handler)
+        }
+        precondition(saved == nil)
+        precondition(manager.connection.status == .disconnected)
+
+        try! manager.connection.startVPNTunnel()
+        precondition(manager.connection.status == .connected)
+        precondition(manager.connection.connectedDate != nil)
+
+        manager.connection.stopVPNTunnel()
+        precondition(manager.connection.status == .disconnected)
+        precondition(manager.connection.connectedDate == nil)
+
+        await drainHostQueue()
+        NotificationCenter.default.removeObserver(observer)
+        let observed = seen.withLock { $0 }
+        precondition(observed.contains(.connecting))
+        precondition(observed.contains(.connected))
+        precondition(observed.contains(.disconnecting))
+        precondition(observed.contains(.disconnected))
+
+        manager.isEnabled = false
+        let savedDisabled = await awaitHostCallback { handler in
+            manager.saveToPreferences(completionHandler: handler)
+        }
+        precondition(savedDisabled == nil)
+        do {
+            try manager.connection.startVPNTunnel()
+            fatalError("disabled configuration must throw configurationDisabled")
+        } catch {
+            requireVPNError(error, code: .configurationDisabled)
+        }
+
+        manager.isEnabled = true
+        let savedEnabled = await awaitHostCallback { handler in
+            manager.saveToPreferences(completionHandler: handler)
+        }
+        precondition(savedEnabled == nil)
+
+        NetworkExtensionHostPreferences.reloadPersistedStateForHostTesting()
+        let reloaded = await awaitHostCallback { handler in
+            NEVPNManager.shared().loadFromPreferences(completionHandler: handler)
+        }
+        precondition(reloaded == nil)
+        precondition(NEVPNManager.shared().localizedDescription == "Simulated Linux VPN")
+        precondition(NEVPNManager.shared().protocolConfiguration?.serverAddress == "vpn.example.invalid")
+        precondition(NEVPNManager.shared().connection.status == .disconnected)
+        precondition(NEVPNManager.shared().onDemandRules?.first?.ssidMatch == ["Cafe"])
+
+        let tunnel = NETunnelProviderManager()
+        let tunnelLoad = await awaitHostCallback { handler in
+            tunnel.loadFromPreferences(completionHandler: handler)
+        }
+        precondition(tunnelLoad == nil)
+        let providerProtocol = NETunnelProviderProtocol()
+        providerProtocol.serverAddress = "packet.example.invalid"
+        providerProtocol.providerBundleIdentifier = "example.packet-tunnel"
+        providerProtocol.providerConfiguration = ["mode": "test"]
+        tunnel.protocolConfiguration = providerProtocol
+        tunnel.localizedDescription = "Packet tunnel"
+        tunnel.isEnabled = true
+        tunnel.replaceAppRulesForHostTesting([
+            NEAppRule(signingIdentifier: "example.app")
+        ])
+        let tunnelSave = await awaitHostCallback { handler in
+            tunnel.saveToPreferences(completionHandler: handler)
+        }
+        precondition(tunnelSave == nil)
+        let copiedRules = tunnel.copyAppRules()
+        precondition(copiedRules?.first?.matchSigningIdentifier == "example.app")
+        precondition(copiedRules?.first !== tunnel.copyAppRules()?.first)
+
+        let session = tunnel.connection as! NETunnelProviderSession
+        do {
+            try session.startTunnel(options: ["debug": true])
+            fatalError("extension-hosted startTunnel must fail closed")
+        } catch {
+            requireVPNError(error, code: .connectionFailed)
+        }
+        do {
+            try session.sendProviderMessage(Data([0x01]), responseHandler: { _ in })
+            fatalError("sendProviderMessage must fail closed")
+        } catch {
+            requireVPNError(error, code: .configurationInvalid)
+        }
+        session.stopTunnel()
+
+        let allTunnels = await awaitHostCallback { handler in
+            NETunnelProviderManager.loadAllFromPreferences { managers, error in
+                handler((managers, error))
+            }
+        }
+        precondition(allTunnels.1 == nil)
+        precondition(allTunnels.0?.count == 1)
+        precondition(allTunnels.0?.first?.protocolConfiguration?.serverAddress == "packet.example.invalid")
+        precondition(
+            (allTunnels.0?.first?.protocolConfiguration as? NETunnelProviderProtocol)?
+                .providerBundleIdentifier == "example.packet-tunnel"
+        )
+
+        let removed = await awaitHostCallback { handler in
+            NEVPNManager.shared().removeFromPreferences(completionHandler: handler)
+        }
+        precondition(removed == nil)
+        precondition(NEVPNManager.shared().connection.status == .invalid)
+        do {
+            try NEVPNManager.shared().connection.startVPNTunnel()
+            fatalError("removed configuration must fail closed")
+        } catch {
+            requireVPNError(error, code: .configurationInvalid)
+        }
+    }
+
+    static func exerciseSecureCodingRoundTrip() {
+        let ike = NEVPNProtocolIKEv2()
+        ike.serverAddress = "vpn.example.invalid"
+        ike.username = "user"
+        ike.authenticationMethod = .sharedSecret
+        ike.enablePFS = true
+        ike.mtu = 1400
+        ike.certificateType = .ed25519
+        ike.deadPeerDetectionRate = .low
+        ike.minimumTLSVersion = .version1_2
+        ike.maximumTLSVersion = .version1_2
+        ike.allowPostQuantumKeyExchangeFallback = true
+        ike.disableMOBIKE = true
+        ike.disableRedirect = true
+        ike.enableFallback = true
+        ike.enableRevocationCheck = true
+        ike.strictRevocationCheck = true
+        ike.useConfigurationAttributeInternalIPSubnet = true
+        ike.serverCertificateCommonName = "vpn"
+        ike.serverCertificateIssuerCommonName = "issuer"
+        ike.ikeSecurityAssociationParameters.encryptionAlgorithm = .algorithmAES128GCM
+        ike.ikeSecurityAssociationParameters.integrityAlgorithm = .SHA384
+        ike.ikeSecurityAssociationParameters.diffieHellmanGroup = .group20
+        ike.ikeSecurityAssociationParameters.postQuantumKeyExchangeMethods = [.method36]
+        ike.ppkConfiguration = NEVPNIKEv2PPKConfiguration(
+            identifier: "ppk",
+            keychainReference: Data([0x09])
+        )
+        let restoredIKE = roundTrip(ike)
+        precondition(restoredIKE.serverAddress == "vpn.example.invalid")
+        precondition(restoredIKE.enablePFS)
+        precondition(restoredIKE.mtu == 1400)
+        precondition(restoredIKE.certificateType == .ed25519)
+        precondition(
+            restoredIKE.ikeSecurityAssociationParameters.diffieHellmanGroup == .group20
+        )
+        precondition(
+            restoredIKE.ikeSecurityAssociationParameters.postQuantumKeyExchangeMethods == [.method36]
+        )
+        precondition(restoredIKE.ppkConfiguration?.identifier == "ppk")
+
+        let ipsec = NEVPNProtocolIPSec()
+        ipsec.serverAddress = "ipsec.example.invalid"
+        ipsec.authenticationMethod = .sharedSecret
+        ipsec.sharedSecretReference = Data([0x11])
+        ipsec.localIdentifier = "local"
+        ipsec.remoteIdentifier = "remote"
+        ipsec.useExtendedAuthentication = true
+        let restoredIPSec = roundTrip(ipsec)
+        precondition(restoredIPSec.authenticationMethod == .sharedSecret)
+        precondition(restoredIPSec.sharedSecretReference == Data([0x11]))
+
+        let tunnel = NETunnelProviderProtocol()
+        tunnel.serverAddress = "packet.example.invalid"
+        tunnel.providerBundleIdentifier = "example.packet-tunnel"
+        tunnel.providerConfiguration = ["k": "v"]
+        let restoredTunnel = roundTrip(tunnel)
+        precondition(restoredTunnel.providerBundleIdentifier == "example.packet-tunnel")
+        precondition(restoredTunnel.providerConfiguration?["k"] as? String == "v")
+
+        let connect = NEOnDemandRuleConnect()
+        connect.interfaceTypeMatch = .cellular
+        connect.ssidMatch = ["Office"]
+        connect.dnsSearchDomainMatch = ["corp"]
+        connect.probeURL = URL(string: "https://probe.example.invalid")
+        let restoredConnect = roundTrip(connect)
+        precondition(restoredConnect.action == .connect)
+        precondition(restoredConnect.interfaceTypeMatch == .cellular)
+        precondition(restoredConnect.ssidMatch == ["Office"])
+
+        let evaluate = NEOnDemandRuleEvaluateConnection()
+        evaluate.connectionRules = [
+            NEEvaluateConnectionRule(matchDomains: ["example.invalid"], andAction: .neverConnect)
+        ]
+        evaluate.connectionRules?.first?.useDNSServers = ["1.1.1.1"]
+        let restoredEvaluate = roundTrip(evaluate)
+        precondition(restoredEvaluate.connectionRules?.first?.action == .neverConnect)
+        precondition(restoredEvaluate.connectionRules?.first?.useDNSServers == ["1.1.1.1"])
+
+        let v4 = NEIPv4Settings(addresses: ["10.0.0.2"], subnetMasks: ["255.255.255.0"])
+        v4.includedRoutes = [NEIPv4Route.default()]
+        let restoredV4 = roundTrip(v4)
+        precondition(restoredV4.addresses == ["10.0.0.2"])
+        precondition(restoredV4.includedRoutes?.first?.destinationAddress == "0.0.0.0")
+
+        let settings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "203.0.113.1")
+        settings.ipv4Settings = v4
+        settings.mtu = 1280
+        let restoredSettings = roundTrip(settings)
+        precondition(restoredSettings.tunnelRemoteAddress == "203.0.113.1")
+        precondition(restoredSettings.mtu?.intValue == 1280)
+    }
+
+    static func exerciseRemainingPublicSurface() {
+        touchHashable(NEAppProxyFlowError.Code.datagramTooLarge)
+        touchHashable(NEAppProxyFlowError.Code.hostUnreachable)
+        touchHashable(NEAppProxyFlowError.Code.internal)
+        touchHashable(NEAppProxyFlowError.Code.invalidArgument)
+        touchHashable(NEAppProxyFlowError.Code.peerReset)
+        touchHashable(NEAppProxyFlowError.Code.readAlreadyPending)
+        touchHashable(NEAppProxyFlowError.Code.refused)
+        touchHashable(NEAppProxyFlowError.Code.timedOut)
+        touchHashable(NEAppPushManagerError.Code.internalError)
+        touchHashable(NEDNSProxyManagerError.configurationDisabled)
+        touchHashable(NEDNSProxyManagerError.configurationInvalid)
+        touchHashable(NEDNSProxyManagerError.configurationStale)
+        touchHashable(NEDNSSettingsManagerError.configurationDisabled)
+        touchHashable(NEDNSSettingsManagerError.configurationInvalid)
+        touchHashable(NEDNSSettingsManagerError.configurationStale)
+        touchHashable(NEEvaluateConnectionRuleAction.neverConnect)
+        touchHashable(NEFilterAction.allow)
+        touchHashable(NEFilterAction.filterData)
+        touchHashable(NEFilterAction.remediate)
+        touchHashable(NEFilterManagerError.configurationDisabled)
+        touchHashable(NEFilterManagerError.configurationInternalError)
+        touchHashable(NEFilterManagerError.configurationStale)
+        touchHashable(NEFilterReport.Event.dataDecision)
+        touchHashable(NEFilterReport.Event.flowClosed)
+        touchHashable(NEHotspotEAPSettings.EAPType.EAPFAST)
+        touchHashable(NEHotspotEAPSettings.EAPType.EAPPEAP)
+        touchHashable(NEHotspotEAPSettings.EAPType.EAPTTLS)
+        for code in [
+            NEHotspotConfigurationError.alreadyAssociated,
+            .applicationIsNotInForeground,
+            .invalid,
+            .invalidEAPSettings,
+            .invalidHS20DomainName,
+            .invalidHS20Settings,
+            .invalidSSID,
+            .invalidSSIDPrefix,
+            .invalidWEPPassphrase,
+            .invalidWPAPassphrase,
+            .joinOnceNotSupported,
+            .pending,
+            .systemConfiguration,
+            .systemDenied,
+            .unknown,
+            .userDenied,
+            .userUnauthorized,
+        ] as [NEHotspotConfigurationError] {
+            touchHashable(code)
+            _ = NEHotspotConfigurationError(rawValue: code.rawValue)
+        }
+        touchHashable(NEHotspotEAPSettings.TTLSInnerAuthenticationType.eapttlsInnerAuthenticationCHAP)
+        touchHashable(NEHotspotEAPSettings.TTLSInnerAuthenticationType.eapttlsInnerAuthenticationEAP)
+        touchHashable(NEHotspotEAPSettings.TTLSInnerAuthenticationType.eapttlsInnerAuthenticationMSCHAP)
+        touchHashable(NEHotspotEAPSettings.TTLSInnerAuthenticationType.eapttlsInnerAuthenticationPAP)
+        for command in [
+            NEHotspotHelperCommandType.authenticate,
+            .evaluate,
+            .filterScanList,
+            .logoff,
+            .maintain,
+            .none,
+            .presentUI,
+        ] as [NEHotspotHelperCommandType] {
+            touchHashable(command)
+            _ = NEHotspotHelperCommandType(rawValue: command.rawValue)
+        }
+        touchHashable(NEHotspotHelperConfidence.high)
+        touchHashable(NEHotspotHelperConfidence.none)
+        for result in [
+            NEHotspotHelperResult.authenticationRequired,
+            .commandNotRecognized,
+            .success,
+            .temporaryFailure,
+            .uiRequired,
+            .unsupportedNetwork,
+        ] as [NEHotspotHelperResult] {
+            touchHashable(result)
+            _ = NEHotspotHelperResult(rawValue: result.rawValue)
+        }
+        touchHashable(NEHotspotNetworkSecurityType.enterprise)
+        touchHashable(NEHotspotNetworkSecurityType.open)
+        touchHashable(NEHotspotNetworkSecurityType.personal)
+        touchHashable(NEHotspotNetworkSecurityType.WEP)
+        touchHashable(NEOnDemandRuleInterfaceType.any)
+        touchHashable(NEOnDemandRuleInterfaceType.cellular)
+        for reason in NEProviderStopReason.none.rawValue...NEProviderStopReason.internalError.rawValue {
+            if let value = NEProviderStopReason(rawValue: reason) {
+                touchHashable(value)
+            }
+        }
+        for code in 0...9 {
+            if let value = NERelayManagerClientError(rawValue: code) {
+                touchHashable(value)
+            }
+        }
+        touchHashable(NERelayManagerError.configurationDisabled)
+        touchHashable(NERelayManagerError.configurationInvalid)
+        touchHashable(NERelayManagerError.configurationStale)
+        touchHashable(NETrafficDirection.inbound)
+        touchHashable(NETrafficDirection.outbound)
+        touchHashable(NETunnelProviderError.networkSettingsCanceled)
+        touchHashable(NETunnelProviderError.networkSettingsInvalid)
+        touchHashable(NETunnelProviderRoutingMethod.sourceApplication)
+        touchHashable(NEVPNError.configurationDisabled)
+        touchHashable(NEVPNError.configurationStale)
+        touchHashable(NEVPNError.configurationUnknown)
+        touchHashable(NEVPNIKEAuthenticationMethod.none)
+        for cert in [
+            NEVPNIKEv2CertificateType.ECDSA384,
+            .ECDSA521,
+            .ed25519,
+            .RSA,
+            .RSAPSS,
+        ] as [NEVPNIKEv2CertificateType] {
+            touchHashable(cert)
+        }
+        touchHashable(NEVPNIKEv2DeadPeerDetectionRate.high)
+        touchHashable(NEVPNIKEv2DeadPeerDetectionRate.low)
+        touchHashable(NEVPNIKEv2DeadPeerDetectionRate.none)
+        for group in [
+            0, 14, 15, 16, 17, 18, 19, 20, 21, 31, 32,
+        ] {
+            if let value = NEVPNIKEv2DiffieHellmanGroup(rawValue: group) {
+                touchHashable(value)
+            }
+        }
+        touchHashable(NEVPNIKEv2EncryptionAlgorithm.algorithmAES128)
+        touchHashable(NEVPNIKEv2EncryptionAlgorithm.algorithmAES128GCM)
+        touchHashable(NEVPNIKEv2EncryptionAlgorithm.algorithmAES256)
+        touchHashable(NEVPNIKEv2IntegrityAlgorithm.SHA384)
+        touchHashable(NEVPNIKEv2IntegrityAlgorithm.SHA512)
+        touchHashable(NEVPNIKEv2PostQuantumKeyExchangeMethod.method36)
+        touchHashable(NEVPNIKEv2PostQuantumKeyExchangeMethod.method37)
+        touchHashable(NEVPNIKEv2PostQuantumKeyExchangeMethod.methodNone)
+        touchHashable(NEVPNIKEv2TLSVersion.version1_0)
+        touchHashable(NEVPNIKEv2TLSVersion.version1_1)
+        touchHashable(NEVPNIKEv2TLSVersion.versionDefault)
+        touchHashable(NEVPNStatus.connecting)
+        touchHashable(NEVPNStatus.disconnecting)
+        touchHashable(NEVPNStatus.reasserting)
+        touchHashable(NWPathStatus.invalid)
+        touchHashable(NWPathStatus.satisfiable)
+        touchHashable(NWPathStatus.satisfied)
+        touchHashable(NWTCPConnectionState.connected)
+        touchHashable(NWTCPConnectionState.connecting)
+        touchHashable(NWTCPConnectionState.invalid)
+        touchHashable(NWTCPConnectionState.waiting)
+        touchHashable(NWUDPSessionState.invalid)
+        touchHashable(NWUDPSessionState.preparing)
+        touchHashable(NWUDPSessionState.ready)
+        touchHashable(NWUDPSessionState.waiting)
+        touchHashable(NEHotspotManager.Error.internalError)
+        touchHashable(NEHotspotManager.Error.configurationInvalid)
+
+        _ = NEAppProxyFlowError(.hostUnreachable).errorUserInfo
+        _ = NEAppProxyFlowError.hostUnreachable
+        _ = NEAppProxyFlowError.invalidArgument
+        _ = NEAppProxyFlowError.datagramTooLarge
+        _ = NEAppProxyFlowError.readAlreadyPending
+        _ = NEAppProxyFlowError.refused
+        _ = NEAppProxyFlowError.internal
+        _ = NEAppProxyFlowError.timedOut
+        _ = NEAppProxyFlowError.peerReset
+        _ = NEAppProxyFlowError(.internal).localizedDescription
+        _ = NEAppPushManagerError.internalError
+        _ = NEAppPushManagerError(.internalError).localizedDescription
+        _ = NETunnelProviderError.networkSettingsInvalid
+        _ = NETunnelProviderError.networkSettingsCanceled
+        _ = NETunnelProviderError(.networkSettingsInvalid).localizedDescription
+        _ = NEVPNError.configurationStale
+        _ = NEVPNError.configurationUnknown
+        _ = NEVPNError.configurationDisabled
+        _ = NEVPNError(.configurationUnknown).localizedDescription
+        precondition(NEVPNError(.configurationInvalid) != NEVPNError(.connectionFailed))
+        _ = NEVPNError.Code(rawValue: 1)
+        _ = NEVPNStatus(rawValue: 0)
+        _ = NWPathStatus(rawValue: 1)
+        _ = NEDNSProtocol(rawValue: 1)
+        _ = NEFilterAction(rawValue: 1)
+        _ = NWUDPSessionState(rawValue: 1)
+        _ = NETrafficDirection(rawValue: 1)
+        _ = NEAppProxyFlowError.Code(rawValue: 1)
+        _ = NEFilterReport.Event(rawValue: 1)
+        _ = NERelayManagerError(rawValue: 1)
+        _ = NEFilterManagerError(rawValue: 1)
+        _ = NEOnDemandRuleAction(rawValue: 1)
+        _ = NEProviderStopReason(rawValue: 1)
+        _ = NEVPNIKEv2TLSVersion(rawValue: 0)
+        _ = NWTCPConnectionState(rawValue: 1)
+        _ = NEAppPushManagerError.Code(rawValue: 1)
+        _ = NETunnelProviderError.Code(rawValue: 1)
+        _ = NEDNSProxyManagerError(rawValue: 1)
+        _ = NEDNSSettingsManagerError(rawValue: 1)
+        _ = NEHotspotHelperConfidence(rawValue: 1)
+        _ = NERelayManagerClientError(rawValue: 1)
+        _ = NEVPNIKEv2CertificateType(rawValue: 1)
+        _ = NEHotspotHelperCommandType(rawValue: 1)
+        _ = NEHotspotNetworkSecurityType(rawValue: 1)
+        _ = NEVPNIKEAuthenticationMethod(rawValue: 1)
+        _ = NEVPNIKEv2DiffieHellmanGroup(rawValue: 14)
+        _ = NEVPNIKEv2IntegrityAlgorithm(rawValue: 3)
+        _ = NEHotspotEAPSettings.EAPType(rawValue: 13)
+        _ = NETunnelProviderRoutingMethod(rawValue: 1)
+        _ = NEVPNIKEv2EncryptionAlgorithm(rawValue: 3)
+        _ = NEEvaluateConnectionRuleAction(rawValue: 1)
+        _ = NEVPNIKEv2DeadPeerDetectionRate(rawValue: 1)
+        _ = NEHotspotEAPSettings.TLSVersion(rawValue: 2)
+        _ = NEVPNIKEv2PostQuantumKeyExchangeMethod(rawValue: 0)
+        _ = NEHotspotEAPSettings.TTLSInnerAuthenticationType(rawValue: 0)
+        _ = NEURLFilterManager.Status(rawValue: 0)
+        _ = NEURLFilterManager.Error.RawValue.self
+        _ = NEURLFilterManager.Status.RawValue.self
+
+        let flow = NEAppProxyTCPFlow()
+        precondition(flow.isBound == false)
+        _ = flow.metaData
+        _ = flow.remoteHostname
+        _ = flow.remoteEndpoint
+        _ = flow.remoteFlowEndpoint
+        flow.closeReadWithError(nil)
+        flow.closeWriteWithError(nil)
+        let udp = NEAppProxyUDPFlow()
+        _ = udp.localEndpoint
+        _ = udp.localFlowEndpoint
+
+        let proxy = NEAppProxyProvider()
+        proxy.cancelProxyWithError(nil)
+        _ = proxy.handleNewUDPFlow(udp, initialRemoteEndpoint: NWHostEndpoint(hostname: "h", port: "1"))
+        let dnsProxy = NEDNSProxyProvider()
+        _ = dnsProxy.systemDNSSettings
+        dnsProxy.cancelProxyWithError(nil)
+        _ = dnsProxy.handleNewFlow(flow)
+        _ = dnsProxy.handleNewUDPFlow(udp, initialRemoteEndpoint: NWHostEndpoint(hostname: "h", port: "1"))
+
+        let push = NEAppPushManager()
+        push.isEnabled = true
+        push.localizedDescription = "push"
+        push.matchEthernet = true
+        push.providerConfiguration = ["a": "b"]
+        let pushProvider = NEAppPushProvider()
+        _ = pushProvider.providerConfiguration
+        pushProvider.handleTimerEvent()
+        pushProvider.reportPushToTalkMessage(userInfo: ["k": "v"])
+        pushProvider.start()
+        pushProvider.unmatchEthernet()
+
+        let appRule = NEAppRule(signingIdentifier: "id")
+        appRule.matchDomains = ["example.invalid"]
+
+        let doh = NEDNSOverHTTPSSettings(servers: ["1.1.1.1"])
+        doh.identityReference = Data([0x01])
+        let dot = NEDNSOverTLSSettings(servers: ["1.1.1.1"])
+        dot.identityReference = Data([0x02])
+        let dns = NEDNSSettings(servers: ["1.1.1.1"])
+        dns.allowFailover = true
+        dns.domainName = "example.invalid"
+        dns.matchDomainsNoSearch = true
+
+        NEDNSProxyManager.shared().isEnabled = false
+        NEDNSProxyManager.shared().localizedDescription = "dns"
+        NEDNSProxyManager.shared().providerProtocol = NEDNSProxyProviderProtocol()
+        NEDNSProxyManager.shared().providerProtocol?.providerConfiguration = ["x": "y"]
+        NEDNSSettingsManager.shared().dnsSettings = dns
+        NEDNSSettingsManager.shared().localizedDescription = "dns settings"
+        NEDNSSettingsManager.shared().onDemandRules = [NEOnDemandRuleIgnore()]
+
+        let browser = NEFilterBrowserFlow()
+        _ = browser.parentURL
+        _ = browser.request
+        _ = browser.response
+        let socket = NEFilterSocketFlow()
+        _ = socket.localEndpoint
+        _ = socket.remoteEndpoint
+        _ = socket.remoteHostname
+        _ = socket.socketFamily
+        _ = socket.socketProtocol
+        _ = socket.socketType
+        _ = socket.localFlowEndpoint
+        _ = socket.remoteFlowEndpoint
+        let filterFlow = NEFilterFlow()
+        _ = filterFlow.url
+        _ = filterFlow.sourceAppIdentifier
+        _ = filterFlow.sourceAppUniqueIdentifier
+        _ = filterFlow.sourceAppVersion
+        let report = NEFilterReport()
+        _ = report.bytesInboundCount
+        _ = report.bytesOutboundCount
+        _ = report.flow
+        NEFilterManager.shared().localizedDescription = "filter"
+        let filterConfig = NEFilterProviderConfiguration()
+        filterConfig.filterBrowsers = true
+        filterConfig.identityReference = Data([0x03])
+        filterConfig.passwordReference = Data([0x04])
+        filterConfig.serverAddress = "filter.example.invalid"
+        filterConfig.username = "filter"
+        filterConfig.vendorConfiguration = ["v": "1"]
+        let filterProvider = NEFilterProvider()
+        _ = filterProvider.filterConfiguration
+        let dataProvider = NEFilterDataProvider()
+        _ = dataProvider.handleInboundDataComplete(for: filterFlow)
+        _ = dataProvider.handleOutboundDataComplete(for: filterFlow)
+        _ = dataProvider.handleOutboundData(from: filterFlow, readBytesStartOffset: 0, readBytes: Data())
+        _ = dataProvider.handleRemediation(for: filterFlow)
+        let control = NEFilterControlProvider()
+        control.urlAppendStringMap = ["a": "b"]
+        control.remediationMap = ["r": ["k": "v" as NSString]]
+        control.notifyRulesChanged()
+        _ = NEFilterControlVerdict.allow(withUpdateRules: true)
+        _ = NEFilterControlVerdict.updateRules()
+        _ = NEFilterDataVerdict.allow()
+        _ = NEFilterDataVerdict.drop()
+        _ = NEFilterDataVerdict.needRules()
+        _ = NEFilterDataVerdict.remediateVerdict(
+            withRemediationURLMapKey: "u",
+            remediationButtonTextMapKey: "b"
+        )
+        _ = NEFilterNewFlowVerdict.urlAppendStringVerdict(withMapKey: "m")
+        _ = NEFilterNewFlowVerdict.drop()
+        _ = NEFilterNewFlowVerdict.filterDataVerdict(
+            withFilterInbound: false,
+            peekInboundBytes: 1,
+            filterOutbound: false,
+            peekOutboundBytes: 1
+        )
+        _ = NEFilterNewFlowVerdict.needRules()
+        _ = NEFilterNewFlowVerdict.remediateVerdict(
+            withRemediationURLMapKey: "u",
+            remediationButtonTextMapKey: "b"
+        )
+        _ = NEFilterRemediationVerdict.allow()
+        _ = NEFilterRemediationVerdict.needRules()
+
+        let hotspot = NEHotspotConfiguration(SSID: "Cafe")
+        hotspot.hidden = true
+        hotspot.lifeTimeInDays = 7
+        _ = NEHotspotConfiguration(ssid: "Cafe", passphrase: "password12", isWEP: false)
+        _ = NEHotspotConfiguration(SSIDPrefix: "Pre")
+        _ = NEHotspotConfiguration(ssidPrefix: "Pre", passphrase: "password12", isWEP: false)
+        _ = NEHotspotConfiguration(SSIDPrefix: "Pre", passphrase: "password12", isWEP: true)
+        let eap = NEHotspotEAPSettings()
+        eap.outerIdentity = "outer"
+        eap.isTLSClientCertificateRequired = true
+        eap.trustedServerNames = ["radius.example.invalid"]
+        _ = NEHotspotConfiguration(SSID: "Ent", eapSettings: eap)
+        let hs20 = NEHotspotHS20Settings(domainName: "example.invalid", roamingEnabled: true)
+        hs20.mccAndMNCs = ["310260"]
+        hs20.roamingConsortiumOIs = ["001"]
+        _ = NEHotspotConfiguration(HS20Settings: hs20, eapSettings: eap)
+        NEHotspotConfigurationManager.shared.removeConfiguration(forHS20DomainName: "example.invalid")
+        NEHotspotConfigurationManager.shared.removeConfiguration(forSSID: "Cafe")
+        let command = NEHotspotHelperCommand()
+        _ = command.commandType
+        _ = command.network
+        _ = command.networkList
+        let endpoint = NWHostEndpoint(hostname: "example.invalid", port: "443")
+        _ = command.createTCPConnection(endpoint)
+        _ = command.createUDPSession(endpoint)
+        let response = command.createResponse(.uiRequired)
+        let network = NEHotspotNetwork(ssid: "Cafe", bssid: "00:00:00:00:00:00")
+        _ = network.ssid
+        _ = network.bssid
+        _ = network.didAutoJoin
+        _ = network.isChosenHelper
+        _ = network.didJustJoin
+        _ = network.isSecure
+        _ = network.signalStrength
+        network.setPassword("secret")
+        response.setNetwork(network)
+        response.setNetworkList([network])
+
+        let packet = NEPacket(data: Data([0x45]), protocolFamily: NetworkExtensionPOSIX.inetFamily)
+        _ = packet.metadata
+        let tunnelProvider = NEPacketTunnelProvider()
+        _ = tunnelProvider.packetFlow
+        tunnelProvider.cancelTunnelWithError(nil)
+        _ = tunnelProvider.createUDPSessionThroughTunnel(to: endpoint, from: nil)
+        let provider = NEProvider()
+        _ = provider.defaultPath
+        _ = provider.createUDPSession(to: endpoint, from: nil)
+        provider.wake()
+        let path = NWPath(status: .satisfied, isExpensive: true, isConstrained: true)
+        _ = path.isExpensive
+        _ = path.isConstrained
+
+        let proxyServer = NEProxyServer(address: "127.0.0.1", port: 8080)
+        proxyServer.username = "u"
+        proxyServer.password = "p"
+        let proxySettings = NEProxySettings()
+        proxySettings.httpEnabled = true
+        proxySettings.httpServer = proxyServer
+        proxySettings.autoProxyConfigurationEnabled = true
+        proxySettings.exceptionList = ["localhost"]
+        proxySettings.excludeSimpleHostnames = true
+        proxySettings.matchDomains = ["example.invalid"]
+        proxySettings.proxyAutoConfigurationJavaScript = "function FindProxy() { return 'DIRECT'; }"
+        proxySettings.proxyAutoConfigurationURL = URL(string: "https://wpad.example.invalid")
+        _ = NEIPv4Route(destinationAddress: "10.0.0.0", subnetMask: "255.255.255.0").destinationSubnetMask
+        _ = NEIPv4Settings(addresses: ["10.0.0.2"], subnetMasks: ["255.255.255.0"]).subnetMasks
+        let v6Route = NEIPv6Route(destinationAddress: "fd00::", networkPrefixLength: 64)
+        v6Route.gatewayAddress = "fd00::1"
+        _ = v6Route.destinationNetworkPrefixLength
+        let v6 = NEIPv6Settings(addresses: ["fd00::2"], networkPrefixLengths: [64])
+        v6.excludedRoutes = [v6Route]
+        _ = v6.addresses
+
+        let lte = NEPrivateLTENetwork()
+        lte.trackingAreaCode = "1"
+        let tunnelCfg = NETunnelProvider()
+        _ = tunnelCfg.appRules
+        _ = tunnelCfg.protocolConfiguration
+        tunnelCfg.reasserting = true
+        _ = tunnelCfg.routingMethod
+
+        let ike = NEVPNProtocolIKEv2()
+        ike.disconnectOnSleep = true
+        ike.enforceRoutes = true
+        ike.excludeAPNs = false
+        ike.excludeCellularServices = false
+        ike.excludeDeviceCommunication = false
+        ike.excludeLocalNetworks = false
+        ike.identityData = Data([0x01])
+        ike.identityDataPassword = "pw"
+        ike.identityReference = Data([0x02])
+        ike.includeAllNetworks = true
+        ike.passwordReference = Data([0x03])
+        ike.proxySettings = proxySettings
+        ike.sliceUUID = "slice"
+        ike.allowPostQuantumKeyExchangeFallback = true
+        ike.disableMOBIKE = true
+        ike.disableRedirect = true
+        ike.enableFallback = true
+        ike.enableRevocationCheck = true
+        ike.mtu = 1280
+        ike.serverCertificateCommonName = "cn"
+        ike.serverCertificateIssuerCommonName = "issuer"
+        ike.strictRevocationCheck = true
+        ike.useConfigurationAttributeInternalIPSubnet = true
+
+        let tls = NWTLSParameters()
+        tls.sslCipherSuites = [1]
+        tls.tlsSessionID = Data([0x04])
+        tls.maximumSSLProtocolVersion = 1
+        tls.minimumSSLProtocolVersion = 1
+        let tcp = NWTCPConnection(endpoint: endpoint)
+        _ = tcp.connectedPath
+        _ = tcp.error
+        _ = tcp.hasBetterPath
+        _ = tcp.localAddress
+        _ = tcp.remoteAddress
+        _ = tcp.txtRecord
+        tcp.writeClose()
+        _ = NWTCPConnection(upgradeFor: tcp)
+        _ = NWTCPConnection(upgradeForConnection: tcp)
+        let udpSession = NWUDPSession(endpoint: endpoint)
+        _ = udpSession.currentPath
+        _ = udpSession.endpoint
+        _ = udpSession.hasBetterPath
+        _ = udpSession.maximumDatagramLength
+        _ = udpSession.resolvedEndpoint
+        _ = udpSession.isViable
+        udpSession.tryNextResolvedEndpoint()
+        _ = NWUDPSession(upgradeFor: udpSession)
+        _ = NWUDPSession(upgradeForSession: udpSession)
+
+        let request = NSMutableURLRequest(url: URL(string: "https://example.invalid")!)
+        request.bind(to: command)
+
+        let hotspotManager = NEHotspotManager.shared
+        hotspotManager.safariDomains = ["example.invalid"]
+        hotspotManager.evaluatedSSIDs = ["Cafe"]
+        hotspotManager.evaluationProviderBundleIdentifier = "eval"
+        hotspotManager.authenticationProviderBundleIdentifier = "auth"
+        hotspotManager.isEnabled = false
+        _ = NEHotspotManager.Error.internalError.localizedDescription
+
+        _ = NEURLFilterManager.shared.pirServerURL
+        _ = NEURLFilterManager.shared.appBundleIdentifier
+        _ = NEURLFilterManager.shared.pirAuthenticationToken
+        NEURLFilterManager.shared.prefilterFetchInterval = 60
+        _ = NEURLFilterManager.shared.pirPrivacyPassIssuerURL
+        _ = NEURLFilterManager.shared.controlProviderBundleIdentifier
+        NEURLFilterManager.shared.isEnabled = false
+        let err = NEURLFilterManager.Error.configurationInvalid
+        _ = err.helpAnchor
+        _ = err.failureReason
+        _ = err.errorDescription
+        _ = err.recoverySuggestion
+        _ = err.localizedDescription
+        _ = NEURLFilterManager.Status.invalid.rawValue
+        let prefilter = NEURLFilterPrefilter(
+            data: .temporaryFilepath(URL(fileURLWithPath: "/tmp/prefilter")),
+            tag: "t2",
+            bitCount: 4,
+            hashCount: 2,
+            murmurSeed: 7
+        )
+        _ = prefilter.murmurSeed
+        _ = prefilter.bitCount
+        _ = prefilter.hashCount
+
+        _ = NEAppProxyProviderManager()
+
+        final class UDPHandler: NEAppProxyUDPFlowHandling {
+            func handleNewUDPFlow(
+                _ flow: NEAppProxyUDPFlow,
+                initialRemoteFlowEndpoint remoteEndpoint: NWEndpoint
+            ) -> Bool {
+                _ = (flow, remoteEndpoint)
+                return false
+            }
+        }
+        _ = UDPHandler().handleNewUDPFlow(udp, initialRemoteFlowEndpoint: endpoint)
+
+        final class AuthDelegate: NSObject, NWTCPConnectionAuthenticationDelegate {}
+        let auth = AuthDelegate()
+        _ = auth.shouldEvaluateTrust(for: tcp)
+        _ = auth.shouldProvideIdentity(for: tcp)
+
+        let handler: NEHotspotHelperHandler = { _ in }
+        _ = handler
+    }
+
+    @MainActor
+    static func exerciseMainActorTypes() {
+        _ = NEAppExtensionConfiguration()
+        _ = NEURLFilterControlProviderConfiguration()
+        _ = NEHotspotEvaluationProviderConfiguration()
+        _ = NEHotspotAuthenticationProviderConfiguration()
+    }
+
     static func exerciseHostCallbackContracts() async {
         await exerciseReturnBeforeCallbackAndQueueIdentity()
         await exerciseExactlyOnceDelivery()
@@ -1111,12 +2101,12 @@ struct NetworkExtensionRuntime {
         let error = await awaitHostCallback { handler in
             NEVPNManager.shared().loadFromPreferences(completionHandler: handler)
         }
-        requireVPNError(error, code: .configurationReadWriteFailed)
+        precondition(error == nil)
 
         let disconnect = await awaitHostCallback { handler in
             NEVPNManager.shared().connection.fetchLastDisconnectError(completionHandler: handler)
         }
-        requireVPNError(disconnect, code: .connectionFailed)
+        precondition(disconnect == nil)
     }
 
     static func exerciseExactlyOnceDelivery() async {
@@ -1213,7 +2203,7 @@ struct NetworkExtensionRuntime {
         }
         precondition(results.count == groupCount)
         for error in results {
-            requireVPNError(error, code: .configurationReadWriteFailed)
+            precondition(error == nil)
         }
 
         let filterSaves = await withTaskGroup(of: (any Error)?.self, returning: [(any Error)?].self) { group in

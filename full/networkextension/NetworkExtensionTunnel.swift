@@ -120,7 +120,9 @@ open class NETunnelProvider: NEProvider {
     open func setTunnelNetworkSettings(
         _ tunnelNetworkSettings: NETunnelNetworkSettings?
     ) async throws {
-        _ = tunnelNetworkSettings
+        if let tunnelNetworkSettings {
+            try tunnelNetworkSettings.validateForTunnel()
+        }
         throw _NEHostBoundary.tunnelError(.networkSettingsFailed)
     }
 }
