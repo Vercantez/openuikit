@@ -84,11 +84,17 @@ open class MDLObject: NSObject, MDLNamed {
     public func atPath(_ path: String) -> MDLObject {
         let trimmed = path.hasPrefix("/") ? String(path.dropFirst()) : path
         if trimmed.isEmpty { return self }
+        var parts = trimmed.split(separator: "/").map(String.init)
+        let selfName = name.isEmpty ? defaultPathName() : name
+        if parts.first == selfName {
+            parts.removeFirst()
+        }
+        if parts.isEmpty { return self }
         var current: MDLObject = self
-        for part in trimmed.split(separator: "/").map(String.init) {
+        for part in parts {
             guard let next = current.children.objects.first(where: { object in
-                let name = object.name.isEmpty ? object.defaultPathName() : object.name
-                return name == part
+                let childName = object.name.isEmpty ? object.defaultPathName() : object.name
+                return childName == part
             }) else {
                 return current
             }

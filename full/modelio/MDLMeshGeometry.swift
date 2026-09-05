@@ -92,6 +92,60 @@ func mdlExtractMeshChannels(_ mesh: MDLMesh) -> ([SIMD3<Float>], [SIMD3<Float>],
     return (positions, normals, uvs, indices)
 }
 
+struct MDLExtraAttribute {
+    var name: String
+    var format: MDLVertexFormat
+    var values: Data
+    var stride: Int
+}
+
+func mdlCapturedExtraAttributes(_ mesh: MDLMesh) -> [MDLExtraAttribute] {
+    let skip: Set<String> = [
+        MDLVertexAttributePosition,
+        MDLVertexAttributeNormal,
+        MDLVertexAttributeTextureCoordinate,
+    ]
+    var extras: [MDLExtraAttribute] = []
+    for case let attribute as MDLVertexAttribute in mesh.vertexDescriptor.attributes {
+        if skip.contains(attribute.name) { continue }
+        guard let data = mesh.vertexAttributeData(forAttributeNamed: attribute.name) else { continue }
+        let stride = max(Int(data.stride), 1)
+        let byteCount = stride * max(Int(mesh.vertexCount), 0)
+        extras.append(
+            MDLExtraAttribute(
+                name: attribute.name,
+                format: attribute.format,
+                values: Data(bytes: data.dataStart, count: byteCount),
+                stride: stride
+            )
+        )
+    }
+    return extras
+}
+
+func mdlRestoreExtraAttributes(_ mesh: MDLMesh, _ extras: [MDLExtraAttribute], indices: [UInt32]) {
+    for extra in extras {
+        var expanded = Data()
+        let count = extra.stride == 0 ? 0 : extra.values.count / extra.stride
+        for index in indices {
+            let i = Int(index)
+            if i < count {
+                let start = i * extra.stride
+                expanded.append(extra.values.subdata(in: start..<(start + extra.stride)))
+            } else {
+                expanded.append(Data(count: extra.stride))
+            }
+        }
+        mesh.addAttribute(
+            withName: extra.name,
+            format: extra.format,
+            type: "float",
+            data: expanded,
+            stride: extra.stride
+        )
+    }
+}
+
 func mdlReplaceMesh(
     _ mesh: MDLMesh,
     positions: [SIMD3<Float>],

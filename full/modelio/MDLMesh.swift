@@ -373,6 +373,7 @@ open class MDLMesh: MDLObject {
     }
 
     public func makeVerticesUniqueAndReturnError() throws {
+        let extras = mdlCapturedExtraAttributes(self)
         let (positions, normals, uvs, indices) = mdlExtractMeshChannels(self)
         var newPositions: [SIMD3<Float>] = []
         var newNormals: [SIMD3<Float>] = []
@@ -386,6 +387,7 @@ open class MDLMesh: MDLObject {
             newUVs.append(i < uvs.count ? uvs[i] : SIMD2<Float>())
         }
         mdlReplaceMesh(self, positions: newPositions, normals: newNormals, uvs: newUVs, indices: newIndices)
+        mdlRestoreExtraAttributes(self, extras, indices: indices)
     }
 
     @discardableResult
