@@ -89,7 +89,7 @@ func testStrokeStyleRetention() {
 func testInterpolationMethods() {
     precondition(InterpolationMethod.linear != .catmullRom)
     precondition(InterpolationMethod.catmullRom(alpha: 0.5) == .catmullRom)
-    precondition(InterpolationMethod.cardinal(tension: 0.25) == .cardinal)
+    precondition(InterpolationMethod.cardinal(tension: 0) == .cardinal)
     precondition(InterpolationMethod.monotone.description == "monotone")
     let marked = LineMark(x: .value("x", 1), y: .value("y", 2))
         .interpolationMethod(.catmullRom)
