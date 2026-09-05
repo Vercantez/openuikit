@@ -32,11 +32,18 @@ public var MPSTextureLinkingConstantIndex: Int32 { 10 }
 public var MPSUserAvailableFunctionConstantStartIndex: Int32 { 11 }
 public var MPSUserConstantIndex: Int32 { 12 }
 
-/// Linux has no Metal GPU. Encode paths trap rather than returning a
-/// fabricated filtered texture. Command-buffer memory hints are inert.
+/// Linux has no Metal GPU. Encode paths that have no CPU implementation
+/// refuse without writing destination pixels. Command-buffer memory hints
+/// are inert.
 public enum MPSHostBoundary {
-    public static func refuseGPUEncode(_ api: String) -> Never {
-        fatalError("MetalPerformanceShaders: \(api) requires a Metal GPU, which is unavailable on this host")
+    public private(set) static var lastRefusedAPI: String?
+
+    public static func reset() {
+        lastRefusedAPI = nil
+    }
+
+    public static func refuseGPUEncode(_ api: String) {
+        lastRefusedAPI = api
     }
 }
 
@@ -166,6 +173,7 @@ open class MPSUnaryImageKernel: MPSKernel {
     ) -> Bool {
         _ = (commandBuffer, texture, copyAllocator)
         MPSHostBoundary.refuseGPUEncode("MPSUnaryImageKernel.encode(inPlaceTexture:)")
+        return false
     }
 }
 
@@ -242,6 +250,7 @@ open class MPSBinaryImageKernel: MPSKernel {
     ) -> Bool {
         _ = (commandBuffer, inPlacePrimaryTexture, secondaryTexture, copyAllocator)
         MPSHostBoundary.refuseGPUEncode("MPSBinaryImageKernel.encode(inPlacePrimaryTexture:)")
+        return false
     }
 
     open func encode(
@@ -252,6 +261,7 @@ open class MPSBinaryImageKernel: MPSKernel {
     ) -> Bool {
         _ = (commandBuffer, primaryTexture, inPlaceSecondaryTexture, copyAllocator)
         MPSHostBoundary.refuseGPUEncode("MPSBinaryImageKernel.encode(inPlaceSecondaryTexture:)")
+        return false
     }
 }
 
