@@ -68,3 +68,65 @@ public final class SiriTipUIView: UIView, @unchecked Sendable {
     }
 }
 
+public extension IntentResult {
+    static func result<Content: View>(
+        view: Content
+    ) -> IntentResultContainer<Never, Never, _SnippetViewContainer, Never>
+    where Self == IntentResultContainer<Never, Never, _SnippetViewContainer, Never> {
+        _ = view
+        return IntentResultContainer()
+    }
+
+    static func result<Value: _IntentValue, Content: View>(
+        value: Value,
+        view: Content
+    ) -> IntentResultContainer<Value, Never, _SnippetViewContainer, Never>
+    where Self == IntentResultContainer<Value, Never, _SnippetViewContainer, Never> {
+        _ = view
+        return IntentResultContainer(value: value)
+    }
+
+    static func result<Value: _IntentValue, Content: View>(
+        value: Value,
+        dialog: IntentDialog,
+        view: Content
+    ) -> IntentResultContainer<Value, Never, _SnippetViewContainer, IntentDialog>
+    where Self == IntentResultContainer<Value, Never, _SnippetViewContainer, IntentDialog> {
+        _ = view
+        return IntentResultContainer(value: value, dialog: dialog)
+    }
+
+    static func result<Content: View>(
+        content: () -> Content
+    ) -> IntentResultContainer<Never, Never, _SnippetViewContainer, Never>
+    where Self == IntentResultContainer<Never, Never, _SnippetViewContainer, Never> {
+        _ = content()
+        return IntentResultContainer()
+    }
+}
+
+extension IntentParameterContext {
+    public func requestConfirmation<ViewType: View>(
+        for itemToConfirm: Value.ValueType,
+        dialog: IntentDialog? = nil,
+        view: ViewType
+    ) async throws -> Bool {
+        _ = itemToConfirm
+        _ = dialog
+        _ = view
+        throw AppIntentError.Unrecoverable.unsupportedOnDevice
+    }
+
+    public func requestConfirmation<ViewType: View>(
+        for itemToConfirm: Value.ValueType,
+        dialog: IntentDialog? = nil,
+        @ViewBuilder view: () -> ViewType
+    ) async throws -> Bool {
+        _ = itemToConfirm
+        _ = dialog
+        _ = view()
+        throw AppIntentError.Unrecoverable.unsupportedOnDevice
+    }
+}
+
+

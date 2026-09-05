@@ -19,19 +19,19 @@ runtime and is packaged as `IntentsUI.swiftmodule` plus
 
 Wave-5 schema v2 coverage lives in `coverage.tsv`. Before this lane there was
 no coverage file (0 implemented / 0 declared / 0 deferred of 4160 public IDs).
-The current honest census is recorded there: the in-process donation, voice-
-shortcut, resolution, person/image, Focus-restricted, and identifier-constant
-slice is `implemented` with `tests/agent/IntentsTests.swift`; the remaining
-compiling surface is `declared`; Apple Siri services, CoreLocation/Contacts/
-EventKit/CGColor/NSExtensionContext members, synthesized Equatable/SetAlgebra
-witnesses without a valid anchor, and the Swift `INShortcut` enum overlay are
+The current census is recorded there: 1507 implemented / 1873 declared / 780
+deferred. The in-process donation, voice-shortcut, relevant-shortcut,
+resolution, person/image/media/call-record, Siri-denied, and identifier-constant
+slice is `implemented` with `tests/agent/*Tests.swift`; the remaining compiling
+surface is `declared`; Apple Siri services, CoreLocation/Contacts/EventKit/
+CGColor/NSExtensionContext members, and the Swift `INShortcut` enum overlay are
 `deferred`.
 
-Siri authorization and Focus stay fail-closed at `.restricted`. Generated
-handler protocols default to needs-value / empty / failure responses rather
-than inventing Apple handler success. `INShortcut` remains the pre-existing
-`NSObject` class used by the Mach-O guest; Apple's Swift enum overlay is not
-substituted in.
+Siri authorization stays fail-closed at `.denied`. Focus stays `.restricted`.
+Generated handler protocols default to needs-value / empty / failure responses
+rather than inventing Apple handler success. `INShortcut` remains the
+pre-existing `NSObject` class used by the Mach-O guest; Apple's Swift enum
+overlay is not substituted in.
 
 On the isolated host, corelibs Foundation has no `NSUserActivity`. When
 OpenUIKit is unavailable the module provides a lookalike so
@@ -75,13 +75,16 @@ empty-options result rather than fabricated success.
 The first production runtime slice has real, process-safe state for:
 
 - intent phrases and response user activities;
-- interaction donation, enumeration for a host, and deletion;
+- interaction donation, enumeration for a host, deletion by identifier and
+  group identifier, and NSSecureCoding round trips for INIntent/INInteraction;
 - typed resolution outcomes and retained values;
-- intent objects, speakable strings, object collections, people, images, and
-  basic media identities;
-- shortcut suggestions and stable voice-shortcut install/update/delete;
-- restricted/unavailable Focus-status authorization rather than a false
-  account-level success.
+- intent objects, speakable strings, object collections, people, images, media
+  items/search, call records, and INParameter key paths;
+- shortcut suggestions, relevant-shortcut storage, and stable voice-shortcut
+  install/update/delete (a fresh `getAllVoiceShortcuts` is empty; host SPI
+  install is local);
+- `.denied` Siri authorization and restricted/unavailable Focus-status
+  authorization rather than a false account-level success.
 
 `NSUserActivity` Siri overlay properties are stored on the portable guest
 path by Intents, while OpenUIKit retains the canonical class identity. This

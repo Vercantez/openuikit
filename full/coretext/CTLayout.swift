@@ -1,5 +1,14 @@
 import CoreFoundation
 import Foundation
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+
+struct _CTGlyphUnit {
+    var scalar: UInt32
+    var glyph: CGGlyph
+    var advance: CGFloat
+}
 
 public final class CTTypesetter: Hashable, @unchecked Sendable {
     let string: NSAttributedString
@@ -22,6 +31,7 @@ public final class CTLine: Hashable, @unchecked Sendable {
     let descent: CGFloat
     let leading: CGFloat
     let font: CTFont
+    let units: [_CTGlyphUnit]
 
     init(
         string: NSAttributedString,
@@ -30,7 +40,8 @@ public final class CTLine: Hashable, @unchecked Sendable {
         ascent: CGFloat,
         descent: CGFloat,
         leading: CGFloat,
-        font: CTFont
+        font: CTFont,
+        units: [_CTGlyphUnit]
     ) {
         self.string = string
         self.range = range
@@ -39,6 +50,7 @@ public final class CTLine: Hashable, @unchecked Sendable {
         self.descent = descent
         self.leading = leading
         self.font = font
+        self.units = units
     }
 
     public static func == (left: CTLine, right: CTLine) -> Bool { left === right }
@@ -75,19 +87,22 @@ public final class CTFrame: Hashable, @unchecked Sendable {
     let visibleRange: NSRange
     let pathBounds: CGRect
     let attributes: [String: Any]
+    let path: CGPath
 
     init(
         string: NSAttributedString,
         lines: [CTLine],
         visibleRange: NSRange,
         pathBounds: CGRect,
-        attributes: [String: Any]
+        attributes: [String: Any],
+        path: CGPath
     ) {
         self.string = string
         self.lines = lines
         self.visibleRange = visibleRange
         self.pathBounds = pathBounds
         self.attributes = attributes
+        self.path = path
     }
 
     public static func == (left: CTFrame, right: CTFrame) -> Bool { left === right }
@@ -158,17 +173,20 @@ public final class CTGlyphInfo: Hashable, @unchecked Sendable {
     let collection: CTCharacterCollection
     let characterIdentifier: CGFontIndex
     let baseString: String
+    let glyph: CGGlyph
 
     init(
         glyphName: String?,
         collection: CTCharacterCollection,
         characterIdentifier: CGFontIndex,
-        baseString: String
+        baseString: String,
+        glyph: CGGlyph = 0
     ) {
         self.glyphName = glyphName
         self.collection = collection
         self.characterIdentifier = characterIdentifier
         self.baseString = baseString
+        self.glyph = glyph
     }
 
     public static func == (left: CTGlyphInfo, right: CTGlyphInfo) -> Bool { left === right }
@@ -194,10 +212,6 @@ public final class CTRunDelegate: Hashable, @unchecked Sendable {
     public func hash(into hasher: inout Hasher) { hasher.combine(ObjectIdentifier(self)) }
 }
 
-#if !canImport(CoreGraphics)
-public typealias CGFontIndex = UInt16
-#endif
-
 private func _attrString(_ value: CFAttributedString) -> NSAttributedString {
     value as NSAttributedString
 }
@@ -213,7 +227,49 @@ private func _fontFromAttributedString(_ string: NSAttributedString) -> CTFont {
 }
 
 private func _advance(for font: CTFont) -> CGFloat {
-    max(font.size * 0.5, 1)
+    _ctCharAdvance(font, scalar: 65)
+}
+
+private func _units(in string: NSAttributedString, range: NSRange, font: CTFont) -> [_CTGlyphUnit] {
+    let ns = string.string as NSString
+    let substring = ns.substring(with: range)
+    var units: [_CTGlyphUnit] = []
+    units.reserveCapacity(substring.utf16.count)
+    for scalar in substring.unicodeScalars {
+        let advance = _ctCharAdvance(font, scalar: scalar.value)
+        units.append(
+            _CTGlyphUnit(
+                scalar: scalar.value,
+                glyph: CGGlyph(truncatingIfNeeded: scalar.value),
+                advance: advance
+            )
+        )
+    }
+    return units
+}
+
+private func _width(_ units: [_CTGlyphUnit]) -> CGFloat {
+    var total: CGFloat = 0
+    for unit in units { total += unit.advance }
+    return total
+}
+
+private func _makeLine(
+    string: NSAttributedString,
+    range: NSRange,
+    font: CTFont
+) -> CTLine {
+    let units = _units(in: string, range: range, font: font)
+    return CTLine(
+        string: string,
+        range: range,
+        width: _width(units),
+        ascent: CTFontGetAscent(font),
+        descent: CTFontGetDescent(font),
+        leading: CTFontGetLeading(font),
+        font: font,
+        units: units
+    )
 }
 
 public func CTTypesetterCreateWithAttributedString(_ string: CFAttributedString) -> CTTypesetter {
@@ -249,11 +305,28 @@ public func CTTypesetterSuggestLineBreakWithOffset(
     let length = string.length
     guard startIndex < length else { return startIndex }
     let font = _fontFromAttributedString(typesetter.string)
-    let advance = _advance(for: font)
-    let available = max(width, advance)
-    var count = Int((available / advance).rounded(.down))
-    if count < 1 { count = 1 }
-    let end = min(length, startIndex + count)
+    let available = max(width, 1)
+    var used: CGFloat = 0
+    var end = startIndex
+    var lastBreak = startIndex
+    while end < length {
+        let ch = string.character(at: end)
+        let advance = _ctCharAdvance(font, scalar: UInt32(ch))
+        if end > startIndex && used + advance > available {
+            break
+        }
+        used += advance
+        end += 1
+        if ch == 32 || ch == 9 || ch == 10 {
+            lastBreak = end
+        }
+    }
+    if lastBreak > startIndex && end < length {
+        return lastBreak
+    }
+    if end == startIndex {
+        return min(length, startIndex + 1)
+    }
     return end
 }
 
@@ -289,16 +362,7 @@ public func CTTypesetterCreateLineWithOffset(
     let length = stringRange.length < 0 ? ns.length - start : min(stringRange.length, ns.length - start)
     let range = NSRange(location: start, length: max(0, length))
     let font = _fontFromAttributedString(ns)
-    let width = CGFloat(range.length) * _advance(for: font)
-    return CTLine(
-        string: ns,
-        range: range,
-        width: width,
-        ascent: CTFontGetAscent(font),
-        descent: CTFontGetDescent(font),
-        leading: CTFontGetLeading(font),
-        font: font
-    )
+    return _makeLine(string: ns, range: range, font: font)
 }
 
 public func CTLineCreateWithAttributedString(_ attrString: CFAttributedString) -> CTLine {
@@ -320,6 +384,9 @@ public func CTLineGetTrailingWhitespaceWidth(_ line: CTLine) -> Double {
     guard line.range.length > 0 else { return 0 }
     let last = ns.substring(with: NSRange(location: line.range.location + line.range.length - 1, length: 1))
     if last == " " || last == "\t" {
+        if let unit = line.units.last {
+            return Double(unit.advance)
+        }
         return Double(_advance(for: line.font))
     }
     return 0
@@ -346,13 +413,23 @@ public func CTLineGetOffsetForStringIndex(
 ) -> CGFloat {
     secondaryOffset?.pointee = 0
     let local = max(0, min(charIndex, line.range.location + line.range.length) - line.range.location)
-    return CGFloat(local) * _advance(for: line.font)
+    var offset: CGFloat = 0
+    let limit = min(local, line.units.count)
+    for i in 0..<limit {
+        offset += line.units[i].advance
+    }
+    return offset
 }
 public func CTLineGetStringIndexForPosition(_ line: CTLine, _ position: CGPoint) -> CFIndex {
-    let advance = _advance(for: line.font)
-    guard advance > 0 else { return line.range.location }
-    let index = Int((position.x / advance).rounded(.down))
-    return line.range.location + max(0, min(index, line.range.length))
+    guard !line.units.isEmpty else { return line.range.location }
+    var x: CGFloat = 0
+    for (i, unit) in line.units.enumerated() {
+        if position.x < x + unit.advance * 0.5 {
+            return line.range.location + i
+        }
+        x += unit.advance
+    }
+    return line.range.location + line.units.count
 }
 public func CTLineGetPenOffsetForFlush(_ line: CTLine, _ flushFactor: CGFloat, _ flushWidth: Double) -> Double {
     let extra = flushWidth - Double(line.width)
@@ -374,7 +451,8 @@ public func CTLineCreateJustifiedLine(
         ascent: line.ascent,
         descent: line.descent,
         leading: line.leading,
-        font: line.font
+        font: line.font,
+        units: line.units
     )
 }
 public func CTLineCreateTruncatedLine(
@@ -384,29 +462,50 @@ public func CTLineCreateTruncatedLine(
     _ truncationToken: CTLine?
 ) -> CTLine? {
     _ = (truncationType, truncationToken)
-    let advance = _advance(for: line.font)
-    let count = max(1, Int((width / Double(advance)).rounded(.down)))
+    var used: CGFloat = 0
+    var count = 0
+    for unit in line.units {
+        if count > 0 && used + unit.advance > CGFloat(width) { break }
+        used += unit.advance
+        count += 1
+    }
+    if count < 1 && !line.units.isEmpty { count = 1 }
     let length = min(line.range.length, count)
+    let units = Array(line.units.prefix(length))
     return CTLine(
         string: line.string,
         range: NSRange(location: line.range.location, length: length),
-        width: CGFloat(length) * advance,
+        width: _width(units),
         ascent: line.ascent,
         descent: line.descent,
         leading: line.leading,
-        font: line.font
+        font: line.font,
+        units: units
     )
 }
 public func CTLineEnumerateCaretOffsets(
     _ line: CTLine,
     _ block: (Double, CFIndex, Bool, UnsafeMutablePointer<Bool>) -> Void
 ) {
-    let advance = Double(_advance(for: line.font))
-    for i in 0...line.range.length {
+    var x: Double = 0
+    for i in 0...line.units.count {
         var stop = false
-        block(advance * Double(i), line.range.location + i, true, &stop)
+        block(x, line.range.location + i, true, &stop)
         if stop { return }
+        if i < line.units.count {
+            x += Double(line.units[i].advance)
+        }
     }
+}
+
+public func CTLineDraw(_ line: CTLine, _ context: CGContext) {
+    _ = line
+    _ctRecordLineDraw(context)
+}
+
+public func CTLineGetImageBounds(_ line: CTLine, _ context: CGContext?) -> CGRect {
+    _ = context
+    return CTLineGetBoundsWithOptions(line, [])
 }
 
 public func CTRunGetTypeID() -> CFTypeID { 0x4354_5255 }
@@ -434,14 +533,17 @@ public func CTRunGetTypographicBounds(
     ascent?.pointee = run.line.ascent
     descent?.pointee = run.line.descent
     leading?.pointee = run.line.leading
-    return Double(CGFloat(run.range.length) * _advance(for: run.line.font))
+    return Double(run.line.width)
 }
 public func CTRunGetAdvances(_ run: CTRun, _ range: CFRange, _ buffer: UnsafeMutablePointer<CGSize>?) {
-    let count = range.length > 0 ? range.length : run.range.length
-    let advance = _advance(for: run.line.font)
+    let units = run.line.units
+    let count = range.length > 0 ? range.length : units.count
+    let start = range.length > 0 ? max(0, range.location - run.range.location) : 0
     guard let buffer else { return }
     for i in 0..<count {
-        buffer[i] = CGSize(width: advance, height: 0)
+        let idx = start + i
+        let width = (idx >= 0 && idx < units.count) ? units[idx].advance : 0
+        buffer[i] = CGSize(width: width, height: 0)
     }
 }
 public func CTRunGetAdvancesPtr(_ run: CTRun) -> UnsafePointer<CGSize>? {
@@ -449,14 +551,36 @@ public func CTRunGetAdvancesPtr(_ run: CTRun) -> UnsafePointer<CGSize>? {
     return nil
 }
 public func CTRunGetPositions(_ run: CTRun, _ range: CFRange, _ buffer: UnsafeMutablePointer<CGPoint>?) {
-    let count = range.length > 0 ? range.length : run.range.length
-    let advance = _advance(for: run.line.font)
+    let units = run.line.units
+    let count = range.length > 0 ? range.length : units.count
+    let start = range.length > 0 ? max(0, range.location - run.range.location) : 0
     guard let buffer else { return }
+    var x: CGFloat = 0
+    for j in 0..<start where j < units.count {
+        x += units[j].advance
+    }
     for i in 0..<count {
-        buffer[i] = CGPoint(x: CGFloat(i) * advance, y: 0)
+        buffer[i] = CGPoint(x: x, y: 0)
+        let idx = start + i
+        if idx >= 0 && idx < units.count {
+            x += units[idx].advance
+        }
     }
 }
 public func CTRunGetPositionsPtr(_ run: CTRun) -> UnsafePointer<CGPoint>? {
+    _ = run
+    return nil
+}
+public func CTRunGetGlyphs(_ run: CTRun, _ range: CFRange, _ buffer: UnsafeMutablePointer<CGGlyph>) {
+    let units = run.line.units
+    let count = range.length > 0 ? range.length : units.count
+    let start = range.length > 0 ? max(0, range.location - run.range.location) : 0
+    for i in 0..<count {
+        let idx = start + i
+        buffer[i] = (idx >= 0 && idx < units.count) ? units[idx].glyph : 0
+    }
+}
+public func CTRunGetGlyphsPtr(_ run: CTRun) -> UnsafePointer<CGGlyph>? {
     _ = run
     return nil
 }
@@ -480,6 +604,17 @@ public func CTRunGetBaseAdvancesAndOrigins(
 ) {
     CTRunGetAdvances(runRef, range, advancesBuffer)
     CTRunGetPositions(runRef, range, originsBuffer)
+}
+public func CTRunGetTextMatrix(_ run: CTRun) -> CGAffineTransform {
+    run.line.font.matrix
+}
+public func CTRunGetImageBounds(_ run: CTRun, _ context: CGContext?, _ range: CFRange) -> CGRect {
+    _ = (context, range)
+    return CGRect(x: 0, y: -run.line.descent, width: run.line.width, height: run.line.ascent + run.line.descent)
+}
+public func CTRunDraw(_ run: CTRun, _ context: CGContext, _ range: CFRange) {
+    _ = (run, range)
+    _ctRecordRunDraw(context)
 }
 
 public func CTFramesetterCreateWithAttributedString(_ attrString: CFAttributedString) -> CTFramesetter {
@@ -529,6 +664,62 @@ public func CTFramesetterSuggestFrameSizeWithConstraints(
     let font = _fontFromAttributedString(ns)
     let lineHeight = CTFontGetAscent(font) + CTFontGetDescent(font) + CTFontGetLeading(font)
     return CGSize(width: maxWidth, height: CGFloat(max(lines, 1)) * lineHeight)
+}
+
+public func CTFramesetterCreateFrame(
+    _ framesetter: CTFramesetter,
+    _ stringRange: CFRange,
+    _ path: CGPath,
+    _ frameAttributes: CFDictionary?
+) -> CTFrame {
+    let bounds = _ctPathBounds(path)
+    var mapped: [String: Any] = [:]
+    if let frameAttributes {
+        let ns = _ctNSDictionary(frameAttributes)
+        for (key, value) in ns {
+            mapped["\(key)"] = value
+        }
+    }
+    let ns = framesetter.typesetter.string
+    var start = stringRange.location
+    if start < 0 { start = 0 }
+    let endLimit = stringRange.length < 0 ? ns.length : min(ns.length, start + stringRange.length)
+    var cursor = start
+    var lines: [CTLine] = []
+    var usedHeight: CGFloat = 0
+    while cursor < endLimit {
+        let next = CTTypesetterSuggestLineBreak(framesetter.typesetter, cursor, Double(bounds.width))
+        if next <= cursor { break }
+        let line = CTTypesetterCreateLine(
+            framesetter.typesetter,
+            CFRange(location: cursor, length: next - cursor)
+        )
+        let lineHeight = line.ascent + line.descent + line.leading
+        if bounds.height > 0 && usedHeight + lineHeight > bounds.height && !lines.isEmpty {
+            break
+        }
+        lines.append(line)
+        usedHeight += lineHeight
+        cursor = next
+    }
+    return CTFrame(
+        string: ns,
+        lines: lines,
+        visibleRange: NSRange(location: start, length: cursor - start),
+        pathBounds: bounds,
+        attributes: mapped,
+        path: path
+    )
+}
+
+public func CTFrameGetPath(_ frame: CTFrame) -> CGPath {
+    frame.path
+}
+
+public func CTFrameDraw(_ frame: CTFrame, _ context: CGContext) {
+    for line in frame.lines {
+        CTLineDraw(line, context)
+    }
 }
 
 public func CTFrameGetTypeID() -> CFTypeID { 0x4354_4652 }
@@ -730,7 +921,22 @@ public func CTGlyphInfoCreateWithCharacterIdentifier(
         glyphName: nil,
         collection: collection,
         characterIdentifier: cid,
-        baseString: _ctString(baseString)
+        baseString: _ctString(baseString),
+        glyph: CGGlyph(cid)
+    )
+}
+public func CTGlyphInfoCreateWithGlyph(
+    _ glyph: CGGlyph,
+    _ font: CTFont,
+    _ baseString: CFString
+) -> CTGlyphInfo? {
+    _ = font
+    return CTGlyphInfo(
+        glyphName: nil,
+        collection: .identityMapping,
+        characterIdentifier: glyph,
+        baseString: _ctString(baseString),
+        glyph: glyph
     )
 }
 public func CTGlyphInfoGetGlyphName(_ glyphInfo: CTGlyphInfo) -> CFString? {
@@ -741,6 +947,9 @@ public func CTGlyphInfoGetCharacterCollection(_ glyphInfo: CTGlyphInfo) -> CTCha
 }
 public func CTGlyphInfoGetCharacterIdentifier(_ glyphInfo: CTGlyphInfo) -> CGFontIndex {
     glyphInfo.characterIdentifier
+}
+public func CTGlyphInfoGetGlyph(_ glyphInfo: CTGlyphInfo) -> CGGlyph {
+    glyphInfo.glyph
 }
 
 public func CTRunDelegateGetTypeID() -> CFTypeID { 0x4354_5244 }

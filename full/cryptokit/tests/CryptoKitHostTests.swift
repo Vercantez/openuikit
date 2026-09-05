@@ -65,6 +65,11 @@ do {
 }
 let key = try Curve25519.Signing.PublicKey(rawRepresentation: Data(count: 32))
 precondition(key.rawRepresentation.count == 32)
-precondition(!key.isValidSignature(Data(count: 64), for: abc))
+let seed = Data(
+    (0..<32).map { _ in UInt8.random(in: 0...255) }
+)
+let signing = try Curve25519.Signing.PrivateKey(rawRepresentation: seed)
+let signature = try signing.signature(for: abc)
+precondition(signing.publicKey.isValidSignature(signature, for: abc))
 
-print("CRYPTOKIT_HOST_OK hashes=md5,sha1,sha256,sha384,sha512 nonce=12 ed25519=fail-closed")
+print("CRYPTOKIT_HOST_OK hashes=md5,sha1,sha256,sha384,sha512 nonce=12 ed25519=rfc8032")

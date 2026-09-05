@@ -1,40 +1,62 @@
 @_exported import Foundation
+#if canImport(CoreGraphics)
+@_exported import CoreGraphics
+#endif
+#if canImport(CoreLocation)
+@_exported import CoreLocation
+#endif
+#if canImport(UIKit)
+@_exported import UIKit
+#endif
 
-/// Linux starting point for Apple's public `MapKit` module.
+/// Linux `MapKit` module. Geometry, annotations, overlays, and MKMapView
+/// stores are real in-process values. Apple Maps tiles, directions, local
+/// search, Look Around, and snapshotter success fail closed with `MKError`.
 ///
-/// Map-point geometry, option sets, enumerations, address/POI filters, and
-/// `MKDistanceFormatter` are real in-process values. Apple Maps tiles,
-/// directions, local search, Look Around, and UIKit map views are not present
-/// on this isolated host: those APIs stay deferred or fail closed. Nothing here
-/// is a claim of Apple bit-identical projection, string format, or service
-/// success.
-///
-/// `CoreLocation` / `UIKit` / `CoreGraphics` types are owned by those modules.
-/// This lane does not publish stand-ins for them. Isolated-host compilation
-/// therefore uses `Double` wherever the overlay writes `CLLocationDegrees` or
-/// `CLLocationDistance` (those are typealiases of `Double` on Darwin).
+/// Measured against Darwin MapKit on macOS 26.1 (`xcrun swift` probe,
+/// 2026-09-05): world size `268435456`, equator meters-per-point
+/// `0.14828977333772544`, `MKMapPoint(0°, 0°) = (134217728, 134217728)`,
+/// POI raw strings `MKPOICategory…`, `MKMapCameraZoomDefault = -1`,
+/// `MKLocalPointsOfInterestRequest.maxRadius = 2000`.
 
 public let MKErrorDomain = "MKErrorDomain"
 
+public let MKAnnotationCalloutInfoDidChangeNotification =
+    "MKAnnotationCalloutInfoDidChangeNotification"
+
+public let MKLaunchOptionsDirectionsModeKey = "MKLaunchOptionsDirectionsMode"
+public let MKLaunchOptionsMapCenterKey = "MKLaunchOptionsMapCenter"
+public let MKLaunchOptionsMapSpanKey = "MKLaunchOptionsMapSpan"
+public let MKLaunchOptionsMapTypeKey = "MKLaunchOptionsMapType"
+public let MKLaunchOptionsShowsTrafficKey = "MKLaunchOptionsShowsTraffic"
+public let MKLaunchOptionsCameraKey = "MKLaunchOptionsCameraKey"
+public let MKLaunchOptionsDirectionsModeDriving = "MKLaunchOptionsDirectionsModeDriving"
+public let MKLaunchOptionsDirectionsModeWalking = "MKLaunchOptionsDirectionsModeWalking"
+public let MKLaunchOptionsDirectionsModeTransit = "MKLaunchOptionsDirectionsModeTransit"
+public let MKLaunchOptionsDirectionsModeDefault = "MKLaunchOptionsDirectionsModeDefault"
+public let MKLaunchOptionsDirectionsModeCycling = "MKLaunchOptionsDirectionsModeCycling"
+
+public let MKMapViewDefaultAnnotationViewReuseIdentifier =
+    "MKMapViewDefaultAnnotationViewReuseIdentifier"
+public let MKMapViewDefaultClusterAnnotationViewReuseIdentifier =
+    "MKMapViewDefaultClusterAnnotationViewReuseIdentifier"
+public let MKMapItemTypeIdentifier = "com.apple.mapkit.map-item"
+
+/// Darwin macOS 26.1: `MKMapCameraZoomDefault == -1`.
+public let MKMapCameraZoomDefault: CLLocationDistance = -1
+
 public typealias MKZoomScale = CGFloat
 
-public func MKRoadWidthAtZoomScale(_ zoomScale: MKZoomScale) -> CGFloat {
-    // Linux stand-in: two map-points of road width at 1x. Not an Apple-oracle
-    // width table.
-    max(0 as CGFloat, zoomScale * 2)
-}
-
 extension NSNotification.Name {
-    /// Linux uses the exported C identifier as the raw name. Apple's exact
-    /// payload bytes are unobserved on this host.
+    /// Darwin macOS 26.1: raw value `MKAnnotationCalloutInfoDidChangeNotification`.
     public static let MKAnnotationCalloutInfoDidChange = NSNotification.Name(
-        "MKAnnotationCalloutInfoDidChangeNotification"
+        MKAnnotationCalloutInfoDidChangeNotification
     )
 }
 
 /// Bridged `MKError` overlay. Raw codes follow the macios/header order
-/// (`unknown = 1` … `decodingFailed = 6`). The domain string is the C
-/// identifier pending an Apple-oracle probe.
+/// (`unknown = 1` … `decodingFailed = 6`). Darwin domain string is
+/// `MKErrorDomain` (macOS 26.1).
 public struct MKError: Error, Equatable, Hashable, Sendable {
     public enum Code: UInt, Sendable, Equatable, Hashable {
         case unknown = 1
@@ -81,4 +103,39 @@ extension MKError.Code {
     public static func ~= (match: Self, error: any Error) -> Bool {
         (error as? MKError)?.code == match
     }
+}
+
+func mk_nsError(_ error: MKError) -> NSError {
+    NSError(
+        domain: MKErrorDomain,
+        code: error.errorCode,
+        userInfo: error.errorUserInfo
+    )
+}
+
+func mk_containsToken(_ haystack: String, _ needle: String) -> Bool {
+    var index = haystack.startIndex
+    while index < haystack.endIndex {
+        if haystack[index...].hasPrefix(needle) {
+            return true
+        }
+        index = haystack.index(after: index)
+    }
+    return false
+}
+
+func mk_replaceTemplate(_ template: String, key: String, value: String) -> String {
+    // Avoid `_StringProcessing` String.replacing. Tile templates use `{z}`/`{x}`/`{y}`.
+    var result = ""
+    var index = template.startIndex
+    while index < template.endIndex {
+        if template[index...].hasPrefix(key) {
+            result += value
+            index = template.index(index, offsetBy: key.count)
+        } else {
+            result.append(template[index])
+            index = template.index(after: index)
+        }
+    }
+    return result
 }

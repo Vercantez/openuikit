@@ -80,9 +80,166 @@ open class UITouch: NSObject, @unchecked Sendable {}
 #endif
 
 #if os(Linux)
+/// Isolated-host stand-in for Foundation.NSItemProvider. Linux
+/// swift-corelibs-foundation does not vend the class; the later guest
+/// uses the port's Foundation type (full/foundation/NSExtensionHost.swift).
+///
+/// Registration and load APIs follow Apple's NSItemProvider:
+/// https://developer.apple.com/documentation/foundation/nsitemprovider
+/// Raw visibility values match Apple's NSItemProviderRepresentationVisibility
+/// (all=0, team=1, group=2, ownProcess=3).
+public enum NSItemProviderRepresentationVisibility: Int, Hashable, Sendable {
+    case all = 0
+    case team = 1
+    case group = 2
+    case ownProcess = 3
+}
+
 open class NSItemProvider: NSObject, @unchecked Sendable {
+    private struct Representation {
+        let typeIdentifier: String
+        let loadHandler: (@escaping (Data?, Error?) -> Void) -> Progress?
+    }
+
+    private let lock = NSLock()
+    private var representations: [Representation] = []
+
     public override init() {
         super.init()
+    }
+
+    public var registeredTypeIdentifiers: [String] {
+        lock.withLock { representations.map(\.typeIdentifier) }
+    }
+
+    public var suggestedName: String?
+
+    public func hasItemConformingToTypeIdentifier(_ typeIdentifier: String) -> Bool {
+        let identifiers = registeredTypeIdentifiers
+        if identifiers.contains(where: { $0 == typeIdentifier }) {
+            return true
+        }
+        let wanted = UTType(identifier: typeIdentifier)
+        return identifiers.contains { identifier in
+            UTType(identifier: identifier).conforms(to: wanted)
+        }
+    }
+
+    open func registerDataRepresentation(
+        forTypeIdentifier typeIdentifier: String,
+        visibility: NSItemProviderRepresentationVisibility,
+        loadHandler: @escaping (@escaping (Data?, Error?) -> Void) -> Progress?
+    ) {
+        _ = visibility
+        lock.withLock {
+            representations.append(
+                Representation(typeIdentifier: typeIdentifier, loadHandler: loadHandler)
+            )
+        }
+    }
+
+    @discardableResult
+    open func loadDataRepresentation(
+        forTypeIdentifier typeIdentifier: String,
+        completionHandler: @escaping (Data?, Error?) -> Void
+    ) -> Progress {
+        let progress = Progress(totalUnitCount: 1)
+        guard let representation = representation(matching: typeIdentifier) else {
+            completionHandler(
+                nil,
+                PhotosUIUnavailable.linuxHost(operation: "NSItemProvider.loadDataRepresentation")
+            )
+            progress.completedUnitCount = 1
+            return progress
+        }
+        _ = representation.loadHandler { data, error in
+            completionHandler(data, error)
+            progress.completedUnitCount = 1
+        }
+        return progress
+    }
+
+    /// Writes a copy of the registered payload to a temporary file.
+    /// Apple deletes that file when the completion handler returns; Linux
+    /// leaves it in place so a synchronous host test can read it after return.
+    /// See oracle-questions.tsv.
+    @discardableResult
+    open func loadFileRepresentation(
+        forTypeIdentifier typeIdentifier: String,
+        completionHandler: @escaping (URL?, Error?) -> Void
+    ) -> Progress {
+        let progress = Progress(totalUnitCount: 1)
+        loadDataRepresentation(forTypeIdentifier: typeIdentifier) { data, error in
+            defer { progress.completedUnitCount = 1 }
+            if let error {
+                completionHandler(nil, error)
+                return
+            }
+            guard let data else {
+                completionHandler(
+                    nil,
+                    PhotosUIUnavailable.linuxHost(operation: "NSItemProvider.loadFileRepresentation")
+                )
+                return
+            }
+            let url = FileManager.default.temporaryDirectory
+                .appendingPathComponent("photosui-item-" + UUID().uuidString)
+            do {
+                try data.write(to: url)
+                completionHandler(url, nil)
+            } catch {
+                completionHandler(nil, error)
+            }
+        }
+        return progress
+    }
+
+    /// Linux host: Data is the only loadable class. Apple's
+    /// NSItemProviderReading graph (UIImage, URL, …) is unobserved.
+    @discardableResult
+    open func loadObject<T>(
+        ofClass aClass: T.Type,
+        completionHandler: @escaping (T?, Error?) -> Void
+    ) -> Progress {
+        _ = aClass
+        let progress = Progress(totalUnitCount: 1)
+        guard T.self == Data.self else {
+            completionHandler(
+                nil,
+                PhotosUIUnavailable.linuxHost(operation: "NSItemProvider.loadObject")
+            )
+            progress.completedUnitCount = 1
+            return progress
+        }
+        let identifiers = registeredTypeIdentifiers
+        guard let first = identifiers.first else {
+            completionHandler(
+                nil,
+                PhotosUIUnavailable.linuxHost(operation: "NSItemProvider.loadObject")
+            )
+            progress.completedUnitCount = 1
+            return progress
+        }
+        loadDataRepresentation(forTypeIdentifier: first) { data, error in
+            completionHandler(data as? T, error)
+        }
+        progress.completedUnitCount = 1
+        return progress
+    }
+
+    public func canLoadObject<T>(ofClass aClass: T.Type) -> Bool {
+        _ = aClass
+        return T.self == Data.self && !registeredTypeIdentifiers.isEmpty
+    }
+
+    private func representation(matching typeIdentifier: String) -> Representation? {
+        let wanted = UTType(identifier: typeIdentifier)
+        return lock.withLock {
+            representations.first { item in
+                item.typeIdentifier == typeIdentifier
+                    || UTType(identifier: item.typeIdentifier).conforms(to: wanted)
+            }
+        }
     }
 }
 #endif

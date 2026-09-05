@@ -35,7 +35,21 @@ open class NSUserActivity: NSObject, @unchecked Sendable {
 public protocol CustomLocalizedStringResourceConvertible {
     var localizedStringResource: LocalizedStringResource { get }
 }
+
+extension LocalizedStringResource {
+    init(_ string: String) {
+        self.init(stringLiteral: string)
+    }
+}
 #endif
+
+func appIntentsString(_ resource: LocalizedStringResource) -> String {
+    // Measured: Foundation.LocalizedStringResource("Adds a feed").key ==
+    // "Adds a feed" on Darwin; the lookalike stores the same field.
+    // String interpolation of the Apple type is a debug dump, not the key
+    // (testAppIntentStaticRequirements).
+    resource.key
+}
 
 // MARK: - SwiftUI lookalikes (isolated host has no SwiftUI module)
 
@@ -217,6 +231,4 @@ open class CLPlacemark: NSObject, @unchecked Sendable {
 
 // MARK: - ExtensionKit lookalike used only in AppIntentsExtension
 
-#if !canImport(ExtensionFoundation) && !canImport(ExtensionKit)
 public protocol AppExtension {}
-#endif

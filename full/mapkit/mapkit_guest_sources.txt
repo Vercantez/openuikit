@@ -1,6 +1,17 @@
 full/mapkit/MKAddressFilter.swift
+full/mapkit/MKAnnotation.swift
+full/mapkit/MKControls.swift
+full/mapkit/MKDirections.swift
 full/mapkit/MKDistanceFormatter.swift
 full/mapkit/MKGeometry.swift
+full/mapkit/MKLocalSearch.swift
+full/mapkit/MKLookalikes.swift
+full/mapkit/MKMapCamera.swift
+full/mapkit/MKMapItem.swift
+full/mapkit/MKMapView.swift
+full/mapkit/MKOverlay.swift
+full/mapkit/MKOverlayRenderer.swift
 full/mapkit/MKPointOfInterest.swift
+full/mapkit/MKSnapshotter.swift
 full/mapkit/MKTypes.swift
 full/mapkit/MapKit.swift

@@ -6,13 +6,13 @@ public enum AppShortcutOptionsCollectionSpecificationBuilder: Hashable, Sendable
     case _appIntentsPlaceholder
 }
 
-public enum VideoCategory: Hashable, Sendable {
+public enum VideoCategory: String, Hashable, Sendable {
     case tv
     case movies
     case freeform
 }
 
-public enum StringSearchScope: Hashable, Sendable {
+public enum StringSearchScope: String, Hashable, Sendable {
     case freeformVideo
     case tv
     case movies
@@ -95,4 +95,32 @@ public enum EntityQueryComparatorsBuilder: Hashable, Sendable {
 public enum EntityQuerySortingOptionsBuilder: Hashable, Sendable {
     case _appIntentsPlaceholder
 }
+
+extension VideoCategory: AppEnum {
+    public static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        TypeDisplayRepresentation(name: "Video Category")
+    }
+    public static var caseDisplayRepresentations: [VideoCategory: DisplayRepresentation] {
+        [
+            .tv: "TV",
+            .movies: "Movies",
+            .freeform: "Freeform"
+        ]
+    }
+}
+
+extension StringSearchScope: AppEnum {
+    public static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        TypeDisplayRepresentation(name: "String Search Scope")
+    }
+    public static var caseDisplayRepresentations: [StringSearchScope: DisplayRepresentation] {
+        [
+            .freeformVideo: "Freeform Video",
+            .tv: "TV",
+            .movies: "Movies",
+            .general: "General"
+        ]
+    }
+}
+
 

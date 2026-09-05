@@ -1,4 +1,13 @@
 import Foundation
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
+#if canImport(UIKit)
+import UIKit
+#endif
 
 public final class MKAddressFilter: NSObject, NSCopying {
     private enum Mode {
@@ -78,5 +87,10 @@ public final class MKAddressFilter: NSObject, NSCopying {
     public func copy(with zone: NSZone? = nil) -> Any {
         _ = zone
         return MKAddressFilter(mode: mode)
+    }
+
+    public init?(coder: NSCoder) {
+        _ = coder
+        return nil
     }
 }
