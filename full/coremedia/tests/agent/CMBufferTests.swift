@@ -2,18 +2,146 @@ import CoreMedia
 import Dispatch
 import Foundation
 
-func testCMBlockBufferCopyOwnedBytes() {
-    let payload = Data([0x10, 0x20, 0x30, 0x40])
-    let buffer = CMBlockBuffer(data: payload)
-    precondition(CMBlockBufferGetDataLength(buffer) == 4)
-    precondition(!CMBlockBufferIsEmpty(buffer))
-    let copied = try! buffer.dataBytes()
-    precondition(copied == payload)
-    var sink = [UInt8](repeating: 0, count: 4)
-    sink.withUnsafeMutableBytes { dest in
-        try! buffer.copyDataBytes(to: dest)
+func testCMBlockBufferCreateCopyFill() {
+    var empty: CMBlockBuffer?
+    precondition(
+        CMBlockBufferCreateEmpty(allocator: nil, capacity: 1, flags: 0, blockBufferOut: &empty) == 0
+    )
+    precondition(CMBlockBufferIsEmpty(empty!))
+    var created: CMBlockBuffer?
+    var bytes: [UInt8] = [1, 2, 3, 4]
+    bytes.withUnsafeMutableBytes { raw in
+        precondition(
+            CMBlockBufferCreateWithMemoryBlock(
+                allocator: nil,
+                memoryBlock: raw.baseAddress,
+                blockLength: 4,
+                blockAllocator: nil,
+                customBlockSource: nil,
+                offsetToData: 0,
+                dataLength: 4,
+                flags: 0,
+                blockBufferOut: &created
+            ) == 0
+        )
     }
-    precondition(sink == [0x10, 0x20, 0x30, 0x40])
+    let buffer = created!
+    precondition(CMBlockBufferGetDataLength(buffer) == 4)
+    precondition(CMBlockBufferIsRangeContiguous(buffer, atOffset: 0, length: 4))
+    var dest = [UInt8](repeating: 0, count: 4)
+    dest.withUnsafeMutableBytes { raw in
+        precondition(
+            CMBlockBufferCopyDataBytes(buffer, atOffset: 0, dataLength: 4, destination: raw.baseAddress!)
+                == 0
+        )
+    }
+    precondition(dest == [1, 2, 3, 4])
+    precondition(
+        CMBlockBufferFillDataBytes(with: 9, blockBuffer: buffer, offsetIntoDestination: 1, dataLength: 2)
+            == 0
+    )
+    let afterFill = try! buffer.dataBytes()
+    precondition(afterFill[1] == 9)
+    let refill: [UInt8] = [7, 7]
+    refill.withUnsafeBytes { raw in
+        precondition(
+            CMBlockBufferReplaceDataBytes(
+                with: raw.baseAddress!,
+                blockBuffer: buffer,
+                offsetIntoDestination: 0,
+                dataLength: 2
+            ) == 0
+        )
+    }
+    precondition(kCMBlockBufferNoErr == 0)
+    precondition(kCMBlockBufferStructureAllocationFailedErr == -12700)
+    precondition(kCMBlockBufferInsufficientSpaceErr == -12708)
+    precondition(CMBlockBuffer.Error.badOffsetParameter.code == -12703)
+    precondition(CMBlockBuffer.Flags.assureMemoryNow.rawValue == kCMBlockBufferAssureMemoryNowFlag)
+    precondition(buffer.endIndex == buffer.dataLength)
+    precondition(buffer.owner === buffer)
+    try! buffer.fillDataBytes(with: 0)
+    precondition(CMBlockBufferAssureBlockMemory(buffer) == 0)
+    var contiguous: CMBlockBuffer?
+    precondition(
+        CMBlockBufferCreateContiguous(
+            allocator: nil,
+            sourceBuffer: buffer,
+            blockAllocator: nil,
+            customBlockSource: nil,
+            offsetToData: 0,
+            dataLength: 4,
+            flags: 0,
+            blockBufferOut: &contiguous
+        ) == 0
+    )
+    precondition(contiguous!.dataLength == 4)
+    let source = CMBlockBufferCustomBlockSource()
+    precondition(source.version == 1)
+}
+
+func testCMSampleBufferCreateAndTiming() {
+    let format = try! CMFormatDescription(
+        videoCodecType: .h264,
+        width: 8,
+        height: 8,
+        extensions: nil
+    )
+    let data = CMBlockBuffer(data: Data([0, 1, 2, 3]))
+    var timing = CMSampleTimingInfo(
+        duration: CMTime(value: 1, timescale: 30),
+        presentationTimeStamp: CMTime(value: 5, timescale: 30),
+        decodeTimeStamp: .invalid
+    )
+    var size = 4
+    var sample: CMSampleBuffer?
+    precondition(
+        withUnsafePointer(to: &timing) { timingPtr in
+            withUnsafePointer(to: &size) { sizePtr in
+                CMSampleBufferCreateReady(
+                    allocator: nil,
+                    dataBuffer: data,
+                    formatDescription: format,
+                    sampleCount: 1,
+                    sampleTimingEntryCount: 1,
+                    sampleTimingArray: timingPtr,
+                    sampleSizeEntryCount: 1,
+                    sampleSizeArray: sizePtr,
+                    sampleBufferOut: &sample
+                )
+            }
+        } == 0
+    )
+    let sbuf = sample!
+    precondition(CMSampleBufferIsValid(sbuf))
+    precondition(CMSampleBufferGetNumSamples(sbuf) == 1)
+    precondition(CMSampleBufferGetPresentationTimeStamp(sbuf) == timing.presentationTimeStamp)
+    var info = CMSampleTimingInfo()
+    precondition(CMSampleBufferGetSampleTimingInfo(sbuf, at: 0, timingInfoOut: &info) == 0)
+    precondition(info.duration == timing.duration)
+    precondition(CMSampleBufferSetOutputPresentationTimeStamp(sbuf, newValue: .zero) == 0)
+    precondition(CMSampleBufferGetOutputPresentationTimeStamp(sbuf) == .zero)
+    var copy: CMSampleBuffer?
+    precondition(CMSampleBufferCreateCopy(allocator: nil, sampleBuffer: sbuf, sampleBufferOut: &copy) == 0)
+    precondition(copy!.numSamples == 1)
+    precondition(kCMSampleBufferError_Invalidated == -12744)
+    precondition(kCMSampleBufferError_DataFailed == -16750)
+    precondition(kCMSampleBufferError_DataCanceled == -16751)
+    precondition(CFStringGetLength(kCMSampleAttachmentKey_NotSync) > 0)
+    CMSetAttachment(
+        sbuf,
+        key: kCMSampleAttachmentKey_DisplayImmediately,
+        value: kCFBooleanTrue,
+        attachmentMode: kCMAttachmentMode_ShouldPropagate
+    )
+    var mode: CMAttachmentMode = 0
+    let got = CMGetAttachment(sbuf, key: kCMSampleAttachmentKey_DisplayImmediately, attachmentModeOut: &mode)
+    precondition(got != nil)
+    precondition(mode == kCMAttachmentMode_ShouldPropagate)
+}
+
+func testCMBlockBufferCopyOwnedBytes() {
+    testCMBlockBufferCreateCopyFill()
 }
 
 func testCMBlockBufferEmptyAndMalformed() {

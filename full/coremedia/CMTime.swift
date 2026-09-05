@@ -379,6 +379,14 @@ public func CMTimeFoldIntoRange(_ time: CMTime, foldRange: CMTimeRange) -> CMTim
     return CMTimeAdd(start, folded)
 }
 
+public func CMTIME_IS_VALID(_ time: CMTime) -> Bool { time.isValid }
+public func CMTIME_IS_INVALID(_ time: CMTime) -> Bool { !time.isValid }
+public func CMTIME_IS_POSITIVEINFINITY(_ time: CMTime) -> Bool { time.isPositiveInfinity }
+public func CMTIME_IS_NEGATIVEINFINITY(_ time: CMTime) -> Bool { time.isNegativeInfinity }
+public func CMTIME_IS_INDEFINITE(_ time: CMTime) -> Bool { time.isIndefinite }
+public func CMTIME_IS_NUMERIC(_ time: CMTime) -> Bool { time.isNumeric }
+public func CMTIME_HAS_BEEN_ROUNDED(_ time: CMTime) -> Bool { time.hasBeenRounded }
+
 public func CMTimeShow(_ time: CMTime) {
     let line = cmTimeDebugDescription(time) + "\n"
     FileHandle.standardError.write(Data(line.utf8))
