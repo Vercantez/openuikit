@@ -21,6 +21,9 @@ public enum RealAppScreen {
     /// iPad (A16) portrait. MEASURED `UIScreen.main.bounds` on the
     /// `iPad-A16` simulator (2x): 820 × 1180.
     public static let windowSizePad = CGSize(width: 820, height: 1180)
+    /// iPhone SE (3rd gen) landscapeLeft. MEASURED ConfProbe `--landscape`,
+    /// iPhone SE 2x / iOS 26.1: `UIScreen.main.bounds` 667 × 375.
+    public static let windowSizePhoneLandscape = CGSize(width: 667, height: 375)
     /// Default (phone) window; openhost `--app pocketcasts` uses this.
     public static let windowSize = windowSizePhone
     /// MEASURED realappprobe, iPhone 16 / iOS 26.1: window safe area
@@ -30,6 +33,10 @@ public enum RealAppScreen {
     /// iPad (A16) 820×1180 @2x / iOS 26.1: window `safeAreaInsets`
     /// `[32, 0, 25, 0]`.
     public static let padSafeArea = UIEdgeInsets(top: 32, left: 0, bottom: 25, right: 0)
+    /// MEASURED ConfProbe `--landscape`, iPhone SE 2x / iOS 26.1
+    /// (ConfProbe-Landscape-Info.plist hides the status bar): NavFlow
+    /// t200.landscape dump `screen.windowSafeArea` `[0, 0, 0, 0]`.
+    public static let phoneLandscapeSafeArea = UIEdgeInsets.zero
 
     /// Where UIImage(named:) finds the app's icons. `openrender`/`openhost`
     /// point this at fixtures/realapp/assets before building the screen.

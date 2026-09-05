@@ -285,7 +285,7 @@ open class UINavigationController: UIViewController {
             // 59 pt notch set y to that inset (additionalSafeAreaInsets 20/59
             // on a zero-SA window match the real status-bar / notch samples).
             let pad = iOSBarTop
-            let barH = navigationBar.prefersLargeTitles
+            let barH = navigationBar.displaysLargeTitles
                 ? navigationBar.largeTitleOverlayHeight
                 : UINavigationBar.iOSBarContentHeight + navigationBar.searchOverlayHeight
             navigationBar.frame = CGRect(x: 0, y: pad, width: w, height: barH)
@@ -319,9 +319,13 @@ open class UINavigationController: UIViewController {
         updateContentSafeArea()
     }
 
-    /// iOS 26.1 bar origin: `max(safeArea.top, 10)`. See updateContainerLayout.
+    /// iOS 26.1 bar origin: `max(safeArea.top, 10)` portrait, `max(safeArea.top, 24)`
+    /// compact height. See updateContainerLayout.
     var iOSBarTop: CGFloat {
-        max(view.safeAreaInsets.top, UINavigationBar.iOSMinimumBarTop)
+        let floor = UINavigationBar.isCompactHeight
+            ? UINavigationBar.iOSCompactHeightBarTop
+            : UINavigationBar.iOSMinimumBarTop
+        return max(view.safeAreaInsets.top, floor)
     }
 
     /// The bars a child underlaps are SAFE AREA, not a scroll-view inset.
@@ -399,7 +403,7 @@ open class UINavigationController: UIViewController {
     func bindContentScrollView(of vc: UIViewController) {
         let previous = navigationBar.trackedScrollView
         let wantsSearch = vc.navigationItem.searchController != nil
-        guard navigationBar.prefersLargeTitles || wantsSearch,
+        guard navigationBar.displaysLargeTitles || wantsSearch,
               let scroll = vc._contentScrollView else {
             previous?._scrollObserver = nil
             navigationBar.trackedScrollView = nil
@@ -409,7 +413,7 @@ open class UINavigationController: UIViewController {
         // The expanded overlay reaches the scroll view as SAFE AREA
         // (updateContentSafeArea), exactly as it does on the device, so only
         // the rest offset is settled here.
-        if navigationBar.prefersLargeTitles {
+        if navigationBar.displaysLargeTitles {
             let inset = navigationBar.effectiveLargeTitleExpandedInset
             let wasAtRest = scroll.contentOffset.y == -scroll.adjustedContentInset.top
             updateContentSafeArea()
@@ -430,7 +434,7 @@ open class UINavigationController: UIViewController {
     /// Snap a release inside the large-title zone to the nearest rest state
     /// (fully expanded / fully collapsed), like UIKit.
     func snapLargeTitleIfNeeded(_ scroll: UIScrollView) {
-        guard navigationBar.prefersLargeTitles,
+        guard navigationBar.displaysLargeTitles,
               scroll === navigationBar.trackedScrollView else { return }
         let d = scroll.contentOffset.y + navigationBar.effectiveLargeTitleExpandedInset
         guard d > 0.5, d < navigationBar.effectiveLargeTitleZoneHeight - 0.5 else { return }
