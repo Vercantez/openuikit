@@ -61,6 +61,8 @@ precondition(blur.edgeMode == .clamp)
 let region = blur.sourceRegion(destinationSize: MTLSize(width: 8, height: 4, depth: 1))
 precondition(region.size.width == 8)
 precondition(region.size.height == 4)
+let blurCopy = blur.copy(with: nil, device: device)
+precondition(blurCopy.sigma == 2.5)
 
 var histogramInfo = MPSImageHistogramInfo()
 histogramInfo.numberOfHistogramEntries = 256
@@ -108,5 +110,31 @@ precondition(imageType.rawValue != 0)
 let commandBuffer = device.makeCommandBuffer()
 MPSHintTemporaryMemoryHighWaterMark(commandBuffer, 4096)
 MPSSetHeapCacheDuration(commandBuffer, 0)
+
+let packed = MPSPackedFloat3(x: 1, y: 2, z: 3)
+precondition(packed.elements.1 == 2)
+let nd = MPSNDArray(device: device, descriptor: MPSNDArrayDescriptor(dataType: .float32, shape: [2, 2]))
+precondition(nd.length(ofDimension: 0) == 2)
+precondition(MPSImageMedian.minKernelDiameter() == 3)
+precondition(MPSImageMedian.maxKernelDiameter() == 9)
+
+let aDesc = MPSMatrixDescriptor(rows: 2, columns: 2, rowBytes: 8, dataType: .float32)
+let a = MPSMatrix(device: device, descriptor: aDesc)
+let b = MPSMatrix(device: device, descriptor: aDesc)
+let c = MPSMatrix(device: device, descriptor: aDesc)
+let ap = a.data.contents.bindMemory(to: Float.self, capacity: 4)
+let bp = b.data.contents.bindMemory(to: Float.self, capacity: 4)
+ap[0] = 1; ap[1] = 0; ap[2] = 0; ap[3] = 1
+bp[0] = 2; bp[1] = 3; bp[2] = 4; bp[3] = 5
+let gemm = MPSMatrixMultiplication(device: device, resultRows: 2, resultColumns: 2, interiorColumns: 2)
+gemm.encode(commandBuffer: commandBuffer, leftMatrix: a, rightMatrix: b, resultMatrix: c)
+let cp = c.data.contents.bindMemory(to: Float.self, capacity: 4)
+precondition(abs(cp[0] - 2) < 0.001)
+precondition(abs(cp[3] - 5) < 0.001)
+
+MPSHostBoundary.reset()
+let unary = MPSUnaryImageKernel(device: device)
+unary.encode(commandBuffer: commandBuffer, sourceImage: image, destinationImage: image)
+precondition(MPSHostBoundary.lastRefusedAPI != nil)
 
 print("METALPERFORMANCESHADERS_AGENT_RUNTIME_OK")
