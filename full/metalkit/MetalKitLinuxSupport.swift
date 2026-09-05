@@ -181,6 +181,7 @@ open class MTLTextureDescriptor: NSObject, @unchecked Sendable {
 public protocol MTLBuffer: AnyObject {
     var device: any MTLDevice { get }
     var length: Int { get }
+    var contents: UnsafeMutableRawPointer { get }
 }
 
 public protocol MTLTexture: AnyObject {
@@ -269,10 +270,38 @@ open class MTL4RenderPassDescriptor: NSObject, @unchecked Sendable {
 final class MetalKitLookalikeBuffer: MTLBuffer, @unchecked Sendable {
     let device: any MTLDevice
     let length: Int
+    private let storage: UnsafeMutablePointer<UInt8>
 
-    init(device: any MTLDevice, length: Int) {
+    init(device: any MTLDevice, length: Int, bytes: Data = Data()) {
         self.device = device
-        self.length = max(length, 0)
+        let byteCount = max(length, 0)
+        self.length = byteCount
+        let pointer = UnsafeMutablePointer<UInt8>.allocate(capacity: max(byteCount, 1))
+        pointer.initialize(repeating: 0, count: max(byteCount, 1))
+        if !bytes.isEmpty && byteCount > 0 {
+            bytes.copyBytes(to: pointer, count: min(bytes.count, byteCount))
+        }
+        self.storage = pointer
+    }
+
+    deinit {
+        storage.deinitialize(count: max(length, 1))
+        storage.deallocate()
+    }
+
+    var contents: UnsafeMutableRawPointer {
+        UnsafeMutableRawPointer(storage)
+    }
+
+    func copyBytes() -> Data {
+        Data(bytes: storage, count: length)
+    }
+
+    func fill(_ data: Data, offset: Int) {
+        guard offset >= 0, offset <= length else { return }
+        let count = min(data.count, length - offset)
+        guard count > 0 else { return }
+        data.copyBytes(to: storage + offset, count: count)
     }
 }
 
@@ -330,4 +359,143 @@ private let isolatedHostDevice = MetalSoftwareDevice()
 
 public func MTLCreateSystemDefaultDevice() -> (any MTLDevice)? {
     isolatedHostDevice
+}
+
+// MARK: - Metal vertex / index types (lookalikes)
+
+public enum MTLVertexFormat: UInt, Sendable, Equatable, Hashable {
+    case invalid = 0
+    case uchar2 = 1
+    case uchar3 = 2
+    case uchar4 = 3
+    case char2 = 4
+    case char3 = 5
+    case char4 = 6
+    case uchar2Normalized = 7
+    case uchar3Normalized = 8
+    case uchar4Normalized = 9
+    case char2Normalized = 10
+    case char3Normalized = 11
+    case char4Normalized = 12
+    case ushort2 = 13
+    case ushort3 = 14
+    case ushort4 = 15
+    case short2 = 16
+    case short3 = 17
+    case short4 = 18
+    case ushort2Normalized = 19
+    case ushort3Normalized = 20
+    case ushort4Normalized = 21
+    case short2Normalized = 22
+    case short3Normalized = 23
+    case short4Normalized = 24
+    case half2 = 25
+    case half3 = 26
+    case half4 = 27
+    case float = 28
+    case float2 = 29
+    case float3 = 30
+    case float4 = 31
+    case int = 32
+    case int2 = 33
+    case int3 = 34
+    case int4 = 35
+    case uint = 36
+    case uint2 = 37
+    case uint3 = 38
+    case uint4 = 39
+    case int1010102Normalized = 40
+    case uint1010102Normalized = 41
+    case uchar4Normalized_bgra = 42
+    case uchar = 45
+    case char = 46
+    case ucharNormalized = 47
+    case charNormalized = 48
+    case ushort = 49
+    case short = 50
+    case ushortNormalized = 51
+    case shortNormalized = 52
+    case half = 53
+}
+
+public enum MTLIndexType: UInt, Sendable {
+    case uint16 = 0
+    case uint32 = 1
+}
+
+public enum MTLPrimitiveType: UInt, Sendable {
+    case point = 0
+    case line = 1
+    case lineStrip = 2
+    case triangle = 3
+    case triangleStrip = 4
+}
+
+public enum MTLVertexStepFunction: UInt, Sendable {
+    case constant = 0
+    case perVertex = 1
+    case perInstance = 2
+    case perPatch = 3
+    case perPatchControlPoint = 4
+}
+
+open class MTLVertexAttributeDescriptor: NSObject, @unchecked Sendable {
+    public var format: MTLVertexFormat = .invalid
+    public var offset: Int = 0
+    public var bufferIndex: Int = 0
+}
+
+open class MTLVertexAttributeDescriptorArray: NSObject, @unchecked Sendable {
+    private var slots: [Int: MTLVertexAttributeDescriptor] = [:]
+
+    public subscript(index: Int) -> MTLVertexAttributeDescriptor {
+        get {
+            if let existing = slots[index] {
+                return existing
+            }
+            let created = MTLVertexAttributeDescriptor()
+            slots[index] = created
+            return created
+        }
+        set {
+            slots[index] = newValue
+        }
+    }
+
+    var populatedIndices: [Int] {
+        slots.keys.sorted()
+    }
+}
+
+open class MTLVertexBufferLayoutDescriptor: NSObject, @unchecked Sendable {
+    public var stride: Int = 0
+    public var stepFunction: MTLVertexStepFunction = .perVertex
+    public var stepRate: Int = 1
+}
+
+open class MTLVertexBufferLayoutDescriptorArray: NSObject, @unchecked Sendable {
+    private var slots: [Int: MTLVertexBufferLayoutDescriptor] = [:]
+
+    public subscript(index: Int) -> MTLVertexBufferLayoutDescriptor {
+        get {
+            if let existing = slots[index] {
+                return existing
+            }
+            let created = MTLVertexBufferLayoutDescriptor()
+            slots[index] = created
+            return created
+        }
+        set {
+            slots[index] = newValue
+        }
+    }
+
+    var populatedIndices: [Int] {
+        slots.keys.sorted()
+    }
+}
+
+open class MTLVertexDescriptor: NSObject, @unchecked Sendable {
+    public let attributes = MTLVertexAttributeDescriptorArray()
+    public let layouts = MTLVertexBufferLayoutDescriptorArray()
 }
