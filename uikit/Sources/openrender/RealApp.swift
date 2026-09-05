@@ -90,6 +90,14 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     UIScreen.main._hostConfigure(bounds: CGRect(origin: .zero, size: size), scale: scale)
 
     let window = UIWindow(frame: CGRect(origin: .zero, size: size))
+    // MEASURED realapp_focus_settings_light / realappprobe, iPhone 16 /
+    // iOS 26.1: `UIGraphicsImageRendererFormat.opaque = true`, so unpainted
+    // window pixels (nil UILayoutContainerView behind a `UIImage()` nav bar)
+    // land as (0,0,0,255) *at sample time*. Liquid glass over that strip is
+    // 220; sampling a transparent Bitmap instead writes a translucent frost
+    // (α≈224) that the post-pass below cannot repair. Paint the window
+    // black so destination-sampling chrome sees the same clear as the probe.
+    window.backgroundColor = .black
     // MEASURED (realappprobe, iPhone 16 / iOS 26.1): the window's safe area
     // is [59, 0, 34, 0]; the sheet's detent height gets the 34 added
     // (343 + 34 = 377), which the port could not reproduce with zero insets.
@@ -139,12 +147,9 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
         UINib.unhandledKeys = []
     }
     let bmp = UIRenderer.render(window, scale: scale)
-    // MEASURED realapp_focus_settings_light / realappprobe, iPhone 16 /
-    // iOS 26.1: `UIGraphicsImageRendererFormat.opaque = true`, so unpainted
-    // window pixels (nil UILayoutContainerView behind a `UIImage()` nav bar)
-    // land as (0,0,0,255). The port's Bitmap starts transparent-zero;
-    // compare composites that over white. Fill zero-alpha here to match
-    // the probe; fully painted screens (Pocket Casts) are unchanged.
+    // Leftover zero-alpha holes (not glass — those already sampled the
+    // opaque black window) still get a=255 so compare does not composite
+    // them over white.
     var i = 0
     while i < bmp.pixels.count {
         if bmp.pixels[i + 3] == 0 {

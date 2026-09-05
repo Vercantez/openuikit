@@ -40,15 +40,13 @@
 //                   iOS 26 renders `.done` / `UIBarButtonItem.Style.done`
 //                   as; the style was literally renamed `.prominent`).
 //
-// DIVERGENCE (documented in docs/KNOWN_GAPS.md): the platter is a real glass
-// material — it samples and blurs its backdrop. OpenUIKit has the filtering
-// backend, but its view renderer does not route this platter through it yet.
-// We draw the measured FLAT
-// equivalent: white in light mode, (25, 25, 25) in dark, plus the measured
-// soft shadow. Over a flat neutral backdrop that is what the golden shows
-// (over white the platter is literally invisible apart from its shadow);
-// over a saturated backdrop the real platter tints toward the backdrop hue
-// and ours does not.
+// iOS-cut light platters now route through `_UIGlassMaterial` (measured
+// mix α=222/255, T=220/α, σ=2.25 pt, 1 pt inner ring — sample table on
+// that type). Catalyst and dark iOS keep the measured FLAT fills: white
+// in light Catalyst, (25, 25, 25) in dark, plus the measured soft shadow.
+// `.done` / prominent platters stay tint-filled (not glass). Over a
+// saturated backdrop the two-unknown mix's red residual is reported in
+// the glass-material agent report; fixtures stay on white / black / #F2F2F7.
 //
 // DIVERGENCE (SF Symbols): several `barButtonSystemItem`s render as SF
 // Symbols on iOS 26, and SF Symbols are not portable (no font, no license to
@@ -241,8 +239,9 @@ public enum _UIBarMetrics {
     public static let shadowRadius: CGFloat = 10
     public static let shadowOffset = CGSize(width: 0, height: 4)
 
-    /// Flat equivalent of the glass platter (see the file header): measured
-    /// white over a light backdrop, (25, 25, 25) over a dark one.
+    /// Flat fallback when `_UIGlassMaterial` does not apply (Catalyst, dark,
+    /// `.done` tint fill): measured white over a light backdrop, (25, 25, 25)
+    /// over a dark one.
     public static let platterFill = UIColor(dynamicProvider: { traits in
         traits.userInterfaceStyle == .dark
             ? UIColor(red: 25 / 255, green: 25 / 255, blue: 25 / 255, alpha: 1)
@@ -304,6 +303,7 @@ final class _UIBarButtonItemView: UIControl {
         self.item = item
         super.init(frame: .zero)
         isOpaque = false
+        platter.isOpaque = false
         platter.layer.cornerRadius = _UIBarMetrics.platterRadius
         platter.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
         platter.layer.shadowOpacity = _UIBarMetrics.shadowOpacity
@@ -354,6 +354,9 @@ final class _UIBarButtonItemView: UIControl {
         platter.backgroundColor = _platterHiddenByGroup ? UIColor.clear
             : item.style == .done ? (item.tintColor ?? barTintColor)
             : _UIBarMetrics.platterFill
+        // Glass samples the backdrop. `.done` is a tint fill (measured
+        // prominent style); grouped items yield to `_UIBarSharedPlatterView`.
+        platter._usesIOSGlass = !_platterHiddenByGroup && item.style != .done && showsPlatter
         platter.layer.shadowOpacity = _platterHiddenByGroup ? 0 : _UIBarMetrics.shadowOpacity
         platter.isHidden = !showsPlatter
     }
@@ -456,6 +459,8 @@ final class _UIBarSharedPlatterView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
+        isOpaque = false
+        _usesIOSGlass = true
         layer.cornerRadius = _UIBarMetrics.platterRadius
         layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
         layer.shadowOpacity = _UIBarMetrics.shadowOpacity
