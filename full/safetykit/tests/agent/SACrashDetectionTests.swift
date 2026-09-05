@@ -104,9 +104,21 @@ func testSACrashDetectionEventInitCoder() {
     precondition(decoded?.location?.latitude == 1.5)
     precondition(decoded?.location?.longitude == 2.5)
 
-    let empty = NSKeyedUnarchiver(forReadingWith: Data())
-    empty.requiresSecureCoding = true
-    precondition(SACrashDetectionEvent(coder: empty) == nil)
+    let withoutLocation = SACrashDetectionEvent.host_makeEvent(
+        date: date,
+        response: .attempted,
+        location: nil
+    )
+    let nilLocationData = try! NSKeyedArchiver.archivedData(
+        withRootObject: withoutLocation,
+        requiringSecureCoding: true
+    )
+    let decodedNilLocation = try! NSKeyedUnarchiver.unarchivedObject(
+        ofClass: SACrashDetectionEvent.self,
+        from: nilLocationData
+    )
+    precondition(decodedNilLocation?.response == .attempted)
+    precondition(decodedNilLocation?.location == nil)
 }
 
 func testSACrashDetectionManagerConstructible() {

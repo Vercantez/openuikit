@@ -67,7 +67,11 @@ open class SACrashDetectionEvent: NSObject, NSSecureCoding, NSCopying, @unchecke
         }
         self.date = date
         self.response = response
-        self.location = coder.decodeObject(of: CLLocation.self, forKey: "location")
+        if coder.containsValue(forKey: "location") {
+            self.location = coder.decodeObject(of: CLLocation.self, forKey: "location")
+        } else {
+            self.location = nil
+        }
         super.init()
     }
 
