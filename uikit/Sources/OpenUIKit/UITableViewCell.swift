@@ -426,7 +426,15 @@ open class UITableViewCell: UIView, ReusableView {
         UIEdgeInsets(top: 15, left: trailingMargin, bottom: 15, right: trailingMargin)
     }
     var iOSMargin: CGFloat {
-        if UITableView.isPadChrome { return UITableView.iOSPadCellMargin }
+        if UITableView.isPadChrome {
+            // MEASURED `/tmp/ipad-open-cap` table_inset / table_grouped,
+            // iPad (A16) 820×1180 @2x / iOS 26.1: inset-grouped
+            // `layoutMargins` `[15, 20, 15, 20]`; grouped / plain stay 16.
+            if tableView?.style == .insetGrouped {
+                return UITableView.iOSPadInsetGroupedInnerInset
+            }
+            return UITableView.iOSPadCellMargin
+        }
         return UITableView.iOSSystemMargin(width: window?.bounds.width ?? tableView?.bounds.width ?? bounds.width)
     }
     /// Right edge of a value1 detail label with no accessory (16 in on iOS).
@@ -821,7 +829,7 @@ open class UITableViewCell: UIView, ReusableView {
         selectedBackgroundView?.frame = bounds
         if let tableView {
             _textInset = tableView.style == .plain
-                ? tableView.plainTextInset : UITableViewCell.labelX
+                ? tableView.plainTextInset : tableView.groupedTextInset
         }
         let lead = showsDeleteControl ? UITableViewCell.editLeadingGutter : 0
         contentView.frame = CGRect(x: lead, y: pad, width: contentWidth, height: h)
