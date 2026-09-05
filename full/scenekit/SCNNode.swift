@@ -51,6 +51,7 @@ open class SCNLookAtConstraint: SCNConstraint {
 
 open class SCNBillboardConstraint: SCNConstraint {
     public var freeAxes: SCNBillboardAxis = .all
+    public override init() { super.init() }
     public required init?(coder: NSCoder) { return nil }
 }
 
@@ -97,6 +98,14 @@ open class SCNDistanceConstraint: SCNConstraint {
     public weak var target: SCNNode?
     public var minimumDistance: CGFloat = 0
     public var maximumDistance: CGFloat = 0
+
+    public override init() { super.init() }
+
+    public convenience init(target: SCNNode?) {
+        self.init()
+        self.target = target
+    }
+
     public required init?(coder: NSCoder) { return nil }
 }
 
@@ -108,6 +117,7 @@ open class SCNReplicatorConstraint: SCNConstraint {
     public var orientationOffset: SCNQuaternion = SCNVector4(x: 0, y: 0, z: 0, w: 1)
     public var positionOffset: SCNVector3 = SCNVector3Zero
     public var scaleOffset: SCNVector3 = SCNVector3Zero
+    public override init() { super.init() }
     public required init?(coder: NSCoder) { return nil }
 }
 
@@ -116,6 +126,7 @@ open class SCNAccelerationConstraint: SCNConstraint {
     public var maximumLinearVelocity: CGFloat = 0
     public var decelerationDistance: CGFloat = 0
     public var damping: CGFloat = 0.1
+    public override init() { super.init() }
     public required init?(coder: NSCoder) { return nil }
 }
 
@@ -124,6 +135,7 @@ open class SCNAvoidOccluderConstraint: SCNConstraint {
     public var occluderCategoryBitMask: Int = 1
     public var bias: CGFloat = 0
     public weak var delegate: SCNAvoidOccluderConstraintDelegate?
+    public override init() { super.init() }
     public required init?(coder: NSCoder) { return nil }
 }
 
@@ -155,6 +167,7 @@ open class SCNSliderConstraint: SCNConstraint {
     public var offset: SCNVector3 = SCNVector3Zero
     public var radius: CGFloat = 0
     public var collisionCategoryBitMask: Int = 0
+    public override init() { super.init() }
     public required init?(coder: NSCoder) { return nil }
 }
 
@@ -194,18 +207,38 @@ open class SCNNode: NSObject, NSCopying, NSSecureCoding, SCNActionable, SCNAnima
     public var position: SCNVector3 = SCNVector3Zero {
         didSet { _transformDirty = true }
     }
-    public var rotation: SCNVector4 = SCNVector4(x: 0, y: 1, z: 0, w: 0) {
-        didSet { _transformDirty = true }
-    }
-    public var eulerAngles: SCNVector3 = SCNVector3Zero {
-        didSet {
-            rotation = SCNVector4(x: 0, y: 1, z: 0, w: eulerAngles.y)
+    private var _rotation = SCNVector4(x: 0, y: 1, z: 0, w: 0)
+    private var _orientation = SCNQuaternion(x: 0, y: 0, z: 0, w: 1)
+    private var _eulerAngles = SCNVector3Zero
+
+    public var rotation: SCNVector4 {
+        get { _rotation }
+        set {
+            _rotation = newValue
+            _orientation = _scnQuatFromAxisAngle(newValue)
+            _eulerAngles = _scnEulerFromQuat(_orientation)
             _transformDirty = true
         }
     }
+
+    public var eulerAngles: SCNVector3 {
+        get { _eulerAngles }
+        set {
+            _eulerAngles = newValue
+            _orientation = _scnQuatFromEuler(newValue)
+            _rotation = _scnAxisAngleFromQuat(_orientation)
+            _transformDirty = true
+        }
+    }
+
     public var orientation: SCNQuaternion {
-        get { rotation }
-        set { rotation = newValue }
+        get { _orientation }
+        set {
+            _orientation = _scnQuatNormalize(newValue)
+            _rotation = _scnAxisAngleFromQuat(_orientation)
+            _eulerAngles = _scnEulerFromQuat(_orientation)
+            _transformDirty = true
+        }
     }
     public var scale: SCNVector3 = SCNVector3(x: 1, y: 1, z: 1) {
         didSet { _transformDirty = true }
@@ -246,8 +279,8 @@ open class SCNNode: NSObject, NSCopying, NSSecureCoding, SCNActionable, SCNAnima
     public var worldPosition: SCNVector3 {
         get { _scnDecomposeTranslation(worldTransform) }
         set {
-            if parent != nil {
-                position = convertPosition(newValue, from: nil)
+            if let parent {
+                position = parent.convertPosition(newValue, from: nil)
             } else {
                 position = newValue
             }
@@ -255,12 +288,18 @@ open class SCNNode: NSObject, NSCopying, NSSecureCoding, SCNActionable, SCNAnima
     }
 
     public var worldOrientation: SCNQuaternion {
-        get { _scnDecomposeRotation(worldTransform) }
+        get { _scnQuatFromAxisAngle(_scnDecomposeRotation(worldTransform)) }
         set {
             if parent == nil {
                 orientation = newValue
             } else {
-                rotation = newValue
+                let world = _scnMatrixFromQuat(newValue)
+                var local = SCNMatrix4Mult(SCNMatrix4Invert(parent!.worldTransform), world)
+                local.m41 = transform.m41
+                local.m42 = transform.m42
+                local.m43 = transform.m43
+                local.m11 *= scale.x; local.m12 *= scale.x; local.m13 *= scale.x
+                transform = local
             }
         }
     }
@@ -275,12 +314,45 @@ open class SCNNode: NSObject, NSCopying, NSSecureCoding, SCNActionable, SCNAnima
     public var particleSystems: [SCNParticleSystem]? { _particleSystems.isEmpty ? nil : _particleSystems }
 
     public var boundingBox: (min: SCNVector3, max: SCNVector3) {
-        get { geometry?.boundingBox ?? (SCNVector3Zero, SCNVector3Zero) }
+        get { _worldAlignedBounds() }
         set { geometry?.boundingBox = newValue }
     }
 
     public var boundingSphere: (center: SCNVector3, radius: Float) {
-        geometry?.boundingSphere ?? (SCNVector3Zero, 0)
+        let box = boundingBox
+        let center = SCNVector3(
+            x: (box.min.x + box.max.x) * 0.5,
+            y: (box.min.y + box.max.y) * 0.5,
+            z: (box.min.z + box.max.z) * 0.5
+        )
+        return (center, _scnLength(_scnSub(box.max, center)))
+    }
+
+    private func _worldAlignedBounds() -> (min: SCNVector3, max: SCNVector3) {
+        var points: [SCNVector3] = []
+        if let geometry {
+            let b = geometry.boundingBox
+            let corners = [
+                SCNVector3(b.min.x, b.min.y, b.min.z), SCNVector3(b.max.x, b.min.y, b.min.z),
+                SCNVector3(b.min.x, b.max.y, b.min.z), SCNVector3(b.max.x, b.max.y, b.min.z),
+                SCNVector3(b.min.x, b.min.y, b.max.z), SCNVector3(b.max.x, b.min.y, b.max.z),
+                SCNVector3(b.min.x, b.max.y, b.max.z), SCNVector3(b.max.x, b.max.y, b.max.z)
+            ]
+            points.append(contentsOf: corners)
+        }
+        for child in childNodes {
+            let cb = child.boundingBox
+            points.append(contentsOf: [
+                child.convertPosition(cb.min, to: self),
+                child.convertPosition(cb.max, to: self),
+                child.convertPosition(SCNVector3(cb.min.x, cb.min.y, cb.max.z), to: self),
+                child.convertPosition(SCNVector3(cb.max.x, cb.max.y, cb.min.z), to: self)
+            ])
+        }
+        if points.isEmpty {
+            return (SCNVector3Zero, SCNVector3Zero)
+        }
+        return _scnBounds(points)
     }
 
     public required override init() {
@@ -444,17 +516,8 @@ open class SCNNode: NSObject, NSCopying, NSSecureCoding, SCNActionable, SCNAnima
     }
 
     public func look(at worldTarget: SCNVector3, up worldUp: SCNVector3, localFront: SCNVector3) {
-        let from = worldPosition
-        let dir = _scnNormalize(_scnSub(worldTarget, from))
-        if _scnLength(dir) == 0 { return }
-        _ = worldUp
-        _ = localFront
-        let angle = acos(max(-1, min(1, _scnDot(SCNNode.localFront, dir))))
-        let axis = _scnNormalize(_scnCross(SCNNode.localFront, dir))
-        if _scnLength(axis) == 0 {
-            return
-        }
-        worldOrientation = SCNVector4(x: axis.x, y: axis.y, z: axis.z, w: angle)
+        let rot = _scnLookAtMatrix(from: worldPosition, to: worldTarget, up: worldUp, localFront: localFront)
+        worldOrientation = _scnQuatFromAxisAngle(_scnDecomposeRotation(rot))
     }
 
     public func rotate(by worldRotation: SCNQuaternion, aroundTarget worldTarget: SCNVector3) {
@@ -476,21 +539,68 @@ open class SCNNode: NSObject, NSCopying, NSSecureCoding, SCNActionable, SCNAnima
 
     private func _copy(into copy: SCNNode, flatten: Bool) {
         copy.name = name
-        copy.geometry = geometry
         copy.camera = camera
         copy.light = light
         copy.position = position
         copy.rotation = rotation
         copy.scale = scale
+        copy.pivot = pivot
         copy.opacity = opacity
         copy.isHidden = isHidden
         copy.categoryBitMask = categoryBitMask
         copy.castsShadow = castsShadow
-        if !flatten {
+        copy.constraints = constraints
+        if flatten {
+            copy.geometry = _flattenedGeometry()
+        } else {
+            copy.geometry = geometry
             for child in childNodes {
                 copy.addChildNode(child.clone())
             }
         }
+    }
+
+    private func _flattenedGeometry() -> SCNGeometry {
+        var vertices: [SCNVector3] = []
+        var normals: [SCNVector3] = []
+        var uvs: [CGPoint] = []
+        var indices: [UInt32] = []
+        func gather(_ node: SCNNode, _ transform: SCNMatrix4) {
+            if let geometry = node.geometry {
+                let worldVerts = _scnReadVertices(geometry)
+                let worldNormals = _scnReadNormals(geometry)
+                let tex = _scnReadUVs(geometry)
+                let tris = _scnReadTriangles(geometry)
+                let base = UInt32(vertices.count)
+                for v in worldVerts {
+                    vertices.append(_scnTransformPoint(transform, v))
+                }
+                if worldNormals.count == worldVerts.count {
+                    for n in worldNormals {
+                        normals.append(_scnNormalize(_scnTransformDirection(transform, n)))
+                    }
+                } else {
+                    normals.append(contentsOf: repeatElement(SCNVector3(0, 1, 0), count: worldVerts.count))
+                }
+                if tex.count == worldVerts.count {
+                    uvs.append(contentsOf: tex)
+                } else {
+                    uvs.append(contentsOf: repeatElement(CGPoint.zero, count: worldVerts.count))
+                }
+                indices.append(contentsOf: tris.map { base + $0 })
+            }
+            for child in node.childNodes {
+                gather(child, SCNMatrix4Mult(transform, child.transform))
+            }
+        }
+        gather(self, SCNMatrix4Identity)
+        let geom = SCNGeometry()
+        if vertices.isEmpty {
+            return geometry ?? geom
+        }
+        _scnAssignMesh(geom, _SCNMesh(vertices: vertices, normals: normals, uvs: uvs, indices: indices, min: _scnBounds(vertices).0, max: _scnBounds(vertices).1))
+        geom.materials = geometry?.materials ?? [SCNMaterial()]
+        return geom
     }
 
     public func addAudioPlayer(_ player: SCNAudioPlayer) {
@@ -520,11 +630,96 @@ open class SCNNode: NSObject, NSCopying, NSSecureCoding, SCNActionable, SCNAnima
     }
 
     public func hitTestWithSegment(from pointA: SCNVector3, to pointB: SCNVector3, options: [String: Any]? = nil) -> [SCNHitTestResult] {
-        _ = pointA
-        _ = pointB
-        _ = options
-        return []
+        let typed = _scnHitOptions(from: options)
+        return _scnHitTestSegment(root: self, from: pointA, to: pointB, options: typed, spaceNode: self)
     }
+
+    public var simdPosition: SIMD3<Float> {
+        get { SIMD3(position) }
+        set { position = SCNVector3(newValue) }
+    }
+    public var simdRotation: SIMD4<Float> {
+        get { SIMD4(rotation) }
+        set { rotation = SCNVector4(newValue) }
+    }
+    public var simdEulerAngles: SIMD3<Float> {
+        get { SIMD3(eulerAngles) }
+        set { eulerAngles = SCNVector3(newValue) }
+    }
+    public var simdOrientation: SIMD4<Float> {
+        get { SIMD4(orientation) }
+        set { orientation = SCNQuaternion(newValue) }
+    }
+    public var simdScale: SIMD3<Float> {
+        get { SIMD3(scale) }
+        set { scale = SCNVector3(newValue) }
+    }
+    public var simdWorldPosition: SIMD3<Float> {
+        get { SIMD3(worldPosition) }
+        set { worldPosition = SCNVector3(newValue) }
+    }
+    public var simdWorldFront: SIMD3<Float> { SIMD3(worldFront) }
+    public var simdWorldRight: SIMD3<Float> { SIMD3(worldRight) }
+    public var simdWorldUp: SIMD3<Float> { SIMD3(worldUp) }
+    public class var simdLocalFront: SIMD3<Float> { SIMD3(localFront) }
+    public class var simdLocalRight: SIMD3<Float> { SIMD3(localRight) }
+    public class var simdLocalUp: SIMD3<Float> { SIMD3(localUp) }
+
+    public func simdConvertPosition(_ position: SIMD3<Float>, from node: SCNNode?) -> SIMD3<Float> {
+        SIMD3(convertPosition(SCNVector3(position), from: node))
+    }
+    public func simdConvertPosition(_ position: SIMD3<Float>, to node: SCNNode?) -> SIMD3<Float> {
+        SIMD3(convertPosition(SCNVector3(position), to: node))
+    }
+    public func simdConvertVector(_ vector: SIMD3<Float>, from node: SCNNode?) -> SIMD3<Float> {
+        SIMD3(convertVector(SCNVector3(vector), from: node))
+    }
+    public func simdConvertVector(_ vector: SIMD3<Float>, to node: SCNNode?) -> SIMD3<Float> {
+        SIMD3(convertVector(SCNVector3(vector), to: node))
+    }
+    public func simdLocalTranslate(by translation: SIMD3<Float>) {
+        localTranslate(by: SCNVector3(translation))
+    }
+    public func simdLook(at worldTarget: SIMD3<Float>) {
+        look(at: SCNVector3(worldTarget))
+    }
+    public func simdLook(at worldTarget: SIMD3<Float>, up worldUp: SIMD3<Float>, localFront: SIMD3<Float>) {
+        look(at: SCNVector3(worldTarget), up: SCNVector3(worldUp), localFront: SCNVector3(localFront))
+    }
+
+#if canImport(simd)
+    public var simdPivot: simd_float4x4 {
+        get { simd_float4x4(pivot) }
+        set { pivot = SCNMatrix4(newValue) }
+    }
+    public var simdTransform: simd_float4x4 {
+        get { simd_float4x4(transform) }
+        set { transform = SCNMatrix4(newValue) }
+    }
+    public var simdWorldTransform: simd_float4x4 {
+        get { simd_float4x4(worldTransform) }
+        set { worldTransform = SCNMatrix4(newValue) }
+    }
+    public var simdWorldOrientation: simd_quatf {
+        get {
+            let q = worldOrientation
+            return simd_quatf(ix: q.x, iy: q.y, iz: q.z, r: q.w)
+        }
+        set { worldOrientation = SCNQuaternion(x: newValue.imag.x, y: newValue.imag.y, z: newValue.imag.z, w: newValue.real) }
+    }
+    public func simdConvertTransform(_ transform: simd_float4x4, from node: SCNNode?) -> simd_float4x4 {
+        simd_float4x4(convertTransform(SCNMatrix4(transform), from: node))
+    }
+    public func simdConvertTransform(_ transform: simd_float4x4, to node: SCNNode?) -> simd_float4x4 {
+        simd_float4x4(convertTransform(SCNMatrix4(transform), to: node))
+    }
+    public func simdLocalRotate(by rotation: simd_quatf) {
+        localRotate(by: SCNQuaternion(x: rotation.imag.x, y: rotation.imag.y, z: rotation.imag.z, w: rotation.real))
+    }
+    public func simdRotate(by worldRotation: simd_quatf, aroundTarget worldTarget: SIMD3<Float>) {
+        rotate(by: SCNQuaternion(x: worldRotation.imag.x, y: worldRotation.imag.y, z: worldRotation.imag.z, w: worldRotation.real), aroundTarget: SCNVector3(worldTarget))
+    }
+#endif
 
     public var hasActions: Bool { _actions.contains { !$0.finished && !$0.cancelled } }
     public var actionKeys: [String] { _actions.filter { !$0.finished && !$0.cancelled }.map(\.key) }
@@ -589,9 +784,17 @@ open class SCNNode: NSObject, NSCopying, NSSecureCoding, SCNActionable, SCNAnima
     public func linux_advanceTime(_ dt: TimeInterval) {
         if isPaused { return }
         _linuxAdvanceActions(dt)
+        _linuxApplyConstraints()
         let snapshot = childNodes
         for child in snapshot {
             child.linux_advanceTime(dt)
+        }
+    }
+
+    func _linuxApplyConstraints() {
+        guard let constraints else { return }
+        for constraint in constraints where constraint.isEnabled {
+            _scnApplyConstraint(constraint, to: self)
         }
     }
 
