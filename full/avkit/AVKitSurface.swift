@@ -1,4 +1,3 @@
-import Dispatch
 import Foundation
 #if os(macOS)
 import CoreGraphics
@@ -61,14 +60,13 @@ extension AVAudioSession {
         case external = 2
     }
 
-    /// Isolated host: invoke the completion asynchronously, exactly once, with
+    /// Isolated host: invoke the completion synchronously, exactly once, with
     /// `(false, .none)`. Route hardware and AirPlay picking are unavailable.
+    /// The sealed runner has no run loop, so this path cannot hop to a queue.
     public func prepareRouteSelectionForPlayback(
         completionHandler: @escaping (Bool, AVAudioSession.RouteSelection) -> Void
     ) {
-        DispatchQueue.avkitCallback.async {
-            completionHandler(false, .none)
-        }
+        completionHandler(false, .none)
     }
 }
 
@@ -400,6 +398,45 @@ open class AVPictureInPictureController: NSObject {
 
     public func invalidatePlaybackState() {}
 
+    /// Linux never starts PiP. Host hook delivers the documented lifecycle
+    /// willStart → didStart → willStop → didStop, or failedToStart alone.
+    /// Apple: https://developer.apple.com/documentation/avkit/avpictureinpicturecontrollerdelegate
+    public func openUIKitHostDeliverPictureInPictureDelegateSequence(failedToStart: Bool) {
+        if failedToStart {
+            isPictureInPictureActive = false
+            isPictureInPicturePossible = false
+            isPictureInPictureSuspended = false
+            delegate?.pictureInPictureController(
+                self,
+                failedToStartPictureInPictureWithError: AVKitError(.pictureInPictureStartFailed)
+            )
+            return
+        }
+        isPictureInPicturePossible = false
+        isPictureInPictureSuspended = false
+        delegate?.pictureInPictureControllerWillStartPictureInPicture(self)
+        isPictureInPictureActive = true
+        delegate?.pictureInPictureControllerDidStartPictureInPicture(self)
+        delegate?.pictureInPictureControllerWillStopPictureInPicture(self)
+        isPictureInPictureActive = false
+        delegate?.pictureInPictureControllerDidStopPictureInPicture(self)
+    }
+
+    /// Linux never presents a sample-buffer PiP window. Host hook invokes the
+    /// synchronous sample-buffer playback-delegate methods so tests can
+    /// observe the documented surface without awaiting `skipByInterval`.
+    public func openUIKitHostInvokeSampleBufferPlaybackDelegate() {
+        guard let playback = contentSource?.sampleBufferPlaybackDelegate else { return }
+        playback.pictureInPictureController(
+            self,
+            didTransitionToRenderSize: CMVideoDimensions(width: 0, height: 0)
+        )
+        playback.pictureInPictureController(self, setPlaying: false)
+        _ = playback.pictureInPictureControllerIsPlaybackPaused(self)
+        _ = playback.pictureInPictureControllerShouldProhibitBackgroundAudioPlayback(self)
+        _ = playback.pictureInPictureControllerTimeRangeForPlayback(self)
+    }
+
     public func startPictureInPicture() {
         // Apple: when PiP cannot start, the controller tells the delegate
         // through failedToStartPictureInPictureWithError
@@ -600,13 +637,10 @@ open class AVPlayerViewController: UIViewController {
             // MEASURED: assigning a player with defaultRate 1.5 selects the
             // 1.5 list entry. Header: defaultRate and selectedSpeed reflect
             // each other.
-            // Runtime gap: isolated-host AVPlayer is a stored-property
-            // lookalike (rate / defaultRate), not AVFoundation's KVO-compliant
-            // player. Observing "rate" / "status" / "timeControlStatus" does
-            // not deliver NSKeyValueChange; isReadyForDisplay stays false
-            // because there is no AVPlayerItem.status == .readyToPlay pipeline.
-            guard let player else { return }
-            selectedSpeed = speeds.first(where: { $0.rate == player.defaultRate })
+            if let player {
+                selectedSpeed = speeds.first(where: { $0.rate == player.defaultRate })
+            }
+            refreshDisplayState()
         }
     }
     public var allowsPictureInPicturePlayback = true
@@ -636,6 +670,60 @@ open class AVPlayerViewController: UIViewController {
 
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
+    }
+
+    /// Recompute `isReadyForDisplay` / `videoBounds` from the current item.
+    /// Linux emits KVO for the ObjC keys `readyForDisplay` and `videoBounds`.
+    /// Isolated-host AVPlayerItem is not itself KVO-compliant; callers that
+    /// mutate `presentationSize` must invoke `openUIKitHostRefreshDisplayState`.
+    public func openUIKitHostRefreshDisplayState() {
+        refreshDisplayState()
+    }
+
+    /// Linux never presents interstitials. Host hook delivers willPresent then
+    /// didPresent so tests can observe that documented pair.
+    public func openUIKitHostDeliverInterstitialDelegatePair(
+        _ interstitial: AVInterstitialTimeRange
+    ) {
+        delegate?.playerViewController(self, willPresent: interstitial)
+        delegate?.playerViewController(self, didPresent: interstitial)
+    }
+
+    /// Linux never restores a full-screen or PiP interface. Host hook invokes
+    /// the restore completions with `false`.
+    public func openUIKitHostDeliverRestoreCompletions() {
+        var fullScreen = true
+        var pictureInPicture = true
+        delegate?.playerViewController(
+            self,
+            restoreUserInterfaceForFullScreenExitWithCompletionHandler: { fullScreen = $0 }
+        )
+        delegate?.playerViewController(
+            self,
+            restoreUserInterfaceForPictureInPictureStopWithCompletionHandler: { pictureInPicture = $0 }
+        )
+        _ = (fullScreen, pictureInPicture)
+    }
+
+    /// Linux never starts PiP, so automatic dismiss is never applied. Host
+    /// hook reads the documented should-dismiss query.
+    public func openUIKitHostQueryShouldAutomaticallyDismissAtPictureInPictureStart() -> Bool {
+        delegate?.playerViewControllerShouldAutomaticallyDismissAtPictureInPictureStart(self)
+            ?? false
+    }
+
+    private func refreshDisplayState() {
+        let item = player?.currentItem
+        let size = item?.presentationSize ?? .zero
+        let itemReady = item?.status == .readyToPlay
+        // Model: a presentable size plus readyToPlay. This is not a decoded
+        // frame. Apple's isReadyForDisplay is first-frame readiness
+        // (https://developer.apple.com/documentation/avkit/avplayerviewcontroller/isreadyfordisplay).
+        // Isolated-host Foundation has no ObjC willChangeValue/didChangeValue.
+        let ready = itemReady && size != .zero
+        let bounds = CGRect(origin: .zero, size: size)
+        isReadyForDisplay = ready
+        videoBounds = bounds
     }
 
     public func selectSpeed(_ speed: AVPlaybackSpeed) {
@@ -858,14 +946,3 @@ extension AVRoutePickerViewDelegate {
     }
 }
 
-enum AVKitHostAvailability {
-    static let callbackQueue: DispatchQueue = {
-        DispatchQueue(label: "com.apple.avkit.AVKit.callback")
-    }()
-}
-
-extension DispatchQueue {
-    fileprivate static var avkitCallback: DispatchQueue {
-        AVKitHostAvailability.callbackQueue
-    }
-}
