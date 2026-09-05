@@ -101,3 +101,14 @@ absent on this VM. The sealed gate compiles with a clean product tree
 `bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3` (campaign expected
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
 `dd4c8bca7e8735289928bbd1abd44f4b35815308` matched.
+
+`bash full/network/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=Network lane=medium-full symbols=3047
+FRAMEWORK_FANOUT_REFERENCE_OK
+NETWORK_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Network dylib=libNetwork.dylib
+```
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. Swift 6.2.4 / linux compiled `libNetwork.dylib` with a clean product tree.
