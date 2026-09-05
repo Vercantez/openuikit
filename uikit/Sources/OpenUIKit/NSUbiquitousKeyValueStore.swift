@@ -9,6 +9,12 @@
 // Apple's type. The portable implementation is always testable as
 // OpenUIKitUbiquitousKeyValueStore.
 
+// The guest library route (build_full.sh, arm64-apple-macos on Linux) compiles
+// OpenUIKit against the port's FoundationEssentials, where `Foundation` does
+// not exist as a module (verify66 @ 302e119b: "no such module 'Foundation'" on
+// both authorities). The class needs UserDefaults + NotificationCenter, so it
+// exists only where Foundation does: Darwin and Linux corelibs.
+#if canImport(Foundation)
 import Foundation
 
 public final class OpenUIKitUbiquitousKeyValueStore: NSObject, @unchecked Sendable {
@@ -133,3 +139,4 @@ public let NSUbiquitousKeyValueStoreInitialSyncChange = 1
 public let NSUbiquitousKeyValueStoreQuotaViolationChange = 2
 public let NSUbiquitousKeyValueStoreAccountChange = 3
 #endif
+#endif // canImport(Foundation)
