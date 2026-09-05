@@ -93,11 +93,16 @@ xcrun simctl install "$UDID" "$APP"
 CONTAINER=$(xcrun simctl get_app_container "$UDID" com.openuikit.confprobe data)
 rm -f "$CONTAINER"/Documents/* 2>/dev/null || true
 # CONFPROBE_TRACE=1 writes Documents/trace.json (per-tick presentation
-# geometry, no extra PNG). simctl forwards SIMCTL_CHILD_* into the app.
+# geometry, no extra PNG). CONFPROBE_STYLE=dark pins the window dark
+# before makeRoot (scripts/conformance_flow.sh --dark). simctl forwards
+# SIMCTL_CHILD_* into the app.
 typeset -a LAUNCH_ENV
 LAUNCH_ENV=(SIMCTL_CHILD_CONFPROBE_APP=$APPNAME)
 if [[ -n "${CONFPROBE_TRACE:-}" ]]; then
   LAUNCH_ENV+=(SIMCTL_CHILD_CONFPROBE_TRACE=1)
+fi
+if [[ -n "${CONFPROBE_STYLE:-}" ]]; then
+  LAUNCH_ENV+=(SIMCTL_CHILD_CONFPROBE_STYLE=$CONFPROBE_STYLE)
 fi
 env $LAUNCH_ENV xcrun simctl launch --console-pty "$UDID" com.openuikit.confprobe || true
 for i in {1..90}; do [[ -f "$CONTAINER/Documents/DONE" ]] && break; sleep 1; done
@@ -106,4 +111,4 @@ for i in {1..90}; do [[ -f "$CONTAINER/Documents/DONE" ]] && break; sleep 1; don
   || { echo "conformance_probe_sim: $(cat "$CONTAINER/Documents/DONE")" >&2; exit 1 }
 rm -f "$OUTDIR"/$APPNAME.* 2>/dev/null || true
 cp "$CONTAINER"/Documents/*.png "$CONTAINER"/Documents/*.json "$OUTDIR"/
-echo "captured $(ls "$OUTDIR"/$APPNAME.*.png | wc -l | tr -d ' ') frame(s) into $OUTDIR"
+echo "captured $(ls "$OUTDIR"/$APPNAME.*.png | wc -l | tr -d ' ') frame(s) into $OUTDIR style=${CONFPROBE_STYLE:-light}"

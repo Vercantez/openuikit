@@ -468,7 +468,10 @@ public final class UISheetPresentationController: UIPresentationController {
         let cv = vc.view!
         savedBackgroundColor = cv.backgroundColor
         if paintsAsSheet {
-            if let bg = cv.backgroundColor { platter.fillColor = bg }
+            if let bg = cv.backgroundColor {
+                platter.fillColor = bg
+                platter.presentedViewSetBackground = true
+            }
             cv.backgroundColor = nil
         } else if cv.backgroundColor == nil {
             platter.fillColor = .systemBackground
@@ -712,38 +715,66 @@ final class _UIPageSheetView: UIView {
     /// `modalclone_white`); a large detent with systemBackground is **255**
     /// (Modal t3200). `systemBackground.resolvedColor` is still [1,1,1,1]
     /// even at `userInterfaceLevel = .elevated` — the 245 is the iOS 26
-    /// floating-card glass, not the elevated palette. Dark is unmeasured
-    /// and stays the resolved semantic. Catalyst does not float.
+    /// floating-card glass, not the elevated palette. Catalyst does not float.
+    ///
+    /// Dark, MEASURED /tmp/sheetfill_dark + Modal t1200.dark / t3200.dark
+    /// / NavFlow t1200.dark, iPhone SE 2x / iOS 26.1 (one process per
+    /// backdrop): large + **explicit** `view.backgroundColor =
+    /// .systemBackground` is **(28, 28, 30)** against black/white/red/gray33
+    /// = `secondarySystemBackground` = `systemBackground` at
+    /// `userInterfaceLevel = .elevated` (colorprobe
+    /// `systemBackground_dark_elevated`). A large sheet whose presented
+    /// view left background nil (fixture `modal_sheet_grabber_dark`,
+    /// iPhone 16 3x / iOS 26.1, over #333) composites to unelevated
+    /// systemBackground **(0, 0, 0)** — the dimmed presenting strip is
+    /// (41, 41, 41) = 0.2 over #333. Floating tracks the dimmed backdrop
+    /// (black → 57, white → 84, gray33 → 62) — `_UIGlassMaterial` dark
+    /// mix, fallback 57 when the render-pass glass does not run.
     static let floatingSystemBackgroundGlass: CGFloat = 245.0 / 255.0
 
+    /// True when the presented controller's view had a non-nil
+    /// `backgroundColor` that was moved onto this platter. Distinguishes
+    /// explicit `.systemBackground` (elevated 28,28,30 in dark large)
+    /// from the default fill (unelevated black). MEASURED as above.
+    var presentedViewSetBackground = false
+
     var paintedFillColor: UIColor {
-        guard floating,
-              !padFormSheet,
-              OpenUIKitRuntime.systemFontCut == .iOS,
-              traitCollection.userInterfaceStyle != .dark,
-              case .semantic(let name) = fillColor.storage,
-              name == "systemBackground" else {
+        let isSysBg: Bool = {
+            if case .semantic(let name) = fillColor.storage { return name == "systemBackground" }
+            return false
+        }()
+        guard OpenUIKitRuntime.systemFontCut == .iOS, isSysBg else {
             return fillColor
         }
+        if traitCollection.userInterfaceStyle == .dark {
+            if floating, !padFormSheet {
+                return UIColor(white: _UIGlassMaterial.darkFloatingFallback, alpha: 1)
+            }
+            if presentedViewSetBackground {
+                return .secondarySystemBackground
+            }
+            return fillColor
+        }
+        guard floating, !padFormSheet else { return fillColor }
         return UIColor(white: _UIPageSheetView.floatingSystemBackgroundGlass, alpha: 1)
     }
 
-    /// Same predicate as `paintedFillColor` returning 245: the floating
-    /// systemBackground card is `_UIGlassMaterial` over the dim (20 % black
-    /// over white → 204; k·204+220 = 246.4 vs measured 245, residual 1.4).
-    /// The 245 property stays for tests and the Catalyst/dark fallback fill.
+    /// Same predicate as `paintedFillColor` returning 245 / dark glass:
+    /// the floating systemBackground card is `_UIGlassMaterial` over the
+    /// dim. Large dark is the elevated semantic, not glass.
     private func refreshIOSGlass() {
         guard floating,
               !padFormSheet,
               OpenUIKitRuntime.systemFontCut == .iOS,
-              traitCollection.userInterfaceStyle != .dark,
               case .semantic(let name) = fillColor.storage,
               name == "systemBackground" else {
             _usesIOSGlass = false
+            _usesIOSDarkGlass = false
             return
         }
         isOpaque = false
         _usesIOSGlass = true
+        _usesIOSDarkGlass = traitCollection.userInterfaceStyle == .dark
     }
 
     override func _iosGlassPath(in bounds: CGRect) -> Path {

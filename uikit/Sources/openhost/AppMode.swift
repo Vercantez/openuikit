@@ -86,6 +86,10 @@ final class HostAppDelegate: UIResponder, UIApplicationDelegate {
     }
     var window: UIWindow?
     var root: UIViewController?
+    /// Applied to the window BEFORE `makeRoot()` so semantic colours
+    /// resolve against the style the first capture sees. Default light
+    /// matches the previous conformance pin.
+    var style: UIUserInterfaceStyle = .light
 
     /// openhost owns this concrete delegate instance and supplies it directly
     /// to `UIApplicationMain(delegate:)`; no class-name construction is
@@ -100,6 +104,7 @@ final class HostAppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions
                      launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let w = UIWindow(frame: UIScreen.main.bounds)
+        w.overrideUserInterfaceStyle = style
         let vc = makeRoot()
         w.rootViewController = vc
         w.makeKeyAndVisible()
@@ -164,6 +169,7 @@ func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
                                  scale: scale)
 
     let delegate = HostAppDelegate(name: appName, makeRoot: app.makeRoot)
+    delegate.style = style
     _appDelegate = delegate
     UIApplicationMain(delegate: delegate)
 
@@ -175,6 +181,7 @@ func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
         // 820×1180 @2x / iOS 26.1: window `safeAreaInsets` `[32, 0, 25, 0]`.
         window._setSafeAreaInsets(RealAppScreen.padSafeArea)
     }
+    window.overrideUserInterfaceStyle = style
     window.setNeedsLayout()
     window.layoutIfNeeded()
     // M14 real-app screen: OpenUIKit's UIWindow does not run an appearance

@@ -2,9 +2,10 @@
 # hillclimb.sh [max-agents] — one round of the fidelity hill-climb:
 #
 #   1. score:  fresh iOS suite capture (scripts/ios_suite.sh), real-app
-#              screens, Catalyst gate, any conformance-app flows found under
-#              /tmp/conformance-* -> scoreboard/latest.{json,md} (committed by
-#              the operator with the round);
+#              screens, Catalyst gate, conformance-app flows under
+#              /tmp/hc-conformance-<App> and /tmp/hc-conformance-<App>-dark
+#              -> scoreboard/latest.{json,md} (committed by the operator
+#              with the round);
 #   2. pick:   the worst rows with status "fail" (below their bar, not listed
 #              in scoreboard/open.txt as measured-open), one task each, up to
 #              max-agents (default 3); scenes of one family (same prefix
@@ -38,6 +39,9 @@ if [[ -z "${SKIP_CAPTURE:-}" ]]; then
     echo "==> conformance $app --ipad"
     zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app-ipad $app --ipad > /tmp/hc-conformance-$app-ipad.flow.log 2>&1 \
       || echo "WARNING: conformance_flow.sh $app --ipad rc=$? (see /tmp/hc-conformance-$app-ipad.flow.log)"
+    echo "==> conformance $app dark"
+    zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app-dark $app --dark > /tmp/hc-conformance-$app-dark.flow.log 2>&1 \
+      || echo "WARNING: conformance_flow.sh $app --dark rc=$? (see /tmp/hc-conformance-$app-dark.flow.log)"
   done
 else
   SKIP_CAPTURE=1 zsh scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || echo "WARNING: ios_suite.sh (skip-capture) rc=$?"
@@ -55,6 +59,7 @@ conf=()
 for app in Sources/ConformanceApps/*(/:t); do
   [[ -d /tmp/hc-conformance-$app ]] && conf+=(/tmp/hc-conformance-$app)
   [[ -d /tmp/hc-conformance-$app-ipad ]] && conf+=(/tmp/hc-conformance-$app-ipad)
+  [[ -d /tmp/hc-conformance-$app-dark ]] && conf+=(/tmp/hc-conformance-$app-dark)
 done
 confargs=()
 (( ${#conf} > 0 )) && confargs=(--conformance "${conf[@]}")
