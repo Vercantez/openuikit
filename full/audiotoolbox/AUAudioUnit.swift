@@ -14,13 +14,18 @@ open class AUAudioUnitPreset: NSObject {
 }
 
 open class AUAudioUnitBusArray: NSObject {
-    public private(set) var count: Int = 0
+    public private(set) var count: Int
+    public var isCountChangeable: Bool { false }
 
     public override init() {
+        count = 0
         super.init()
     }
 
-    public var isCountChangeable: Bool { false }
+    internal init(busCount: Int) {
+        count = busCount
+        super.init()
+    }
 
     open func setBusCount(_ count: Int) throws {
         _ = count
@@ -61,26 +66,59 @@ open class AUParameterGroup: AUParameterNode {
 
 open class AUParameterTree: AUParameterGroup {}
 
-/// Swift-only AUAudioUnit surface. Instantiation fails closed: Linux has no
-/// Audio Unit plug-in host, hardware I/O, or v3 extension scanner.
+/// Swift-only AUAudioUnit surface. Software mixer / generator / generic output
+/// units instantiate in-process. RemoteIO, VoiceProcessingIO, and empty
+/// descriptions fail closed: Linux has no hardware I/O or plug-in host.
 open class AUAudioUnit: NSObject {
     public let componentDescription: AudioComponentDescription
     public private(set) var renderResourcesAllocated = false
-    public var maximumFramesToRender: AUAudioFrameCount = 0
-    public var audioUnitName: String? { nil }
-    public var manufacturerName: String? { nil }
-    public var componentName: String? { nil }
-    public var audioUnitShortName: String? { nil }
+    public var maximumFramesToRender: AUAudioFrameCount = 512
+    public var renderQuality: Int = 0
+    public var shouldBypassEffect = false
+    public var renderingOffline = true
+    public private(set) var running = false
+    public var audioUnitName: String?
+    public var manufacturerName: String? = "Apple"
+    public var componentName: String?
+    public var audioUnitShortName: String?
     public var componentVersion: UInt32 { 0 }
+    public var latency: TimeInterval { 0 }
+    public var tailTime: TimeInterval { 0 }
+    public var canPerformInput: Bool { false }
+    public var canPerformOutput: Bool {
+        componentDescription.componentType == kAudioUnitType_Output
+    }
+    public var canProcessInPlace: Bool { true }
+    public var inputEnabled = false
+    public var outputEnabled = true
     public var component: AudioComponent {
-        AudioComponent(bitPattern: 1)!
+        var description = componentDescription
+        return AudioComponentFindNext(nil, &description) ?? AudioComponent(bitPattern: 1)!
     }
 
-    private let inputBusArray = AUAudioUnitBusArray()
-    private let outputBusArray = AUAudioUnitBusArray()
+    private let inputBusArray: AUAudioUnitBusArray
+    private let outputBusArray: AUAudioUnitBusArray
+    public let parameterTree = AUParameterTree()
 
     public var inputBusses: AUAudioUnitBusArray { inputBusArray }
     public var outputBusses: AUAudioUnitBusArray { outputBusArray }
+
+    public static func isHostedSoftwareUnit(_ description: AudioComponentDescription) -> Bool {
+        if description.componentSubType == kAudioUnitSubType_RemoteIO
+            || description.componentSubType == kAudioUnitSubType_VoiceProcessingIO
+        {
+            return false
+        }
+        if description.componentType == 0 && description.componentSubType == 0 {
+            return false
+        }
+        return description.componentType == kAudioUnitType_Output
+            || description.componentType == kAudioUnitType_Mixer
+            || description.componentType == kAudioUnitType_Generator
+            || description.componentSubType == kAudioUnitSubType_GenericOutput
+            || description.componentSubType == kAudioUnitSubType_MultiChannelMixer
+            || description.componentSubType == kAudioUnitSubType_ScheduledSoundPlayer
+    }
 
     public init(
         componentDescription: AudioComponentDescription,
@@ -88,14 +126,36 @@ open class AUAudioUnit: NSObject {
     ) throws {
         _ = options
         self.componentDescription = componentDescription
+        let inputs = (componentDescription.componentType == kAudioUnitType_Mixer) ? 2 : 1
+        inputBusArray = AUAudioUnitBusArray(busCount: inputs)
+        outputBusArray = AUAudioUnitBusArray(busCount: 1)
         super.init()
-        throw NSError(
-            domain: NSOSStatusErrorDomain,
-            code: Int(kAudioUnitErr_ComponentManagerNotSupported),
-            userInfo: [
-                NSLocalizedDescriptionKey: "Audio Unit plug-ins are unavailable on this Linux host"
-            ]
-        )
+        guard Self.isHostedSoftwareUnit(componentDescription) else {
+            throw NSError(
+                domain: NSOSStatusErrorDomain,
+                code: Int(kAudioUnitErr_ComponentManagerNotSupported),
+                userInfo: [
+                    NSLocalizedDescriptionKey: "Audio Unit plug-ins are unavailable on this Linux host"
+                ]
+            )
+        }
+        switch componentDescription.componentSubType {
+        case kAudioUnitSubType_GenericOutput:
+            audioUnitName = "GenericOutput"
+            componentName = "GenericOutput"
+            audioUnitShortName = "genr"
+        case kAudioUnitSubType_MultiChannelMixer:
+            audioUnitName = "MultiChannelMixer"
+            componentName = "MultiChannelMixer"
+            audioUnitShortName = "mcmx"
+        case kAudioUnitSubType_ScheduledSoundPlayer:
+            audioUnitName = "ScheduledSoundPlayer"
+            componentName = "ScheduledSoundPlayer"
+            audioUnitShortName = "sspl"
+        default:
+            audioUnitName = "SoftwareAudioUnit"
+            componentName = "SoftwareAudioUnit"
+        }
     }
 
     public convenience init(componentDescription: AudioComponentDescription) throws {
@@ -110,12 +170,25 @@ open class AUAudioUnit: NSObject {
     }
 
     open func allocateRenderResources() throws {
-        throw AUAudioUnitError.unavailable(kAudioUnitErr_FailedInitialization)
+        guard Self.isHostedSoftwareUnit(componentDescription) else {
+            throw AUAudioUnitError.unavailable(kAudioUnitErr_FailedInitialization)
+        }
+        renderResourcesAllocated = true
     }
 
     open func deallocateRenderResources() {
         renderResourcesAllocated = false
     }
 
-    open func reset() {}
+    open func reset() {
+        running = false
+    }
+
+    open func startHardware() throws {
+        throw AUAudioUnitError.unavailable(kAudioUnitErr_FailedInitialization)
+    }
+
+    open func stopHardware() {
+        running = false
+    }
 }

@@ -261,6 +261,20 @@ internal func atFloatToSample(_ sample: Float, dest: UnsafeMutableRawPointer, bi
     }
 }
 
+internal func atLinearInterpolateFrameCount(
+    sourceFrames: Int,
+    sourceRate: Float64,
+    destRate: Float64
+) -> Int {
+    if sourceFrames <= 0 {
+        return 0
+    }
+    if sourceFrames == 1 || sourceRate <= 0 || destRate <= 0 || sourceRate == destRate {
+        return sourceFrames
+    }
+    return Int(floor(Double(sourceFrames - 1) * destRate / sourceRate)) + 1
+}
+
 internal func atConvertPCM(
     source: ATASBD,
     dest: ATASBD,
@@ -273,9 +287,6 @@ internal func atConvertPCM(
     if !source.isPCM || !dest.isPCM {
         return (kAudioConverterErr_FormatNotSupported, 0)
     }
-    if source.mSampleRate != dest.mSampleRate {
-        return (kAudioConverterErr_FormatNotSupported, 0)
-    }
     let srcWidth = source.bytesPerSample
     let dstWidth = dest.bytesPerSample
     if srcWidth <= 0 || dstWidth <= 0 {
@@ -283,13 +294,36 @@ internal func atConvertPCM(
     }
     let srcChannels = source.frameCountChannels
     let dstChannels = dest.frameCountChannels
-    let srcFrameBytes = source.isNonInterleaved ? srcWidth : srcWidth * srcChannels
-    let frames = inputByteCount / max(srcFrameBytes, 1)
-    if frames <= 0 {
+    let srcFrames = inputByteCount / max(srcWidth * srcChannels, 1)
+    if srcFrames <= 0 {
         return (0, 0)
     }
-    let dstFrameBytes = dest.isNonInterleaved ? dstWidth : dstWidth * dstChannels
-    let needed = frames * dstFrameBytes
+    var sourcePlanes = Array(
+        repeating: [Float](repeating: 0, count: srcFrames),
+        count: srcChannels
+    )
+    for frame in 0..<srcFrames {
+        for channel in 0..<srcChannels {
+            let offset: Int
+            if source.isNonInterleaved {
+                offset = channel * srcFrames * srcWidth + frame * srcWidth
+            } else {
+                offset = frame * srcWidth * srcChannels + channel * srcWidth
+            }
+            sourcePlanes[channel][frame] = atSampleToFloat(
+                bytes: input.advanced(by: offset),
+                bits: Int(source.mBitsPerChannel),
+                floating: source.isFloat,
+                bigEndian: source.isBigEndian
+            )
+        }
+    }
+    let destFrames = atLinearInterpolateFrameCount(
+        sourceFrames: srcFrames,
+        sourceRate: source.mSampleRate,
+        destRate: dest.mSampleRate
+    )
+    let needed = destFrames * dstWidth * dstChannels
     if needed > outputByteCapacity {
         return (kAudioConverterErr_InvalidOutputSize, 0)
     }
@@ -299,31 +333,28 @@ internal func atConvertPCM(
     } else {
         map = (0..<dstChannels).map { min($0, srcChannels - 1) }
     }
-    for frame in 0..<frames {
+    let ratio = (dest.mSampleRate == 0 || source.mSampleRate == dest.mSampleRate)
+        ? 1.0
+        : source.mSampleRate / dest.mSampleRate
+    for frame in 0..<destFrames {
+        let sourcePosition = Double(frame) * ratio
+        let index0 = min(max(Int(floor(sourcePosition)), 0), srcFrames - 1)
+        let index1 = min(index0 + 1, srcFrames - 1)
+        let fraction = Float(sourcePosition - Double(index0))
         for destChannel in 0..<dstChannels {
             let sourceChannel = map[destChannel]
             let sample: Float
             if sourceChannel < 0 || sourceChannel >= srcChannels {
                 sample = 0
-            } else if source.isNonInterleaved {
-                let plane = input.advanced(by: sourceChannel * frames * srcWidth + frame * srcWidth)
-                sample = atSampleToFloat(
-                    bytes: plane,
-                    bits: Int(source.mBitsPerChannel),
-                    floating: source.isFloat,
-                    bigEndian: source.isBigEndian
-                )
+            } else if index0 == index1 || fraction == 0 {
+                sample = sourcePlanes[sourceChannel][index0]
             } else {
-                let offset = frame * srcWidth * srcChannels + sourceChannel * srcWidth
-                sample = atSampleToFloat(
-                    bytes: input.advanced(by: offset),
-                    bits: Int(source.mBitsPerChannel),
-                    floating: source.isFloat,
-                    bigEndian: source.isBigEndian
-                )
+                let a = sourcePlanes[sourceChannel][index0]
+                let b = sourcePlanes[sourceChannel][index1]
+                sample = a + (b - a) * fraction
             }
             if dest.isNonInterleaved {
-                let plane = output.advanced(by: destChannel * frames * dstWidth + frame * dstWidth)
+                let plane = output.advanced(by: destChannel * destFrames * dstWidth + frame * dstWidth)
                 atFloatToSample(
                     sample,
                     dest: plane,

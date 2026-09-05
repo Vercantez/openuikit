@@ -753,12 +753,13 @@ internal func atLoadSMF(sequence: ATMusicSequenceObject, bytes: [UInt8]) -> Int3
             start: start,
             end: end,
             ticksPerBeat: ticksPerBeat,
-            isFirst: trackIndex == 0
+            isFirst: false
         )
         if status != 0 { return status }
         offset = start + chunkLen
         trackIndex += 1
     }
+    _ = format
     return 0
 }
 
