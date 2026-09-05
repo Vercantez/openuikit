@@ -132,3 +132,23 @@ models are covered by focused tests in `tests/agent/AVMediaProbeTests.swift`
 and `tests/agent/AVFailClosedTests.swift`. `AVSpeechSynthesizer` remains extra
 portable AVFAudio surface from pass 1; it is not in this module's public
 census. No SwiftUI cross-import overlay rows exist in this seed.
+
+Sealed Linux gate (`bash full/avfoundation/tests/acceptance/test_host.sh`)
+ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVFoundation lane=medium-full symbols=5632
+FRAMEWORK_FANOUT_REFERENCE_OK
+AVFOUNDATION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
+```
+
+`swiftc --version` on this host is Swift 6.2.4, target
+`x86_64-unknown-linux-gnu`. The campaign inventory stamp
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a
+host-inventory token, not printed by the sealed framework gate.
+`.cursor/verify-cloud-environment.sh` currently stops on a missing
+`scratch/.cursor-built-products.json` in this snapshot; the framework tree
+itself has no stale `.build` / `build` / `scratch` products.
+`tests/test_avfoundation_host.sh` is a Darwin IceCubes/`xcrun` consumer and
+is not runnable on this Linux host.
