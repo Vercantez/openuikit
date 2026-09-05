@@ -63,13 +63,28 @@ first, build this module with those `-I/-L` paths, and execute
 
 ## Depth pass 2026-09
 
-Wave-1 left 532 implemented / 12 declared / 169 deferred. This depth pass
-finishes the public overlay against the pinned 714-ID corpus:
+Wave-1 left 532 implemented / 12 declared / 169 deferred. The first depth
+commit (`fd739cdd`) reached 712 implemented / 1 declared / 0 deferred /
+1 not-applicable, but merge refused it: every implemented evidence cell
+was a source/runtime path (`full/contacts/…swift;full/contacts/tests/agent/ContactsRuntime.swift`)
+instead of `test:full/contacts/tests/agent/<File>Tests.swift#testName`.
 
-- Implemented **712** / declared **1** / deferred **0** / not-applicable **1**
+This ledger repair keeps the same honest statuses and cites real focused
+tests:
+
+- After: implemented **712** / declared **1** / deferred **0** / not-applicable **1**
   (`CNContact.id` Identifiable overlay is UUID, not ObjectIdentifier;
-  generic `CNLabeledValue` `init(coder:)` compiles but Linux cannot archive
-  that generic class).
+  generic `CNLabeledValue` `init(coder:)` is `declared` —
+  `source:full/contacts/CNTypes.swift#CNLabeledValue` — because Linux
+  `NSKeyedArchiver` cannot archive that generic class).
+- Top-5 implemented evidence distribution (712 rows):
+  1. `ContactsConstantsTests.swift#testPublicStringConstants` — 308 (table-driven C string constants)
+  2. `ContactsEnumTests.swift#testEnumRawValues` — 97 (enum cases plus synthesized `!=` / hash / `rawValue`)
+  3. `ContactsHistoryTests.swift#testChangeHistoryEventsAndVisitor` — 42
+  4. `ContactsContactTests.swift#testContactPropertiesAndKeys` — 34
+  5. `ContactsContactTests.swift#testMutableContactSetters` — 28
+- No non-constant/non-enum test exceeds 40% of the remaining 307 implemented rows
+  (largest remaining citation is history visitor at 13.7%).
 - Local directory store with `store.json`, reload SPI, and transactional
   `execute`.
 - Authorization `.notDetermined` → `.authorized` / `.denied`.
@@ -80,6 +95,8 @@ finishes the public overlay against the pinned 714-ID corpus:
   `unauthorizedKeys` on unfetched key access.
 - vCard 3.0 round trip: N/FN/TEL;TYPE=/EMAIL;TYPE=/ADR;TYPE=/ORG/BDAY/PHOTO/NOTE/URL.
 - Gate: `bash full/contacts/tests/acceptance/test_host.sh` (Linux host, no docker).
+  Schema-v1 compiles `ContactsRuntime.swift` only; that file concatenates the
+  same `test*` functions the coverage ledger cites.
 
 Still not claimed: Apple TCC UI, iCloud/CardDAV unify identity, Apple
 locale name tables, Apple-identical vCard bytes, Darwin raw values for
