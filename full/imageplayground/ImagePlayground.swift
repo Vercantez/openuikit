@@ -108,10 +108,13 @@ public struct ImagePlaygroundConcept {
         ImagePlaygroundConcept(storage: .extracted(text: text, title: title))
     }
 
-    /// Records `url` as an image concept without ImageIO validation.
-    /// Darwin nil conditions (unreadable files, unsupported types) are unobserved.
+    /// Records a local file URL as an image concept without ImageIO validation.
+    /// Apple's documentation requires "the URL of a local file"; non-file URLs
+    /// return `nil`. Darwin nil conditions for unreadable files or unsupported
+    /// types remain unobserved.
     public static func image(_ url: URL) -> ImagePlaygroundConcept? {
-        ImagePlaygroundConcept(storage: .imageURL(url))
+        guard url.isFileURL else { return nil }
+        return ImagePlaygroundConcept(storage: .imageURL(url))
     }
 
     init(storage: Storage) {
@@ -165,7 +168,31 @@ extension ImageCreator.Error: CustomNSError, LocalizedError {
         [:]
     }
 
-    public var errorDescription: String? { nil }
+    /// Linux-host `LocalizedError` text taken from the sealed symbol-graph
+    /// case documentation. Darwin localized payloads are unobserved.
+    public var errorDescription: String? {
+        switch self {
+        case .unsupportedInputImage:
+            return "The system cannot use one of the specified source images."
+        case .faceInImageTooSmall:
+            return "The system cannot use one of the source images because the face in it is too small."
+        case .unavailable:
+            return "Image creation is currently unavailable."
+        case .notSupported:
+            return "The device doesn’t support image generation."
+        case .creationFailed:
+            return "A general failure occurred during image creation."
+        case .creationCancelled:
+            return "Image creation was cancelled."
+        case .unsupportedLanguage:
+            return "The input text uses an unsupported language."
+        case .backgroundCreationForbidden:
+            return "The app is hidden or in the background."
+        case .conceptsRequirePersonIdentity:
+            return "A source image containing a person's face needs to be added in order to complete the request."
+        }
+    }
+
     public var failureReason: String? { nil }
     public var recoverySuggestion: String? { nil }
     public var helpAnchor: String? { nil }

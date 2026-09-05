@@ -1,1 +1,2 @@
 full/quicklook/QuickLook.swift
+full/quicklook/QuickLookHostTypes.swift

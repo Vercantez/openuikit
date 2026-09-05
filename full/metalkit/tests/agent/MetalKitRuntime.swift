@@ -246,11 +246,53 @@ func runOnMain(_ body: @MainActor () throws -> Void) throws {
     }
 }
 
+func exerciseMesh() throws {
+    guard let device = MTLCreateSystemDefaultDevice() else {
+        throw MetalKitRuntimeFailure.message("missing software device")
+    }
+    try expect(MTKMetalVertexFormatFromModelIO(.float3) == .float3, "float3 mapping")
+    try expect(MTKModelIOVertexFormatFromMetal(.float3) == .float3, "float3 reverse")
+    let allocator = MDLMeshBufferDataAllocator()
+    let vertices = allocator.newBuffer(with: Data(count: 36), type: .vertex)
+    let indices = allocator.newBuffer(with: Data([0, 0, 1, 0, 2, 0]), type: .index)
+    let descriptor = MDLVertexDescriptor(
+        attributes: [MDLVertexAttribute(name: "position", format: .float3, offset: 0, bufferIndex: 0)],
+        layouts: [MDLVertexBufferLayout(stride: 12)]
+    )
+    let source = MDLMesh(
+        vertexBuffers: [vertices],
+        vertexCount: 3,
+        vertexDescriptor: descriptor,
+        submeshes: [
+            MDLSubmesh(
+                name: "tri",
+                indexBuffer: indices,
+                indexCount: 3,
+                indexType: .uInt16,
+                geometryType: .triangles
+            )
+        ],
+        name: "probe"
+    )
+    let mesh = try MTKMesh(mesh: source, device: device)
+    try expect(mesh.vertexCount == 3, "vertex count")
+    try expect(mesh.submeshes[0].primitiveType == .triangle, "triangle primitive")
+    let pair = try MTKMesh.newMeshes(asset: MDLAsset(meshes: [source]), device: device)
+    try expect(pair.metalKitMeshes.count == 1, "asset conversion")
+    do {
+        _ = try MTKTextureLoader(device: device).newTexture(texture: MDLTexture(width: 1, height: 1))
+        throw MetalKitRuntimeFailure.message("mdl texture should fail closed")
+    } catch {
+        try requireTextureLoaderError(error, "mdl texture")
+    }
+}
+
 do {
     try runOnMain {
         try exerciseView()
     }
     try exerciseTextureLoader()
+    try exerciseMesh()
     print("METALKIT_AGENT_RUNTIME_OK")
 } catch {
     fputs("METALKIT_AGENT_RUNTIME_FAIL: \(error)\n", stderr)

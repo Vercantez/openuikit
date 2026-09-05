@@ -127,17 +127,16 @@ enum FileProviderDependencyIdentity {
             identifier: NSFileProviderDomainIdentifier("identity-domain"),
             displayName: "Identity"
         )) == nil)
-        do {
-            try await NSFileProviderManager.add(
-                NSFileProviderDomain(
-                    identifier: NSFileProviderDomainIdentifier("identity-domain"),
-                    displayName: "Identity"
-                )
+        try await NSFileProviderManager.add(
+            NSFileProviderDomain(
+                identifier: NSFileProviderDomainIdentifier("identity-domain"),
+                displayName: "Identity"
             )
-            fatalError("add must fail closed without a host adapter")
-        } catch {
-            requireCode(error, .providerNotFound)
-        }
+        )
+        precondition(NSFileProviderManager(for: NSFileProviderDomain(
+            identifier: NSFileProviderDomainIdentifier("identity-domain"),
+            displayName: "Identity"
+        )) != nil)
 
         let manager = NSFileProviderManager.default
         var serviceCalls = 0
@@ -179,7 +178,7 @@ enum FileProviderDependencyIdentity {
                 identityCalls += 1
                 precondition(itemID == nil)
                 precondition(domainID == nil)
-                requireCode(error!, .providerNotFound)
+                requireCode(error!, .noSuchItem)
                 done()
             }
         }
@@ -189,7 +188,7 @@ enum FileProviderDependencyIdentity {
         waitOnce { done in
             manager.waitForStabilization { error in
                 stabilizeCalls += 1
-                requireCode(error!, .providerNotFound)
+                precondition(error == nil)
                 done()
             }
         }
@@ -209,7 +208,7 @@ enum FileProviderDependencyIdentity {
         waitOnce { done in
             NSFileProviderManager.removeAllDomains { error in
                 removeAllCalls += 1
-                requireCode(error!, .providerNotFound)
+                precondition(error == nil)
                 done()
             }
         }

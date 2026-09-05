@@ -304,6 +304,15 @@ open class UIScrollView: UIView {
 
     public func setContentOffset(_ offset: CGPoint, animated: Bool) {
         stopScrollAnimation()
+        var offset = offset
+        // MEASURED Tabs t7000 / t7000.xxxl / t7000.ax1: see
+        // `UINavigationBar.hideOnScrollContentBump`. Inactive search
+        // only — Notes t5000 types into an active search and must not
+        // add the 60 pt hide-on-scroll slot.
+        if OpenUIKitRuntime.systemFontCut == .iOS,
+           let nav = _scrollObserver as? UINavigationController {
+            offset.y += nav.navigationBar.hideOnScrollContentBump(requestedY: offset.y)
+        }
         if animated {
             UIView.animateScrollCurve(
                 withDuration: UIScrollView.animatedContentOffsetDuration,
@@ -372,7 +381,7 @@ open class UIScrollView: UIView {
             || UIDevice.current.userInterfaceIdiom == .pad) {
             return 312
         }
-        return 260
+        return _UIKeyboardChrome.currentOverlap
     }
 
     var iOSKeyboardAvoidanceBottom: CGFloat {

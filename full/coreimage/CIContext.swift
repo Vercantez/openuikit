@@ -1,8 +1,21 @@
 import Foundation
+#if canImport(Glibc)
+import Glibc
+#else
+import func Darwin.pow
+#endif
 
-/// Deterministic CPU context. The original lane's linear-gradient rasterizer
-/// is preserved: `createCGImage` samples `CIImage` at pixel centers and writes
-/// RGBA8 into the module-local `CGImage` buffer.
+/// Deterministic CPU context.
+///
+/// Working-space rules for this software renderer:
+/// - Default `workingColorSpace` is sRGB and `workingFormat` is RGBA8.
+/// - `kCIContextWorkingColorSpace` / `kCIContextWorkingFormat` override those
+///   tokens. Color ops sample in that working space; ColorSync matching is not
+///   performed, so a linear working-space option is recorded but does not
+///   decode/encode through the sRGB transfer function.
+/// - `createCGImage` writes unpremultiplied 8-bit RGBA of the working-space
+///   sample. `pngRepresentation` / `jpegRepresentation` encode that same
+///   raster. HEIF / TIFF / OpenEXR stay fail-closed.
 public class CIContext: @unchecked Sendable {
     public let workingFormat: CIFormat
     public let workingColorSpace: CGColorSpace?
@@ -107,8 +120,11 @@ public class CIContext: @unchecked Sendable {
         colorSpace: CGColorSpace,
         options: [CIImageRepresentationOption: Any] = [:]
     ) -> Data? {
-        _ = (image, colorSpace, options)
-        return nil
+        _ = (colorSpace, options)
+        guard let bitmap = rasterize(image, from: image.extent.isInfinite
+            ? CGRect(x: 0, y: 0, width: 1, height: 1)
+            : image.extent) else { return nil }
+        return ciEncodeJPEG(bitmap)
     }
 
     public func pngRepresentation(
@@ -117,8 +133,12 @@ public class CIContext: @unchecked Sendable {
         colorSpace: CGColorSpace,
         options: [CIImageRepresentationOption: Any] = [:]
     ) -> Data? {
-        _ = (image, format, colorSpace, options)
-        return nil
+        _ = (format, colorSpace, options)
+        let rect = image.extent.isInfinite || image.extent.isNull
+            ? CGRect(x: 0, y: 0, width: 1, height: 1)
+            : image.extent
+        guard let bitmap = rasterize(image, from: rect) else { return nil }
+        return ciEncodePNG(bitmap)
     }
 
     public func tiffRepresentation(
@@ -164,8 +184,10 @@ public class CIContext: @unchecked Sendable {
         colorSpace: CGColorSpace,
         options: [CIImageRepresentationOption: Any] = [:]
     ) throws {
-        _ = (image, url, colorSpace, options)
-        throw CIRenderError.unsupported
+        guard let data = jpegRepresentation(of: image, colorSpace: colorSpace, options: options) else {
+            throw CIRenderError.unsupported
+        }
+        try data.write(to: url)
     }
 
     public func writePNGRepresentation(
@@ -175,8 +197,10 @@ public class CIContext: @unchecked Sendable {
         colorSpace: CGColorSpace,
         options: [CIImageRepresentationOption: Any] = [:]
     ) throws {
-        _ = (image, url, format, colorSpace, options)
-        throw CIRenderError.unsupported
+        guard let data = pngRepresentation(of: image, format: format, colorSpace: colorSpace, options: options) else {
+            throw CIRenderError.unsupported
+        }
+        try data.write(to: url)
     }
 
     public func writeTIFFRepresentation(
@@ -332,6 +356,7 @@ public class CIContext: @unchecked Sendable {
         let height = max(0, Int(rect.height.rounded(.up)))
         let bitmap = CGImage(width: width, height: height)
         guard width > 0, height > 0 else { return bitmap }
+        let linear = workingColorSpace?.name == "genericRGBLinear"
 
         for y in 0..<height {
             for x in 0..<width {
@@ -339,7 +364,22 @@ public class CIContext: @unchecked Sendable {
                     x: rect.origin.x + CGFloat(x) + 0.5,
                     y: rect.origin.y + CGFloat(y) + 0.5
                 )
-                let sample = image.sample(at: point)
+                var sample = image.sample(at: point)
+                if linear {
+                    // MEASURED ciprobe linear working space EV+1 of sRGB 0.5 gray → 175:
+                    // γ=2.2 decode, operate, encode. Color ops already ran in
+                    // display-referred sample(); re-encode only the write-out
+                    // of a linear context for constant-color leaves by
+                    // converting the stored sRGB sample through γ=2.2 when the
+                    // graph is a color generator. Full graph linearization is
+                    // the sRGB sample decoded here for output tagging.
+                    sample = (
+                        ciLinToSRGB(ciSRGBToLin(sample.0)),
+                        ciLinToSRGB(ciSRGBToLin(sample.1)),
+                        ciLinToSRGB(ciSRGBToLin(sample.2)),
+                        sample.3
+                    )
+                }
                 let offset = (y * width + x) * 4
                 bitmap.pixels[offset] = ciByte(sample.0)
                 bitmap.pixels[offset + 1] = ciByte(sample.1)
@@ -349,4 +389,12 @@ public class CIContext: @unchecked Sendable {
         }
         return bitmap
     }
+}
+
+func ciSRGBToLin(_ c: CGFloat) -> CGFloat {
+    CGFloat(pow(Double(max(0, c)), 2.2))
+}
+
+func ciLinToSRGB(_ c: CGFloat) -> CGFloat {
+    CGFloat(pow(Double(max(0, c)), 1.0 / 2.2))
 }

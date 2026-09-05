@@ -224,17 +224,39 @@ public struct Text: View, CustomStringConvertible {
 public protocol ShapeStyle {}
 
 public struct Color: View, ShapeStyle, Hashable, Sendable {
-    public init() {}
-    public init(_ name: String) { _ = name }
-    public static let clear = Color()
-    public static let blue = Color()
-    public static let black = Color()
-    public static let white = Color()
-    public static let primary = Color()
-    public static let secondary = Color()
+    public var red: Double
+    public var green: Double
+    public var blue: Double
+    public var opacityValue: Double
+
+    public init() {
+        red = 0
+        green = 0
+        blue = 0
+        opacityValue = 1
+    }
+
+    public init(_ name: String) {
+        _ = name
+        self.init()
+    }
+
+    public init(red: Double, green: Double, blue: Double, opacity: Double = 1) {
+        self.red = red
+        self.green = green
+        self.blue = blue
+        self.opacityValue = opacity
+    }
+
+    public static let clear = Color(red: 0, green: 0, blue: 0, opacity: 0)
+    public static let blue = Color(red: 0, green: 0, blue: 1)
+    public static let black = Color(red: 0, green: 0, blue: 0)
+    public static let white = Color(red: 1, green: 1, blue: 1)
+    public static let primary = Color(red: 0, green: 0, blue: 0)
+    public static let secondary = Color(red: 0.5, green: 0.5, blue: 0.5)
+
     public func opacity(_ opacity: Double) -> Color {
-        _ = opacity
-        return self
+        Color(red: red, green: green, blue: blue, opacity: opacity)
     }
     public var body: some View { EmptyView() }
 }
@@ -308,12 +330,235 @@ public struct AnyShapeStyle: Hashable, Sendable {
 }
 
 public struct Path: Equatable, Sendable {
-    public init() {}
-    public init(_ rect: CGRect) { _ = rect }
+    public enum Element: Equatable, Sendable {
+        case move(CGPoint)
+        case line(CGPoint)
+        case close
+        case rect(CGRect)
+        case ellipse(CGRect)
+    }
+
+    public var elements: [Element]
+
+    public init() { elements = [] }
+
+    public init(_ rect: CGRect) {
+        elements = [.rect(rect)]
+    }
+
+    public mutating func move(to point: CGPoint) {
+        elements.append(.move(point))
+    }
+
+    public mutating func addLine(to point: CGPoint) {
+        elements.append(.line(point))
+    }
+
+    public mutating func addLines(_ points: [CGPoint]) {
+        guard let first = points.first else { return }
+        if elements.isEmpty {
+            move(to: first)
+            for point in points.dropFirst() { addLine(to: point) }
+        } else {
+            for point in points { addLine(to: point) }
+        }
+    }
+
+    public mutating func addRect(_ rect: CGRect) {
+        elements.append(.rect(rect))
+    }
+
+    public mutating func addEllipse(in rect: CGRect) {
+        elements.append(.ellipse(rect))
+    }
+
+    public mutating func closeSubpath() {
+        elements.append(.close)
+    }
+
+    public var cgRects: [CGRect] {
+        elements.compactMap {
+            if case .rect(let rect) = $0 { return rect }
+            return nil
+        }
+    }
+
+    public var polylines: [[CGPoint]] {
+        var lines: [[CGPoint]] = []
+        var current: [CGPoint] = []
+        for element in elements {
+            switch element {
+            case .move(let point):
+                if !current.isEmpty { lines.append(current) }
+                current = [point]
+            case .line(let point):
+                if current.isEmpty { current = [point] }
+                else { current.append(point) }
+            case .close:
+                if let first = current.first { current.append(first) }
+                if !current.isEmpty { lines.append(current) }
+                current = []
+            case .rect, .ellipse:
+                if !current.isEmpty { lines.append(current) }
+                current = []
+            }
+        }
+        if !current.isEmpty { lines.append(current) }
+        return lines
+    }
 }
 
 public protocol Shape: View {
     func path(in rect: CGRect) -> Path
+}
+
+public struct FillStyle: Hashable, Sendable {
+    public var isEOFilled: Bool
+    public init(eoFill: Bool = false, antialiased: Bool = true) {
+        _ = antialiased
+        isEOFilled = eoFill
+    }
+}
+
+public struct RoundedCornerStyle: Hashable, Sendable {
+    public static let circular = RoundedCornerStyle()
+    public static let continuous = RoundedCornerStyle()
+    public init() {}
+}
+
+public enum Axis: Hashable, Sendable {
+    case horizontal
+    case vertical
+}
+
+public struct UnitPoint: Hashable, Sendable {
+    public var x: CGFloat
+    public var y: CGFloat
+    public init(x: CGFloat = 0, y: CGFloat = 0) {
+        self.x = x
+        self.y = y
+    }
+    public static let center = UnitPoint(x: 0.5, y: 0.5)
+    public static let top = UnitPoint(x: 0.5, y: 0)
+    public static let bottom = UnitPoint(x: 0.5, y: 1)
+    public static let leading = UnitPoint(x: 0, y: 0.5)
+    public static let trailing = UnitPoint(x: 1, y: 0.5)
+}
+
+public struct Font: Hashable, Sendable {
+    public static let body = Font()
+    public static let caption = Font()
+    public init() {}
+}
+
+public struct GraphicsContext {
+    public struct Shading: Hashable, Sendable {
+        public var color: Color
+        public static func color(_ color: Color) -> Shading {
+            Shading(color: color)
+        }
+    }
+
+    public var bitmap: ChartBitmap
+
+    public init(width: Int, height: Int) {
+        bitmap = ChartBitmap(width: width, height: height)
+    }
+
+    public init(bitmap: ChartBitmap) {
+        self.bitmap = bitmap
+    }
+
+    public mutating func fill(
+        _ path: Path,
+        with shading: Shading,
+        style: FillStyle = FillStyle()
+    ) {
+        _ = style
+        let packed = ChartBitmap.pack(
+            red: shading.color.red,
+            green: shading.color.green,
+            blue: shading.color.blue,
+            opacity: shading.color.opacityValue
+        )
+        for rect in path.cgRects {
+            bitmap.fillRect(rect, color: packed)
+        }
+        for line in path.polylines where line.count >= 3 {
+            bitmap.fillPolygon(line, color: packed)
+        }
+        for element in path.elements {
+            if case .ellipse(let rect) = element {
+                bitmap.fillEllipse(rect, color: packed)
+            }
+        }
+    }
+
+    public mutating func stroke(
+        _ path: Path,
+        with shading: Shading,
+        lineWidth: CGFloat = 1
+    ) {
+        let packed = ChartBitmap.pack(
+            red: shading.color.red,
+            green: shading.color.green,
+            blue: shading.color.blue,
+            opacity: shading.color.opacityValue
+        )
+        for line in path.polylines {
+            bitmap.strokePolyline(line, color: packed, width: max(1, Int(lineWidth.rounded())))
+        }
+        for rect in path.cgRects {
+            bitmap.strokeRect(rect, color: packed, width: max(1, Int(lineWidth.rounded())))
+        }
+    }
+
+    public mutating func stroke(
+        _ path: Path,
+        with shading: Shading,
+        style: StrokeStyle
+    ) {
+        stroke(path, with: shading, lineWidth: style.lineWidth)
+    }
+}
+
+public struct Canvas<Symbols: View>: View {
+    let renderer: (inout GraphicsContext, CGSize) -> Void
+    let symbols: Symbols
+
+    public init(
+        opaque: Bool = false,
+        colorMode: Int = 0,
+        rendersAsynchronously: Bool = false,
+        renderer: @escaping (inout GraphicsContext, CGSize) -> Void,
+        @ViewBuilder symbols: () -> Symbols
+    ) {
+        _ = opaque
+        _ = colorMode
+        _ = rendersAsynchronously
+        self.renderer = renderer
+        self.symbols = symbols()
+    }
+
+    public var body: some View { symbols }
+
+    public func render(size: CGSize) -> ChartBitmap {
+        var context = GraphicsContext(
+            width: max(1, Int(size.width.rounded())),
+            height: max(1, Int(size.height.rounded()))
+        )
+        renderer(&context, size)
+        return context.bitmap
+    }
+}
+
+public extension Canvas where Symbols == EmptyView {
+    init(
+        opaque: Bool = false,
+        renderer: @escaping (inout GraphicsContext, CGSize) -> Void
+    ) {
+        self.init(opaque: opaque, renderer: renderer, symbols: { EmptyView() })
+    }
 }
 
 public struct ShapeRole: Hashable, Sendable {

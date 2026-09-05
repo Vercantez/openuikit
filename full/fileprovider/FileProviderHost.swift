@@ -1,8 +1,8 @@
 import Foundation
 
-/// Linux host adapter for File Provider daemon operations. Public manager APIs
-/// fail closed unless a host installs an adapter through
-/// `NSFileProviderManager._installHostAdapter`.
+/// Optional override for domain registry and placeholder writes. The
+/// process-local host is installed by default; passing `nil` to
+/// `NSFileProviderManager._installHostAdapter` restores it.
 @_spi(OpenUIKitHost)
 public protocol FileProviderHostAdapter: AnyObject {
     func addDomain(_ domain: NSFileProviderDomain) async throws
@@ -19,7 +19,8 @@ public protocol FileProviderHostAdapter: AnyObject {
 
 enum FileProviderHostRegistry {
     private static let lock = NSLock()
-    nonisolated(unsafe) private static var adapter: FileProviderHostAdapter?
+    nonisolated(unsafe) private static var adapter: FileProviderHostAdapter? =
+        FileProviderLocalHost.shared
 
     static func currentAdapter() -> FileProviderHostAdapter? {
         lock.lock()
@@ -29,17 +30,48 @@ enum FileProviderHostRegistry {
 
     static func install(_ adapter: FileProviderHostAdapter?) {
         lock.lock()
-        FileProviderHostRegistry.adapter = adapter
+        FileProviderHostRegistry.adapter = adapter ?? FileProviderLocalHost.shared
         lock.unlock()
     }
 }
 
 extension NSFileProviderManager {
-    /// Install or clear the Linux host adapter. Passing `nil` restores
-    /// fail-closed public manager APIs.
+    /// Install a host adapter, or pass `nil` to restore the process-local host.
     @_spi(OpenUIKitHost)
     public static func _installHostAdapter(_ adapter: FileProviderHostAdapter?) {
         FileProviderHostRegistry.install(adapter)
+    }
+
+    /// Reset the process-local domain registry, item store, and documents tree.
+    @_spi(OpenUIKitHost)
+    public static func _resetLocalHostForTesting() {
+        FileProviderHostRegistry.install(nil)
+        FileProviderLocalHost.shared.resetForTesting()
+    }
+
+    /// The in-process replicated extension bound to this manager's domain.
+    @_spi(OpenUIKitHost)
+    public func _localReplicatedExtension() -> (any NSFileProviderReplicatedExtension)? {
+        guard let domain = boundDomain else { return nil }
+        return FileProviderLocalHost.shared.provider(for: domain)
+    }
+
+    /// Register an enumerator so `signalEnumerator(for:)` can deliver changes.
+    @_spi(OpenUIKitHost)
+    public func _registerWorkingEnumerator(
+        _ enumerator: any NSFileProviderEnumerator,
+        for containerItemIdentifier: NSFileProviderItemIdentifier
+    ) {
+        guard let domain = boundDomain,
+            let local = enumerator as? FileProviderLocalEnumerator
+        else {
+            return
+        }
+        FileProviderLocalHost.shared.registerEnumerator(
+            local,
+            domain: domain,
+            container: containerItemIdentifier
+        )
     }
 
     /// Linux-only JSON sidecar used by a host adapter. This is not Apple

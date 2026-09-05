@@ -23,7 +23,7 @@ open class GCController: NSObject, GCDevice {
     open var extendedGamepad: GCExtendedGamepad?
     open var microGamepad: GCMicroGamepad?
 
-    public static var current: GCController? { nil }
+    public static var current: GCController? { GCSimulatedInput.currentController }
     public static var shouldMonitorBackgroundEvents = false
 
     init(profile: GCPhysicalInputProfile) {
@@ -54,9 +54,12 @@ open class GCController: NSObject, GCDevice {
         motion?.hasRotationRate = false
         motion?.hasGravityAndUserAcceleration = false
         motion?.hasAttitudeAndRotationRate = false
+        input.bind(from: profile)
     }
 
-    open class func controllers() -> [GCController] { [] }
+    open class func controllers() -> [GCController] {
+        GCSimulatedInput.connectedControllers()
+    }
 
     open class func withExtendedGamepad() -> GCController {
         let controller = GCController(profile: GCExtendedGamepad())
@@ -184,10 +187,11 @@ open class GCKeyboardInput: GCPhysicalInputProfile {
 open class GCKeyboard: NSObject, GCDevice {
     open var handlerQueue: DispatchQueue = .main
     open var productCategory: String { GCProductCategoryKeyboard }
-    open var vendorName: String? { nil }
     open var physicalInputProfile: GCPhysicalInputProfile { keyboardInput ?? GCPhysicalInputProfile() }
     open var keyboardInput: GCKeyboardInput? = GCKeyboardInput()
-    public static var coalesced: GCKeyboard? { nil }
+    var simulatedVendorName: String?
+    open var vendorName: String? { simulatedVendorName }
+    public static var coalesced: GCKeyboard? { GCSimulatedInput.coalescedKeyboard }
 }
 
 extension GCKeyboard {
@@ -226,7 +230,7 @@ open class GCMouseInput: GCPhysicalInputProfile {
     open var mouseMovedHandler: GCMouseMoved?
     open var scroll = GCDeviceCursor()
 
-    override init() {
+    public required init() {
         super.init()
         register(leftButton, name: "Left Button")
         if let middleButton { register(middleButton, name: "Middle Button") }
@@ -238,11 +242,12 @@ open class GCMouseInput: GCPhysicalInputProfile {
 open class GCMouse: NSObject, GCDevice {
     open var handlerQueue: DispatchQueue = .main
     open var productCategory: String { GCProductCategoryMouse }
-    open var vendorName: String? { nil }
     open var physicalInputProfile: GCPhysicalInputProfile { mouseInput ?? GCPhysicalInputProfile() }
     open var mouseInput: GCMouseInput? = GCMouseInput()
-    public static var current: GCMouse? { nil }
-    open class func mice() -> [GCMouse] { [] }
+    var simulatedVendorName: String?
+    open var vendorName: String? { simulatedVendorName }
+    public static var current: GCMouse? { GCSimulatedInput.currentMouse }
+    open class func mice() -> [GCMouse] { GCSimulatedInput.connectedMice() }
 }
 
 extension GCMouse {
@@ -315,6 +320,9 @@ open class GCVirtualController: NSObject {
 
     open var controller: GCController? { nil }
     private let configuration: Configuration
+    private var storedButtonValues: [String: CGFloat] = [:]
+    private var storedDpadPositions: [String: CGPoint] = [:]
+    private var storedElementConfigurations: [String: ElementConfiguration] = [:]
 
     public init(configuration: Configuration) {
         self.configuration = configuration
@@ -334,18 +342,18 @@ open class GCVirtualController: NSObject {
     open func disconnect() {}
 
     open func setPosition(_ position: CGPoint, forDirectionPadElement element: String) {
-        _ = (position, element)
+        storedDpadPositions[element] = position
     }
 
     open func setValue(_ value: CGFloat, forButtonElement element: String) {
-        _ = (value, element)
+        storedButtonValues[element] = value
     }
 
     open func updateConfiguration(
         forElement element: String,
         configuration config: (ElementConfiguration) -> ElementConfiguration
     ) {
-        _ = config(ElementConfiguration())
-        _ = element
+        let updated = config(storedElementConfigurations[element] ?? ElementConfiguration())
+        storedElementConfigurations[element] = updated
     }
 }

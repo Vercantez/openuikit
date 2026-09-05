@@ -65,6 +65,89 @@ final class KeyboardChromeTests: XCTestCase {
         _ = tf.resignFirstResponder()
     }
 
+    func testHasTextUsesLowercaseAndShiftOff() throws {
+        // MEASURED kbstateprobe has_text, iPhone SE 2x / iOS 26.1:
+        // "Alex Rivera" → lowercase, shift outline.
+        OpenUIKitRuntime.systemFontCut = .iOS
+        let (_, tf) = makeWindow()
+        tf.text = "Alex Rivera"
+        XCTAssertTrue(tf.becomeFirstResponder())
+        let kb = try XCTUnwrap(keyboardWindow())
+        var q: _UIKeyboardKey?
+        var shift: _UIKeyboardKey?
+        for sub in kb.panel.subviews {
+            guard let key = sub as? _UIKeyboardKey else { continue }
+            if key.label?.text == "q" { q = key }
+            if key.kind == .shiftOff { shift = key }
+        }
+        XCTAssertEqual(try XCTUnwrap(q).frame,
+                       CGRect(x: 8.5, y: 52, width: 30.5, height: 42))
+        XCTAssertNotNil(shift)
+        _ = tf.resignFirstResponder()
+    }
+
+    func testSearchBarReturnIsSearchGlyph() throws {
+        // MEASURED kbstateprobe search_empty: returnKeyType .search (6).
+        OpenUIKitRuntime.systemFontCut = .iOS
+        let w = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let sb = UISearchBar(frame: CGRect(x: 16, y: 80, width: 343, height: 36))
+        w.addSubview(sb)
+        w.layoutIfNeeded()
+        XCTAssertEqual(sb.searchTextField.returnKeyType, .search)
+        XCTAssertEqual(sb.searchTextField.autocorrectionType, .no)
+        XCTAssertTrue(sb.becomeFirstResponder())
+        let kb = try XCTUnwrap(keyboardWindow())
+        var found = false
+        for sub in kb.panel.subviews {
+            if let key = sub as? _UIKeyboardKey, key.kind == .search {
+                found = true
+                XCTAssertEqual(key.frame,
+                               CGRect(x: 281.5, y: 214, width: 85, height: 42))
+            }
+        }
+        XCTAssertTrue(found)
+        _ = sb.resignFirstResponder()
+    }
+
+    func testNumberPadOverlapIs233() throws {
+        // MEASURED kbstateprobe numberpad, iPhone SE 2x: frameEnd height 233.
+        OpenUIKitRuntime.systemFontCut = .iOS
+        let (_, tf) = makeWindow()
+        tf.keyboardType = .numberPad
+        XCTAssertTrue(tf.becomeFirstResponder())
+        let kb = try XCTUnwrap(keyboardWindow())
+        XCTAssertEqual(kb.restPanelFrame,
+                       CGRect(x: 0, y: 434, width: 375, height: 233))
+        _ = tf.resignFirstResponder()
+    }
+
+    func testSentenceShiftRule() {
+        XCTAssertTrue(_UIKeyboardResolved.shouldShift(
+            text: "", cursor: 0, autocap: .sentences))
+        XCTAssertFalse(_UIKeyboardResolved.shouldShift(
+            text: "Alex Rivera", cursor: 11, autocap: .sentences))
+        XCTAssertFalse(_UIKeyboardResolved.shouldShift(
+            text: "", cursor: 0, autocap: .none))
+        XCTAssertFalse(_UIKeyboardResolved.shouldShift(
+            text: "lunch.", cursor: 6, autocap: .sentences))
+        XCTAssertTrue(_UIKeyboardResolved.shouldShift(
+            text: "Hello. ", cursor: 7, autocap: .sentences))
+    }
+
+    func testSearchControllerIsActiveDoesNotFocus() {
+        OpenUIKitRuntime.systemFontCut = .iOS
+        let w = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        w.makeKeyAndVisible()
+        let sc = UISearchController(searchResultsController: nil)
+        w.addSubview(sc.searchBar)
+        sc.isActive = true
+        if let kb = keyboardWindow() {
+            XCTAssertTrue(kb.isHidden || !(w.firstResponder is UIKeyInput))
+        }
+        XCTAssertFalse(sc.searchBar.searchTextField.isFirstResponder)
+        sc.isActive = false
+    }
+
     func testCatalystCutDoesNotShowKeyboard() {
         OpenUIKitRuntime.systemFontCut = .macOS
         let (_, tf) = makeWindow()

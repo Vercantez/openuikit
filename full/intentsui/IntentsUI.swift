@@ -16,12 +16,14 @@ import Foundation
 
 /// Host presentation mode. Linux has no Siri add/edit sheet, so the only
 /// supported path is a platform host driving `finish` / `cancel` / `delete`.
-public enum INUIVoiceShortcutPresentationCapability: Int, Sendable {
+public enum INUIVoiceShortcutPresentationCapability: Int, Hashable, Sendable {
     case unavailable = 0
     case hostDriven = 1
 }
 
-public enum INUIVoiceShortcutError: Error, Sendable {
+/// Portable host errors. Apple's Siri-sheet error domain and codes are
+/// unobserved; these cases are Linux fail-closed results, not NSError codes.
+public enum INUIVoiceShortcutError: Error, Equatable, Hashable, Sendable {
     case emptyInvocationPhrase
     case shortcutNotFound
 }
@@ -255,5 +257,9 @@ public enum IntentsUIHostControl {
         invocationPhrase: String
     ) -> INVoiceShortcut {
         IntentsUIHostVoiceShortcuts.install(shortcut, invocationPhrase: invocationPhrase)
+    }
+
+    public static func voiceShortcut(identifier: UUID) -> INVoiceShortcut? {
+        IntentsUIHostVoiceShortcuts.value(identifier: identifier)
     }
 }

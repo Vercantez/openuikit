@@ -368,6 +368,10 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
             setNeedsLayout()
             textViewDelegate?.textViewDidBeginEditing(self)
         }
+        // Same as UITextField: keyboard sync during super runs before
+        // caretOffset is at document end. MEASURED kbstateprobe textview
+        // ("…lunch.") is lowercase.
+        if let w = window { _UIKeyboardChrome.sync(from: w) }
         return true
     }
 

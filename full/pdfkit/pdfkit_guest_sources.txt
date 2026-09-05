@@ -2,7 +2,11 @@ full/pdfkit/PDFAction.swift
 full/pdfkit/PDFAnnotation.swift
 full/pdfkit/PDFDocument.swift
 full/pdfkit/PDFKit.swift
+full/pdfkit/PDFKitCrypto.swift
 full/pdfkit/PDFKitDependencies.swift
 full/pdfkit/PDFKitEnums.swift
+full/pdfkit/PDFKitFilters.swift
+full/pdfkit/PDFKitHost.swift
 full/pdfkit/PDFKitPDFIO.swift
+full/pdfkit/PDFKitRender.swift
 full/pdfkit/PDFView.swift

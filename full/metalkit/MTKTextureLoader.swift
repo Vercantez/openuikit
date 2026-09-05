@@ -167,6 +167,22 @@ open class MTKTextureLoader: NSObject, @unchecked Sendable {
         try await hopFailClosed("Named asset textures are unavailable without ImageIO and an asset catalog host")
     }
 
+    public func newTexture(
+        texture: MDLTexture,
+        options: [MTKTextureLoader.Option: Any]? = nil
+    ) throws -> any MTLTexture {
+        _ = (texture, options)
+        throw failClosedError("MDLTexture GPU upload is fail-closed without ImageIO and a real MTLTexture path")
+    }
+
+    public func newTexture(
+        texture: MDLTexture,
+        options: [MTKTextureLoader.Option: Any]? = nil
+    ) async throws -> any MTLTexture {
+        _ = (texture, options)
+        try await hopFailClosed("MDLTexture GPU upload is fail-closed without ImageIO and a real MTLTexture path")
+    }
+
     private func hopFailClosed(_ message: String) async throws -> Never {
         let text = message
         do {

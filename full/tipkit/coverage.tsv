@@ -11,53 +11,53 @@ c:@M@TipKit@objc(cs)TipUIPopoverViewController(im)initWithCoder:	unavailable	n/a
 c:@M@TipKit@objc(cs)TipUIPopoverViewController(im)initWithNibName:bundle:	unavailable	n/a	UIKit TipUI* type needs UIKit, Edge, ShapeStyle; omitted rather than substituted.
 c:@M@TipKit@objc(cs)TipUIView	unavailable	n/a	UIKit TipUI* type needs UIKit, Edge, ShapeStyle; omitted rather than substituted.
 c:@M@TipKit@objc(cs)TipUIView(py)backgroundColor	unavailable	n/a	UIKit TipUI* type needs UIKit, Edge, ShapeStyle; omitted rather than substituted.
-s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:10Foundation14LocalizedErrorPAAE16errorDescriptionSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit03AnyA0V2IDa	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:10Foundation14LocalizedErrorPAAE16errorDescriptionSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit03AnyA0V2IDa	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
 s:6TipKit04MiniA9ViewStyleV	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
 s:6TipKit04MiniA9ViewStyleV4Bodya	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
 s:6TipKit04MiniA9ViewStyleV8makeBody13configurationQrAA0adE13ConfigurationV_tF	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
-s:6TipKit0A0P	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0P2idSSvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0P5image7SwiftUI5ImageVSgvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0P5rulesSayAA4TipsO4RuleVGvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0P5title7SwiftUI4TextVvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0P7actionsSayAA4TipsO6ActionVGvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0P7message7SwiftUI4TextVSgvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0P7optionsSayAA0A6Option_pGvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE10invalidate6reasonyAA4TipsO18InvalidationReasonO_tF	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE10invalidate6reasonyAA4TipsO18InvalidationReasonO_tF::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE13shouldDisplaySbvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE13shouldDisplaySbvp::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE13statusUpdatesScSyAA4TipsO6StatusOGvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE13statusUpdatesScSyAA4TipsO6StatusOGvp::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE15MaxDisplayCounta	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE15MaxDisplayCounta::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE16resetEligibilityyyYaF	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE16resetEligibilityyyYaF::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE18InvalidationReasona	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE18InvalidationReasona::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE18MaxDisplayDurationa	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE18MaxDisplayDurationa::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE20shouldDisplayUpdates12_Concurrency16AsyncMapSequenceVyScSyAA4TipsO6StatusOGSbGvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE20shouldDisplayUpdates12_Concurrency16AsyncMapSequenceVyScSyAA4TipsO6StatusOGSbGvp::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE23IgnoresDisplayFrequencya	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE23IgnoresDisplayFrequencya::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE4Rulea	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE4Rulea::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE5Eventa	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE5Eventa::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE6Actiona	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE6Actiona::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE6Optiona	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE6Optiona::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE6Statusa	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE6Statusa::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE6statusAA4TipsO6StatusOvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A0PAAE6statusAA4TipsO6StatusOvp::SYNTHESIZED::s:6TipKit03AnyA0V	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
+s:6TipKit0A0P	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipProtocolIdentityAndDefaults	-
+s:6TipKit0A0P2idSSvp	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipProtocolIdentityAndDefaults	-
+s:6TipKit0A0P5image7SwiftUI5ImageVSgvp	deferred	oracle-questions.tsv	Requires SwiftUI.Image; not substituted on this host.
+s:6TipKit0A0P5rulesSayAA4TipsO4RuleVGvp	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipPendingRulesAndMaxDisplayCount	-
+s:6TipKit0A0P5title7SwiftUI4TextVvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text; not substituted on this host.
+s:6TipKit0A0P7actionsSayAA4TipsO6ActionVGvp	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipProtocolIdentityAndDefaults	-
+s:6TipKit0A0P7message7SwiftUI4TextVSgvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text; not substituted on this host.
+s:6TipKit0A0P7optionsSayAA0A6Option_pGvp	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipProtocolIdentityAndDefaults	-
+s:6TipKit0A0PAAE10invalidate6reasonyAA4TipsO18InvalidationReasonO_tF	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipInvalidateAndResetEligibility	-
+s:6TipKit0A0PAAE10invalidate6reasonyAA4TipsO18InvalidationReasonO_tF::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE13shouldDisplaySbvp	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipInvalidateAndResetEligibility	-
+s:6TipKit0A0PAAE13shouldDisplaySbvp::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE13statusUpdatesScSyAA4TipsO6StatusOGvp	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipStatusUpdatesAndShouldDisplayUpdates	-
+s:6TipKit0A0PAAE13statusUpdatesScSyAA4TipsO6StatusOGvp::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE15MaxDisplayCounta	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipProtocolIdentityAndDefaults	-
+s:6TipKit0A0PAAE15MaxDisplayCounta::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE16resetEligibilityyyYaF	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipInvalidateAndResetEligibility	-
+s:6TipKit0A0PAAE16resetEligibilityyyYaF::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE18InvalidationReasona	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipProtocolIdentityAndDefaults	-
+s:6TipKit0A0PAAE18InvalidationReasona::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE18MaxDisplayDurationa	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipProtocolIdentityAndDefaults	-
+s:6TipKit0A0PAAE18MaxDisplayDurationa::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE20shouldDisplayUpdates12_Concurrency16AsyncMapSequenceVyScSyAA4TipsO6StatusOGSbGvp	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipStatusUpdatesAndShouldDisplayUpdates	-
+s:6TipKit0A0PAAE20shouldDisplayUpdates12_Concurrency16AsyncMapSequenceVyScSyAA4TipsO6StatusOGSbGvp::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE23IgnoresDisplayFrequencya	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipProtocolIdentityAndDefaults	-
+s:6TipKit0A0PAAE23IgnoresDisplayFrequencya::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE4Rulea	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipProtocolIdentityAndDefaults	-
+s:6TipKit0A0PAAE4Rulea::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE5Eventa	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipProtocolIdentityAndDefaults	-
+s:6TipKit0A0PAAE5Eventa::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE6Actiona	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipProtocolIdentityAndDefaults	-
+s:6TipKit0A0PAAE6Actiona::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE6Optiona	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipProtocolIdentityAndDefaults	-
+s:6TipKit0A0PAAE6Optiona::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE6Statusa	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipProtocolIdentityAndDefaults	-
+s:6TipKit0A0PAAE6Statusa::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
+s:6TipKit0A0PAAE6statusAA4TipsO6StatusOvp	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testTipInvalidateAndResetEligibility	-
+s:6TipKit0A0PAAE6statusAA4TipsO6StatusOvp::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	test:full/tipkit/tests/agent/TipEligibilityTests.swift#testAnyTipErasure	-
 s:6TipKit0A20UICollectionViewCellC09configureA0_9arrowEdge13actionHandlerACXDAA0A0_p_7SwiftUI0H0OSgyAA4TipsO6ActionVctF	unavailable	n/a	UIKit TipUI* type needs UIKit, Edge, ShapeStyle; omitted rather than substituted.
 s:6TipKit0A20UICollectionViewCellC10imageStyle7SwiftUI05ShapeG0_pSgvp	unavailable	n/a	UIKit TipUI* type needs UIKit, Edge, ShapeStyle; omitted rather than substituted.
 s:6TipKit0A20UICollectionViewCellC12cornerRadius14CoreFoundation7CGFloatVvp	unavailable	n/a	UIKit TipUI* type needs UIKit, Edge, ShapeStyle; omitted rather than substituted.
@@ -90,17 +90,17 @@ s:6TipKit0A4ViewV4bodyQrvp	unavailable	n/a	SwiftUI TipView / View / TipViewStyle
 s:6TipKit0A4ViewV_11isPresented9arrowEdge6actionACyAA03AnyA0VGAA0A0_pSg_7SwiftUI7BindingVySbGSgAL0G0OSgyAA4TipsO6ActionVctcAHRszrlufc	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
 s:6TipKit0A4ViewV_11isPresented9arrowEdge8anchorID6actionACyAA03AnyA0VGAA0A0_pSg_7SwiftUI7BindingVySbGSgAM0G0OSgqd__yAA4TipsO6ActionVctcAIRszSHRd__lufc	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
 s:6TipKit0A4ViewV_9arrowEdge6actionACyAA03AnyA0VGAA0A0_pSg_7SwiftUI0E0OSgyAA4TipsO6ActionVctcAGRszrlufc	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
-s:6TipKit0A5GroupC	implemented	TipGroup.swift;TipKitRuntime.swift:exerciseTipGroupPriority	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0A5GroupC07currentA0AA0A0_pSgvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A5GroupC07currentA7UpdatesQrvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A5GroupC8PriorityO	implemented	TipGroup.swift;TipKitRuntime.swift:exerciseTipGroupPriority	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0A5GroupC8PriorityO14firstAvailableyA2EmF	implemented	TipGroup.swift;TipKitRuntime.swift:exerciseTipGroupPriority	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0A5GroupC8PriorityO2eeoiySbAE_AEtFZ	implemented	TipGroup.swift;TipKitRuntime.swift:exerciseTipGroupPriority	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0A5GroupC8PriorityO4hash4intoys6HasherVz_tF	implemented	TipGroup.swift;TipKitRuntime.swift:exerciseTipGroupPriority	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0A5GroupC8PriorityO7orderedyA2EmF	implemented	TipGroup.swift;TipKitRuntime.swift:exerciseTipGroupPriority	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0A5GroupC8PriorityO9hashValueSivp	implemented	TipGroup.swift;TipKitRuntime.swift:exerciseTipGroupPriority	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0A5GroupCyA2C8PriorityO_SayAA0A0_pGyXEtcfc	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit0A6OptionP	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
+s:6TipKit0A5GroupC	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testTipGroupPriority	-
+s:6TipKit0A5GroupC07currentA0AA0A0_pSgvp	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testTipGroupCurrentTip	-
+s:6TipKit0A5GroupC07currentA7UpdatesQrvp	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testTipGroupCurrentTip	-
+s:6TipKit0A5GroupC8PriorityO	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testTipGroupPriority	-
+s:6TipKit0A5GroupC8PriorityO14firstAvailableyA2EmF	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testTipGroupPriority	-
+s:6TipKit0A5GroupC8PriorityO2eeoiySbAE_AEtFZ	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testTipGroupPriority	-
+s:6TipKit0A5GroupC8PriorityO4hash4intoys6HasherVz_tF	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testTipGroupPriority	-
+s:6TipKit0A5GroupC8PriorityO7orderedyA2EmF	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testTipGroupPriority	-
+s:6TipKit0A5GroupC8PriorityO9hashValueSivp	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testTipGroupPriority	-
+s:6TipKit0A5GroupCyA2C8PriorityO_SayAA0A0_pGyXEtcfc	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testTipGroupCurrentTip	-
+s:6TipKit0A6OptionP	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationLimitAndDisplayOptions	-
 s:6TipKit0A6UIViewC10imageStyle7SwiftUI05ShapeE0_pSgvp	unavailable	n/a	UIKit TipUI* type needs UIKit, Edge, ShapeStyle; omitted rather than substituted.
 s:6TipKit0A6UIViewC12cornerRadius14CoreFoundation7CGFloatVvp	unavailable	n/a	UIKit TipUI* type needs UIKit, Edge, ShapeStyle; omitted rather than substituted.
 s:6TipKit0A6UIViewC15backgroundStyle7SwiftUI05ShapeE0_pvp	unavailable	n/a	UIKit TipUI* type needs UIKit, Edge, ShapeStyle; omitted rather than substituted.
@@ -113,122 +113,122 @@ s:6TipKit0A9ViewStyleP4BodyQa	unavailable	n/a	SwiftUI TipView / View / TipViewSt
 s:6TipKit0A9ViewStyleP8makeBody13configuration0F0QzAA0acD13ConfigurationV_tF	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
 s:6TipKit0A9ViewStylePA2A04MiniacD0VRszrlE04miniA0AEvpZ	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
 s:6TipKit0A9ViewStylePA2A04MiniacD0VRszrlE04miniA0AEvpZ::SYNTHESIZED::s:6TipKit04MiniA9ViewStyleV	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
-s:6TipKit0aB5ErrorV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0aB5ErrorV11descriptionSSvp	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0aB5ErrorV16errorDescriptionSSSgvp	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0aB5ErrorV25invalidPredicateValueTypeACvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0aB5ErrorV2eeoiySbAC_ACtFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0aB5ErrorV30tipsDatastoreAlreadyConfiguredACvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0aB5ErrorV33missingGroupContainerEntitlementsACvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0aB5ErrorV4hash4intoys6HasherVz_tF	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit0aB5ErrorV9hashValueSivp	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO	implemented	TipKit.swift;TipKitRuntime.swift:exerciseConfigure	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO04hideC10ForTestingyySayAA0A0_pXpGFZ	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit4TipsO04showC10ForTestingyySayAA0A0_pXpGFZ	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit4TipsO07hideAllC10ForTestingyyFZ	implemented	TipKit.swift;TipKitRuntime.swift:exerciseTestingFlags	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO07showAllC10ForTestingyyFZ	implemented	TipKit.swift;TipKitRuntime.swift:exerciseTestingFlags	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO13DonationLimitV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO13DonationLimitV10maximumAgeAC0D9TimeRangeVSgvp	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO13DonationLimitV12maximumCount0F3AgeAESi_AC0D9TimeRangeVSgtcfc	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO13DonationLimitV12maximumCountSivp	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO13EmptyDonationV	implemented	TipsTypes.swift;TipKitRuntime.swift:exerciseEmptyDonationCodable	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO13EmptyDonationV4fromAEs7Decoder_p_tKcfc	implemented	TipsTypes.swift;TipKitRuntime.swift:exerciseEmptyDonationCodable	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO13EmptyDonationV6encode2toys7Encoder_p_tKF	implemented	TipsTypes.swift;TipKitRuntime.swift:exerciseEmptyDonationCodable	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO14resetDatastoreyyKFZ	implemented	TipKit.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO15MaxDisplayCountV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO15MaxDisplayCountVyAESicfc	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO15ParameterOptionV	implemented	TipsRuleParameter.swift;TipKitRuntime.swift:exerciseParametersAndRules	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO15ParameterOptionV9transientAEvpZ	implemented	TipsRuleParameter.swift;TipKitRuntime.swift:exerciseParametersAndRules	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO17DonationTimeRangeV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO17DonationTimeRangeV2eeoiySbAE_AEtFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO17DonationTimeRangeV3dayAEvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Linux-local elapsed 86400s; calendar-day Darwin mapping unobserved.
-s:6TipKit4TipsO17DonationTimeRangeV4daysyAESiFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO17DonationTimeRangeV4fromAEs7Decoder_p_tKcfc	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO17DonationTimeRangeV4hash4intoys6HasherVz_tF	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO17DonationTimeRangeV4hourAEvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO17DonationTimeRangeV4weekAEvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO17DonationTimeRangeV5hoursyAESiFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO17DonationTimeRangeV5weeksyAESiFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO17DonationTimeRangeV6encode2toys7Encoder_p_tKF	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO17DonationTimeRangeV6minuteAEvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO17DonationTimeRangeV7minutesyAESiFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO17DonationTimeRangeV9hashValueSivp	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO18InvalidationReasonO	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO18InvalidationReasonO15actionPerformedyA2EmF	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO18InvalidationReasonO20displayCountExceededyA2EmF	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO18InvalidationReasonO23displayDurationExceededyA2EmF	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO18InvalidationReasonO2eeoiySbAE_AEtFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO18InvalidationReasonO4hash4intoys6HasherVz_tF	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO18InvalidationReasonO9hashValueSivp	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO18InvalidationReasonO9tipClosedyA2EmF	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO18MaxDisplayDurationV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO18MaxDisplayDurationVyAESdcfc	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV2eeoiySbAG_AGtFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV5namedyAGSSFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV9automaticAGvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV05cloudB9ContaineryA2E05CloudbG0VSgFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Constructs an option value. configure does not synchronize.
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV2eeoiySbAG_AGtFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV5dailyAGvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV6hourlyAGvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV6weeklyAGvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV7monthlyAGvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV9immediateAGvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV16displayFrequencyyA2E07DisplayG0VFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV14groupContainer10identifierAGSS_tKFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Always throws missingGroupContainerEntitlements; no Linux app-group store.
-s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV18applicationDefaultAGvpZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV2eeoiySbAG_AGtFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV3urlyAG10Foundation3URLVFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Constructs a location value. configure does not create the file.
-s:6TipKit4TipsO19ConfigurationOptionV17datastoreLocationyA2E09DatastoreG0VFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO23IgnoresDisplayFrequencyV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO23IgnoresDisplayFrequencyVyAESbcfc	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO4RuleV	declared	TipsRuleParameter.swift;TipKitRuntime.swift:exerciseParametersAndRules	Struct compiles; public constructor is the unobserved #Rule macro. SPI predicates only.
-s:6TipKit4TipsO4RuleV17CompoundOperationO	implemented	TipsRuleParameter.swift;TipKitRuntime.swift:exerciseParametersAndRules	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO4RuleV17CompoundOperationO11conjunctionyA2GmF	implemented	TipsRuleParameter.swift;TipKitRuntime.swift:exerciseParametersAndRules	Enum case constructible; combinators are SPI until #Rule is observed.
-s:6TipKit4TipsO4RuleV17CompoundOperationO11disjunctionyA2GmF	implemented	TipsRuleParameter.swift;TipKitRuntime.swift:exerciseParametersAndRules	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO4RuleV17CompoundOperationO2eeoiySbAG_AGtFZ	implemented	TipsRuleParameter.swift;TipKitRuntime.swift:exerciseParametersAndRules	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO4RuleV17CompoundOperationO4hash4intoys6HasherVz_tF	implemented	TipsRuleParameter.swift;TipKitRuntime.swift:exerciseParametersAndRules	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO4RuleV17CompoundOperationO9hashValueSivp	implemented	TipsRuleParameter.swift;TipKitRuntime.swift:exerciseParametersAndRules	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV12sendDonationyyx_yyYbcSgtF	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV12sendDonationyyyyYbcSgAC05EmptyF0VRszrlF	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseSendDonationHop	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV15deleteDonationsyyYaKF	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV2IDa	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV2id13donationLimitAEy_AC13EmptyDonationVGSS_AC0iG0VtcAIRszrlufc	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV2id13donationLimitAEy_xGSS_AC08DonationG0Vtcfc	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV2idAEy_AC13EmptyDonationVGSS_tcAHRszrlufc	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV2idAEy_xGSS_tcfc	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV5Valuea	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV6donateyyYaAC13EmptyDonationVRszrlF	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Async hop through sendDonation completion queue onto in-memory store.
-s:6TipKit4TipsO5EventV6donateyyxYaF	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV8DonationV	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV8DonationV13dynamicMemberqd__s7KeyPathCyxqd__G_tcluip	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV8DonationV4date10Foundation4DateVvp	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV8DonationV4fromAGy_x_Gs7Decoder_p_tKcfc	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV8DonationV6encode2toys7Encoder_p_tKF	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO5EventV9donationsSayAE8DonationVy_x_GGvp	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO6ActionV	implemented	TipsAction.swift;TipKitRuntime.swift:exerciseActions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO6ActionV2IDa	implemented	TipsAction.swift;TipKitRuntime.swift:exerciseActions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO6ActionV2id5title7performAESSSg_xyyctcSyRzlufc	implemented	TipsAction.swift;TipKitRuntime.swift:exerciseActions	StringProtocol title init. Text-labeled init is deferred.
-s:6TipKit4TipsO6ActionV2id7perform_AESSSg_yyc7SwiftUI4TextVyctcfc	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit4TipsO6ActionV2idSSvp	implemented	TipsAction.swift;TipKitRuntime.swift:exerciseActions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO6ActionV5indexSiSgvp	implemented	TipsAction.swift;TipKitRuntime.swift:exerciseActions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO6ActionV5label7SwiftUI4TextVyYbcvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text/Image/Tip existentials; not substituted on this host.
-s:6TipKit4TipsO6ActionV7handleryycvp	implemented	TipsAction.swift;TipKitRuntime.swift:exerciseActions	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO6StatusO	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO6StatusO11invalidatedyAeC18InvalidationReasonOcAEmF	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO6StatusO2eeoiySbAE_AEtFZ	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO6StatusO4hash4intoys6HasherVz_tF	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO6StatusO7pendingyA2EmF	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO6StatusO9availableyA2EmF	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO6StatusO9hashValueSivp	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO9ParameterV	implemented	TipsRuleParameter.swift;TipKitRuntime.swift:exerciseParametersAndRules	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO9ParameterV2IDa	implemented	TipsRuleParameter.swift;TipKitRuntime.swift:exerciseParametersAndRules	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO9ParameterV5Valuea	implemented	TipsRuleParameter.swift;TipKitRuntime.swift:exerciseParametersAndRules	Exercised on the isolated host against the in-memory Linux engine.
-s:6TipKit4TipsO9configureyySayAC19ConfigurationOptionVGKFZ	implemented	TipKit.swift;TipKitRuntime.swift:exerciseConfigure	Once-per-process in-memory configure. URL/CloudKit options recorded, no file or sync.
+s:6TipKit0aB5ErrorV	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:6TipKit0aB5ErrorV11descriptionSSvp	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:6TipKit0aB5ErrorV16errorDescriptionSSSgvp	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:6TipKit0aB5ErrorV25invalidPredicateValueTypeACvpZ	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:6TipKit0aB5ErrorV2eeoiySbAC_ACtFZ	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:6TipKit0aB5ErrorV30tipsDatastoreAlreadyConfiguredACvpZ	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:6TipKit0aB5ErrorV33missingGroupContainerEntitlementsACvpZ	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:6TipKit0aB5ErrorV4hash4intoys6HasherVz_tF	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:6TipKit0aB5ErrorV9hashValueSivp	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:6TipKit4TipsO	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigureOnceAndResetDatastore	-
+s:6TipKit4TipsO04hideC10ForTestingyySayAA0A0_pXpGFZ	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testHideShowAllAndTypedTestingFlags	-
+s:6TipKit4TipsO04showC10ForTestingyySayAA0A0_pXpGFZ	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testHideShowAllAndTypedTestingFlags	-
+s:6TipKit4TipsO07hideAllC10ForTestingyyFZ	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testHideShowAllAndTypedTestingFlags	-
+s:6TipKit4TipsO07showAllC10ForTestingyyFZ	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testHideShowAllAndTypedTestingFlags	-
+s:6TipKit4TipsO13DonationLimitV	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationLimitAndDisplayOptions	-
+s:6TipKit4TipsO13DonationLimitV10maximumAgeAC0D9TimeRangeVSgvp	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationLimitAndDisplayOptions	-
+s:6TipKit4TipsO13DonationLimitV12maximumCount0F3AgeAESi_AC0D9TimeRangeVSgtcfc	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationLimitAndDisplayOptions	-
+s:6TipKit4TipsO13DonationLimitV12maximumCountSivp	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationLimitAndDisplayOptions	-
+s:6TipKit4TipsO13EmptyDonationV	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testEmptyDonationCodable	-
+s:6TipKit4TipsO13EmptyDonationV4fromAEs7Decoder_p_tKcfc	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testEmptyDonationCodable	-
+s:6TipKit4TipsO13EmptyDonationV6encode2toys7Encoder_p_tKF	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testEmptyDonationCodable	-
+s:6TipKit4TipsO14resetDatastoreyyKFZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigureOnceAndResetDatastore	Clears donations and invalidations; does not un-configure.
+s:6TipKit4TipsO15MaxDisplayCountV	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationLimitAndDisplayOptions	-
+s:6TipKit4TipsO15MaxDisplayCountVyAESicfc	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationLimitAndDisplayOptions	-
+s:6TipKit4TipsO15ParameterOptionV	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testParameterAndRuleSPI	-
+s:6TipKit4TipsO15ParameterOptionV9transientAEvpZ	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testParameterAndRuleSPI	-
+s:6TipKit4TipsO17DonationTimeRangeV	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:6TipKit4TipsO17DonationTimeRangeV2eeoiySbAE_AEtFZ	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:6TipKit4TipsO17DonationTimeRangeV3dayAEvpZ	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	Linux-local elapsed 86400s; calendar-day Darwin mapping unobserved.
+s:6TipKit4TipsO17DonationTimeRangeV4daysyAESiFZ	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:6TipKit4TipsO17DonationTimeRangeV4fromAEs7Decoder_p_tKcfc	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:6TipKit4TipsO17DonationTimeRangeV4hash4intoys6HasherVz_tF	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:6TipKit4TipsO17DonationTimeRangeV4hourAEvpZ	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:6TipKit4TipsO17DonationTimeRangeV4weekAEvpZ	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:6TipKit4TipsO17DonationTimeRangeV5hoursyAESiFZ	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:6TipKit4TipsO17DonationTimeRangeV5weeksyAESiFZ	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:6TipKit4TipsO17DonationTimeRangeV6encode2toys7Encoder_p_tKF	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:6TipKit4TipsO17DonationTimeRangeV6minuteAEvpZ	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:6TipKit4TipsO17DonationTimeRangeV7minutesyAESiFZ	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:6TipKit4TipsO17DonationTimeRangeV9hashValueSivp	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:6TipKit4TipsO18InvalidationReasonO	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testInvalidationReasonCases	-
+s:6TipKit4TipsO18InvalidationReasonO15actionPerformedyA2EmF	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testInvalidationReasonCases	-
+s:6TipKit4TipsO18InvalidationReasonO20displayCountExceededyA2EmF	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testInvalidationReasonCases	-
+s:6TipKit4TipsO18InvalidationReasonO23displayDurationExceededyA2EmF	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testInvalidationReasonCases	-
+s:6TipKit4TipsO18InvalidationReasonO2eeoiySbAE_AEtFZ	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testInvalidationReasonCases	-
+s:6TipKit4TipsO18InvalidationReasonO4hash4intoys6HasherVz_tF	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testInvalidationReasonCases	-
+s:6TipKit4TipsO18InvalidationReasonO9hashValueSivp	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testInvalidationReasonCases	-
+s:6TipKit4TipsO18InvalidationReasonO9tipClosedyA2EmF	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testInvalidationReasonCases	-
+s:6TipKit4TipsO18MaxDisplayDurationV	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationLimitAndDisplayOptions	-
+s:6TipKit4TipsO18MaxDisplayDurationVyAESdcfc	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationLimitAndDisplayOptions	-
+s:6TipKit4TipsO19ConfigurationOptionV	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV2eeoiySbAG_AGtFZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV5namedyAGSSFZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV9automaticAGvpZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:6TipKit4TipsO19ConfigurationOptionV05cloudB9ContaineryA2E05CloudbG0VSgFZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	Constructs an option value. configure does not synchronize.
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV2eeoiySbAG_AGtFZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV5dailyAGvpZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV6hourlyAGvpZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV6weeklyAGvpZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV7monthlyAGvpZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV9immediateAGvpZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:6TipKit4TipsO19ConfigurationOptionV16displayFrequencyyA2E07DisplayG0VFZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testDatastoreLocationFailClosed	-
+s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV14groupContainer10identifierAGSS_tKFZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testDatastoreLocationFailClosed	Always throws missingGroupContainerEntitlements; no Linux app-group store.
+s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV18applicationDefaultAGvpZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testDatastoreLocationFailClosed	-
+s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV2eeoiySbAG_AGtFZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testDatastoreLocationFailClosed	-
+s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV3urlyAG10Foundation3URLVFZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testDatastoreLocationFailClosed	Constructs a location value. configure does not create the file.
+s:6TipKit4TipsO19ConfigurationOptionV17datastoreLocationyA2E09DatastoreG0VFZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testDatastoreLocationFailClosed	-
+s:6TipKit4TipsO23IgnoresDisplayFrequencyV	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationLimitAndDisplayOptions	-
+s:6TipKit4TipsO23IgnoresDisplayFrequencyVyAESbcfc	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationLimitAndDisplayOptions	-
+s:6TipKit4TipsO4RuleV	declared	source:full/tipkit/TipsRuleParameter.swift#Tips.Rule	Struct compiles; public constructor is the unobserved #Rule macro. SPI predicates only.
+s:6TipKit4TipsO4RuleV17CompoundOperationO	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testParameterAndRuleSPI	-
+s:6TipKit4TipsO4RuleV17CompoundOperationO11conjunctionyA2GmF	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testParameterAndRuleSPI	Enum case constructible; combinators are SPI until #Rule is observed.
+s:6TipKit4TipsO4RuleV17CompoundOperationO11disjunctionyA2GmF	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testParameterAndRuleSPI	-
+s:6TipKit4TipsO4RuleV17CompoundOperationO2eeoiySbAG_AGtFZ	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testParameterAndRuleSPI	-
+s:6TipKit4TipsO4RuleV17CompoundOperationO4hash4intoys6HasherVz_tF	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testParameterAndRuleSPI	-
+s:6TipKit4TipsO4RuleV17CompoundOperationO9hashValueSivp	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testParameterAndRuleSPI	-
+s:6TipKit4TipsO5EventV	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:6TipKit4TipsO5EventV12sendDonationyyx_yyYbcSgtF	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventEmptyDonationAndLimit	-
+s:6TipKit4TipsO5EventV12sendDonationyyyyYbcSgAC05EmptyF0VRszrlF	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventSendDonationHop	-
+s:6TipKit4TipsO5EventV15deleteDonationsyyYaKF	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:6TipKit4TipsO5EventV2IDa	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:6TipKit4TipsO5EventV2id13donationLimitAEy_AC13EmptyDonationVGSS_AC0iG0VtcAIRszrlufc	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventEmptyDonationAndLimit	-
+s:6TipKit4TipsO5EventV2id13donationLimitAEy_xGSS_AC08DonationG0Vtcfc	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:6TipKit4TipsO5EventV2idAEy_AC13EmptyDonationVGSS_tcAHRszrlufc	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventEmptyDonationAndLimit	-
+s:6TipKit4TipsO5EventV2idAEy_xGSS_tcfc	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:6TipKit4TipsO5EventV5Valuea	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:6TipKit4TipsO5EventV6donateyyYaAC13EmptyDonationVRszrlF	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventEmptyDonationAndLimit	Async hop through sendDonation completion queue onto in-memory store.
+s:6TipKit4TipsO5EventV6donateyyxYaF	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:6TipKit4TipsO5EventV8DonationV	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:6TipKit4TipsO5EventV8DonationV13dynamicMemberqd__s7KeyPathCyxqd__G_tcluip	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:6TipKit4TipsO5EventV8DonationV4date10Foundation4DateVvp	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:6TipKit4TipsO5EventV8DonationV4fromAGy_x_Gs7Decoder_p_tKcfc	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventEmptyDonationAndLimit	-
+s:6TipKit4TipsO5EventV8DonationV6encode2toys7Encoder_p_tKF	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventEmptyDonationAndLimit	-
+s:6TipKit4TipsO5EventV9donationsSayAE8DonationVy_x_GGvp	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:6TipKit4TipsO6ActionV	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testActionStringProtocolInit	-
+s:6TipKit4TipsO6ActionV2IDa	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testActionStringProtocolInit	-
+s:6TipKit4TipsO6ActionV2id5title7performAESSSg_xyyctcSyRzlufc	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testActionStringProtocolInit	StringProtocol title init. Text-labeled init is deferred.
+s:6TipKit4TipsO6ActionV2id7perform_AESSSg_yyc7SwiftUI4TextVyctcfc	deferred	oracle-questions.tsv	Requires SwiftUI.Text label closure; StringProtocol init is implemented.
+s:6TipKit4TipsO6ActionV2idSSvp	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testActionStringProtocolInit	-
+s:6TipKit4TipsO6ActionV5indexSiSgvp	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testActionStringProtocolInit	-
+s:6TipKit4TipsO6ActionV5label7SwiftUI4TextVyYbcvp	deferred	oracle-questions.tsv	Requires SwiftUI.Text; not substituted on this host.
+s:6TipKit4TipsO6ActionV7handleryycvp	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testActionStringProtocolInit	-
+s:6TipKit4TipsO6StatusO	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testTipsStatusCases	-
+s:6TipKit4TipsO6StatusO11invalidatedyAeC18InvalidationReasonOcAEmF	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testTipsStatusCases	-
+s:6TipKit4TipsO6StatusO2eeoiySbAE_AEtFZ	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testTipsStatusCases	-
+s:6TipKit4TipsO6StatusO4hash4intoys6HasherVz_tF	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testTipsStatusCases	-
+s:6TipKit4TipsO6StatusO7pendingyA2EmF	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testTipsStatusCases	-
+s:6TipKit4TipsO6StatusO9availableyA2EmF	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testTipsStatusCases	-
+s:6TipKit4TipsO6StatusO9hashValueSivp	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testTipsStatusCases	-
+s:6TipKit4TipsO9ParameterV	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testParameterAndRuleSPI	-
+s:6TipKit4TipsO9ParameterV2IDa	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testParameterAndRuleSPI	-
+s:6TipKit4TipsO9ParameterV5Valuea	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testParameterAndRuleSPI	-
+s:6TipKit4TipsO9configureyySayAC19ConfigurationOptionVGKFZ	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigureOnceAndResetDatastore	Once-per-process in-memory configure. URL/CloudKit options recorded, no file or sync.
 s:7SwiftUI4ViewP6TipKitE03tipC5StyleyQrqd__AD0dcG0Rd__lF	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
 s:7SwiftUI4ViewP6TipKitE03tipC5StyleyQrqd__AD0dcG0Rd__lF::SYNTHESIZED::s:6TipKit0A4ViewV	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
 s:7SwiftUI4ViewP6TipKitE07popoverD0_11isPresented16attachmentAnchor10arrowEdges6actionQrAD0D0_pSg_AA7BindingVySbGSgAA017PopoverAttachmentJ0OAA4EdgeO3SetVyAD4TipsO6ActionVctF	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
@@ -1021,16 +1021,16 @@ s:7SwiftUI4ViewPAAE9onReceive_7performQrqd___y6OutputQyd__ct7Combine9PublisherRd
 s:7SwiftUI4ViewPAAE9statusBar6hiddenQrSb_tF::SYNTHESIZED::s:6TipKit0A4ViewV	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
 s:7SwiftUI4ViewPAAE9textScale_9isEnabledQrAA4TextV0E0V_SbtF::SYNTHESIZED::s:6TipKit0A4ViewV	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
 s:7SwiftUI4ViewPAAE9underline_7pattern5colorQrSb_AA4TextV9LineStyleV7PatternVAA5ColorVSgtF::SYNTHESIZED::s:6TipKit0A4ViewV	unavailable	n/a	SwiftUI TipView / View / TipViewStyle surface; isolated host has no SwiftUI.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit0A5GroupC8PriorityO	implemented	TipGroup.swift;TipKitRuntime.swift:exerciseTipGroupPriority	Exercised on the isolated host against the in-memory Linux engine.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO17DonationTimeRangeV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertTimeRangesAndLimits	Exercised on the isolated host against the in-memory Linux engine.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO18InvalidationReasonO	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertConfigurationOptions	Exercised on the isolated host against the in-memory Linux engine.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO4RuleV17CompoundOperationO	implemented	TipsRuleParameter.swift;TipKitRuntime.swift:exerciseParametersAndRules	Exercised on the isolated host against the in-memory Linux engine.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO6StatusO	implemented	TipsTypes.swift;TipKitRuntime.swift:assertStatusAndInvalidation	Exercised on the isolated host against the in-memory Linux engine.
-s:ST6TipKitE13donatedWithinySayAA4TipsO5EventV8DonationVy_qd___GGAD0G9TimeRangeVSeRd__SERd__s8SendableRd__AI7ElementRtzlF	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:ST6TipKitE13largestSubset9groupedBySayAA4TipsO5EventV8DonationVy_qd___GGs7KeyPathCyqd__qd_0_G_tSeRd__SERd__s8SendableRd__SHRd_0_AJ7ElementRtzr0_lF	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:ST6TipKitE14smallestSubset9groupedBySayAA4TipsO5EventV8DonationVy_qd___GGs7KeyPathCyqd__qd_0_G_tSeRd__SERd__s8SendableRd__SHRd_0_AJ7ElementRtzr0_lF	implemented	TipsEvent.swift;TipKitRuntime.swift:exerciseEvents	Exercised on the isolated host against the in-memory Linux engine.
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	TipsTypes.swift;TipKitRuntime.swift:assertErrorIdentities	Exercised on the isolated host against the in-memory Linux engine.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit0A5GroupC8PriorityO	implemented	test:full/tipkit/tests/agent/TipGroupTests.swift#testTipGroupPriority	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO17DonationTimeRangeV	implemented	test:full/tipkit/tests/agent/TipsDonationTests.swift#testDonationTimeRangeValues	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO18InvalidationReasonO	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testInvalidationReasonCases	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testConfigurationCloudKitAndFrequency	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV	implemented	test:full/tipkit/tests/agent/TipsConfigurationTests.swift#testDatastoreLocationFailClosed	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO4RuleV17CompoundOperationO	implemented	test:full/tipkit/tests/agent/TipsActionParameterTests.swift#testParameterAndRuleSPI	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO6StatusO	implemented	test:full/tipkit/tests/agent/TipsStatusTests.swift#testTipsStatusCases	-
+s:ST6TipKitE13donatedWithinySayAA4TipsO5EventV8DonationVy_qd___GGAD0G9TimeRangeVSeRd__SERd__s8SendableRd__AI7ElementRtzlF	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:ST6TipKitE13largestSubset9groupedBySayAA4TipsO5EventV8DonationVy_qd___GGs7KeyPathCyqd__qd_0_G_tSeRd__SERd__s8SendableRd__SHRd_0_AJ7ElementRtzr0_lF	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:ST6TipKitE14smallestSubset9groupedBySayAA4TipsO5EventV8DonationVy_qd___GGs7KeyPathCyqd__qd_0_G_tSeRd__SERd__s8SendableRd__SHRd_0_AJ7ElementRtzr0_lF	implemented	test:full/tipkit/tests/agent/TipsEventTests.swift#testEventDonateAndQuery	-
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	test:full/tipkit/tests/agent/TipKitErrorTests.swift#testTipKitErrorIdentities	-

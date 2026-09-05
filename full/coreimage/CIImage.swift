@@ -1,5 +1,15 @@
 import Foundation
 
+enum CIColorOp: @unchecked Sendable {
+    case sepia(CGFloat)
+    case colorControls(saturation: CGFloat, brightness: CGFloat, contrast: CGFloat)
+    case matrix(r: CIVector, g: CIVector, b: CIVector, a: CIVector, bias: CIVector)
+    case exposure(CGFloat)
+    case hue(CGFloat)
+    case vibrance(CGFloat)
+    case photo(String)
+}
+
 enum CIImageNode: @unchecked Sendable {
     case empty
     case color(CIColor, extent: CGRect)
@@ -9,6 +19,8 @@ enum CIImageNode: @unchecked Sendable {
     case transformed(CIImage, CGAffineTransform)
     case composited(foreground: CIImage, background: CIImage)
     case tagged(CIImage)
+    case adjusted(CIImage, CIColorOp)
+    case blurred(CIImage, radius: CGFloat)
 }
 
 public class CIImage: NSObject, NSSecureCoding, @unchecked Sendable {
@@ -37,8 +49,13 @@ public class CIImage: NSObject, NSSecureCoding, @unchecked Sendable {
             return matrix.applying(to: image.extent)
         case .composited(let foreground, let background):
             return foreground.extent.union(background.extent)
-        case .tagged(let image):
+        case .tagged(let image), .adjusted(let image, _):
             return image.extent
+        case .blurred(let image, let radius):
+            // Apple CIGaussianBlur support is a 3σ kernel: the output extent is
+            // the input extent inset by −3×inputRadius on each edge.
+            let pad = 3 * radius
+            return image.extent.insetBy(dx: -pad, dy: -pad)
         }
     }
 
@@ -69,7 +86,7 @@ public class CIImage: NSObject, NSSecureCoding, @unchecked Sendable {
     }
 
     public init(cgImage image: CGImage) {
-        let extent = CGRect(x: 0, y: 0, width: image.width, height: image.height)
+        let extent = CGRect(x: 0, y: 0, width: CGFloat(image.width), height: CGFloat(image.height))
         self.node = .bitmap(image, extent: extent)
         self.storedCGImage = image
         super.init()
@@ -80,7 +97,7 @@ public class CIImage: NSObject, NSSecureCoding, @unchecked Sendable {
     }
 
     public init(cgImage image: CGImage, options: [CIImageOption: Any]? = nil) {
-        let extent = CGRect(x: 0, y: 0, width: image.width, height: image.height)
+        let extent = CGRect(x: 0, y: 0, width: CGFloat(image.width), height: CGFloat(image.height))
         self.node = .bitmap(image, extent: extent)
         self.storedCGImage = image
         super.init()
@@ -115,7 +132,7 @@ public class CIImage: NSObject, NSSecureCoding, @unchecked Sendable {
             }
         }
         let bitmap = CGImage(width: width, height: height, pixels: pixels)
-        self.node = .bitmap(bitmap, extent: CGRect(x: 0, y: 0, width: width, height: height))
+        self.node = .bitmap(bitmap, extent: CGRect(x: 0, y: 0, width: CGFloat(width), height: CGFloat(height)))
         self.storedCGImage = bitmap
         self.storedColorSpace = colorSpace
         super.init()
@@ -126,8 +143,12 @@ public class CIImage: NSObject, NSSecureCoding, @unchecked Sendable {
     }
 
     public init?(data: Data, options: [CIImageOption: Any]? = nil) {
-        _ = (data, options)
-        return nil
+        guard let bitmap = ciDecodeImage(data) else { return nil }
+        let extent = CGRect(x: 0, y: 0, width: CGFloat(bitmap.width), height: CGFloat(bitmap.height))
+        self.node = .bitmap(bitmap, extent: extent)
+        self.storedCGImage = bitmap
+        super.init()
+        applyOptions(options)
     }
 
     public convenience init?(contentsOf url: URL) {
@@ -138,9 +159,9 @@ public class CIImage: NSObject, NSSecureCoding, @unchecked Sendable {
         self.init(contentsOf: url, options: nil)
     }
 
-    public init?(contentsOf url: URL, options: [CIImageOption: Any]? = nil) {
-        _ = (url, options)
-        return nil
+    public convenience init?(contentsOf url: URL, options: [CIImageOption: Any]? = nil) {
+        guard let data = try? Data(contentsOf: url) else { return nil }
+        self.init(data: data, options: options)
     }
 
     public convenience init?(contentsOfURL url: URL, options: [CIImageOption: Any]? = nil) {
@@ -156,13 +177,24 @@ public class CIImage: NSObject, NSSecureCoding, @unchecked Sendable {
         options: [CIImageOption: Any]? = nil
     ) {
         let bitmap = CGImage(width: width, height: height)
-        self.node = .bitmap(bitmap, extent: CGRect(x: 0, y: 0, width: width, height: height))
+        self.node = .bitmap(bitmap, extent: CGRect(x: 0, y: 0, width: CGFloat(width), height: CGFloat(height)))
         self.storedCGImage = bitmap
         self.storedColorSpace = colorSpace
         super.init()
         applyOptions(options)
         _ = provider
         _ = format
+    }
+
+    public init(texture name: UInt32, size: CGSize, flipped: Bool, colorSpace: CGColorSpace?) {
+        _ = (name, flipped)
+        let width = max(0, Int(size.width.rounded(.down)))
+        let height = max(0, Int(size.height.rounded(.down)))
+        let bitmap = CGImage(width: width, height: height)
+        self.node = .bitmap(bitmap, extent: CGRect(x: 0, y: 0, width: CGFloat(width), height: CGFloat(height)))
+        self.storedCGImage = bitmap
+        self.storedColorSpace = colorSpace
+        super.init()
     }
 
     public required init?(coder: NSCoder) {
@@ -186,7 +218,10 @@ public class CIImage: NSObject, NSSecureCoding, @unchecked Sendable {
     public static var clear: CIImage { CIImage(color: .clear) }
 
     public func cropped(to rect: CGRect) -> CIImage {
-        CIImage(node: .cropped(self, rect.intersection(extent.isNull ? rect : extent)))
+        if extent.isInfinite || extent.isNull {
+            return CIImage(node: .cropped(self, rect))
+        }
+        return CIImage(node: .cropped(self, rect.intersection(extent)))
     }
 
     public func clamped(to rect: CGRect) -> CIImage {
@@ -296,8 +331,7 @@ public class CIImage: NSObject, NSSecureCoding, @unchecked Sendable {
     }
 
     public func applyingGaussianBlur(sigma: Double) -> CIImage {
-        _ = sigma
-        return CIImage(node: .tagged(self))
+        CIImage(node: .blurred(self, radius: CGFloat(sigma)))
     }
 
     public func applyingFilter(_ filterName: String) -> CIImage {
@@ -414,6 +448,10 @@ public class CIImage: NSObject, NSSecureCoding, @unchecked Sendable {
             return (r, g, b, a)
         case .tagged(let image):
             return image.sample(at: point)
+        case .adjusted(let image, let op):
+            return ciApplyColorOp(op, image.sample(at: point))
+        case .blurred(let image, let radius):
+            return ciSampleBlurred(image, radius: radius, at: point)
         }
     }
 }

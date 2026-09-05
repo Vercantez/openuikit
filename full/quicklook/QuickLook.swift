@@ -3,13 +3,19 @@ import Foundation
 #if canImport(UIKit)
 import UIKit
 #endif
+#if canImport(PDFKit)
+import PDFKit
+#endif
+#if canImport(SwiftUI)
+import SwiftUI
+#endif
 
 /// The item contract consumed by `QLPreviewController`.
 ///
 /// Objective-C optional requirements are expressed with protocol defaults on
 /// the portable runtime so ordinary Swift conformers can implement the same
 /// source surface while Objective-C interoperability is disabled.
-public protocol QLPreviewItem: AnyObject {
+public protocol QLPreviewItem: NSObjectProtocol {
   var previewItemURL: URL? { get }
   var previewItemTitle: String? { get }
 }
@@ -46,7 +52,7 @@ public final class ARQuickLookPreviewItem: NSObject, QLPreviewItem {
 
 /// Observable boundary between Quick Look's source-facing API and a host.
 ///
-/// OpenUIKit includes a local image/metadata controller when UIKit is present.
+/// OpenUIKit includes a local image/PDF/text controller when UIKit is present.
 /// Embedders can replace that presenter through the SPI without claiming an
 /// Apple Quick Look daemon or support for proprietary preview generators.
 @MainActor
@@ -119,7 +125,8 @@ public enum QuickLookPortable {
       _hostDidDismiss()
     }
     activeController = controller
-    presenter.present(controller, animated: true)
+    let nav = UINavigationController(rootViewController: controller)
+    presenter.present(nav, animated: true)
     return true
     #else
     active = false
@@ -194,28 +201,141 @@ open class QLFilePreviewRequest: NSObject {
 }
 
 /// Reply returned by a `QLPreviewingController`. Drawing, typed-data, and PDF
-/// convenience initializers stay undeclared on the Foundation-only host because
-/// they require CoreGraphics, UniformTypeIdentifiers, or PDFKit types.
+/// initializers store their arguments and never invoke the supplied generators
+/// on this host: there is no Quick Look preview pipeline.
 open class QLPreviewReply: NSObject {
   public var stringEncoding: String.Encoding = .utf8
   public var attachments: [String: QLPreviewReplyAttachment] = [:]
   public var title: String = ""
-  private let sourceFileURL: URL
+
+  private let sourceFileURL: URL?
+  private let storedContextSize: CGSize?
+  private let storedIsBitmap: Bool?
+  private let storedContentType: UTType?
+  private let storedContentSize: CGSize?
+  private let storedPDFPageSize: CGSize?
+  private let drawUsing:
+    ((CGContext, QLPreviewReply) throws -> Void)?
+  private let createDataUsing: ((QLPreviewReply) throws -> Data)?
+  private let createDocumentUsing: ((QLPreviewReply) throws -> PDFDocument)?
 
   public init(fileURL: URL) {
     sourceFileURL = fileURL
+    storedContextSize = nil
+    storedIsBitmap = nil
+    storedContentType = nil
+    storedContentSize = nil
+    storedPDFPageSize = nil
+    drawUsing = nil
+    createDataUsing = nil
+    createDocumentUsing = nil
     super.init()
   }
-}
 
-/// Attachment payload. `contentType` and `init(data:contentType:)` require
-/// UniformTypeIdentifiers.UTType, which is not a declared host dependency.
-open class QLPreviewReplyAttachment: NSObject {
-  public let data: Data
+  public convenience init(
+    contextSize: CGSize,
+    isBitmap: Bool,
+    drawUsing closure: @escaping (CGContext, QLPreviewReply) throws -> Void
+  ) {
+    self.init(
+      fileURL: nil,
+      contextSize: contextSize,
+      isBitmap: isBitmap,
+      contentType: nil,
+      contentSize: nil,
+      pdfPageSize: nil,
+      drawUsing: closure,
+      createDataUsing: nil,
+      createDocumentUsing: nil
+    )
+  }
+
+  public convenience init(
+    dataOfContentType contentType: UTType,
+    contentSize: CGSize,
+    createDataUsing closure: @escaping (QLPreviewReply) throws -> Data
+  ) {
+    self.init(
+      fileURL: nil,
+      contextSize: nil,
+      isBitmap: nil,
+      contentType: contentType,
+      contentSize: contentSize,
+      pdfPageSize: nil,
+      drawUsing: nil,
+      createDataUsing: closure,
+      createDocumentUsing: nil
+    )
+  }
+
+  public convenience init(
+    forPDFWithPageSize defaultPageSize: CGSize,
+    createDocumentUsing closure: @escaping (QLPreviewReply) throws -> PDFDocument
+  ) {
+    self.init(
+      fileURL: nil,
+      contextSize: nil,
+      isBitmap: nil,
+      contentType: nil,
+      contentSize: nil,
+      pdfPageSize: defaultPageSize,
+      drawUsing: nil,
+      createDataUsing: nil,
+      createDocumentUsing: closure
+    )
+  }
+
+  private init(
+    fileURL: URL?,
+    contextSize: CGSize?,
+    isBitmap: Bool?,
+    contentType: UTType?,
+    contentSize: CGSize?,
+    pdfPageSize: CGSize?,
+    drawUsing: ((CGContext, QLPreviewReply) throws -> Void)?,
+    createDataUsing: ((QLPreviewReply) throws -> Data)?,
+    createDocumentUsing: ((QLPreviewReply) throws -> PDFDocument)?
+  ) {
+    sourceFileURL = fileURL
+    storedContextSize = contextSize
+    storedIsBitmap = isBitmap
+    storedContentType = contentType
+    storedContentSize = contentSize
+    storedPDFPageSize = pdfPageSize
+    self.drawUsing = drawUsing
+    self.createDataUsing = createDataUsing
+    self.createDocumentUsing = createDocumentUsing
+    super.init()
+  }
 
   @_spi(OpenUIKitHost)
-  public init(data: Data) {
+  public var _fileURL: URL? { sourceFileURL }
+
+  @_spi(OpenUIKitHost)
+  public var _contextSize: CGSize? { storedContextSize }
+
+  @_spi(OpenUIKitHost)
+  public var _isBitmap: Bool? { storedIsBitmap }
+
+  @_spi(OpenUIKitHost)
+  public var _contentType: UTType? { storedContentType }
+
+  @_spi(OpenUIKitHost)
+  public var _contentSize: CGSize? { storedContentSize }
+
+  @_spi(OpenUIKitHost)
+  public var _pdfPageSize: CGSize? { storedPDFPageSize }
+}
+
+/// Attachment payload. `contentType` is UniformTypeIdentifiers.UTType when that
+/// module is importable; otherwise the host-local stand-in of the same name.
+open class QLPreviewReplyAttachment: NSObject {
+  public let data: Data
+  public let contentType: UTType
+
+  public init(data: Data, contentType: UTType) {
     self.data = data
+    self.contentType = contentType
     super.init()
   }
 }
@@ -253,7 +373,8 @@ open class QLPreviewSceneActivationConfiguration: NSObject {
 
 /// Fail-closed preview-generation contract. Optional Apple methods become
 /// throwing defaults; the isolated host never claims a generator or Spotlight
-/// preview pipeline.
+/// preview pipeline. Defaults throw `CocoaError.featureUnsupported` rather than
+/// inventing an unobserved Quick Look error payload.
 public protocol QLPreviewingController: NSObjectProtocol {
   func preparePreviewOfFile(at url: URL) async throws
   func preparePreviewOfSearchableItem(
@@ -267,7 +388,7 @@ public protocol QLPreviewingController: NSObjectProtocol {
 public extension QLPreviewingController {
   func preparePreviewOfFile(at url: URL) async throws {
     _ = url
-    throw _QLPreviewingHostError.unsupported
+    throw CocoaError(.featureUnsupported)
   }
 
   func preparePreviewOfSearchableItem(
@@ -276,19 +397,15 @@ public extension QLPreviewingController {
   ) async throws {
     _ = identifier
     _ = queryString
-    throw _QLPreviewingHostError.unsupported
+    throw CocoaError(.featureUnsupported)
   }
 
   func providePreview(for request: QLFilePreviewRequest) async throws
     -> QLPreviewReply
   {
     _ = request
-    throw _QLPreviewingHostError.unsupported
+    throw CocoaError(.featureUnsupported)
   }
-}
-
-enum _QLPreviewingHostError: Error {
-  case unsupported
 }
 
 @MainActor
@@ -322,6 +439,20 @@ public protocol QLPreviewControllerDelegate: AnyObject {
     didSaveEditedCopyOf previewItem: any QLPreviewItem,
     at modifiedContentsURL: URL
   )
+  func previewController(
+    _ controller: QLPreviewController,
+    frameFor item: any QLPreviewItem,
+    inSourceView view: UnsafeMutablePointer<UIView?>
+  ) -> CGRect
+  func previewController(
+    _ controller: QLPreviewController,
+    transitionImageFor item: any QLPreviewItem,
+    contentRect: UnsafeMutablePointer<CGRect>
+  ) -> UIImage?
+  func previewController(
+    _ controller: QLPreviewController,
+    transitionViewFor item: any QLPreviewItem
+  ) -> UIView?
 }
 
 public extension QLPreviewControllerDelegate {
@@ -370,6 +501,37 @@ public extension QLPreviewControllerDelegate {
     _ = previewItem
     _ = modifiedContentsURL
   }
+
+  func previewController(
+    _ controller: QLPreviewController,
+    frameFor item: any QLPreviewItem,
+    inSourceView view: UnsafeMutablePointer<UIView?>
+  ) -> CGRect {
+    _ = controller
+    _ = item
+    _ = view
+    return .zero
+  }
+
+  func previewController(
+    _ controller: QLPreviewController,
+    transitionImageFor item: any QLPreviewItem,
+    contentRect: UnsafeMutablePointer<CGRect>
+  ) -> UIImage? {
+    _ = controller
+    _ = item
+    contentRect.pointee = .zero
+    return nil
+  }
+
+  func previewController(
+    _ controller: QLPreviewController,
+    transitionViewFor item: any QLPreviewItem
+  ) -> UIView? {
+    _ = controller
+    _ = item
+    return nil
+  }
 }
 
 #if canImport(UIKit)
@@ -396,27 +558,53 @@ open class QLPreviewController: UIViewController {
   private var portableDataSource: _QLURLDataSource?
   private var portableDismiss: (() -> Void)?
   private let imageView = UIImageView()
+  private let textView = UITextView()
   private let metadataLabel = UILabel()
+  #if canImport(PDFKit)
+  private let pdfView = PDFView()
+  #endif
 
   open class func canPreview(_ item: any QLPreviewItem) -> Bool {
     guard let url = item.previewItemURL, url.isFileURL else { return false }
-    return FileManager.default.fileExists(atPath: url.path)
+    return _QLPreviewableContent.isPreviewable(url: url)
+  }
+
+  @_spi(OpenUIKitHost)
+  public var _previewTitle: String? {
+    currentPreviewItem?.previewItemTitle
+      ?? currentPreviewItem?.previewItemURL?.lastPathComponent
+  }
+
+  @_spi(OpenUIKitHost)
+  public var _previewKind: String {
+    _QLPreviewableContent.kind(for: currentPreviewItem?.previewItemURL).rawValue
   }
 
   open override func viewDidLoad() {
     super.viewDidLoad()
     imageView.contentMode = .scaleAspectFit
+    textView.isEditable = false
+    textView.isHidden = true
     metadataLabel.numberOfLines = 0
     metadataLabel.textAlignment = .center
     view.addSubview(imageView)
+    view.addSubview(textView)
     view.addSubview(metadataLabel)
+    #if canImport(PDFKit)
+    pdfView.isHidden = true
+    view.addSubview(pdfView)
+    #endif
     reloadData()
   }
 
   open override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     imageView.frame = view.bounds
+    textView.frame = view.bounds
     metadataLabel.frame = view.bounds.insetBy(dx: 24, dy: 24)
+    #if canImport(PDFKit)
+    pdfView.frame = view.bounds
+    #endif
   }
 
   open override func viewWillDisappear(_ animated: Bool) {
@@ -479,21 +667,60 @@ open class QLPreviewController: UIViewController {
     }
   }
 
+  private func _hideContentViews() {
+    imageView.isHidden = true
+    imageView.image = nil
+    textView.isHidden = true
+    textView.text = nil
+    metadataLabel.isHidden = true
+    #if canImport(PDFKit)
+    pdfView.isHidden = true
+    pdfView.document = nil
+    #endif
+  }
+
   private func _renderCurrentItem() {
-    guard isViewLoaded, let item = currentPreviewItem else { return }
+    navigationItem.title = _previewTitle
+    guard isViewLoaded else { return }
+    _hideContentViews()
+    guard let item = currentPreviewItem else { return }
     let url = item.previewItemURL
-    if let path = url?.path, let image = UIImage(contentsOfFile: path) {
-      imageView.image = image
-      imageView.isHidden = false
-      metadataLabel.isHidden = true
-    } else {
-      imageView.image = nil
-      imageView.isHidden = true
-      metadataLabel.isHidden = false
-      metadataLabel.text = item.previewItemTitle
-        ?? url?.lastPathComponent
-        ?? "Preview unavailable"
+    switch _QLPreviewableContent.kind(for: url) {
+    case .image:
+      if let path = url?.path, let image = UIImage(contentsOfFile: path) {
+        imageView.image = image
+        imageView.isHidden = false
+      } else {
+        _showMetadataFallback(item: item, url: url)
+      }
+    case .pdf:
+      #if canImport(PDFKit)
+      if let url, let document = PDFDocument(url: url) {
+        pdfView.document = document
+        pdfView.isHidden = false
+      } else {
+        _showMetadataFallback(item: item, url: url)
+      }
+      #else
+      _showMetadataFallback(item: item, url: url)
+      #endif
+    case .text:
+      if let url, let body = try? String(contentsOf: url, encoding: .utf8) {
+        textView.text = body
+        textView.isHidden = false
+      } else {
+        _showMetadataFallback(item: item, url: url)
+      }
+    case .other, .unsupported, .empty:
+      _showMetadataFallback(item: item, url: url)
     }
+  }
+
+  private func _showMetadataFallback(item: any QLPreviewItem, url: URL?) {
+    metadataLabel.isHidden = false
+    metadataLabel.text = item.previewItemTitle
+      ?? url?.lastPathComponent
+      ?? "Preview unavailable"
   }
 }
 #else
@@ -520,7 +747,18 @@ open class QLPreviewController: NSObject {
 
   open class func canPreview(_ item: any QLPreviewItem) -> Bool {
     guard let url = item.previewItemURL, url.isFileURL else { return false }
-    return FileManager.default.fileExists(atPath: url.path)
+    return _QLPreviewableContent.isPreviewable(url: url)
+  }
+
+  @_spi(OpenUIKitHost)
+  public var _previewTitle: String? {
+    currentPreviewItem?.previewItemTitle
+      ?? currentPreviewItem?.previewItemURL?.lastPathComponent
+  }
+
+  @_spi(OpenUIKitHost)
+  public var _previewKind: String {
+    _QLPreviewableContent.kind(for: currentPreviewItem?.previewItemURL).rawValue
   }
 
   open func reloadData() {
@@ -581,3 +819,58 @@ private final class _QLURLDataSource: QLPreviewControllerDataSource {
 }
 #endif
 
+#if canImport(SwiftUI)
+@MainActor
+private struct _PortableQuickLookModifier: ViewModifier {
+  @Binding var selection: URL?
+  let items: [URL]
+
+  func body(content: Content) -> some View {
+    content
+      .onAppear { synchronize(selection) }
+      .onChange(of: selection) { _, selectedURL in
+        synchronize(selectedURL)
+      }
+  }
+
+  private func synchronize(_ selectedURL: URL?) {
+    guard let selectedURL else {
+      QuickLookPortable._dismissPresentation()
+      return
+    }
+    guard items.contains(selectedURL) else {
+      selection = nil
+      return
+    }
+    _ = QuickLookPortable._requestPresentation(
+      urls: items,
+      selectedURL: selectedURL
+    ) { updatedSelection in
+      selection = updatedSelection
+    }
+  }
+}
+
+public extension View {
+  nonisolated func quickLookPreview(_ item: Binding<URL?>) -> some View {
+    modifier(
+      _PortableQuickLookModifier(
+        selection: item,
+        items: item.wrappedValue.map { [$0] } ?? []
+      )
+    )
+  }
+
+  nonisolated func quickLookPreview<Items>(
+    _ selection: Binding<Items.Element?>,
+    in items: Items
+  ) -> some View where Items: RandomAccessCollection, Items.Element == URL {
+    modifier(
+      _PortableQuickLookModifier(
+        selection: selection,
+        items: Array(items)
+      )
+    )
+  }
+}
+#endif

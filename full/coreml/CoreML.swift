@@ -438,6 +438,37 @@ public protocol MLCustomModel {
     func predictions(from inputBatch: any MLBatchProvider, options: MLPredictionOptions) throws -> any MLBatchProvider
 }
 
+extension MLCustomLayer {
+    public init(parameterDictionary parameters: [String: Any]) throws {
+        try self.init(parameters: parameters)
+    }
+}
+
+/// Linux stand-in that keeps `MLCustomLayer` fail-closed. Clients cannot
+/// register a working custom layer without a compiled-model runtime.
+open class MLFailClosedCustomLayer: NSObject, MLCustomLayer {
+    public required init(parameters: [String: Any]) throws {
+        _ = parameters
+        super.init()
+        throw coreMLError(.customLayer, "MLCustomLayer is fail-closed on Linux.")
+    }
+
+    public func setWeightData(_ weights: [Data]) throws {
+        _ = weights
+        throw coreMLError(.customLayer, "MLCustomLayer is fail-closed on Linux.")
+    }
+
+    public func outputShapes(forInputShapes inputShapes: [[NSNumber]]) throws -> [[NSNumber]] {
+        _ = inputShapes
+        throw coreMLError(.customLayer, "MLCustomLayer is fail-closed on Linux.")
+    }
+
+    public func evaluate(inputs: [MLMultiArray], outputs: [MLMultiArray]) throws {
+        _ = (inputs, outputs)
+        throw coreMLError(.customLayer, "MLCustomLayer is fail-closed on Linux.")
+    }
+}
+
 extension MLCustomModel {
     public func predictions(
         from inputBatch: any MLBatchProvider,

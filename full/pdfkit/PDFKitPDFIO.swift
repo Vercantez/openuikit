@@ -28,6 +28,11 @@ enum PDFKitObject {
     case ref(Int, Int)
     case stream([String: PDFKitObject], Data)
 
+    var boolValue: Bool? {
+        if case .bool(let value) = self { return value }
+        return nil
+    }
+
     var intValue: Int? {
         if case .number(let value) = self { return Int(value) }
         return nil
@@ -79,6 +84,26 @@ struct PDFKitParsedPage {
     var contents: Data
     var text: String
     var resourceKeyCount: Int
+    var annotations: [PDFKitParsedAnnotation]
+    var characters: [PDFKitParsedCharacter]
+    var resources: PDFKitObject?
+}
+
+struct PDFKitParsedCharacter {
+    var scalar: Character
+    var bounds: CGRect
+}
+
+struct PDFKitParsedAnnotation {
+    var subtype: String
+    var bounds: CGRect
+    var contents: String?
+    var uri: String?
+    var destinationPageIndex: Int?
+    var fieldName: String?
+    var fieldValue: String?
+    var quadPoints: [CGPoint]
+    var colorComponents: [CGFloat]
 }
 
 struct PDFKitParsedDocument {
@@ -88,6 +113,9 @@ struct PDFKitParsedDocument {
     var pages: [PDFKitParsedPage]
     var attributes: [AnyHashable: Any]
     var outlines: [PDFKitParsedOutline]
+    var accessPermissions: PDFAccessPermissions
+    var permissionsStatus: PDFDocumentPermissions
+    var encryptInfo: PDFKitCrypto.EncryptInfo?
 }
 
 struct PDFKitParsedOutline {
@@ -97,8 +125,8 @@ struct PDFKitParsedOutline {
 }
 
 enum PDFKitIO {
-    static func parse(_ data: Data) -> PDFKitParsedDocument? {
-        switch parseDetailed(data) {
+    static func parse(_ data: Data, password: String? = nil) -> PDFKitParsedDocument? {
+        switch parseDetailed(data, password: password) {
         case .success(let document):
             return document
         case .failure:
@@ -106,8 +134,8 @@ enum PDFKitIO {
         }
     }
 
-    static func parseDetailed(_ data: Data) -> PDFKitParseOutcome {
-        PDFKitParser(data: data).parse()
+    static func parseDetailed(_ data: Data, password: String? = nil) -> PDFKitParseOutcome {
+        PDFKitParser(data: data, password: password).parse()
     }
 
     static func write(
@@ -129,6 +157,8 @@ private struct PDFXRefEntry {
     let generation: Int
     let offset: Int
     let inUse: Bool
+    var objectStreamNumber: Int = -1
+    var objectStreamIndex: Int = -1
 }
 
 private struct PDFPendingStream {
@@ -148,7 +178,8 @@ private enum PDFKitLimits {
 }
 
 private final class PDFKitParser {
-    let bytes: [UInt8]
+    var bytes: [UInt8]
+    let password: String?
     var index = 0
     var objects: [PDFObjectID: PDFKitObject] = [:]
     var objectsByNumber: [Int: PDFObjectID] = [:]
@@ -158,9 +189,14 @@ private final class PDFKitParser {
     var nesting = 0
     var pageTreeNodes = 0
     var outlineNodes = 0
+    var encryptObjectNumber: Int?
+    var fileKey: [UInt8]?
+    var useAES = false
+    var unlockedAsOwner = false
 
-    init(data: Data) {
+    init(data: Data, password: String?) {
         bytes = [UInt8](data)
+        self.password = password
     }
 
     func parse() -> PDFKitParseOutcome {
@@ -172,20 +208,8 @@ private final class PDFKitParser {
         parseHeaderVersion()
         do {
             let entries = try parseXRef()
-            if trailer["Encrypt"] != nil {
-                return .success(
-                    PDFKitParsedDocument(
-                        majorVersion: major,
-                        minorVersion: minor,
-                        encrypted: true,
-                        pages: [],
-                        attributes: [:],
-                        outlines: []
-                    )
-                )
-            }
             var pending: [PDFPendingStream] = []
-            for entry in entries where entry.inUse {
+            for entry in entries where entry.inUse && entry.offset >= 0 {
                 if objects.count >= PDFKitLimits.maxObjects {
                     return .failure(.budgetExceeded)
                 }
@@ -199,6 +223,22 @@ private final class PDFKitParser {
             for stream in pending {
                 try finishStream(stream)
             }
+            let encryptInfo = try parseEncryptInfo()
+            if let encryptInfo {
+                if let password {
+                    guard let unlocked = PDFKitCrypto.unlock(password: password, info: encryptInfo) else {
+                        return .success(lockedDocument(info: encryptInfo))
+                    }
+                    fileKey = unlocked.key
+                    useAES = encryptInfo.useAES
+                    unlockedAsOwner = unlocked.owner
+                    try decryptAllObjects()
+                } else {
+                    return .success(lockedDocument(info: encryptInfo))
+                }
+            }
+            try expandObjectStreams()
+            try decodeAllStreams()
             let catalog = try requiredDict(resolve(trailer["Root"]))
             let pagesRoot = catalog["Pages"]
             let pages = try collectPages(from: pagesRoot, inherited: InheritedPageState(), trail: [])
@@ -208,10 +248,15 @@ private final class PDFKitParser {
                 PDFKitParsedDocument(
                     majorVersion: major,
                     minorVersion: minor,
-                    encrypted: false,
+                    encrypted: encryptInfo != nil,
                     pages: pages,
                     attributes: attributes,
-                    outlines: outlines
+                    outlines: outlines,
+                    accessPermissions: permissions(from: encryptInfo, owner: unlockedAsOwner),
+                    permissionsStatus: encryptInfo == nil
+                        ? .owner
+                        : (unlockedAsOwner ? .owner : .user),
+                    encryptInfo: encryptInfo
                 )
             )
         } catch let failure as PDFKitParseFailure {
@@ -219,6 +264,43 @@ private final class PDFKitParser {
         } catch {
             return .failure(.invalidXref)
         }
+    }
+
+    private func lockedDocument(info: PDFKitCrypto.EncryptInfo) -> PDFKitParsedDocument {
+        PDFKitParsedDocument(
+            majorVersion: major,
+            minorVersion: minor,
+            encrypted: true,
+            pages: [],
+            attributes: [:],
+            outlines: [],
+            accessPermissions: [],
+            permissionsStatus: .none,
+            encryptInfo: info
+        )
+    }
+
+    private func permissions(from info: PDFKitCrypto.EncryptInfo?, owner: Bool) -> PDFAccessPermissions {
+        if info == nil || owner {
+            return [
+                .allowsLowQualityPrinting, .allowsHighQualityPrinting, .allowsDocumentChanges,
+                .allowsDocumentAssembly, .allowsContentCopying, .allowsContentAccessibility,
+                .allowsCommenting, .allowsFormFieldEntry
+            ]
+        }
+        let bits = UInt32(bitPattern: info?.permissions ?? -4)
+        var set: PDFAccessPermissions = []
+        if (bits & (1 << 2)) != 0 { set.insert(.allowsLowQualityPrinting) }
+        if (bits & (1 << 3)) != 0 { set.insert(.allowsHighQualityPrinting) }
+        if (bits & (1 << 4)) != 0 { set.insert(.allowsDocumentChanges) }
+        if (bits & (1 << 5)) != 0 { set.insert(.allowsContentCopying) }
+        if (bits & (1 << 6)) != 0 {
+            set.insert(.allowsCommenting)
+            set.insert(.allowsFormFieldEntry)
+        }
+        if (bits & (1 << 9)) != 0 { set.insert(.allowsContentAccessibility) }
+        if (bits & (1 << 10)) != 0 { set.insert(.allowsDocumentAssembly) }
+        return set
     }
 
     private enum ParsedIndirect {
@@ -254,22 +336,134 @@ private final class PDFKitParser {
 
     private func parseXRef() throws -> [PDFXRefEntry] {
         guard let start = startXRefOffset() else { throw PDFKitParseFailure.invalidXref }
+        return try parseXRef(at: start, trail: [])
+    }
+
+    private func parseXRef(at start: Int, trail: Set<Int>) throws -> [PDFXRefEntry] {
         guard start >= 0, start < bytes.count else { throw PDFKitParseFailure.invalidXref }
+        if trail.contains(start) { throw PDFKitParseFailure.cycleDetected }
+        var nextTrail = trail
+        nextTrail.insert(start)
         index = start
         skipWhitespaceAndComments()
         if matchKeyword("xref") {
-            let entries = try parseClassicXRef()
+            var entries = try parseClassicXRef()
             skipWhitespaceAndComments()
             guard matchKeyword("trailer") else { throw PDFKitParseFailure.invalidXref }
             skipWhitespaceAndComments()
             guard case .dict(let dict) = try readObject() else { throw PDFKitParseFailure.invalidXref }
-            trailer = dict
-            if let type = dict["Type"]?.nameValue, type == "XRef" {
-                throw PDFKitParseFailure.unsupportedXrefStream
+            if trailer.isEmpty { trailer = dict }
+            if let prev = dict["Prev"]?.intValue {
+                let previous = try parseXRef(at: prev, trail: nextTrail)
+                entries = mergeXRef(previous, entries)
             }
             return entries
         }
-        throw PDFKitParseFailure.unsupportedXrefStream
+        return try parseXRefStream(at: start, trail: nextTrail)
+    }
+
+    private func mergeXRef(_ older: [PDFXRefEntry], _ newer: [PDFXRefEntry]) -> [PDFXRefEntry] {
+        var map: [Int: PDFXRefEntry] = [:]
+        for entry in older { map[entry.number] = entry }
+        for entry in newer { map[entry.number] = entry }
+        return map.values.sorted { $0.number < $1.number }
+    }
+
+    /// ISO 32000-1 §7.5.8 cross-reference streams.
+    private func parseXRefStream(at start: Int, trail: Set<Int>) throws -> [PDFXRefEntry] {
+        index = start
+        skipWhitespaceAndComments()
+        guard let number = readRawInt() else { throw PDFKitParseFailure.invalidXref }
+        skipWhitespaceAndComments()
+        guard let generation = readRawInt() else { throw PDFKitParseFailure.invalidXref }
+        skipWhitespaceAndComments()
+        guard matchKeyword("obj") else { throw PDFKitParseFailure.invalidXref }
+        skipWhitespaceAndComments()
+        let header = try readObject()
+        skipWhitespaceAndComments()
+        guard matchKeyword("stream") else { throw PDFKitParseFailure.invalidXref }
+        if index < bytes.count, bytes[index] == 0x0D { index += 1 }
+        if index < bytes.count, bytes[index] == 0x0A { index += 1 }
+        guard let dict = header.dictValue else { throw PDFKitParseFailure.invalidXref }
+        let length = try resolvedInt(dict["Length"])
+        let end = index + length
+        guard end <= bytes.count else { throw PDFKitParseFailure.truncated }
+        var streamData = Data(bytes[index..<end])
+        streamData = try PDFKitFilters.decode(streamData, filter: dict["Filter"], decodeParms: dict["DecodeParms"] ?? dict["DP"])
+        if trailer.isEmpty { trailer = dict }
+        let id = PDFObjectID(number: number, generation: generation)
+        objects[id] = .stream(dict, streamData)
+        objectsByNumber[number] = id
+        let width = (dict["W"]?.arrayValue ?? []).compactMap(\.intValue)
+        guard width.count == 3 else { throw PDFKitParseFailure.invalidXref }
+        let size = dict["Size"]?.intValue ?? 0
+        var subsections: [(Int, Int)] = []
+        if let indexArray = dict["Index"]?.arrayValue {
+            var cursor = 0
+            while cursor + 1 < indexArray.count {
+                subsections.append((indexArray[cursor].intValue ?? 0, indexArray[cursor + 1].intValue ?? 0))
+                cursor += 2
+            }
+        } else {
+            subsections = [(0, size)]
+        }
+        let rowWidth = width.reduce(0, +)
+        guard rowWidth > 0 else { throw PDFKitParseFailure.invalidXref }
+        var entries: [PDFXRefEntry] = []
+        var streamIndex = 0
+        let raw = [UInt8](streamData)
+        for (first, count) in subsections {
+            for objectNumber in first..<(first + count) {
+                guard streamIndex + rowWidth <= raw.count else { throw PDFKitParseFailure.truncated }
+                let field1 = xrefField(raw, at: streamIndex, width: width[0])
+                let field2 = xrefField(raw, at: streamIndex + width[0], width: width[1])
+                let field3 = xrefField(raw, at: streamIndex + width[0] + width[1], width: width[2])
+                streamIndex += rowWidth
+                let type = width[0] == 0 ? 1 : field1
+                switch type {
+                case 0:
+                    entries.append(PDFXRefEntry(number: objectNumber, generation: field3, offset: 0, inUse: false))
+                case 1:
+                    entries.append(PDFXRefEntry(number: objectNumber, generation: field3, offset: field2, inUse: true))
+                case 2:
+                    entries.append(
+                        PDFXRefEntry(
+                            number: objectNumber,
+                            generation: 0,
+                            offset: -1,
+                            inUse: true,
+                            objectStreamNumber: field2,
+                            objectStreamIndex: field3
+                        )
+                    )
+                default:
+                    throw PDFKitParseFailure.invalidXref
+                }
+            }
+        }
+        if let prev = dict["Prev"]?.intValue {
+            let previous = try parseXRef(at: prev, trail: trail)
+            entries = mergeXRef(previous, entries)
+        }
+        return entries
+    }
+
+    private func xrefField(_ bytes: [UInt8], at offset: Int, width: Int) -> Int {
+        if width == 0 { return 0 }
+        var value = 0
+        for index in 0..<width {
+            value = (value << 8) | Int(bytes[offset + index])
+        }
+        return value
+    }
+
+    private func resolvedInt(_ object: PDFKitObject?) throws -> Int {
+        if let value = object?.intValue { return value }
+        if case .ref = object {
+            let resolved = try resolve(object)
+            if let value = resolved?.intValue { return value }
+        }
+        throw PDFKitParseFailure.unresolvedLength
     }
 
     private func startXRefOffset() -> Int? {
@@ -355,13 +549,6 @@ private final class PDFKitParser {
         let value = try readObject()
         skipWhitespaceAndComments()
         if matchKeyword("stream") {
-            if let type = value.dictValue?["Type"]?.nameValue, type == "XRef" {
-                throw PDFKitParseFailure.unsupportedXrefStream
-            }
-            if let type = value.dictValue?["Type"]?.nameValue, type == "ObjStm" {
-                throw PDFKitParseFailure.unsupportedObjectStream
-            }
-            try rejectUnsupportedFilter(value.dictValue ?? [:])
             if index < bytes.count, bytes[index] == 0x0D { index += 1 }
             if index < bytes.count, bytes[index] == 0x0A { index += 1 }
             let dataOffset = index
@@ -394,31 +581,198 @@ private final class PDFKitParser {
     }
 
     private func register(_ id: PDFObjectID, _ value: PDFKitObject) throws {
-        if let type = value.dictValue?["Type"]?.nameValue, type == "ObjStm" {
-            throw PDFKitParseFailure.unsupportedObjectStream
-        }
-        if let type = value.dictValue?["Type"]?.nameValue, type == "XRef" {
-            throw PDFKitParseFailure.unsupportedXrefStream
-        }
-        try rejectUnsupportedFilter(value.dictValue ?? [:])
         objects[id] = value
         objectsByNumber[id.number] = id
     }
 
-    private func rejectUnsupportedFilter(_ dict: [String: PDFKitObject]) throws {
-        let filter = dict["Filter"] ?? dict["F"]
-        guard let filter else { return }
-        if let name = filter.nameValue {
-            if name != "Identity" { throw PDFKitParseFailure.unsupportedFilter }
-            return
+    /// ISO 32000-1 §7.5.7 object streams.
+    private func expandObjectStreams() throws {
+        let streams = objects.filter { _, value in
+            value.dictValue?["Type"]?.nameValue == "ObjStm"
         }
-        if let array = filter.arrayValue {
-            if array.contains(where: { $0.nameValue != "Identity" }) {
-                throw PDFKitParseFailure.unsupportedFilter
+        for (id, value) in streams {
+            guard case .stream(let dict, let data) = value else { continue }
+            let decoded = try PDFKitFilters.decode(
+                data,
+                filter: dict["Filter"],
+                decodeParms: dict["DecodeParms"] ?? dict["DP"]
+            )
+            let count = dict["N"]?.intValue ?? 0
+            let first = dict["First"]?.intValue ?? 0
+            guard count >= 0, first >= 0, first <= decoded.count else { throw PDFKitParseFailure.invalidXref }
+            let header = [UInt8](decoded.prefix(first))
+            var cursor = 0
+            var pairs: [(Int, Int)] = []
+            for _ in 0..<count {
+                while cursor < header.count, header[cursor] == 0x20 || header[cursor] == 0x0A || header[cursor] == 0x0D || header[cursor] == 0x09 {
+                    cursor += 1
+                }
+                let numberStart = cursor
+                while cursor < header.count, header[cursor] >= 0x30 && header[cursor] <= 0x39 { cursor += 1 }
+                guard cursor > numberStart else { throw PDFKitParseFailure.invalidXref }
+                let objectNumber = Int(String(bytes: header[numberStart..<cursor], encoding: .ascii) ?? "") ?? 0
+                while cursor < header.count, header[cursor] == 0x20 || header[cursor] == 0x0A || header[cursor] == 0x0D || header[cursor] == 0x09 {
+                    cursor += 1
+                }
+                let offsetStart = cursor
+                while cursor < header.count, header[cursor] >= 0x30 && header[cursor] <= 0x39 { cursor += 1 }
+                guard cursor > offsetStart else { throw PDFKitParseFailure.invalidXref }
+                let relative = Int(String(bytes: header[offsetStart..<cursor], encoding: .ascii) ?? "") ?? 0
+                pairs.append((objectNumber, relative))
             }
-            return
+            let payload = [UInt8](decoded.dropFirst(first))
+            for (objectNumber, relative) in pairs {
+                if objects[PDFObjectID(number: objectNumber, generation: 0)] != nil { continue }
+                guard relative >= 0, relative < payload.count else { throw PDFKitParseFailure.invalidXref }
+                let parsed = try readObjectFromBytes(Array(payload[relative...]))
+                try register(PDFObjectID(number: objectNumber, generation: 0), parsed)
+            }
+            _ = id
         }
-        throw PDFKitParseFailure.unsupportedFilter
+    }
+
+    private func readObjectFromBytes(_ source: [UInt8]) throws -> PDFKitObject {
+        let savedBytes = bytes
+        let savedIndex = index
+        let savedNesting = nesting
+        bytes = source
+        index = 0
+        nesting = 0
+        defer {
+            bytes = savedBytes
+            index = savedIndex
+            nesting = savedNesting
+        }
+        return try readObject()
+    }
+
+    private func parseEncryptInfo() throws -> PDFKitCrypto.EncryptInfo? {
+        guard let encryptRef = trailer["Encrypt"] else { return nil }
+        if case .ref(let number, _) = encryptRef {
+            encryptObjectNumber = number
+        }
+        guard let dict = try resolve(encryptRef)?.dictValue else { return nil }
+        let filter = dict["Filter"]?.nameValue ?? ""
+        if filter != "Standard" { throw PDFKitParseFailure.unsupportedFilter }
+        let revision = dict["R"]?.intValue ?? 2
+        let version = dict["V"]?.intValue ?? 1
+        let lengthBits = dict["Length"]?.intValue ?? (revision <= 2 ? 40 : 128)
+        var info = PDFKitCrypto.EncryptInfo(
+            revision: revision,
+            version: version,
+            keyLengthBytes: max(5, lengthBits / 8),
+            permissions: Int32(dict["P"]?.intValue ?? -4),
+            ownerKey: binaryString(dict["O"]),
+            userKey: binaryString(dict["U"]),
+            fileID: fileIdentifier(),
+            encryptMetadata: dict["EncryptMetadata"]?.boolValue ?? true,
+            useAES: usesAES(dict),
+            ownerEncryptionKey: binaryString(dict["OE"]),
+            userEncryptionKey: binaryString(dict["UE"]),
+            perms: binaryString(dict["Perms"])
+        )
+        if revision >= 5 { info.keyLengthBytes = 32 }
+        return info
+    }
+
+    private func usesAES(_ dict: [String: PDFKitObject]) -> Bool {
+        if let cfm = dict["CFM"]?.nameValue { return cfm == "AESV2" || cfm == "AESV3" }
+        if let filterDict = dict["CF"]?.dictValue {
+            let stm = dict["StmF"]?.nameValue ?? "StdCF"
+            if let cfm = filterDict[stm]?.dictValue?["CFM"]?.nameValue {
+                return cfm == "AESV2" || cfm == "AESV3"
+            }
+        }
+        return dict["V"]?.intValue ?? 0 >= 4 && dict["R"]?.intValue ?? 0 >= 4
+    }
+
+    private func fileIdentifier() -> [UInt8] {
+        if let array = trailer["ID"]?.arrayValue, let first = array.first {
+            return binaryString(first)
+        }
+        return []
+    }
+
+    private func binaryString(_ object: PDFKitObject?) -> [UInt8] {
+        switch object {
+        case .string(let value):
+            return Array(value.data(using: .isoLatin1) ?? Data())
+        case .stream(_, let data):
+            return [UInt8](data)
+        default:
+            return []
+        }
+    }
+
+    private func decryptAllObjects() throws {
+        guard let fileKey else { return }
+        for (id, value) in objects {
+            if id.number == encryptObjectNumber { continue }
+            objects[id] = decryptObject(value, id: id, key: fileKey)
+        }
+    }
+
+    private func decryptObject(_ object: PDFKitObject, id: PDFObjectID, key: [UInt8]) -> PDFKitObject {
+        switch object {
+        case .string(let value):
+            let raw = Array(value.data(using: .isoLatin1) ?? Data())
+            let decrypted = PDFKitCrypto.decryptObject(
+                Data(raw),
+                key: key,
+                object: id.number,
+                generation: id.generation,
+                useAES: useAES
+            )
+            return .string(String(data: decrypted, encoding: .isoLatin1) ?? "")
+        case .stream(let dict, let data):
+            let decrypted = PDFKitCrypto.decryptObject(
+                data,
+                key: key,
+                object: id.number,
+                generation: id.generation,
+                useAES: useAES
+            )
+            let newDict = decryptDict(dict, id: id, key: key)
+            return .stream(newDict, decrypted)
+        case .dict(let dict):
+            return .dict(decryptDict(dict, id: id, key: key))
+        case .array(let items):
+            return .array(items.map { decryptObject($0, id: id, key: key) })
+        default:
+            return object
+        }
+    }
+
+    private func decryptDict(
+        _ dict: [String: PDFKitObject],
+        id: PDFObjectID,
+        key: [UInt8]
+    ) -> [String: PDFKitObject] {
+        var result: [String: PDFKitObject] = [:]
+        for (name, value) in dict {
+            result[name] = decryptObject(value, id: id, key: key)
+        }
+        return result
+    }
+
+    private func decodeAllStreams() throws {
+        for (id, value) in objects {
+            guard case .stream(let dict, let data) = value else { continue }
+            if dict["Type"]?.nameValue == "XRef" { continue }
+            if dict["Type"]?.nameValue == "ObjStm" { continue }
+            let decoded = try PDFKitFilters.decode(
+                data,
+                filter: dict["Filter"] ?? dict["F"],
+                decodeParms: dict["DecodeParms"] ?? dict["DP"]
+            )
+            var newDict = dict
+            newDict["Filter"] = nil
+            newDict["F"] = nil
+            newDict["DecodeParms"] = nil
+            newDict["DP"] = nil
+            newDict["Length"] = .number(Double(decoded.count))
+            objects[id] = .stream(newDict, decoded)
+        }
     }
 
     private func collectPages(
@@ -470,6 +824,7 @@ private final class PDFKitParser {
             ?? CGRect(x: 0, y: 0, width: 612, height: 792)
         let contentsData = try contentData(from: dict["Contents"])
         let resources = dict["Resources"] ?? inherited.resources
+        let extracted = PDFKitTextExtractor.extract(from: contentsData, box: media)
         return PDFKitParsedPage(
             mediaBox: media,
             cropBox: rect(from: dict["CropBox"]) ?? inherited.cropBox,
@@ -478,9 +833,61 @@ private final class PDFKitParser {
             artBox: rect(from: dict["ArtBox"]) ?? inherited.artBox,
             rotation: dict["Rotate"]?.intValue ?? inherited.rotation,
             contents: contentsData,
-            text: PDFKitTextExtractor.extract(from: contentsData),
-            resourceKeyCount: resourceKeyCount(from: resources)
+            text: extracted.text,
+            resourceKeyCount: resourceKeyCount(from: resources),
+            annotations: try parseAnnotations(from: dict["Annots"]),
+            characters: extracted.characters,
+            resources: resources
         )
+    }
+
+    private func parseAnnotations(from object: PDFKitObject?) throws -> [PDFKitParsedAnnotation] {
+        guard let resolved = try resolve(object), let array = resolved.arrayValue else { return [] }
+        var annotations: [PDFKitParsedAnnotation] = []
+        for item in array {
+            guard let dict = try resolve(item)?.dictValue else { continue }
+            let subtype = dict["Subtype"]?.nameValue ?? dict["Subtype"]?.stringValue ?? "Text"
+            let bounds = rect(from: dict["Rect"]) ?? .zero
+            var uri: String?
+            var destPage: Int?
+            if let action = try resolve(dict["A"])?.dictValue {
+                if action["S"]?.nameValue == "URI" {
+                    uri = action["URI"]?.stringValue
+                }
+                if action["S"]?.nameValue == "GoTo", let dest = action["D"] {
+                    destPage = try pageIndex(fromDestination: dest)
+                }
+            }
+            if let dest = dict["Dest"] {
+                destPage = try pageIndex(fromDestination: try resolve(dest) ?? dest)
+            }
+            var quads: [CGPoint] = []
+            if let numbers = dict["QuadPoints"]?.arrayValue {
+                var index = 0
+                while index + 1 < numbers.count {
+                    quads.append(CGPoint(x: numbers[index].doubleValue ?? 0, y: numbers[index + 1].doubleValue ?? 0))
+                    index += 2
+                }
+            }
+            var color: [CGFloat] = []
+            if let components = dict["C"]?.arrayValue {
+                color = components.compactMap { $0.doubleValue.map { CGFloat($0) } }
+            }
+            annotations.append(
+                PDFKitParsedAnnotation(
+                    subtype: subtype,
+                    bounds: bounds,
+                    contents: dict["Contents"]?.stringValue,
+                    uri: uri,
+                    destinationPageIndex: destPage,
+                    fieldName: dict["T"]?.stringValue,
+                    fieldValue: dict["V"]?.stringValue,
+                    quadPoints: quads,
+                    colorComponents: color
+                )
+            )
+        }
+        return annotations
     }
 
     private func resourceKeyCount(from object: PDFKitObject?) -> Int {
@@ -533,7 +940,30 @@ private final class PDFKitParser {
                 attributes[attribute] = value
             }
         }
+        if let created = pdfDate(dict["CreationDate"]?.stringValue) {
+            attributes[PDFDocumentAttribute.creationDateAttribute] = created
+        }
+        if let modified = pdfDate(dict["ModDate"]?.stringValue) {
+            attributes[PDFDocumentAttribute.modificationDateAttribute] = modified
+        }
         return attributes
+    }
+
+    private func pdfDate(_ string: String?) -> Date? {
+        guard var text = string else { return nil }
+        if text.hasPrefix("D:") {
+            text = String(text.dropFirst(2))
+        }
+        let digits = text.prefix(14).filter { $0.isNumber }
+        guard digits.count >= 8 else { return nil }
+        var components = DateComponents()
+        components.year = Int(digits.prefix(4))
+        components.month = Int(digits.dropFirst(4).prefix(2))
+        components.day = Int(digits.dropFirst(6).prefix(2))
+        if digits.count >= 10 { components.hour = Int(digits.dropFirst(8).prefix(2)) }
+        if digits.count >= 12 { components.minute = Int(digits.dropFirst(10).prefix(2)) }
+        if digits.count >= 14 { components.second = Int(digits.dropFirst(12).prefix(2)) }
+        return Calendar(identifier: .gregorian).date(from: components)
     }
 
     private func parseOutlines(from object: PDFKitObject?) throws -> [PDFKitParsedOutline] {
@@ -768,7 +1198,7 @@ private final class PDFKitParser {
             }
             if depth > 0 { result.append(char) }
         }
-        return .string(String(bytes: result, encoding: .utf8) ?? String(bytes: result, encoding: .isoLatin1) ?? "")
+        return .string(String(bytes: result, encoding: .isoLatin1) ?? "")
     }
 
     private func readHexString() throws -> PDFKitObject {
@@ -892,8 +1322,135 @@ private final class PDFKitParser {
 }
 
 private enum PDFKitTextExtractor {
-    static func extract(from data: Data) -> String {
-        guard let text = String(data: data, encoding: .isoLatin1) else { return "" }
+    static func extract(from data: Data, box: CGRect) -> (text: String, characters: [PDFKitParsedCharacter]) {
+        let tokens = PDFKitContentLexer.tokens(in: data)
+        var pieces: [String] = []
+        var characters: [PDFKitParsedCharacter] = []
+        var fontSize: CGFloat = 12
+        var x: CGFloat = 0
+        var y: CGFloat = box.size.height - 72
+        var inText = false
+        var index = 0
+        while index < tokens.count {
+            let token = tokens[index]
+            if token == "BT" {
+                inText = true
+                index += 1
+                continue
+            }
+            if token == "ET" {
+                inText = false
+                index += 1
+                continue
+            }
+            if token == "Tf", index >= 2 {
+                fontSize = CGFloat(Double(tokens[index - 1]) ?? 12)
+            }
+            if token == "Td" || token == "TD", index >= 2 {
+                x += CGFloat(Double(tokens[index - 2]) ?? 0)
+                y += CGFloat(Double(tokens[index - 1]) ?? 0)
+            }
+            if token == "Tm", index >= 6 {
+                x = CGFloat(Double(tokens[index - 2]) ?? 0)
+                y = CGFloat(Double(tokens[index - 1]) ?? 0)
+            }
+            if inText, token == "Tj" || token == "'" || token == "\"", index >= 1 {
+                let string = unquote(tokens[index - 1])
+                if !string.isEmpty {
+                    pieces.append(string)
+                    appendCharacters(string, fontSize: fontSize, x: &x, y: y, into: &characters)
+                }
+            }
+            if inText, token == "TJ", index >= 1 {
+                let string = unquote(tokens[index - 1])
+                if !string.isEmpty {
+                    pieces.append(string)
+                    appendCharacters(string, fontSize: fontSize, x: &x, y: y, into: &characters)
+                }
+            }
+            index += 1
+        }
+        if pieces.isEmpty {
+            // Fall back to scanning literal strings so a content stream that
+            // only uses non-standard operators still yields searchable text.
+            let fallback = fallbackStrings(data)
+            if !fallback.isEmpty {
+                pieces = fallback
+                var cursorX: CGFloat = 72
+                let cursorY = max(24, box.size.height - 72)
+                for piece in fallback {
+                    var x = cursorX
+                    appendCharacters(piece, fontSize: 12, x: &x, y: cursorY, into: &characters)
+                    cursorX = x + 8
+                }
+            }
+        }
+        let text = pieces.joined(separator: " ")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return (text, characters)
+    }
+
+    private static func appendCharacters(
+        _ string: String,
+        fontSize: CGFloat,
+        x: inout CGFloat,
+        y: CGFloat,
+        into characters: inout [PDFKitParsedCharacter]
+    ) {
+        let width = fontSize * 0.6
+        let height = fontSize
+        for character in string {
+            characters.append(
+                PDFKitParsedCharacter(
+                    scalar: character,
+                    bounds: CGRect(x: x, y: y, width: width, height: height)
+                )
+            )
+            x += width
+        }
+    }
+
+    private static func unquote(_ token: String) -> String {
+        if token.hasPrefix("("), token.hasSuffix(")") {
+            return unescape(String(token.dropFirst().dropLast()))
+        }
+        if token.hasPrefix("<"), token.hasSuffix(">") {
+            let hex = String(token.dropFirst().dropLast())
+            var data = Data()
+            var cursor = hex.startIndex
+            while cursor < hex.endIndex {
+                let next = hex.index(cursor, offsetBy: 2, limitedBy: hex.endIndex) ?? hex.endIndex
+                if let value = UInt8(hex[cursor..<next], radix: 16) {
+                    data.append(value)
+                }
+                cursor = next
+            }
+            return String(data: data, encoding: .isoLatin1) ?? ""
+        }
+        return ""
+    }
+
+    private static func unescape(_ string: String) -> String {
+        var result = ""
+        var index = string.startIndex
+        while index < string.endIndex {
+            let char = string[index]
+            if char == "\\" {
+                let next = string.index(after: index)
+                if next < string.endIndex {
+                    result.append(string[next])
+                    index = string.index(after: next)
+                    continue
+                }
+            }
+            result.append(char)
+            index = string.index(after: index)
+        }
+        return result
+    }
+
+    private static func fallbackStrings(_ data: Data) -> [String] {
+        guard let text = String(data: data, encoding: .isoLatin1) else { return [] }
         var pieces: [String] = []
         var cursor = text.startIndex
         while cursor < text.endIndex {
@@ -906,9 +1463,7 @@ private enum PDFKitTextExtractor {
             }
             cursor = text.index(after: cursor)
         }
-        return pieces.joined(separator: " ")
-            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return pieces
     }
 
     private static func readPDFString(_ text: String, from start: String.Index) -> (String, String.Index)? {
@@ -939,6 +1494,104 @@ private enum PDFKitTextExtractor {
     }
 }
 
+enum PDFKitContentLexer {
+    static func tokens(in data: Data) -> [String] {
+        var tokens: [String] = []
+        let bytes = [UInt8](data)
+        var index = 0
+        while index < bytes.count {
+            let byte = bytes[index]
+            if byte == 0x00 || byte == 0x09 || byte == 0x0A || byte == 0x0C || byte == 0x0D || byte == 0x20 {
+                index += 1
+                continue
+            }
+            if byte == 0x25 {
+                while index < bytes.count, bytes[index] != 0x0A, bytes[index] != 0x0D { index += 1 }
+                continue
+            }
+            if byte == 0x28 {
+                let start = index
+                index += 1
+                var depth = 1
+                while index < bytes.count, depth > 0 {
+                    if bytes[index] == 0x5C {
+                        index += 2
+                        continue
+                    }
+                    if bytes[index] == 0x28 { depth += 1 }
+                    if bytes[index] == 0x29 { depth -= 1 }
+                    index += 1
+                }
+                tokens.append(String(bytes: bytes[start..<min(index, bytes.count)], encoding: .isoLatin1) ?? "")
+                continue
+            }
+            if byte == 0x3C {
+                let start = index
+                if index + 1 < bytes.count, bytes[index + 1] == 0x3C {
+                    index += 2
+                    var depth = 1
+                    while index + 1 < bytes.count, depth > 0 {
+                        if bytes[index] == 0x3C, bytes[index + 1] == 0x3C {
+                            depth += 1
+                            index += 2
+                            continue
+                        }
+                        if bytes[index] == 0x3E, bytes[index + 1] == 0x3E {
+                            depth -= 1
+                            index += 2
+                            continue
+                        }
+                        index += 1
+                    }
+                    tokens.append("<<>>")
+                    continue
+                }
+                while index < bytes.count, bytes[index] != 0x3E { index += 1 }
+                if index < bytes.count { index += 1 }
+                tokens.append(String(bytes: bytes[start..<min(index, bytes.count)], encoding: .isoLatin1) ?? "")
+                continue
+            }
+            if byte == 0x5B {
+                let start = index
+                index += 1
+                var depth = 1
+                while index < bytes.count, depth > 0 {
+                    if bytes[index] == 0x5B { depth += 1 }
+                    if bytes[index] == 0x5D { depth -= 1 }
+                    if bytes[index] == 0x28 {
+                        index += 1
+                        var sdepth = 1
+                        while index < bytes.count, sdepth > 0 {
+                            if bytes[index] == 0x5C { index += 2; continue }
+                            if bytes[index] == 0x28 { sdepth += 1 }
+                            if bytes[index] == 0x29 { sdepth -= 1 }
+                            index += 1
+                        }
+                        continue
+                    }
+                    index += 1
+                }
+                tokens.append(String(bytes: bytes[start..<min(index, bytes.count)], encoding: .isoLatin1) ?? "")
+                continue
+            }
+            let start = index
+            while index < bytes.count {
+                let current = bytes[index]
+                if current == 0x00 || current == 0x09 || current == 0x0A || current == 0x0C || current == 0x0D || current == 0x20 {
+                    break
+                }
+                if current == 0x28 || current == 0x29 || current == 0x3C || current == 0x3E || current == 0x5B || current == 0x5D || current == 0x2F || current == 0x25 {
+                    break
+                }
+                index += 1
+            }
+            if index == start { index += 1; continue }
+            tokens.append(String(bytes: bytes[start..<index], encoding: .ascii) ?? "")
+        }
+        return tokens
+    }
+}
+
 private enum PDFKitWriter {
     static func write(
         pages: [PDFPage],
@@ -954,24 +1607,55 @@ private enum PDFKitWriter {
         }
 
         let info = object(1, Data(infoDictionary(attributes).utf8))
-        let catalog = object(2, Data("<< /Type /Catalog /Pages 3 0 R >>".utf8))
         var pageNumbers: [Int] = []
-        var bodies: [(Int, Data)] = [(1, info), (2, catalog)]
+        var bodies: [(Int, Data)] = [(1, info)]
         var nextNumber = 4
         var pageBodies: [(Int, Data)] = []
+        var outlineRootNumber: Int?
         for page in pages {
             let contentNumber = nextNumber
             nextNumber += 1
+            var annotNumbers: [Int] = []
+            for annotation in page.annotations {
+                let annotNumber = nextNumber
+                nextNumber += 1
+                annotNumbers.append(annotNumber)
+                pageBodies.append((annotNumber, object(annotNumber, Data(annotationDictionary(annotation).utf8))))
+            }
             let pageNumber = nextNumber
             nextNumber += 1
             pageNumbers.append(pageNumber)
             let box = page.bounds(for: .mediaBox)
-            let stream = contentStream(for: page.string ?? "", box: box)
+            let stream: Data
+            if let existing = page.contentData, !existing.isEmpty {
+                stream = wrappedStream(existing)
+            } else {
+                stream = contentStream(for: page.string ?? "", box: box)
+            }
             pageBodies.append((contentNumber, object(contentNumber, stream)))
-            let dict =
-                "<< /Type /Page /Parent 3 0 R /MediaBox [\(pdfNumber(box.origin.x)) \(pdfNumber(box.origin.y)) \(pdfNumber(box.origin.x + box.size.width)) \(pdfNumber(box.origin.y + box.size.height))] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >> >> /Contents \(contentNumber) 0 R >>"
+            var dict = "<< /Type /Page /Parent 3 0 R /MediaBox [\(boxArray(box))]"
+            let crop = page.bounds(for: .cropBox)
+            if crop != box { dict += " /CropBox [\(boxArray(crop))]" }
+            if page.rotation != 0 { dict += " /Rotate \(page.rotation)" }
+            dict += " /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >> >> /Contents \(contentNumber) 0 R"
+            if !annotNumbers.isEmpty {
+                dict += " /Annots [\(annotNumbers.map { "\($0) 0 R" }.joined(separator: " "))]"
+            }
+            dict += " >>"
             pageBodies.append((pageNumber, object(pageNumber, Data(dict.utf8))))
         }
+        if let outline = pages.first?.document?.outlineRoot, outline.numberOfChildren > 0 {
+            let built = outlineObjects(outline, start: nextNumber, pageNumbers: pageNumbers, pages: pages)
+            outlineRootNumber = built.root
+            nextNumber = built.next
+            pageBodies.append(contentsOf: built.bodies.map { ($0.0, object($0.0, $0.1)) })
+        }
+        var catalogBody = "<< /Type /Catalog /Pages 3 0 R"
+        if let outlineRootNumber {
+            catalogBody += " /Outlines \(outlineRootNumber) 0 R"
+        }
+        catalogBody += " >>"
+        bodies.append((2, object(2, Data(catalogBody.utf8))))
         let kids = pageNumbers.map { "\($0) 0 R" }.joined(separator: " ")
         let pagesObject = object(
             3,
@@ -1018,8 +1702,117 @@ private enum PDFKitWriter {
         add("Creator", attributes?[PDFDocumentAttribute.creatorAttribute])
         add("Producer", attributes?[PDFDocumentAttribute.producerAttribute] ?? "OpenUIKit PDFKit")
         add("Keywords", attributes?[PDFDocumentAttribute.keywordsAttribute])
+        func addDate(_ key: String, _ value: Any?) {
+            guard let date = value as? Date else { return }
+            let formatted = pdfDateString(date)
+            parts.append("/\(key) (\(formatted))")
+        }
+        addDate("CreationDate", attributes?[PDFDocumentAttribute.creationDateAttribute])
+        addDate("ModDate", attributes?[PDFDocumentAttribute.modificationDateAttribute])
         parts.append(">>")
         return parts.joined(separator: " ")
+    }
+
+    private static func pdfDateString(_ date: Date) -> String {
+        let calendar = Calendar(identifier: .gregorian)
+        let c = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+        return String(
+            format: "D:%04d%02d%02d%02d%02d%02d",
+            c.year ?? 1970,
+            c.month ?? 1,
+            c.day ?? 1,
+            c.hour ?? 0,
+            c.minute ?? 0,
+            c.second ?? 0
+        )
+    }
+
+    private static func wrappedStream(_ data: Data) -> Data {
+        var stream = Data("<< /Length \(data.count) >>\nstream\n".utf8)
+        stream.append(data)
+        if data.last != 0x0A { stream.append(0x0A) }
+        stream.append(Data("endstream".utf8))
+        return stream
+    }
+
+    private static func boxArray(_ box: CGRect) -> String {
+        "\(pdfNumber(box.origin.x)) \(pdfNumber(box.origin.y)) \(pdfNumber(box.origin.x + box.size.width)) \(pdfNumber(box.origin.y + box.size.height))"
+    }
+
+    private static func annotationDictionary(_ annotation: PDFAnnotation) -> String {
+        let type = annotation.type ?? "Text"
+        var parts = [
+            "<< /Type /Annot /Subtype /\(type) /Rect [\(boxArray(annotation.bounds))]"
+        ]
+        if let contents = annotation.contents {
+            parts.append("/Contents (\(escape(contents)))")
+        }
+        if let field = annotation.fieldName {
+            parts.append("/T (\(escape(field)))")
+        }
+        if let value = annotation.widgetStringValue {
+            parts.append("/V (\(escape(value)))")
+        }
+        if let url = annotation.url {
+            parts.append("/A << /S /URI /URI (\(escape(url.absoluteString))) >>")
+        }
+        parts.append(">>")
+        return parts.joined(separator: " ")
+    }
+
+    private static func outlineObjects(
+        _ root: PDFOutline,
+        start: Int,
+        pageNumbers: [Int],
+        pages: [PDFPage]
+    ) -> (root: Int, next: Int, bodies: [(Int, Data)]) {
+        var next = start
+        var bodies: [(Int, Data)] = []
+
+        func emitSiblings(_ outlines: [PDFOutline], parent: Int?) -> [Int] {
+            let numbers = outlines.map { _ -> Int in
+                let number = next
+                next += 1
+                return number
+            }
+            for (index, outline) in outlines.enumerated() {
+                var children: [PDFOutline] = []
+                for childIndex in 0..<outline.numberOfChildren {
+                    if let child = outline.child(at: childIndex) { children.append(child) }
+                }
+                let childNumbers = emitSiblings(children, parent: numbers[index])
+                var dict = "<< /Title (\(escape(outline.label ?? "")))"
+                if let parent { dict += " /Parent \(parent) 0 R" }
+                if index + 1 < numbers.count { dict += " /Next \(numbers[index + 1]) 0 R" }
+                if index > 0 { dict += " /Prev \(numbers[index - 1]) 0 R" }
+                if let first = childNumbers.first, let last = childNumbers.last {
+                    dict += " /First \(first) 0 R /Last \(last) 0 R /Count \(childNumbers.count)"
+                }
+                if let dest = outline.destination, let page = dest.page,
+                   let pageIndex = pages.firstIndex(where: { $0 === page }),
+                   pageNumbers.indices.contains(pageIndex) {
+                    dict += " /Dest [\(pageNumbers[pageIndex]) 0 R /XYZ \(pdfNumber(dest.point.x)) \(pdfNumber(dest.point.y)) 0]"
+                }
+                dict += " >>"
+                bodies.append((numbers[index], Data(dict.utf8)))
+            }
+            return numbers
+        }
+
+        let children: [PDFOutline] = (0..<root.numberOfChildren).compactMap { root.child(at: $0) }
+        if children.isEmpty {
+            let number = next
+            next += 1
+            bodies.append((number, Data("<< /Title (\(escape(root.label ?? ""))) >>".utf8)))
+            return (number, next, bodies)
+        }
+        let childNumbers = emitSiblings(children, parent: nil)
+        // Synthetic root points at the first sibling chain.
+        let rootNumber = next
+        next += 1
+        let dict = "<< /Type /Outlines /First \(childNumbers[0]) 0 R /Last \(childNumbers[childNumbers.count - 1]) 0 R /Count \(childNumbers.count) >>"
+        bodies.append((rootNumber, Data(dict.utf8)))
+        return (rootNumber, next, bodies)
     }
 
     private static func contentStream(for text: String, box: CGRect) -> Data {

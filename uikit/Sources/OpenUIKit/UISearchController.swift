@@ -58,9 +58,11 @@ open class UISearchController: UIViewController, UISearchBarDelegate {
         if automaticallyShowsCancelButton {
             searchBar.setShowsCancelButton(isActive, animated: false)
         }
-        if isActive {
-            _ = searchBar.becomeFirstResponder()
-        } else {
+        // MEASURED merge-keyboard Notes t4000: isActive alone does not
+        // raise the remote keyboard (golden still shows the tab bar).
+        // Tabs focusSearch calls searchBar.becomeFirstResponder
+        // explicitly. Do not become first responder from isActive.
+        if !isActive {
             _ = searchBar.resignFirstResponder()
         }
         searchResultsUpdater?.updateSearchResults(for: self)

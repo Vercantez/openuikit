@@ -94,6 +94,9 @@ open class PDFView: PDFKitViewBase {
     private let findSessionDelegate = PDFKitFindSessionDelegate()
     private lazy var hostedFindInteraction = UIFindInteraction(sessionDelegate: findSessionDelegate)
     private let hostedDocumentView = UIView()
+    #else
+    private let hostedFindInteraction = PDFKitFindInteraction()
+    private let hostedDocumentView = PDFKitViewBase()
     #endif
 
     open var document: PDFDocument? {
@@ -125,7 +128,13 @@ open class PDFView: PDFKitViewBase {
     open var isInMarkupMode = false
     open var isFindInteractionEnabled = false
     open var isUsingPageViewController = false
-    open var autoScales = false
+    open var autoScales = false {
+        didSet {
+            if autoScales {
+                scaleFactor = scaleFactorForSizeToFit
+            }
+        }
+    }
     open var minScaleFactor: CGFloat = 0.25
     open var maxScaleFactor: CGFloat = 4
     open var currentSelection: PDFSelection? {
@@ -133,9 +142,8 @@ open class PDFView: PDFKitViewBase {
     }
     open var highlightedSelections: [PDFSelection]?
 
-    #if canImport(UIKit)
-    open var pageBreakMargins: UIEdgeInsets {
-        get { UIEdgeInsets(top: breakTop, left: breakLeft, bottom: breakBottom, right: breakRight) }
+    open var pageBreakMargins: PDFKitEdgeInsets {
+        get { PDFKitEdgeInsets(top: breakTop, left: breakLeft, bottom: breakBottom, right: breakRight) }
         set {
             breakTop = newValue.top
             breakLeft = newValue.left
@@ -144,16 +152,22 @@ open class PDFView: PDFKitViewBase {
         }
     }
 
-    open var findInteraction: UIFindInteraction { hostedFindInteraction }
-    open var documentView: UIView? { hostedDocumentView }
+    open var findInteraction: PDFKitFindInteraction { hostedFindInteraction }
+    open var documentView: PDFKitViewBase? { hostedDocumentView }
 
+    #if canImport(UIKit)
     open override var backgroundColor: UIColor? {
         get { pdfBackgroundColor }
-        set { pdfBackgroundColor = newValue ?? UIColor(white: 0.5, alpha: 1) }
+        set { pdfBackgroundColor = newValue ?? PDFKitColor(white: 0.5, alpha: 1) }
     }
-
-    private var pdfBackgroundColor: UIColor = UIColor(white: 0.5, alpha: 1)
+    #else
+    open var backgroundColor: PDFKitColor? {
+        get { pdfBackgroundColor }
+        set { pdfBackgroundColor = newValue ?? PDFKitColor(white: 0.5, alpha: 1) }
+    }
     #endif
+
+    private var pdfBackgroundColor: PDFKitColor = PDFKitColor(white: 0.5, alpha: 1)
 
     open var scaleFactor: CGFloat {
         get { _scaleFactor }
@@ -325,12 +339,10 @@ open class PDFView: PDFKitViewBase {
         layoutDocumentView()
     }
 
-    #if canImport(UIKit)
-    open func areaOfInterest(forMouse event: UIEvent) -> PDFAreaOfInterest {
+    open func areaOfInterest(forMouse event: Any?) -> PDFAreaOfInterest {
         _ = event
-        return .pageArea
+        return areaOfInterest(for: .zero)
     }
-    #endif
 
     open func areaOfInterest(for cursorLocation: CGPoint) -> PDFAreaOfInterest {
         if let page = currentPage, page.annotation(at: cursorLocation) != nil {
@@ -367,7 +379,10 @@ open class PDFView: PDFKitViewBase {
     }
 
     open func drawPagePost(_ page: PDFPage, to context: CGContext) {
-        _ = (page, context)
+        if let selection = currentSelection {
+            selection.draw(for: page, with: displayBox, active: true)
+        }
+        _ = context
     }
     #endif
 
@@ -461,9 +476,19 @@ open class PDFThumbnailView: PDFKitViewBase {
     open var layoutMode: PDFThumbnailLayoutMode = .vertical
     open var thumbnailSize = CGSize(width: 100, height: 130)
 
+    open var contentInset = PDFKitEdgeInsets.zero
     #if canImport(UIKit)
-    open var contentInset = UIEdgeInsets.zero
+    open override var backgroundColor: UIColor? {
+        get { thumbBackgroundColor }
+        set { thumbBackgroundColor = newValue }
+    }
+    #else
+    open var backgroundColor: PDFKitColor? {
+        get { thumbBackgroundColor }
+        set { thumbBackgroundColor = newValue }
+    }
     #endif
+    private var thumbBackgroundColor: PDFKitColor?
 
     #if !canImport(UIKit)
     public override init() {

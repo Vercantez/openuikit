@@ -283,7 +283,7 @@ open class GCDeviceBattery: NSObject {
     open var batteryLevel: Float
     open var batteryState: State
 
-    init(level: Float, state: State) {
+    public init(level: Float, state: State) {
         self.batteryLevel = level
         self.batteryState = state
         super.init()
@@ -292,7 +292,7 @@ open class GCDeviceBattery: NSObject {
 
 open class GCDeviceLight: NSObject {
     open var color: GCColor
-    init(color: GCColor) {
+    public init(color: GCColor) {
         self.color = color
         super.init()
     }
@@ -422,14 +422,18 @@ func _gcTouchCoreServices() {
 #endif
 
 extension NSValue {
+    /// Linux Foundation cannot encode Swift structs through `objCType`, so the
+    /// point is packed as two IEEE-754 `UInt32` halves of a `UInt64`.
     public convenience init(GCPoint2 point: GCPoint2) {
-        var copy = point
-        self.init(bytes: &copy, objCType: "{GCPoint2=ff}")
+        var packed = UInt64(point.x.bitPattern) | (UInt64(point.y.bitPattern) << 32)
+        self.init(bytes: &packed, objCType: "Q")
     }
 
     public var gcPoint2Value: GCPoint2 {
-        var point = GCPoint2()
-        getValue(&point)
-        return point
+        var packed: UInt64 = 0
+        getValue(&packed)
+        let x = Float(bitPattern: UInt32(truncatingIfNeeded: packed))
+        let y = Float(bitPattern: UInt32(truncatingIfNeeded: packed >> 32))
+        return GCPoint2(x: x, y: y)
     }
 }

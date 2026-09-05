@@ -517,6 +517,11 @@ open class GCGamepadSnapshot: GCGamepad {
         _apply()
     }
 
+    public required init() {
+        self.snapshotData = Data()
+        super.init()
+    }
+
     public init(controller: GCController, snapshotData data: Data) {
         self.snapshotData = data
         super.init()
@@ -546,6 +551,11 @@ open class GCExtendedGamepadSnapshot: GCExtendedGamepad {
         self.snapshotData = data
         super.init()
         _apply()
+    }
+
+    public required init() {
+        self.snapshotData = Data()
+        super.init()
     }
 
     public init(controller: GCController, snapshotData data: Data) {
@@ -598,6 +608,11 @@ open class GCMicroGamepadSnapshot: GCMicroGamepad {
         self.snapshotData = data
         super.init()
         _apply()
+    }
+
+    public required init() {
+        self.snapshotData = Data()
+        super.init()
     }
 
     public init(controller: GCController, snapshotData data: Data) {

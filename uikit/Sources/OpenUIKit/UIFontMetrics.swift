@@ -71,9 +71,15 @@ public struct UIContentSizeCategory: Hashable, RawRepresentable, Sendable {
     /// iPhone SE 2x / iOS 26.1: window `traitOverrides` `.accessibilityLarge`
     /// (body 33) but Edit / inline "Reminders" / "Form" stay **21 pt**
     /// (`headline` / body at extraExtraLarge), while the large title is
-    /// uncapped 48 pt.
+    /// uncapped 48 pt. MEASURED NavFlow t200.xxxl: Filter / inline Library
+    /// also **21 pt** (not 23); large title is uncapped **40**. xxxl is
+    /// not an accessibility category, so the cap is the category itself
+    /// unless it is xxxl or accessibility.
     var iOSBarCapped: UIContentSizeCategory {
-        isAccessibilityCategory ? .extraExtraLarge : self
+        if isAccessibilityCategory || self == .extraExtraExtraLarge {
+            return .extraExtraLarge
+        }
+        return self
     }
 }
 

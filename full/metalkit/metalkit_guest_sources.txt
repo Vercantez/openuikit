@@ -1,4 +1,7 @@
+full/metalkit/MTKMesh.swift
+full/metalkit/MTKModelIO.swift
 full/metalkit/MTKTextureLoader.swift
 full/metalkit/MTKView.swift
 full/metalkit/MetalKit.swift
 full/metalkit/MetalKitLinuxSupport.swift
+full/metalkit/MetalKitModelIOTypes.swift

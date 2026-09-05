@@ -5,6 +5,7 @@ full/cfnetwork/CFHost.swift
 full/cfnetwork/CFNetDiagnostics.swift
 full/cfnetwork/CFNetServices.swift
 full/cfnetwork/CFNetwork.swift
+full/cfnetwork/CFNetworkCrypto.swift
 full/cfnetwork/CFNetworkSupport.swift
 full/cfnetwork/CFProxySupport.swift
 full/cfnetwork/CFStreams.swift

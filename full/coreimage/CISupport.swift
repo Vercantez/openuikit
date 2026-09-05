@@ -138,6 +138,8 @@ public class CIRenderInfo: @unchecked Sendable {
 }
 
 public class CIRenderTask: @unchecked Sendable {
+    public init() {}
+
     public func waitUntilCompleted() throws -> CIRenderInfo {
         CIRenderInfo()
     }
@@ -192,6 +194,11 @@ public class CIRAWFilter: CIFilter, @unchecked Sendable {
     public var supportedDecoderVersions: [CIRAWDecoderVersion] { [] }
 
     public override var outputImage: CIImage? { nil }
+
+    public override init() {
+        super.init()
+        name = "CIRAWFilter"
+    }
 
     public convenience init?(imageURL url: URL) {
         _ = url

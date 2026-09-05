@@ -19,6 +19,7 @@ open class CBService: CBAttribute {
     var _isPrimary: Bool
     var _characteristics: [CBCharacteristic]?
     var _includedServices: [CBService]?
+    var _hostService: CBHostSimulatedService?
 
     open weak var peripheral: CBPeripheral? { _peripheral }
     open var isPrimary: Bool { _isPrimary }
@@ -109,6 +110,7 @@ open class CBCharacteristic: CBAttribute {
     var _descriptors: [CBDescriptor]?
     var _isBroadcasted = false
     var _isNotifying = false
+    var _hostCharacteristic: CBHostSimulatedCharacteristic?
 
     open weak var service: CBService? { _service }
     open var properties: CBCharacteristicProperties { _properties }
@@ -191,6 +193,7 @@ open class CBMutableCharacteristic: CBCharacteristic {
 open class CBDescriptor: CBAttribute {
     weak var _characteristic: CBCharacteristic?
     var _value: Any?
+    var _hostDescriptor: CBHostSimulatedDescriptor?
 
     open weak var characteristic: CBCharacteristic? { _characteristic }
     open var value: Any? { _value }
@@ -229,5 +232,15 @@ open class CBATTRequest: NSObject {
         _offset = offset
         _value = value
         super.init()
+    }
+
+    @_spi(OpenUIKitHost)
+    public convenience init(
+        hostCentral central: CBCentral,
+        characteristic: CBCharacteristic,
+        offset: Int,
+        value: Data?
+    ) {
+        self.init(central: central, characteristic: characteristic, offset: offset, value: value)
     }
 }

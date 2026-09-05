@@ -1,5 +1,5 @@
+@_spi(OpenUIKitHost) import IntentsUI
 import Foundation
-import IntentsUI
 
 /// Schema-v2 host gate compiles `*Tests.swift` and a generated runner, not this
 /// file. Keep it as a standalone probe of the host-driven shortcut controllers.
@@ -27,6 +27,7 @@ func intentsUIRuntimeProbe() {
     )
 
     intentsUIRuntimeOnMain {
+        IntentsUIHostControl.resetVoiceShortcuts()
         let shortcut = INShortcut()
         let add = INUIAddVoiceShortcutViewController(shortcut: shortcut)
         precondition(add.shortcut === shortcut)
@@ -36,6 +37,8 @@ func intentsUIRuntimeProbe() {
         precondition(button.style == .white)
         button.cornerRadius = 8
         precondition(button.cornerRadius == 8)
+
+        precondition(INUIVoiceShortcutError.emptyInvocationPhrase != .shortcutNotFound)
     }
 
     print("INTENTSUI_AGENT_RUNTIME_OK")

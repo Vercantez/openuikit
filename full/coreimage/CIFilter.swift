@@ -13,7 +13,7 @@ extension CIFilterProtocol {
     public static func customAttributes() -> [String: Any]? { nil }
 }
 
-public class CIFilter: NSObject, NSSecureCoding, @unchecked Sendable {
+public class CIFilter: NSObject, NSSecureCoding, CIFilterProtocol, @unchecked Sendable {
     public static var supportsSecureCoding: Bool { true }
 
     public var name: String
@@ -29,26 +29,7 @@ public class CIFilter: NSObject, NSSecureCoding, @unchecked Sendable {
     }
 
     public var outputImage: CIImage? {
-        switch name {
-        case "CILinearGradient", "CISmoothLinearGradient":
-            let color0 = (inputs[kCIInputColor0Key] as? CIColor) ?? .black
-            let color1 = (inputs[kCIInputColor1Key] as? CIColor) ?? .clear
-            let point0 = ciPoint(inputs[kCIInputPoint0Key], fallback: .zero)
-            let point1 = ciPoint(inputs[kCIInputPoint1Key], fallback: CGPoint(x: 0, y: 1))
-            return CIImage(
-                node: .gradient(
-                    color0: color0,
-                    color1: color1,
-                    point0: point0,
-                    point1: point1,
-                    extent: .infinite
-                )
-            )
-        case "CIConstantColorGenerator":
-            return CIImage(color: (inputs[kCIInputColorKey] as? CIColor) ?? .white)
-        default:
-            return nil
-        }
+        ciApplyNamedFilter(name, inputs: inputs)
     }
 
     public override init() {
@@ -81,7 +62,44 @@ public class CIFilter: NSObject, NSSecureCoding, @unchecked Sendable {
 
     public func setDefaults() {
         inputs.removeAll()
+        CIFilterRegistry.shared.applyDefaults(name, to: self)
     }
+
+#if os(Linux)
+    public func setValue(_ value: Any?, forKey key: String) {
+        if key == kCIOutputImageKey { return }
+        if let value {
+            inputs[key] = value
+        } else {
+            inputs.removeValue(forKey: key)
+        }
+    }
+
+    public func value(forKey key: String) -> Any? {
+        if key == kCIOutputImageKey { return outputImage }
+        if key == "inputKeys" { return inputKeys }
+        if key == "outputKeys" { return outputKeys }
+        if key == "attributes" { return attributes }
+        return inputs[key]
+    }
+#else
+    public override func setValue(_ value: Any?, forKey key: String) {
+        if key == kCIOutputImageKey { return }
+        if let value {
+            inputs[key] = value
+        } else {
+            inputs.removeValue(forKey: key)
+        }
+    }
+
+    public override func value(forKey key: String) -> Any? {
+        if key == kCIOutputImageKey { return outputImage }
+        if key == "inputKeys" { return inputKeys }
+        if key == "outputKeys" { return outputKeys }
+        if key == "attributes" { return attributes }
+        return inputs[key]
+    }
+#endif
 
     func setInputImage(_ image: CIImage) {
         inputs[kCIInputImageKey] = image
@@ -104,15 +122,7 @@ public class CIFilter: NSObject, NSSecureCoding, @unchecked Sendable {
     public convenience init?(name: String) {
         guard CIFilterRegistry.shared.names.contains(name) else { return nil }
         self.init(name: name, attributes: CIFilterRegistry.shared.attributes(for: name))
-        if name == "CILinearGradient" || name == "CISmoothLinearGradient" {
-            inputs[kCIInputColor0Key] = CIColor.black
-            inputs[kCIInputColor1Key] = CIColor.clear
-            inputs[kCIInputPoint0Key] = CIVector(x: 0, y: 0)
-            inputs[kCIInputPoint1Key] = CIVector(x: 0, y: 1)
-        }
-        if name == "CIConstantColorGenerator" {
-            inputs[kCIInputColorKey] = CIColor.white
-        }
+        CIFilterRegistry.shared.applyDefaults(name, to: self)
     }
 
     public convenience init?(name: String, withInputParameters params: [String: Any]?) {
@@ -246,17 +256,24 @@ final class CIFilterRegistry {
             kCIAttributeFilterName: "CILinearGradient",
             kCIAttributeFilterDisplayName: "Linear Gradient",
             kCIAttributeFilterCategories: [kCICategoryGradient, kCICategoryGenerator, kCICategoryStillImage],
+            "inputKeys": [kCIInputColor0Key, kCIInputColor1Key, kCIInputPoint0Key, kCIInputPoint1Key],
+            "outputKeys": [kCIOutputImageKey],
         ]
         attrs["CISmoothLinearGradient"] = [
             kCIAttributeFilterName: "CISmoothLinearGradient",
             kCIAttributeFilterDisplayName: "Smooth Linear Gradient",
             kCIAttributeFilterCategories: [kCICategoryGradient, kCICategoryGenerator, kCICategoryStillImage],
+            "inputKeys": [kCIInputColor0Key, kCIInputColor1Key, kCIInputPoint0Key, kCIInputPoint1Key],
+            "outputKeys": [kCIOutputImageKey],
         ]
         attrs["CIConstantColorGenerator"] = [
             kCIAttributeFilterName: "CIConstantColorGenerator",
             kCIAttributeFilterDisplayName: "Constant Color",
             kCIAttributeFilterCategories: [kCICategoryGenerator, kCICategoryStillImage],
+            "inputKeys": [kCIInputColorKey],
+            "outputKeys": [kCIOutputImageKey],
         ]
+        ciInstallBuiltinFilters(self)
     }
 
     var names: [String] { attrs.keys.sorted() }
@@ -270,6 +287,68 @@ final class CIFilterRegistry {
         var merged = attributes
         merged[kCIAttributeFilterName] = name
         attrs[name] = merged
+    }
+
+    func registerBuiltin(
+        name: String,
+        display: String,
+        categories: [String],
+        inputKeys: [String],
+        extras: [String: Any] = [:]
+    ) {
+        var dict: [String: Any] = [
+            kCIAttributeFilterName: name,
+            kCIAttributeFilterDisplayName: display,
+            kCIAttributeFilterCategories: categories,
+            kCIAttributeClass: "CIFilter",
+            "inputKeys": inputKeys,
+            "outputKeys": [kCIOutputImageKey],
+        ]
+        for (key, value) in extras {
+            dict[key] = value
+        }
+        attrs[name] = dict
+    }
+
+    func applyDefaults(_ name: String, to filter: CIFilter) {
+        switch name {
+        case "CILinearGradient", "CISmoothLinearGradient":
+            filter.inputs[kCIInputColor0Key] = CIColor.black
+            filter.inputs[kCIInputColor1Key] = CIColor.clear
+            filter.inputs[kCIInputPoint0Key] = CIVector(x: 0, y: 0)
+            filter.inputs[kCIInputPoint1Key] = CIVector(x: 0, y: 1)
+        case "CIConstantColorGenerator":
+            filter.inputs[kCIInputColorKey] = CIColor.white
+        case "CIGaussianBlur":
+            filter.inputs[kCIInputRadiusKey] = Float(10)
+        case "CIColorControls":
+            filter.inputs[kCIInputSaturationKey] = Float(1)
+            filter.inputs[kCIInputBrightnessKey] = Float(0)
+            filter.inputs[kCIInputContrastKey] = Float(1)
+        case "CISepiaTone":
+            filter.inputs[kCIInputIntensityKey] = Float(1)
+        case "CIColorMatrix":
+            filter.inputs["inputRVector"] = CIVector(x: 1, y: 0, z: 0, w: 0)
+            filter.inputs["inputGVector"] = CIVector(x: 0, y: 1, z: 0, w: 0)
+            filter.inputs["inputBVector"] = CIVector(x: 0, y: 0, z: 1, w: 0)
+            filter.inputs["inputAVector"] = CIVector(x: 0, y: 0, z: 0, w: 1)
+            filter.inputs["inputBiasVector"] = CIVector(x: 0, y: 0, z: 0, w: 0)
+        case "CIExposureAdjust":
+            filter.inputs[kCIInputEVKey] = Float(0)
+        case "CIVibrance":
+            filter.inputs[kCIInputAmountKey] = Float(0)
+        case "CIHueAdjust":
+            filter.inputs[kCIInputAngleKey] = Float(0)
+        case "CIAffineTransform":
+            filter.inputs[kCIInputTransformKey] = CIVector(cgAffineTransform: .identity)
+        case "CIQRCodeGenerator":
+            filter.inputs["inputCorrectionLevel"] = "M"
+        case "CICode128BarcodeGenerator":
+            filter.inputs["inputQuietSpace"] = Float(10)
+            filter.inputs["inputBarcodeHeight"] = Float(32)
+        default:
+            break
+        }
     }
 
     func make(name: String) -> CIFilter? {

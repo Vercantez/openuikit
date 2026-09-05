@@ -36,16 +36,45 @@ platform branch `reference/` could not be compared (`unavailable`).
   plan-status token APIs fail with `NSPOSIXErrorDomain` / `EPERM`.
 - `init(coder:)` on plan types returns `nil`; Apple archive keys are
   unobserved.
+- Call-state constants use the public CTCall payloads (`dialing`, `incoming`,
+  `connected`, `disconnected`). RAT constants use the C identifier as the
+  string value (the 20-app corpus compares `currentRadioAccessTechnology`
+  against `CTRadioAccessTechnologyLTE` and siblings). Notification
+  `rawValue`s are the C notification identifiers.
 
 ## Fail-closed / not claimed
 
 - No baseband, SIM, carrier token, eSIM host, or CallKit replacement.
-- The 20 call-state, RAT, notification-name, and `CTSubscriberTokenRefreshed`
-  string payloads are provisional (symbol-name fallbacks). macios loads them
-  from the Apple dylib via `Dlfcn` / `[Field]`; exact bytes stay oracle
-  questions and coverage-`declared`.
+- `CTCall.callState` stays empty; Linux never reports `CTCallStateConnected`.
+- `CTTelephonyNetworkInfo.currentRadioAccessTechnology` stays `nil`.
 - `CTCallCenter.callEventHandler` is stored and never invoked.
 - No module-local CoreFoundation aliases.
+
+## Depth pass 2026-09
+
+- implemented before: 92
+- implemented after: 112
+- declared before: 20
+- declared after: 0
+- deferred / unavailable / not-applicable: 0 / 0 / 0
+
+The remaining 20 C string constants (call state, RAT, notification names,
+`CTSubscriberTokenRefreshed`) moved from `declared` to `implemented` with
+table-driven value tests. Every `implemented` row now cites a top-level
+`func testName()` under `tests/agent/*Tests.swift`. Corpus priority from
+`reference/corpus-summary.json` (Telegram, Home Assistant, Kickstarter
+ios-oss, Signal, element): `CTTelephonyNetworkInfo`,
+`currentRadioAccessTechnology`, `CTRadioAccessTechnology*`, `CTCarrier`,
+`CTCellularData`. `scratch/ladder-corpus` was not present in this
+environment; ranking used the sealed corpus summary.
+
+Top-5 evidence distribution:
+
+1. `testRadioAccessTechnologyConstants` — 13
+2. `testAddPlanResultEnum` — 9
+3. `testRestrictedStateEnum` — 8
+4. `testPlanCapabilityEnum` — 7
+5. `testPlanRequestStorage` — 7
 
 Did not touch `machorun/`, `uikit/`, `env/contract.json`, or
 `scripts/vendor_pins.sh`.

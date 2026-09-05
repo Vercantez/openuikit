@@ -22,9 +22,6 @@ import SwiftUI
 // 4. Run with `LD_LIBRARY_PATH` covering those dylibs.
 // 5. Confirm `CONTACTSUI_DEPENDENCY_IDENTITY_OK` and that `libContactsUI.dylib`
 //    was loaded.
-//
-// Assertions below that need Contacts/UIKit/SwiftUI are compiled only when
-// those modules exist. This file must still type-check on the isolated host.
 
 private func assertNotContactsUIType<T>(_ value: T) {
     precondition(!String(reflecting: type(of: value)).hasPrefix("ContactsUI."))
@@ -49,7 +46,7 @@ private func assertContactsUIKitIdentity() {
     let contact = CNMutableContact()
     assertNotContactsUIType(contact)
     let editor = CNContactViewController(for: contact)
-    precondition(type(of: editor).superclass() == UIViewController.self || editor is UIViewController)
+    precondition(type(of: editor).superclass() == UITableViewController.self || editor is UIViewController)
     let picker = CNContactPickerViewController()
     precondition(picker is UIViewController)
     _ = CNContactViewController.descriptorForRequiredKeys()

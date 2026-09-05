@@ -1,270 +1,270 @@
 precise	status	evidence	notes
-c:@E@NFCFeliCaEncryptionId	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCFeliCaEncryptionId@EncryptionIdAES	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCFeliCaEncryptionId@EncryptionIdAES_DES	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCFeliCaEncryptionId@NFCFeliCaEncryptionIdAES	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCFeliCaEncryptionId@NFCFeliCaEncryptionIdAES_DES	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCFeliCaPollingRequestCode	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCFeliCaPollingRequestCode@NFCFeliCaPollingRequestCodeCommunicationPerformance	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCFeliCaPollingRequestCode@NFCFeliCaPollingRequestCodeNoRequest	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCFeliCaPollingRequestCode@NFCFeliCaPollingRequestCodeSystemCode	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCFeliCaPollingRequestCode@PollingRequestCodeCommunicationPerformance	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCFeliCaPollingRequestCode@PollingRequestCodeNoRequest	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCFeliCaPollingRequestCode@PollingRequestCodeSystemCode	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCFeliCaPollingTimeSlot	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCFeliCaPollingTimeSlot@NFCFeliCaPollingTimeSlotMax1	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCFeliCaPollingTimeSlot@NFCFeliCaPollingTimeSlotMax16	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCFeliCaPollingTimeSlot@NFCFeliCaPollingTimeSlotMax2	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCFeliCaPollingTimeSlot@NFCFeliCaPollingTimeSlotMax4	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCFeliCaPollingTimeSlot@NFCFeliCaPollingTimeSlotMax8	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCFeliCaPollingTimeSlot@PollingTimeSlotMax1	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCFeliCaPollingTimeSlot@PollingTimeSlotMax16	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCFeliCaPollingTimeSlot@PollingTimeSlotMax2	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCFeliCaPollingTimeSlot@PollingTimeSlotMax4	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCFeliCaPollingTimeSlot@PollingTimeSlotMax8	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693RequestFlag	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagAddress	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagCommandSpecificBit8	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagDualSubCarriers	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagHighDataRate	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagOption	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagProtocolExtension	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagSelect	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693RequestFlag@RequestFlagAddress	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693RequestFlag@RequestFlagDualSubCarriers	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693RequestFlag@RequestFlagHighDataRate	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693RequestFlag@RequestFlagOption	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693RequestFlag@RequestFlagProtocolExtension	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693RequestFlag@RequestFlagSelect	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693ResponseFlag	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagBlockSecurityStatusBit5	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagBlockSecurityStatusBit6	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagError	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagFinalResponse	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagProtocolExtension	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagResponseBufferValid	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagWaitTimeExtension	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCMiFareFamily	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCMiFareFamily@NFCMiFareDESFire	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCMiFareFamily@NFCMiFarePlus	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCMiFareFamily@NFCMiFareUltralight	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCMiFareFamily@NFCMiFareUnknown	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCNDEFStatus	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCNDEFStatus@NFCNDEFStatusNotSupported	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCNDEFStatus@NFCNDEFStatusReadOnly	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCNDEFStatus@NFCNDEFStatusReadWrite	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCPollingOption	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCPollingOption@NFCPollingISO14443	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCPollingOption@NFCPollingISO15693	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCPollingOption@NFCPollingISO18092	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCPollingOption@NFCPollingPACE	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCReaderError	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCReaderError@NFCNdefReaderSessionErrorTagNotWritable	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCNdefReaderSessionErrorTagSizeTooSmall	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCNdefReaderSessionErrorTagUpdateFailure	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCNdefReaderSessionErrorZeroLengthMessage	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderErrorAccessNotAccepted	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderErrorIneligible	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderErrorInvalidParameter	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderErrorInvalidParameterLength	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderErrorParameterOutOfBound	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderErrorRadioDisabled	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCReaderError@NFCReaderErrorSecurityViolation	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderErrorUnsupportedFeature	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCReaderError@NFCReaderSessionInvalidationErrorFirstNDEFTagRead	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderSessionInvalidationErrorSessionTerminatedUnexpectedly	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderSessionInvalidationErrorSessionTimeout	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderSessionInvalidationErrorSystemIsBusy	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderSessionInvalidationErrorUserCanceled	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderTransceiveErrorPacketTooLong	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderTransceiveErrorRetryExceeded	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderTransceiveErrorSessionInvalidated	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderTransceiveErrorTagConnectionLost	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderTransceiveErrorTagNotConnected	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCReaderTransceiveErrorTagResponseError	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCReaderError@NFCTagCommandConfigurationErrorInvalidParameters	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCTypeNameFormat	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCTypeNameFormat@NFCTypeNameFormatAbsoluteURI	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCTypeNameFormat@NFCTypeNameFormatEmpty	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCTypeNameFormat@NFCTypeNameFormatMedia	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCTypeNameFormat@NFCTypeNameFormatNFCExternal	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCTypeNameFormat@NFCTypeNameFormatNFCWellKnown	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCTypeNameFormat@NFCTypeNameFormatUnchanged	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCTypeNameFormat@NFCTypeNameFormatUnknown	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCVASErrorCode	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCVASErrorCode@NFCVASErrorCodeDataNotActivated	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@NFCVASErrorCodeDataNotFound	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@NFCVASErrorCodeIncorrectData	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@NFCVASErrorCodeSuccess	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCVASErrorCode@NFCVASErrorCodeUnsupportedApplicationVersion	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@NFCVASErrorCodeUserIntervention	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@NFCVASErrorCodeWrongLCField	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@NFCVASErrorCodeWrongParameters	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@VASErrorCodeDataNotActivated	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@VASErrorCodeDataNotFound	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@VASErrorCodeIncorrectData	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@VASErrorCodeSuccess	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@VASErrorCodeUnsupportedApplicationVersion	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@VASErrorCodeUserIntervention	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@VASErrorCodeWrongLCField	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASErrorCode@VASErrorCodeWrongParameters	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASMode	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCVASMode@NFCVASModeNormal	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCVASMode@NFCVASModeURLOnly	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@E@NFCVASMode@VASModeNormal	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@E@NFCVASMode@VASModeURLOnly	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@NFCErrorDomain	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:@NFCISO15693TagResponseErrorKey	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@NFCTagResponseUnexpectedLengthErrorKey	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@T@EncryptionId	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@T@PollingRequestCode	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@T@PollingTimeSlot	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@T@RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@T@VASErrorCode	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:@T@VASMode	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCISO15693CustomCommandConfiguration	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO15693CustomCommandConfiguration(im)initWithManufacturerCode:customCommandCode:requestParameters:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO15693CustomCommandConfiguration(im)initWithManufacturerCode:customCommandCode:requestParameters:maximumRetries:retryInterval:	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCISO15693CustomCommandConfiguration(py)customCommandCode	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCISO15693CustomCommandConfiguration(py)manufacturerCode	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO15693CustomCommandConfiguration(py)requestParameters	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO15693ReadMultipleBlocksConfiguration	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO15693ReadMultipleBlocksConfiguration(im)initWithRange:chunkSize:	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCISO15693ReadMultipleBlocksConfiguration(im)initWithRange:chunkSize:maximumRetries:retryInterval:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO15693ReadMultipleBlocksConfiguration(py)chunkSize	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO15693ReadMultipleBlocksConfiguration(py)range	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCISO7816APDU	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO7816APDU(im)initWithData:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO7816APDU(im)initWithInstructionClass:instructionCode:p1Parameter:p2Parameter:data:expectedResponseLength:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO7816APDU(py)data	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO7816APDU(py)expectedResponseLength	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO7816APDU(py)instructionClass	declared	full/corenfc/NFCISO7816.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCISO7816APDU(py)instructionCode	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO7816APDU(py)p1Parameter	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCISO7816APDU(py)p2Parameter	declared	full/corenfc/NFCISO7816.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCNDEFMessage	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFMessage(cm)ndefMessageWithData:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFMessage(im)initWithNDEFRecords:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFMessage(im)initWithNDEFRecords:::SYNTHESIZED::c:objc(cs)NFCNDEFMessage	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFMessage(py)length	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFMessage(py)records	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFPayload	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFPayload(cm)wellKnowTypeTextPayloadWithString:locale:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFPayload(cm)wellKnownTypeTextPayloadWithString:locale:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFPayload(cm)wellKnownTypeURIPayloadWithString:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFPayload(cm)wellKnownTypeURIPayloadWithURL:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFPayload(im)initWithFormat:type:identifier:payload:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFPayload(im)initWithFormat:type:identifier:payload:chunkSize:	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCNDEFPayload(im)wellKnownTypeURIPayload	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFPayload(py)identifier	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCNDEFPayload(py)payload	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFPayload(py)type	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFPayload(py)typeNameFormat	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFReaderSession	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFReaderSession(im)connectToTag:completionHandler:	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCNDEFReaderSession(im)initWithDelegate:queue:invalidateAfterFirstRead:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCNDEFReaderSession(im)restartPolling	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCPaymentTagReaderSession	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCReaderSession	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCReaderSession(cpy)readingAvailable	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCReaderSession(py)delegate	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCReaderSession(py)sessionQueue	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCTagCommandConfiguration	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCTagCommandConfiguration(py)maximumRetries	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCTagCommandConfiguration(py)retryInterval	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCTagReaderSession	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCTagReaderSession(im)restartPolling	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCVASCommandConfiguration	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCVASCommandConfiguration(im)initWithVASMode:passTypeIdentifier:url:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCVASCommandConfiguration(im)initWithVASMode:passTypeIdentifier:url:::SYNTHESIZED::c:objc(cs)NFCVASCommandConfiguration	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCVASCommandConfiguration(py)mode	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCVASCommandConfiguration(py)passTypeIdentifier	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCVASCommandConfiguration(py)url	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCVASReaderSession	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCVASReaderSession(im)initWithVASCommandConfigurations:delegate:queue:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCVASReaderSession(im)initWithVASCommandConfigurations:delegate:queue:::SYNTHESIZED::c:objc(cs)NFCVASReaderSession	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCVASResponse	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCVASResponse(py)mobileToken	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(cs)NFCVASResponse(py)status	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(cs)NFCVASResponse(py)vasData	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
+c:@E@NFCFeliCaEncryptionId	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaEncryptionIdRawValues	table-driven enum raw values
+c:@E@NFCFeliCaEncryptionId@EncryptionIdAES	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaEncryptionIdRawValues	table-driven enum raw values
+c:@E@NFCFeliCaEncryptionId@EncryptionIdAES_DES	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaEncryptionIdRawValues	table-driven enum raw values
+c:@E@NFCFeliCaEncryptionId@NFCFeliCaEncryptionIdAES	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaEncryptionIdRawValues	table-driven enum raw values
+c:@E@NFCFeliCaEncryptionId@NFCFeliCaEncryptionIdAES_DES	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaEncryptionIdRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingRequestCode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingRequestCodeRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingRequestCode@NFCFeliCaPollingRequestCodeCommunicationPerformance	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingRequestCodeRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingRequestCode@NFCFeliCaPollingRequestCodeNoRequest	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingRequestCodeRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingRequestCode@NFCFeliCaPollingRequestCodeSystemCode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingRequestCodeRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingRequestCode@PollingRequestCodeCommunicationPerformance	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingRequestCodeRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingRequestCode@PollingRequestCodeNoRequest	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingRequestCodeRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingRequestCode@PollingRequestCodeSystemCode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingRequestCodeRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingTimeSlot	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingTimeSlot@NFCFeliCaPollingTimeSlotMax1	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingTimeSlot@NFCFeliCaPollingTimeSlotMax16	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingTimeSlot@NFCFeliCaPollingTimeSlotMax2	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingTimeSlot@NFCFeliCaPollingTimeSlotMax4	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingTimeSlot@NFCFeliCaPollingTimeSlotMax8	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingTimeSlot@PollingTimeSlotMax1	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingTimeSlot@PollingTimeSlotMax16	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingTimeSlot@PollingTimeSlotMax2	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingTimeSlot@PollingTimeSlotMax4	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	table-driven enum raw values
+c:@E@NFCFeliCaPollingTimeSlot@PollingTimeSlotMax8	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	table-driven enum raw values
+c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagAddress	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagCommandSpecificBit8	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagDualSubCarriers	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagHighDataRate	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagProtocolExtension	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693RequestFlag@NFCISO15693RequestFlagSelect	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693RequestFlag@RequestFlagAddress	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693RequestFlag@RequestFlagDualSubCarriers	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693RequestFlag@RequestFlagHighDataRate	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693RequestFlag@RequestFlagOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693RequestFlag@RequestFlagProtocolExtension	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693RequestFlag@RequestFlagSelect	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	option-set members
+c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagMembers	option-set members
+c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagBlockSecurityStatusBit5	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagMembers	option-set members
+c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagBlockSecurityStatusBit6	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagMembers	option-set members
+c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagError	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagMembers	option-set members
+c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagFinalResponse	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagMembers	option-set members
+c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagProtocolExtension	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagMembers	option-set members
+c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagResponseBufferValid	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagMembers	option-set members
+c:@E@NFCISO15693ResponseFlag@NFCISO15693ResponseFlagWaitTimeExtension	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagMembers	option-set members
+c:@E@NFCMiFareFamily	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCMiFareFamilyRawValues	table-driven enum raw values
+c:@E@NFCMiFareFamily@NFCMiFareDESFire	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCMiFareFamilyRawValues	table-driven enum raw values
+c:@E@NFCMiFareFamily@NFCMiFarePlus	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCMiFareFamilyRawValues	table-driven enum raw values
+c:@E@NFCMiFareFamily@NFCMiFareUltralight	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCMiFareFamilyRawValues	table-driven enum raw values
+c:@E@NFCMiFareFamily@NFCMiFareUnknown	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCMiFareFamilyRawValues	table-driven enum raw values
+c:@E@NFCNDEFStatus	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCNDEFStatusRawValues	table-driven enum raw values
+c:@E@NFCNDEFStatus@NFCNDEFStatusNotSupported	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCNDEFStatusRawValues	table-driven enum raw values
+c:@E@NFCNDEFStatus@NFCNDEFStatusReadOnly	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCNDEFStatusRawValues	table-driven enum raw values
+c:@E@NFCNDEFStatus@NFCNDEFStatusReadWrite	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCNDEFStatusRawValues	table-driven enum raw values
+c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionMembers	option-set members
+c:@E@NFCPollingOption@NFCPollingISO14443	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionMembers	option-set members
+c:@E@NFCPollingOption@NFCPollingISO15693	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionMembers	option-set members
+c:@E@NFCPollingOption@NFCPollingISO18092	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionMembers	option-set members
+c:@E@NFCPollingOption@NFCPollingPACE	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionMembers	option-set members
+c:@E@NFCReaderError	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCNdefReaderSessionErrorTagNotWritable	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCNdefReaderSessionErrorTagSizeTooSmall	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCNdefReaderSessionErrorTagUpdateFailure	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCNdefReaderSessionErrorZeroLengthMessage	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderErrorAccessNotAccepted	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderErrorIneligible	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderErrorInvalidParameter	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderErrorInvalidParameterLength	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderErrorParameterOutOfBound	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderErrorRadioDisabled	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderErrorSecurityViolation	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderErrorUnsupportedFeature	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderSessionInvalidationErrorFirstNDEFTagRead	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderSessionInvalidationErrorSessionTerminatedUnexpectedly	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderSessionInvalidationErrorSessionTimeout	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderSessionInvalidationErrorSystemIsBusy	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderSessionInvalidationErrorUserCanceled	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderTransceiveErrorPacketTooLong	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderTransceiveErrorRetryExceeded	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderTransceiveErrorSessionInvalidated	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderTransceiveErrorTagConnectionLost	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderTransceiveErrorTagNotConnected	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCReaderTransceiveErrorTagResponseError	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCReaderError@NFCTagCommandConfigurationErrorInvalidParameters	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	table-driven error codes
+c:@E@NFCTypeNameFormat	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCTypeNameFormatRawValues	table-driven enum raw values
+c:@E@NFCTypeNameFormat@NFCTypeNameFormatAbsoluteURI	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCTypeNameFormatRawValues	table-driven enum raw values
+c:@E@NFCTypeNameFormat@NFCTypeNameFormatEmpty	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCTypeNameFormatRawValues	table-driven enum raw values
+c:@E@NFCTypeNameFormat@NFCTypeNameFormatMedia	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCTypeNameFormatRawValues	table-driven enum raw values
+c:@E@NFCTypeNameFormat@NFCTypeNameFormatNFCExternal	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCTypeNameFormatRawValues	table-driven enum raw values
+c:@E@NFCTypeNameFormat@NFCTypeNameFormatNFCWellKnown	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCTypeNameFormatRawValues	table-driven enum raw values
+c:@E@NFCTypeNameFormat@NFCTypeNameFormatUnchanged	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCTypeNameFormatRawValues	table-driven enum raw values
+c:@E@NFCTypeNameFormat@NFCTypeNameFormatUnknown	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCTypeNameFormatRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@NFCVASErrorCodeDataNotActivated	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@NFCVASErrorCodeDataNotFound	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@NFCVASErrorCodeIncorrectData	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@NFCVASErrorCodeSuccess	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@NFCVASErrorCodeUnsupportedApplicationVersion	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@NFCVASErrorCodeUserIntervention	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@NFCVASErrorCodeWrongLCField	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@NFCVASErrorCodeWrongParameters	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@VASErrorCodeDataNotActivated	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@VASErrorCodeDataNotFound	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@VASErrorCodeIncorrectData	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@VASErrorCodeSuccess	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@VASErrorCodeUnsupportedApplicationVersion	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@VASErrorCodeUserIntervention	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@VASErrorCodeWrongLCField	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASErrorCode@VASErrorCodeWrongParameters	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	table-driven enum raw values
+c:@E@NFCVASMode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASModeRawValues	table-driven enum raw values
+c:@E@NFCVASMode@NFCVASModeNormal	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASModeRawValues	table-driven enum raw values
+c:@E@NFCVASMode@NFCVASModeURLOnly	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASModeRawValues	table-driven enum raw values
+c:@E@NFCVASMode@VASModeNormal	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASModeRawValues	table-driven enum raw values
+c:@E@NFCVASMode@VASModeURLOnly	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASModeRawValues	table-driven enum raw values
+c:@NFCErrorDomain	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCErrorDomainStrings	error-domain string constants
+c:@NFCISO15693TagResponseErrorKey	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCErrorDomainStrings	error-domain string constants
+c:@NFCTagResponseUnexpectedLengthErrorKey	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCErrorDomainStrings	error-domain string constants
+c:@T@EncryptionId	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCoreNFCTypeAliases	public typealiases
+c:@T@PollingRequestCode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCoreNFCTypeAliases	public typealiases
+c:@T@PollingTimeSlot	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCoreNFCTypeAliases	public typealiases
+c:@T@RequestFlag	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCoreNFCTypeAliases	public typealiases
+c:@T@VASErrorCode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCoreNFCTypeAliases	public typealiases
+c:@T@VASMode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCoreNFCTypeAliases	public typealiases
+c:objc(cs)NFCISO15693CustomCommandConfiguration	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testISO15693CustomCommandConfiguration	-
+c:objc(cs)NFCISO15693CustomCommandConfiguration(im)initWithManufacturerCode:customCommandCode:requestParameters:	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testISO15693CustomCommandConfiguration	-
+c:objc(cs)NFCISO15693CustomCommandConfiguration(im)initWithManufacturerCode:customCommandCode:requestParameters:maximumRetries:retryInterval:	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testISO15693CustomCommandConfiguration	-
+c:objc(cs)NFCISO15693CustomCommandConfiguration(py)customCommandCode	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testISO15693CustomCommandConfiguration	-
+c:objc(cs)NFCISO15693CustomCommandConfiguration(py)manufacturerCode	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testISO15693CustomCommandConfiguration	-
+c:objc(cs)NFCISO15693CustomCommandConfiguration(py)requestParameters	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testISO15693CustomCommandConfiguration	-
+c:objc(cs)NFCISO15693ReadMultipleBlocksConfiguration	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testISO15693ReadMultipleBlocksConfiguration	-
+c:objc(cs)NFCISO15693ReadMultipleBlocksConfiguration(im)initWithRange:chunkSize:	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testISO15693ReadMultipleBlocksConfiguration	-
+c:objc(cs)NFCISO15693ReadMultipleBlocksConfiguration(im)initWithRange:chunkSize:maximumRetries:retryInterval:	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testISO15693ReadMultipleBlocksConfiguration	-
+c:objc(cs)NFCISO15693ReadMultipleBlocksConfiguration(py)chunkSize	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testISO15693ReadMultipleBlocksConfiguration	-
+c:objc(cs)NFCISO15693ReadMultipleBlocksConfiguration(py)range	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testISO15693ReadMultipleBlocksConfiguration	-
+c:objc(cs)NFCISO7816APDU	implemented	test:full/corenfc/tests/agent/NFCISO7816Tests.swift#testNFCISO7816APDURoundTrip	-
+c:objc(cs)NFCISO7816APDU(im)initWithData:	implemented	test:full/corenfc/tests/agent/NFCISO7816Tests.swift#testNFCISO7816APDURoundTrip	-
+c:objc(cs)NFCISO7816APDU(im)initWithInstructionClass:instructionCode:p1Parameter:p2Parameter:data:expectedResponseLength:	implemented	test:full/corenfc/tests/agent/NFCISO7816Tests.swift#testNFCISO7816APDURoundTrip	-
+c:objc(cs)NFCISO7816APDU(py)data	implemented	test:full/corenfc/tests/agent/NFCISO7816Tests.swift#testNFCISO7816APDURoundTrip	-
+c:objc(cs)NFCISO7816APDU(py)expectedResponseLength	implemented	test:full/corenfc/tests/agent/NFCISO7816Tests.swift#testNFCISO7816APDURoundTrip	-
+c:objc(cs)NFCISO7816APDU(py)instructionClass	implemented	test:full/corenfc/tests/agent/NFCISO7816Tests.swift#testNFCISO7816APDUProperties	-
+c:objc(cs)NFCISO7816APDU(py)instructionCode	implemented	test:full/corenfc/tests/agent/NFCISO7816Tests.swift#testNFCISO7816APDURoundTrip	-
+c:objc(cs)NFCISO7816APDU(py)p1Parameter	implemented	test:full/corenfc/tests/agent/NFCISO7816Tests.swift#testNFCISO7816APDURoundTrip	-
+c:objc(cs)NFCISO7816APDU(py)p2Parameter	implemented	test:full/corenfc/tests/agent/NFCISO7816Tests.swift#testNFCISO7816APDUProperties	-
+c:objc(cs)NFCNDEFMessage	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFMessageEncodeDecode	NDEF 1.0 encode/decode
+c:objc(cs)NFCNDEFMessage(cm)ndefMessageWithData:	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFMessageEncodeDecode	NDEF 1.0 encode/decode
+c:objc(cs)NFCNDEFMessage(im)initWithNDEFRecords:	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFMessageEncodeDecode	NDEF 1.0 encode/decode
+c:objc(cs)NFCNDEFMessage(im)initWithNDEFRecords:::SYNTHESIZED::c:objc(cs)NFCNDEFMessage	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFMessageEncodeDecode	NDEF 1.0 encode/decode
+c:objc(cs)NFCNDEFMessage(py)length	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFMessageEncodeDecode	NDEF 1.0 encode/decode
+c:objc(cs)NFCNDEFMessage(py)records	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFMessageEncodeDecode	NDEF 1.0 encode/decode
+c:objc(cs)NFCNDEFPayload	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFPayloadProperties	-
+c:objc(cs)NFCNDEFPayload(cm)wellKnowTypeTextPayloadWithString:locale:	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFTextPayload	NDEF text TNF
+c:objc(cs)NFCNDEFPayload(cm)wellKnownTypeTextPayloadWithString:locale:	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFTextPayload	NDEF text TNF
+c:objc(cs)NFCNDEFPayload(cm)wellKnownTypeURIPayloadWithString:	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFURIPayload	NDEF URI TNF
+c:objc(cs)NFCNDEFPayload(cm)wellKnownTypeURIPayloadWithURL:	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFURIPayload	NDEF URI TNF
+c:objc(cs)NFCNDEFPayload(im)initWithFormat:type:identifier:payload:	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFPayloadProperties	-
+c:objc(cs)NFCNDEFPayload(im)initWithFormat:type:identifier:payload:chunkSize:	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFPayloadProperties	-
+c:objc(cs)NFCNDEFPayload(im)wellKnownTypeURIPayload	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFURIPayload	NDEF URI TNF
+c:objc(cs)NFCNDEFPayload(py)identifier	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFPayloadProperties	-
+c:objc(cs)NFCNDEFPayload(py)payload	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFPayloadProperties	-
+c:objc(cs)NFCNDEFPayload(py)type	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFPayloadProperties	-
+c:objc(cs)NFCNDEFPayload(py)typeNameFormat	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFPayloadProperties	-
+c:objc(cs)NFCNDEFReaderSession	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionFailClosed	-
+c:objc(cs)NFCNDEFReaderSession(im)connectToTag:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionConnectFails	-
+c:objc(cs)NFCNDEFReaderSession(im)initWithDelegate:queue:invalidateAfterFirstRead:	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionFailClosed	-
+c:objc(cs)NFCNDEFReaderSession(im)restartPolling	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionConnectFails	-
+c:objc(cs)NFCPaymentTagReaderSession	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testPaymentTagReaderSession	-
+c:objc(cs)NFCReaderSession	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionFailClosed	-
+c:objc(cs)NFCReaderSession(cpy)readingAvailable	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testReadingAvailableIsFalse	-
+c:objc(cs)NFCReaderSession(py)delegate	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionFailClosed	-
+c:objc(cs)NFCReaderSession(py)sessionQueue	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionFailClosed	-
+c:objc(cs)NFCTagCommandConfiguration	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testTagCommandConfiguration	-
+c:objc(cs)NFCTagCommandConfiguration(py)maximumRetries	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testTagCommandConfiguration	-
+c:objc(cs)NFCTagCommandConfiguration(py)retryInterval	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testTagCommandConfiguration	-
+c:objc(cs)NFCTagReaderSession	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testTagReaderSessionHostConnectFails	-
+c:objc(cs)NFCTagReaderSession(im)restartPolling	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testTagReaderSessionHostConnectFails	-
+c:objc(cs)NFCVASCommandConfiguration	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testVASCommandConfiguration	-
+c:objc(cs)NFCVASCommandConfiguration(im)initWithVASMode:passTypeIdentifier:url:	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testVASCommandConfiguration	-
+c:objc(cs)NFCVASCommandConfiguration(im)initWithVASMode:passTypeIdentifier:url:::SYNTHESIZED::c:objc(cs)NFCVASCommandConfiguration	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testVASCommandConfiguration	-
+c:objc(cs)NFCVASCommandConfiguration(py)mode	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testVASCommandConfiguration	-
+c:objc(cs)NFCVASCommandConfiguration(py)passTypeIdentifier	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testVASCommandConfiguration	-
+c:objc(cs)NFCVASCommandConfiguration(py)url	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testVASCommandConfiguration	-
+c:objc(cs)NFCVASReaderSession	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testVASReaderSession	-
+c:objc(cs)NFCVASReaderSession(im)initWithVASCommandConfigurations:delegate:queue:	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testVASReaderSession	-
+c:objc(cs)NFCVASReaderSession(im)initWithVASCommandConfigurations:delegate:queue:::SYNTHESIZED::c:objc(cs)NFCVASReaderSession	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testVASReaderSession	-
+c:objc(cs)NFCVASResponse	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testVASResponse	-
+c:objc(cs)NFCVASResponse(py)mobileToken	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testVASResponse	-
+c:objc(cs)NFCVASResponse(py)status	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testVASResponse	-
+c:objc(cs)NFCVASResponse(py)vasData	implemented	test:full/corenfc/tests/agent/NFCConfigurationTests.swift#testVASResponse	-
 c:objc(cs)NSUserActivity(py)ndefMessagePayload	deferred		NSUserActivity is unavailable in this Linux Foundation overlay
-c:objc(pl)NFCFeliCaTag	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(pl)NFCFeliCaTag(im)pollingWithSystemCode:requestCode:timeSlot:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCFeliCaTag(im)readWithoutEncryptionWithServiceCodeList:blockList:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCFeliCaTag(im)requestResponseWithCompletionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCFeliCaTag(im)requestServiceV2WithNodeCodeList:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCFeliCaTag(im)requestServiceWithNodeCodeList:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCFeliCaTag(im)requestSpecificationVersionWithCompletionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCFeliCaTag(im)requestSystemCodeWithCompletionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCFeliCaTag(im)resetModeWithCompletionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCFeliCaTag(im)sendFeliCaCommandPacket:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCFeliCaTag(im)writeWithoutEncryptionWithServiceCodeList:blockList:blockData:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCFeliCaTag(py)currentIDm	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCFeliCaTag(py)currentSystemCode	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(pl)NFCISO15693Tag(im)customCommandWithRequestFlag:customCommandCode:customRequestParameters:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)extendedLockBlockWithRequestFlags:blockNumber:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)extendedReadMultipleBlocksWithRequestFlags:blockRange:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)extendedReadSingleBlockWithRequestFlags:blockNumber:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)extendedWriteSingleBlockWithRequestFlags:blockNumber:dataBlock:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)getMultipleBlockSecurityStatusWithRequestFlag:blockRange:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)getSystemInfoWithRequestFlag:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)lockAFIWithRequestFlag:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)lockBlockWithRequestFlags:blockNumber:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)lockDFSIDWithRequestFlag:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)lockDSFIDWithRequestFlag:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)readMultipleBlocksWithConfiguration:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)readMultipleBlocksWithRequestFlags:blockRange:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)readSingleBlockWithRequestFlags:blockNumber:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)resetToReadyWithRequestFlags:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)selectWithRequestFlags:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)sendCustomCommandWithConfiguration:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)stayQuietWithCompletionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)writeAFIWithRequestFlag:afi:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)writeDSFIDWithRequestFlag:dsfid:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)writeMultipleBlocksWithRequestFlags:blockRange:dataBlocks:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(im)writeSingleBlockWithRequestFlags:blockNumber:dataBlock:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(py)icManufacturerCode	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(py)icSerialNumber	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO15693Tag(py)identifier	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO7816Tag	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(pl)NFCISO7816Tag(im)sendCommandAPDU:completionHandler:	declared	full/corenfc/NFCISO7816.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO7816Tag(py)applicationData	declared	full/corenfc/NFCISO7816.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO7816Tag(py)historicalBytes	declared	full/corenfc/NFCISO7816.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO7816Tag(py)identifier	declared	full/corenfc/NFCISO7816.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO7816Tag(py)initialSelectedAID	declared	full/corenfc/NFCISO7816.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCISO7816Tag(py)proprietaryApplicationDataCoding	declared	full/corenfc/NFCISO7816.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCMiFareTag	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(pl)NFCMiFareTag(im)sendMiFareCommand:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCMiFareTag(im)sendMiFareISO7816Command:completionHandler:	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCMiFareTag(py)historicalBytes	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCMiFareTag(py)identifier	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCMiFareTag(py)mifareFamily	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCNDEFReaderSessionDelegate	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(pl)NFCNDEFReaderSessionDelegate(im)readerSession:didDetectNDEFs:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(pl)NFCNDEFReaderSessionDelegate(im)readerSession:didDetectTags:	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCNDEFReaderSessionDelegate(im)readerSession:didInvalidateWithError:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(pl)NFCNDEFReaderSessionDelegate(im)readerSessionDidBecomeActive:	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCNDEFTag	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(pl)NFCNDEFTag(im)queryNDEFStatusWithCompletionHandler:	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCNDEFTag(im)readNDEFWithCompletionHandler:	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCNDEFTag(im)writeLockWithCompletionHandler:	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCNDEFTag(im)writeNDEF:completionHandler:	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCNDEFTag(py)available	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(pl)NFCReaderSession	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCReaderSession(im)beginSession	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCReaderSession(im)invalidateSession	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCReaderSession(im)invalidateSessionWithErrorMessage:	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCReaderSession(py)alertMessage	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCReaderSession(py)ready	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-c:objc(pl)NFCVASReaderSessionDelegate	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(pl)NFCVASReaderSessionDelegate(im)readerSession:didInvalidateWithError:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(pl)NFCVASReaderSessionDelegate(im)readerSession:didReceiveVASResponses:	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-c:objc(pl)NFCVASReaderSessionDelegate(im)readerSessionDidBecomeActive:	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@NFCReaderError	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@NFCReaderError	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@NFCReaderError	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@NFCReaderError	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
+c:objc(pl)NFCFeliCaTag	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagAsyncFailClosed	-
+c:objc(pl)NFCFeliCaTag(im)pollingWithSystemCode:requestCode:timeSlot:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagCallbacksFailClosed	-
+c:objc(pl)NFCFeliCaTag(im)readWithoutEncryptionWithServiceCodeList:blockList:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagCallbacksFailClosed	-
+c:objc(pl)NFCFeliCaTag(im)requestResponseWithCompletionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagAsyncFailClosed	-
+c:objc(pl)NFCFeliCaTag(im)requestServiceV2WithNodeCodeList:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagCallbacksFailClosed	-
+c:objc(pl)NFCFeliCaTag(im)requestServiceWithNodeCodeList:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagCallbacksFailClosed	-
+c:objc(pl)NFCFeliCaTag(im)requestSpecificationVersionWithCompletionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagAsyncFailClosed	-
+c:objc(pl)NFCFeliCaTag(im)requestSystemCodeWithCompletionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagAsyncFailClosed	-
+c:objc(pl)NFCFeliCaTag(im)resetModeWithCompletionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagAsyncFailClosed	-
+c:objc(pl)NFCFeliCaTag(im)sendFeliCaCommandPacket:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagCallbacksFailClosed	-
+c:objc(pl)NFCFeliCaTag(im)writeWithoutEncryptionWithServiceCodeList:blockList:blockData:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagCallbacksFailClosed	-
+c:objc(pl)NFCFeliCaTag(py)currentIDm	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testHostTagProperties	-
+c:objc(pl)NFCFeliCaTag(py)currentSystemCode	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testHostTagProperties	-
+c:objc(pl)NFCISO15693Tag	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagAsyncFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)customCommandWithRequestFlag:customCommandCode:customRequestParameters:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)extendedLockBlockWithRequestFlags:blockNumber:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)extendedReadMultipleBlocksWithRequestFlags:blockRange:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)extendedReadSingleBlockWithRequestFlags:blockNumber:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)extendedWriteSingleBlockWithRequestFlags:blockNumber:dataBlock:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)getMultipleBlockSecurityStatusWithRequestFlag:blockRange:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)getSystemInfoWithRequestFlag:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)lockAFIWithRequestFlag:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)lockBlockWithRequestFlags:blockNumber:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)lockDFSIDWithRequestFlag:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)lockDSFIDWithRequestFlag:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)readMultipleBlocksWithConfiguration:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)readMultipleBlocksWithRequestFlags:blockRange:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)readSingleBlockWithRequestFlags:blockNumber:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)resetToReadyWithRequestFlags:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)selectWithRequestFlags:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)sendCustomCommandWithConfiguration:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)stayQuietWithCompletionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)writeAFIWithRequestFlag:afi:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)writeDSFIDWithRequestFlag:dsfid:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)writeMultipleBlocksWithRequestFlags:blockRange:dataBlocks:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(im)writeSingleBlockWithRequestFlags:blockNumber:dataBlock:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagCallbacksFailClosed	-
+c:objc(pl)NFCISO15693Tag(py)icManufacturerCode	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testHostTagProperties	-
+c:objc(pl)NFCISO15693Tag(py)icSerialNumber	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testHostTagProperties	-
+c:objc(pl)NFCISO15693Tag(py)identifier	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testHostTagProperties	-
+c:objc(pl)NFCISO7816Tag	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO7816TagFailClosed	-
+c:objc(pl)NFCISO7816Tag(im)sendCommandAPDU:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO7816TagFailClosed	-
+c:objc(pl)NFCISO7816Tag(py)applicationData	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testHostTagProperties	-
+c:objc(pl)NFCISO7816Tag(py)historicalBytes	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testHostTagProperties	-
+c:objc(pl)NFCISO7816Tag(py)identifier	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testHostTagProperties	-
+c:objc(pl)NFCISO7816Tag(py)initialSelectedAID	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testHostTagProperties	-
+c:objc(pl)NFCISO7816Tag(py)proprietaryApplicationDataCoding	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testHostTagProperties	-
+c:objc(pl)NFCMiFareTag	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testMiFareTagFailClosed	-
+c:objc(pl)NFCMiFareTag(im)sendMiFareCommand:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testMiFareTagFailClosed	-
+c:objc(pl)NFCMiFareTag(im)sendMiFareISO7816Command:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testMiFareTagFailClosed	-
+c:objc(pl)NFCMiFareTag(py)historicalBytes	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testHostTagProperties	-
+c:objc(pl)NFCMiFareTag(py)identifier	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testHostTagProperties	-
+c:objc(pl)NFCMiFareTag(py)mifareFamily	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testHostTagProperties	-
+c:objc(pl)NFCNDEFReaderSessionDelegate	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionFailClosed	-
+c:objc(pl)NFCNDEFReaderSessionDelegate(im)readerSession:didDetectNDEFs:	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionFailClosed	-
+c:objc(pl)NFCNDEFReaderSessionDelegate(im)readerSession:didDetectTags:	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFDelegateDefaults	-
+c:objc(pl)NFCNDEFReaderSessionDelegate(im)readerSession:didInvalidateWithError:	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionFailClosed	-
+c:objc(pl)NFCNDEFReaderSessionDelegate(im)readerSessionDidBecomeActive:	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFDelegateDefaults	-
+c:objc(pl)NFCNDEFTag	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testNDEFTagFailClosed	-
+c:objc(pl)NFCNDEFTag(im)queryNDEFStatusWithCompletionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testNDEFTagFailClosed	-
+c:objc(pl)NFCNDEFTag(im)readNDEFWithCompletionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testNDEFTagFailClosed	-
+c:objc(pl)NFCNDEFTag(im)writeLockWithCompletionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testNDEFTagFailClosed	-
+c:objc(pl)NFCNDEFTag(im)writeNDEF:completionHandler:	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testNDEFTagFailClosed	-
+c:objc(pl)NFCNDEFTag(py)available	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testNDEFTagFailClosed	-
+c:objc(pl)NFCReaderSession	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionFailClosed	-
+c:objc(pl)NFCReaderSession(im)beginSession	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionFailClosed	-
+c:objc(pl)NFCReaderSession(im)invalidateSession	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testReaderSessionInvalidate	-
+c:objc(pl)NFCReaderSession(im)invalidateSessionWithErrorMessage:	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testReaderSessionInvalidate	-
+c:objc(pl)NFCReaderSession(py)alertMessage	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionFailClosed	-
+c:objc(pl)NFCReaderSession(py)ready	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testNDEFReaderSessionFailClosed	-
+c:objc(pl)NFCVASReaderSessionDelegate	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testVASReaderSession	-
+c:objc(pl)NFCVASReaderSessionDelegate(im)readerSession:didInvalidateWithError:	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testVASReaderSession	-
+c:objc(pl)NFCVASReaderSessionDelegate(im)readerSession:didReceiveVASResponses:	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testVASReaderSession	-
+c:objc(pl)NFCVASReaderSessionDelegate(im)readerSessionDidBecomeActive:	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testVASDelegateDefault	-
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@NFCReaderError	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCErrorDomainStrings	-
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@NFCReaderError	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorConstruction	-
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@NFCReaderError	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorConstruction	-
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@NFCReaderError	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorPatternMatch	-
 s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@NFCReaderError	deferred		Linux implements CustomNSError + Hashable, not Darwin _BridgedStoredNSError bridging
 s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCReaderError	deferred		Linux implements CustomNSError + Hashable, not Darwin _BridgedStoredNSError bridging
 s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@NFCReaderError	deferred		Linux implements CustomNSError + Hashable, not Darwin _BridgedStoredNSError bridging
@@ -284,305 +284,305 @@ s:14_CoreNFC_UIKit19NFCWindowSceneEventO6encode2toys7Encoder_p_tKF	deferred		UIK
 s:14_CoreNFC_UIKit19NFCWindowSceneEventO9hashValueSivp	deferred		UIKit overlay; UIKit is not a declared dependency of this seed
 s:14_CoreNFC_UIKit22NFCWindowSceneDelegateP	deferred		UIKit overlay; UIKit is not a declared dependency of this seed
 s:14_CoreNFC_UIKit22NFCWindowSceneDelegateP06windowE0_010didReceivedE5EventySo08UIWindowE0C_AA0deJ0OtF	deferred		UIKit overlay; UIKit is not a declared dependency of this seed
-s:7CoreNFC11CardSessionC	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC10invalidateyyF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC10isEligibleSbvpZ	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC11EventStreamC	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC11EventStreamC13AsyncIteratora	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC11EventStreamC17makeAsyncIteratorAE0I0CyF	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC11EventStreamC7Elementa	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC11EventStreamC8IteratorC	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC11EventStreamC8IteratorC4nextAC0E0OSgyYaKF	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC11EventStreamC8IteratorC7Elementa	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC11eventStreamAC05EventF0Cvp	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC11isSupportedSbvpZ	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC12alertMessageSSvp	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC13stopEmulation6statusyAC0F8UIStatusO_tYaF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC14startEmulationyyYaKF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC17EmulationUIStatusO	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC17EmulationUIStatusO2eeoiySbAE_AEtFZ	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC17EmulationUIStatusO4hash4intoys6HasherVz_tF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC17EmulationUIStatusO7failureyA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC17EmulationUIStatusO7successyA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC17EmulationUIStatusO9hashValueSivp	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC21isEmulationInProgressSbvp	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC4APDUC	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC4APDUC16debugDescriptionSSvp	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC4APDUC2eeoiySbAE_AEtFZ	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC4APDUC7payload10Foundation4DataVvp	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC4APDUC7respond8responsey10Foundation4DataV_tYaKF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5ErrorO	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC5ErrorO012transmissionE0yA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5ErrorO03maxD15DurationReachedyA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5ErrorO11invalidatedyA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5ErrorO13radioDisabledyA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5ErrorO15userInvalidatedyA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5ErrorO16emulationStoppedyA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5ErrorO17accessNotAcceptedyA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5ErrorO18systemNotAvailableyA2EmF	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC5ErrorO23systemEligibilityFailedyA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5ErrorO2eeoiySbAE_AEtFZ	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC11CardSessionC5ErrorO4hash4intoys6HasherVz_tF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5ErrorO9hashValueSivp	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5EventO	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5EventO14readerDetectedyA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5EventO14sessionStartedyA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5EventO16readerDeselectedyA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5EventO18sessionInvalidatedyAeC5ErrorO_tcAEmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionC5EventO8receivedyAeC4APDUCcAEmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC11CardSessionCACyYaKcfc	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC19NFCFeliCaStatusFlagV	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC19NFCFeliCaStatusFlagV11statusFlag1Sivp	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC19NFCFeliCaStatusFlagV11statusFlag2Sivp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC21NFCISO15693SystemInfoV	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC21NFCISO15693SystemInfoV11icReferenceSivp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC21NFCISO15693SystemInfoV11totalBlocksSivp	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC21NFCISO15693SystemInfoV16uniqueIdentifier10Foundation4DataVvp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC21NFCISO15693SystemInfoV27applicationFamilyIdentifierSivp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC21NFCISO15693SystemInfoV27dataStorageFormatIdentifierSivp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC21NFCISO15693SystemInfoV9blockSizeSivp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC22NFCISO7816ResponseAPDUV	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC22NFCISO7816ResponseAPDUV11statusWord1s5UInt8Vvp	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC22NFCISO7816ResponseAPDUV11statusWord2s5UInt8Vvp	declared	full/corenfc/NFCISO7816.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC22NFCISO7816ResponseAPDUV7payload10Foundation4DataVSgvp	declared	full/corenfc/NFCISO7816.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC24NFCFeliCaPollingResponseV	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC24NFCFeliCaPollingResponseV11requestData10Foundation0H0VSgvp	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC24NFCFeliCaPollingResponseV20manufactureParameter10Foundation4DataVvp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC27NFCTagReaderSessionDelegateP	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC27NFCTagReaderSessionDelegateP03tagdE0_22didInvalidateWithErrorySo0cdE0C_s0K0_ptF	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC27NFCTagReaderSessionDelegateP03tagdE0_9didDetectySo0cdE0C_SayAA0C0OGtF	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC27NFCTagReaderSessionDelegateP03tagdE15DidBecomeActiveyySo0cdE0CF	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC29NFCPresentmentIntentAssertionC	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO18systemNotAvailableyA2EmF	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO23systemEligibilityFailedyA2EmF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO2eeoiySbAE_AEtFZ	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO4hash4intoys6HasherVz_tF	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO9hashValueSivp	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC29NFCPresentmentIntentAssertionC7acquireACyYaKFZ	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC29NFCPresentmentIntentAssertionC7isValidSbvp	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC33NFCFeliCaRequsetServiceV2ResponseV	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC33NFCFeliCaRequsetServiceV2ResponseV11statusFlag1Sivp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC33NFCFeliCaRequsetServiceV2ResponseV11statusFlag2Sivp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC33NFCFeliCaRequsetServiceV2ResponseV20encryptionIdentifierSo0cD12EncryptionIdVvp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC33NFCFeliCaRequsetServiceV2ResponseV21nodeKeyVersionListAESSay10Foundation4DataVGSgvp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC33NFCFeliCaRequsetServiceV2ResponseV21nodeKeyVersionListDESSay10Foundation4DataVGSgvp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC38NFCISO15693MultipleBlockSecurityStatusV	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC38NFCISO15693MultipleBlockSecurityStatusV05blockfG0SaySiGvp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC44NFCFeliCaRequestSpecificationVersionResponseV	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC44NFCFeliCaRequestSpecificationVersionResponseV05basicG010Foundation4DataVSgvp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC44NFCFeliCaRequestSpecificationVersionResponseV06optionG010Foundation4DataVSgvp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC44NFCFeliCaRequestSpecificationVersionResponseV11statusFlag1Sivp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC44NFCFeliCaRequestSpecificationVersionResponseV11statusFlag2Sivp	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:7CoreNFC6NFCTagO	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC6NFCTagO11isAvailableSbvp	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC6NFCTagO6feliCayACSo07NFCFeliE3Tag_pcACmF	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC6NFCTagO6miFareyACSo05NFCMiE3Tag_pcACmF	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC6NFCTagO7iso7816yACSo13NFCISO7816Tag_pcACmF	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:7CoreNFC6NFCTagO8iso15693yACSo14NFCISO15693Tag_pcACmF	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:SC14NFCReaderErrorLeV	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:SC14NFCReaderErrorLeV016readerTransceiveB13PacketTooLongSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV016readerTransceiveB13RetryExceededSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV016readerTransceiveB15TagNotConnectedSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV016readerTransceiveB17TagConnectionLostSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV016readerTransceiveB18SessionInvalidatedSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV016readerTransceiveb11TagResponseB0SoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV017ndefReaderSessionB14TagNotWritableSoAAVvpZ	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV017ndefReaderSessionB15TagSizeTooSmallSoAAVvpZ	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV017ndefReaderSessionB16TagUpdateFailureSoAAVvpZ	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV017ndefReaderSessionB17ZeroLengthMessageSoAAVvpZ	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:SC14NFCReaderErrorLeV023tagCommandConfigurationB17InvalidParametersSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV025readerSessionInvalidationB12SystemIsBusySoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV025readerSessionInvalidationB12UserCanceledSoAAVvpZ	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:SC14NFCReaderErrorLeV025readerSessionInvalidationB16FirstNDEFTagReadSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV025readerSessionInvalidationbD22TerminatedUnexpectedlySoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV025readerSessionInvalidationbD7TimeoutSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV06readerB10IneligibleSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV06readerB13RadioDisabledSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV06readerB16InvalidParameterSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV06readerB17AccessNotAcceptedSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV06readerB17SecurityViolationSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV06readerB18UnsupportedFeatureSoAAVvpZ	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:SC14NFCReaderErrorLeV06readerB19ParameterOutOfBoundSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV06readerB22InvalidParameterLengthSoAAVvpZ	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SC14NFCReaderErrorLeV11errorDomainSSvpZ	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCFeliCaEncryptionId	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCFeliCaPollingRequestCode	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCFeliCaPollingTimeSlot	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCMiFareFamily	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCNDEFStatus	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCReaderError	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCTypeNameFormat	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCVASErrorCode	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCVASMode	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
+s:7CoreNFC11CardSessionC	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionUnsupported	-
+s:7CoreNFC11CardSessionC10invalidateyyF	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionEmulationFailClosed	-
+s:7CoreNFC11CardSessionC10isEligibleSbvpZ	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionUnsupported	-
+s:7CoreNFC11CardSessionC11EventStreamC	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionEventStream	-
+s:7CoreNFC11CardSessionC11EventStreamC13AsyncIteratora	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionEventStream	-
+s:7CoreNFC11CardSessionC11EventStreamC17makeAsyncIteratorAE0I0CyF	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionEventStream	-
+s:7CoreNFC11CardSessionC11EventStreamC7Elementa	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionEventStream	-
+s:7CoreNFC11CardSessionC11EventStreamC8IteratorC	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionEventStream	-
+s:7CoreNFC11CardSessionC11EventStreamC8IteratorC4nextAC0E0OSgyYaKF	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionEventStream	-
+s:7CoreNFC11CardSessionC11EventStreamC8IteratorC7Elementa	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionEventStream	-
+s:7CoreNFC11CardSessionC11eventStreamAC05EventF0Cvp	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionEventStream	-
+s:7CoreNFC11CardSessionC11isSupportedSbvpZ	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionUnsupported	-
+s:7CoreNFC11CardSessionC12alertMessageSSvp	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionEmulationFailClosed	-
+s:7CoreNFC11CardSessionC13stopEmulation6statusyAC0F8UIStatusO_tYaF	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionEmulationFailClosed	-
+s:7CoreNFC11CardSessionC14startEmulationyyYaKF	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionEmulationFailClosed	-
+s:7CoreNFC11CardSessionC17EmulationUIStatusO	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionEmulationUIStatus	-
+s:7CoreNFC11CardSessionC17EmulationUIStatusO2eeoiySbAE_AEtFZ	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionEmulationUIStatus	-
+s:7CoreNFC11CardSessionC17EmulationUIStatusO4hash4intoys6HasherVz_tF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionEmulationUIStatus	-
+s:7CoreNFC11CardSessionC17EmulationUIStatusO7failureyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionEmulationUIStatus	-
+s:7CoreNFC11CardSessionC17EmulationUIStatusO7successyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionEmulationUIStatus	-
+s:7CoreNFC11CardSessionC17EmulationUIStatusO9hashValueSivp	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionEmulationUIStatus	-
+s:7CoreNFC11CardSessionC21isEmulationInProgressSbvp	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionEmulationFailClosed	-
+s:7CoreNFC11CardSessionC4APDUC	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionAPDU	-
+s:7CoreNFC11CardSessionC4APDUC16debugDescriptionSSvp	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionAPDU	-
+s:7CoreNFC11CardSessionC4APDUC2eeoiySbAE_AEtFZ	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionAPDU	-
+s:7CoreNFC11CardSessionC4APDUC7payload10Foundation4DataVvp	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionAPDU	-
+s:7CoreNFC11CardSessionC4APDUC7respond8responsey10Foundation4DataV_tYaKF	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionAPDU	-
+s:7CoreNFC11CardSessionC5ErrorO	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:7CoreNFC11CardSessionC5ErrorO012transmissionE0yA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:7CoreNFC11CardSessionC5ErrorO03maxD15DurationReachedyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:7CoreNFC11CardSessionC5ErrorO11invalidatedyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:7CoreNFC11CardSessionC5ErrorO13radioDisabledyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:7CoreNFC11CardSessionC5ErrorO15userInvalidatedyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:7CoreNFC11CardSessionC5ErrorO16emulationStoppedyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:7CoreNFC11CardSessionC5ErrorO17accessNotAcceptedyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:7CoreNFC11CardSessionC5ErrorO18systemNotAvailableyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:7CoreNFC11CardSessionC5ErrorO23systemEligibilityFailedyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:7CoreNFC11CardSessionC5ErrorO2eeoiySbAE_AEtFZ	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:7CoreNFC11CardSessionC5ErrorO4hash4intoys6HasherVz_tF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:7CoreNFC11CardSessionC5ErrorO9hashValueSivp	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:7CoreNFC11CardSessionC5EventO	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionEventCases	-
+s:7CoreNFC11CardSessionC5EventO14readerDetectedyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionEventCases	-
+s:7CoreNFC11CardSessionC5EventO14sessionStartedyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionEventCases	-
+s:7CoreNFC11CardSessionC5EventO16readerDeselectedyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionEventCases	-
+s:7CoreNFC11CardSessionC5EventO18sessionInvalidatedyAeC5ErrorO_tcAEmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionEventCases	-
+s:7CoreNFC11CardSessionC5EventO8receivedyAeC4APDUCcAEmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionEventCases	-
+s:7CoreNFC11CardSessionCACyYaKcfc	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionUnsupported	-
+s:7CoreNFC19NFCFeliCaStatusFlagV	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaStatusFlag	-
+s:7CoreNFC19NFCFeliCaStatusFlagV11statusFlag1Sivp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaStatusFlag	-
+s:7CoreNFC19NFCFeliCaStatusFlagV11statusFlag2Sivp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaStatusFlag	-
+s:7CoreNFC21NFCISO15693SystemInfoV	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCISO15693SystemInfo	-
+s:7CoreNFC21NFCISO15693SystemInfoV11icReferenceSivp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCISO15693SystemInfo	-
+s:7CoreNFC21NFCISO15693SystemInfoV11totalBlocksSivp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCISO15693SystemInfo	-
+s:7CoreNFC21NFCISO15693SystemInfoV16uniqueIdentifier10Foundation4DataVvp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCISO15693SystemInfo	-
+s:7CoreNFC21NFCISO15693SystemInfoV27applicationFamilyIdentifierSivp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCISO15693SystemInfo	-
+s:7CoreNFC21NFCISO15693SystemInfoV27dataStorageFormatIdentifierSivp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCISO15693SystemInfo	-
+s:7CoreNFC21NFCISO15693SystemInfoV9blockSizeSivp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCISO15693SystemInfo	-
+s:7CoreNFC22NFCISO7816ResponseAPDUV	implemented	test:full/corenfc/tests/agent/NFCISO7816Tests.swift#testNFCISO7816ResponseAPDU	-
+s:7CoreNFC22NFCISO7816ResponseAPDUV11statusWord1s5UInt8Vvp	implemented	test:full/corenfc/tests/agent/NFCISO7816Tests.swift#testNFCISO7816ResponseAPDU	-
+s:7CoreNFC22NFCISO7816ResponseAPDUV11statusWord2s5UInt8Vvp	implemented	test:full/corenfc/tests/agent/NFCISO7816Tests.swift#testNFCISO7816ResponseAPDU	-
+s:7CoreNFC22NFCISO7816ResponseAPDUV7payload10Foundation4DataVSgvp	implemented	test:full/corenfc/tests/agent/NFCISO7816Tests.swift#testNFCISO7816ResponseAPDU	-
+s:7CoreNFC24NFCFeliCaPollingResponseV	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaPollingResponse	-
+s:7CoreNFC24NFCFeliCaPollingResponseV11requestData10Foundation0H0VSgvp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaPollingResponse	-
+s:7CoreNFC24NFCFeliCaPollingResponseV20manufactureParameter10Foundation4DataVvp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaPollingResponse	-
+s:7CoreNFC27NFCTagReaderSessionDelegateP	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testTagReaderSessionHostConnectFails	-
+s:7CoreNFC27NFCTagReaderSessionDelegateP03tagdE0_22didInvalidateWithErrorySo0cdE0C_s0K0_ptF	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testTagReaderSessionHostConnectFails	-
+s:7CoreNFC27NFCTagReaderSessionDelegateP03tagdE0_9didDetectySo0cdE0C_SayAA0C0OGtF	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testTagReaderSessionHostConnectFails	-
+s:7CoreNFC27NFCTagReaderSessionDelegateP03tagdE15DidBecomeActiveyySo0cdE0CF	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testTagReaderSessionDelegateDidBecomeActive	-
+s:7CoreNFC29NFCPresentmentIntentAssertionC	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testPresentmentIntentAssertion	-
+s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testPresentmentIntentAssertionErrorCases	-
+s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO18systemNotAvailableyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testPresentmentIntentAssertionErrorCases	-
+s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO23systemEligibilityFailedyA2EmF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testPresentmentIntentAssertionErrorCases	-
+s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO2eeoiySbAE_AEtFZ	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testPresentmentIntentAssertionErrorCases	-
+s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO4hash4intoys6HasherVz_tF	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testPresentmentIntentAssertionErrorCases	-
+s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO9hashValueSivp	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testPresentmentIntentAssertionErrorCases	-
+s:7CoreNFC29NFCPresentmentIntentAssertionC7acquireACyYaKFZ	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testPresentmentIntentAssertion	-
+s:7CoreNFC29NFCPresentmentIntentAssertionC7isValidSbvp	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testPresentmentIntentAssertion	-
+s:7CoreNFC33NFCFeliCaRequsetServiceV2ResponseV	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaRequsetServiceV2Response	-
+s:7CoreNFC33NFCFeliCaRequsetServiceV2ResponseV11statusFlag1Sivp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaRequsetServiceV2Response	-
+s:7CoreNFC33NFCFeliCaRequsetServiceV2ResponseV11statusFlag2Sivp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaRequsetServiceV2Response	-
+s:7CoreNFC33NFCFeliCaRequsetServiceV2ResponseV20encryptionIdentifierSo0cD12EncryptionIdVvp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaRequsetServiceV2Response	-
+s:7CoreNFC33NFCFeliCaRequsetServiceV2ResponseV21nodeKeyVersionListAESSay10Foundation4DataVGSgvp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaRequsetServiceV2Response	-
+s:7CoreNFC33NFCFeliCaRequsetServiceV2ResponseV21nodeKeyVersionListDESSay10Foundation4DataVGSgvp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaRequsetServiceV2Response	-
+s:7CoreNFC38NFCISO15693MultipleBlockSecurityStatusV	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCISO15693MultipleBlockSecurityStatus	-
+s:7CoreNFC38NFCISO15693MultipleBlockSecurityStatusV05blockfG0SaySiGvp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCISO15693MultipleBlockSecurityStatus	-
+s:7CoreNFC44NFCFeliCaRequestSpecificationVersionResponseV	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaRequestSpecificationVersionResponse	-
+s:7CoreNFC44NFCFeliCaRequestSpecificationVersionResponseV05basicG010Foundation4DataVSgvp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaRequestSpecificationVersionResponse	-
+s:7CoreNFC44NFCFeliCaRequestSpecificationVersionResponseV06optionG010Foundation4DataVSgvp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaRequestSpecificationVersionResponse	-
+s:7CoreNFC44NFCFeliCaRequestSpecificationVersionResponseV11statusFlag1Sivp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaRequestSpecificationVersionResponse	-
+s:7CoreNFC44NFCFeliCaRequestSpecificationVersionResponseV11statusFlag2Sivp	implemented	test:full/corenfc/tests/agent/NFCValueTypeTests.swift#testNFCFeliCaRequestSpecificationVersionResponse	-
+s:7CoreNFC6NFCTagO	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testNFCTagCases	-
+s:7CoreNFC6NFCTagO11isAvailableSbvp	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testNFCTagCases	-
+s:7CoreNFC6NFCTagO6feliCayACSo07NFCFeliE3Tag_pcACmF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testNFCTagCases	-
+s:7CoreNFC6NFCTagO6miFareyACSo05NFCMiE3Tag_pcACmF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testNFCTagCases	-
+s:7CoreNFC6NFCTagO7iso7816yACSo13NFCISO7816Tag_pcACmF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testNFCTagCases	-
+s:7CoreNFC6NFCTagO8iso15693yACSo14NFCISO15693Tag_pcACmF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testNFCTagCases	-
+s:SC14NFCReaderErrorLeV	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV016readerTransceiveB13PacketTooLongSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV016readerTransceiveB13RetryExceededSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV016readerTransceiveB15TagNotConnectedSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV016readerTransceiveB17TagConnectionLostSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV016readerTransceiveB18SessionInvalidatedSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV016readerTransceiveb11TagResponseB0SoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV017ndefReaderSessionB14TagNotWritableSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV017ndefReaderSessionB15TagSizeTooSmallSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV017ndefReaderSessionB16TagUpdateFailureSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV017ndefReaderSessionB17ZeroLengthMessageSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV023tagCommandConfigurationB17InvalidParametersSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV025readerSessionInvalidationB12SystemIsBusySoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV025readerSessionInvalidationB12UserCanceledSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV025readerSessionInvalidationB16FirstNDEFTagReadSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV025readerSessionInvalidationbD22TerminatedUnexpectedlySoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV025readerSessionInvalidationbD7TimeoutSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV06readerB10IneligibleSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV06readerB13RadioDisabledSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV06readerB16InvalidParameterSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV06readerB17AccessNotAcceptedSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV06readerB17SecurityViolationSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV06readerB18UnsupportedFeatureSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV06readerB19ParameterOutOfBoundSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV06readerB22InvalidParameterLengthSoAAVvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorStaticCodeProperties	NFCReaderError.Code statics
+s:SC14NFCReaderErrorLeV11errorDomainSSvpZ	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCErrorDomainStrings	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCFeliCaEncryptionId	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaEncryptionIdRawValues	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCFeliCaPollingRequestCode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingRequestCodeRawValues	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCFeliCaPollingTimeSlot	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagMembers	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCMiFareFamily	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCMiFareFamilyRawValues	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCNDEFStatus	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCNDEFStatusRawValues	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionMembers	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCReaderError	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCTypeNameFormat	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCTypeNameFormatRawValues	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCVASErrorCode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NFCVASMode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASModeRawValues	synthesized Equatable
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:14_CoreNFC_UIKit19NFCWindowSceneEventO	deferred		UIKit overlay; UIKit is not a declared dependency of this seed
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7CoreNFC11CardSessionC17EmulationUIStatusO	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7CoreNFC11CardSessionC4APDUC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7CoreNFC11CardSessionC5ErrorO	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCFeliCaEncryptionId	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCFeliCaPollingRequestCode	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCFeliCaPollingTimeSlot	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCMiFareFamily	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCNDEFStatus	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCReaderError	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCTypeNameFormat	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCVASErrorCode	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCVASMode	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCFeliCaEncryptionId	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCFeliCaPollingRequestCode	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCFeliCaPollingTimeSlot	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCMiFareFamily	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCNDEFStatus	declared	full/corenfc/NFCNDEF.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCReaderError	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCTypeNameFormat	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCVASErrorCode	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCVASMode	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC8IteratorC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So10NFCVASModeV8rawValueABSgSi_tcfc	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So12NFCFeliCaTagP7CoreNFCE08sendFeliB7Command13commandPacket13resultHandlery10Foundation4DataV_ys6ResultOyAIs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So12NFCFeliCaTagP7CoreNFCE14requestService12nodeCodeList13resultHandlerySay10Foundation4DataVG_ys6ResultOyAJs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So12NFCFeliCaTagP7CoreNFCE15requestResponse13resultHandleryys6ResultOySis5Error_pGc_tF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So12NFCFeliCaTagP7CoreNFCE16requestServiceV212nodeCodeList13resultHandlerySay10Foundation4DataVG_ys6ResultOyAC0ab7RequsetgH8ResponseVs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So12NFCFeliCaTagP7CoreNFCE17requestSystemCode13resultHandleryys6ResultOySay10Foundation4DataVGs5Error_pGc_tF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So12NFCFeliCaTagP7CoreNFCE21readWithoutEncryption15serviceCodeList05blockK013resultHandlerySay10Foundation4DataVG_AKys6ResultOyAC0aB10StatusFlagV_AKts5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So12NFCFeliCaTagP7CoreNFCE22writeWithoutEncryption15serviceCodeList05blockK00L4Data13resultHandlerySay10Foundation0M0VG_A2Lys6ResultOyAC0aB10StatusFlagVs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So12NFCFeliCaTagP7CoreNFCE27requestSpecificationVersion13resultHandleryys6ResultOyAC0ab7RequestgH8ResponseVs5Error_pGc_tF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So12NFCFeliCaTagP7CoreNFCE7polling10systemCode07requestH08timeSlot13resultHandlery10Foundation4DataV_So0ab14PollingRequestH0VSo0abp4TimeK0Vys6ResultOyAC0abP8ResponseVs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So12NFCFeliCaTagP7CoreNFCE9resetMode13resultHandleryys6ResultOyAC0aB10StatusFlagVs5Error_pGc_tF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So12NFCMiFareTagP7CoreNFCE06sendMiB14ISO7816Command_13resultHandlerySo14NFCISO7816APDUC_ys6ResultOyAC0l8ResponseM0Vs5Error_pGctF	declared	full/corenfc/NFCISO7816.swift	compiles on Linux; behavior not exercised by the host runtime probe
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7CoreNFC11CardSessionC17EmulationUIStatusO	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionEmulationUIStatus	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7CoreNFC11CardSessionC4APDUC	implemented	test:full/corenfc/tests/agent/NFCCardSessionTests.swift#testCardSessionAPDU	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7CoreNFC11CardSessionC5ErrorO	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	synthesized Equatable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testPresentmentIntentAssertionErrorCases	synthesized Equatable
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCFeliCaEncryptionId	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaEncryptionIdRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCFeliCaPollingRequestCode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingRequestCodeRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCFeliCaPollingTimeSlot	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCMiFareFamily	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCMiFareFamilyRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCNDEFStatus	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCNDEFStatusRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCReaderError	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCTypeNameFormat	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCTypeNameFormatRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCVASErrorCode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NFCVASMode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASModeRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCFeliCaEncryptionId	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaEncryptionIdRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCFeliCaPollingRequestCode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingRequestCodeRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCFeliCaPollingTimeSlot	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCMiFareFamily	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCMiFareFamilyRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCNDEFStatus	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCNDEFStatusRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCReaderError	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCTypeNameFormat	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCTypeNameFormatRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCVASErrorCode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	synthesized Hashable
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NFCVASMode	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASModeRawValues	synthesized Hashable
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC8IteratorC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:7CoreNFC11CardSessionC11EventStreamC	declared	source:full/corenfc/CardSession.swift#EventStream	Swift stdlib AsyncSequence combinators; not CoreNFC-specific Linux behavior
+s:So10NFCVASModeV8rawValueABSgSi_tcfc	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASModeRawValues	-
+s:So12NFCFeliCaTagP7CoreNFCE08sendFeliB7Command13commandPacket13resultHandlery10Foundation4DataV_ys6ResultOyAIs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagResultHandlersFailClosed	-
+s:So12NFCFeliCaTagP7CoreNFCE14requestService12nodeCodeList13resultHandlerySay10Foundation4DataVG_ys6ResultOyAJs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagResultHandlersFailClosed	-
+s:So12NFCFeliCaTagP7CoreNFCE15requestResponse13resultHandleryys6ResultOySis5Error_pGc_tF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagResultHandlersFailClosed	-
+s:So12NFCFeliCaTagP7CoreNFCE16requestServiceV212nodeCodeList13resultHandlerySay10Foundation4DataVG_ys6ResultOyAC0ab7RequsetgH8ResponseVs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagResultHandlersFailClosed	-
+s:So12NFCFeliCaTagP7CoreNFCE17requestSystemCode13resultHandleryys6ResultOySay10Foundation4DataVGs5Error_pGc_tF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagResultHandlersFailClosed	-
+s:So12NFCFeliCaTagP7CoreNFCE21readWithoutEncryption15serviceCodeList05blockK013resultHandlerySay10Foundation4DataVG_AKys6ResultOyAC0aB10StatusFlagV_AKts5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagResultHandlersFailClosed	-
+s:So12NFCFeliCaTagP7CoreNFCE22writeWithoutEncryption15serviceCodeList05blockK00L4Data13resultHandlerySay10Foundation0M0VG_A2Lys6ResultOyAC0aB10StatusFlagVs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagResultHandlersFailClosed	-
+s:So12NFCFeliCaTagP7CoreNFCE27requestSpecificationVersion13resultHandleryys6ResultOyAC0ab7RequestgH8ResponseVs5Error_pGc_tF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagResultHandlersFailClosed	-
+s:So12NFCFeliCaTagP7CoreNFCE7polling10systemCode07requestH08timeSlot13resultHandlery10Foundation4DataV_So0ab14PollingRequestH0VSo0abp4TimeK0Vys6ResultOyAC0abP8ResponseVs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagResultHandlersFailClosed	-
+s:So12NFCFeliCaTagP7CoreNFCE9resetMode13resultHandleryys6ResultOyAC0aB10StatusFlagVs5Error_pGc_tF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testFeliCaTagResultHandlersFailClosed	-
+s:So12NFCMiFareTagP7CoreNFCE06sendMiB14ISO7816Command_13resultHandlerySo14NFCISO7816APDUC_ys6ResultOyAC0l8ResponseM0Vs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testMiFareTagFailClosed	-
 s:So12NFCMiFareTagP7CoreNFCE06sendMiB14ISO7816CommandyAC22NFCISO7816ResponseAPDUVSo0jL0CYaKF	deferred		Swift cannot overload sendMiFareISO7816Command(_:) by return type; Linux exposes the ObjC tuple result
-s:So12NFCMiFareTagP7CoreNFCE06sendMiB7Command13commandPacket13resultHandlery10Foundation4DataV_ys6ResultOyAIs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So13NFCISO7816TagP7CoreNFCE11sendCommand4apdu13resultHandlerySo0A4APDUC_ys6ResultOyAC0a8ResponseJ0Vs5Error_pGctF	declared	full/corenfc/NFCISO7816.swift	compiles on Linux; behavior not exercised by the host runtime probe
+s:So12NFCMiFareTagP7CoreNFCE06sendMiB7Command13commandPacket13resultHandlery10Foundation4DataV_ys6ResultOyAIs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testMiFareTagFailClosed	-
+s:So13NFCISO7816TagP7CoreNFCE11sendCommand4apdu13resultHandlerySo0A4APDUC_ys6ResultOyAC0a8ResponseJ0Vs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO7816TagFailClosed	-
 s:So13NFCISO7816TagP7CoreNFCE11sendCommand4apduAC0A12ResponseAPDUVSo0aI0C_tYaKF	deferred		Swift cannot overload sendCommand(apdu:) by return type; Linux exposes the ObjC tuple result
-s:So13NFCNDEFStatusV8rawValueABSgSu_tcfc	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE10readBuffer12requestFlags13resultHandlerySo0A11RequestFlagV_ys6ResultOySo0a8ResponseL0V_10Foundation4DataVts5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE10readBuffer12requestFlagsSo0A12ResponseFlagV_10Foundation4DataVtSo0a7RequestJ0V_tYaKF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE10systemInfo12requestFlagsAC0a6SystemF0VSo0A11RequestFlagV_tYaKF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE11sendRequest12requestFlags11commandCode4data13resultHandlerySi_Si10Foundation4DataVSgys6ResultOySo0A12ResponseFlagV_ALts5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE11sendRequest12requestFlags11commandCode4dataSo0A12ResponseFlagV_10Foundation4DataVSgtSi_SiAMtYaKF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE12authenticate12requestFlags21cryptoSuiteIdentifier7message13resultHandlerySo0A11RequestFlagV_Si10Foundation4DataVys6ResultOySo0a8ResponseO0V_AMts5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE12authenticate12requestFlags21cryptoSuiteIdentifier7messageSo0A12ResponseFlagV_10Foundation4DataVtSo0a7RequestM0V_SiALtYaKF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE13customCommand12requestFlags0eF4Code0E17RequestParameters13resultHandlerySo0aJ4FlagV_Si10Foundation4DataVys6ResultOyAMs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE13getSystemInfo12requestFlags13resultHandlerySo0A11RequestFlagV_ys6ResultOyAC0afG0Vs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE15readSingleBlock12requestFlags11blockNumber13resultHandlerySo0A11RequestFlagV_s5UInt8Vys6ResultOy10Foundation4DataVs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE18readMultipleBlocks12requestFlags10blockRange13resultHandlerySo0A11RequestFlagV_So8_NSRangeVys6ResultOySay10Foundation4DataVGs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE22fastReadMultipleBlocks12requestFlags10blockRange13resultHandlerySo0A11RequestFlagV_So8_NSRangeVys6ResultOySay10Foundation4DataVGs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE22fastReadMultipleBlocks12requestFlags10blockRangeSay10Foundation4DataVGSo0A11RequestFlagV_So8_NSRangeVtYaKF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE23extendedReadSingleBlock12requestFlags11blockNumber13resultHandlerySo0A11RequestFlagV_Siys6ResultOy10Foundation4DataVs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE27extendedWriteMultipleBlocks12requestFlags10blockRange04dataH017completionHandlerySo0A11RequestFlagV_So8_NSRangeVSay10Foundation4DataVGys5Error_pSgctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE27extendedWriteMultipleBlocks12requestFlags10blockRange04dataH0ySo0A11RequestFlagV_So8_NSRangeVSay10Foundation4DataVGtYaKF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE30extendedFastReadMultipleBlocks12requestFlags10blockRange13resultHandlerySo0A11RequestFlagV_So8_NSRangeVys6ResultOySay10Foundation4DataVGs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE30extendedFastReadMultipleBlocks12requestFlags10blockRangeSay10Foundation4DataVGSo0A11RequestFlagV_So8_NSRangeVtYaKF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE38extendedGetMultipleBlockSecurityStatus12requestFlags10blockRange13resultHandlerySo0A11RequestFlagV_So8_NSRangeVys6ResultOyAC0aghiJ0Vs5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE38extendedGetMultipleBlockSecurityStatus12requestFlags10blockRangeAC0aghiJ0VSo0A11RequestFlagV_So8_NSRangeVtYaKF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE9challenge12requestFlags21cryptoSuiteIdentifier7message17completionHandlerySo0A11RequestFlagV_Si10Foundation4DataVys5Error_pSgctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE9challenge12requestFlags21cryptoSuiteIdentifier7messageySo0A11RequestFlagV_Si10Foundation4DataVtYaKF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE9keyUpdate12requestFlags0E10Identifier7message13resultHandlerySo0A11RequestFlagV_Si10Foundation4DataVys6ResultOySo0a8ResponseN0V_AMts5Error_pGctF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCISO15693TagP7CoreNFCE9keyUpdate12requestFlags0E10Identifier7messageSo0A12ResponseFlagV_10Foundation4DataVtSo0a7RequestL0V_SiALtYaKF	declared	full/corenfc/NFCTags.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So14NFCNDEFPayloadC7CoreNFCE24wellKnownTypeTextPayloadSSSg_10Foundation6LocaleVSgtyF	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:So14NFCReaderErrorV8rawValueABSgSi_tcfc	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So15NFCMiFareFamilyV8rawValueABSgSu_tcfc	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:So15NFCVASErrorCodeV8rawValueABSgSi_tcfc	declared	full/corenfc/NFCConfiguration.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So16NFCPollingOptionV8rawValueABSi_tcfc	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So17NFCTypeNameFormatV8rawValueABSgs5UInt8V_tcfc	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:So19NFCTagReaderSessionC7CoreNFCE12connectedTagAC0A0OSgvp	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:So19NFCTagReaderSessionC7CoreNFCE13pollingOption8delegate5queueABSgSo010NFCPollingG0V_AC0abC8Delegate_pSo012OS_dispatch_I0CSgtcfc	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:So19NFCTagReaderSessionC7CoreNFCE7connect2to17completionHandleryAC0A0O_ys5Error_pSgctF	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So19NFCTagReaderSessionC7CoreNFCE7connect2toyAC0A0O_tYaKF	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So21NFCFeliCaEncryptionIdV8rawValueABSgSi_tcfc	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So22NFCISO15693RequestFlagV8rawValueABs5UInt8V_tcfc	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So23NFCISO15693ResponseFlagV8rawValueABs5UInt8V_tcfc	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:So24NFCFeliCaPollingTimeSlotV8rawValueABSgSi_tcfc	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
+s:So13NFCNDEFStatusV8rawValueABSgSu_tcfc	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCNDEFStatusRawValues	-
+s:So14NFCISO15693TagP7CoreNFCE10readBuffer12requestFlags13resultHandlerySo0A11RequestFlagV_ys6ResultOySo0a8ResponseL0V_10Foundation4DataVts5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE10readBuffer12requestFlagsSo0A12ResponseFlagV_10Foundation4DataVtSo0a7RequestJ0V_tYaKF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagOverlaysFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE10systemInfo12requestFlagsAC0a6SystemF0VSo0A11RequestFlagV_tYaKF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagOverlaysFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE11sendRequest12requestFlags11commandCode4data13resultHandlerySi_Si10Foundation4DataVSgys6ResultOySo0A12ResponseFlagV_ALts5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE11sendRequest12requestFlags11commandCode4dataSo0A12ResponseFlagV_10Foundation4DataVSgtSi_SiAMtYaKF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagOverlaysFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE12authenticate12requestFlags21cryptoSuiteIdentifier7message13resultHandlerySo0A11RequestFlagV_Si10Foundation4DataVys6ResultOySo0a8ResponseO0V_AMts5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE12authenticate12requestFlags21cryptoSuiteIdentifier7messageSo0A12ResponseFlagV_10Foundation4DataVtSo0a7RequestM0V_SiALtYaKF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagOverlaysFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE13customCommand12requestFlags0eF4Code0E17RequestParameters13resultHandlerySo0aJ4FlagV_Si10Foundation4DataVys6ResultOyAMs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE13getSystemInfo12requestFlags13resultHandlerySo0A11RequestFlagV_ys6ResultOyAC0afG0Vs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE15readSingleBlock12requestFlags11blockNumber13resultHandlerySo0A11RequestFlagV_s5UInt8Vys6ResultOy10Foundation4DataVs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE18readMultipleBlocks12requestFlags10blockRange13resultHandlerySo0A11RequestFlagV_So8_NSRangeVys6ResultOySay10Foundation4DataVGs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE22fastReadMultipleBlocks12requestFlags10blockRange13resultHandlerySo0A11RequestFlagV_So8_NSRangeVys6ResultOySay10Foundation4DataVGs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE22fastReadMultipleBlocks12requestFlags10blockRangeSay10Foundation4DataVGSo0A11RequestFlagV_So8_NSRangeVtYaKF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagOverlaysFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE23extendedReadSingleBlock12requestFlags11blockNumber13resultHandlerySo0A11RequestFlagV_Siys6ResultOy10Foundation4DataVs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE27extendedWriteMultipleBlocks12requestFlags10blockRange04dataH017completionHandlerySo0A11RequestFlagV_So8_NSRangeVSay10Foundation4DataVGys5Error_pSgctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE27extendedWriteMultipleBlocks12requestFlags10blockRange04dataH0ySo0A11RequestFlagV_So8_NSRangeVSay10Foundation4DataVGtYaKF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagOverlaysFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE30extendedFastReadMultipleBlocks12requestFlags10blockRange13resultHandlerySo0A11RequestFlagV_So8_NSRangeVys6ResultOySay10Foundation4DataVGs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE30extendedFastReadMultipleBlocks12requestFlags10blockRangeSay10Foundation4DataVGSo0A11RequestFlagV_So8_NSRangeVtYaKF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagOverlaysFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE38extendedGetMultipleBlockSecurityStatus12requestFlags10blockRange13resultHandlerySo0A11RequestFlagV_So8_NSRangeVys6ResultOyAC0aghiJ0Vs5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE38extendedGetMultipleBlockSecurityStatus12requestFlags10blockRangeAC0aghiJ0VSo0A11RequestFlagV_So8_NSRangeVtYaKF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagOverlaysFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE9challenge12requestFlags21cryptoSuiteIdentifier7message17completionHandlerySo0A11RequestFlagV_Si10Foundation4DataVys5Error_pSgctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE9challenge12requestFlags21cryptoSuiteIdentifier7messageySo0A11RequestFlagV_Si10Foundation4DataVtYaKF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagOverlaysFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE9keyUpdate12requestFlags0E10Identifier7message13resultHandlerySo0A11RequestFlagV_Si10Foundation4DataVys6ResultOySo0a8ResponseN0V_AMts5Error_pGctF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagResultHandlersFailClosed	-
+s:So14NFCISO15693TagP7CoreNFCE9keyUpdate12requestFlags0E10Identifier7messageSo0A12ResponseFlagV_10Foundation4DataVtSo0a7RequestL0V_SiALtYaKF	implemented	test:full/corenfc/tests/agent/NFCTagTests.swift#testISO15693TagOverlaysFailClosed	-
+s:So14NFCNDEFPayloadC7CoreNFCE24wellKnownTypeTextPayloadSSSg_10Foundation6LocaleVSgtyF	implemented	test:full/corenfc/tests/agent/NFCNDEFTests.swift#testNFCNDEFTextPayload	NDEF text TNF
+s:So14NFCReaderErrorV8rawValueABSgSi_tcfc	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorCodeRawValues	-
+s:So15NFCMiFareFamilyV8rawValueABSgSu_tcfc	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCMiFareFamilyRawValues	-
+s:So15NFCVASErrorCodeV8rawValueABSgSi_tcfc	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCVASErrorCodeRawValues	-
+s:So16NFCPollingOptionV8rawValueABSi_tcfc	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionMembers	-
+s:So17NFCTypeNameFormatV8rawValueABSgs5UInt8V_tcfc	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCTypeNameFormatRawValues	-
+s:So19NFCTagReaderSessionC7CoreNFCE12connectedTagAC0A0OSgvp	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testTagReaderSessionHostConnectFails	-
+s:So19NFCTagReaderSessionC7CoreNFCE13pollingOption8delegate5queueABSgSo010NFCPollingG0V_AC0abC8Delegate_pSo012OS_dispatch_I0CSgtcfc	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testTagReaderSessionInitNil	-
+s:So19NFCTagReaderSessionC7CoreNFCE7connect2to17completionHandleryAC0A0O_ys5Error_pSgctF	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testTagReaderSessionHostConnectFails	-
+s:So19NFCTagReaderSessionC7CoreNFCE7connect2toyAC0A0O_tYaKF	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testTagReaderSessionHostConnectFails	-
+s:So21NFCFeliCaEncryptionIdV8rawValueABSgSi_tcfc	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaEncryptionIdRawValues	-
+s:So22NFCISO15693RequestFlagV8rawValueABs5UInt8V_tcfc	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagMembers	-
+s:So23NFCISO15693ResponseFlagV8rawValueABs5UInt8V_tcfc	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagMembers	-
+s:So24NFCFeliCaPollingTimeSlotV8rawValueABSgSi_tcfc	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingTimeSlotRawValues	-
 s:So24UISceneConnectionOptionsC14_CoreNFC_UIKitE8nfcEventAC014NFCWindowSceneH0OSgvp	deferred		UIKit overlay; UIKit is not a declared dependency of this seed
-s:So26NFCPaymentTagReaderSessionC7CoreNFCE8delegate5queueAbC06NFCTagcD8Delegate_p_So012OS_dispatch_H0CSgtcfc	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:So27NFCFeliCaPollingRequestCodeV8rawValueABSgSi_tcfc	declared	full/corenfc/NFCValueTypes.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@NFCReaderError	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:7CoreNFC11CardSessionC5ErrorO	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO	declared	full/corenfc/CardSession.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	tests/agent/CoreNFCRuntime.swift	exercised by isolated host runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	declared	full/corenfc/CoreNFC.swift	compiles on Linux; behavior not exercised by the host runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NFCPollingOption	declared	full/corenfc/NFCSessions.swift	compiles on Linux; behavior not exercised by the host runtime probe
+s:So26NFCPaymentTagReaderSessionC7CoreNFCE8delegate5queueAbC06NFCTagcD8Delegate_p_So012OS_dispatch_H0CSgtcfc	implemented	test:full/corenfc/tests/agent/NFCSessionTests.swift#testPaymentTagReaderSession	-
+s:So27NFCFeliCaPollingRequestCodeV8rawValueABSgSi_tcfc	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testNFCFeliCaPollingRequestCodeRawValues	-
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@NFCReaderError	implemented	test:full/corenfc/tests/agent/NFCErrorTests.swift#testNFCReaderErrorConstruction	-
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:7CoreNFC11CardSessionC5ErrorO	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testCardSessionErrorCases	-
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:7CoreNFC29NFCPresentmentIntentAssertionC5ErrorO	implemented	test:full/corenfc/tests/agent/NFCEnumTests.swift#testPresentmentIntentAssertionErrorCases	-
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NFCISO15693RequestFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693RequestFlagAlgebra	OptionSet algebra
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NFCISO15693ResponseFlag	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCISO15693ResponseFlagAlgebra	OptionSet algebra
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NFCPollingOption	implemented	test:full/corenfc/tests/agent/NFCOptionSetTests.swift#testNFCPollingOptionAlgebra	OptionSet algebra

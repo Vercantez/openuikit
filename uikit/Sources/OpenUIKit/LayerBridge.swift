@@ -486,6 +486,7 @@ public enum LayerBridge {
             combine(&h, (pv.trackTintColor ?? UIColor.systemFill).resolvedCGColor(with: traits))
         case let key as _UIKeyboardKey:
             h.combine(key.kindFingerprint)
+            if let t = key.label?.text { h.combine(t) }
             combine(&h, (key.backgroundColor ?? .white).resolvedCGColor(with: traits))
         default:
             break

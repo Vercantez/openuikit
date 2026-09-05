@@ -16,6 +16,9 @@ open class MLModelConfiguration: NSObject, NSSecureCoding, Foundation.NSCopying 
 
     open var computeUnits: MLComputeUnits
     open var allowLowPrecisionAccumulationOnGPU: Bool
+    /// Metal is not linked by this isolated compile. The Apple overlay types this
+    /// as `(any MTLDevice)?`; Linux stores a nil object so clients observe no device.
+    open var preferredMetalDevice: AnyObject?
     open var functionName: String?
     open var modelDisplayName: String?
     open var parameters: [MLParameterKey: Any]?
@@ -24,6 +27,7 @@ open class MLModelConfiguration: NSObject, NSSecureCoding, Foundation.NSCopying 
     public override init() {
         self.computeUnits = .all
         self.allowLowPrecisionAccumulationOnGPU = false
+        self.preferredMetalDevice = nil
         self.functionName = nil
         self.modelDisplayName = nil
         self.parameters = nil
@@ -41,6 +45,7 @@ open class MLModelConfiguration: NSObject, NSSecureCoding, Foundation.NSCopying 
         let copied = MLModelConfiguration()
         copied.computeUnits = computeUnits
         copied.allowLowPrecisionAccumulationOnGPU = allowLowPrecisionAccumulationOnGPU
+        copied.preferredMetalDevice = preferredMetalDevice
         copied.functionName = functionName
         copied.modelDisplayName = modelDisplayName
         copied.parameters = parameters
@@ -78,7 +83,7 @@ open class MLState: NSObject {
 }
 
 open class MLModelAsset: NSObject {
-    private let sourceURL: URL?
+    let sourceURL: URL?
     private let specificationData: Data?
 
     public convenience init(url compiledModelURL: URL) throws {
@@ -148,14 +153,16 @@ open class MLModelAsset: NSObject {
 open class MLModel: NSObject {
     public let configuration: MLModelConfiguration
     public let modelDescription: MLModelDescription
+    let compiled: CoreMLCompiledModel?
 
     public static var availableComputeDevices: [MLComputeDevice] {
         MLComputeDevice.allComputeDevices
     }
 
-    init(configuration: MLModelConfiguration, modelDescription: MLModelDescription) {
+    init(configuration: MLModelConfiguration, modelDescription: MLModelDescription, compiled: CoreMLCompiledModel? = nil) {
         self.configuration = configuration
         self.modelDescription = modelDescription
+        self.compiled = compiled
         super.init()
     }
 
@@ -168,11 +175,11 @@ open class MLModel: NSObject {
     }
 
     public init(contentsOf url: URL, configuration: MLModelConfiguration) throws {
-        _ = url
+        let spec = try CoreMLModelCodec.load(contentsOf: url)
         self.configuration = configuration
-        self.modelDescription = MLModelDescription()
+        self.modelDescription = spec.description
+        self.compiled = spec
         super.init()
-        throw coreMLNoModelIO("MLModel.init(contentsOf:configuration:)")
     }
 
     public convenience init(contentsOfURL url: URL, configuration: MLModelConfiguration) throws {
@@ -184,10 +191,13 @@ open class MLModel: NSObject {
         configuration: MLModelConfiguration,
         completionHandler handler: @escaping (MLModel?, (any Error)?) -> Void
     ) {
-        _ = (asset, configuration)
-        let error = coreMLMissingModelLoad("MLModel.load(_:configuration:)")
-        coreMLDeliverCompletion {
-            handler(nil, error)
+        load(contentsOf: asset.sourceURL ?? URL(fileURLWithPath: "/tmp/missing.mlmodelc"), configuration: configuration) { result in
+            switch result {
+            case .success(let model):
+                handler(model, nil)
+            case .failure(let error):
+                handler(nil, error)
+            }
         }
     }
 
@@ -196,10 +206,13 @@ open class MLModel: NSObject {
         configuration: MLModelConfiguration = MLModelConfiguration(),
         completionHandler handler: @escaping (Result<MLModel, any Error>) -> Void
     ) {
-        _ = (url, configuration)
-        let error = coreMLMissingModelLoad("MLModel.load(contentsOf:configuration:)")
         coreMLDeliverCompletion {
-            handler(.failure(error))
+            do {
+                let model = try MLModel(contentsOf: url, configuration: configuration)
+                handler(.success(model))
+            } catch {
+                handler(.failure(coreMLMissingModelLoad("MLModel.load(contentsOf:configuration:)")))
+            }
         }
     }
 
@@ -213,8 +226,7 @@ open class MLModel: NSObject {
     }
 
     open class func compileModel(at modelURL: URL) throws -> URL {
-        _ = modelURL
-        throw coreMLNoModelIO("MLModel.compileModel(at:)")
+        try CoreMLModelCodec.compile(contentsOf: modelURL)
     }
 
     open class func compileModel(at modelURL: URL) async throws -> URL {
@@ -227,16 +239,20 @@ open class MLModel: NSObject {
         at url: URL,
         completionHandler handler: @escaping (Result<URL, any Error>) -> Void
     ) {
-        _ = url
-        let error = coreMLNoModelIO("MLModel.compileModel(at:completionHandler:)")
         coreMLDeliverCompletion {
-            handler(.failure(error))
+            do {
+                handler(.success(try compileModel(at: url)))
+            } catch {
+                handler(.failure(error))
+            }
         }
     }
 
     open func parameterValue(for key: MLParameterKey) throws -> Any {
-        _ = key
-        throw coreMLError(.parameters, "MLModel parameter lookup has no compiled model on Linux.")
+        if let value = configuration.parameters?[key] {
+            return value
+        }
+        throw coreMLError(.parameters, "MLModel has no value for parameter \(key.name).")
     }
 
     open func prediction(from input: any MLFeatureProvider) throws -> any MLFeatureProvider {
@@ -247,8 +263,10 @@ open class MLModel: NSObject {
         from input: any MLFeatureProvider,
         options: MLPredictionOptions
     ) throws -> any MLFeatureProvider {
-        _ = (input, options)
-        throw coreMLNoBackend("MLModel.prediction(from:options:)")
+        guard let compiled else {
+            throw coreMLNoBackend("MLModel.prediction(from:options:)")
+        }
+        return try coreMLPredict(compiled, from: input, options: options)
     }
 
     open func prediction(
@@ -263,8 +281,8 @@ open class MLModel: NSObject {
         using state: MLState,
         options: MLPredictionOptions
     ) throws -> any MLFeatureProvider {
-        _ = (inputFeatures, state, options)
-        throw coreMLNoBackend("MLModel.prediction(from:using:options:)")
+        _ = state
+        return try prediction(from: inputFeatures, options: options)
     }
 
     open func prediction(
@@ -272,16 +290,21 @@ open class MLModel: NSObject {
         using state: MLState,
         options: MLPredictionOptions = MLPredictionOptions()
     ) async throws -> any MLFeatureProvider {
-        _ = (input, state, options)
-        throw coreMLNoBackend("MLModel.prediction(from:using:options:)")
+        _ = state
+        guard let compiled else {
+            throw coreMLNoBackend("MLModel.prediction(from:using:options:)")
+        }
+        return try coreMLPredict(compiled, from: input, options: options)
     }
 
     open func prediction(
         from input: any MLFeatureProvider,
         options: MLPredictionOptions = MLPredictionOptions()
     ) async throws -> any MLFeatureProvider {
-        _ = (input, options)
-        throw coreMLNoBackend("MLModel.prediction(from:options:)")
+        guard let compiled else {
+            throw coreMLNoBackend("MLModel.prediction(from:options:)")
+        }
+        return try coreMLPredict(compiled, from: input, options: options)
     }
 
     open func prediction(from inputs: [String: MLTensor]) async throws -> [String: MLTensor] {
@@ -305,12 +328,24 @@ open class MLModel: NSObject {
         from inputBatch: any MLBatchProvider,
         options: MLPredictionOptions
     ) throws -> any MLBatchProvider {
-        _ = (inputBatch, options)
-        throw coreMLNoBackend("MLModel.predictions(from:options:)")
+        var rows: [any MLFeatureProvider] = []
+        rows.reserveCapacity(inputBatch.count)
+        for index in 0..<inputBatch.count {
+            rows.append(try prediction(from: inputBatch.features(at: index), options: options))
+        }
+        return MLArrayBatchProvider(array: rows)
     }
 
     open func makeState() -> MLState {
-        MLState()
+        var buffers: [String: MLMultiArray] = [:]
+        for (name, description) in modelDescription.stateDescriptionsByName {
+            let shape = description.stateConstraint?.bufferShape ?? [1]
+            let dataType = description.stateConstraint?.dataType ?? .float32
+            if let array = try? MLMultiArray(shape: shape.map { NSNumber(value: $0) }, dataType: dataType) {
+                buffers[name] = array
+            }
+        }
+        return MLState(buffers: buffers)
     }
 }
 

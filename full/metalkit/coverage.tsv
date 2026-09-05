@@ -1,125 +1,125 @@
 precise	status	evidence	notes
-c:@F@MTKMetalVertexDescriptorFromModelIO	deferred		ModelIO is not on main; vertex-descriptor conversion stays deferred.
-c:@F@MTKMetalVertexFormatFromModelIO	deferred		ModelIO is not on main; vertex-descriptor conversion stays deferred.
-c:@F@MTKModelIOVertexDescriptorFromMetal	deferred		ModelIO is not on main; vertex-descriptor conversion stays deferred.
-c:@F@MTKModelIOVertexFormatFromMetal	deferred		ModelIO is not on main; vertex-descriptor conversion stays deferred.
-c:@MTKModelErrorDomain	implemented	full/metalkit/MetalKit.swift;tests/agent/MetalKitRuntime.swift	String newtype with ObjC export-name raw values; Apple payload identity unobserved beyond those names
-c:@MTKModelErrorKey	implemented	full/metalkit/MetalKit.swift;tests/agent/MetalKitRuntime.swift	String newtype with ObjC export-name raw values; Apple payload identity unobserved beyond those names
-c:@MTKTextureLoaderCubeLayoutVertical	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderErrorDomain	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderErrorKey	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderOptionAllocateMipmaps	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderOptionCubeLayout	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderOptionGenerateMipmaps	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderOptionLoadAsArray	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderOptionOrigin	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderOptionSRGB	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderOptionTextureCPUCacheMode	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderOptionTextureStorageMode	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderOptionTextureUsage	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderOriginBottomLeft	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderOriginFlippedVertically	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@MTKTextureLoaderOriginTopLeft	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@T@MTKModelError	implemented	full/metalkit/MetalKit.swift;tests/agent/MetalKitRuntime.swift	String newtype with ObjC export-name raw values; Apple payload identity unobserved beyond those names
-c:@T@MTKTextureLoaderArrayCallback	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@T@MTKTextureLoaderCallback	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@T@MTKTextureLoaderCubeLayout	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@T@MTKTextureLoaderError	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@T@MTKTextureLoaderOption	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:@T@MTKTextureLoaderOrigin	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKMesh	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMesh(im)initWithMesh:device:error:	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMesh(py)name	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMesh(py)submeshes	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMesh(py)vertexBuffers	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMesh(py)vertexCount	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMesh(py)vertexDescriptor	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMeshBuffer	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMeshBuffer(im)zone	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMeshBuffer(py)allocator	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMeshBuffer(py)buffer	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMeshBuffer(py)length	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMeshBuffer(py)offset	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMeshBuffer(py)type	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMeshBufferAllocator	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMeshBufferAllocator(im)initWithDevice:	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKMeshBufferAllocator(py)device	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKSubmesh	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKSubmesh(py)indexBuffer	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKSubmesh(py)indexCount	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKSubmesh(py)indexType	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKSubmesh(py)mesh	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKSubmesh(py)name	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKSubmesh(py)primitiveType	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-c:objc(cs)MTKTextureLoader	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKTextureLoader(im)initWithDevice:	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKTextureLoader(im)newTextureWithCGImage:options:completionHandler:	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKTextureLoader(im)newTextureWithCGImage:options:error:	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKTextureLoader(im)newTextureWithContentsOfURL:options:completionHandler:	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKTextureLoader(im)newTextureWithContentsOfURL:options:error:	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKTextureLoader(im)newTextureWithData:options:completionHandler:	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKTextureLoader(im)newTextureWithData:options:error:	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKTextureLoader(im)newTextureWithMDLTexture:options:completionHandler:	deferred		ModelIO is not on main; MDLTexture loaders stay deferred rather than inventing MDL types.
-c:objc(cs)MTKTextureLoader(im)newTextureWithMDLTexture:options:error:	deferred		ModelIO is not on main; MDLTexture loaders stay deferred rather than inventing MDL types.
-c:objc(cs)MTKTextureLoader(im)newTextureWithName:scaleFactor:bundle:options:completionHandler:	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKTextureLoader(im)newTextureWithName:scaleFactor:bundle:options:error:	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKTextureLoader(im)newTexturesWithContentsOfURLs:options:completionHandler:	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKTextureLoader(im)newTexturesWithContentsOfURLs:options:error:	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKTextureLoader(im)newTexturesWithNames:scaleFactor:bundle:options:completionHandler:	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKTextureLoader(py)device	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-c:objc(cs)MTKView	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(im)draw	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(im)initWithCoder:	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(im)initWithFrame:device:	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(im)releaseDrawables	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)autoResizeDrawable	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)clearColor	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)clearDepth	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)clearStencil	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)colorPixelFormat	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)currentDrawable	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)currentMTL4RenderPassDescriptor	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)currentRenderPassDescriptor	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)delegate	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)depthStencilAttachmentTextureUsage	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)depthStencilPixelFormat	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)depthStencilStorageMode	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)depthStencilTexture	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)device	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)drawableSize	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)enableSetNeedsDisplay	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)framebufferOnly	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)multisampleColorAttachmentTextureUsage	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)multisampleColorTexture	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)paused	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)preferredDevice	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)preferredDrawableSize	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)preferredFramesPerSecond	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)presentsWithTransaction	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(cs)MTKView(py)sampleCount	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(pl)MTKViewDelegate	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(pl)MTKViewDelegate(im)drawInMTKView:	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-c:objc(pl)MTKViewDelegate(im)mtkView:drawableSizeWillChange:	implemented	full/metalkit/MTKView.swift;tests/agent/MetalKitRuntime.swift	Isolated-host lookalike UIView/MTL* path; not the Metal/UIKit modules or Apple CAMetalLayer/GPU
-s:8MetalKit030MTKModelIOVertexDescriptorFromA9WithErrorySo09MDLVertexE0CSo09MTLVertexE0CKF	deferred		ModelIO is not on main; vertex-descriptor conversion stays deferred.
-s:8MetalKit44MTKMetalVertexDescriptorFromModelIOWithErrorySo09MTLVertexE0CSgSo09MDLVertexE0CKF	deferred		ModelIO is not on main; vertex-descriptor conversion stays deferred.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKModelError	implemented	full/metalkit/MetalKit.swift;tests/agent/MetalKitRuntime.swift	String newtype with ObjC export-name raw values; Apple payload identity unobserved beyond those names
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKTextureLoaderCubeLayout	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKTextureLoaderError	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKTextureLoaderOption	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKTextureLoaderOrigin	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:So13MTKModelErrora8rawValueABSS_tcfc	implemented	full/metalkit/MetalKit.swift;tests/agent/MetalKitRuntime.swift	String newtype with ObjC export-name raw values; Apple payload identity unobserved beyond those names
-s:So21MTKTextureLoaderErrora8rawValueABSS_tcfc	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:So22MTKTextureLoaderOptiona8rawValueABSS_tcfc	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:So22MTKTextureLoaderOrigina8rawValueABSS_tcfc	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:So26MTKTextureLoaderCubeLayouta8rawValueABSS_tcfc	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:So7MTKMeshC8MetalKitE9newMeshes5asset6deviceSaySo7MDLMeshCG13modelIOMeshes_SayABG05metalcE0tSo8MDLAssetC_So9MTLDevice_ptKFZ	deferred		ModelIO is not on main; MTKMesh/MTKMeshBuffer/MTKSubmesh stay deferred rather than inventing MDL types.
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKModelError	implemented	full/metalkit/MetalKit.swift;tests/agent/MetalKitRuntime.swift	String newtype with ObjC export-name raw values; Apple payload identity unobserved beyond those names
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKTextureLoaderCubeLayout	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKTextureLoaderError	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKTextureLoaderOption	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKTextureLoaderOrigin	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKModelError	implemented	full/metalkit/MetalKit.swift;tests/agent/MetalKitRuntime.swift	String newtype with ObjC export-name raw values; Apple payload identity unobserved beyond those names
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKTextureLoaderCubeLayout	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKTextureLoaderError	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKTextureLoaderOption	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKTextureLoaderOrigin	implemented	full/metalkit/MTKTextureLoader.swift;tests/agent/MetalKitRuntime.swift	Fail-closed loader on lookalike MTLDevice/CGImage; ImageIO not imported; option/error newtypes exercised
+c:@F@MTKMetalVertexDescriptorFromModelIO	implemented	test:full/metalkit/tests/agent/MetalKitVertexFormatTests.swift#testMetalVertexDescriptorFromModelIO	Converts MDLVertexDescriptor attributes/layouts into MTLVertexDescriptor
+c:@F@MTKMetalVertexFormatFromModelIO	implemented	test:full/metalkit/tests/agent/MetalKitVertexFormatTests.swift#testVertexFormatRoundTripTable	Documented MDLVertexFormat to MTLVertexFormat mapping
+c:@F@MTKModelIOVertexDescriptorFromMetal	implemented	test:full/metalkit/tests/agent/MetalKitVertexFormatTests.swift#testModelIOVertexDescriptorFromMetal	Converts MTLVertexDescriptor back to MDLVertexDescriptor
+c:@F@MTKModelIOVertexFormatFromMetal	implemented	test:full/metalkit/tests/agent/MetalKitVertexFormatTests.swift#testUnmappedMetalFormatIsInvalid	Reverse mapping; uchar4Normalized_bgra has no ModelIO counterpart
+c:@MTKModelErrorDomain	implemented	test:full/metalkit/tests/agent/MetalKitModelErrorTests.swift#testModelErrorDomainAndKey	ObjC export-name raw value
+c:@MTKModelErrorKey	implemented	test:full/metalkit/tests/agent/MetalKitModelErrorTests.swift#testModelErrorDomainAndKey	ObjC export-name raw value
+c:@MTKTextureLoaderCubeLayoutVertical	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderCubeLayoutConstant	C constant raw value
+c:@MTKTextureLoaderErrorDomain	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderErrorConstants	C constant raw value
+c:@MTKTextureLoaderErrorKey	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderErrorConstants	C constant raw value
+c:@MTKTextureLoaderOptionAllocateMipmaps	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionConstants	Table-driven option raw values
+c:@MTKTextureLoaderOptionCubeLayout	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionConstants	Table-driven option raw values
+c:@MTKTextureLoaderOptionGenerateMipmaps	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionConstants	Table-driven option raw values
+c:@MTKTextureLoaderOptionLoadAsArray	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionConstants	Table-driven option raw values
+c:@MTKTextureLoaderOptionOrigin	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionConstants	Table-driven option raw values
+c:@MTKTextureLoaderOptionSRGB	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionConstants	Table-driven option raw values
+c:@MTKTextureLoaderOptionTextureCPUCacheMode	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionConstants	Table-driven option raw values
+c:@MTKTextureLoaderOptionTextureStorageMode	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionConstants	Table-driven option raw values
+c:@MTKTextureLoaderOptionTextureUsage	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionConstants	Table-driven option raw values
+c:@MTKTextureLoaderOriginBottomLeft	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOriginConstants	C constant raw value
+c:@MTKTextureLoaderOriginFlippedVertically	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOriginConstants	C constant raw value
+c:@MTKTextureLoaderOriginTopLeft	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOriginConstants	C constant raw value
+c:@T@MTKModelError	implemented	test:full/metalkit/tests/agent/MetalKitModelErrorTests.swift#testModelErrorRawValueInit	String newtype
+c:@T@MTKTextureLoaderArrayCallback	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testTextureLoaderCallbackTypealiases	Callback typealias
+c:@T@MTKTextureLoaderCallback	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testTextureLoaderCallbackTypealiases	Callback typealias
+c:@T@MTKTextureLoaderCubeLayout	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderCubeLayoutRawValueAndHashable	String newtype
+c:@T@MTKTextureLoaderError	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderErrorRawValueAndHashable	String newtype
+c:@T@MTKTextureLoaderOption	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionRawValueAndHashable	String newtype
+c:@T@MTKTextureLoaderOrigin	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOriginRawValueAndHashable	String newtype
+c:objc(cs)MTKMesh	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshInitCopiesVertexAndIndexBuffers	Software buffer copy from MDLMesh
+c:objc(cs)MTKMesh(im)initWithMesh:device:error:	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshInitCopiesVertexAndIndexBuffers	Copies vertex/index bytes into MTLBuffer
+c:objc(cs)MTKMesh(py)name	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshInitCopiesVertexAndIndexBuffers	Name copied from MDLMesh
+c:objc(cs)MTKMesh(py)submeshes	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testSubmeshPropertiesFromConvertedMesh	Converted submesh list
+c:objc(cs)MTKMesh(py)vertexBuffers	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshInitCopiesVertexAndIndexBuffers	Copied MTKMeshBuffer list
+c:objc(cs)MTKMesh(py)vertexCount	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshInitCopiesVertexAndIndexBuffers	Vertex count copied from MDLMesh
+c:objc(cs)MTKMesh(py)vertexDescriptor	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshInitCopiesVertexAndIndexBuffers	Descriptor retained from MDLMesh
+c:objc(cs)MTKMeshBuffer	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshBufferFromAllocator	Software MTLBuffer wrapper
+c:objc(cs)MTKMeshBuffer(im)zone	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshBufferFromAllocator	Zone is nil for default allocation
+c:objc(cs)MTKMeshBuffer(py)allocator	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshBufferFromAllocator	Allocator identity
+c:objc(cs)MTKMeshBuffer(py)buffer	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshBufferFromAllocator	Underlying MTLBuffer
+c:objc(cs)MTKMeshBuffer(py)length	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshBufferFromAllocator	Copied byte length
+c:objc(cs)MTKMeshBuffer(py)offset	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshBufferFromAllocator	Offset is zero for new buffers
+c:objc(cs)MTKMeshBuffer(py)type	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshBufferFromAllocator	Vertex vs index type
+c:objc(cs)MTKMeshBufferAllocator	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshBufferAllocatorInitAndDevice	Device-backed allocator
+c:objc(cs)MTKMeshBufferAllocator(im)initWithDevice:	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshBufferAllocatorInitAndDevice	Stores the MTLDevice
+c:objc(cs)MTKMeshBufferAllocator(py)device	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshBufferAllocatorInitAndDevice	Device identity
+c:objc(cs)MTKSubmesh	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testSubmeshPropertiesFromConvertedMesh	Converted draw-call segment
+c:objc(cs)MTKSubmesh(py)indexBuffer	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testSubmeshPropertiesFromConvertedMesh	Copied index MTKMeshBuffer
+c:objc(cs)MTKSubmesh(py)indexCount	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testSubmeshPropertiesFromConvertedMesh	Index count copied
+c:objc(cs)MTKSubmesh(py)indexType	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testSubmeshPropertiesFromConvertedMesh	UInt16 maps to MTLIndexType.uint16
+c:objc(cs)MTKSubmesh(py)mesh	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testSubmeshPropertiesFromConvertedMesh	Weak back-pointer to MTKMesh
+c:objc(cs)MTKSubmesh(py)name	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testSubmeshPropertiesFromConvertedMesh	Mutable name
+c:objc(cs)MTKSubmesh(py)primitiveType	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testSubmeshPropertiesFromConvertedMesh	Triangles map to MTLPrimitiveType.triangle
+c:objc(cs)MTKTextureLoader	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testTextureLoaderInitAndDevice	Fail-closed loader
+c:objc(cs)MTKTextureLoader(im)initWithDevice:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testTextureLoaderInitAndDevice	Stores the MTLDevice
+c:objc(cs)MTKTextureLoader(im)newTextureWithCGImage:options:completionHandler:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testNewTextureAsyncOverloadsFailClosed	Async CGImage path is fail-closed
+c:objc(cs)MTKTextureLoader(im)newTextureWithCGImage:options:error:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testNewTextureFromCGImageFailsClosed	ImageIO is not imported
+c:objc(cs)MTKTextureLoader(im)newTextureWithContentsOfURL:options:completionHandler:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testNewTextureAsyncOverloadsFailClosed	Async URL path is fail-closed
+c:objc(cs)MTKTextureLoader(im)newTextureWithContentsOfURL:options:error:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testNewTextureFromURLFailsClosed	URL decode needs ImageIO
+c:objc(cs)MTKTextureLoader(im)newTextureWithData:options:completionHandler:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testNewTextureAsyncOverloadsFailClosed	Async data path is fail-closed
+c:objc(cs)MTKTextureLoader(im)newTextureWithData:options:error:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testNewTextureFromDataFailsClosed	Data decode needs ImageIO
+c:objc(cs)MTKTextureLoader(im)newTextureWithMDLTexture:options:completionHandler:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testNewTextureFromMDLTextureFailsClosed	MDLTexture GPU upload is fail-closed
+c:objc(cs)MTKTextureLoader(im)newTextureWithMDLTexture:options:error:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testNewTextureFromMDLTextureFailsClosed	MDLTexture GPU upload is fail-closed
+c:objc(cs)MTKTextureLoader(im)newTextureWithName:scaleFactor:bundle:options:completionHandler:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testNewTextureAsyncOverloadsFailClosed	Async named asset path is fail-closed
+c:objc(cs)MTKTextureLoader(im)newTextureWithName:scaleFactor:bundle:options:error:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testNewTextureFromNameFailsClosed	Named assets need an asset catalog host
+c:objc(cs)MTKTextureLoader(im)newTexturesWithContentsOfURLs:options:completionHandler:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testNewTextureAsyncOverloadsFailClosed	Async URL array path is fail-closed
+c:objc(cs)MTKTextureLoader(im)newTexturesWithContentsOfURLs:options:error:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testNewTexturesFromURLsErrorPointer	NSErrorPointer path returns []
+c:objc(cs)MTKTextureLoader(im)newTexturesWithNames:scaleFactor:bundle:options:completionHandler:	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testNewTexturesFromNamesFailsClosed	Named array path is fail-closed
+c:objc(cs)MTKTextureLoader(py)device	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderTests.swift#testTextureLoaderInitAndDevice	Device identity
+c:objc(cs)MTKView	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewInitWithFrameAndDevice	Lookalike UIView subclass
+c:objc(cs)MTKView(im)draw	implemented	test:full/metalkit/tests/agent/MetalKitViewDelegateTests.swift#testViewDelegateDrawInView	draw() forwards to delegate when not paused
+c:objc(cs)MTKView(im)initWithCoder:	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewInitWithCoder	Coder init uses the software default device
+c:objc(cs)MTKView(im)initWithFrame:device:	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewInitWithFrameAndDevice	Stores frame and device
+c:objc(cs)MTKView(im)releaseDrawables	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewReleaseDrawables	Drops cached software drawable
+c:objc(cs)MTKView(py)autoResizeDrawable	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDefaultFlags	Default true
+c:objc(cs)MTKView(py)clearColor	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDefaultColorAndClearState	Default black opaque
+c:objc(cs)MTKView(py)clearDepth	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDefaultColorAndClearState	Default 1
+c:objc(cs)MTKView(py)clearStencil	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDefaultColorAndClearState	Default 0
+c:objc(cs)MTKView(py)colorPixelFormat	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDefaultColorAndClearState	Default bgra8Unorm
+c:objc(cs)MTKView(py)currentDrawable	implemented	test:full/metalkit/tests/agent/MetalKitViewDrawableTests.swift#testViewCurrentDrawable	Software CAMetalDrawable of drawableSize
+c:objc(cs)MTKView(py)currentMTL4RenderPassDescriptor	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewMultisampleAndMTL4FailClosed	Always nil; Metal 4 is not implemented
+c:objc(cs)MTKView(py)currentRenderPassDescriptor	implemented	test:full/metalkit/tests/agent/MetalKitViewDrawableTests.swift#testViewCurrentRenderPassDescriptor	CPU render pass wrapping the software drawable
+c:objc(cs)MTKView(py)delegate	implemented	test:full/metalkit/tests/agent/MetalKitViewDelegateTests.swift#testViewDelegateProtocolIdentity	Weak delegate
+c:objc(cs)MTKView(py)depthStencilAttachmentTextureUsage	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDepthStencilTexture	Used when allocating the software depth texture
+c:objc(cs)MTKView(py)depthStencilPixelFormat	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDepthStencilTexture	invalid means no depth texture
+c:objc(cs)MTKView(py)depthStencilStorageMode	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDepthStencilTexture	Stored on the software depth texture
+c:objc(cs)MTKView(py)depthStencilTexture	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDepthStencilTexture	Software depth texture when format is set
+c:objc(cs)MTKView(py)device	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewInitWithFrameAndDevice	Optional MTLDevice
+c:objc(cs)MTKView(py)drawableSize	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDrawableSizeAndPreferredSize	Tracks frame * contentScaleFactor when auto-resizing
+c:objc(cs)MTKView(py)enableSetNeedsDisplay	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDefaultFlags	Default false
+c:objc(cs)MTKView(py)framebufferOnly	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDefaultFlags	Default true
+c:objc(cs)MTKView(py)multisampleColorAttachmentTextureUsage	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewMultisampleAndMTL4FailClosed	Stored; MSAA texture stays nil
+c:objc(cs)MTKView(py)multisampleColorTexture	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewMultisampleAndMTL4FailClosed	Always nil on this software path
+c:objc(cs)MTKView(py)paused	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewPausedSkipsDraw	Paused skips draw()
+c:objc(cs)MTKView(py)preferredDevice	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewPreferredDevice	Software default device
+c:objc(cs)MTKView(py)preferredDrawableSize	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDrawableSizeAndPreferredSize	bounds.size * contentScaleFactor
+c:objc(cs)MTKView(py)preferredFramesPerSecond	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDefaultFlags	Default 60
+c:objc(cs)MTKView(py)presentsWithTransaction	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDefaultFlags	Default false
+c:objc(cs)MTKView(py)sampleCount	implemented	test:full/metalkit/tests/agent/MetalKitViewTests.swift#testViewDefaultFlags	Default 1
+c:objc(pl)MTKViewDelegate	implemented	test:full/metalkit/tests/agent/MetalKitViewDelegateTests.swift#testViewDelegateProtocolIdentity	Delegate protocol
+c:objc(pl)MTKViewDelegate(im)drawInMTKView:	implemented	test:full/metalkit/tests/agent/MetalKitViewDelegateTests.swift#testViewDelegateDrawInView	draw(in:) callback
+c:objc(pl)MTKViewDelegate(im)mtkView:drawableSizeWillChange:	implemented	test:full/metalkit/tests/agent/MetalKitViewDelegateTests.swift#testViewDelegateDrawableSizeWillChange	Size-change callback
+s:8MetalKit030MTKModelIOVertexDescriptorFromA9WithErrorySo09MDLVertexE0CSo09MTLVertexE0CKF	implemented	test:full/metalkit/tests/agent/MetalKitVertexFormatTests.swift#testModelIOVertexDescriptorFromMetalWithError	Throwing reverse descriptor conversion
+s:8MetalKit44MTKMetalVertexDescriptorFromModelIOWithErrorySo09MTLVertexE0CSgSo09MDLVertexE0CKF	implemented	test:full/metalkit/tests/agent/MetalKitVertexFormatTests.swift#testMetalVertexDescriptorFromModelIOWithError	Throwing descriptor conversion
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKModelError	implemented	test:full/metalkit/tests/agent/MetalKitModelErrorTests.swift#testModelErrorInequality	Equatable !=
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKTextureLoaderCubeLayout	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderCubeLayoutRawValueAndHashable	Equatable !=
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKTextureLoaderError	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderErrorRawValueAndHashable	Equatable !=
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKTextureLoaderOption	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionRawValueAndHashable	Equatable !=
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKTextureLoaderOrigin	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOriginRawValueAndHashable	Equatable !=
+s:So13MTKModelErrora8rawValueABSS_tcfc	implemented	test:full/metalkit/tests/agent/MetalKitModelErrorTests.swift#testModelErrorRawValueInit	init(rawValue:)
+s:So21MTKTextureLoaderErrora8rawValueABSS_tcfc	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderErrorRawValueAndHashable	init(rawValue:)
+s:So22MTKTextureLoaderOptiona8rawValueABSS_tcfc	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionRawValueAndHashable	init(rawValue:)
+s:So22MTKTextureLoaderOrigina8rawValueABSS_tcfc	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOriginRawValueAndHashable	init(rawValue:)
+s:So26MTKTextureLoaderCubeLayouta8rawValueABSS_tcfc	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderCubeLayoutRawValueAndHashable	init(rawValue:)
+s:So7MTKMeshC8MetalKitE9newMeshes5asset6deviceSaySo7MDLMeshCG13modelIOMeshes_SayABG05metalcE0tSo8MDLAssetC_So9MTLDevice_ptKFZ	implemented	test:full/metalkit/tests/agent/MetalKitMeshTests.swift#testMeshNewMeshesFromAsset	Converts every MDLMesh in an MDLAsset
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKModelError	implemented	test:full/metalkit/tests/agent/MetalKitModelErrorTests.swift#testModelErrorHashValue	Hashable hashValue
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKTextureLoaderCubeLayout	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderCubeLayoutRawValueAndHashable	Hashable hashValue
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKTextureLoaderError	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderErrorRawValueAndHashable	Hashable hashValue
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKTextureLoaderOption	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionRawValueAndHashable	Hashable hashValue
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKTextureLoaderOrigin	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOriginRawValueAndHashable	Hashable hashValue
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKModelError	implemented	test:full/metalkit/tests/agent/MetalKitModelErrorTests.swift#testModelErrorHashInto	hash(into:)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKTextureLoaderCubeLayout	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderCubeLayoutRawValueAndHashable	hash(into:)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKTextureLoaderError	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderErrorRawValueAndHashable	hash(into:)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKTextureLoaderOption	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOptionRawValueAndHashable	hash(into:)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKTextureLoaderOrigin	implemented	test:full/metalkit/tests/agent/MetalKitTextureLoaderOptionTests.swift#testTextureLoaderOriginRawValueAndHashable	hash(into:)

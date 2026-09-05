@@ -241,6 +241,15 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             _hasText = newValue != nil
             _attributed = nil
             normalizeTextStateAfterContentAssignment()
+            if isEditing {
+                // Forms typeName / Tabs typeSearch assign `.text` while
+                // focused. MEASURED kbstateprobe has_text: caret at end
+                // (sel 11/11) and lowercase keys; t2100 goldens show
+                // QuickType for the typed string.
+                storeSelection(NSRange(location: documentUTF16Length, length: 0),
+                           notifyDelegate: false)
+                if let w = window { _UIKeyboardChrome.sync(from: w) }
+            }
             refreshContent()
         }
     }
@@ -1015,6 +1024,11 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             sendActions(for: .editingDidBegin)
             delegate?.textFieldDidBeginEditing(self)
         }
+        // MEASURED kbstateprobe has_text, iPhone SE 2x: focusing a
+        // field that already has text leaves selStart=selEnd=11 and a
+        // lowercase keyboard. UIResponder.becomeFirstResponder syncs the
+        // keyboard before this override moves the caret, so rebuild now.
+        if let w = window { _UIKeyboardChrome.sync(from: w) }
         return true
     }
 

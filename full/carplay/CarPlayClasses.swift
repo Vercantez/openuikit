@@ -53,20 +53,27 @@ open class CPBarButton: NSObject, @unchecked Sendable {
     }
     public var buttonStyle: CPBarButtonStyle = .none
     public var buttonType: CPBarButton.`Type` = .text
-    public var isEnabled: Bool = false
+    public var isEnabled: Bool = true
     public var image: UIImage? = nil
     public var title: String? = nil
+    var storedHandler: CPBarButtonHandler? = nil
     public override init() { super.init() }
     public init(image: UIImage, handler: CPBarButtonHandler? = nil) {
         super.init()
         self.image = image
+        self.buttonType = .image
+        self.storedHandler = handler
     }
     public init(title: String, handler: CPBarButtonHandler? = nil) {
         super.init()
         self.title = title
+        self.buttonType = .text
+        self.storedHandler = handler
     }
     public init(type: CPBarButton.`Type`, handler: CPBarButtonHandler? = nil) {
         super.init()
+        self.buttonType = type
+        self.storedHandler = handler
     }
     public init?(coder: NSCoder) {
         super.init()
@@ -75,13 +82,15 @@ open class CPBarButton: NSObject, @unchecked Sendable {
 }
 
 open class CPButton: NSObject, @unchecked Sendable {
-    public var isEnabled: Bool = false
+    public var isEnabled: Bool = true
     public var image: UIImage? = nil
     public var title: String? = nil
+    var storedHandler: ((CPButton) -> Void)? = nil
     public override init() { super.init() }
     public init(image: UIImage, handler: ((CPButton) -> Void)? = nil) {
         super.init()
         self.image = image
+        self.storedHandler = handler
     }
 }
 
@@ -107,6 +116,7 @@ open class CPContactCallButton: CPButton, @unchecked Sendable {
     public override init() { super.init() }
     public init(handler: ((CPButton) -> Void)? = nil) {
         super.init()
+        self.storedHandler = handler
     }
 }
 
@@ -114,6 +124,7 @@ open class CPContactDirectionsButton: CPButton, @unchecked Sendable {
     public override init() { super.init() }
     public init(handler: ((CPButton) -> Void)? = nil) {
         super.init()
+        self.storedHandler = handler
     }
 }
 
@@ -130,12 +141,14 @@ open class CPDashboardButton: NSObject, @unchecked Sendable {
     public var image: UIImage = UIImage()
     public var subtitleVariants: [String] = []
     public var titleVariants: [String] = []
+    var storedHandler: ((CPDashboardButton) -> Void)? = nil
     public override init() { super.init() }
     public init(titleVariants: [String], subtitleVariants: [String], image: UIImage, handler: ((CPDashboardButton) -> Void)? = nil) {
         super.init()
         self.titleVariants = titleVariants
         self.subtitleVariants = subtitleVariants
         self.image = image
+        self.storedHandler = handler
     }
     public init?(coder: NSCoder) {
         super.init()
@@ -144,26 +157,34 @@ open class CPDashboardButton: NSObject, @unchecked Sendable {
 }
 
 open class CPDashboardController: NSObject, @unchecked Sendable {
+    /// Stored locally only. Linux has no dashboard head unit, so assigning
+    /// shortcuts never presents them to a vehicle.
     public var shortcutButtons: [CPDashboardButton] = []
     public override init() { super.init() }
+
+    @_spi(OpenUIKitHost)
+    public var openuikit_vehiclePresentationActive: Bool { false }
 }
 
 open class CPGridButton: NSObject, @unchecked Sendable {
-    public var isEnabled: Bool = false
+    public var isEnabled: Bool = true
     public var image: UIImage = UIImage()
     public var messageConfiguration: CPMessageGridItemConfiguration? = nil
     public var titleVariants: [String] = []
+    var storedHandler: ((CPGridButton) -> Void)? = nil
     public override init() { super.init() }
     public init(titleVariants: [String], image: UIImage, handler: ((CPGridButton) -> Void)? = nil) {
         super.init()
         self.titleVariants = titleVariants
         self.image = image
+        self.storedHandler = handler
     }
     public init(titleVariants: [String], image: UIImage, messageConfiguration: CPMessageGridItemConfiguration?, handler: ((CPGridButton) -> Void)? = nil) {
         super.init()
         self.titleVariants = titleVariants
         self.image = image
         self.messageConfiguration = messageConfiguration
+        self.storedHandler = handler
     }
     public init?(coder: NSCoder) {
         super.init()
@@ -212,7 +233,7 @@ open class CPInformationRatingItem: CPInformationItem, @unchecked Sendable {
     public var rating: NSNumber? = nil
     public override init() { super.init() }
     public init(rating: NSNumber?, maximumRating: NSNumber?, title: String?, detail: String?) {
-        super.init()
+        super.init(title: title, detail: detail)
         self.rating = rating
         self.maximumRating = maximumRating
     }
@@ -221,78 +242,14 @@ open class CPInformationRatingItem: CPInformationItem, @unchecked Sendable {
 open class CPInstrumentClusterController: NSObject, @unchecked Sendable {
     public var attributedInactiveDescriptionVariants: [NSAttributedString] = []
     public var compassSetting: CPInstrumentClusterSetting = .unspecified
+    public weak var delegate: (any CPInstrumentClusterControllerDelegate)?
     public var inactiveDescriptionVariants: [String] = []
     public var instrumentClusterWindow: UIWindow? = nil
     public var speedLimitSetting: CPInstrumentClusterSetting = .unspecified
     public override init() { super.init() }
-}
 
-@MainActor open class CPInterfaceController: NSObject, @unchecked Sendable {
-    public weak var delegate: (any CPInterfaceControllerDelegate)?
-    public var carTraitCollection: UITraitCollection = UITraitCollection()
-    public var prefersDarkUserInterfaceStyle: Bool = false
-    public var presentedTemplate: CPTemplate? = nil
-    public var rootTemplate: CPTemplate = CPTemplate()
-    public var templates: [CPTemplate] = []
-    public var topTemplate: CPTemplate? = nil
-    public override init() { super.init() }
-    public func dismissTemplate(animated: Bool) {
-        _ = animated
-        self.presentedTemplate = nil
-    }
-    public func dismissTemplate(animated: Bool) async throws -> Bool {
-        return false
-    }
-    public func popTemplate(animated: Bool) {
-        _ = animated
-        if self.templates.count > 1 { self.templates.removeLast() }
-        self.topTemplate = self.templates.last
-    }
-    public func popTemplate(animated: Bool) async throws -> Bool {
-        return false
-    }
-    public func popToRootTemplate(animated: Bool) {
-        _ = animated
-        if let first = self.templates.first { self.templates = [first] }
-        self.topTemplate = self.templates.last
-    }
-    public func popToRootTemplate(animated: Bool) async throws -> Bool {
-        return false
-    }
-    public func pop(to targetTemplate: CPTemplate, animated: Bool) {
-        _ = animated
-        if let idx = self.templates.firstIndex(where: { $0 === targetTemplate }) {
-            self.templates = Array(self.templates.prefix(through: idx))
-        }
-        self.topTemplate = self.templates.last
-    }
-    public func pop(to targetTemplate: CPTemplate, animated: Bool) async throws -> Bool {
-        return false
-    }
-    public func presentTemplate(_ templateToPresent: CPTemplate, animated: Bool) {
-        _ = animated
-        self.presentedTemplate = templateToPresent
-    }
-    public func presentTemplate(_ templateToPresent: CPTemplate, animated: Bool) async throws -> Bool {
-        return false
-    }
-    public func pushTemplate(_ templateToPush: CPTemplate, animated: Bool) {
-        _ = animated
-        self.templates.append(templateToPush)
-        self.topTemplate = templateToPush
-    }
-    public func pushTemplate(_ templateToPush: CPTemplate, animated: Bool) async throws -> Bool {
-        return false
-    }
-    public func setRootTemplate(_ rootTemplate: CPTemplate, animated: Bool) {
-        _ = animated
-        self.rootTemplate = rootTemplate
-        self.templates = [rootTemplate]
-        self.topTemplate = rootTemplate
-    }
-    public func setRootTemplate(_ rootTemplate: CPTemplate, animated: Bool) async throws -> Bool {
-        return false
-    }
+    @_spi(OpenUIKitHost)
+    public var openuikit_vehiclePresentationActive: Bool { false }
 }
 
 open class CPLane: NSObject, @unchecked Sendable {
@@ -308,6 +265,10 @@ open class CPLane: NSObject, @unchecked Sendable {
     }
     public init(angles: [Measurement<UnitAngle>], highlightedAngle: Measurement<UnitAngle>, isPreferred preferred: Bool) {
         super.init()
+        self.angles = angles
+        self.highlightedAngle = highlightedAngle
+        self.primaryAngle = highlightedAngle
+        self.status = preferred ? .preferred : .good
     }
     public init?(coder: NSCoder) {
         super.init()
@@ -329,7 +290,7 @@ open class CPLaneGuidance: NSObject, @unchecked Sendable {
     public class var maximumImageSize: CGSize { CPButtonMaximumImageSize }
     public var allowsMultipleLines: Bool = false
     public var elements: [CPListImageRowItemElement] = []
-    public var isEnabled: Bool = false
+    public var isEnabled: Bool = true
     public var gridImages: [UIImage] = []
     public var handler: ((any CPSelectableListItem, @escaping () -> Void) -> Void)? = nil
     public var imageTitles: [String] = []
@@ -339,11 +300,15 @@ open class CPLaneGuidance: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(text: String?, cardElements elements: [CPListImageRowItemCardElement], allowsMultipleLines: Bool) {
         super.init()
+        self.text = text
         self.elements = elements
+        self.allowsMultipleLines = allowsMultipleLines
     }
     public init(text: String?, condensedElements elements: [CPListImageRowItemCondensedElement], allowsMultipleLines: Bool) {
         super.init()
+        self.text = text
         self.elements = elements
+        self.allowsMultipleLines = allowsMultipleLines
     }
     public init(text: String?, elements: [CPListImageRowItemRowElement], allowsMultipleLines: Bool) {
         super.init()
@@ -353,29 +318,35 @@ open class CPLaneGuidance: NSObject, @unchecked Sendable {
     }
     public init(text: String?, gridElements elements: [CPListImageRowItemGridElement], allowsMultipleLines: Bool) {
         super.init()
+        self.text = text
         self.elements = elements
+        self.allowsMultipleLines = allowsMultipleLines
     }
     public init(text: String?, imageGridElements elements: [CPListImageRowItemImageGridElement], allowsMultipleLines: Bool) {
         super.init()
+        self.text = text
         self.elements = elements
+        self.allowsMultipleLines = allowsMultipleLines
     }
     public init(text: String, images: [UIImage]) {
         super.init()
         self.text = text
+        self.gridImages = images
     }
     public init(text: String, images: [UIImage], imageTitles: [String]) {
         super.init()
         self.text = text
+        self.gridImages = images
         self.imageTitles = imageTitles
     }
     public func update(_ gridImages: [UIImage]) {
-        // fail-closed
+        self.gridImages = gridImages
     }
 }
 
 @MainActor open class CPListImageRowItemElement: NSObject, @unchecked Sendable {
     public class var maximumImageSize: CGSize { CPButtonMaximumImageSize }
-    public var isEnabled: Bool = false
+    public var isEnabled: Bool = true
     public var image: UIImage = UIImage()
     public override init() { super.init() }
 }
@@ -390,6 +361,7 @@ open class CPLaneGuidance: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(image: UIImage, showsImageFullHeight: Bool, title: String?, subtitle: String?, tintColor: UIColor?) {
         super.init()
+        self.image = image
         self.showsImageFullHeight = showsImageFullHeight
         self.title = title ?? ""
         self.subtitle = subtitle
@@ -409,6 +381,7 @@ open class CPLaneGuidance: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(image: UIImage, imageShape: CPListImageRowItemCondensedElement.Shape, title: String, subtitle: String?, accessorySymbolName: String?) {
         super.init()
+        self.image = image
         self.imageShape = imageShape
         self.title = title
         self.subtitle = subtitle
@@ -420,6 +393,7 @@ open class CPLaneGuidance: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(image: UIImage) {
         super.init()
+        self.image = image
     }
 }
 
@@ -434,6 +408,7 @@ open class CPLaneGuidance: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(image: UIImage, imageShape: CPListImageRowItemImageGridElement.Shape, title: String, accessorySymbolName: String?) {
         super.init()
+        self.image = image
         self.imageShape = imageShape
         self.title = title
         self.accessorySymbolName = accessorySymbolName
@@ -446,6 +421,7 @@ open class CPLaneGuidance: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(image: UIImage, title: String?, subtitle: String?) {
         super.init()
+        self.image = image
         self.title = title
         self.subtitle = subtitle
     }
@@ -461,20 +437,20 @@ open class CPLaneGuidance: NSObject, @unchecked Sendable {
         case off = 0
         case whileLimitedUIActive = 1
     }
-    public class var maximumImageSize: CGSize { CPButtonMaximumImageSize }
-    public var accessoryImage: UIImage? = nil
+    public class var maximumImageSize: CGSize { CGSize(width: 90, height: 90) }
+    public private(set) var accessoryImage: UIImage? = nil
     public var accessoryType: CPListItemAccessoryType = .none
-    public var detailText: String? = nil
-    public var isEnabled: Bool = false
+    public private(set) var detailText: String? = nil
+    public var isEnabled: Bool = true
     public var isExplicitContent: Bool = false
     public var handler: ((any CPSelectableListItem, @escaping () -> Void) -> Void)? = nil
-    public var image: UIImage? = nil
+    public private(set) var image: UIImage? = nil
     public var playbackProgress: CGFloat = 0
     public var isPlaying: Bool = false
     public var playingIndicatorLocation: CPListItemPlayingIndicatorLocation = .leading
-    public var showsDisclosureIndicator: Bool = false
+    public private(set) var showsDisclosureIndicator: Bool = false
     public var showsExplicitLabel: Bool = false
-    public var text: String? = nil
+    public private(set) var text: String? = nil
     public var userInfo: Any? = nil
     public override init() { super.init() }
     public init(text: String?, detailText: String?) {
@@ -495,6 +471,7 @@ open class CPLaneGuidance: NSObject, @unchecked Sendable {
         self.image = image
         self.accessoryImage = accessoryImage
         self.accessoryType = accessoryType
+        self.showsDisclosureIndicator = accessoryType == .disclosureIndicator
     }
     public init(text: String?, detailText: String?, image: UIImage?, showsDisclosureIndicator: Bool) {
         super.init()
@@ -559,7 +536,10 @@ open class CPLaneGuidance: NSObject, @unchecked Sendable {
         self.items = items
     }
     public func index(of item: any CPListTemplateItem) -> Int {
-        return 0
+        if let idx = items.firstIndex(where: { $0 === item }) {
+            return idx
+        }
+        return NSNotFound
     }
     public func item(at index: Int) -> any CPListTemplateItem {
         if index >= 0, index < self.items.count { return self.items[index] }
@@ -581,6 +561,7 @@ open class CPManeuver: NSObject, @unchecked Sendable {
     public var junctionExitAngle: Measurement<UnitAngle>? = nil
     public var junctionImage: UIImage? = nil
     public var junctionType: CPJunctionType = .intersection
+    public var linkedLaneGuidance: CPLaneGuidance = CPLaneGuidance()
     public var maneuverType: CPManeuverType = .noTurn
     public var notificationAttributedInstructionVariants: [NSAttributedString] = []
     public var notificationInstructionVariants: [String] = []
@@ -598,13 +579,15 @@ open class CPManeuver: NSObject, @unchecked Sendable {
 }
 
 @MainActor open class CPMapButton: NSObject, @unchecked Sendable {
-    public var isEnabled: Bool = false
+    public var isEnabled: Bool = true
     public var focusedImage: UIImage? = nil
     public var isHidden: Bool = false
     public var image: UIImage? = nil
+    var storedHandler: ((CPMapButton) -> Void)? = nil
     public override init() { super.init() }
     public init(handler: ((CPMapButton) -> Void)? = nil) {
         super.init()
+        self.storedHandler = handler
     }
     public init?(coder: NSCoder) {
         super.init()
@@ -616,6 +599,8 @@ open class CPMessageComposeBarButton: CPBarButton, @unchecked Sendable {
     public override init() { super.init() }
     public init(image: UIImage) {
         super.init()
+        self.image = image
+        self.buttonType = .image
     }
 }
 
@@ -626,13 +611,14 @@ open class CPMessageGridItemConfiguration: NSObject, @unchecked Sendable {
     public init(conversationIdentifier: String, unread: Bool) {
         super.init()
         self.conversationIdentifier = conversationIdentifier
+        self.isUnread = unread
     }
 }
 
-open class CPMessageListItem: NSObject, @unchecked Sendable {
+@MainActor open class CPMessageListItem: NSObject, CPListTemplateItem, @unchecked Sendable {
     public var conversationIdentifier: String? = nil
     public var detailText: String? = nil
-    public var isEnabled: Bool = false
+    public var isEnabled: Bool = true
     public var leadingConfiguration: CPMessageListItemLeadingConfiguration = CPMessageListItemLeadingConfiguration()
     public var leadingDetailTextImage: UIImage? = nil
     public var phoneOrEmailAddress: String? = nil
@@ -652,6 +638,7 @@ open class CPMessageListItem: NSObject, @unchecked Sendable {
     }
     public init(fullName: String, phoneOrEmailAddress: String, leadingConfiguration: CPMessageListItemLeadingConfiguration, trailingConfiguration: CPMessageListItemTrailingConfiguration?, detailText: String?, trailingText: String?) {
         super.init()
+        self.text = fullName
         self.phoneOrEmailAddress = phoneOrEmailAddress
         self.leadingConfiguration = leadingConfiguration
         self.trailingConfiguration = trailingConfiguration
@@ -669,6 +656,7 @@ open class CPMessageListItemLeadingConfiguration: NSObject, @unchecked Sendable 
         super.init()
         self.leadingItem = leadingItem
         self.leadingImage = leadingImage
+        self.isUnread = unread
     }
 }
 
@@ -720,7 +708,8 @@ open class CPMessageListItemTrailingConfiguration: NSObject, @unchecked Sendable
         return nil
     }
     public func updateTitleVariants(_ newTitleVariants: [String], subtitleVariants newSubtitleVariants: [String]) {
-        // fail-closed
+        self.titleVariants = newTitleVariants
+        self.subtitleVariants = newSubtitleVariants
     }
 }
 
@@ -732,44 +721,97 @@ open class CPMessageListItemTrailingConfiguration: NSObject, @unchecked Sendable
         case proceedToRoute = 5
         case rerouting = 4
     }
+    public enum HostTripState: String, Sendable {
+        case idle
+        case navigating
+        case paused
+        case finished
+        case cancelled
+    }
     public var currentLaneGuidance: CPLaneGuidance? = nil
     public var currentRoadNameVariants: [String] = []
     public var maneuverState: CPManeuverState = .initial
-    public var trip: CPTrip = CPTrip()
+    public private(set) var trip: CPTrip
     public var upcomingManeuvers: [CPManeuver] = []
-    public override init() { super.init() }
+    public private(set) var hostTripState: HostTripState = .navigating
+    public private(set) var pauseReason: CPNavigationSession.PauseReason? = nil
+    public private(set) var pauseDescription: String? = nil
+    var maneuverEstimates: [ObjectIdentifier: CPTravelEstimates] = [:]
+
+    public override init() {
+        self.trip = CPTrip()
+        super.init()
+        self.hostTripState = .idle
+    }
+
+    init(trip: CPTrip) {
+        self.trip = trip
+        super.init()
+        self.hostTripState = .navigating
+        self.maneuverState = .initial
+    }
+
     public func add(_ laneGuidances: [CPLaneGuidance]) {
-        // fail-closed
+        if hostTripState == .navigating || hostTripState == .paused {
+            currentLaneGuidance = laneGuidances.last
+        }
     }
     public func add(_ maneuvers: [CPManeuver]) {
-        // fail-closed
+        if hostTripState == .navigating || hostTripState == .paused {
+            upcomingManeuvers = maneuvers
+            if !maneuvers.isEmpty {
+                maneuverState = .prepare
+            }
+        }
     }
     public func cancelTrip() {
-        // fail-closed
+        hostTripState = .cancelled
+        upcomingManeuvers = []
+        pauseReason = nil
     }
     public func finishTrip() {
-        // fail-closed
+        hostTripState = .finished
+        upcomingManeuvers = []
+        maneuverState = .execute
+        pauseReason = .arrived
     }
     public func pauseTrip(for reason: CPNavigationSession.PauseReason, description: String?) {
-        // fail-closed
+        pauseTrip(for: reason, description: description, turnCardColor: nil)
     }
     public func pauseTrip(for reason: CPNavigationSession.PauseReason, description: String?, turnCardColor: UIColor?) {
-        // fail-closed
+        _ = turnCardColor
+        if hostTripState == .navigating {
+            hostTripState = .paused
+            pauseReason = reason
+            pauseDescription = description
+        }
     }
     public func resumeTrip(updatedRouteInformation routeInformation: CPRouteInformation) {
-        // fail-closed
+        if hostTripState == .paused {
+            hostTripState = .navigating
+            pauseReason = nil
+            pauseDescription = nil
+            upcomingManeuvers = routeInformation.currentManeuvers
+            currentLaneGuidance = routeInformation.currentLaneGuidance
+            maneuverState = .continue
+        }
     }
     public func updateEstimates(_ estimates: CPTravelEstimates, for maneuver: CPManeuver) {
-        // fail-closed
+        maneuverEstimates[ObjectIdentifier(maneuver)] = estimates
+        if upcomingManeuvers.first === maneuver {
+            maneuverState = .execute
+        }
     }
 }
 
 @MainActor open class CPNowPlayingButton: NSObject, @unchecked Sendable {
-    public var isEnabled: Bool = false
+    public var isEnabled: Bool = true
     public var isSelected: Bool = false
+    var storedHandler: ((CPNowPlayingButton) -> Void)? = nil
     public override init() { super.init() }
     public init(handler: ((CPNowPlayingButton) -> Void)? = nil) {
         super.init()
+        self.storedHandler = handler
     }
     public init?(coder: NSCoder) {
         super.init()
@@ -787,12 +829,13 @@ open class CPMessageListItemTrailingConfiguration: NSObject, @unchecked Sendable
     public init(image: UIImage, handler: ((CPNowPlayingButton) -> Void)? = nil) {
         super.init()
         self.image = image
+        self.storedHandler = handler
     }
 }
 
 @MainActor open class CPNowPlayingMode: NSObject, @unchecked Sendable {
     static let _default = CPNowPlayingMode()
-    public class var `default`: CPNowPlayingMode { CPNowPlayingMode() }
+    public class var `default`: CPNowPlayingMode { CPNowPlayingMode._default }
     public override init() { super.init() }
     public init?(coder: NSCoder) {
         super.init()
@@ -838,9 +881,15 @@ open class CPMessageListItemTrailingConfiguration: NSObject, @unchecked Sendable
     public override init() { super.init() }
     public init(elapsedTime: TimeInterval, paused: Bool) {
         super.init()
+        self.timeValue = elapsedTime
+        self.isPaused = paused
+        self.countsUp = true
     }
     public init(timeRemaining: TimeInterval, paused: Bool) {
         super.init()
+        self.timeValue = timeRemaining
+        self.isPaused = paused
+        self.countsUp = false
     }
     public init?(coder: NSCoder) {
         super.init()
@@ -880,6 +929,7 @@ open class CPMessageListItemTrailingConfiguration: NSObject, @unchecked Sendable
         self.teamStandings = teamStandings
         self.eventScore = eventScore
         self.possessionIndicator = possessionIndicator
+        self.isFavorite = favorite
     }
     public init?(coder: NSCoder) {
         super.init()
@@ -893,9 +943,11 @@ open class CPMessageListItemTrailingConfiguration: NSObject, @unchecked Sendable
     public override init() { super.init() }
     public init(teamInitials: String) {
         super.init()
+        self.initials = teamInitials
     }
     public init(teamLogo: UIImage) {
         super.init()
+        self.logo = teamLogo
     }
     public init?(coder: NSCoder) {
         super.init()
@@ -976,7 +1028,12 @@ open class CPRouteInformation: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(maneuvers: [CPManeuver], laneGuidances: [CPLaneGuidance], currentManeuvers: [CPManeuver], currentLaneGuidance: CPLaneGuidance, trip tripTravelEstimates: CPTravelEstimates, maneuverTravelEstimates: CPTravelEstimates) {
         super.init()
+        self.maneuvers = maneuvers
+        self.laneGuidances = laneGuidances
+        self.currentManeuvers = currentManeuvers
+        self.currentLaneGuidance = currentLaneGuidance
         self.tripTravelEstimates = tripTravelEstimates
+        self.maneuverTravelEstimates = maneuverTravelEstimates
     }
     public init(maneuvers: [CPManeuver], laneGuidances: [CPLaneGuidance], currentManeuvers: [CPManeuver], currentLaneGuidance: CPLaneGuidance, tripTravelEstimates: CPTravelEstimates, maneuverTravelEstimates: CPTravelEstimates) {
         super.init()
@@ -990,11 +1047,27 @@ open class CPRouteInformation: NSObject, @unchecked Sendable {
 }
 
 open class CPSessionConfiguration: NSObject, @unchecked Sendable {
-    public var contentStyle: CPContentStyle = []
-    public var limitedUserInterfaces: CPLimitableUserInterface = []
+    public private(set) var contentStyle: CPContentStyle = []
+    public private(set) var limitedUserInterfaces: CPLimitableUserInterface = []
+    public weak var delegate: (any CPSessionConfigurationDelegate)?
     public override init() { super.init() }
     public init(delegate: any CPSessionConfigurationDelegate) {
         super.init()
+        self.delegate = delegate
+    }
+
+    @_spi(OpenUIKitHost)
+    @MainActor
+    public func openuikit_applySimulatedStyle(_ style: CPContentStyle) {
+        contentStyle = style
+        delegate?.sessionConfiguration(self, contentStyleChanged: style)
+    }
+
+    @_spi(OpenUIKitHost)
+    @MainActor
+    public func openuikit_applyLimitedUserInterfaces(_ limited: CPLimitableUserInterface) {
+        limitedUserInterfaces = limited
+        delegate?.sessionConfiguration(self, limitedUserInterfacesChanged: limited)
     }
 }
 
@@ -1028,14 +1101,14 @@ open class CPSessionConfiguration: NSObject, @unchecked Sendable {
 }
 
 @MainActor open class CPAlertTemplate: CPTemplate, @unchecked Sendable {
-    public class var maximumActionCount: Int { 3 }
-    public var actions: [CPAlertAction] = []
-    public var titleVariants: [String] = []
+    public class var maximumActionCount: Int { CarPlayAlertMaximumActionCount }
+    public private(set) var actions: [CPAlertAction] = []
+    public private(set) var titleVariants: [String] = []
     public override init() { super.init() }
     public init(titleVariants: [String], actions: [CPAlertAction]) {
         super.init()
         self.titleVariants = titleVariants
-        self.actions = actions
+        self.actions = Array(actions.prefix(CarPlayAlertMaximumActionCount))
     }
 }
 
@@ -1050,16 +1123,16 @@ open class CPSessionConfiguration: NSObject, @unchecked Sendable {
 
 @MainActor open class CPGridTemplate: CPTemplate, CPBarButtonProviding, @unchecked Sendable {
     public class var maximumGridButtonImageSize: CGSize { CPButtonMaximumImageSize }
-    public var gridButtons: [CPGridButton] = []
-    public var title: String = ""
+    public private(set) var gridButtons: [CPGridButton] = []
+    public private(set) var title: String = ""
     public override init() { super.init() }
     public init(title: String?, gridButtons: [CPGridButton]) {
         super.init()
         self.title = title ?? ""
-        self.gridButtons = gridButtons
+        self.gridButtons = Array(gridButtons.prefix(CPGridTemplateMaximumItems))
     }
     public func updateGridButtons(_ gridButtons: [CPGridButton]) {
-        self.gridButtons = gridButtons
+        self.gridButtons = Array(gridButtons.prefix(CPGridTemplateMaximumItems))
     }
     public func updateTitle(_ title: String) {
         self.title = title
@@ -1076,53 +1149,86 @@ open class CPSessionConfiguration: NSObject, @unchecked Sendable {
         super.init()
         self.title = title
         self.layout = layout
-        self.items = items
-        self.actions = actions
+        self.items = Array(items.prefix(CarPlayInformationMaximumItemCount))
+        self.actions = Array(actions.prefix(CarPlayInformationMaximumActionCount))
     }
 }
 
 @MainActor open class CPListTemplate: CPTemplate, CPBarButtonProviding, @unchecked Sendable {
     public class var maximumGridButtonImageSize: CGSize { CPButtonMaximumImageSize }
     public class var maximumHeaderGridButtonCount: Int { 3 }
+    /// Documented CarPlay list cap (programming guide): 12 items.
     public class var maximumItemCount: Int { 12 }
+    /// Documented CarPlay list cap (programming guide): 12 sections.
     public class var maximumSectionCount: Int { 12 }
     public var assistantCellConfiguration: CPAssistantCellConfiguration? = nil
+    public weak var delegate: (any CPListTemplateDelegate)?
     public var emptyViewSubtitleVariants: [String] = []
     public var emptyViewTitleVariants: [String] = []
     public var headerGridButtons: [CPGridButton]? = nil
     public var itemCount: Int = 0
     public var sectionCount: Int = 0
-    public var sections: [CPListSection] = []
+    public private(set) var sections: [CPListSection] = []
     public var showsSpinnerWhileEmpty: Bool = false
     public var title: String? = nil
     public override init() { super.init() }
     public init(title: String?, sections: [CPListSection]) {
         super.init()
         self.title = title
-        self.sections = sections
-        self.sectionCount = sections.count
-        self.itemCount = sections.reduce(0) { $0 + $1.items.count }
+        applySections(sections)
     }
     public init(title: String?, sections: [CPListSection], assistantCellConfiguration: CPAssistantCellConfiguration?) {
         super.init()
         self.title = title
-        self.sections = sections
         self.assistantCellConfiguration = assistantCellConfiguration
+        applySections(sections)
     }
     public init(title: String?, sections: [CPListSection], assistantCellConfiguration: CPAssistantCellConfiguration?, headerGridButtons: [CPGridButton]?) {
         super.init()
         self.title = title
-        self.sections = sections
         self.assistantCellConfiguration = assistantCellConfiguration
-        self.headerGridButtons = headerGridButtons
+        if let headerGridButtons {
+            self.headerGridButtons = Array(headerGridButtons.prefix(CPListTemplate.maximumHeaderGridButtonCount))
+        }
+        applySections(sections)
     }
     public func indexPath(for item: any CPListTemplateItem) -> IndexPath? {
+        for (sectionIndex, section) in sections.enumerated() {
+            let itemIndex = section.index(of: item)
+            if itemIndex != NSNotFound {
+                return IndexPath(indexes: [sectionIndex, itemIndex])
+            }
+        }
         return nil
     }
     public func updateSections(_ sections: [CPListSection]) {
-        self.sections = sections
-        self.sectionCount = sections.count
-        self.itemCount = sections.reduce(0) { $0 + $1.items.count }
+        applySections(sections)
+    }
+    private func applySections(_ sections: [CPListSection]) {
+        let cappedSections = Array(sections.prefix(CPListTemplate.maximumSectionCount))
+        var remaining = CPListTemplate.maximumItemCount
+        var kept: [CPListSection] = []
+        for section in cappedSections {
+            if remaining <= 0 { break }
+            if section.items.count > remaining {
+                let trimmed = CPListSection(
+                    items: Array(section.items.prefix(remaining)),
+                    header: section.header,
+                    sectionIndexTitle: section.sectionIndexTitle
+                )
+                trimmed.headerButton = section.headerButton
+                trimmed.headerImage = section.headerImage
+                trimmed.headerSubtitle = section.headerSubtitle
+                kept.append(trimmed)
+                remaining = 0
+            } else {
+                kept.append(section)
+                remaining -= section.items.count
+            }
+        }
+        self.sections = kept
+        self.sectionCount = kept.count
+        self.itemCount = kept.reduce(0) { $0 + $1.items.count }
     }
 }
 
@@ -1136,45 +1242,79 @@ open class CPSessionConfiguration: NSObject, @unchecked Sendable {
         public static let down = PanDirection(rawValue: 8)
     }
     public var automaticallyHidesNavigationBar: Bool = false
-    public var currentNavigationAlert: CPNavigationAlert? = nil
+    public private(set) var currentNavigationAlert: CPNavigationAlert? = nil
     public var guidanceBackgroundColor: UIColor = UIColor()
     public var hidesButtonsWithNavigationBar: Bool = false
     public var mapButtons: [CPMapButton] = []
-    public var isPanningInterfaceVisible: Bool = false
+    public weak var mapDelegate: (any CPMapTemplateDelegate)?
+    public private(set) var isPanningInterfaceVisible: Bool = false
     public var tripEstimateStyle: CPTripEstimateStyle = .light
+    public private(set) var previewTrips: [CPTrip] = []
+    public private(set) var selectedPreviewTrip: CPTrip? = nil
+    public private(set) var tripEstimates: [ObjectIdentifier: (CPTravelEstimates, CPTimeRemainingColor)] = [:]
+    public private(set) var activeNavigationSession: CPNavigationSession? = nil
     public override init() { super.init() }
     public func dismissNavigationAlert(animated: Bool) async -> Bool {
-        return false
+        _ = animated
+        guard let alert = currentNavigationAlert else { return false }
+        mapDelegate?.mapTemplate(self, willDismiss: alert, dismissalContext: .userDismissed)
+        currentNavigationAlert = nil
+        mapDelegate?.mapTemplate(self, didDismiss: alert, dismissalContext: .userDismissed)
+        return true
     }
     public func dismissPanningInterface(animated: Bool) {
-        // fail-closed
+        _ = animated
+        if isPanningInterfaceVisible {
+            mapDelegate?.mapTemplateWillDismissPanningInterface(self)
+            isPanningInterfaceVisible = false
+            mapDelegate?.mapTemplateDidDismissPanningInterface(self)
+        }
     }
     public func hideTripPreviews() {
-        // fail-closed
+        previewTrips = []
+        selectedPreviewTrip = nil
     }
     public func present(navigationAlert: CPNavigationAlert, animated: Bool) {
-        // fail-closed
+        _ = animated
+        mapDelegate?.mapTemplate(self, willShow: navigationAlert)
+        currentNavigationAlert = navigationAlert
+        mapDelegate?.mapTemplate(self, didShow: navigationAlert)
     }
     public func showPanningInterface(animated: Bool) {
-        // fail-closed
+        _ = animated
+        isPanningInterfaceVisible = true
+        mapDelegate?.mapTemplateDidShowPanningInterface(self)
     }
     public func showRouteChoicesPreview(for tripPreview: CPTrip, textConfiguration: CPTripPreviewTextConfiguration?) {
-        // fail-closed
+        _ = textConfiguration
+        previewTrips = [tripPreview]
+        selectedPreviewTrip = tripPreview
+        if let choice = tripPreview.routeChoices.first {
+            mapDelegate?.mapTemplate(self, selectedPreviewFor: tripPreview, using: choice)
+        }
     }
     public func showTripPreviews(_ tripPreviews: [CPTrip], selectedTrip: CPTrip?, textConfiguration: CPTripPreviewTextConfiguration?) {
-        // fail-closed
+        _ = textConfiguration
+        previewTrips = tripPreviews
+        selectedPreviewTrip = selectedTrip ?? tripPreviews.first
     }
     public func showTripPreviews(_ tripPreviews: [CPTrip], textConfiguration: CPTripPreviewTextConfiguration?) {
-        // fail-closed
+        showTripPreviews(tripPreviews, selectedTrip: tripPreviews.first, textConfiguration: textConfiguration)
     }
     public func startNavigationSession(for trip: CPTrip) -> CPNavigationSession {
-        return CPNavigationSession()
+        hideTripPreviews()
+        let session = CPNavigationSession(trip: trip)
+        activeNavigationSession = session
+        if let choice = trip.routeChoices.first {
+            mapDelegate?.mapTemplate(self, startedTrip: trip, using: choice)
+        }
+        return session
     }
     public func updateEstimates(_ estimates: CPTravelEstimates, for trip: CPTrip) {
-        // fail-closed
+        update(estimates, for: trip, with: .default)
     }
     public func update(_ estimates: CPTravelEstimates, for trip: CPTrip, with timeRemainingColor: CPTimeRemainingColor) {
-        // fail-closed
+        tripEstimates[ObjectIdentifier(trip)] = (estimates, timeRemainingColor)
     }
 }
 
@@ -1182,92 +1322,135 @@ open class CPSessionConfiguration: NSObject, @unchecked Sendable {
     static let _shared = CPNowPlayingTemplate()
     public class var shared: CPNowPlayingTemplate { CPNowPlayingTemplate._shared }
     public var isAlbumArtistButtonEnabled: Bool = false
-    public var nowPlayingButtons: [CPNowPlayingButton] = []
+    public private(set) var nowPlayingButtons: [CPNowPlayingButton] = []
     public var nowPlayingMode: CPNowPlayingMode? = nil
     public var isUpNextButtonEnabled: Bool = false
     public var upNextTitle: String = ""
+    private var observers: [ObjectIdentifier: any CPNowPlayingTemplateObserver] = [:]
+    /// Declared MediaPlayer Now Playing bridge. Linux has no MPNowPlayingInfoCenter
+    /// session; this remains fail-closed and does not invent Now Playing metadata.
+    public private(set) var mpNowPlayingBridgeDeclared = true
     public override init() { super.init() }
     public func add(_ observer: any CPNowPlayingTemplateObserver) {
-        // fail-closed
+        observers[ObjectIdentifier(observer)] = observer
     }
     public func remove(_ observer: any CPNowPlayingTemplateObserver) {
-        // fail-closed
+        observers.removeValue(forKey: ObjectIdentifier(observer))
     }
     public func updateNowPlayingButtons(_ nowPlayingButtons: [CPNowPlayingButton]) {
-        // fail-closed
+        self.nowPlayingButtons = nowPlayingButtons
+    }
+
+    @_spi(OpenUIKitHost)
+    public func openuikit_notifyUpNext() {
+        for observer in observers.values {
+            observer.nowPlayingTemplateUpNextButtonTapped(self)
+        }
+    }
+
+    @_spi(OpenUIKitHost)
+    public func openuikit_notifyAlbumArtist() {
+        for observer in observers.values {
+            observer.nowPlayingTemplateAlbumArtistButtonTapped(self)
+        }
     }
 }
 
 @MainActor open class CPPointOfInterestTemplate: CPTemplate, CPBarButtonProviding, @unchecked Sendable {
-    public var pointsOfInterest: [CPPointOfInterest] = []
+    public private(set) var pointsOfInterest: [CPPointOfInterest] = []
     public var selectedIndex: Int = 0
     public var title: String = ""
+    public weak var pointOfInterestDelegate: (any CPPointOfInterestTemplateDelegate)?
     public override init() { super.init() }
     public init(title: String, pointsOfInterest: [CPPointOfInterest], selectedIndex: Int) {
         super.init()
         self.title = title
-        self.pointsOfInterest = pointsOfInterest
-        self.selectedIndex = selectedIndex
+        applyPoints(pointsOfInterest, selectedIndex: selectedIndex)
     }
     public func setPointsOfInterest(_ pointsOfInterest: [CPPointOfInterest], selectedIndex: Int) {
-        // fail-closed
+        applyPoints(pointsOfInterest, selectedIndex: selectedIndex)
+        if selectedIndex >= 0, selectedIndex < self.pointsOfInterest.count {
+            pointOfInterestDelegate?.pointOfInterestTemplate(self, didSelectPointOfInterest: self.pointsOfInterest[selectedIndex])
+        }
+    }
+    private func applyPoints(_ points: [CPPointOfInterest], selectedIndex: Int) {
+        self.pointsOfInterest = Array(points.prefix(CarPlayPointOfInterestMaximumCount))
+        if self.pointsOfInterest.isEmpty {
+            self.selectedIndex = 0
+        } else {
+            self.selectedIndex = min(max(selectedIndex, 0), self.pointsOfInterest.count - 1)
+        }
     }
 }
 
 @MainActor open class CPSearchTemplate: CPTemplate, @unchecked Sendable {
+    public weak var delegate: (any CPSearchTemplateDelegate)?
     public override init() { super.init() }
+
+    @_spi(OpenUIKitHost)
+    public func openuikit_updateSearchText(_ text: String) async -> [CPListItem] {
+        guard let delegate else { return [] }
+        return await delegate.searchTemplate(self, updatedSearchText: text)
+    }
+
+    @_spi(OpenUIKitHost)
+    public func openuikit_selectResult(_ item: CPListItem) async {
+        await delegate?.searchTemplate(self, selectedResult: item)
+    }
+
+    @_spi(OpenUIKitHost)
+    public func openuikit_pressSearchButton() {
+        delegate?.searchTemplateSearchButtonPressed(self)
+    }
 }
 
 @MainActor open class CPTabBarTemplate: CPTemplate, @unchecked Sendable {
-    public class var maximumTabCount: Int { 5 }
-    public var selectedTemplate: CPTemplate? = nil
-    public var templates: [CPTemplate] = []
+    /// Documented maximum is 5. Some vehicles only support 4 tabs.
+    public class var maximumTabCount: Int { CarPlayDocumentedTabBarMaximum }
+    public class var someVehiclesMaximumTabCount: Int { CarPlayDocumentedTabBarSomeUnitsMaximum }
+    public weak var delegate: (any CPTabBarTemplateDelegate)?
+    public private(set) var selectedTemplate: CPTemplate? = nil
+    public private(set) var templates: [CPTemplate] = []
     public override init() { super.init() }
     public init(templates: [CPTemplate]) {
         super.init()
-        self.templates = templates
+        applyTemplates(templates)
     }
     public func select(_ newTemplate: CPTemplate) {
-        // fail-closed
+        if templates.contains(where: { $0 === newTemplate }) {
+            selectedTemplate = newTemplate
+            delegate?.tabBarTemplate(self, didSelect: newTemplate)
+        }
     }
     public func selectTemplate(at index: Int) {
-        // fail-closed
+        guard index >= 0, index < templates.count else { return }
+        select(templates[index])
     }
     public func updateTemplates(_ newTemplates: [CPTemplate]) {
-        // fail-closed
+        applyTemplates(newTemplates)
     }
-}
-
-@MainActor open class CPTemplateApplicationDashboardScene: UIScene, @unchecked Sendable {
-    public var dashboardController: CPDashboardController = CPDashboardController()
-    public var dashboardWindow: UIWindow = UIWindow()
-    public var delegate: (any CPTemplateApplicationDashboardSceneDelegate)? = nil
-    public override init() { super.init() }
-}
-
-@MainActor open class CPTemplateApplicationInstrumentClusterScene: UIScene, @unchecked Sendable {
-    public var contentStyle: UIUserInterfaceStyle = .unspecified
-    public var delegate: (any CPTemplateApplicationInstrumentClusterSceneDelegate)? = nil
-    public var instrumentClusterController: CPInstrumentClusterController = CPInstrumentClusterController()
-    public override init() { super.init() }
-}
-
-@MainActor open class CPTemplateApplicationScene: UIScene, @unchecked Sendable {
-    public var carWindow: CPWindow = CPWindow()
-    public var contentStyle: UIUserInterfaceStyle = .unspecified
-    public var delegate: (any CPTemplateApplicationSceneDelegate)? = nil
-    public var interfaceController: CPInterfaceController = CPInterfaceController()
-    public override init() { super.init() }
+    private func applyTemplates(_ newTemplates: [CPTemplate]) {
+        templates = Array(newTemplates.prefix(CPTabBarTemplate.maximumTabCount))
+        if let selected = selectedTemplate, templates.contains(where: { $0 === selected }) {
+            return
+        }
+        selectedTemplate = templates.first
+        if let selectedTemplate {
+            delegate?.tabBarTemplate(self, didSelect: selectedTemplate)
+        }
+    }
 }
 
 open class CPTextButton: NSObject, @unchecked Sendable {
     public var textStyle: CPTextButtonStyle = .normal
     public var title: String = ""
+    var storedHandler: ((CPTextButton) -> Void)? = nil
     public override init() { super.init() }
     public init(title: String, textStyle: CPTextButtonStyle, handler: ((CPTextButton) -> Void)? = nil) {
         super.init()
         self.title = title
         self.textStyle = textStyle
+        self.storedHandler = handler
     }
 }
 
@@ -1278,9 +1461,15 @@ open class CPTravelEstimates: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(distanceRemaining: Measurement<UnitLength>, distanceRemainingToDisplay: Measurement<UnitLength>, timeRemaining time: TimeInterval) {
         super.init()
+        self.distanceRemaining = distanceRemaining
+        self.distanceRemainingToDisplay = distanceRemainingToDisplay
+        self.timeRemaining = time
     }
     public init(distanceRemaining distance: Measurement<UnitLength>, timeRemaining time: TimeInterval) {
         super.init()
+        self.distanceRemaining = distance
+        self.distanceRemainingToDisplay = distance
+        self.timeRemaining = time
     }
     public init?(coder: NSCoder) {
         super.init()
@@ -1344,20 +1533,17 @@ open class CPVoiceControlState: NSObject, @unchecked Sendable {
 }
 
 @MainActor open class CPVoiceControlTemplate: CPTemplate, @unchecked Sendable {
-    public var activeStateIdentifier: String? = nil
-    public var voiceControlStates: [CPVoiceControlState] = []
+    public private(set) var activeStateIdentifier: String? = nil
+    public private(set) var voiceControlStates: [CPVoiceControlState] = []
     public override init() { super.init() }
     public init(voiceControlStates: [CPVoiceControlState]) {
         super.init()
         self.voiceControlStates = voiceControlStates
     }
     public func activateVoiceControlState(withIdentifier identifier: String) {
-        // fail-closed
+        if voiceControlStates.contains(where: { $0.identifier == identifier }) {
+            activeStateIdentifier = identifier
+        }
     }
-}
-
-@MainActor open class CPWindow: UIWindow, @unchecked Sendable {
-    public var mapButtonSafeAreaLayoutGuide: UILayoutGuide = UILayoutGuide()
-    public override init() { super.init() }
 }
 

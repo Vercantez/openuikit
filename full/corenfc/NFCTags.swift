@@ -733,7 +733,7 @@ public enum NFCTag {
 
 /// Host-only stand-in so `NFCTag` cases can be constructed without a radio.
 @_spi(OpenUIKitHost)
-public final class CoreNFCHostNDEFTag: NSObject, NFCNDEFTag, NFCFeliCaTag, NFCISO15693Tag, NFCISO7816Tag, NFCMiFareTag {
+public final class CoreNFCHostNDEFTag: NSObject, NFCNDEFTag, NFCFeliCaTag, NFCISO15693Tag, NFCISO7816Tag, NFCMiFareTag, @unchecked Sendable {
     public var isAvailable: Bool { false }
     public var currentIDm: Data { Data() }
     public var currentSystemCode: Data { Data() }

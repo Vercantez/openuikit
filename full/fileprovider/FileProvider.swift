@@ -1,10 +1,11 @@
 /// Portable Linux starting point for Apple's public `FileProvider` module.
 ///
-/// Value types, errors, item/enumerator protocols, and fail-closed manager
-/// and extension APIs are real. Apple's File Provider daemon, Files.app,
-/// application-extension host, and XPC services are not hosted here: public
-/// registration and daemon APIs throw typed `NSFileProviderError` unless a
-/// Linux host installs `@_spi(OpenUIKitHost)` `FileProviderHostAdapter`.
+/// Value types, errors, item/enumerator protocols, and a process-local provider
+/// host are real. The local host keeps an on-disk domain registry and drives
+/// `NSFileProviderReplicatedExtension` in-process. Apple's File Provider
+/// daemon, Files.app, application-extension host, and XPC services are not
+/// hosted here: `NSFileProviderService` / `makeListenerEndpoint` stay
+/// fail-closed, and `NSFileProviderExtension` action methods stay fail-closed.
 ///
 /// `NSXPCListenerEndpoint` and `NSFileProviderService` are not FileProvider-owned
 /// in the canonical graph. This module never vends a local type of those names.

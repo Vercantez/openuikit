@@ -5,6 +5,12 @@ OpenUIKit Linux platform. It reconstructs the public Xcode 26.1 iPhoneOS
 Swift surface from the sealed symbol graph. It is not wired into the shared
 guest package; that integration is a separate central review step.
 
+Coverage: **460 implemented / 14 declared / 474 total** (fully nondeferred).
+The 14 remaining `declared` rows are Apple `_BridgedStoredNSError`
+synthesized members. Linux implements the observable `CustomNSError` /
+`Hashable` overlay instead; a freshly constructed
+`NSError(domain:code:)` does not become `CBError` / `CBATTError`.
+
 ## What is real
 
 - `CBUUID` accepts only exact 16-bit (4 hex), 32-bit (8 hex), 128-bit
@@ -22,31 +28,102 @@ guest package; that integration is a separate central review step.
 - GATT mutables transfer characteristics, descriptors, and included
   services atomically: prior owners drop the child and stale reverse
   references are cleared.
-- Managers report `.unsupported` / `.denied`, never scan, and deliver
-  `centralManagerDidUpdateState` / `peripheralManagerDidUpdateState`
-  asynchronously on the supplied queue, exactly once per current delegate.
-  Replacing the delegate, including after a nil assignment, delivers initial
-  state to the new object. `connect` fail-closes with
-  `didFailToConnect` after the call returns; `cancelPeripheralConnection`
-  does not invent a disconnect for a never-connected peripheral.
+- Without a simulated adapter, managers settle `.unknown` → `.unsupported`
+  during `init` (Linux has no radio to query) and keep
+  `CBManager.authorization == .denied`. Scans stay idle, retrieves return
+  `[]`, `connect` fail-closes with `didFailToConnect` /
+  `operationNotSupported` after the call returns, and
+  `cancelPeripheralConnection` does not invent a disconnect for a
+  never-connected peripheral. State callbacks hop asynchronously onto the
+  supplied queue, once per current delegate.
+
+## Depth pass 2026-09
+
+Coverage before this evidence repair: **460 implemented / 14 declared / 474
+total**, but every implemented row cited `tests/agent/CoreBluetoothRuntime.swift`
+(a file path). Merge refused that form.
+
+Coverage after: **460 implemented / 14 declared / 474 total**. Implemented rows
+cite `test:full/corebluetooth/tests/agent/<File>Tests.swift#testName`. The 14
+`declared` rows are Apple `_BridgedStoredNSError` synthesized members and now
+use `source:full/corebluetooth/CoreBluetooth.swift#Symbol`.
+
+Top-5 implemented evidence distribution:
+
+| Citations | Evidence |
+| ---: | --- |
+| 40 | `CoreBluetoothErrorTests.swift#testCBATTErrorCodes` |
+| 40 | `CoreBluetoothErrorTests.swift#testCBErrorCodes` |
+| 21 | `CoreBluetoothOptionSetTests.swift#testCBAttributePermissionsAlgebra` |
+| 21 | `CoreBluetoothOptionSetTests.swift#testCBCentralManagerFeatureAlgebra` |
+| 21 | `CoreBluetoothOptionSetTests.swift#testCBCharacteristicPropertiesAlgebra` |
+
+`testCBErrorCodes` / `testCBATTErrorCodes` are table-driven enum-member and
+static `err…` value tests. The three algebra tests cover SetAlgebra witnesses
+per option-set type (not a bulk relabel of unrelated rows).
+
+This pass adds an explicit `@_spi(OpenUIKitHost)` simulated adapter
+(`CBHostSimulation`) so tests can exercise the public central / peripheral /
+GATT / ATT surface **without a radio**. Installing the adapter is the only
+path to `.poweredOn`. Authorization stays `.denied` (no TCC grant).
+
+Implemented against the simulated adapter:
+
+- `CBCentralManager.init(delegate:queue:options:)` with restore-identifier
+  `willRestoreState` (host-supplied dictionary or empty restoration keys)
+  before `centralManagerDidUpdateState`.
+- `scanForPeripherals(withServices:options:)` / `stopScan` / `isScanning`
+  with `CBCentralManagerScanOptionAllowDuplicatesKey` (duplicates delivered
+  twice per scan session when allowed; once otherwise). `didDiscover`
+  dictionaries contain every `CBAdvertisementData*` key.
+- `connect` / `cancelPeripheralConnection` with documented callback order:
+  call returns, then `didConnect` or `didFailToConnect`; user cancel of a
+  connected peripheral delivers `didDisconnectPeripheral(error:)` (nil)
+  then the timestamp overlay, plus `connectionEventDidOccur` when
+  `registerForConnectionEvents` was used. ANCS-authorized simulated
+  peripherals also deliver `didUpdateANCSAuthorizationFor`.
+- `retrievePeripherals(withIdentifiers:)` and
+  `retrieveConnectedPeripherals(withServices:)` return the same
+  `CBPeripheral` instances produced by scan/connect.
+- `CBPeripheral` GATT: `discoverServices` /
+  `discoverCharacteristics` / `discoverDescriptors` /
+  `discoverIncludedServices`, `readValue` / `writeValue(.withResponse)` /
+  `writeValue(.withoutResponse)` with `maximumWriteValueLength` (512 / 20),
+  `setNotifyValue` driving `didUpdateNotificationStateFor` plus an optional
+  notify payload, `readRSSI`, `canSendWriteWithoutResponse`, and
+  `peripheralIsReady(toSendWriteWithoutResponse:)`. Oversized
+  without-response writes are dropped.
+- `CBPeripheralManager.add`, `startAdvertising` (including
+  `alreadyAdvertising`), `updateValue(for:onSubscribedCentrals:)`,
+  `respond(to:withResult:)`, and host-injected
+  `didReceiveRead` / `didReceiveWrite` from a simulated `CBCentral`.
+- L2CAP publish/open/unpublish remain fail-closed
+  (`CBError.operationNotSupported`); `CBL2CAPChannel` is constructible for
+  identity tests via host SPI.
 
 ## Fail-closed boundaries
 
+- No BlueZ / HCI / kernel radio. `.poweredOn` exists only while a test
+  hook adapter is installed.
 - Advertisement/option key **payloads** and
   `CBUUIDCharacteristicObservationScheduleString` are unobserved; constants
-  exist as process-local identities only.
+  exist as process-local identities only. Simulated advertisement
+  *dictionaries* use those constants as keys.
 - `CBConnectionEventMatchingOption.peripheralUUIDs` /
   `serviceUUIDs` raw strings are unobserved.
 - `cancelPeripheralConnection` does not fabricate a disconnect callback for
-  a peripheral that was never connected.
-- Linux has no radio, TCC prompt, or restore cache. Scans stay idle,
-  retrieves return `[]`, advertising/`add` fail with
-  `CBError.operationNotSupported`.
+  a peripheral that was never connected. Cancel during `.connecting` maps
+  to `didFailToConnect` / `operationCancelled` (Linux simulation choice).
+- Linux has no TCC prompt or Apple restore cache. Restore callbacks fire
+  only when `CB*OptionRestoreIdentifierKey` is supplied; restored
+  peripherals are never invented.
+- `CBCentralManager.supports(.extendedScanAndConnect)` is `false`.
 
 ## Tests
 
-`tests/agent/CoreBluetoothRuntime.swift` is the host-gate probe and prints
-`COREBLUETOOTH_AGENT_RUNTIME_OK`.
+Focused `func test*()` families live in `tests/agent/*Tests.swift`. The sealed
+v1 gate compiles only `tests/agent/CoreBluetoothRuntime.swift`, which concatenates
+those tests plus support probes and prints `COREBLUETOOTH_AGENT_RUNTIME_OK`.
 
 `tests/agent/CoreBluetoothDependencyIdentity.swift` is a future EC2 identity
 probe: real Foundation / CoreFoundation / Dispatch / CoreBluetooth imports,
@@ -54,3 +131,12 @@ cross-module NSError checks, UUID/GATT/callback proofs, and `ldd` of
 `libCoreBluetooth.dylib`. It prints
 `COREBLUETOOTH_DEPENDENCY_IDENTITY_OK`. It does not claim an integrated
 Linux product until that cold build uses real dependency modules.
+
+Expected sealed-gate markers:
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FRAMEWORK_FANOUT_REFERENCE_OK
+COREBLUETOOTH_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CoreBluetooth dylib=libCoreBluetooth.dylib
+```

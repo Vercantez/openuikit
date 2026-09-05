@@ -111,8 +111,12 @@ private func exerciseAvailabilityAndSession() async {
         } catch {
             requireTranslationError(error, .unableToIdentifyLanguage)
         }
-        let nonempty = try! await availability.status(for: "hello", to: french)
-        precondition(nonempty == .unsupported)
+        do {
+            _ = try await availability.status(for: "hello", to: french)
+            fatalError("Linux has no language identification")
+        } catch {
+            requireTranslationError(error, .unableToIdentifyLanguage)
+        }
 
         let session = TranslationSession(installedSource: english, target: french)
         precondition(session.sourceLanguage == english)
@@ -140,6 +144,17 @@ private func exerciseAvailabilityAndSession() async {
             fatalError("translate must not invent Apple ML output")
         } catch {
             requireTranslationError(error, .notInstalled)
+        }
+
+        let samePair = TranslationSession(
+            installedSource: Locale.Language(identifier: "en-US"),
+            target: Locale.Language(identifier: "en-GB")
+        )
+        do {
+            _ = try await samePair.translate("Hello")
+            fatalError("same-language pairing must fail closed")
+        } catch {
+            requireTranslationError(error, .unsupportedLanguagePairing)
         }
 
         let request = TranslationSession.Request(sourceText: "Hello", clientIdentifier: "r1")

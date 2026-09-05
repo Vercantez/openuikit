@@ -15,6 +15,38 @@ open class ARReferenceImage: NSObject {
         super.init()
     }
 
+    public init(_ image: CGImage, orientation: CGImagePropertyOrientation, physicalWidth: CGFloat) {
+        let height = image.width == 0 ? 0 : physicalWidth * CGFloat(image.height) / CGFloat(image.width)
+        self._physicalSize = CGSize(width: physicalWidth, height: height)
+        self._resourceGroupName = nil
+        _ = orientation
+        super.init()
+    }
+
+    public init(CGImage image: CGImage, orientation: CGImagePropertyOrientation, physicalWidth: CGFloat) {
+        let height = image.width == 0 ? 0 : physicalWidth * CGFloat(image.height) / CGFloat(image.width)
+        self._physicalSize = CGSize(width: physicalWidth, height: height)
+        self._resourceGroupName = nil
+        _ = orientation
+        super.init()
+    }
+
+    public init(_ pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation, physicalWidth: CGFloat) {
+        let height = pixelBuffer.width == 0 ? 0 : physicalWidth * CGFloat(pixelBuffer.height) / CGFloat(max(pixelBuffer.width, 1))
+        self._physicalSize = CGSize(width: physicalWidth, height: height)
+        self._resourceGroupName = nil
+        _ = orientation
+        super.init()
+    }
+
+    public init(pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation, physicalWidth: CGFloat) {
+        let height = pixelBuffer.width == 0 ? 0 : physicalWidth * CGFloat(pixelBuffer.height) / CGFloat(max(pixelBuffer.width, 1))
+        self._physicalSize = CGSize(width: physicalWidth, height: height)
+        self._resourceGroupName = nil
+        _ = orientation
+        super.init()
+    }
+
     public class func referenceImages(inGroupNamed name: String, bundle: Bundle?) -> Set<ARReferenceImage>? {
         _ = (name, bundle)
         return nil
@@ -80,6 +112,11 @@ open class ARReferenceObject: NSObject, NSSecureCoding {
     public func merging(_ object: ARReferenceObject) throws -> ARReferenceObject {
         _ = object
         throw ARError(.objectMergeFailed)
+    }
+
+    public func export(to url: URL, previewImage: UIImage?) throws {
+        _ = (url, previewImage)
+        throw ARError(.fileIOFailed)
     }
 
     public override var hash: Int { identity.hashValue }

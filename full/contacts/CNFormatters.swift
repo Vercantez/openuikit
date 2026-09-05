@@ -56,21 +56,27 @@ open class CNContactFormatter: NSObject {
 
     open class func string(from contact: CNContact, style: CNContactFormatterStyle) -> String? {
         let phonetic = style == .phoneticFullName
-        let parts = contact.displayNameParts(phonetic: phonetic)
-        if contact.contactType == .organization && !parts.organization.isEmpty {
-            return parts.organization
+        if contact.contactType == .organization {
+            let organization = phonetic ? contact.phoneticOrganizationName : contact.organizationName
+            if !organization.isEmpty { return organization }
         }
+        let prefix = phonetic ? "" : contact.namePrefix
+        let given = phonetic ? contact.phoneticGivenName : contact.givenName
+        let middle = phonetic ? contact.phoneticMiddleName : contact.middleName
+        let family = phonetic ? contact.phoneticFamilyName : contact.familyName
+        let suffix = phonetic ? "" : contact.nameSuffix
         let order = nameOrder(for: contact)
-        let pieces: [String]
+        let ordered: [String]
         if order == .familyNameFirst {
-            pieces = [parts.last, parts.first]
+            ordered = [prefix, family, given, middle, suffix]
         } else {
-            pieces = [parts.first, parts.last]
+            ordered = [prefix, given, middle, family, suffix]
         }
-        let joined = pieces.filter { !$0.isEmpty }.joined(separator: delimiter(for: contact))
+        let joined = ordered.filter { !$0.isEmpty }.joined(separator: delimiter(for: contact))
         if joined.isEmpty {
             if !contact.nickname.isEmpty { return contact.nickname }
-            if !parts.organization.isEmpty { return parts.organization }
+            let organization = phonetic ? contact.phoneticOrganizationName : contact.organizationName
+            if !organization.isEmpty { return organization }
             return nil
         }
         return joined
@@ -109,16 +115,51 @@ open class CNPostalAddressFormatter: NSObject {
         style: CNPostalAddressFormatterStyle
     ) -> String {
         _ = style
+        let region = postalAddress.isoCountryCode.isEmpty
+            ? (Locale.current.region?.identifier ?? "US")
+            : postalAddress.isoCountryCode.uppercased()
+        return layout(postalAddress, region: region)
+    }
+
+    private static func layout(_ address: CNPostalAddress, region: String) -> String {
         var lines: [String] = []
-        if !postalAddress.street.isEmpty { lines.append(postalAddress.street) }
-        var cityLine: [String] = []
-        if !postalAddress.city.isEmpty { cityLine.append(postalAddress.city) }
-        if !postalAddress.state.isEmpty { cityLine.append(postalAddress.state) }
-        if !postalAddress.postalCode.isEmpty { cityLine.append(postalAddress.postalCode) }
-        if !cityLine.isEmpty {
-            lines.append(cityLine.joined(separator: ", "))
+        func cityStatePostalUS() -> String? {
+            var parts: [String] = []
+            if !address.city.isEmpty { parts.append(address.city) }
+            var stateZip = address.state
+            if !address.postalCode.isEmpty {
+                stateZip = stateZip.isEmpty ? address.postalCode : "\(stateZip) \(address.postalCode)"
+            }
+            if !stateZip.isEmpty { parts.append(stateZip) }
+            return parts.isEmpty ? nil : parts.joined(separator: ", ")
         }
-        if !postalAddress.country.isEmpty { lines.append(postalAddress.country) }
+        switch region {
+        case "US", "CA", "AU", "NZ":
+            if !address.street.isEmpty { lines.append(address.street) }
+            if let cityLine = cityStatePostalUS() { lines.append(cityLine) }
+            if !address.country.isEmpty { lines.append(address.country) }
+        case "GB", "UK":
+            if !address.street.isEmpty { lines.append(address.street) }
+            if !address.city.isEmpty { lines.append(address.city) }
+            if !address.postalCode.isEmpty { lines.append(address.postalCode) }
+            if !address.country.isEmpty { lines.append(address.country) }
+        case "JP", "KR", "CN":
+            if !address.country.isEmpty { lines.append(address.country) }
+            if !address.postalCode.isEmpty { lines.append(address.postalCode) }
+            var locality: [String] = []
+            if !address.state.isEmpty { locality.append(address.state) }
+            if !address.city.isEmpty { locality.append(address.city) }
+            if !locality.isEmpty { lines.append(locality.joined(separator: " ")) }
+            if !address.street.isEmpty { lines.append(address.street) }
+        default:
+            if !address.street.isEmpty { lines.append(address.street) }
+            var cityLine: [String] = []
+            if !address.postalCode.isEmpty { cityLine.append(address.postalCode) }
+            if !address.city.isEmpty { cityLine.append(address.city) }
+            if !cityLine.isEmpty { lines.append(cityLine.joined(separator: " ")) }
+            if !address.state.isEmpty { lines.append(address.state) }
+            if !address.country.isEmpty { lines.append(address.country) }
+        }
         return lines.joined(separator: "\n")
     }
 
@@ -176,9 +217,10 @@ open class CNContactVCardSerialization: NSObject {
         guard let text = String(data: data, encoding: .utf8) else {
             throw CNError(.vCardMalformed)
         }
+        let unfolded = unfoldVCard(text.replacingOccurrences(of: "\r\n", with: "\n"))
         var contacts: [CNContact] = []
         var current: CNMutableContact?
-        for rawLine in text.replacingOccurrences(of: "\r\n", with: "\n").split(separator: "\n", omittingEmptySubsequences: false) {
+        for rawLine in unfolded.split(separator: "\n", omittingEmptySubsequences: false) {
             let line = String(rawLine)
             let upper = line.uppercased()
             if upper == "BEGIN:VCARD" {
@@ -198,6 +240,20 @@ open class CNContactVCardSerialization: NSObject {
         return contacts
     }
 
+    private static func unfoldVCard(_ text: String) -> String {
+        var result = ""
+        let lines = text.split(separator: "\n", omittingEmptySubsequences: false)
+        for line in lines {
+            if line.first == " " || line.first == "\t" {
+                result.append(contentsOf: line.dropFirst())
+            } else {
+                if !result.isEmpty { result.append("\n") }
+                result.append(contentsOf: line)
+            }
+        }
+        return result
+    }
+
     private static func encodeCard(_ contact: CNContact) -> String {
         var lines = ["BEGIN:VCARD", "VERSION:3.0"]
         lines.append(
@@ -206,41 +262,148 @@ open class CNContactVCardSerialization: NSObject {
         if let full = CNContactFormatter.string(from: contact, style: .fullName) {
             lines.append("FN:\(escape(full))")
         }
+        if !contact.nickname.isEmpty {
+            lines.append("NICKNAME:\(escape(contact.nickname))")
+        }
         if !contact.organizationName.isEmpty {
             lines.append("ORG:\(escape(contact.organizationName))")
         }
         if !contact.jobTitle.isEmpty {
             lines.append("TITLE:\(escape(contact.jobTitle))")
         }
-        if !contact.nickname.isEmpty {
-            lines.append("NICKNAME:\(escape(contact.nickname))")
+        if let birthday = contact.birthday, let formatted = formatBDay(birthday) {
+            lines.append("BDAY:\(formatted)")
         }
         if !contact.note.isEmpty {
             lines.append("NOTE:\(escape(contact.note))")
         }
         for phone in contact.phoneNumbers {
-            lines.append("TEL:\(escape(phone.value.stringValue))")
+            let type = telType(phone.label)
+            lines.append("TEL;TYPE=\(type):\(escape(phone.value.stringValue))")
         }
         for email in contact.emailAddresses {
-            lines.append("EMAIL:\(escape(email.value as String))")
+            let type = emailType(email.label)
+            lines.append("EMAIL;TYPE=\(type):\(escape(email.value as String))")
         }
         for url in contact.urlAddresses {
             lines.append("URL:\(escape(url.value as String))")
         }
         for labeled in contact.postalAddresses {
             let address = labeled.value
+            let type = addressType(labeled.label)
             lines.append(
-                "ADR:;;\(escape(address.street));\(escape(address.city));\(escape(address.state));\(escape(address.postalCode));\(escape(address.country))"
+                "ADR;TYPE=\(type):;;\(escape(address.street));\(escape(address.city));\(escape(address.state));\(escape(address.postalCode));\(escape(address.country))"
             )
         }
+        if let photo = contact.imageData ?? contact.thumbnailImageData {
+            let encoded = photo.base64EncodedString()
+            let kind = photoType(photo)
+            lines.append("PHOTO;ENCODING=b;TYPE=\(kind):\(encoded)")
+        }
         lines.append("END:VCARD")
-        return lines.joined(separator: "\r\n") + "\r\n"
+        return foldVCard(lines).joined(separator: "\r\n") + "\r\n"
+    }
+
+    private static func foldVCard(_ lines: [String]) -> [String] {
+        var folded: [String] = []
+        for line in lines {
+            if line.utf8.count <= 75 {
+                folded.append(line)
+                continue
+            }
+            var remaining = line
+            var first = true
+            while !remaining.isEmpty {
+                let limit = first ? 75 : 74
+                var index = remaining.startIndex
+                var count = 0
+                var cut = remaining.endIndex
+                while index < remaining.endIndex {
+                    let next = remaining.index(after: index)
+                    count += remaining[index..<next].utf8.count
+                    if count > limit {
+                        cut = index
+                        break
+                    }
+                    index = next
+                }
+                let chunk = String(remaining[..<cut])
+                folded.append(first ? chunk : " " + chunk)
+                remaining = String(remaining[cut...])
+                first = false
+            }
+        }
+        return folded
+    }
+
+    private static func formatBDay(_ components: DateComponents) -> String? {
+        guard let year = components.year, let month = components.month, let day = components.day else {
+            return nil
+        }
+        return String(format: "%04d-%02d-%02d", year, month, day)
+    }
+
+    private static func telType(_ label: String?) -> String {
+        switch label {
+        case CNLabelPhoneNumberiPhone: return "IPHONE"
+        case CNLabelPhoneNumberMobile: return "CELL"
+        case CNLabelPhoneNumberAppleWatch: return "WATCH"
+        case CNLabelPhoneNumberHomeFax: return "FAX,HOME"
+        case CNLabelPhoneNumberWorkFax: return "FAX,WORK"
+        case CNLabelPhoneNumberOtherFax: return "FAX"
+        case CNLabelPhoneNumberPager: return "PAGER"
+        case CNLabelPhoneNumberMain: return "MAIN"
+        case CNLabelWork: return "WORK"
+        case CNLabelHome: return "HOME"
+        default: return "VOICE"
+        }
+    }
+
+    private static func emailType(_ label: String?) -> String {
+        switch label {
+        case CNLabelWork: return "WORK"
+        case CNLabelEmailiCloud: return "INTERNET"
+        case CNLabelHome: return "HOME"
+        default: return "INTERNET"
+        }
+    }
+
+    private static func addressType(_ label: String?) -> String {
+        switch label {
+        case CNLabelWork: return "WORK"
+        default: return "HOME"
+        }
+    }
+
+    private static func photoType(_ data: Data) -> String {
+        if data.starts(with: [0x89, 0x50, 0x4E, 0x47]) { return "PNG" }
+        if data.starts(with: [0x47, 0x49, 0x46]) { return "GIF" }
+        return "JPEG"
     }
 
     private static func applyVCardLine(_ line: String, to contact: CNMutableContact) {
         guard let colon = line.firstIndex(of: ":") else { return }
-        let name = String(line[..<colon]).uppercased()
+        let nameAndParams = String(line[..<colon])
         let value = unescape(String(line[line.index(after: colon)...]))
+        let pieces = nameAndParams.split(separator: ";")
+        guard let rawName = pieces.first else { return }
+        let name = String(rawName).uppercased()
+        var params: [String: String] = [:]
+        for parameter in pieces.dropFirst() {
+            let text = String(parameter)
+            if let eq = text.firstIndex(of: "=") {
+                let key = String(text[..<eq]).uppercased()
+                let value = String(text[text.index(after: eq)...]).uppercased()
+                if let existing = params[key], !existing.isEmpty {
+                    params[key] = existing + "," + value
+                } else {
+                    params[key] = value
+                }
+            } else {
+                params[text.uppercased()] = ""
+            }
+        }
+        let types = params["TYPE"]?.split(separator: ",").map(String.init) ?? []
         if name == "N" {
             let parts = splitUnescaped(value)
             if parts.count > 0 { contact.familyName = parts[0] }
@@ -256,13 +419,19 @@ open class CNContactVCardSerialization: NSObject {
             contact.nickname = value
         } else if name == "NOTE" {
             contact.note = value
-        } else if name.hasPrefix("TEL") {
-            contact.phoneNumbers.append(CNLabeledValue(label: CNLabelOther, value: CNPhoneNumber(stringValue: value)))
-        } else if name.hasPrefix("EMAIL") {
-            contact.emailAddresses.append(CNLabeledValue(label: CNLabelOther, value: value as NSString))
-        } else if name.hasPrefix("URL") {
-            contact.urlAddresses.append(CNLabeledValue(label: CNLabelHome, value: value as NSString))
-        } else if name.hasPrefix("ADR") {
+        } else if name == "BDAY" {
+            contact.birthday = parseBDay(value)
+        } else if name == "TEL" {
+            contact.phoneNumbers.append(
+                CNLabeledValue(label: phoneLabel(from: types), value: CNPhoneNumber(stringValue: value))
+            )
+        } else if name == "EMAIL" {
+            contact.emailAddresses.append(
+                CNLabeledValue(label: emailLabel(from: types), value: value as NSString)
+            )
+        } else if name == "URL" {
+            contact.urlAddresses.append(CNLabeledValue(label: CNLabelURLAddressHomePage, value: value as NSString))
+        } else if name == "ADR" {
             let parts = splitUnescaped(value)
             let address = CNMutablePostalAddress()
             if parts.count > 2 { address.street = parts[2] }
@@ -270,8 +439,46 @@ open class CNContactVCardSerialization: NSObject {
             if parts.count > 4 { address.state = parts[4] }
             if parts.count > 5 { address.postalCode = parts[5] }
             if parts.count > 6 { address.country = parts[6] }
-            contact.postalAddresses.append(CNLabeledValue(label: CNLabelHome, value: address))
+            contact.postalAddresses.append(
+                CNLabeledValue(label: types.contains("WORK") ? CNLabelWork : CNLabelHome, value: address)
+            )
+        } else if name == "PHOTO" {
+            let cleaned = value.replacingOccurrences(of: " ", with: "")
+            if let data = Data(base64Encoded: cleaned) {
+                contact.imageData = data
+            }
         }
+    }
+
+    private static func parseBDay(_ value: String) -> DateComponents? {
+        let digits = value.filter(\.isNumber)
+        guard digits.count >= 8 else { return nil }
+        var components = DateComponents()
+        components.calendar = Calendar(identifier: .gregorian)
+        components.year = Int(digits.prefix(4))
+        components.month = Int(digits.dropFirst(4).prefix(2))
+        components.day = Int(digits.dropFirst(6).prefix(2))
+        return components
+    }
+
+    private static func phoneLabel(from types: [String]) -> String {
+        if types.contains("IPHONE") { return CNLabelPhoneNumberiPhone }
+        if types.contains("CELL") { return CNLabelPhoneNumberMobile }
+        if types.contains("WATCH") { return CNLabelPhoneNumberAppleWatch }
+        if types.contains("PAGER") { return CNLabelPhoneNumberPager }
+        if types.contains("MAIN") { return CNLabelPhoneNumberMain }
+        if types.contains("FAX") && types.contains("WORK") { return CNLabelPhoneNumberWorkFax }
+        if types.contains("FAX") && types.contains("HOME") { return CNLabelPhoneNumberHomeFax }
+        if types.contains("FAX") { return CNLabelPhoneNumberOtherFax }
+        if types.contains("WORK") { return CNLabelWork }
+        if types.contains("HOME") { return CNLabelHome }
+        return CNLabelOther
+    }
+
+    private static func emailLabel(from types: [String]) -> String {
+        if types.contains("WORK") { return CNLabelWork }
+        if types.contains("HOME") { return CNLabelHome }
+        return CNLabelOther
     }
 
     private static func escape(_ value: String) -> String {
