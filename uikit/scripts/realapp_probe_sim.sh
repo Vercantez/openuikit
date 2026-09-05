@@ -28,7 +28,7 @@ sed -e 's/^import OpenUIKit$/import UIKit/' \
     -e 's/^    public override func viewDidLoad() {$/    required init?(coder: NSCoder) { fatalError() }\n    public override func viewDidLoad() {/' \
     Sources/RealAppProbe/RealAppScreen.swift > "$TMPSRC/RealAppScreen.swift"
 sed -e 's/^import OpenUIKit$/import UIKit/' Sources/RealAppProbe/Shims.swift > "$TMPSRC/Shims.swift"
-sed -e 's/^import OpenUIKit$/import UIKit/' Sources/RealAppProbe/FocusShims.swift > "$TMPSRC/FocusShims.swift"
+sed -e 's/^import OpenUIKit$/import UIKit/' Sources/RealAppProbe/Focus/FocusShims.swift > "$TMPSRC/FocusShims.swift"
 # The vendored file's two ADAPTED(objc-runtime) lines are the ledger's own
 # `Selector.named` spelling for native ELF; on Darwin compile the UPSTREAM
 # `#selector` text (pocket-casts-ios podcasts/SimpleActionView.swift:106,137).
