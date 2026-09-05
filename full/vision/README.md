@@ -84,10 +84,32 @@ bash tests/acceptance/test_host.sh
 
 Campaign `ios26.1-fwdepth-r3`, lane `large-partitioned`, framework `Vision`
 (3584 IDs). Starting commit `5cc42895aa4277d0ed2103050b64be03fe813c3e`.
-Branch `agent/fw-vision`. Coverage after this pass: **implemented ≥ 900**
-(classical handler/request/observation/geometry/barcode/rectangle/contour
-families are nondeferred). Wave-1 was 342 implemented / 41 declared / 3201
-deferred.
+Branch `agent/fw-vision`.
+
+Coverage honesty repair (merge refused `dd1e8715` for bulk `tests/agent/VisionRuntime.swift`
+path evidence):
+
+| | implemented | declared | deferred |
+|---|---:|---:|---:|
+| Wave-1 | 342 | 41 | 3201 |
+| Depth pass before evidence repair | 1513 | 1922 | 149 |
+| After focused `*Tests.swift#testName` ledger | **729** | **2560** | **295** |
+
+Nondeferred 3289. Every `implemented` row cites
+`test:full/vision/tests/agent/<File>Tests.swift#testName` for a real top-level
+`func testName()`. Rows without a focused assertion are `declared` with
+`source:full/vision/<file>.swift#Symbol`. Handler/request/observation/geometry/
+barcode/rectangle/contour families remain nondeferred.
+
+Top-5 implemented evidence distribution (729 rows):
+
+1. `VisionEnumTests.swift#testValueCatalog` — 270 (37.0%) — table-driven enums, revisions, error codes (allowed shared value test)
+2. `VisionIdentifierTests.swift#testBarcodeSymbologyCatalog` — 46 (6.3%)
+3. `VisionOverlayTests.swift#testOverlayNormalizedGeometry` — 32 (4.4%)
+4. `VisionRequestHandlerTests.swift#testImageRequestHandlerSources` — 24 (3.3%)
+5. `VisionOverlayTests.swift#testOverlayBarcodePerform` — 24 (3.3%)
+
+No non-enum test exceeds 40% of implemented rows.
 
 Public surface implemented for real on Linux:
 
@@ -108,7 +130,7 @@ code, rectangle-filter coordinate space.
 Environment note: `.cursor/verify-cloud-environment.sh` did not print
 `CURSOR_SWIFT_ENVIRONMENT_OK` in this VM because `scratch/ladder-corpus/focus-ios`
 is missing. `swiftc` is Swift 6.2.4 / `x86_64-unknown-linux-gnu`. The sealed
-gate ran directly on this Linux host (no docker). Host gate output (2026-09-05):
+gate ran directly on this Linux host (no docker). Host gate output:
 
 ```
 CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
