@@ -17,6 +17,10 @@
 # test_vendor_tree (chained on the attestation line), push.
 set -e
 cd "$(dirname "$0")/../.."          # monorepo root
+# One merge at a time: several waiters once launched merges into main together.
+MERGE_LOCK=/tmp/agent_merge.lock
+until mkdir "$MERGE_LOCK" 2>/dev/null; do sleep 30; done
+trap 'rmdir "$MERGE_LOCK" 2>/dev/null' EXIT INT TERM HUP
 ROOT=$(pwd)
 NAME=${1:?usage: agent_merge.sh <branch>}
 git fetch -q origin 2>/dev/null || true
@@ -72,7 +76,7 @@ done
 git worktree prune
 WT=$(mktemp -d /tmp/agent_merge.XXXX)
 git worktree add -q --detach "$WT" main
-trap 'git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune' EXIT INT TERM HUP
+trap 'git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune; rmdir "$MERGE_LOCK" 2>/dev/null' EXIT INT TERM HUP
 git -C "$WT" merge -q --no-ff --no-commit "$BR" || { echo "MERGE CONFLICT with main"; exit 4; }
 cd "$WT/uikit"
 # When /tmp has no simulator goldens (Linux merge box, or a wiped Mac),
@@ -205,7 +209,11 @@ for d in sorted(glob.glob("/tmp/agent_merge_conf-*")):
     for cap in s["captures"]:
         name = f"{s['app']}:{cap['name']}"; score = float(cap["score"]); row = board.get(name)
         if row is None: continue
-        if row["status"] == "pass" and score < row["threshold"]: bad.append(f"{name} {score:.3f} < bar {row['threshold']} (was {row['score']:.3f})")
+        if row["status"] == "pass" and score < row["threshold"]:
+            # ALLOW_DROP also covers a passing row that a probe change turns honest
+            # (both sides omitted an element before): named in the merge, never silent.
+            if name in os.environ.get("ALLOW_DROP", "").split(): print(f"   {name}: {score:.3f} < bar {row['threshold']} (was {row['score']:.3f}) ALLOWED (ALLOW_DROP)")
+            else: bad.append(f"{name} {score:.3f} < bar {row['threshold']} (was {row['score']:.3f})")
         elif score < row["score"] - 0.5:
             # ALLOW_DROP="Tabs:t6000 ..." names failing rows a merge may lower on purpose
             # (a measured interaction another branch owns); it must be said in the merge.
