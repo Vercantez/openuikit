@@ -80,6 +80,33 @@ for name, floor in floors.items():
     m = re.search(name + r".*?'score': np\.float64\(([\d.]+)\)", out)
     if not m or float(m.group(1)) < floor: raise SystemExit(f'REAL APP DROPPED: {name} {m.group(1) if m else "?"} < {floor}')
 PY
+echo "==> conformance apps (SKIP_CAPTURE re-render against the last round's goldens)"
+# Wave 12 merged a page-transition regression (Pager t600 98.9 -> 95.9) that
+# the gate and the real-app floors cannot see. Every app the last round
+# captured (/tmp/hc-conformance-<App>) is re-rendered from the merged tree
+# and graded against scoreboard/latest.json: a passing row must stay at or
+# above its bar, a failing row must not lose more than 0.5.
+for app in Sources/ConformanceApps/*(/:t); do
+  [[ -d /tmp/hc-conformance-$app/golden ]] || { echo "   $app: no round capture, skipped"; continue; }
+  rm -rf /tmp/agent_merge_conf-$app; cp -r /tmp/hc-conformance-$app /tmp/agent_merge_conf-$app
+  SKIP_CAPTURE=1 zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app $app > /tmp/agent_merge_conf-$app.log 2>&1 \
+    || { echo "CONFORMANCE FLOW FAILED: $app (see /tmp/agent_merge_conf-$app.log)"; exit 9; }
+done
+python3 - <<'PY' || exit 9
+import json, os, glob
+board = {r["scene"]: r for r in json.load(open("scoreboard/latest.json"))["rows"] if r["category"] == "conformance"}
+bad = []
+for d in sorted(glob.glob("/tmp/agent_merge_conf-*")):
+    if not os.path.isdir(d): continue
+    s = json.load(open(os.path.join(d, "summary.json")))
+    for cap in s["captures"]:
+        name = f"{s['app']}:{cap['name']}"; score = float(cap["score"]); row = board.get(name)
+        if row is None: continue
+        if row["status"] == "pass" and score < row["threshold"]: bad.append(f"{name} {score:.3f} < bar {row['threshold']} (was {row['score']:.3f})")
+        elif score < row["score"] - 0.5: bad.append(f"{name} {score:.3f} dropped from {row['score']:.3f}")
+        print(f"   {name}: {score:.3f} (board {row['score']:.3f})")
+if bad: raise SystemExit("CONFORMANCE DROPPED: " + "; ".join(bad))
+PY
 echo "==> Linux build"
 docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work && cd /work && rm -f Package.resolved && swift build -c release --product openrender 2>&1 | grep -E "error|Build of" | tail -3' | tail -3
 docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work && cd /work && rm -f Package.resolved && swift build -c release --product openrender >/dev/null 2>&1' || { echo "LINUX BUILD RED"; exit 7; }
