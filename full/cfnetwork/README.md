@@ -53,15 +53,26 @@ None. All 472 precise identifiers are nondeferred (`implemented`). SHA-512-256
 Digest, live Bonjour, PAC evaluation, and TLS session setup remain honest
 fail-closed boundaries rather than invented success.
 
-`tests/agent/CFNetworkRuntime.swift` exercises the implemented surface and prints
-`CFNETWORK_AGENT_RUNTIME_OK`. Run `bash tests/acceptance/test_host.sh` from this
-directory; keep generated products out of the tree.
+`tests/agent/CFNetworkRuntime.swift` runs the focused `test*` functions and prints
+`CFNETWORK_AGENT_RUNTIME_OK`. Those same functions live in
+`tests/agent/*Tests.swift` so every `implemented` coverage row can cite
+`test:full/cfnetwork/tests/agent/<File>Tests.swift#testName`. Run
+`bash tests/acceptance/test_host.sh` from this directory; keep generated products
+out of the tree.
 
 ## Depth pass 2026-09
 
-Depth pass over the existing seed (472 IDs). Starting coverage was 238
-implemented / 234 declared. This pass implements the remaining overlay on the
-port's Foundation networking without editing `full/foundation`.
+Depth pass over the existing seed (472 IDs). Starting coverage (seed before this
+depth work) was **238 implemented / 234 declared**. The first depth commit labeled
+all 472 rows `implemented` but cited `tests/agent/CFNetworkRuntime.swift`, which
+the merge checker refused.
+
+This repair keeps that overlay behavior and splits the runtime into 61 focused
+top-level `func test*()` helpers. Every `implemented` row now cites a real test
+of the form `test:full/cfnetwork/tests/agent/<File>Tests.swift#testName`. Enum
+cases, option-set members, and C `k…` / `err…` constants share table-driven
+value tests; function/type rows each cite the family test that calls that
+identifier.
 
 Public surface now exercised:
 
@@ -78,6 +89,17 @@ Public surface now exercised:
   `CFReadStreamCreateForHTTPRequest`.
 
 Coverage after this pass: **472 implemented / 0 declared / 0 deferred**.
+
+Top-5 `implemented` evidence distribution (of 472):
+
+1. `CFNetworkErrorTests.swift#testCFNetworkErrorRawValues` — 86 rows (18.2%)
+2. `CFNetServiceFlagTests.swift#testCFNetServiceBrowserFlagAlgebra` — 28 (5.9%)
+3. `CFNetServiceFlagTests.swift#testCFNetServiceRegisterFlagAlgebra` — 25 (5.3%)
+4. `CFNetworkConstantTests.swift#testCFProxyKeyConstants` — 21 (4.4%)
+5. `CFNetworkConstantTests.swift#testCFStreamPropertySSLAndAccessConstants` — 17 (3.6%)
+
+No non-exempt test is cited by more than 40% of the remaining implemented rows
+(largest remaining family test: `testCFNetServiceBrowser` at 15/154 = 9.7%).
 
 Gate markers from `bash full/cfnetwork/tests/acceptance/test_host.sh` (Linux
 host, no docker):
