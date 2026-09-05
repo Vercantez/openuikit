@@ -158,6 +158,91 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(UINavigationBar.iOSLargeTitleBarHeight, 106)
         XCTAssertEqual(UINavigationBar.iOSMinimumBarTop, 10)
         XCTAssertEqual(UINavigationBar.iOSCompactHeightBarTop, 24)
+
+        // MEASURED NavFlow t200.ax1 / TableEditor t200.ax1, iPhone SE 2x /
+        // iOS 26.1: 48 pt Bold, label 57.5, zone 61.5, bar 115.5, inset 125.5.
+        device(375, 667, scale: 2)
+        let ax1 = UITraitCollection(preferredContentSizeCategory: .accessibilityLarge)
+        XCTAssertEqual(UINavigationBar.largeTitleFont(compatibleWith: ax1).pointSize, 48)
+        XCTAssertEqual(UINavigationBar.largeTitleLabelHeight(compatibleWith: ax1), 57.5)
+        XCTAssertEqual(UINavigationBar.largeTitleLabelY(compatibleWith: ax1), 54)
+        XCTAssertEqual(UINavigationBar.iOSLargeTitleBarHeight(compatibleWith: ax1), 115.5)
+        XCTAssertEqual(UINavigationBar.largeTitleExpandedInset(compatibleWith: ax1), 125.5)
+        XCTAssertEqual(
+            UIFontMetrics(forTextStyle: .body).scaledValue(for: 44, compatibleWith: ax1),
+            80)
+        XCTAssertEqual(UITableViewCell.plainClassicRowHeight(compatibleWith: ax1), 80)
+        let actionFont = UIAlertMetrics.actionFont(compatibleWith: ax1)
+        XCTAssertEqual(actionFont.pointSize, 33)
+        XCTAssertEqual(UIAlertMetrics.actionHeight(for: actionFont, compatibleWith: ax1), 63.5)
+        let xxxl = UITraitCollection(preferredContentSizeCategory: .extraExtraExtraLarge)
+        XCTAssertEqual(UITableViewCell.plainClassicRowHeight(compatibleWith: xxxl), 59)
+        let xxxlAction = UIAlertMetrics.actionFont(compatibleWith: xxxl)
+        XCTAssertEqual(xxxlAction.pointSize, 23)
+        XCTAssertEqual(UIAlertMetrics.actionHeight(for: xxxlAction, compatibleWith: xxxl), 48)
+        XCTAssertEqual(UIAlertMetrics.actionStackHeight(count: 5, actionH: 48), 304)
+        XCTAssertEqual(
+            UIFontMetrics(forTextStyle: .body).scaledValue(for: 44, compatibleWith: xxxl),
+            58)
+        XCTAssertEqual(UINavigationBar.iOSLargeTitleBarHeight(compatibleWith: xxxl), 108)
+        XCTAssertEqual(UINavigationBar.largeTitleExpandedInset(compatibleWith: xxxl), 118)
+        let titleFont = UIAlertMetrics.titleFont(compatibleWith: ax1)
+        XCTAssertEqual(titleFont.pointSize, 33)
+        let messageFont = UIAlertMetrics.messageFont(compatibleWith: ax1)
+        XCTAssertEqual(messageFont.pointSize, 30)
+        XCTAssertEqual(
+            UIAlertMetrics.labelBoxHeight(for: messageFont, lines: 2,
+                                          oneLine: 18, pitch: 20),
+            72)
+
+        // prefersLargeTitles is set before the bar joins the window, as
+        // NavFlow's makeRoot does. Layout must pick up 48 pt from the
+        // window override, not keep the construction-time 34 pt font.
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
+        let bar = UINavigationBar(frame: CGRect(x: 0, y: 10, width: 375, height: 106))
+        bar.prefersLargeTitles = true
+        bar.setState(title: "Library", backTitle: nil)
+        XCTAssertEqual(bar.largeTitleLabel?.font.pointSize, 34)
+        window.addSubview(bar)
+        bar.setNeedsLayout()
+        bar.layoutIfNeeded()
+        XCTAssertEqual(bar.largeTitleLabel?.font.pointSize, 48)
+        XCTAssertEqual(bar.largeTitleLabel?.frame.height, 57.5)
+
+        // MEASURED Modal t5200.ax1: action label 33 Medium in a 63.5 pill.
+        // `_layoutCard` styles actions from the presenting view's traits.
+        let root = UIViewController()
+        window.rootViewController = root
+        window.makeKeyAndVisible()
+        let alert = UIAlertController(title: "Save changes?",
+                                      message: "This cannot be undone.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Save", style: .default))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        root.present(alert, animated: false)
+        let pill = alert.actionViews.first
+        XCTAssertEqual(pill?.label.font.pointSize, 33)
+        XCTAssertEqual(pill?.bounds.height, 63.5)
+
+        root.dismiss(animated: false)
+        // MEASURED Modal t7200.ax1, iPhone SE 2x / iOS 26.1: headerless
+        // action sheet PhoneTVMacView **304** with 63.5 pills clipped
+        // (separatable sequence 381.5). t7200.xxxl pills stay 48 in the
+        // same 304 card.
+        let sheet = UIAlertController(title: nil, message: nil,
+                                      preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: "Copy", style: .default))
+        sheet.addAction(UIAlertAction(title: "Share", style: .default))
+        sheet.addAction(UIAlertAction(title: "Favorite", style: .default))
+        sheet.addAction(UIAlertAction(title: "Delete", style: .destructive))
+        sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        root.present(sheet, animated: false)
+        XCTAssertEqual(sheet.actionViews.first?.label.font.pointSize, 33)
+        XCTAssertEqual(sheet.actionViews.first?.bounds.height, 63.5)
+        XCTAssertEqual(sheet.view.bounds.height, 304)
+        XCTAssertTrue(sheet.view.clipsToBounds)
+
         OpenUIKitRuntime.systemFontCut = savedCut
         if savedCut != .iOS {
             XCTAssertEqual(UINavigationBar.largeTitleX, 20)
@@ -211,6 +296,35 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(table.metrics[1].headerY, 187.5, accuracy: 1e-9)
         XCTAssertEqual(table.metrics[1].headerHeight, 38, accuracy: 1e-9)
         XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 1)).minY, 225.5, accuracy: 1e-9)
+    }
+
+    /// MEASURED NavFlow t200.landscape vs Notes t4000.xxxl, iPhone SE 2x /
+    /// iOS 26.1: compact-height rest SA.top **78** (= 24+54) must keep the
+    /// 55.5 first header (a `> 10+54` compare treated 78 as a search
+    /// overlay and dropped t200.landscape 96.71 → 81.13). xxxl search
+    /// overlay SA.top **84** (table y 84) is compact **38**.
+    func testCompactHeightRestDoesNotCompactInsetGroupedFirstHeader() {
+        device(667, 375, scale: 2)
+        let source = UntitledGroupedSource()
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 667, height: 375),
+                                style: .insetGrouped)
+        table.dataSource = source
+        table.delegate = source
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            horizontalSizeClass: .compact, verticalSizeClass: .compact)
+        table._setSafeAreaInsets(UIEdgeInsets(top: 78, left: 0, bottom: 0, right: 0))
+        table.layoutIfNeeded()
+        XCTAssertEqual(table.metrics[0].headerHeight, 55.5, accuracy: 1e-9)
+        XCTAssertFalse(table.metrics[0].compactHeader)
+
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .extraExtraExtraLarge)
+        table._setSafeAreaInsets(UIEdgeInsets(top: 84, left: 0, bottom: 0, right: 0))
+        table.layoutIfNeeded()
+        XCTAssertEqual(table.metrics[0].headerHeight, 38, accuracy: 1e-9)
+        XCTAssertTrue(table.metrics[0].compactHeader)
     }
 
     // MARK: Compact pageSheet top inset (probe_sheet_inset / NavFlow t1200)
@@ -574,6 +688,10 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertTrue(nav.navigationBar.titleLabel.isHidden)
         XCTAssertEqual(tab.tabBar.frame.minY, 32)
         XCTAssertEqual(nav.navigationBar.bounds.height, 54)
+        // MEASURED Tabs-ipad t7000: golden offset stays 200 (inline
+        // search, no overlay slot). Phone t7000 is 260. Sample while
+        // `!isActive` — the active-search guard also returns 0.
+        XCTAssertEqual(nav.navigationBar.hideOnScrollContentBump(requestedY: 200), 0)
 
         sc.isActive = true
         window.layoutIfNeeded()

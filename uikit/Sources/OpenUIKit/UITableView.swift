@@ -546,7 +546,7 @@ open class UITableView: UIScrollView {
         // and grouped/insetGrouped keep `defaultRowHeight` so those
         // fixtures stay on the content-config number.
         if UITableView.isIOSChrome, style == .plain {
-            return UITableViewCell.plainClassicRowHeight
+            return UITableViewCell.plainClassicRowHeight(compatibleWith: traitCollection)
         }
         return UITableViewCell.defaultRowHeight
     }
@@ -699,11 +699,41 @@ open class UITableView: UIScrollView {
                     // 38; navLargeWithFooters later 45.5 (previous footer
                     // has text, so not compact).
                     let underlapsLargeTitle = UITableView.isIOSChrome
-                        && safeAreaInsets.top >= UINavigationBar.largeTitleExpandedInset
+                        && safeAreaInsets.top >= UINavigationBar.largeTitleExpandedInset(
+                            compatibleWith: traitCollection)
+                    // MEASURED Notes t4000.xxxl, iPhone SE 2x / iOS 26.1:
+                    // inset-grouped first header is **38** (label y 12)
+                    // under the search overlay (table y 84, bar 74, field
+                    // 58). Inline rest SA.top **64** stays on the 55.5
+                    // path (Notes t200.xxxl golden is 38 — OPEN). Grouped
+                    // first header at SA.top 64 is **55.5** (Forms
+                    // t200.xxxl Account).
+                    // Compact-height landscape (NavFlow t200.landscape)
+                    // SA.top is **78** = 24+54. Comparing against
+                    // iOSMinimumBarTop+54 (64) treated that as a search
+                    // overlay and compactified the first header
+                    // (96.71 → 81.13). Use the compact-height bar origin
+                    // so 78 > 78 is false. `.large` search (Notes t5000,
+                    // SA.top 70) keeps 55.5 — only xxxl / accessibility
+                    // overlays were measured at 38.
+                    let barTop = UINavigationBar.isCompactHeight
+                        ? UINavigationBar.iOSCompactHeightBarTop
+                        : UINavigationBar.iOSMinimumBarTop
+                    let cat = traitCollection.preferredContentSizeCategory
+                    let scaledSearchOverlay = cat.isAccessibilityCategory
+                        || cat == .extraExtraExtraLarge
+                    let insetGroupedUnderNav = UITableView.isIOSChrome
+                        && style == .insetGrouped
+                        && s == 0
+                        && !UINavigationBar.isPad
+                        && scaledSearchOverlay
+                        && safeAreaInsets.top
+                            > barTop + UINavigationBar.iOSBarContentHeight
                     let afterUntitledFooter = s > 0 && !metrics[s - 1].footerHasView
                         && metrics[s - 1].footerHeight > 0
                     let compact = UITableView.isIOSChrome && style != .plain
-                        && ((s == 0 && underlapsLargeTitle) || afterUntitledFooter)
+                        && ((s == 0 && (underlapsLargeTitle || insetGroupedUnderNav))
+                            || afterUntitledFooter)
                     m.compactHeader = compact
                     headerH = m.headerTitle != nil
                         ? UITableView.headerHeight(style: style, firstSection: s == 0,

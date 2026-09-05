@@ -177,6 +177,15 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// large-title font under a window content-size override — see
     /// `effectiveLargeTitleBarHeight`.
     public static let iOSLargeTitleZoneHeightDefault: CGFloat = 52
+    /// Height of the expanded large-title bar under the iOS cut when
+    /// traits scale the large-title face.
+    /// MEASURED navbar_large / NavFlow t200: **106** = 54 + 52 at `.large`.
+    /// MEASURED NavFlow t200.ax1 / TableEditor t200.ax1, iPhone SE 2x /
+    /// iOS 26.1: **115.5** = 54 + 61.5 when the 48 pt large-title line box
+    /// is 57.5 (zone = max(52, 57.5+4)). Pad-idiom 138 inset is unchanged.
+    static func iOSLargeTitleBarHeight(compatibleWith traits: UITraitCollection) -> CGFloat {
+        iOSBarContentHeight + largeTitleVisualZoneHeight(compatibleWith: traits)
+    }
     /// Deprecated name for `barTopPadding` (M7.5 called it a status inset).
     public static var statusBarInset: CGFloat { barTopPadding }
     /// Total bar height.
@@ -213,10 +222,30 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// on this window yields collapseDistance −22 and label y 111.5
     /// (TableEditor blob 561.8 at `[22, 98, 19, 46]`; NavFlow t4800
     /// contentOffset −116 vs −138). Phone SE stays 116.
-    public static var largeTitleExpandedInset: CGFloat { isPad ? 138 : 116 }
+    public static var largeTitleExpandedInset: CGFloat {
+        largeTitleExpandedInset(compatibleWith: .current)
+    }
+    static func largeTitleExpandedInset(compatibleWith traits: UITraitCollection) -> CGFloat {
+        if isPad { return 138 }
+        if isIOS { return largeInlineZoneTop + iOSLargeTitleBarHeight(compatibleWith: traits) }
+        return 116
+    }
     static let largeInlineZoneTop: CGFloat = 10
     static let largeInlineZoneHeight: CGFloat = 54
     static let largeTitleZoneHeight: CGFloat = 52
+    /// Visual large-title zone. Collapse still swaps at `largeTitleZoneHeight`
+    /// (52) — unmeasured at ax1. Rest height grows with the line box:
+    /// max(52, labelHeight+4) → 52 at `.large`, 61.5 at ax1 (57.5+4).
+    static func largeTitleVisualZoneHeight(compatibleWith traits: UITraitCollection) -> CGFloat {
+        let grown = largeTitleLabelHeight(compatibleWith: traits) + 4
+        // MEASURED NavFlow t200.xxxl: bar **108** = 54 content + **54**
+        // zone (40 pt Bold box 48). `max(52, 48+4)` is 52 and sat the
+        // bar at 106 (t200.xxxl 94.29 → 94.21). ax1 stays 57.5+4=61.5.
+        if traits.preferredContentSizeCategory == .extraExtraExtraLarge {
+            return max(largeInlineZoneHeight, grown)
+        }
+        return max(largeTitleZoneHeight, grown)
+    }
     /// Catalyst: label [20, 3, w, 40.5] inside the zone. iOS 26.1 (MEASURED
     /// 2026-09-04, `navbar_dark`/`navbar_large` on the iPhone SE 3rd gen and
     /// the iPhone 16 alike, confirmed navprobe.barorigin): the large-title
@@ -231,8 +260,32 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// `NavigationBarLargeTitleView` (abs `[20, 89.5]`); the bar's own
     /// `layoutMargins.left` is 20. Catalyst stays 20.
     static var largeTitleX: CGFloat { isIOS && !isPad ? 16 : 20 }
-    static var largeTitleLabelY: CGFloat { isIOS ? 57.5 : 67 }
-    static var largeTitleLabelHeight: CGFloat { isIOS ? 41 : 40.5 }
+    static var largeTitleLabelY: CGFloat { largeTitleLabelY(compatibleWith: .current) }
+    static var largeTitleLabelHeight: CGFloat { largeTitleLabelHeight(compatibleWith: .current) }
+    /// MEASURED navbar_large: zone 52, bar-local y **57.5**. NavFlow t200.ax1:
+    /// zone 61.5, label abs y **64** = bar y 10 + **54** (flush with the
+    /// content-bar bottom). Collapse distance is still 52 (unmeasured at ax1).
+    static func largeTitleLabelY(compatibleWith traits: UITraitCollection) -> CGFloat {
+        guard isIOS else { return 67 }
+        return largeTitleVisualZoneHeight(compatibleWith: traits) > largeTitleZoneHeight
+            ? iOSBarContentHeight : 57.5
+    }
+    /// MEASURED navbar_large / navprobe on SE 2x and iPhone 16: 34 pt Bold
+    /// box is **41** (not the 3x pixel-ceil of lineHeight 40.574). NavFlow
+    /// t200.ax1: 48 pt Bold box **57.5** = `FontEngine.labelLineHeight`.
+    static func largeTitleLabelHeight(compatibleWith traits: UITraitCollection) -> CGFloat {
+        guard isIOS else { return 40.5 }
+        let font = largeTitleFont(compatibleWith: traits)
+        if font.pointSize == largeTitleFontSize { return 41 }
+        return FontEngine.labelLineHeight(for: font)
+    }
+    /// MEASURED NavFlow t200.ax1 / TableEditor t200.ax1: the large-title
+    /// UILabel is **48 pt Bold** = `preferredFont(.largeTitle)` point size
+    /// with weight `.bold` (the Dynamic Type table's `bold=false` is the
+    /// descriptor; the bar still paints Bold). `.large` stays 34 Bold.
+    static func largeTitleFont(compatibleWith traits: UITraitCollection) -> UIFont {
+        iOSLargeTitleFont(compatibleWith: traits)
+    }
     static var isIOS: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
 
     /// Size from `preferredFont(.largeTitle)` (48 at ax1, 34 at `.large`);
@@ -266,8 +319,9 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         guard UINavigationBar.isIOS, !UINavigationBar.isPad else {
             return UINavigationBar.largeTitleZoneHeight
         }
-        return max(UINavigationBar.largeTitleZoneHeight,
-                   effectiveLargeTitleLabelHeight + 4)
+        // Same rule as `largeTitleVisualZoneHeight` (xxxl floor 54).
+        return UINavigationBar.largeTitleVisualZoneHeight(
+            compatibleWith: traitCollection)
     }
     var effectiveLargeTitleExpandedInset: CGFloat {
         if UINavigationBar.isPad { return 138 }
@@ -814,6 +868,36 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         setNeedsLayout()
     }
 
+    /// Extra contentOffset.y to add to a programmatic
+    /// `setContentOffset` when `hidesSearchBarWhenScrolling` will hide
+    /// the slot. MEASURED Tabs t7000 / t7000.xxxl / t7000.ax1, iPhone
+    /// SE 2x / iOS 26.1: script `setContentOffset(200)` lands at
+    /// **260 / 274 / 296** = 200 + active search-bar height
+    /// (`8 + scaledField(44) + 8` → 60 / 74 / 96). `.large` 52 pt rows
+    /// at offset 200 scored 92.53 against 260; ax1 80 pt rows at 200
+    /// dropped t7000.ax1 92.06 → 91.42 against 296.
+    /// `!isActive` is required: Notes t5000 types into an already-active
+    /// search (reload / offset) and must not pick up the hide-on-scroll
+    /// bump (round-15 t5000 98.70; the merge without this guard dropped
+    /// it to 92.52).
+    /// Pad has no overlay slot to hide — search is a trailing 240×44
+    /// field in the 54 pt bar (`searchOverlayHeight` is 0). MEASURED
+    /// Tabs-ipad t7000, iPad (A16) 820×1180 @2x / iOS 26.1: golden
+    /// `contentOffset [0, 200]` (same as the script); adding the phone
+    /// 60 pt bump scored 94.333 against 98.355.
+    func hideOnScrollContentBump(requestedY: CGFloat) -> CGFloat {
+        guard OpenUIKitRuntime.systemFontCut == .iOS,
+              !UINavigationBar.isPad,
+              let item = topItem, item.hidesSearchBarWhenScrolling,
+              let sc = item.searchController, !sc.isActive,
+              requestedY > 8 else { return 0 }
+        let field = UIFontMetrics(forTextStyle: .body).scaledValue(
+            for: 44, compatibleWith: traitCollection)
+        return max(UINavigationBar.iOSBarContentHeight
+                    + UINavigationBar.searchActiveExtraHeight,
+                   8 + field + 8)
+    }
+
     /// Extra height the navigation controller should add to the bar frame
     /// for an active inline search. Inactive search is 0 pt (Tabs t200).
     /// Pad: MEASURED Tabs-ipad t4000, the bar stays **54** (search is a
@@ -822,7 +906,14 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         guard OpenUIKitRuntime.systemFontCut == .iOS else { return 0 }
         if UINavigationBar.isPad { return 0 }
         guard let sc = topItem?.searchController, sc.isActive else { return 0 }
-        return UINavigationBar.searchActiveExtraHeight
+        // MEASURED Tabs t4000: extra 6 → bar 60 = 8+44+8. Tabs t4000.ax1 /
+        // Notes t4000.ax1, SE 2x / iOS 26.1: field 80
+        // (`UIFontMetrics.body.scaledValue(44)` table hit), extra 42 → bar 96
+        // = 8+80+8. Floor stays 6 so `.large` is unchanged.
+        let field = UIFontMetrics(forTextStyle: .body).scaledValue(
+            for: 44, compatibleWith: traitCollection)
+        return max(UINavigationBar.searchActiveExtraHeight,
+                   8 + field + 8 - UINavigationBar.iOSBarContentHeight)
     }
 
     func makeItemView(_ item: UIBarButtonItem) -> _UIBarButtonItemView {
@@ -1375,7 +1466,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// (106 → 54); Catalyst keeps the 116 pt overlay for the whole collapse.
     var largeTitleOverlayHeight: CGFloat {
         guard UINavigationBar.isIOS else {
-            return UINavigationBar.largeTitleExpandedInset
+            return UINavigationBar.largeTitleExpandedInset(compatibleWith: traitCollection)
         }
         if UINavigationBar.isCompactHeight {
             return UINavigationBar.iOSBarContentHeight
@@ -1405,6 +1496,13 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         // the transition would move the INCOMING title by the outgoing
         // offset. `layoutSubviews` already stands back for the same reason.
         guard displaysLargeTitles, transition == nil else { return }
+        // MEASURED NavFlow t200.ax1, iPhone SE 2x / iOS 26.1: "Library"
+        // large title `[16, 64, 156, 57.5]` at 48 pt Bold. The label is
+        // created in `configureLargeTitleAppearance` before the bar joins
+        // the window (NavFlow sets `prefersLargeTitles` in `makeRoot`), so
+        // construction-time `traitCollection` is `.large` (34 pt, width
+        // 111.5). Re-style from the inherited window `traitOverrides`.
+        applyTitleAttributes()
         let d = collapseDistance
         let collapsed = d >= effectiveLargeTitleZoneHeight
         if let l = largeTitleLabel {

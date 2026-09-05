@@ -347,8 +347,8 @@ open class SFSafariViewController: UIViewController {
 
     /// MEASURED Present t1200.ax1 vs t1200.xxxl, iPhone SE 2x / iOS 26.1:
     /// dismiss glass, X bbox and address ink bbox are identical, so every
-    /// category above extraExtraLarge caps there (tighter than nav-bar
-    /// `iOSBarCapped`, which leaves xxxl uncapped).
+    /// category above extraExtraLarge caps there (same xxxl floor as
+    /// nav-bar `iOSBarCapped`).
     private func safariCappedCategory() -> UIContentSizeCategory {
         let cat = traitCollection.preferredContentSizeCategory
         if cat.isAccessibilityCategory || cat == .extraExtraExtraLarge {
