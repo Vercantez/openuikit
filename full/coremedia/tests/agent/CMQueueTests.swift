@@ -268,6 +268,9 @@ func testCMBufferQueueErrorAndTriggerConstants() {
     precondition(kCMBufferQueueError_InvalidTriggerCondition == -12767)
     precondition(kCMBufferQueueError_InvalidTriggerToken == -12768)
     precondition(kCMBufferQueueError_InvalidBuffer == -12769)
+    let whenDurationBecomesLessThan: CMBufferQueueTriggerCondition =
+        kCMBufferQueueTrigger_WhenDurationBecomesLessThan
+    precondition(whenDurationBecomesLessThan == 1)
     precondition(kCMBufferQueueTrigger_WhenDurationBecomesLessThan == 1)
     precondition(kCMBufferQueueTrigger_WhenDurationBecomesLessThanOrEqualTo == 2)
     precondition(kCMBufferQueueTrigger_WhenDurationBecomesGreaterThan == 3)

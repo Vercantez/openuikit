@@ -104,6 +104,29 @@ public var kCMTimeMappingInvalid: CMTimeMapping { .invalid }
 
 public var kCMTimeMaxTimescale: Int { Int(Int32.max) }
 
+/// C `CMITEMCOUNT_MAX` is a preprocessor macro. The Swift overlay exposes it
+/// as `Int.max`, matching 64-bit `CMItemCount` / `CFIndex`.
+public var CMITEMCOUNT_MAX: Int { Int.max }
+
+/// Linux overlay of CoreMedia header feature flags. Annotation macros are
+/// true because this module uses Swift nullability and derived enums;
+/// Darwin C visibility / timebase source terminology stay off.
+public var COREMEDIA_TRUE: Bool { true }
+public var COREMEDIA_FALSE: Bool { false }
+public var COREMEDIA_DECLARE_BRIDGED_TYPES: Bool { true }
+public var COREMEDIA_DECLARE_NULLABILITY: Bool { true }
+public var COREMEDIA_DECLARE_NULLABILITY_BEGIN_END: Bool { true }
+public var COREMEDIA_DECLARE_RELEASES_ARGUMENT: Bool { true }
+public var COREMEDIA_DECLARE_RETURNS_NOT_RETAINED_ON_PARAMETERS: Bool { true }
+public var COREMEDIA_DECLARE_RETURNS_RETAINED: Bool { true }
+public var COREMEDIA_DECLARE_RETURNS_RETAINED_BLOCK: Bool { true }
+public var COREMEDIA_DECLARE_RETURNS_RETAINED_ON_PARAMETERS: Bool { true }
+public var COREMEDIA_USE_DERIVED_ENUMS_FOR_CONSTANTS: Bool { true }
+public var COREMEDIA_CMBASECLASS_VERSION_IS_POINTER_ALIGNED: Bool { true }
+public var COREMEDIA_USE_ALIGNED_CMBASECLASS_VERSION: Bool { true }
+public var COREMEDIA_EXPORTS_USE_EXPLICIT_VISIBILITY: Int32 { 0 }
+public var CMTIMEBASE_USE_SOURCE_TERMINOLOGY: Int32 { 0 }
+
 public var kCMPersistentTrackID_Invalid: CMPersistentTrackID { 0 }
 
 public var kCMAttachmentMode_ShouldNotPropagate: CMAttachmentMode { 0 }

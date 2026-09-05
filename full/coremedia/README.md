@@ -38,6 +38,10 @@ This directory is a clean-room Linux implementation of Apple's public
 - Public `kCMTime*` / `kCMSampleAttachment*` / `kCMFormatDescription*`
   CFString keys (suffix payloads; color aliases match this repo's CoreVideo
   strings) and OSStatus integers from the public headers.
+- C header macros (`CMITEMCOUNT_MAX`, `COREMEDIA_TRUE`/`FALSE`, and the
+  `COREMEDIA_DECLARE_*` / alignment / visibility flags) as Swift overlay
+  constants. `CMITEMCOUNT_MAX` is `Int.max`; Darwin visibility and
+  `CMTIMEBASE_USE_SOURCE_TERMINOLOGY` are `0` on this Linux port.
 
 `implemented` rows cite a focused test of that identifier. Enum/option-set
 members may share one table-driven raw-value test. kCM* string payloads are
@@ -75,25 +79,34 @@ color/matrix, sample attachments, metadata key spaces).
 
 ## Depth pass 2026-09 (wave 8)
 
-Second pass over the first-pass seed. Counts are exact `coverage.tsv`
-rows (3504 public precise IDs).
+Repair after `FW_MERGE REFUSED` at `08baa78a` (1130 `not-applicable` rows
+were not SwiftUI cross-import overlay IDs). Counts are exact
+`coverage.tsv` rows (3504 public precise IDs).
 
-| status | before | after |
+| status | before (`08baa78a`) | after |
 | --- | ---: | ---: |
-| implemented | 437 | 721 |
-| declared | 1289 | 1172 |
-| deferred | 648 | 481 |
+| implemented | 721 | 737 |
+| declared | 1172 | 1600 |
+| deferred | 481 | 1167 |
 | unavailable | 0 | 0 |
-| not-applicable | 1130 | 1130 |
+| not-applicable | 1130 | 0 |
 
-Top-5 `implemented` evidence distribution after this pass:
+The 15 C preprocessor macros plus `CMTIMEBASE_USE_SOURCE_TERMINOLOGY` are
+now Linux Swift overlay constants with
+`CMMacroTests.swift#testCMCoreMediaMacroConstants`. The 1115
+`::SYNTHESIZED::` stdlib/Foundation witnesses are `declared` when the host
+type exists in this port and `deferred` when the overlay host is absent
+(DataBlockBuffer collections, stereo/packing, MemoryPool/Tag, camera
+calibration, CoreVideo pixel-buffer hosts).
 
-1. `CMKeyStringTests.swift#testCMFormatDescriptionExtensionKeyStrings` — 46 (6.4%)
-2. `CMKeyStringTests.swift#testCMSampleAttachmentKeyStrings` — 34 (4.7%)
-3. `CMQueueTests.swift#testCMBufferQueueErrorAndTriggerConstants` — 33 (4.6%)
-4. `CMKeyStringTests.swift#testCMFormatDescriptionColorMatrixKeyStrings` — 29 (4.0%)
-5. `CMFormatDescriptionTests.swift#testCMFormatDescriptionOverlayKeys` — 26 (3.6%)
+Top-5 `implemented` evidence distribution after this repair:
 
-No non-constant test owns more than 40% of the newly implemented rows.
+1. `CMKeyStringTests.swift#testCMFormatDescriptionExtensionKeyStrings` — 46 (6.2%)
+2. `CMKeyStringTests.swift#testCMSampleAttachmentKeyStrings` — 34 (4.6%)
+3. `CMQueueTests.swift#testCMBufferQueueErrorAndTriggerConstants` — 33 (4.5%)
+4. `CMKeyStringTests.swift#testCMFormatDescriptionColorMatrixKeyStrings` — 29 (3.9%)
+5. `CMFormatDescriptionTests.swift#testCMFormatDescriptionOverlayKeys` — 26 (3.5%)
+
+No non-constant test owns more than 40% of the remaining implemented rows.
 SwiftUI cross-import overlay IDs are not in this module's public surface.
 Audio ASBD / CVImageBuffer / MemoryPool / Tag / packing remain deferred.
