@@ -14,8 +14,32 @@ pinned `dotnet/macios` HealthKit bindings under `$OPENUIKIT_MACIOS_ROOT`.
 ## Depth pass 2026-09
 
 Wave-3 depth pass over the wave-2 starting point (1303 implemented / 258
-declared / 1084 deferred). Public-surface IDs: 2645. After this pass:
-**2606 implemented / 0 declared / 0 deferred / 39 unavailable**.
+declared / 1084 deferred). Public-surface IDs: 2645.
+
+Coverage ledger repair (merge refused `e265036b` because implemented rows cited
+source paths instead of `test:full/healthkit/tests/agent/<File>Tests.swift#testName`):
+
+- **Before repair:** 2606 implemented / 0 declared / 0 deferred / 39 unavailable
+- **After repair:** 1663 implemented / 943 declared / 0 deferred / 39 unavailable
+
+Every `implemented` row now cites a real top-level synchronous `func testName()`
+in `tests/agent/*Tests.swift`. Enums, option-set members, and C `HK*` constants
+share table-driven value tests. Other APIs are split across 28 focused tests;
+the largest non-table test is 15.1% of remaining implemented rows (under the 40%
+bulk-relabel cap). Rows without a real focused assertion were reclassified to
+`declared` with `source:full/healthkit/<file>.swift#Symbol`.
+
+**Top-5 implemented evidence distribution**
+
+| rows | evidence |
+| ---: | --- |
+| 520 | `test:full/healthkit/tests/agent/HealthKitEnumTests.swift#testEnumRawValues` |
+| 407 | `test:full/healthkit/tests/agent/HealthKitConstantTests.swift#testCStringAndIdentifierConstants` |
+| 109 | `test:full/healthkit/tests/agent/HealthKitEquatableTests.swift#testEnumEquatableAndHashable1` |
+| 85 | `test:full/healthkit/tests/agent/HealthKitEquatableTests.swift#testEnumEquatableAndHashable2` |
+| 72 | `test:full/healthkit/tests/agent/HealthKitEquatableTests.swift#testEnumEquatableAndHashable3` |
+
+The first two are the allowed table-driven enum / C-constant tests.
 
 ### Public surface implemented
 
@@ -94,6 +118,14 @@ Agent probe: `full/healthkit/tests/agent/HealthKitRuntime.swift` (store CRUD,
 auth hook, predicates, statistics, collection, anchored/observer/source/
 route/correlation, characteristics, builder, background fail-closed).
 
+Focused coverage tests (cited by `coverage.tsv`): `HealthKitEnumTests.swift`,
+`HealthKitConstantTests.swift`, `HealthKitOptionSetTests.swift`,
+`HealthKitEquatableTests.swift`, `HealthKitUnitTests.swift`,
+`HealthKitStoreTests.swift`, `HealthKitQueryTests.swift`,
+`HealthKitStatisticsTests.swift`, `HealthKitSampleTests.swift`,
+`HealthKitWorkoutTests.swift`, `HealthKitDescriptorTests.swift`,
+`HealthKitSurfaceTests.swift`.
+
 ### Unresolved behavioral questions
 
 See `oracle-questions.tsv`. Remaining Apple-oracle items: kilocalorie
@@ -135,5 +167,6 @@ when no store directory is writable.
 
 ## Coverage
 
-See `coverage.tsv`. Implemented 2606, unavailable 39, declared 0, deferred 0.
+See `coverage.tsv`. Implemented 1663, declared 943, unavailable 39, deferred 0.
 Unavailable rows are `NSComparisonPredicate.Operator` and `UTType` APIs only.
+Declared rows compile but lack a focused `*Tests.swift` assertion.
