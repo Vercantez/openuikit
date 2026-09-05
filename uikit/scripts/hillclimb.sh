@@ -36,6 +36,9 @@ if [[ -z "${SKIP_CAPTURE:-}" ]]; then
     echo "==> conformance $app"
     zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app $app > /tmp/hc-conformance-$app.flow.log 2>&1 \
       || echo "WARNING: conformance_flow.sh $app rc=$? (see /tmp/hc-conformance-$app.flow.log)"
+    echo "==> conformance $app --ipad"
+    zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app-ipad $app --ipad > /tmp/hc-conformance-$app-ipad.flow.log 2>&1 \
+      || echo "WARNING: conformance_flow.sh $app --ipad rc=$? (see /tmp/hc-conformance-$app-ipad.flow.log)"
     echo "==> conformance $app dark"
     zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app-dark $app --dark > /tmp/hc-conformance-$app-dark.flow.log 2>&1 \
       || echo "WARNING: conformance_flow.sh $app --dark rc=$? (see /tmp/hc-conformance-$app-dark.flow.log)"
@@ -55,6 +58,7 @@ conf=()
 # agents (their flows overwrite it mid-round).
 for app in Sources/ConformanceApps/*(/:t); do
   [[ -d /tmp/hc-conformance-$app ]] && conf+=(/tmp/hc-conformance-$app)
+  [[ -d /tmp/hc-conformance-$app-ipad ]] && conf+=(/tmp/hc-conformance-$app-ipad)
   [[ -d /tmp/hc-conformance-$app-dark ]] && conf+=(/tmp/hc-conformance-$app-dark)
 done
 confargs=()

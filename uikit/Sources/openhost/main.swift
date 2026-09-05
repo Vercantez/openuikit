@@ -76,7 +76,7 @@ if let dir = ProcessInfo.processInfo.environment["OPENUIKIT_FONT_DIR"] {
 
 let usage = """
 usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
-       openhost --app <name> [--scale N] [--script events.json --record outdir]
+       openhost --app <name> [--scale N] [--ipad] [--script events.json --record outdir]
        openhost --nav-demo   [--scale N] [--script events.json --record outdir]
 
 --app boots one of the DemoApp apps in a live window (see AppMode.swift):
@@ -101,6 +101,9 @@ var recordDir: String? = nil
 var navDemo = false
 var navLargeTitles = false
 if ProcessInfo.processInfo.environment["OPENUIKIT_FORCE_IOS"] == "1" { forceIOSCut = true }
+if ProcessInfo.processInfo.environment["OPENUIKIT_CONFORMANCE_IPAD"] == "1" {
+    conformancePadIdiom = true
+}
 var appName: String? = nil
 
 var it = CommandLine.arguments.dropFirst().makeIterator()
@@ -109,6 +112,11 @@ while let arg = it.next() {
     case "--app":
         guard let v = it.next() else { print(usage); exit(1) }
         appName = v
+    case "--ipad":
+        // Pad idiom + 820×1180 window + measured iPad (A16) safe area.
+        // Phone `--app` (no flag) is unchanged. Same surface as
+        // realapp_settings_light_ipad / history / storage.
+        conformancePadIdiom = true
     case "--nav-demo":
         navDemo = true
     case "--large-titles":

@@ -162,6 +162,21 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         }
     }
 
+    /// MEASURED NavFlow-ipad t200 / TableEditor-ipad t200, iPad (A16)
+    /// 820×1180 @2x / iOS 26.1: table `safeAreaInsets.top` **138** =
+    /// 32 + 54 + 52; phone stays 116 = 10 + 54 + 52.
+    func testPadLargeTitleExpandedInsetIs138() {
+        XCTAssertEqual(UINavigationBar.largeTitleExpandedInset, 116)
+        UIDevice.current.userInterfaceIdiom = .pad
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .pad)
+        XCTAssertEqual(UINavigationBar.largeTitleExpandedInset, 138)
+        UIDevice.current.userInterfaceIdiom = .phone
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .phone)
+        XCTAssertEqual(UINavigationBar.largeTitleExpandedInset, 116)
+    }
+
     // MARK: Untitled grouped footers + compact headers (headerprobe / NavFlow)
 
     func testUntitledGroupedFooterAndCompactHeadersMatchHeaderprobe() {
@@ -307,6 +322,72 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
             userInterfaceStyle: .light, displayScale: 3, userInterfaceIdiom: .phone)
         XCTAssertEqual(UINavigationBar.largeTitleX, 16)
         _ = phoneCell
+    }
+
+    // MARK: iPad popover (Modal-ipad t7200 / t9200)
+
+    /// MEASURED Modal-ipad t9200, iPad (A16) 820×1180 @2x / iOS 26.1:
+    /// `_UIPopoverView [561, 62, 240, 180]` = preferredContentSize, trailing
+    /// inset 19 (`820 − 240 − 561`), y = SA.top + 30. Phone still adapts.
+    func testPadPopoverDoesNotAdaptToASheet() {
+        UIDevice.current.userInterfaceIdiom = .pad
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .pad)
+        device(820, 1180, scale: 2)
+
+        let vc = UIViewController()
+        vc.modalPresentationStyle = .popover
+        vc.preferredContentSize = CGSize(width: 240, height: 180)
+        let popover = try! XCTUnwrap(vc.popoverPresentationController)
+        XCTAssertEqual(popover.adaptedStyle, .popover)
+        XCTAssertEqual(vc._resolvedPresentationStyle, .popover)
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 820, height: 1180))
+        window._setSafeAreaInsets(UIEdgeInsets(top: 32, left: 0, bottom: 25, right: 0))
+        let base = UIViewController()
+        window.rootViewController = base
+        window.makeKeyAndVisible()
+        vc.view.backgroundColor = .systemBackground
+        base.present(vc, animated: false)
+        XCTAssertNil(vc._presentationSheet)
+        XCTAssertEqual(vc.view.frame,
+                       CGRect(x: 561, y: 62, width: 240, height: 180))
+    }
+
+    /// MEASURED Modal-ipad t7200: `_UIPopoverView [266, 466, 288, 248]`,
+    /// 4 pills (cancel dropped), centred on sourceRect (410, 590), dim 0.
+    /// Phone action sheet stays the 320×304 card.
+    func testPadActionSheetPopoverDropsCancelAndIs288() {
+        UIDevice.current.userInterfaceIdiom = .pad
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .pad)
+        device(820, 1180, scale: 2)
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 820, height: 1180))
+        window._setSafeAreaInsets(UIEdgeInsets(top: 32, left: 0, bottom: 25, right: 0))
+        let base = UIViewController()
+        window.rootViewController = base
+        window.makeKeyAndVisible()
+        base.view.layoutIfNeeded()
+
+        let sheet = UIAlertController(title: nil, message: nil,
+                                      preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: "Copy", style: .default))
+        sheet.addAction(UIAlertAction(title: "Share", style: .default))
+        sheet.addAction(UIAlertAction(title: "Favorite", style: .default))
+        sheet.addAction(UIAlertAction(title: "Delete", style: .destructive))
+        sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        if let popover = sheet.popoverPresentationController {
+            popover.sourceView = base.view
+            popover.sourceRect = CGRect(x: 410, y: 590, width: 1, height: 1)
+        }
+        base.present(sheet, animated: false)
+        XCTAssertEqual(sheet.view.frame,
+                       CGRect(x: 266, y: 466, width: 288, height: 248))
+        XCTAssertEqual(sheet.actionViews.count, 4)
+        let dim = sheet.presentationController?.containerView?.subviews
+            .first { $0 is _UIDimmingView }
+        XCTAssertEqual(dim?.alpha ?? -1, 0, accuracy: 1e-9)
     }
 }
 

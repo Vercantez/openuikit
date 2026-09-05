@@ -16,8 +16,13 @@
 #      which scripts/scoreboard.py reads with --conformance <workdir>.
 #
 #   scripts/conformance_flow.sh /tmp/conf NavFlow
+#   scripts/conformance_flow.sh /tmp/conf NavFlow --ipad
 #   scripts/conformance_flow.sh /tmp/conf-dark NavFlow --dark
 #   SKIP_CAPTURE=1 scripts/conformance_flow.sh /tmp/conf NavFlow
+#
+# --ipad captures on a private "iPad (A16)" (820×1180 @2x portrait) and
+# openhost renders with idiom .pad, that window size, and the measured
+# pad safe area `[32, 0, 25, 0]` (same plumbing as realapp *_ipad).
 #
 # `--dark` (or a `"style": "dark"` field in script.json) pins
 # `overrideUserInterfaceStyle = .dark` on the window before the first
@@ -28,14 +33,16 @@
 set -e
 setopt null_glob
 cd "$(dirname "$0")/.."
-OUT=${1:?usage: conformance_flow.sh <workdir> <app> [--dark]}
-APPNAME=${2:?usage: conformance_flow.sh <workdir> <app> [--dark]}
+OUT=${1:?usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark]}
+APPNAME=${2:?usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark]}
 shift 2
+IPAD=0
 STYLE=light
 for arg in "$@"; do
   case $arg in
+    --ipad) IPAD=1 ;;
     --dark) STYLE=dark ;;
-    *) echo "usage: conformance_flow.sh <workdir> <app> [--dark]" >&2; exit 2 ;;
+    *) echo "usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark]" >&2; exit 2 ;;
   esac
 done
 SCRIPT="Sources/ConformanceApps/$APPNAME/script.json"
@@ -45,24 +52,37 @@ export CONFPROBE_STYLE=$STYLE
 export OPENUIKIT_APP_STYLE=$STYLE
 
 if [[ -z "${SKIP_CAPTURE:-}" ]]; then
-  echo "==> real iOS replay ($OUT/golden) style=$STYLE"
-  zsh scripts/conformance_probe_sim.sh "$APPNAME" "$OUT/golden" | tail -1
+  echo "==> real iOS replay ($OUT/golden) style=$STYLE ipad=$IPAD"
+  if [[ $IPAD -eq 1 ]]; then
+    zsh scripts/conformance_probe_sim.sh "$APPNAME" "$OUT/golden" --ipad | tail -1
+  else
+    zsh scripts/conformance_probe_sim.sh "$APPNAME" "$OUT/golden" | tail -1
+  fi
 fi
 
 echo "==> OpenUIKit replay, iOS cut ($OUT/ours) style=$STYLE"
 swift build -c release --product openhost >/dev/null
 rm -rf "$OUT/ours"; mkdir -p "$OUT/ours"
-./.build/release/openhost --app "$APPNAME" --script "$SCRIPT" --record "$OUT/ours" \
+typeset -a HOST_ARGS
+HOST_ARGS=(--app "$APPNAME" --script "$SCRIPT" --record "$OUT/ours")
+if [[ $IPAD -eq 1 ]]; then HOST_ARGS+=(--ipad); fi
+./.build/release/openhost "${HOST_ARGS[@]}" \
   | tail -1
 
 echo "==> compare"
-python3 - "$OUT" "$APPNAME" "$SCRIPT" "$STYLE" <<'PY'
+# File names stay <App>.t<ms>.png (confprobe / openhost). The summary's
+# "app" field is <App>-ipad so the scoreboard can register both rounds;
+# dark captures keep the app name and carry the `.dark` capture suffix.
+SUMMARY_APP="$APPNAME"
+if [[ $IPAD -eq 1 ]]; then SUMMARY_APP="${APPNAME}-ipad"; fi
+python3 - "$OUT" "$APPNAME" "$SCRIPT" "$STYLE" "$SUMMARY_APP" <<'PY'
 import json, os, shutil, sys
 sys.path.insert(0, os.path.join(os.getcwd(), "Tools/compare"))
 import compare                                   # the suite's own pixel gate
 from PIL import Image, ImageChops
 
 out, app, script_path, cli_style = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+summary_app = sys.argv[5] if len(sys.argv) > 5 else app
 script = json.load(open(script_path))
 # CLI --dark / CONFPROBE_STYLE wins over the script field (same as both
 # probes): a light script.json can still drive a dark timeline.
@@ -176,7 +196,7 @@ for t in script["captures"]:
     captures.append(entry)
     print(lines[0])
 
-summary = {"app": app, "style": style, "captures": captures}
+summary = {"app": summary_app, "style": style, "captures": captures}
 json.dump(summary, open(f"{out}/summary.json", "w"), indent=1)
 scores = [c["score"] for c in captures]
 print(f"\n{app} ({style}): {len(captures)} capture(s), worst {min(scores):.3f}, "

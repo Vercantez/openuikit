@@ -102,6 +102,13 @@ for app in Sources/ConformanceApps/*(/:t); do
   for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" ]] && { skip=""; rm -rf /tmp/agent_merge_conf-$app/golden; echo "   $app: recapturing goldens with the merged probe"; }; done
   SKIP_CAPTURE=$skip zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app $app > /tmp/agent_merge_conf-$app.log 2>&1 \
     || { echo "CONFORMANCE FLOW FAILED: $app (see /tmp/agent_merge_conf-$app.log)"; exit 9; }
+  if [[ -d /tmp/hc-conformance-$app-ipad/golden ]]; then
+    rm -rf /tmp/agent_merge_conf-$app-ipad; cp -r /tmp/hc-conformance-$app-ipad /tmp/agent_merge_conf-$app-ipad
+    skip_ipad=1
+    for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" || "$r" == "$app-ipad" ]] && { skip_ipad=""; rm -rf /tmp/agent_merge_conf-$app-ipad/golden; echo "   $app-ipad: recapturing goldens with the merged probe"; }; done
+    SKIP_CAPTURE=$skip_ipad zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-ipad $app --ipad > /tmp/agent_merge_conf-$app-ipad.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --ipad (see /tmp/agent_merge_conf-$app-ipad.log)"; exit 9; }
+  fi
   if [[ -d /tmp/hc-conformance-$app-dark/golden ]]; then
     rm -rf /tmp/agent_merge_conf-$app-dark; cp -r /tmp/hc-conformance-$app-dark /tmp/agent_merge_conf-$app-dark
     skipd=1
