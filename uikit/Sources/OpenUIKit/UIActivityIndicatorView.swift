@@ -84,9 +84,13 @@ open class UIActivityIndicatorView: UIView {
             // iOS 26.1 light (MEASURED 2026-09-04, control_activity,
             // iPhone SE 2x, five identical captures): the a=217/255
             // core is (156,156,159) over white, which inverts to
-            // (139,139,142). Dark was not in the capture; keep 140.
+            // (139,139,142). Dark (MEASURED Pager t200.dark, SE 2x):
+            // 9 o'clock a=217/255 core is (120,120,125) over black,
+            // which inverts to (141,141,147). Same method as light;
+            // not the previous placeholder 140.
             return traits.userInterfaceStyle == .dark
-                ? UIColor(white: 140.0 / 255.0, alpha: 1)
+                ? UIColor(red: 141.0 / 255.0, green: 141.0 / 255.0,
+                          blue: 147.0 / 255.0, alpha: 1)
                 : UIColor(red: 139.0 / 255.0, green: 139.0 / 255.0,
                           blue: 142.0 / 255.0, alpha: 1)
         }

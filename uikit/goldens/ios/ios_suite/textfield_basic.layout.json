@@ -1,0 +1,460 @@
+{
+  "name" : "textfield_basic",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        320,
+        200
+      ],
+      "bg" : [
+        0.94899999999999995,
+        0.94899999999999995,
+        0.96899999999999997,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        200
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        20,
+        16,
+        280,
+        34
+      ],
+      "class" : "UITextField",
+      "frame" : [
+        20,
+        16,
+        280,
+        34
+      ],
+      "intrinsic" : [
+        119.5,
+        34
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        20,
+        16,
+        280,
+        34
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "_UITextFieldRoundedRectBackgroundViewNeue",
+      "cornerRadius" : 5,
+      "frame" : [
+        0,
+        0,
+        280,
+        34
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        16,
+        266,
+        30
+      ],
+      "class" : "_UITouchPassthroughView",
+      "frame" : [
+        0,
+        0,
+        266,
+        30
+      ],
+      "path" : "1.1"
+    },
+    {
+      "absFrame" : [
+        27,
+        23,
+        266,
+        20.5
+      ],
+      "class" : "UITextFieldLabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        7,
+        7,
+        266,
+        20.5
+      ],
+      "intrinsic" : [
+        91.5,
+        20.5
+      ],
+      "path" : "1.2",
+      "sizeThatFits200" : [
+        91.5,
+        20.5
+      ],
+      "text" : "Search here"
+    },
+    {
+      "absFrame" : [
+        27,
+        18,
+        266,
+        30
+      ],
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        7,
+        2,
+        266,
+        30
+      ],
+      "path" : "1.3"
+    },
+    {
+      "absFrame" : [
+        27,
+        23,
+        0,
+        21
+      ],
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        0,
+        5,
+        0,
+        21
+      ],
+      "path" : "1.3.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        62,
+        280,
+        34
+      ],
+      "class" : "UITextField",
+      "frame" : [
+        20,
+        62,
+        280,
+        34
+      ],
+      "intrinsic" : [
+        108,
+        34
+      ],
+      "path" : "2"
+    },
+    {
+      "absFrame" : [
+        20,
+        62,
+        280,
+        34
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "_UITextFieldRoundedRectBackgroundViewNeue",
+      "cornerRadius" : 5,
+      "frame" : [
+        0,
+        0,
+        280,
+        34
+      ],
+      "path" : "2.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        62,
+        266,
+        30
+      ],
+      "class" : "_UITouchPassthroughView",
+      "frame" : [
+        0,
+        0,
+        266,
+        30
+      ],
+      "path" : "2.1"
+    },
+    {
+      "absFrame" : [
+        27,
+        64,
+        266,
+        30
+      ],
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        7,
+        2,
+        266,
+        30
+      ],
+      "path" : "2.2"
+    },
+    {
+      "absFrame" : [
+        19,
+        67.5,
+        124,
+        22.5
+      ],
+      "boundsOrigin" : [
+        -8,
+        -1
+      ],
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -8,
+        3.5,
+        124,
+        22.5
+      ],
+      "layerBoundsOrigin" : [
+        -8,
+        -1
+      ],
+      "path" : "2.2.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        108,
+        160,
+        34
+      ],
+      "class" : "UITextField",
+      "frame" : [
+        20,
+        108,
+        160,
+        34
+      ],
+      "intrinsic" : [
+        367,
+        34
+      ],
+      "path" : "3"
+    },
+    {
+      "absFrame" : [
+        20,
+        108,
+        160,
+        34
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "_UITextFieldRoundedRectBackgroundViewNeue",
+      "cornerRadius" : 5,
+      "frame" : [
+        0,
+        0,
+        160,
+        34
+      ],
+      "path" : "3.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        108,
+        146,
+        30
+      ],
+      "class" : "_UITouchPassthroughView",
+      "frame" : [
+        0,
+        0,
+        146,
+        30
+      ],
+      "path" : "3.1"
+    },
+    {
+      "absFrame" : [
+        27,
+        110,
+        146,
+        30
+      ],
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        7,
+        2,
+        146,
+        30
+      ],
+      "path" : "3.2"
+    },
+    {
+      "absFrame" : [
+        19,
+        113.5,
+        190,
+        22.5
+      ],
+      "boundsOrigin" : [
+        -8,
+        -1
+      ],
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -8,
+        3.5,
+        190,
+        22.5
+      ],
+      "layerBoundsOrigin" : [
+        -8,
+        -1
+      ],
+      "path" : "3.2.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        154,
+        160,
+        34
+      ],
+      "class" : "UITextField",
+      "frame" : [
+        20,
+        154,
+        160,
+        34
+      ],
+      "intrinsic" : [
+        118,
+        34
+      ],
+      "path" : "4"
+    },
+    {
+      "absFrame" : [
+        20,
+        154,
+        160,
+        34
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "_UITextFieldRoundedRectBackgroundViewNeue",
+      "cornerRadius" : 5,
+      "frame" : [
+        0,
+        0,
+        160,
+        34
+      ],
+      "path" : "4.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        154,
+        146,
+        30
+      ],
+      "class" : "_UITouchPassthroughView",
+      "frame" : [
+        0,
+        0,
+        146,
+        30
+      ],
+      "path" : "4.1"
+    },
+    {
+      "absFrame" : [
+        27,
+        156,
+        146,
+        30
+      ],
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        7,
+        2,
+        146,
+        30
+      ],
+      "path" : "4.2"
+    },
+    {
+      "absFrame" : [
+        20,
+        162,
+        121,
+        17.5
+      ],
+      "boundsOrigin" : [
+        -7,
+        -1
+      ],
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -7,
+        6,
+        121,
+        17.5
+      ],
+      "layerBoundsOrigin" : [
+        -7,
+        -1
+      ],
+      "path" : "4.2.0"
+    }
+  ]
+}

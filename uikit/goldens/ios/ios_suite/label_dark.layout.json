@@ -1,0 +1,143 @@
+{
+  "name" : "label_dark",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        0,
+        0,
+        0,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        99,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        20,
+        99,
+        20.5
+      ],
+      "intrinsic" : [
+        99,
+        20.5
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        99,
+        20.5
+      ],
+      "text" : "Primary label"
+    },
+    {
+      "absFrame" : [
+        20,
+        50,
+        122.5,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        50,
+        122.5,
+        20.5
+      ],
+      "intrinsic" : [
+        122.5,
+        20.5
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        122.5,
+        20.5
+      ],
+      "text" : "Secondary label"
+    },
+    {
+      "absFrame" : [
+        20,
+        80,
+        98,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        80,
+        98,
+        20.5
+      ],
+      "intrinsic" : [
+        98,
+        20.5
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        98,
+        20.5
+      ],
+      "text" : "Tertiary label"
+    },
+    {
+      "absFrame" : [
+        20,
+        110,
+        93,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        110,
+        93,
+        20.5
+      ],
+      "intrinsic" : [
+        93,
+        20.5
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        93,
+        20.5
+      ],
+      "text" : "Link colored"
+    }
+  ]
+}

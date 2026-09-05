@@ -108,14 +108,17 @@ public enum ConformanceClock {
     }
 
     /// Frame-file suffix. Light stays `t200` so existing goldens keep their
-    /// names; dark appends `.dark` (`t200.dark`) so a dark timeline of the
-    /// same app does not collide on the scoreboard (`NavFlow:t200` vs
-    /// `NavFlow:t200.dark`).
-    public static func captureSuffix(for t: Double, style: String = "light") -> String {
+    /// names; dark appends `.dark` (`t200.dark`) and RTL appends `.rtl`
+    /// (`t200.rtl`) so those timelines do not collide on the scoreboard
+    /// (`NavFlow:t200` vs `NavFlow:t200.dark` vs `NavFlow:t200.rtl`).
+    public static func captureSuffix(for t: Double, style: String = "light",
+                                     direction: String = "ltr") -> String {
         var ms = "\(Int((t * 1000).rounded()))"
         while ms.count < 3 { ms = "0" + ms }
-        if style == "dark" { return "t" + ms + ".dark" }
-        return "t" + ms
+        var suffix = "t" + ms
+        if style == "dark" { suffix += ".dark" }
+        if direction == "rtl" { suffix += ".rtl" }
+        return suffix
     }
 
     /// Style a replay should use. `CONFPROBE_STYLE` / `OPENUIKIT_APP_STYLE`
@@ -126,5 +129,15 @@ public enum ConformanceClock {
         if let environment, environment == "dark" { return "dark" }
         if script == "dark" { return "dark" }
         return "light"
+    }
+
+    /// Layout direction a replay should use. `CONFPROBE_DIRECTION` /
+    /// `OPENUIKIT_APP_DIRECTION` (set by `conformance_flow.sh --rtl`) wins
+    /// so an LTR `script.json` can still drive an RTL timeline; otherwise the
+    /// script's `direction` field; otherwise LTR. Equality only.
+    public static func resolvedDirection(script: String, environment: String?) -> String {
+        if let environment, environment == "rtl" { return "rtl" }
+        if script == "rtl" { return "rtl" }
+        return "ltr"
     }
 }

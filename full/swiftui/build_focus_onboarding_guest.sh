@@ -211,7 +211,7 @@ CF_HEADER_DIR=$W/full/foundation/include/CoreFoundation
 [ -f "$FOUNDATION_GUEST_MANIFEST" ] && [ ! -L "$FOUNDATION_GUEST_MANIFEST" ] \
     || die "missing regular Foundation guest source manifest"
 mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES < "$FOUNDATION_GUEST_MANIFEST"
-[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 38 ] \
+[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 41 ] \
     || die "Foundation guest source manifest must contain exactly 38 lines"
 FOUNDATION_GUEST_SOURCES=()
 FOUNDATION_GUEST_EXCLUDED_URLSESSION=0

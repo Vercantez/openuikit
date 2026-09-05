@@ -1,0 +1,143 @@
+{
+  "name" : "attrtext_underline_strike",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        16,
+        14,
+        71,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        14,
+        71,
+        20.5
+      ],
+      "intrinsic" : [
+        71,
+        20.5
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        71,
+        20.5
+      ],
+      "text" : "underline"
+    },
+    {
+      "absFrame" : [
+        16,
+        46,
+        101.5,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        46,
+        101.5,
+        20.5
+      ],
+      "intrinsic" : [
+        101.5,
+        20.5
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        101.5,
+        20.5
+      ],
+      "text" : "strikethrough"
+    },
+    {
+      "absFrame" : [
+        16,
+        78,
+        123.5,
+        29
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Semibold",
+        17
+      ],
+      "frame" : [
+        16,
+        78,
+        123.5,
+        29
+      ],
+      "intrinsic" : [
+        123.5,
+        29
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        123.5,
+        29
+      ],
+      "text" : "bold and large"
+    },
+    {
+      "absFrame" : [
+        16,
+        126,
+        88,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        126,
+        88,
+        20.5
+      ],
+      "intrinsic" : [
+        88,
+        20.5
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        88,
+        20.5
+      ],
+      "text" : "linked done"
+    }
+  ]
+}

@@ -23,7 +23,13 @@ them with OpenUIKit under the iOS cut, compares, and writes
 wrong region, structural notes, per-view frame differences).
 
 `SIM_DEVICE_SUFFIX=-mine` gives the run its own simulator devices, so
-several flows can run at once. `SKIP_CAPTURE=1` reuses the goldens.
+several flows can run at once. `SKIP_CAPTURE=1` reuses the goldens. When
+`/tmp` has none (a Linux agent, or a wiped Mac), `scripts/goldens_restore.sh`
+copies the committed snapshot in `goldens/ios/` back to the `/tmp` paths
+the suite, the real-app compare, and `conformance_flow.sh` expect;
+`scripts/goldens_snapshot.sh` is how a Mac with a fresh capture writes that
+snapshot. `hillclimb.sh` and `agent_merge.sh` restore on their own when
+`/tmp` is empty and say so in their output.
 
 The whole suite is `scripts/ios_suite.sh` (98 scenes, ~12 minutes with the
 capture, ~2 minutes with `SKIP_CAPTURE=1`); the Catalyst regression gate is

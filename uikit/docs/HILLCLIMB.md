@@ -44,8 +44,14 @@ the reason). The climb only assigns `fail` rows.
    `scripts/conformance_flow.sh <workdir> <app> --dark` replays the same
    script with `overrideUserInterfaceStyle = .dark` on the window before
    the first capture and suffixes capture names `.dark`. A `"style"` field
-   in script.json is honoured by both confprobe and openhost. The round
-   scores `/tmp/hc-conformance-<App>` and `/tmp/hc-conformance-<App>-dark`.
+   in script.json is honoured by both confprobe and openhost.
+   `scripts/conformance_flow.sh <workdir> <app> --rtl` pins
+   `UIView.appearance().semanticContentAttribute = .forceRightToLeft` and
+   the window before the first capture (window-only does not propagate;
+   appearance stamps the tree — /tmp/rtlprobe, iPhone SE 2x / iOS 26.1)
+   and suffixes capture names `.rtl`. A `"direction"` field in script.json
+   is honoured the same way. The round scores `/tmp/hc-conformance-<App>`,
+   `/tmp/hc-conformance-<App>-dark` and `/tmp/hc-conformance-<App>-rtl`.
 
    Adding an app is one directory (`Sources/ConformanceApps/<Name>/` with
    `<Name>App.swift` exposing `windowSize` / `makeRoot()` / `perform(_:)`,
@@ -60,7 +66,11 @@ the reason). The climb only assigns `fail` rows.
 Linux is held to byte-identity with the macOS render of the same source
 (`scripts/linux_realapp_verify.sh`, the arm64/x86 authorities), so the
 Mac-vs-Linux comparison is a build check, not a fidelity question; fidelity
-is always measured against the iOS simulator.
+is always measured against the iOS simulator. The simulator goldens live in
+`/tmp` on the Mac that captured them; `goldens/ios/` is the committed copy
+(`scripts/goldens_snapshot.sh` / `scripts/goldens_restore.sh`) so a Linux
+agent can grade `SKIP_CAPTURE=1` without a simulator. `hillclimb.sh` and
+`agent_merge.sh` restore that snapshot when `/tmp` has none.
 
 ## Rules the loop depends on
 
@@ -78,8 +88,9 @@ is always measured against the iOS simulator.
 ## What a round actually reads (the false greens it has had)
 
 - `scripts/hillclimb.sh N` recaptures the iOS suite AND every app under
-  `Sources/ConformanceApps/` into `/tmp/hc-conformance-<App>` (light) and
-  `/tmp/hc-conformance-<App>-dark` (the same script, window style dark) —
+  `Sources/ConformanceApps/` into `/tmp/hc-conformance-<App>` (light),
+  `/tmp/hc-conformance-<App>-dark` (window style dark), and
+  `/tmp/hc-conformance-<App>-rtl` (appearance + window forceRightToLeft) —
   its own directories. `/tmp/conformance-<App>` belongs to the agents; rounds 3–6
   once scored reports agents had left there and fanned out on rows the
   merged code had already fixed. The board stamps each app's capture time
@@ -106,7 +117,8 @@ is always measured against the iOS simulator.
   `RECAPTURE_APPS="Pager"` so the goldens are captured again with the
   merged tree's probe before grading; and refresh the round's goldens
   (`PICK_ONLY=1 scripts/hillclimb.sh N`) after such a merge lands, or every
-  later branch is graded against stale goldens.
+  later branch is graded against stale goldens. When `/tmp` has none, the
+  merge check restores `goldens/ios/` and prints that it did.
 - Housekeeping after each wave: finished agents' simulator devices
   (`xcrun simctl delete`) and worktrees (`git worktree remove --force`);
   58 devices and 50 worktrees once filled the disk.

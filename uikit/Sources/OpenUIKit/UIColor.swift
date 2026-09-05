@@ -32,9 +32,7 @@ public enum UIUserInterfaceSizeClass: Int, Sendable {
 }
 
 /// Raw values are Darwin's `UIUserInterfaceLayoutDirection` (UIApplication.h).
-/// Auto Layout in OpenUIKit is LTR throughout — `leading` aliases `left`
-/// everywhere (docs/KNOWN_GAPS.md) — so this is a declared value, not a
-/// switch: nothing in the layout or render path reads it.
+/// `.leading` / `.trailing` follow this via `effectiveUserInterfaceLayoutDirection`.
 public enum UIUserInterfaceLayoutDirection: Int, Sendable {
     case leftToRight = 0, rightToLeft = 1
 }

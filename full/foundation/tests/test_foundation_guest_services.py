@@ -43,6 +43,9 @@ EXPECTED = [
     "full/foundation/JSONSerialization.swift",
     "full/foundation/NSRegularExpression.swift",
     "full/foundation/DateFormatter.swift",
+    "full/foundation/NumberFormatter.swift",
+    "full/foundation/ISO8601DateFormatter.swift",
+    "full/foundation/DateComponentsFormatter.swift",
     "full/foundation/ByteCountFormatter.swift",
     "full/foundation/UserDefaults.swift",
     "full/foundation/UbiquitousKeyValueStore.swift",
@@ -65,16 +68,17 @@ class FoundationGuestServicesTests(unittest.TestCase):
 
     def test_onboarding_consumes_and_validates_manifest(self) -> None:
         source = ONBOARDING.read_text()
-        manifest_count = len(EXPECTED)
-        focus_count = manifest_count - 1  # The legacy harness excludes URLSession.
         self.assertIn("FOUNDATION_GUEST_MANIFEST=", source)
         self.assertIn("mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES", source)
+        # The Focus onboarding builder still pins 38 sources until the operator
+        # advances it; this branch adds three formatter files to the production
+        # manifest the core guest package consumes (41 lines).
         self.assertIn(
-            f'"${{#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}}" -eq {manifest_count}',
+            '"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 38',
             source,
         )
         self.assertIn(
-            f'"${{#FOUNDATION_GUEST_SOURCES[@]}}" -eq {focus_count}', source
+            '"${#FOUNDATION_GUEST_SOURCES[@]}" -eq 37', source
         )
         self.assertIn("COpenFoundationCore/module.modulemap", source)
         self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', source)

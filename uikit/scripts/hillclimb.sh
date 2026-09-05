@@ -4,6 +4,7 @@
 #   1. score:  fresh iOS suite capture (scripts/ios_suite.sh), real-app
 #              screens, Catalyst gate, conformance-app flows under
 #              /tmp/hc-conformance-<App> and /tmp/hc-conformance-<App>-dark
+#              and /tmp/hc-conformance-<App>-rtl
 #              -> scoreboard/latest.{json,md} (committed by the operator
 #              with the round);
 #   2. pick:   the worst rows with status "fail" (below their bar, not listed
@@ -21,6 +22,11 @@
 #   scripts/hillclimb.sh 3
 #   SKIP_CAPTURE=1 scripts/hillclimb.sh 3     # reuse the last suite goldens
 #   PICK_ONLY=1 scripts/hillclimb.sh          # score + write tasks, no launch
+#
+# When /tmp has no goldens (Linux, or a wiped Mac), the committed snapshot
+# at goldens/ios/ is restored first (scripts/goldens_restore.sh) and the
+# restore line is printed so a SKIP_CAPTURE round is visibly off the pin,
+# not a silent empty compare.
 set -e
 setopt null_glob
 cd "$(dirname "$0")/.."
@@ -28,6 +34,9 @@ MAXA=${1:-3}
 MODELS=(cursor-grok-4.6-high)   # every local agent: Grok 4.6 High (not fast)
 
 echo "==> score"
+if [[ -d goldens/ios && -f goldens/ios/manifest.json ]]; then
+  zsh scripts/goldens_restore.sh
+fi
 if [[ -z "${SKIP_CAPTURE:-}" ]]; then
   zsh scripts/ios_suite.sh /tmp/ios_suite > /tmp/ios_suite.flow.log 2>&1 || echo "WARNING: ios_suite.sh rc=$? (see /tmp/ios_suite.flow.log)"
   # Every conformance app is recaptured in THIS run: the board once scored
@@ -42,6 +51,9 @@ if [[ -z "${SKIP_CAPTURE:-}" ]]; then
     echo "==> conformance $app dark"
     zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app-dark $app --dark > /tmp/hc-conformance-$app-dark.flow.log 2>&1 \
       || echo "WARNING: conformance_flow.sh $app --dark rc=$? (see /tmp/hc-conformance-$app-dark.flow.log)"
+    echo "==> conformance $app rtl"
+    zsh scripts/conformance_flow.sh /tmp/hc-conformance-$app-rtl $app --rtl > /tmp/hc-conformance-$app-rtl.flow.log 2>&1 \
+      || echo "WARNING: conformance_flow.sh $app --rtl rc=$? (see /tmp/hc-conformance-$app-rtl.flow.log)"
   done
 else
   SKIP_CAPTURE=1 zsh scripts/ios_suite.sh /tmp/ios_suite >/dev/null 2>&1 || echo "WARNING: ios_suite.sh (skip-capture) rc=$?"
@@ -60,6 +72,7 @@ for app in Sources/ConformanceApps/*(/:t); do
   [[ -d /tmp/hc-conformance-$app ]] && conf+=(/tmp/hc-conformance-$app)
   [[ -d /tmp/hc-conformance-$app-ipad ]] && conf+=(/tmp/hc-conformance-$app-ipad)
   [[ -d /tmp/hc-conformance-$app-dark ]] && conf+=(/tmp/hc-conformance-$app-dark)
+  [[ -d /tmp/hc-conformance-$app-rtl ]] && conf+=(/tmp/hc-conformance-$app-rtl)
 done
 confargs=()
 (( ${#conf} > 0 )) && confargs=(--conformance "${conf[@]}")
