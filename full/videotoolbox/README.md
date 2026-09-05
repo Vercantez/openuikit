@@ -72,7 +72,33 @@ Sources listed in `videotoolbox_guest_sources.txt` compile to
 ## Depth pass 2026-09
 
 SDK depth for `VideoToolbox` (482 IDs). Session, property, pixel-transfer,
-and error families are nondeferred. Implemented count: 482/482.
+and error families are nondeferred.
+
+Coverage ledger (exact-ID `coverage.tsv`):
+
+| revision | implemented | declared | evidence |
+| --- | ---: | ---: | --- |
+| seed (before depth pass) | 98 | 384 | file paths / source cites |
+| 047307c4 (FW_MERGE refused) | 482 | 0 | `tests/agent/VideoToolboxRuntime.swift` (file path, not `test:…#testName`) |
+| this repair | 482 | 0 | `test:full/videotoolbox/tests/agent/<File>Tests.swift#testName` |
+
+Every `implemented` row cites a real top-level `func testName()` that exercises
+that identifier. Enum/option-set members and C `k…`/`Err` constants share
+table-driven value tests. The remaining 80 implemented rows (69 functions +
+11 typealiases) split across focused family tests; the largest of those tests
+is cited by 11 rows (13.8%), under the 40% bulk-relabel cap.
+
+Top-5 evidence distribution (implemented rows citing each test):
+
+1. 99 — `VideoToolboxKeyTests.swift#testCompressionPropertyKeyPayloads`
+2. 56 — `VideoToolboxKeyTests.swift#testRemainingPropertyKeyPayloads`
+3. 55 — `VideoToolboxKeyTests.swift#testProfileLevelKeyPayloads`
+4. 47 — `VideoToolboxKeyTests.swift#testDecompressionPropertyKeyPayloads`
+5. 44 — `VideoToolboxErrorTests.swift#testErrorConstantValues`
+
+The sealed host gate still compiles only `VideoToolboxRuntime.swift`; that
+probe now calls the same `func test*()` families and prints the success
+marker.
 
 Gate (Linux host, no docker):
 
