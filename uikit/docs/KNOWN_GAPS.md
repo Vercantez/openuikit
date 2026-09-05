@@ -1814,19 +1814,14 @@ selected visually until OpenUIKit has a compact-height navigation bar.
 
 What is NOT faithful:
 
-- **The platters are glass; ours are flat.** iOS 26 puts every bar button in
-  its own capsule that samples, blurs and refracts the backdrop. We draw the
-  measured flat equivalent (white in light mode, (25, 25, 25) in dark) plus a
-  shadow whose (opacity 0.075, sigma 10, offset (0, 4)) are a least-squares
-  fit to the golden's own falloff — `python3 Tools/compare/fit_bar_shadow.py`,
-  rms 2.3 counts. Over a flat neutral backdrop that is what the golden shows
-  (over white the platter is literally invisible apart from its shadow). Over
-  a **saturated** backdrop it is wrong in hue exactly like the alert card:
-  probed over #FF0000 the real platter renders pink and the labels lose their
-  tint entirely, and probed over a #FFCC00 opaque bar the whole bar reads
-  (247, 206, 70) rather than the (255, 204, 0) that was set — the edge effect
-  and the glass both recolor it. **A fixture must not put bar items over a
-  saturated backdrop**; the shipped ones use white, black and #F2F2F7.
+- **Dark and Catalyst platters stay flat; iOS-cut light is `_UIGlassMaterial`.**
+  MEASURED 2026-09-04, glass_toolbar/tabbar/navbar over white/black/red/grad
+  (SE 2x + iPhone 16 3x): `out = (1−α)·blur(B, σ) + α·T` with α = 222/255,
+  T = 220/α, σ = 2.25 pt, plus a 1 pt inner white ring at 13/35. Dark iOS
+  chrome is a separate measured flat ((25,25,25) / (19,19,19)) and is not
+  this mix. The two-unknown fit's red residual (pred (253, 227, 228) vs
+  meas (255, 201, 204)) is reported, not fitted — fixtures stay on white /
+  black / #F2F2F7. Saturated-backdrop fixtures remain forbidden.
 - **The refractive band is a fitted approximation.** Measured on two goldens,
   the top **14.5 pt** of a 44 pt navigation-bar platter shows the backdrop
   unchanged instead of the frosted fill. We reproduce it by washing that band

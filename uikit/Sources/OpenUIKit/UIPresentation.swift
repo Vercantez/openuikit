@@ -688,6 +688,7 @@ final class _UIPageSheetView: UIView {
                 ? (padFormSheet ? _UIPageSheetView.iOSPadFormSheetCornerRadius
                                 : _UIPageSheetView.floatingBottomCornerRadius)
                 : 0
+            refreshIOSGlass()
             setNeedsDisplay()
         }
     }
@@ -697,6 +698,7 @@ final class _UIPageSheetView: UIView {
     var fillColor: UIColor = .systemBackground {
         didSet {
             if floating { backgroundColor = paintedFillColor }
+            refreshIOSGlass()
             setNeedsDisplay()
         }
     }
@@ -724,6 +726,41 @@ final class _UIPageSheetView: UIView {
             return fillColor
         }
         return UIColor(white: _UIPageSheetView.floatingSystemBackgroundGlass, alpha: 1)
+    }
+
+    /// Same predicate as `paintedFillColor` returning 245: the floating
+    /// systemBackground card is `_UIGlassMaterial` over the dim (20 % black
+    /// over white → 204; k·204+220 = 246.4 vs measured 245, residual 1.4).
+    /// The 245 property stays for tests and the Catalyst/dark fallback fill.
+    private func refreshIOSGlass() {
+        guard floating,
+              !padFormSheet,
+              OpenUIKitRuntime.systemFontCut == .iOS,
+              traitCollection.userInterfaceStyle != .dark,
+              case .semantic(let name) = fillColor.storage,
+              name == "systemBackground" else {
+            _usesIOSGlass = false
+            return
+        }
+        isOpaque = false
+        _usesIOSGlass = true
+    }
+
+    override func _iosGlassPath(in bounds: CGRect) -> Path {
+        let top: CGFloat
+        let bottom: CGFloat
+        if padFormSheet {
+            top = _UIPageSheetView.iOSPadFormSheetCornerRadius
+            bottom = top
+        } else if floating {
+            top = _UIPageSheetView.floatingTopCornerRadius
+            bottom = _UIPageSheetView.floatingBottomCornerRadius
+        } else {
+            top = _UIPageSheetView.topCornerRadius
+            bottom = _UIPageSheetView.bottomCornerRadius
+        }
+        return _UIPageSheetView.sheetPath(
+            in: bounds, topRadius: top, bottomRadius: bottom)
     }
 
     // MARK: Interactive dismissal state
@@ -769,6 +806,8 @@ final class _UIPageSheetView: UIView {
     }
 
     override func drawContent(in canvas: Canvas, bounds: CGRect) {
+        // Glass already replaced this fill in the render pass.
+        if _UIGlassMaterial.shouldApply(self) { return }
         let top: CGFloat
         let bottom: CGFloat
         if padFormSheet {
