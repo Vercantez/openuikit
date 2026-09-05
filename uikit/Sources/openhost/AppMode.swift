@@ -44,6 +44,12 @@ let appModeDefaultScale: CGFloat = 2
 /// 375×667 / idiom .phone. Set from main.swift before `buildAppScene`.
 nonisolated(unsafe) var conformancePadIdiom = false
 
+/// openhost `--landscape` / `OPENUIKIT_CONFORMANCE_LANDSCAPE=1`: SE 2x
+/// landscapeLeft, 667×375 window, compact-height traits. Portrait `--app`
+/// stays 375×667 / regular height. Set from main.swift before
+/// `buildAppScene`. Pad wins if both flags are set.
+nonisolated(unsafe) var conformanceLandscape = false
+
 /// The apps `--app <name>` can boot: window size + root factory. The root is
 /// a plain UIViewController: most apps hand back a UINavigationController,
 /// `showcase` hands back a UITabBarController wrapping three of them.
@@ -166,10 +172,19 @@ func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
         fatalError("unknown app \"\(appName)\" (available: \(names))")
     }
     let pad = conformancePadIdiom
+    let landscape = conformanceLandscape && !pad
     let scale = scaleOverride ?? appModeDefaultScale
     // `--ipad`: same 820×1180 @2x surface as realapp *_ipad / ipadprobe
-    // (RealAppScreen.windowSizePad). Phone registry sizes stay 375×667.
-    let size = pad ? RealAppScreen.windowSizePad : app.size
+    // (RealAppScreen.windowSizePad). `--landscape`: SE 2x rotated
+    // landscapeLeft, 667×375. Phone portrait registry sizes stay 375×667.
+    let size: CGSize
+    if pad {
+        size = RealAppScreen.windowSizePad
+    } else if landscape {
+        size = RealAppScreen.windowSizePhoneLandscape
+    } else {
+        size = app.size
+    }
     GlyphInkTable.windowCompositing = false
     if pad {
         UIDevice.current.userInterfaceIdiom = .pad
@@ -180,6 +195,16 @@ func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
             horizontalSizeClass: .regular,
             verticalSizeClass: .regular,
             userInterfaceIdiom: .pad)
+    } else if landscape {
+        // iPhone SE landscape is compact-compact (not regular-width).
+        // The 600 pt size-class approximation would mark 667 pt wide as
+        // regular and adapt popovers like iPad. Compact height is the
+        // axis this flag exists to exercise.
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: style,
+            displayScale: scale,
+            horizontalSizeClass: .compact,
+            verticalSizeClass: .compact)
     } else {
         UITraitCollection.current = UITraitCollection(userInterfaceStyle: style,
                                                       displayScale: scale)
@@ -203,6 +228,11 @@ func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
         // MEASURED realapp_settings_light_ipad / ipadprobe, iPad (A16)
         // 820×1180 @2x / iOS 26.1: window `safeAreaInsets` `[32, 0, 25, 0]`.
         window._setSafeAreaInsets(RealAppScreen.padSafeArea)
+    } else if landscape {
+        // MEASURED NavFlow t200.landscape dump `screen.windowSafeArea`
+        // `[0, 0, 0, 0]`, iPhone SE 2x / iOS 26.1.
+        window._setSafeAreaInsets(RealAppScreen.phoneLandscapeSafeArea)
+        UIWindowScene()._hostConfigure(interfaceOrientation: .landscapeLeft)
     }
     window.overrideUserInterfaceStyle = style
     window.traitOverrides.preferredContentSizeCategory = contentSizeCategory
