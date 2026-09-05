@@ -103,7 +103,35 @@ Attempt 1 (guest-trial, 16ee0569, recorded at 214fc803): `TBD_CHECK_OK`,
 exactly 38 lines'` (manifest is 41). `GUEST_REALAPP_SCREENS=0`,
 `GATE_B_FAIL rc=2`. Fixed on main at `c858e1f5`.
 
-Attempt 2 (this branch): *(pending)*
+Attempt 2 (`22320ade`): `BUILD_OK`, **`TBD_CHECK_OK`**, `run_linux rc=0`,
+**`difftest rc=0`**, then **`build_full rc=1`**. RealAppProbe compiled;
+link of `render_full` died on POSIX sockets in `LedgerLoopbackServer.start`:
+
+```
+ld64.lld-18: error: undefined symbol: _listen
+ld64.lld-18: error: undefined symbol: _setsockopt
+ld64.lld-18: error: undefined symbol: _socket
+ld64.lld-18: error: undefined symbol: _bind
+ld64.lld-18: error: undefined symbol: _getsockname
+ld64.lld-18: error: undefined symbol: _accept
+```
+
+referenced by `realappprobe.o`. Guest `libSystem.tbd` advertises
+`_getsockopt` (the linker suggested it) but not the listen/bind family.
+`_close` / `_read` / `_write` were not in the undefined list. Gate B
+`GATE_B_FAIL rc=1` (nested `build_full` same link). `GUEST_REALAPP_SCREENS=0`.
+
+Fix (this commit): Darwin no longer calls `socket()` by name. The six
+symbols are `dlsym(RTLD_DEFAULT)` lookups (`@_silgen_name("dlsym")`,
+handle bitPattern −2 — same as FoundationExtensionHostOracle).
+`LedgerStore.swift.o` now has `U _dlsym` / `_close` / `_read` / `_write`
+and **no** `U _socket`. Linux corelibs still call Glibc directly.
+Apple Mac openhost after the change still has Loopback FX `$12.50` (dlsym
+finds Darwin `socket`). If guest `dlsym("socket")` is nil, `start()`
+fails and `loopbackItem` still calls `URLSession.data(for:)` against
+`http://127.0.0.1:1/quote` so the session is exercised.
+
+Attempt 3: *(pending)*
 
 ## x86 cycle
 

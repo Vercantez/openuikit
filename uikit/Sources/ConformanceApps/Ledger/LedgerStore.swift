@@ -11,6 +11,13 @@
 // corelibs do. This file uses async `data(for:)` so the same source
 // compiles on the guest; a semaphore wait fills the row before first
 // layout because openrender has no run loop.
+//
+// MEASURED arm64 verify 22320ade, guest libSystem.tbd: undefined
+// `_socket` `_bind` `_listen` `_accept` `_setsockopt` `_getsockname`
+// referenced by LedgerLoopbackServer.start (realappprobe.o). Direct
+// Darwin socket() does not link on the guest. Linux corelibs still
+// call Glibc. Darwin (Apple Mac + guest) looks the six up with dlsym
+// so Apple keeps the loopback row and the guest still links.
 import UIKit
 import Foundation
 #if canImport(FoundationNetworking)
@@ -184,7 +191,15 @@ nonisolated enum LedgerStore {
     /// fails — the list still renders, with no loopback row.
     static func loopbackItem() -> LedgerItem? {
         let server = LedgerLoopbackServer()
-        guard server.start() else { return nil }
+        guard server.start() else {
+            // POSIX listen is missing on the guest tbd (22320ade). Still
+            // call URLSession.data(for:) so the trial records whether the
+            // session itself runs; 127.0.0.1:1 refuses fast.
+            if let url = URL(string: "http://127.0.0.1:1" + loopbackPath) {
+                _ = fetchSync(url: url)
+            }
+            return nil
+        }
         let urlString = "http://127.0.0.1:\(server.port)" + loopbackPath
         guard let url = URL(string: urlString) else {
             server.stop()
@@ -233,6 +248,38 @@ nonisolated enum LedgerStore {
     }
 }
 
+#if !os(Linux)
+/// Guest libSystem.tbd does not export BSD sockets (arm64 verify 22320ade).
+/// `@_silgen_name("dlsym")` + RTLD_DEFAULT (−2) matches
+/// full/foundation/tests/FoundationExtensionHostOracle.swift; looking the
+/// six names up does not create `_socket` etc. undefineds.
+@_silgen_name("dlsym")
+private func _ledger_dlsym(_ handle: UnsafeMutableRawPointer?,
+                           _ name: UnsafePointer<CChar>?) -> UnsafeMutableRawPointer?
+
+private nonisolated enum LedgerBSD {
+    static let rtldDefault = UnsafeMutableRawPointer(bitPattern: -2)
+    typealias SocketFn = @convention(c) (Int32, Int32, Int32) -> Int32
+    typealias SetSockOptFn = @convention(c) (Int32, Int32, Int32, UnsafeRawPointer?, socklen_t) -> Int32
+    typealias BindFn = @convention(c) (Int32, UnsafePointer<sockaddr>?, socklen_t) -> Int32
+    typealias ListenFn = @convention(c) (Int32, Int32) -> Int32
+    typealias GetSockNameFn = @convention(c) (Int32, UnsafeMutablePointer<sockaddr>?, UnsafeMutablePointer<socklen_t>?) -> Int32
+    typealias AcceptFn = @convention(c) (Int32, UnsafeMutablePointer<sockaddr>?, UnsafeMutablePointer<socklen_t>?) -> Int32
+
+    static func load<T>(_ cName: UnsafePointer<CChar>) -> T? {
+        guard let raw = _ledger_dlsym(rtldDefault, cName) else { return nil }
+        return unsafeBitCast(raw, to: T.self)
+    }
+
+    static let socket: SocketFn? = load("socket")
+    static let setsockopt: SetSockOptFn? = load("setsockopt")
+    static let bind: BindFn? = load("bind")
+    static let listen: ListenFn? = load("listen")
+    static let getsockname: GetSockNameFn? = load("getsockname")
+    static let accept: AcceptFn? = load("accept")
+}
+#endif
+
 /// Tiny HTTP/1.1 listener on 127.0.0.1. POSIX sockets — guest Stream.swift
 /// has no socket destination. Port 0, then getsockname.
 nonisolated final class LedgerLoopbackServer: @unchecked Sendable {
@@ -242,14 +289,26 @@ nonisolated final class LedgerLoopbackServer: @unchecked Sendable {
     func start() -> Bool {
         #if os(Linux)
         let sockType = Int32(SOCK_STREAM.rawValue)
-        #else
-        let sockType = SOCK_STREAM
-        #endif
         let fd = socket(AF_INET, sockType, 0)
         guard fd >= 0 else { return false }
         var yes: Int32 = 1
         _ = setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes,
                        socklen_t(MemoryLayout<Int32>.size))
+        #else
+        guard let socketFn = LedgerBSD.socket,
+              let setsockoptFn = LedgerBSD.setsockopt,
+              let bindFn = LedgerBSD.bind,
+              let listenFn = LedgerBSD.listen,
+              let getsocknameFn = LedgerBSD.getsockname else {
+            return false
+        }
+        let sockType = SOCK_STREAM
+        let fd = socketFn(AF_INET, sockType, 0)
+        guard fd >= 0 else { return false }
+        var yes: Int32 = 1
+        _ = setsockoptFn(fd, SOL_SOCKET, SO_REUSEADDR, &yes,
+                         socklen_t(MemoryLayout<Int32>.size))
+        #endif
         var addr = sockaddr_in()
         #if canImport(Darwin)
         addr.sin_len = UInt8(MemoryLayout<sockaddr_in>.stride)
@@ -259,14 +318,23 @@ nonisolated final class LedgerLoopbackServer: @unchecked Sendable {
         addr.sin_addr.s_addr = UInt32(0x7F000001).bigEndian
         let bindRC = withUnsafePointer(to: &addr) { ptr in
             ptr.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                #if os(Linux)
                 bind(fd, $0, socklen_t(MemoryLayout<sockaddr_in>.size))
+                #else
+                bindFn(fd, $0, socklen_t(MemoryLayout<sockaddr_in>.size))
+                #endif
             }
         }
         if bindRC != 0 {
             close(fd)
             return false
         }
-        if listen(fd, 4) != 0 {
+        #if os(Linux)
+        let listenRC = listen(fd, 4)
+        #else
+        let listenRC = listenFn(fd, 4)
+        #endif
+        if listenRC != 0 {
             close(fd)
             return false
         }
@@ -274,7 +342,11 @@ nonisolated final class LedgerLoopbackServer: @unchecked Sendable {
         var len = socklen_t(MemoryLayout<sockaddr_in>.size)
         let nameRC = withUnsafeMutablePointer(to: &got) { ptr in
             ptr.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                #if os(Linux)
                 getsockname(fd, $0, &len)
+                #else
+                getsocknameFn(fd, $0, &len)
+                #endif
             }
         }
         if nameRC != 0 {
@@ -303,7 +375,12 @@ nonisolated final class LedgerLoopbackServer: @unchecked Sendable {
         var addrLen = socklen_t(MemoryLayout<sockaddr_in>.size)
         let client = withUnsafeMutablePointer(to: &clientAddr) { ptr -> Int32 in
             ptr.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                #if os(Linux)
                 accept(fd, $0, &addrLen)
+                #else
+                guard let acceptFn = LedgerBSD.accept else { return -1 }
+                return acceptFn(fd, $0, &addrLen)
+                #endif
             }
         }
         if client < 0 { return }
