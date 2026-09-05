@@ -157,6 +157,11 @@ public enum INCallDestinationType: Int, Hashable, Sendable {
     case redial = 4
     case unknown = 0
     case voicemail = 3
+
+    public static var emergencyDestination: INCallDestinationType { .emergency }
+    public static var normalDestination: INCallDestinationType { .normal }
+    public static var redialDestination: INCallDestinationType { .redial }
+    public static var voicemailDestination: INCallDestinationType { .voicemail }
 }
 
 public enum INCallRecordType: Int, Hashable, Sendable {

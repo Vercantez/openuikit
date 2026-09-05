@@ -2,12 +2,13 @@
 
 /// Linux starting point for Apple's public `PassKit` module.
 ///
-/// In-process payment-request models, pass identity fields, option sets, and
-/// fail-closed Wallet / Apple Pay presentation are real on this isolated host.
-/// Signed `.pkpass` validation, the pass library, Apple Pay authorization,
-/// identity documents, and Wallet UI are unavailable: those APIs throw
-/// `PassKitPortableError`, return `false`/`nil`/empty, or never present chrome.
-/// Nothing here is a claim of Apple service, entitlement, or UI parity.
+/// Stored-ZIP `pass.json` parsing, in-process payment-request models, pass
+/// identity fields, option sets, and fail-closed Wallet / Apple Pay
+/// presentation are real on this isolated host. CMS signature checks, the
+/// pass library, Apple Pay authorization UI, identity documents, and
+/// Wallet chrome are unavailable: those APIs throw `PKPassKitError`,
+/// return `false`/`nil`/empty, or never present chrome. Nothing here is a
+/// claim of Apple service, entitlement, or UI parity.
 
 public struct PassKitPortableError: Error, Equatable, Sendable,
     CustomStringConvertible
@@ -44,26 +45,46 @@ open class PKPass: PKObject, @unchecked Sendable {
     public let passURL: URL?
     public let serialNumber: String
     public let passTypeIdentifier: String
-    public var authenticationToken: String?
+    public private(set) var authenticationToken: String?
     public var deviceName: String = ""
+    /// Fail-closed: `icon.png` in the archive is not decoded (no image pipeline
+    /// on this Foundation host). Always an empty `UIImage`.
     public var icon: UIImage = UIImage()
-    public var localizedDescription: String = ""
-    public var localizedName: String = ""
-    public var organizationName: String = ""
+    public private(set) var localizedDescription: String = ""
+    public private(set) var localizedName: String = ""
+    public private(set) var organizationName: String = ""
     public var passType: PKPassType = .barcode
     public var paymentPass: PKPaymentPass? { self as? PKPaymentPass }
-    public var relevantDate: Date?
-    public var relevantDates: [PKPassRelevantDate] = []
+    public private(set) var relevantDate: Date?
+    public private(set) var relevantDates: [PKPassRelevantDate] = []
     public var isRemotePass = false
     public var secureElementPass: PKSecureElementPass? { self as? PKSecureElementPass }
-    public var userInfo: [AnyHashable: Any]?
-    public var webServiceURL: URL?
+    public private(set) var userInfo: [AnyHashable: Any]?
+    public private(set) var webServiceURL: URL?
+    var fieldValues: [String: Any] = [:]
 
     public init(data: Data) throws {
-        // A pkpass is a signed archive. Accepting arbitrary bytes without
-        // signature/archive validation would create a counterfeit pass.
-        _ = data
-        throw PassKitPortableError(.passValidationUnavailable)
+        // Stored ZIP + pass.json keys from Apple's Wallet Package Format.
+        // Signature bytes are ignored; CMS verification is unobserved
+        // (oracle-questions.tsv). Deflated archives throw invalidDataError.
+        let manifest = try PassKitPassArchive.parse(data)
+        serialNumber = manifest.serialNumber
+        passTypeIdentifier = manifest.passTypeIdentifier
+        passURL = nil
+        super.init()
+        authenticationToken = manifest.authenticationToken
+        localizedDescription = manifest.localizedDescription
+        localizedName = manifest.localizedName
+        organizationName = manifest.organizationName
+        relevantDate = manifest.relevantDate
+        relevantDates = manifest.relevantDates
+        userInfo = manifest.userInfo
+        webServiceURL = manifest.webServiceURL
+        fieldValues = manifest.fieldValues
+        isRemotePass = false
+        deviceName = ""
+        passType = .barcode
+        icon = UIImage()
     }
 
     internal init(
@@ -78,8 +99,7 @@ open class PKPass: PKObject, @unchecked Sendable {
     }
 
     public func localizedValue(forFieldKey key: String) -> Any? {
-        _ = key
-        return nil
+        fieldValues[key]
     }
 
     public override init() {
@@ -153,10 +173,12 @@ public final class PKPassLibrary: NSObject, @unchecked Sendable {
 
     public func addPasses(
         _ passes: [PKPass],
-        withCompletionHandler completion: ((Bool) -> Void)? = nil
+        withCompletionHandler completion: ((PKPassLibraryAddPassesStatus) -> Void)? = nil
     ) {
         _ = passes
-        completion?(false)
+        // Linux has no Wallet entitlement. Status matches a cancelled add;
+        // throwing APIs on this type use PKPassKitError.notEntitledError.
+        completion?(.didCancelAddPasses)
     }
 
     public func addPasses(_ passes: [PKPass]) async -> PKPassLibraryAddPassesStatus {
@@ -208,7 +230,7 @@ public final class PKPassLibrary: NSObject, @unchecked Sendable {
         completion: ((Bool, any Error) -> Void)? = nil
     ) {
         _ = (paymentPass, activationCode)
-        completion?(false, PassKitPortableError(.passLibraryUnavailable))
+        completion?(false, PKPassKitError(.notEntitledError))
     }
 
     public func activate(
@@ -217,7 +239,7 @@ public final class PKPassLibrary: NSObject, @unchecked Sendable {
         completion: ((Bool, any Error) -> Void)? = nil
     ) {
         _ = (paymentPass, activationData)
-        completion?(false, PassKitPortableError(.passLibraryUnavailable))
+        completion?(false, PKPassKitError(.notEntitledError))
     }
 
     public func activate(
@@ -225,21 +247,21 @@ public final class PKPassLibrary: NSObject, @unchecked Sendable {
         activationData: Data
     ) async throws -> Bool {
         _ = (secureElementPass, activationData)
-        throw PassKitPortableError(.passLibraryUnavailable)
+        throw PKPassKitError(.notEntitledError)
     }
 
     public func encryptedServiceProviderData(
         for secureElementPass: PKSecureElementPass
     ) async throws -> [AnyHashable: Any] {
         _ = secureElementPass
-        throw PassKitPortableError(.passLibraryUnavailable)
+        throw PKPassKitError(.notEntitledError)
     }
 
     public func serviceProviderData(
         for secureElementPass: PKSecureElementPass
     ) async throws -> Data {
         _ = secureElementPass
-        throw PassKitPortableError(.passLibraryUnavailable)
+        throw PKPassKitError(.notEntitledError)
     }
 
     public func sign(
@@ -247,7 +269,7 @@ public final class PKPassLibrary: NSObject, @unchecked Sendable {
         using secureElementPass: PKSecureElementPass
     ) async throws -> (Data, Data) {
         _ = (signData, secureElementPass)
-        throw PassKitPortableError(.passLibraryUnavailable)
+        throw PKPassKitError(.notEntitledError)
     }
 }
 
@@ -281,7 +303,9 @@ open class PKAddPassesViewController: UIViewController, @unchecked Sendable {
         _ = (issuerData, signature)
         passes = []
         super.init(nibName: nil, bundle: nil)
-        throw PassKitPortableError(.passLibraryUnavailable)
+        // Seed lists Foundation only; no UIKit sheet. Issuer provisioning
+        // is entitlement-gated and fails closed.
+        throw PKPassKitError(.notEntitledError)
     }
 
     public override init() {

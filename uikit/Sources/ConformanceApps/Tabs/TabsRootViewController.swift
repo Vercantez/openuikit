@@ -80,6 +80,7 @@ final class TabsSearchViewController: UITableViewController, UISearchResultsUpda
     /// (keyboard-up, search moves into the navigation bar).
     func focusSearch() {
         searchController.isActive = true
+        _ = searchController.searchBar.becomeFirstResponder()
     }
 
     /// What typing into the field does. Query "Row 1" matches Row 1 and

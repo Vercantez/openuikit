@@ -1,11 +1,9 @@
 @_exported import Foundation
 
-// A portable CryptoKit-compatible core. Hashing, HMAC, HKDF, and the
-// symmetric AEAD primitives are implemented directly in Swift so the guest
-// dylib has no dependency on an Apple crypto framework or an ELF library.
-// Public-key, post-quantum, HPKE, and Secure Enclave operations fail closed
-// until a native provider is connected and an Apple-runtime oracle confirms
-// remaining encoding/behavior details.
+// Portable CryptoKit: hashing, HMAC, HKDF, AES-GCM, ChaChaPoly, AES-KW,
+// X25519 (RFC 7748), Ed25519 (RFC 8032), P-256/P-384/P-521 (FIPS 186-4),
+// and HPKE base mode (RFC 9180). Secure Enclave and post-quantum KEMs stay
+// fail-closed. Every field constant is named from a published vector.
 
 public enum CryptoKitError: Error, Hashable, Sendable {
     case incorrectKeySize

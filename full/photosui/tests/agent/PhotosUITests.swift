@@ -28,14 +28,21 @@ func testPickerMode() {
 }
 
 func testPickerFilterComposition() {
+    // Apple PHPickerFilter combinators:
+    // https://developer.apple.com/documentation/photosui/phpickerfilter-swift.struct
+    // Linux equality is structural (order of any/all arrays is significant).
     let any = PHPickerFilter.any(of: [.images, .videos])
     let again = PHPickerFilter.any(of: [.images, .videos])
+    let reversed = PHPickerFilter.any(of: [.videos, .images])
     let all = PHPickerFilter.all(of: [.images, .not(.videos)])
     let negated = PHPickerFilter.not(.images)
     precondition(any == again)
     precondition(any != .images)
+    precondition(any != reversed)
     precondition(all != any)
     precondition(negated != .images)
+    precondition(PHPickerFilter.livePhotos == .livePhotos)
+    precondition(PHPickerFilter.livePhotos != .images)
     precondition(!(any != again))
     var hasher = Hasher()
     any.hash(into: &hasher)
@@ -54,6 +61,8 @@ func testPickerFilterMatches() {
     )
     precondition(!PHPickerFilter.videos._matches([.jpeg]))
     precondition(PHPickerFilter.not(.videos)._matches([.jpeg]))
+    precondition(PHPickerFilter.livePhotos._matches([.jpeg]))
+    precondition(!PHPickerFilter.not(.images)._matches([.jpeg]))
 }
 
 func testPickerFilterCatalog() {
@@ -104,13 +113,32 @@ func testPickerConfigurationDefaults() {
     precondition(copy != configuration)
     precondition(configuration.hashValue == PHPickerConfiguration().hashValue)
 
-    precondition(PHPickerConfiguration.AssetRepresentationMode.automatic != .compatible)
-    precondition(PHPickerConfiguration.Selection.continuousAndOrdered != .default)
+    // Apple documents selectionLimit 0 as unlimited. Linux stores 0; the
+    // picker chrome that would enforce the cap is absent.
+    // https://developer.apple.com/documentation/photosui/phpickerconfiguration/selectionlimit
+    var unlimited = PHPickerConfiguration()
+    unlimited.selectionLimit = 0
+    precondition(unlimited.selectionLimit == 0)
     var hasher = Hasher()
     configuration.hash(into: &hasher)
-    PHPickerConfiguration.AssetRepresentationMode.current.hash(into: &hasher)
-    PHPickerConfiguration.Selection.ordered.hash(into: &hasher)
     _ = hasher.finalize()
+}
+
+func testPickerConfigurationNestedEnums() {
+    typealias Mode = PHPickerConfiguration.AssetRepresentationMode
+    typealias Selection = PHPickerConfiguration.Selection
+    precondition(Mode.automatic != .compatible)
+    precondition(Mode.automatic != .current)
+    precondition(Mode.current != .compatible)
+    precondition(Selection.default != .ordered)
+    precondition(Selection.continuous != .continuousAndOrdered)
+    precondition(Selection.default != .continuous)
+    var hasher = Hasher()
+    Mode.current.hash(into: &hasher)
+    Selection.ordered.hash(into: &hasher)
+    _ = hasher.finalize()
+    precondition(Mode.automatic.hashValue == Mode.automatic.hashValue)
+    precondition(Selection.ordered.hashValue == Selection.ordered.hashValue)
 }
 
 func testPickerConfigurationPhotoLibrary() {
@@ -309,6 +337,64 @@ func testPickerResult() {
     precondition(result != other)
 }
 
+func testPickerResultItemProviderLoad() {
+    let jpeg = Data("jpeg-bytes".utf8)
+    let result = PHPickerResult._hostResult(
+        assetIdentifier: "asset-jpeg",
+        typeIdentifier: UTType.jpeg.identifier,
+        payload: jpeg
+    )
+    precondition(result.assetIdentifier == "asset-jpeg")
+    let provider = result.itemProvider
+    precondition(provider.registeredTypeIdentifiers.contains(where: { $0 == UTType.jpeg.identifier }))
+    precondition(provider.hasItemConformingToTypeIdentifier(UTType.jpeg.identifier))
+    precondition(provider.hasItemConformingToTypeIdentifier(UTType.image.identifier))
+    precondition(provider.canLoadObject(ofClass: Data.self))
+    precondition(!provider.canLoadObject(ofClass: NSString.self))
+
+    let dataBox = CompletionRecorder()
+    let dataProgress = provider.loadDataRepresentation(forTypeIdentifier: UTType.jpeg.identifier) { data, error in
+        precondition(error == nil)
+        dataBox.store(data.map { PickedDocument(bytes: $0) })
+    }
+    precondition(dataProgress.isFinished)
+    precondition(dataBox.document?.bytes == jpeg)
+
+    let fileBox = CompletionRecorder()
+    let fileProgress = provider.loadFileRepresentation(forTypeIdentifier: UTType.jpeg.identifier) { url, error in
+        precondition(error == nil)
+        let bytes = url.flatMap { try? Data(contentsOf: $0) }
+        fileBox.store(bytes.map { PickedDocument(bytes: $0) })
+    }
+    precondition(fileProgress.isFinished)
+    precondition(fileBox.document?.bytes == jpeg)
+
+    let objectBox = CompletionRecorder()
+    let objectProgress = provider.loadObject(ofClass: Data.self) { object, error in
+        precondition(error == nil)
+        objectBox.store(object.map { PickedDocument(bytes: $0) })
+    }
+    precondition(objectProgress.isFinished)
+    precondition(objectBox.document?.bytes == jpeg)
+}
+
+private final class PickerDelegateProbe: PHPickerViewControllerDelegate, @unchecked Sendable {
+    private let lock = NSLock()
+    private var stored: (picker: PHPickerViewController, results: [PHPickerResult])?
+    private(set) var onMain = false
+
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        lock.withLock {
+            stored = (picker, results)
+            onMain = Thread.isMainThread
+        }
+    }
+
+    var last: (picker: PHPickerViewController, results: [PHPickerResult])? {
+        lock.withLock { stored }
+    }
+}
+
 func testPickerViewController() {
     var configuration = PHPickerConfiguration()
     configuration.selectionLimit = 3
@@ -323,6 +409,39 @@ func testPickerViewController() {
     var update = PHPickerConfiguration.Update()
     update.selectionLimit = 2
     picker.updatePicker(using: update)
+    precondition(picker._appliedUpdate?.selectionLimit == 2)
+}
+
+func testPickerDelegateEmptySelection() {
+    let picker = PHPickerViewController(configuration: PHPickerConfiguration())
+    let probe = PickerDelegateProbe()
+    picker.delegate = probe
+    picker._present()
+    let last = probe.last
+    precondition(last?.picker === picker)
+    precondition(last?.results.isEmpty == true)
+    precondition(probe.onMain)
+}
+
+func testPickerDelegateEnqueuedResults() {
+    let jpeg = Data("picked-jpeg".utf8)
+    let queued = PHPickerResult._hostResult(
+        assetIdentifier: "queued",
+        typeIdentifier: UTType.jpeg.identifier,
+        payload: jpeg
+    )
+    let picker = PHPickerViewController(configuration: PHPickerConfiguration())
+    let probe = PickerDelegateProbe()
+    picker.delegate = probe
+    picker._enqueueResults([queued])
+    picker._present()
+    let last = probe.last
+    precondition(last?.results.count == 1)
+    precondition(last?.results.first?.assetIdentifier == "queued")
+    precondition(probe.onMain)
+
+    picker._present()
+    precondition(probe.last?.results.isEmpty == true)
 }
 
 func testPhotosPickerStyleAndBehavior() {
@@ -431,10 +550,157 @@ func testLivePhotoViewFailClosed() {
     precondition(view.isMuted)
     precondition(view.contentsRect.width == 10)
     _ = view.playbackGestureRecognizer
+
+    let probe = LivePhotoDelegateProbe()
+    view.delegate = probe
     view.startPlayback(with: .hint)
+    view.startPlayback(with: .full)
     view.stopPlayback()
+    precondition(!probe.willBegin)
+    precondition(!probe.didEnd)
+    precondition(probe.canBegin(view, style: .hint))
+    precondition(probe.extraDuration(view, touch: UITouch(), style: .hint) == 0)
+
     let badge = PHLivePhotoView.livePhotoBadgeImage(options: .overContent)
     precondition(badge === badge)
+}
+
+private final class LivePhotoDelegateProbe: PHLivePhotoViewDelegate {
+    var willBegin = false
+    var didEnd = false
+
+    func livePhotoView(
+        _ livePhotoView: PHLivePhotoView,
+        willBeginPlaybackWith playbackStyle: PHLivePhotoViewPlaybackStyle
+    ) {
+        _ = livePhotoView
+        _ = playbackStyle
+        willBegin = true
+    }
+
+    func livePhotoView(
+        _ livePhotoView: PHLivePhotoView,
+        didEndPlaybackWith playbackStyle: PHLivePhotoViewPlaybackStyle
+    ) {
+        _ = livePhotoView
+        _ = playbackStyle
+        didEnd = true
+    }
+
+    func canBegin(
+        _ view: PHLivePhotoView,
+        style: PHLivePhotoViewPlaybackStyle
+    ) -> Bool {
+        livePhotoView(view, canBeginPlaybackWith: style)
+    }
+
+    func extraDuration(
+        _ view: PHLivePhotoView,
+        touch: UITouch,
+        style: PHLivePhotoViewPlaybackStyle
+    ) -> TimeInterval {
+        livePhotoView(view, extraMinimumTouchDurationFor: touch, with: style)
+    }
+}
+
+private final class ContentEditingStub: PHContentEditingController {
+    var shouldShowCancelConfirmation = false
+    var started = false
+    var cancelled = false
+    var finished = false
+
+    func canHandle(_ adjustmentData: PHAdjustmentData) -> Bool {
+        _ = adjustmentData
+        return false
+    }
+
+    func startContentEditing(
+        with contentEditingInput: PHContentEditingInput,
+        placeholderImage: UIImage
+    ) {
+        _ = contentEditingInput
+        _ = placeholderImage
+        started = true
+    }
+
+    func finishContentEditing(completionHandler: @escaping (PHContentEditingOutput?) -> Void) {
+        finished = true
+        completionHandler(nil)
+    }
+
+    func cancelContentEditing() {
+        cancelled = true
+    }
+}
+
+func testContentEditingControllerShape() {
+    let editor = ContentEditingStub()
+    precondition(!editor.shouldShowCancelConfirmation)
+    precondition(!editor.canHandle(PHAdjustmentData()))
+    editor.startContentEditing(with: PHContentEditingInput(), placeholderImage: UIImage())
+    var output: PHContentEditingOutput? = PHContentEditingOutput()
+    editor.finishContentEditing { output = $0 }
+    editor.cancelContentEditing()
+    precondition(editor.started)
+    precondition(editor.finished)
+    precondition(editor.cancelled)
+    precondition(output == nil)
+}
+
+func testPhotosPickerInheritedModifiers() {
+    var items: [PhotosPickerItem] = []
+    var presented = true
+    let picker = PhotosPicker(
+        selection: Binding(get: { items }, set: { items = $0 }),
+        matching: .images,
+        label: { Text("Pick") }
+    )
+    _ = picker.photosPicker(
+        isPresented: Binding(get: { presented }, set: { presented = $0 }),
+        selection: Binding(get: { items }, set: { items = $0 }),
+        maxSelectionCount: 2,
+        matching: .images
+    )
+    _ = picker.photosPicker(
+        isPresented: Binding(get: { presented }, set: { presented = $0 }),
+        selection: Binding(get: { items }, set: { items = $0 }),
+        maxSelectionCount: 2,
+        matching: .images,
+        photoLibrary: PHPhotoLibrary.shared
+    )
+    var single: PhotosPickerItem?
+    _ = picker.photosPicker(
+        isPresented: Binding(get: { presented }, set: { presented = $0 }),
+        selection: Binding(get: { single }, set: { single = $0 }),
+        matching: .videos
+    )
+    _ = picker.photosPicker(
+        isPresented: Binding(get: { presented }, set: { presented = $0 }),
+        selection: Binding(get: { single }, set: { single = $0 }),
+        matching: .videos,
+        photoLibrary: PHPhotoLibrary.shared
+    )
+    _ = picker.photosPickerStyle(.inline)
+    _ = picker.photosPickerAccessoryVisibility(.visible, edges: .all)
+    _ = picker.photosPickerDisabledCapabilities(.search)
+    var sawError = false
+    _ = picker.postToPhotosSharedAlbumSheet(
+        isPresented: Binding(get: { presented }, set: { presented = $0 }),
+        items: [] as [PhotosPickerItem],
+        photoLibrary: PHPhotoLibrary.shared,
+        completion: { result in
+            if case .failure = result { sawError = true }
+        }
+    )
+    precondition(!presented)
+    precondition(sawError)
+    presented = true
+    _ = picker.postToPhotosSharedAlbumSheet(
+        isPresented: Binding(get: { presented }, set: { presented = $0 }),
+        items: [] as [PHPickerResult],
+        photoLibrary: PHPhotoLibrary.shared
+    )
+    precondition(!presented)
 }
 
 func testDirectionalEdges() {

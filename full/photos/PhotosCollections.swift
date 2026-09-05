@@ -19,16 +19,25 @@ open class PHCollection: PHObject, @unchecked Sendable {
 
     public func canPerform(_ anOperation: PHCollectionEditOperation) -> Bool {
         _ = anOperation
-        return false
+        return photosReadAccessGranted()
     }
 
     public static func fetchCollections(
         in collectionList: PHCollectionList,
         options: PHFetchOptions?
     ) -> PHFetchResult<PHCollection> {
-        _ = collectionList
         _ = options
-        return PHFetchResult([])
+        guard photosReadAccessGranted() else {
+            return PHFetchResult([])
+        }
+        let wanted = Set(collectionList.childIdentifiers)
+        let albums: [PHCollection] = PhotosLibraryStore.userAlbums().filter {
+            wanted.contains($0.localIdentifier)
+        }
+        let lists: [PHCollection] = PhotosLibraryStore.userLists().filter {
+            wanted.contains($0.localIdentifier)
+        }
+        return PHFetchResult(albums + lists)
     }
 
     public static func fetchTopLevelUserCollections(
@@ -38,7 +47,7 @@ open class PHCollection: PHObject, @unchecked Sendable {
         guard photosReadAccessGranted() else {
             return PHFetchResult([])
         }
-        let collections: [PHCollection] = PHPhotoLibraryPortable.collections()
+        let collections: [PHCollection] = PhotosLibraryStore.userAlbums()
         return PHFetchResult(collections)
     }
 }
@@ -87,7 +96,14 @@ public final class PHAssetCollection: PHCollection, @unchecked Sendable {
         guard photosReadAccessGranted() else {
             return PHFetchResult([])
         }
-        let collections = PHPhotoLibraryPortable.collections().filter { collection in
+        if type == .smartAlbum {
+            let albums = photosSmartAlbumSubtypes().map(photosMakeSmartAlbum)
+            let filtered = albums.filter { collection in
+                subtype == .any || collection.assetCollectionSubtype == subtype
+            }
+            return PHFetchResult(filtered)
+        }
+        let collections = PhotosLibraryStore.userAlbums().filter { collection in
             if type != collection.assetCollectionType {
                 return false
             }
@@ -108,7 +124,7 @@ public final class PHAssetCollection: PHCollection, @unchecked Sendable {
             return PHFetchResult([])
         }
         let wanted = Set(identifiers)
-        let collections = PHPhotoLibraryPortable.collections().filter {
+        let collections = PhotosLibraryStore.userAlbums().filter {
             wanted.contains($0.localIdentifier)
         }
         return PHFetchResult(collections)
@@ -123,7 +139,7 @@ public final class PHAssetCollection: PHCollection, @unchecked Sendable {
         guard photosReadAccessGranted() else {
             return PHFetchResult([])
         }
-        let collections = PHPhotoLibraryPortable.collections().filter { collection in
+        let collections = PhotosLibraryStore.userAlbums().filter { collection in
             collection.assetCollectionType == type
                 && collection.transientAssetIdentifiers.contains(asset.localIdentifier)
         }
@@ -181,6 +197,7 @@ public final class PHCollectionList: PHCollection, @unchecked Sendable {
     public let startDate: Date?
     public let endDate: Date?
     public let localizedLocationNames: [String]
+    let childIdentifiers: [String]
 
     init(
         localIdentifier: String,
@@ -188,13 +205,15 @@ public final class PHCollectionList: PHCollection, @unchecked Sendable {
         type: PHCollectionListType,
         subtype: PHCollectionListSubtype,
         startDate: Date? = nil,
-        endDate: Date? = nil
+        endDate: Date? = nil,
+        childIdentifiers: [String] = []
     ) {
         collectionListType = type
         collectionListSubtype = subtype
         self.startDate = startDate
         self.endDate = endDate
         localizedLocationNames = []
+        self.childIdentifiers = childIdentifiers
         super.init(
             localIdentifier: localIdentifier,
             localizedTitle: title,
@@ -208,28 +227,49 @@ public final class PHCollectionList: PHCollection, @unchecked Sendable {
         subtype: PHCollectionListSubtype,
         options: PHFetchOptions?
     ) -> PHFetchResult<PHCollectionList> {
-        _ = collectionListType
-        _ = subtype
         _ = options
-        return PHFetchResult([])
+        guard photosReadAccessGranted() else {
+            return PHFetchResult([])
+        }
+        let lists = PhotosLibraryStore.userLists().filter { list in
+            if list.collectionListType != collectionListType {
+                return false
+            }
+            if subtype == .any {
+                return true
+            }
+            return list.collectionListSubtype == subtype
+        }
+        return PHFetchResult(lists)
     }
 
     public static func fetchCollectionLists(
         withLocalIdentifiers identifiers: [String],
         options: PHFetchOptions?
     ) -> PHFetchResult<PHCollectionList> {
-        _ = identifiers
         _ = options
-        return PHFetchResult([])
+        guard photosReadAccessGranted() else {
+            return PHFetchResult([])
+        }
+        let wanted = Set(identifiers)
+        let lists = PhotosLibraryStore.userLists().filter {
+            wanted.contains($0.localIdentifier)
+        }
+        return PHFetchResult(lists)
     }
 
     public static func fetchCollectionListsContaining(
         _ collection: PHCollection,
         options: PHFetchOptions?
     ) -> PHFetchResult<PHCollectionList> {
-        _ = collection
         _ = options
-        return PHFetchResult([])
+        guard photosReadAccessGranted() else {
+            return PHFetchResult([])
+        }
+        let lists = PhotosLibraryStore.userLists().filter {
+            $0.childIdentifiers.contains(collection.localIdentifier)
+        }
+        return PHFetchResult(lists)
     }
 
     public static func fetchMomentLists(
@@ -256,12 +296,12 @@ public final class PHCollectionList: PHCollection, @unchecked Sendable {
         with collections: [PHCollection],
         title: String?
     ) -> PHCollectionList {
-        _ = collections
-        return PHCollectionList(
+        PHCollectionList(
             localIdentifier: "transient.list.\(UUID().uuidString)",
             title: title,
             type: .folder,
-            subtype: .regularFolder
+            subtype: .regularFolder,
+            childIdentifiers: collections.map(\.localIdentifier)
         )
     }
 

@@ -18,6 +18,13 @@ open class PHAssetChangeRequest: PHChangeRequest, @unchecked Sendable {
     public var isHidden = false
     public var contentEditingOutput: PHContentEditingOutput?
     public internal(set) var placeholderForCreatedAsset: PHObjectPlaceholder?
+    var targetAssetIdentifier: String?
+    var pendingData: Data?
+    var pendingFileURL: URL?
+    var pendingImage: UIImage?
+    var pendingMediaType: PHAssetMediaType = .image
+    var pendingFilename = "payload.bin"
+    var pendingUTI = "public.png"
 
     public required override init() {
         super.init()
@@ -28,6 +35,8 @@ open class PHAssetChangeRequest: PHChangeRequest, @unchecked Sendable {
         creationDate = asset.creationDate
         isFavorite = asset.isFavorite
         isHidden = asset.isHidden
+        targetAssetIdentifier = asset.localIdentifier
+        PhotosChangeSession.record(.updateAsset(self))
     }
 
     public convenience init(forAsset asset: PHAsset) {
@@ -35,26 +44,62 @@ open class PHAssetChangeRequest: PHChangeRequest, @unchecked Sendable {
     }
 
     public class func creationRequestForAsset(from image: UIImage) -> Self {
-        _ = image
+        let identifier = photosNewLocalIdentifier()
         let request = Self()
         request.placeholderForCreatedAsset = PHObjectPlaceholder(
-            placeholderIdentifier: "created.image.\(UUID().uuidString)"
+            placeholderIdentifier: identifier
         )
+        request.pendingImage = image
+        request.pendingData = PhotosEmbeddedPNG.oneByOne
+        request.pendingFilename = "image.png"
+        request.pendingUTI = "public.png"
+        PhotosChangeSession.record(.createAsset(request))
         return request
     }
 
     public class func creationRequestForAssetFromImage(atFileURL fileURL: URL) -> Self? {
-        _ = fileURL
-        return nil
+        guard FileManager.default.isReadableFile(atPath: fileURL.path) else {
+            return nil
+        }
+        guard let data = try? Data(contentsOf: fileURL), data.isEmpty == false else {
+            return nil
+        }
+        let identifier = photosNewLocalIdentifier()
+        let request = Self()
+        request.placeholderForCreatedAsset = PHObjectPlaceholder(
+            placeholderIdentifier: identifier
+        )
+        request.pendingFileURL = fileURL
+        request.pendingData = data
+        request.pendingFilename = fileURL.lastPathComponent
+        request.pendingUTI = photosUTI(forFilename: fileURL.lastPathComponent)
+        PhotosChangeSession.record(.createAsset(request))
+        return request
     }
 
     public class func creationRequestForAssetFromVideo(atFileURL fileURL: URL) -> Self? {
-        _ = fileURL
-        return nil
+        guard FileManager.default.isReadableFile(atPath: fileURL.path) else {
+            return nil
+        }
+        guard let data = try? Data(contentsOf: fileURL), data.isEmpty == false else {
+            return nil
+        }
+        let identifier = photosNewLocalIdentifier()
+        let request = Self()
+        request.placeholderForCreatedAsset = PHObjectPlaceholder(
+            placeholderIdentifier: identifier
+        )
+        request.pendingFileURL = fileURL
+        request.pendingData = data
+        request.pendingFilename = fileURL.lastPathComponent
+        request.pendingUTI = photosUTI(forFilename: fileURL.lastPathComponent)
+        request.pendingMediaType = .video
+        PhotosChangeSession.record(.createAsset(request))
+        return request
     }
 
     public class func deleteAssets(_ assets: [PHAsset]) {
-        _ = assets
+        PhotosChangeSession.record(.deleteAssets(assets.map(\.localIdentifier)))
     }
 
     public func revertAssetContentToOriginal() {}
@@ -63,9 +108,15 @@ open class PHAssetChangeRequest: PHChangeRequest, @unchecked Sendable {
 public final class PHAssetCollectionChangeRequest: PHChangeRequest, @unchecked Sendable {
     public var title: String
     public private(set) var placeholderForCreatedAssetCollection: PHObjectPlaceholder
+    var targetCollectionIdentifier: String?
+    var pendingAssetIdentifiers: [String] = []
+    var isCreation = false
 
     public convenience init?(for assetCollection: PHAssetCollection) {
         self.init(title: assetCollection.localizedTitle ?? "")
+        targetCollectionIdentifier = assetCollection.localIdentifier
+        pendingAssetIdentifiers = assetCollection.transientAssetIdentifiers
+        PhotosChangeSession.record(.updateAlbum(self))
     }
 
     public convenience init?(forAssetCollection assetCollection: PHAssetCollection) {
@@ -76,8 +127,10 @@ public final class PHAssetCollectionChangeRequest: PHChangeRequest, @unchecked S
         for assetCollection: PHAssetCollection,
         assets: PHFetchResult<PHAsset>?
     ) {
-        _ = assets
         self.init(for: assetCollection)
+        if let assets {
+            pendingAssetIdentifiers = assets.objects.map(\.localIdentifier)
+        }
     }
 
     public convenience init?(
@@ -90,42 +143,88 @@ public final class PHAssetCollectionChangeRequest: PHChangeRequest, @unchecked S
     public init(title: String) {
         self.title = title
         placeholderForCreatedAssetCollection = PHObjectPlaceholder(
-            placeholderIdentifier: "created.album.\(UUID().uuidString)"
+            placeholderIdentifier: photosNewLocalIdentifier()
         )
         super.init()
     }
 
     public class func creationRequestForAssetCollection(withTitle title: String) -> Self {
-        Self(title: title)
+        let request = Self(title: title)
+        request.isCreation = true
+        PhotosChangeSession.record(.createAlbum(request))
+        return request
     }
 
     public class func deleteAssetCollections(_ assetCollections: [PHAssetCollection]) {
-        _ = assetCollections
+        PhotosChangeSession.record(
+            .deleteAlbums(assetCollections.map(\.localIdentifier))
+        )
     }
 
-    public func addAssets(_ assets: [PHAsset]) { _ = assets }
+    public func addAssets(_ assets: [PHAsset]) {
+        pendingAssetIdentifiers.append(contentsOf: assets.map(\.localIdentifier))
+    }
+
     public func insertAssets(_ assets: [PHAsset], at indexes: IndexSet) {
-        _ = assets
-        _ = indexes
+        let identifiers = assets.map(\.localIdentifier)
+        var cursor = 0
+        for index in indexes.sorted() {
+            if cursor < identifiers.count, index <= pendingAssetIdentifiers.count {
+                pendingAssetIdentifiers.insert(identifiers[cursor], at: index)
+                cursor += 1
+            }
+        }
     }
+
     public func moveAssets(at fromIndexes: IndexSet, to toIndex: Int) {
-        _ = fromIndexes
-        _ = toIndex
+        let moving = fromIndexes.sorted().reversed().compactMap { index -> String? in
+            guard pendingAssetIdentifiers.indices.contains(index) else { return nil }
+            return pendingAssetIdentifiers.remove(at: index)
+        }.reversed()
+        var insertAt = min(max(toIndex, 0), pendingAssetIdentifiers.count)
+        for identifier in moving {
+            pendingAssetIdentifiers.insert(identifier, at: insertAt)
+            insertAt += 1
+        }
     }
-    public func removeAssets(_ assets: [PHAsset]) { _ = assets }
-    public func removeAssets(at indexes: IndexSet) { _ = indexes }
+
+    public func removeAssets(_ assets: [PHAsset]) {
+        let unwanted = Set(assets.map(\.localIdentifier))
+        pendingAssetIdentifiers.removeAll { unwanted.contains($0) }
+    }
+
+    public func removeAssets(at indexes: IndexSet) {
+        for index in indexes.sorted().reversed() {
+            if pendingAssetIdentifiers.indices.contains(index) {
+                pendingAssetIdentifiers.remove(at: index)
+            }
+        }
+    }
+
     public func replaceAssets(at indexes: IndexSet, withAssets assets: [PHAsset]) {
-        _ = indexes
-        _ = assets
+        let identifiers = assets.map(\.localIdentifier)
+        var cursor = 0
+        for index in indexes.sorted() {
+            if cursor < identifiers.count, pendingAssetIdentifiers.indices.contains(index) {
+                pendingAssetIdentifiers[index] = identifiers[cursor]
+                cursor += 1
+            }
+        }
     }
 }
 
 public final class PHCollectionListChangeRequest: PHChangeRequest, @unchecked Sendable {
     public var title: String
     public private(set) var placeholderForCreatedCollectionList: PHObjectPlaceholder
+    var targetListIdentifier: String?
+    var pendingChildIdentifiers: [String] = []
+    var isCreation = false
 
     public convenience init?(for collectionList: PHCollectionList) {
         self.init(title: collectionList.localizedTitle ?? "")
+        targetListIdentifier = collectionList.localIdentifier
+        pendingChildIdentifiers = collectionList.childIdentifiers
+        PhotosChangeSession.record(.updateList(self))
     }
 
     public convenience init?(forCollectionList collectionList: PHCollectionList) {
@@ -136,8 +235,8 @@ public final class PHCollectionListChangeRequest: PHChangeRequest, @unchecked Se
         for collectionList: PHCollectionList,
         childCollections: PHFetchResult<PHCollection>
     ) {
-        _ = childCollections
         self.init(for: collectionList)
+        pendingChildIdentifiers = childCollections.objects.map(\.localIdentifier)
     }
 
     public convenience init?(
@@ -150,43 +249,84 @@ public final class PHCollectionListChangeRequest: PHChangeRequest, @unchecked Se
     public convenience init?(
         forTopLevelCollectionListUserCollections childCollections: PHFetchResult<PHCollection>
     ) {
-        _ = childCollections
         self.init(title: "")
+        pendingChildIdentifiers = childCollections.objects.map(\.localIdentifier)
+        PhotosChangeSession.record(.updateList(self))
     }
 
     public init(title: String) {
         self.title = title
         placeholderForCreatedCollectionList = PHObjectPlaceholder(
-            placeholderIdentifier: "created.list.\(UUID().uuidString)"
+            placeholderIdentifier: photosNewLocalIdentifier()
         )
         super.init()
     }
 
     public class func creationRequestForCollectionList(withTitle title: String) -> Self {
-        Self(title: title)
+        let request = Self(title: title)
+        request.isCreation = true
+        PhotosChangeSession.record(.createList(request))
+        return request
     }
 
     public class func deleteCollectionLists(_ collectionLists: [PHCollectionList]) {
-        _ = collectionLists
+        PhotosChangeSession.record(
+            .deleteLists(collectionLists.map(\.localIdentifier))
+        )
     }
 
-    public func addChildCollections(_ collections: [PHCollection]) { _ = collections }
+    public func addChildCollections(_ collections: [PHCollection]) {
+        pendingChildIdentifiers.append(contentsOf: collections.map(\.localIdentifier))
+    }
+
     public func insertChildCollections(_ collections: [PHCollection], at indexes: IndexSet) {
-        _ = collections
-        _ = indexes
+        let identifiers = collections.map(\.localIdentifier)
+        var cursor = 0
+        for index in indexes.sorted() {
+            if cursor < identifiers.count, index <= pendingChildIdentifiers.count {
+                pendingChildIdentifiers.insert(identifiers[cursor], at: index)
+                cursor += 1
+            }
+        }
     }
+
     public func moveChildCollections(at indexes: IndexSet, to toIndex: Int) {
-        _ = indexes
-        _ = toIndex
+        let moving = indexes.sorted().reversed().compactMap { index -> String? in
+            guard pendingChildIdentifiers.indices.contains(index) else { return nil }
+            return pendingChildIdentifiers.remove(at: index)
+        }.reversed()
+        var insertAt = min(max(toIndex, 0), pendingChildIdentifiers.count)
+        for identifier in moving {
+            pendingChildIdentifiers.insert(identifier, at: insertAt)
+            insertAt += 1
+        }
     }
-    public func removeChildCollections(_ collections: [PHCollection]) { _ = collections }
-    public func removeChildCollections(at indexes: IndexSet) { _ = indexes }
+
+    public func removeChildCollections(_ collections: [PHCollection]) {
+        let unwanted = Set(collections.map(\.localIdentifier))
+        pendingChildIdentifiers.removeAll { unwanted.contains($0) }
+    }
+
+    public func removeChildCollections(at indexes: IndexSet) {
+        for index in indexes.sorted().reversed() {
+            if pendingChildIdentifiers.indices.contains(index) {
+                pendingChildIdentifiers.remove(at: index)
+            }
+        }
+    }
+
     public func replaceChildCollections(
         at indexes: IndexSet,
         withChildCollections collections: [PHCollection]
     ) {
-        _ = indexes
-        _ = collections
+        let identifiers = collections.map(\.localIdentifier)
+        var cursor = 0
+        for index in indexes.sorted() {
+            if cursor < identifiers.count, pendingChildIdentifiers.indices.contains(index) {
+                pendingChildIdentifiers[index] = identifiers[cursor]
+                cursor += 1
+            }
+        }
     }
 }
 
@@ -194,8 +334,9 @@ public final class PHAssetCreationRequest: PHAssetChangeRequest, @unchecked Send
     public class func forAsset() -> Self {
         let request = Self()
         request.placeholderForCreatedAsset = PHObjectPlaceholder(
-            placeholderIdentifier: "created.asset.\(UUID().uuidString)"
+            placeholderIdentifier: photosNewLocalIdentifier()
         )
+        PhotosChangeSession.record(.createAsset(request))
         return request
     }
 
@@ -209,9 +350,12 @@ public final class PHAssetCreationRequest: PHAssetChangeRequest, @unchecked Send
         data: Data,
         options: PHAssetResourceCreationOptions?
     ) {
-        _ = type
-        _ = data
-        _ = options
+        pendingMediaType = type == .video ? .video : .image
+        pendingData = data
+        if let filename = options?.originalFilename {
+            pendingFilename = filename
+            pendingUTI = photosUTI(forFilename: filename)
+        }
     }
 
     public func addResource(
@@ -219,23 +363,98 @@ public final class PHAssetCreationRequest: PHAssetChangeRequest, @unchecked Send
         fileURL: URL,
         options: PHAssetResourceCreationOptions?
     ) {
-        _ = type
-        _ = fileURL
-        _ = options
+        pendingMediaType = type == .video ? .video : .image
+        pendingFileURL = fileURL
+        pendingData = try? Data(contentsOf: fileURL)
+        pendingFilename = options?.originalFilename ?? fileURL.lastPathComponent
+        pendingUTI = options?.uniformTypeIdentifier
+            ?? photosUTI(forFilename: pendingFilename)
     }
 }
 
 public final class PHChange: NSObject, @unchecked Sendable {
+    let applied: PhotosAppliedChange
+
+    init(applied: PhotosAppliedChange) {
+        self.applied = applied
+        super.init()
+    }
+
+    public override init() {
+        applied = PhotosAppliedChange(
+            insertedAssetIdentifiers: [],
+            removedAssetIdentifiers: [],
+            changedAssetIdentifiers: [],
+            insertedAlbumIdentifiers: [],
+            removedAlbumIdentifiers: [],
+            changedAlbumIdentifiers: [],
+            token: 0
+        )
+        super.init()
+    }
+
     public func changeDetails<T: PHObject>(for object: T) -> PHObjectChangeDetails<T>? {
-        _ = object
+        let identifier = object.localIdentifier
+        if applied.removedAssetIdentifiers.contains(identifier)
+            || applied.removedAlbumIdentifiers.contains(identifier)
+        {
+            return PHObjectChangeDetails(
+                objectBeforeChanges: object,
+                objectAfterChanges: nil,
+                assetContentChanged: false,
+                objectWasDeleted: true
+            )
+        }
+        if applied.changedAssetIdentifiers.contains(identifier),
+            let after = PhotosLibraryStore.asset(identifier: identifier) as? T
+        {
+            return PHObjectChangeDetails(
+                objectBeforeChanges: object,
+                objectAfterChanges: after,
+                assetContentChanged: true,
+                objectWasDeleted: false
+            )
+        }
+        if applied.changedAlbumIdentifiers.contains(identifier),
+            let after = PhotosLibraryStore.album(identifier: identifier) as? T
+        {
+            return PHObjectChangeDetails(
+                objectBeforeChanges: object,
+                objectAfterChanges: after,
+                assetContentChanged: false,
+                objectWasDeleted: false
+            )
+        }
         return nil
     }
 
     public func changeDetails<T: PHObject>(
         for fetchResult: PHFetchResult<T>
     ) -> PHFetchResultChangeDetails<T>? {
-        _ = fetchResult
-        return nil
+        let afterObjects: [T]
+        if let refetch = fetchResult.refetch {
+            afterObjects = refetch()
+        } else {
+            afterObjects = fetchResult.objects
+        }
+        let after = PHFetchResult(afterObjects, refetch: fetchResult.refetch)
+        let changedIDs = Set(
+            applied.changedAssetIdentifiers + applied.changedAlbumIdentifiers
+        )
+        let changed = afterObjects.filter { changedIDs.contains($0.localIdentifier) }
+        let details = PHFetchResultChangeDetails(
+            fetchResultBeforeChanges: fetchResult,
+            fetchResultAfterChanges: after,
+            changedObjects: changed
+        )
+        if details.insertedIndexes == nil,
+            details.removedIndexes == nil,
+            details.changedIndexes == nil,
+            details.hasMoves == false
+        {
+            return nil
+        }
+        return details
     }
 }
 
@@ -299,13 +518,42 @@ public final class PHFetchResultChangeDetails<ObjectType: PHObject>: NSObject, @
         self.fetchResultBeforeChanges = fetchResultBeforeChanges
         self.fetchResultAfterChanges = fetchResultAfterChanges
         self.changedObjects = changedObjects
-        hasIncrementalChanges = false
-        hasMoves = false
-        insertedIndexes = nil
-        insertedObjects = []
-        removedIndexes = nil
-        removedObjects = []
-        changedIndexes = changedObjects.isEmpty ? nil : IndexSet()
+        let beforeIDs = fetchResultBeforeChanges.objects.map(\.localIdentifier)
+        let afterIDs = fetchResultAfterChanges.objects.map(\.localIdentifier)
+        let beforeSet = Set(beforeIDs)
+        let afterSet = Set(afterIDs)
+        var inserted = IndexSet()
+        var insertedObjs: [ObjectType] = []
+        for (index, identifier) in afterIDs.enumerated() {
+            if beforeSet.contains(identifier) == false {
+                inserted.insert(index)
+                insertedObjs.append(fetchResultAfterChanges.objects[index])
+            }
+        }
+        var removed = IndexSet()
+        var removedObjs: [ObjectType] = []
+        for (index, identifier) in beforeIDs.enumerated() {
+            if afterSet.contains(identifier) == false {
+                removed.insert(index)
+                removedObjs.append(fetchResultBeforeChanges.objects[index])
+            }
+        }
+        let changedIDs = Set(changedObjects.map(\.localIdentifier))
+        var changed = IndexSet()
+        for (index, identifier) in afterIDs.enumerated() {
+            if changedIDs.contains(identifier) {
+                changed.insert(index)
+            }
+        }
+        let remainingBefore = beforeIDs.filter { afterSet.contains($0) }
+        let remainingAfter = afterIDs.filter { beforeSet.contains($0) }
+        hasMoves = remainingBefore != remainingAfter
+        hasIncrementalChanges = true
+        insertedIndexes = inserted.isEmpty ? nil : inserted
+        insertedObjects = insertedObjs
+        removedIndexes = removed.isEmpty ? nil : removed
+        removedObjects = removedObjs
+        changedIndexes = changed.isEmpty ? nil : changed
         super.init()
     }
 
