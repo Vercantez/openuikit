@@ -297,6 +297,58 @@ func unfreezeLayer(_ layer: CALayer) {
     layer.beginTime = 0
 }
 
+/// Presentation bounds.origin of every UIScrollView. Pager page-next /
+/// fling write contentOffset each vsync (model == presentation); there is
+/// no CAAnimation freezeLayer can seek (pager-clock probe: only anims are
+/// page-control `contentsMultiplyColor`).
+func collectScrollPOffsets(_ v: UIView, into out: inout [CGPoint]) {
+    if let sv = v as? UIScrollView {
+        let p = sv.layer.presentation()
+        out.append(CGPoint(x: p?.bounds.origin.x ?? sv.bounds.origin.x,
+                           y: p?.bounds.origin.y ?? sv.bounds.origin.y))
+    }
+    for s in v.subviews {
+        collectScrollPOffsets(s, into: &out)
+    }
+}
+
+func scrollOffsetsMoved(_ a: [CGPoint], _ b: [CGPoint]) -> Bool {
+    let n = min(a.count, b.count)
+    for i in 0..<n {
+        if abs(a[i].x - b[i].x) > 0.5 || abs(a[i].y - b[i].y) > 0.5 {
+            return true
+        }
+    }
+    return false
+}
+
+/// Invert the measured cosine ease-in-out 0.3 s curve (pager-clock probe
+/// n=1..17, max |Δ| 0.25 pt) so a late first-motion sample still names
+/// the right frame. `distance` is the queuing scroll view's page extent.
+func cosineLocalN(delta: CGFloat, distance: CGFloat) -> Int {
+    let d = abs(Double(distance))
+    if d < 1 { return 1 }
+    var u = abs(Double(delta)) / d
+    if u > 1 { u = 1 }
+    let arg = max(-1.0, min(1.0, 1 - 2 * u))
+    let t = acos(arg) / Double.pi
+    let n = Int((t * 18.0).rounded())
+    return n < 1 ? 1 : n
+}
+
+func collectScrollFacts(_ v: UIView, into out: inout [(name: String, px: CGFloat, py: CGFloat, w: CGFloat, h: CGFloat)]) {
+    if let sv = v as? UIScrollView {
+        let p = sv.layer.presentation()
+        out.append((String(describing: type(of: sv)),
+                    p?.bounds.origin.x ?? sv.bounds.origin.x,
+                    p?.bounds.origin.y ?? sv.bounds.origin.y,
+                    sv.bounds.width, sv.bounds.height))
+    }
+    for s in v.subviews {
+        collectScrollFacts(s, into: &out)
+    }
+}
+
 final class AppDelegate: NSObject, UIApplicationDelegate {
     enum Item { case step(String); case capture(Double) }
 
@@ -323,6 +375,17 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     var capturesByActionFrame: [Int: [(t: Double, frames: Int, seek: Bool)]] = [:]
     var armedAfterAction: [(t: Double, frames: Int, seek: Bool)] = []
     var springBegin: CFTimeInterval?
+    /// Rest presentation offsets of every UIScrollView, snapped after the
+    /// action. First motion is named frame 1 of a tick-updated scroll.
+    var scrollRestOffsets: [CGPoint] = []
+    var sawScrollMotion = false
+    var motionTimestamp: CFTimeInterval = 0
+    var motionLocalN = 1
+    var motionDistance: CGFloat = 375
+    var motionRest: CGFloat = 375
+    var motionAxisX = true
+    var motionIndex = 0
+    var lastCurN = 0
 
     func application(_ app: UIApplication,
                      didFinishLaunchingWithOptions o: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -362,12 +425,13 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     /// `round((timestamp − t0) × 60)`, not a callback counter: five runs
     /// that counted callbacks still drifted remaining travel 0.189–0.209
     /// (dt 0.122–0.147 s) because a rest PNG stall stretched later ticks
-    /// while Core Animation kept vsync time. At equal frames an action
-    /// runs before a capture, the same order openhost's recorder uses.
+    /// while Core Animation kept vsync time. At equal frames a capture
+    /// runs before an action so Pager t400's PNG cannot stall the private
+    /// page-scroll updater that ignores layer.speed (pager-clock probe).
     func startLink() {
         let stepFrames = steps.map { ConformanceClock.frameIndex(for: $0.t) }
         for (i, s) in steps.enumerated() {
-            timeline.append((stepFrames[i], 0, .step(s.action)))
+            timeline.append((stepFrames[i], 1, .step(s.action)))
         }
         for c in captures {
             let cf = ConformanceClock.frameIndex(for: c)
@@ -385,7 +449,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
                     continue
                 }
             }
-            timeline.append((cf, 1, .capture(c)))
+            timeline.append((cf, 0, .capture(c)))
         }
         for pa in capturesByActionFrame.keys {
             capturesByActionFrame[pa]!.sort { $0.frames < $1.frames }
@@ -432,6 +496,15 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
                 lastActionTimestamp = l.timestamp
                 lastActionFrame = frame
                 performAction?(action)
+                sawScrollMotion = false
+                motionTimestamp = 0
+                motionLocalN = 1
+                motionRest = 375
+                motionAxisX = true
+                scrollRestOffsets = []
+                if let w = window {
+                    collectScrollPOffsets(w, into: &scrollRestOffsets)
+                }
                 if let list = capturesByActionFrame[entry.frame] {
                     armedAfterAction = list
                     springBegin = nil
@@ -442,30 +515,125 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             }
             cursor += 1
         }
-        // Post-action captures: seek mid-flight to spring begin+N/60,
-        // wait rest (and non-spring mid-flight) on the display-link clock
-        // from the action's timestamp.
+        // Post-action captures: seek mid-flight to spring begin+N/60;
+        // tick-updated scrolls (Pager page-next / fling) invert the cosine
+        // from the presentation offset so named frame N is the first tick
+        // whose local index reaches N (callback count / timestamp skip a
+        // vsync the private updater still runs); rest waits on the
+        // action's timestamp so a PNG stall cannot shrink the gap
+        // (TableEditor / Modal still seek).
         if !armedAfterAction.isEmpty, frame > lastActionFrame, let w = window {
+            var wantsSeek = false
+            for item in armedAfterAction {
+                if item.seek { wantsSeek = true; break }
+            }
+            if wantsSeek, springBegin == nil {
+                springBegin = firstSpringBegin(w)
+            }
+            // MEASURED pager-clock probe, iPhone SE 2x / iOS 26.1:
+            // setViewControllers(animated:) starts 1 or 2 vsyncs after the
+            // action (10 in-process traces: delay [1,2,2,…]; wait-from-action
+            // n=6 pOffset 442 vs 469). No bounds CAAnimation (modelOffset
+            // == pOffset; freezeLayer at action+6/60 stays at the live n=1
+            // state; layer.speed=0 does not stop the updater). Invert
+            // cosine from pOffset so named frame N is independent of that
+            // 1–2 vsync start (mot+5 → 469, mot+11 → 656.5 on all 10).
+            let waitingOnScroll = springBegin == nil && wantsSeek
+            if waitingOnScroll {
+                if !sawScrollMotion {
+                    var now: [CGPoint] = []
+                    collectScrollPOffsets(w, into: &now)
+                    if scrollOffsetsMoved(scrollRestOffsets, now) {
+                        sawScrollMotion = true
+                        motionTimestamp = l.timestamp
+                        var facts: [(name: String, px: CGFloat, py: CGFloat, w: CGFloat, h: CGFloat)] = []
+                        collectScrollFacts(w, into: &facts)
+                        var bestAbs: CGFloat = 0
+                        var bestDelta: CGFloat = 0
+                        var bestW: CGFloat = 375
+                        var bestIdx = 0
+                        let n = min(scrollRestOffsets.count, facts.count)
+                        for i in 0..<n {
+                            let dx = facts[i].px - scrollRestOffsets[i].x
+                            let dy = facts[i].py - scrollRestOffsets[i].y
+                            let mag = max(abs(dx), abs(dy))
+                            if mag > bestAbs {
+                                bestAbs = mag
+                                bestIdx = i
+                                if abs(dx) >= abs(dy) {
+                                    bestDelta = dx
+                                    bestW = facts[i].w
+                                    motionRest = scrollRestOffsets[i].x
+                                    motionAxisX = true
+                                } else {
+                                    bestDelta = dy
+                                    bestW = facts[i].h
+                                    motionRest = scrollRestOffsets[i].y
+                                    motionAxisX = false
+                                }
+                            }
+                        }
+                        motionIndex = bestIdx
+                        // Pick the travel (page width, two pages, …) whose
+                        // cosine n=1..8 residual is smallest so a late
+                        // first-motion sample still names the right frame.
+                        var bestErr: CGFloat = 1_000_000
+                        let candidates: [CGFloat] = [bestW, bestW * 2]
+                        for d in candidates {
+                            if d < 1 { continue }
+                            let guess = cosineLocalN(delta: bestDelta, distance: d)
+                            let u = (1 - cos(Double.pi * Double(guess) / 18.0)) / 2
+                            let pred = abs(d) * CGFloat(u)
+                            let err = abs(pred - abs(bestDelta))
+                            if err < bestErr {
+                                bestErr = err
+                                motionLocalN = guess
+                                motionDistance = d
+                            }
+                        }
+                        print("motion localN=\(motionLocalN) delta=\(bestDelta) dist=\(motionDistance) err=\(bestErr)")
+                    }
+                }
+            }
             while let next = armedAfterAction.first {
+                if next.seek, let origin = springBegin {
+                    let elapsed = Double(next.frames) / Double(ConformanceClock.hz)
+                    freezeLayer(w.layer, at: origin + elapsed)
+                    CATransaction.flush()
+                    capture(at: next.t, frame: lastActionFrame + next.frames, link: l,
+                            sampleElapsed: elapsed, springBegin: origin)
+                    unfreezeLayer(w.layer)
+                    armedAfterAction.removeFirst()
+                    continue
+                }
                 if next.seek {
-                    if springBegin == nil { springBegin = firstSpringBegin(w) }
-                    if let origin = springBegin {
-                        let elapsed = Double(next.frames) / Double(ConformanceClock.hz)
-                        freezeLayer(w.layer, at: origin + elapsed)
-                        CATransaction.flush()
+                    if sawScrollMotion {
+                        var facts: [(name: String, px: CGFloat, py: CGFloat, w: CGFloat, h: CGFloat)] = []
+                        collectScrollFacts(w, into: &facts)
+                        var cur = motionRest
+                        if motionIndex < facts.count {
+                            cur = motionAxisX ? facts[motionIndex].px : facts[motionIndex].py
+                        }
+                        let curN = cosineLocalN(delta: cur - motionRest, distance: motionDistance)
+                        lastCurN = curN
+                        // Named frame N is the first tick whose inverted
+                        // cosine index reaches N (pager-clock live traces:
+                        // n=6 pOffset 469, n=12 656.5).
+                        if next.frames >= 18 {
+                            let since = (l.timestamp - motionTimestamp) * Double(ConformanceClock.hz)
+                            if abs(cur - motionRest) > 1 || since < 15 { break }
+                        } else if curN < next.frames {
+                            break
+                        }
                         capture(at: next.t, frame: lastActionFrame + next.frames, link: l,
-                                sampleElapsed: elapsed, springBegin: origin)
-                        unfreezeLayer(w.layer)
-                        springBegin = nil
+                                sampleElapsed: Double(next.frames) / Double(ConformanceClock.hz),
+                                springBegin: nil)
                         armedAfterAction.removeFirst()
                         continue
                     }
-                    // No CASpringAnimation in the tree: Pager page-next /
-                    // fling drive a tick-updated bounds origin, not a spring.
-                    // Seeking to lastActionTimestamp+N/60 froze every
-                    // mid-flight capture at the 1-frame state (offset 378 /
-                    // 3). Wait N display-link frames instead (TableEditor /
-                    // Modal still seek — they install CASpringAnimation).
+                    let giveUp = lastActionTimestamp
+                        + Double(next.frames + 20) / Double(ConformanceClock.hz)
+                    if l.timestamp + 1e-4 < giveUp { break }
                 }
                 let due = lastActionTimestamp
                     + Double(next.frames) / Double(ConformanceClock.hz)
@@ -558,6 +726,13 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         }
         if let springBegin {
             clock["springBegin"] = round3(CGFloat(springBegin))
+        }
+        if sawScrollMotion {
+            clock["motionTimestamp"] = round3(CGFloat(motionTimestamp))
+            clock["motionLocalN"] = motionLocalN
+            clock["curN"] = lastCurN
+            clock["sinceMotionFrames"] = Int(((link.timestamp - motionTimestamp)
+                                              * Double(ConformanceClock.hz)).rounded())
         }
         let sa = w.safeAreaInsets
         let payload: [String: Any] = [

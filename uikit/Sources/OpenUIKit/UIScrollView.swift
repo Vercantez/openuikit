@@ -295,11 +295,9 @@ open class UIScrollView: UIView {
         set { bounds.origin = newValue }
     }
 
-    /// MEASURED Pager fling, iPhone SE 2x / iOS 26.1, named 60 Hz frames
-    /// (confprobe wait, not a layer seek): `setContentOffset(400, animated:
-    /// true)` from 0: n=0:0 (t3000) n=8:165.5 (t3133) n=16:388 (t3267)
-    /// n=30:400 (t3500). Ease-in-out over 0.3 s, no extra delay. Catalyst
-    /// keeps 0.25.
+    /// MEASURED pager-clock probe + Pager fling, iPhone SE 2x / iOS 26.1:
+    /// cosine ease-in-out over 0.3 s (n=8:165.5 n=16:388 n=30:400).
+    /// Catalyst keeps cubic 0.25.
     static var animatedContentOffsetDuration: Double {
         OpenUIKitRuntime.systemFontCut == .iOS ? 0.3 : 0.25
     }
@@ -307,11 +305,10 @@ open class UIScrollView: UIView {
     public func setContentOffset(_ offset: CGPoint, animated: Bool) {
         stopScrollAnimation()
         if animated {
-            UIView.animate(withDuration: UIScrollView.animatedContentOffsetDuration,
-                           delay: 0,
-                           options: [],
-                           animations: { self.contentOffset = offset },
-                           completion: { [weak self] _ in
+            UIView.animateScrollCurve(
+                withDuration: UIScrollView.animatedContentOffsetDuration,
+                animations: { self.contentOffset = offset },
+                completion: { [weak self] _ in
                                guard let self else { return }
                                // CA removes the bounds animation on completion;
                                // without this a later model change stays pinned
