@@ -285,9 +285,22 @@ open class UINavigationController: UIViewController {
             // 59 pt notch set y to that inset (additionalSafeAreaInsets 20/59
             // on a zero-SA window match the real status-bar / notch samples).
             let pad = iOSBarTop
-            let barH = navigationBar.prefersLargeTitles
-                ? navigationBar.largeTitleOverlayHeight
-                : UINavigationBar.iOSBarContentHeight + navigationBar.searchOverlayHeight
+            // MEASURED `/tmp/tabs-search-slot-probe`, iPhone SE 2x / iOS 26.1:
+            // active search is always bar height 60 (large titles off);
+            // inactive stacked slot adds 60 under the current title overlay
+            // (inline 54+60=114 / large 106+60=166). Hide-on-scroll collapse
+            // of that 60 shrinks safeArea.top and the Feed rebase lands
+            // setContentOffset(200) at 260 (Tabs t7000).
+            let barH: CGFloat
+            if navigationBar.searchIsActive {
+                barH = UINavigationBar.iOSBarContentHeight
+                    + UINavigationBar.searchActiveExtraHeight
+            } else {
+                let base = navigationBar.prefersLargeTitles
+                    ? navigationBar.largeTitleOverlayHeight
+                    : UINavigationBar.iOSBarContentHeight
+                barH = base + navigationBar.searchSlotHeight
+            }
             navigationBar.frame = CGRect(x: 0, y: pad, width: w, height: barH)
             if navigationBar.isTranslucent {
                 contentView.frame = CGRect(x: 0, y: 0, width: w, height: h)

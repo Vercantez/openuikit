@@ -72,7 +72,111 @@ final class UISearchControllerTests: XCTestCase {
         sc.isActive = true
         XCTAssertEqual(bar.searchOverlayHeight, 6)
         sc.isActive = false
+        // MEASURED `/tmp/tabs-search-slot-probe` hideT_largeF cancel + Tabs
+        // t6000: first deactivate reveals the 60 pt stacked slot.
+        XCTAssertEqual(bar.searchOverlayHeight, 60)
+        XCTAssertEqual(bar.searchSlotHeight, 60)
+    }
+
+    /// MEASURED `/tmp/tabs-search-slot-probe` hideF_largeF rest, iPhone SE
+    /// 2x / iOS 26.1: `hidesSearchBarWhenScrolling = false` shows the 60 pt
+    /// slot without ever activating.
+    func testUnhidingSearchBarShowsStackedSlotWithoutActivation() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        let sc = UISearchController(searchResultsController: nil)
+        let item = UINavigationItem(title: "Library")
+        item.searchController = sc
+        item.hidesSearchBarWhenScrolling = false
+        let bar = UINavigationBar()
+        bar.pushItem(item, animated: false)
+        XCTAssertEqual(bar.searchOverlayHeight, 60)
+        XCTAssertEqual(bar.searchSlotHeight, 60)
+    }
+
+    /// Catalyst must not grow a stacked iOS search slot.
+    func testSearchSlotStaysZeroOffIOSCut() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .macOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        let sc = UISearchController(searchResultsController: nil)
+        let item = UINavigationItem(title: "Library")
+        item.searchController = sc
+        item.hidesSearchBarWhenScrolling = false
+        let bar = UINavigationBar()
+        bar.pushItem(item, animated: false)
         XCTAssertEqual(bar.searchOverlayHeight, 0)
+        sc.isActive = true
+        XCTAssertEqual(bar.searchOverlayHeight, 0)
+        sc.isActive = false
+        XCTAssertEqual(bar.searchOverlayHeight, 0)
+    }
+
+    /// MEASURED `/tmp/tabs-search-slot-probe` hideT_largeF + Tabs t6000 /
+    /// t7000, iPhone SE 2x / iOS 26.1. After cancel the bar is 114 / adj
+    /// 124; `setContentOffset(200)` hides the slot and rebases offset to 260.
+    func testStackedSearchSlotAndScrollRebaseMatchTabsT6000T7000() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+
+        final class Host: UITableViewController {
+            var search: UISearchController!
+            override func viewDidLoad() {
+                super.viewDidLoad()
+                title = "Library"
+                let sc = UISearchController(searchResultsController: nil)
+                sc.obscuresBackgroundDuringPresentation = false
+                navigationItem.searchController = sc
+                search = sc
+                tableView.register(UITableViewCell.self, forCellReuseIdentifier: "r")
+                setContentScrollView(tableView)
+            }
+            override func tableView(_ tableView: UITableView,
+                                    numberOfRowsInSection section: Int) -> Int { 30 }
+            override func tableView(_ tableView: UITableView,
+                                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+                let c = tableView.dequeueReusableCell(withIdentifier: "r", for: indexPath)
+                c.textLabel?.text = "Row \(indexPath.row + 1)"
+                return c
+            }
+        }
+
+        let root = Host(style: .plain)
+        let nav = UINavigationController(rootViewController: root)
+        nav.view.frame = CGRect(x: 0, y: 0, width: 375, height: 667)
+        nav.view.layoutIfNeeded()
+        root.tableView.layoutIfNeeded()
+
+        XCTAssertEqual(nav.navigationBar.frame, CGRect(x: 0, y: 10, width: 375, height: 54))
+        XCTAssertEqual(root.tableView.adjustedContentInset.top, 64, accuracy: 0.01)
+        XCTAssertEqual(root.tableView.contentOffset.y, -64, accuracy: 0.01)
+        XCTAssertEqual(nav.navigationBar.searchOverlayHeight, 0)
+
+        root.search.isActive = true
+        nav.view.layoutIfNeeded()
+        XCTAssertEqual(nav.navigationBar.frame.height, 60, accuracy: 0.01)
+        XCTAssertEqual(root.tableView.adjustedContentInset.top, 70, accuracy: 0.01)
+
+        root.search.isActive = false
+        nav.view.layoutIfNeeded()
+        XCTAssertEqual(nav.navigationBar.frame, CGRect(x: 0, y: 10, width: 375, height: 114))
+        XCTAssertEqual(root.search.searchBar.frame,
+                       CGRect(x: 0, y: 54, width: 375, height: 60))
+        XCTAssertEqual(root.tableView.adjustedContentInset.top, 124, accuracy: 0.01)
+        XCTAssertEqual(root.tableView.contentOffset.y, -124, accuracy: 0.01)
+        XCTAssertEqual(root.search.searchBar.searchTextField.frame,
+                       CGRect(x: 16, y: 1, width: 343, height: 44))
+        XCTAssertEqual(root.search.searchBar.searchTextField.backgroundColor,
+                       _UISearchFieldMetrics.stackedPillFill)
+
+        root.tableView.setContentOffset(CGPoint(x: 0, y: 200), animated: false)
+        nav.view.layoutIfNeeded()
+        XCTAssertEqual(nav.navigationBar.frame.height, 54, accuracy: 0.01)
+        XCTAssertEqual(root.search.searchBar.frame.height, 0, accuracy: 0.01)
+        XCTAssertEqual(root.tableView.adjustedContentInset.top, 64, accuracy: 0.01)
+        XCTAssertEqual(root.tableView.contentOffset.y, 260, accuracy: 0.01)
     }
 
     /// MEASURED /tmp/tabs-t2000-probe, iPhone SE 2x / iOS 26.1: assigning

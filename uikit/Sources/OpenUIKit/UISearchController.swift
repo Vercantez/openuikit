@@ -40,6 +40,13 @@ open class UISearchController: UIViewController, UISearchBarDelegate {
     /// The navigation item currently displaying this controller, if any.
     weak var _item: UINavigationItem?
 
+    /// MEASURED `/tmp/tabs-search-slot-probe` + Tabs t6000, iPhone SE 2x /
+    /// iOS 26.1, hide-on-scroll default: after the first active→inactive
+    /// the search occupies a 60 pt stacked slot under the 54 pt bar
+    /// (nav `[0, 10, 375, 114]`, table adj.top **124**). Initial rest
+    /// (never activated) keeps the slot at 0 (Tabs t200).
+    var _slotRevealed = false
+
     public var isActive: Bool = false {
         didSet {
             guard isActive != oldValue else { return }
@@ -61,6 +68,7 @@ open class UISearchController: UIViewController, UISearchBarDelegate {
         if isActive {
             _ = searchBar.becomeFirstResponder()
         } else {
+            _slotRevealed = true
             _ = searchBar.resignFirstResponder()
         }
         searchResultsUpdater?.updateSearchResults(for: self)

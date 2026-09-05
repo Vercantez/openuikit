@@ -280,6 +280,13 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// navigation bar stays `[0, 10, 375, 54]`; when `isActive` the bar
     /// grows to `[0, 10, 375, 60]` (6 pt) and the search field occupies it.
     static let searchActiveExtraHeight: CGFloat = 6
+    /// MEASURED `/tmp/tabs-search-slot-probe` hideT_largeF cancel + Tabs
+    /// t6000, iPhone SE 2x / iOS 26.1: stacked inactive search is **60 pt**
+    /// under the 54 pt content bar (`UISearchBar` `[0, 64, 375, 60]`, nav
+    /// `[0, 10, 375, 114]`, table adj.top 124). t7000 `setContentOffset(200)`
+    /// hides it (hide-on-scroll default) and the Feed-style safe-area rebase
+    /// lands offset **260** (= 200 + 60).
+    static let searchStackedSlotHeight: CGFloat = 60
     var searchHiddenByScroll = false
     var hostedSearchBar: UISearchBar?
 
@@ -698,9 +705,12 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     }
 
     /// Hide-on-scroll for `hidesSearchBarWhenScrolling` (UIKit default true).
-    /// At rest (offset == -adjustedContentInset.top) the slot is visible;
-    /// once the table has moved up by more than 8 pt it hides. Tabs
-    /// scroll-200 is that hide.
+    /// At rest (offset == -adjustedContentInset.top) the slot is visible
+    /// once revealed; once the table has moved up by more than 8 pt it hides.
+    /// MEASURED `/tmp/tabs-search-slot-probe` hideT_largeF + Tabs t7000,
+    /// iPhone SE 2x / iOS 26.1: after cancel (adj 124, offset −124),
+    /// `setContentOffset(200)` hides the 60 pt slot and the safe-area rebase
+    /// lands offset **260**. hide=false keeps the slot and offset 200.
     func updateSearchFromScroll() {
         let item = topItem
         let sc = item?.searchController
@@ -718,11 +728,32 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     }
 
     /// Extra height the navigation controller should add to the bar frame
-    /// for an active inline search. Inactive search is 0 pt (Tabs t200).
+    /// for hosted search. Active: +6 (inline in the 60 pt bar, Tabs t4000).
+    /// Inactive stacked slot: +60 after the first cancel, or always when
+    /// `hidesSearchBarWhenScrolling` is false; 0 at never-activated rest
+    /// with the hide-on-scroll default (Tabs t200).
     var searchOverlayHeight: CGFloat {
         guard OpenUIKitRuntime.systemFontCut == .iOS else { return 0 }
-        guard let sc = topItem?.searchController, sc.isActive else { return 0 }
-        return UINavigationBar.searchActiveExtraHeight
+        guard let sc = topItem?.searchController else { return 0 }
+        if sc.isActive { return UINavigationBar.searchActiveExtraHeight }
+        return searchSlotHeight
+    }
+
+    /// 60 pt stacked slot, or 0. See `searchOverlayHeight`.
+    var searchSlotHeight: CGFloat {
+        guard OpenUIKitRuntime.systemFontCut == .iOS else { return 0 }
+        guard let item = topItem, let sc = item.searchController, !sc.isActive else { return 0 }
+        if searchHiddenByScroll { return 0 }
+        if !item.hidesSearchBarWhenScrolling { return UINavigationBar.searchStackedSlotHeight }
+        if sc._slotRevealed { return UINavigationBar.searchStackedSlotHeight }
+        return 0
+    }
+
+    /// Active inline search fills the 60 pt bar and suppresses large titles
+    /// (probe active: bar `[0, 10, 375, 60]` with prefersLargeTitles on or off).
+    var searchIsActive: Bool {
+        topItem?.searchController?.isActive == true
+            && OpenUIKitRuntime.systemFontCut == .iOS
     }
 
     func makeItemView(_ item: UIBarButtonItem) -> _UIBarButtonItemView {
@@ -777,27 +808,31 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         layoutSearchBar()
     }
 
-    /// Place the hosted search bar. MEASURED Tabs t200 / t4000, iPhone SE
-    /// 2x / iOS 26.1:
-    ///   * rest: UISearchBar `[0, 64, 375, 0]` (hidden; bar stays 54 pt)
+    /// Place the hosted search bar. MEASURED `/tmp/tabs-search-slot-probe`
+    /// + Tabs t200 / t4000 / t6000, iPhone SE 2x / iOS 26.1:
+    ///   * never-activated rest: UISearchBar `[0, 64, 375, 0]` (bar 54 pt)
     ///   * active: search fills the 60 pt bar; field `[16, 18, 288, 44]`
-    ///     (bar-local y 8); dismiss `[315, 18, 44, 44]` r=17 (not "Cancel").
+    ///   * after cancel: stacked slot `[0, 54, 375, 60]` in a 114 pt bar;
+    ///     field `[16, 1, 343, 44]` (Tabs t6000 abs `[16, 65, 343, 44]`).
     func layoutSearchBar() {
         guard let bar = hostedSearchBar else { return }
-        let active = topItem?.searchController?.isActive == true
-            && OpenUIKitRuntime.systemFontCut == .iOS
+        let active = searchIsActive
+        let slot = searchSlotHeight
         bar._navInlineActive = active
-        if !active {
-            // Tabs t200: UISearchBar `[0, 64, 375, 0]` — height 0 at the
-            // bar's bottom edge, not isHidden (the placeholder still dumps).
-            bar.isHidden = false
-            bar.frame = CGRect(x: 0, y: bounds.height, width: bounds.width, height: 0)
-            return
-        }
+        bar._navStackedSlot = slot > 0 && !active
         bar.isHidden = false
-        titleLabel.alpha = 0
-        bar.frame = bounds
-        bar.setShowsCancelButton(true, animated: false)
+        if active {
+            titleLabel.alpha = 0
+            bar.frame = bounds
+            bar.setShowsCancelButton(true, animated: false)
+        } else if slot > 0 {
+            bar.frame = CGRect(x: 0, y: bounds.height - slot,
+                               width: bounds.width, height: slot)
+            bar.setShowsCancelButton(false, animated: false)
+        } else {
+            // Tabs t200: height 0 at the bar's bottom edge, not isHidden.
+            bar.frame = CGRect(x: 0, y: bounds.height, width: bounds.width, height: 0)
+        }
         bar.setNeedsLayout()
         bar.layoutIfNeeded()
     }

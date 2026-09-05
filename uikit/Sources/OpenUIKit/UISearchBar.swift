@@ -177,6 +177,12 @@ enum _UISearchFieldMetrics {
             ? CGColor(red: 19 / 255, green: 19 / 255, blue: 19 / 255, alpha: 1)
             : CGColor(red: 253 / 255, green: 253 / 255, blue: 253 / 255, alpha: 1)
     })
+    /// MEASURED Tabs t6000 field centre, iPhone SE 2x / iOS 26.1: the
+    /// stacked-under-nav slot pill is **(236, 236, 236)** over white, not
+    /// the standalone/inline 253 glass. No drop shadow (the 15 pt under the
+    /// field is 255).
+    static let stackedPillFill = UIColor(
+        red: 236.0 / 255.0, green: 236.0 / 255.0, blue: 236.0 / 255.0, alpha: 1)
 
     /// Magnifier / placeholder / clear-glyph ink.
     static var glyphColor: UIColor { isIOS ? .secondaryLabel : .label }
@@ -334,10 +340,14 @@ open class UISearchTextField: UITextField {
         super.layoutSubviews()
         guard _UISearchFieldMetrics.isIOS else { return }
         let visible = drawsFieldBackground
+        let stacked = _searchBar?._navStackedSlot == true
         layer.cornerRadius = visible ? bounds.height / 2 : 0
-        backgroundColor = visible ? _UISearchFieldMetrics.pillFill : nil
-        layer.shadowColor = visible ? CGColor(red: 0, green: 0, blue: 0, alpha: 1) : nil
-        layer.shadowOpacity = visible ? _UISearchFieldMetrics.shadowOpacity : 0
+        backgroundColor = visible
+            ? (stacked ? _UISearchFieldMetrics.stackedPillFill
+                       : _UISearchFieldMetrics.pillFill)
+            : nil
+        layer.shadowColor = visible && !stacked ? CGColor(red: 0, green: 0, blue: 0, alpha: 1) : nil
+        layer.shadowOpacity = visible && !stacked ? _UISearchFieldMetrics.shadowOpacity : 0
         layer.shadowRadius = _UISearchFieldMetrics.shadowRadius
         layer.shadowOffset = _UISearchFieldMetrics.shadowOffset
     }
@@ -396,6 +406,10 @@ open class UISearchBar: UIView {
     static let navInlineDismissSize: CGFloat = 44
     static let navInlineDismissRadius: CGFloat = 17
     static let navInlineDismissGap: CGFloat = 11
+    /// MEASURED Tabs t6000, iPhone SE 2x / iOS 26.1: stacked-slot field
+    /// `[16, 1, 343, 44]` in the 60 pt search bar at abs y 64 (no dismiss).
+    static let navStackedSideInset: CGFloat = 16
+    static let navStackedFieldY: CGFloat = 1
 
     public weak var delegate: UISearchBarDelegate?
 
@@ -403,6 +417,9 @@ open class UISearchBar: UIView {
     private var cancelButton: UIButton?
     /// Set by UINavigationBar when this bar is the active inline-nav search.
     var _navInlineActive = false
+    /// Set by UINavigationBar when this bar occupies the 60 pt stacked slot
+    /// under the content bar (Tabs t6000 after cancel).
+    var _navStackedSlot = false
 
     public var text: String? {
         get { searchTextField.text }
@@ -516,6 +533,10 @@ open class UISearchBar: UIView {
             layoutNavInline()
             return
         }
+        if _navStackedSlot {
+            layoutNavStackedSlot()
+            return
+        }
         let y = (bounds.height - UISearchBar.standardHeight) / 2
         var right = bounds.width - UISearchBar.fieldSideInset
         if showsCancelButton {
@@ -545,6 +566,17 @@ open class UISearchBar: UIView {
         b.frame = CGRect(x: bounds.width - side - d, y: y, width: d, height: d)
         let fieldW = max(0, bounds.width - side - d - gap - side)
         searchTextField.frame = CGRect(x: side, y: y, width: fieldW,
+                                       height: UISearchBar.fieldHeight)
+    }
+
+    /// MEASURED Tabs t6000: field `[16, 1, 343, 44]` in a 375×60 slot, no
+    /// cancel control (showsCancelButton is false after isActive = false).
+    func layoutNavStackedSlot() {
+        let side = UISearchBar.navStackedSideInset
+        let y = UISearchBar.navStackedFieldY
+        cancelButton?.isHidden = true
+        searchTextField.frame = CGRect(x: side, y: y,
+                                       width: max(0, bounds.width - 2 * side),
                                        height: UISearchBar.fieldHeight)
     }
 
