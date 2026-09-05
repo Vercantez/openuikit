@@ -53,13 +53,7 @@ The isolated runtime probe `tests/agent/CoreDataRuntime.swift` prints
 `tests/agent/CoreDataDependencyIdentity.swift` prints
 `COREDATA_DEPENDENCY_IDENTITY_OK` and is not executed by the isolated gate.
 
-Coverage (wave-1 → depth pass): **88 → 1206 implemented** / 88 declared /
-15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` /
-`UndoManager` rows are deferred so warnings-as-errors builds on Linux
-Foundation. The model, coordinator, context, managed-object, fetch-request,
-and FRC families are nondeferred except Combine `objectWillChange` on
-`NSManagedObject` and the FRC `NSDiffableDataSourceSnapshot` callback
-(UIKit type).
+Coverage (wave-1 → depth pass → ledger repair): **88 → 1206 → 682 implemented** / 612 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
 
 ## Fail-closed boundaries
 
@@ -107,15 +101,39 @@ of those paths can claim success.
 
 ## Depth pass 2026-09
 
-Second-pass work on `origin/agent/fw-coredata`. The in-memory store, fail-closed
-SQLite/CloudKit/history/momd/migration boundaries, and 1206 implemented /
-88 declared / 15 deferred / 10 unavailable coverage mix are unchanged except
-nine `NSExpression`/`UndoManager` rows moved to `deferred` so the module
-builds with warnings-as-errors on this Linux Foundation. What changed is the
-**ledger citation rule**: every `implemented` row now points at the focused
-runtime test that exercises that family, instead of one file-level blob.
+Second-pass work on `origin/agent/fw-coredata`, then a ledger repair after
+merge-gate refusal at `24912ca7`. The in-memory store and fail-closed
+SQLite/CloudKit/history/momd/migration boundaries are unchanged. Nine
+`NSExpression`/`UndoManager` rows stay `deferred` so the module builds with
+warnings-as-errors on this Linux Foundation.
 
-Focused tests in `tests/agent/CoreDataRuntime.swift`:
+**Coverage before / after this ledger repair** (1319 public IDs):
+
+| | implemented | declared | deferred | unavailable |
+| --- | ---: | ---: | ---: | ---: |
+| Before (`24912ca7`, refused) | 1206 | 88 | 15 | 10 |
+| After (focused `test:` evidence) | 682 | 612 | 15 | 10 |
+
+Every `implemented` row now cites
+`test:full/coredata/tests/agent/<File>Tests.swift#testName` naming a real
+top-level synchronous `func testName()`. Rows without that observation are
+`declared` as `source:full/coredata/<file>.swift#Symbol`. Enum / option-set
+members and C `k…`/`err…`/`NS*Error` constants share two table-driven value
+tests; no other test is cited by more than 40% of the remaining implemented
+rows (largest: `testFailClosedSurfaces` at 49 / 207 ≈ 24%).
+
+Top-5 implemented evidence distribution (682 rows):
+
+| Rows | Share | Evidence |
+| ---: | ---: | --- |
+| 257 | 37.7% | `CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues` |
+| 218 | 32.0% | `CoreDataErrorCodeTests.swift#testErrorCodes` |
+| 49 | 7.2% | `CoreDataFailClosedTests.swift#testFailClosedSurfaces` |
+| 23 | 3.4% | `CoreDataBatchTests.swift#testBatchRequests` |
+| 20 | 2.9% | `CoreDataModelTests.swift#testModelMetadataAndStoreCoordinator` |
+
+Focused tests live in `tests/agent/*Tests.swift` (also concatenated into
+`CoreDataRuntime.swift` for the sealed v1 host probe):
 
 | Family | Test |
 | --- | --- |
@@ -128,10 +146,11 @@ Focused tests in `tests/agent/CoreDataRuntime.swift`:
 | FRC sections and change notifications | `testFRCSectionsAndChangeNotifications` |
 | batch requests | `testBatchRequests` (count, objectIDs, statusOnly) |
 | merge policies | `testMergePolicies` |
-| error codes | `testErrorCodes` |
+| error / CocoaError integers | `testErrorCodes` |
+| enum / option-set / C constants | `testEnumOptionSetAndConstantValues` |
 
-Queue, snapshot, child-isolation, store-registry, fail-closed, and constant-catalog
-tests from the first pass remain and are cited for those rows.
+Queue, snapshot, child-isolation, store-registry, directory, version, and
+fail-closed tests remain and are cited only by the identifiers they call.
 
 Isolated-gate markers from this host:
 
