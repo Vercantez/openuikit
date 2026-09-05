@@ -695,6 +695,11 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         updateSearchFromScroll()
         setNeedsLayout()
         _controller?.updateContainerLayout()
+        // Pad: the floating tab bar hides to y = −SA.top while search is
+        // active (Tabs-ipad t4000). Phone keeps the bottom bar.
+        if UITabBar.isPad {
+            _controller?.tabBarController?.layoutTabBarFrame()
+        }
     }
 
     /// Hide-on-scroll for `hidesSearchBarWhenScrolling` (UIKit default true).
@@ -719,8 +724,11 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     /// Extra height the navigation controller should add to the bar frame
     /// for an active inline search. Inactive search is 0 pt (Tabs t200).
+    /// Pad: MEASURED Tabs-ipad t4000, the bar stays **54** (search is a
+    /// trailing 240/280 × 44 field in the 44 pt top chrome, not +6).
     var searchOverlayHeight: CGFloat {
         guard OpenUIKitRuntime.systemFontCut == .iOS else { return 0 }
+        if UINavigationBar.isPad { return 0 }
         guard let sc = topItem?.searchController, sc.isActive else { return 0 }
         return UINavigationBar.searchActiveExtraHeight
     }
@@ -783,18 +791,44 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     ///   * active: search fills the 60 pt bar; field `[16, 18, 288, 44]`
     ///     (bar-local y 8); dismiss `[315, 18, 44, 44]` r=17 (not "Cancel").
     func layoutSearchBar() {
-        guard let bar = hostedSearchBar else { return }
+        guard let bar = hostedSearchBar else {
+            titleLabel.isHidden = false
+            return
+        }
         let active = topItem?.searchController?.isActive == true
             && OpenUIKitRuntime.systemFontCut == .iOS
         bar._navInlineActive = active
+        if UINavigationBar.isPad {
+            // MEASURED Tabs-ipad t200 / t4000, iPad (A16) 820×1180 @2x /
+            // iOS 26.1: rest UISearchBar `[564.969, 31.817, 240, 44]`
+            // (trailing inset 15 = 820 − 240 − 565); active **280** wide
+            // at `[524.802, 31.817, 280, 44]` (same trailing 15). The
+            // inline title is gone — the floating tab bar carries it.
+            // Not the phone inline-nav 60 pt overlay (no +6, no dismiss).
+            bar._navInlineActive = false
+            bar._padTrailingChrome = true
+            bar.isHidden = false
+            titleLabel.isHidden = true
+            titleLabel.alpha = 0
+            let w: CGFloat = active ? 280 : 240
+            let trailing: CGFloat = 15
+            bar.frame = CGRect(x: bounds.width - trailing - w, y: 0,
+                               width: w, height: 44)
+            bar.setShowsCancelButton(false, animated: false)
+            bar.setNeedsLayout()
+            bar.layoutIfNeeded()
+            return
+        }
         if !active {
             // Tabs t200: UISearchBar `[0, 64, 375, 0]` — height 0 at the
             // bar's bottom edge, not isHidden (the placeholder still dumps).
+            bar._padTrailingChrome = false
             bar.isHidden = false
             bar.frame = CGRect(x: 0, y: bounds.height, width: bounds.width, height: 0)
             return
         }
         bar.isHidden = false
+        bar._padTrailingChrome = false
         titleLabel.alpha = 0
         bar.frame = bounds
         bar.setShowsCancelButton(true, animated: false)
@@ -822,6 +856,18 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
             right -= _UIBarItemLayout.gapBefore(rightItemViews, i)
             right -= w
             v.frame = CGRect(x: right, y: y, width: w, height: h)
+        }
+        // MEASURED NavFlow t200.rtl / TableEditor t200.rtl, iPhone SE 2x /
+        // iOS 26.1: leftBarButtonItems are the leading group (Filter at
+        // abs.x 31.703, Edit at 31.74 — physical left = trailing). Mirror
+        // the LTR packing about the bar width; shared platters follow.
+        if _layoutIsRTL {
+            let span = bounds.width
+            for v in leftItemViews + rightItemViews {
+                var f = v.frame
+                f.origin.x = span - f.maxX
+                v.frame = f
+            }
         }
         // iOS 26: runs of adjacent image-only items share one platter.
         let shared = _UIBarItemLayout.sharedPlatterFrames(leftItemViews)
@@ -881,9 +927,24 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         guard !leftItemViews.isEmpty || !rightItemViews.isEmpty || backButton != nil else {
             return centered
         }
+        let clearance = UINavigationBar.titleGroupClearance
+        if _layoutIsRTL {
+            let leadInner = bounds.width
+                - (_UIBarMetrics.sideMargin + backButtonWidth
+                   + _UIBarItemLayout.naturalWidth(leftItemViews))
+            let trailW = _UIBarItemLayout.naturalWidth(rightItemViews)
+            let trailOuter = trailW == 0 ? 0 : _UIBarMetrics.sideMargin + trailW
+            if centered - width / 2 >= trailOuter + clearance,
+               centered + width / 2 <= leadInner - clearance {
+                return centered
+            }
+            let leadingIsEmpty = backButton == nil
+                && !leftItemViews.contains { !$0.item._isSpace }
+            return (leadingIsEmpty ? leadInner : leadInner - _UIBarMetrics.gap)
+                - width / 2
+        }
         let lead = leadingGroupMaxX
         let trail = trailingGroupMinX
-        let clearance = UINavigationBar.titleGroupClearance
         if centered - width / 2 >= lead + clearance,
            centered + width / 2 <= trail - clearance {
             return centered
@@ -929,7 +990,11 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
                        dx: CGFloat = 0) {
         let s = b.sizeThatFits(bounds.size)
         b.bounds = CGRect(x: 0, y: 0, width: s.width, height: s.height)
-        b.center = CGPoint(x: s.width / 2 + dx, y: contentMidY)
+        // MEASURED NavFlow t3000.rtl, iPhone SE 2x / iOS 26.1: the back
+        // control sits on the leading (right) edge. `dx` is the LTR
+        // transition slide and is left unflipped (unmeasured in RTL).
+        let cx = _layoutIsRTL ? bounds.width - s.width / 2 + dx : s.width / 2 + dx
+        b.center = CGPoint(x: cx, y: contentMidY)
         b.alpha = alpha
     }
 
@@ -1151,11 +1216,18 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     /// Where `label` sits as the large title for a collapse distance of `d`.
     func largeTitleFrame(for label: UILabel, collapsedBy d: CGFloat) -> CGRect {
-        CGRect(x: UINavigationBar.largeTitleX,
-               y: UINavigationBar.largeTitleLabelY - d,
-               width: Swift.min(label.intrinsicContentSize.width,
-                                bounds.width - 2 * UINavigationBar.largeTitleX),
-               height: UINavigationBar.largeTitleLabelHeight)
+        let w = Swift.min(label.intrinsicContentSize.width,
+                           bounds.width - 2 * UINavigationBar.largeTitleX)
+        // MEASURED NavFlow t200.rtl / TableEditor t200.rtl, iPhone SE 2x /
+        // iOS 26.1: "Library" abs.x 247.5 = 375 − 16 − 111.5; "Reminders"
+        // 189 = 375 − 16 − 170.
+        let x = _layoutIsRTL
+            ? bounds.width - UINavigationBar.largeTitleX - w
+            : UINavigationBar.largeTitleX
+        return CGRect(x: x,
+                        y: UINavigationBar.largeTitleLabelY - d,
+                        width: w,
+                        height: UINavigationBar.largeTitleLabelHeight)
     }
 
     func configureLargeTitleAppearance() {

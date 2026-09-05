@@ -12,9 +12,10 @@
 // Per capture time t in the app's script it writes, into the app container's
 // Documents (the shell script copies them out):
 //
-//   <app>.t<ms>.png          light capture (default)
+//   <app>.t<ms>.png          light LTR capture (default)
 //   <app>.t<ms>.dark.png     dark capture (`"style":"dark"` or CONFPROBE_STYLE)
-//   <app>.t<ms>.layout.json  {"name", "t", "style", "clock", "screen", "views"}
+//   <app>.t<ms>.rtl.png      RTL capture (`"direction":"rtl"` or CONFPROBE_DIRECTION)
+//   <app>.t<ms>.layout.json  {"name", "t", "style", "direction", "clock", "screen", "views"}
 //                            — absolute MODEL frames plus presentation-layer
 //                            geometry (pframe / pabs / popacity) and the
 //                            CADisplayLink timestamp of this capture
@@ -191,6 +192,9 @@ func dumpLayout(_ v: UIView, path: String, absOrigin: CGPoint,
         entry["fontSize"] = round3(l.font.pointSize)
         entry["fontName"] = l.font.fontName
     }
+    if v.effectiveUserInterfaceLayoutDirection == .rightToLeft {
+        entry["uiDir"] = "rtl"
+    }
     if v is UILabel || v is UIButton || v is UISwitch || v is UIImageView
         || v is UITextField || v is UITextView {
         let i = v.intrinsicContentSize
@@ -232,12 +236,14 @@ func dumpLayout(_ v: UIView, path: String, absOrigin: CGPoint,
     }
 }
 
-/// `{t, action}` steps, capture times, and optional `"style"` (`light` /
-/// `dark`), read out of the app's script.json (copied into the bundle by
-/// scripts/conformance_probe_sim.sh). `CONFPROBE_STYLE` overrides the
-/// field so `conformance_flow.sh --dark` can replay a light script in
-/// dark without rewriting it.
-func loadScript() -> (steps: [(t: Double, action: String)], captures: [Double], style: String) {
+/// `{t, action}` steps, capture times, optional `"style"` (`light` /
+/// `dark`) and `"direction"` (`ltr` / `rtl`), read out of the app's
+/// script.json (copied into the bundle by scripts/conformance_probe_sim.sh).
+/// `CONFPROBE_STYLE` / `CONFPROBE_DIRECTION` override the fields so
+/// `conformance_flow.sh --dark` / `--rtl` can replay a light LTR script
+/// without rewriting it.
+func loadScript() -> (steps: [(t: Double, action: String)], captures: [Double],
+                       style: String, direction: String) {
     guard let url = Bundle.main.url(forResource: "script", withExtension: "json"),
           let data = try? Data(contentsOf: url),
           let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
@@ -253,7 +259,10 @@ func loadScript() -> (steps: [(t: Double, action: String)], captures: [Double], 
     let style = ConformanceClock.resolvedStyle(
         script: (obj["style"] as? String) ?? "light",
         environment: ProcessInfo.processInfo.environment["CONFPROBE_STYLE"])
-    return (steps, captures, style)
+    let direction = ConformanceClock.resolvedDirection(
+        script: (obj["direction"] as? String) ?? "ltr",
+        environment: ProcessInfo.processInfo.environment["CONFPROBE_DIRECTION"])
+    return (steps, captures, style, direction)
 }
 
     /// First CASpringAnimation.beginTime in the tree (absolute media time).
@@ -358,6 +367,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     /// `light` or `dark`. Set on the window *before* `makeRoot()` so
     /// semantic colours resolve against the style the first capture sees.
     var style: String = "light"
+    /// `ltr` or `rtl`. Set on the window *before* `makeRoot()` so
+    /// `semanticContentAttribute` is in place for the first layout.
+    var direction: String = "ltr"
     var performAction: ((String) -> Void)?
     var link: CADisplayLink?
     var frameIndex = 0
@@ -400,13 +412,31 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             }
             fatalError("confprobe: unknown app \"\(appName)\" (have \(have))")
         }
-        (steps, captures, style) = loadScript()
+        (steps, captures, style, direction) = loadScript()
+        // RTL: `UIView.appearance()` BEFORE the window. MEASURED /tmp/rtlprobe,
+        // iPhone SE 2x / iOS 26.1: window-only `semanticContentAttribute =
+        // .forceRightToLeft` stamps the window (1/76 views `uiDir=rtl`,
+        // large-title x 16, switch x 282, disclosure x 332.5). Appearance
+        // stamps the tree (74/76, large-title x 247.5 = 375−16−111.5,
+        // switch x 0, disclosure x 16). `--dark` can pin the window alone
+        // because `overrideUserInterfaceStyle` inherits via traits; RTL
+        // does not. `--rtl` therefore pins appearance then the window.
+        if direction == "rtl" {
+            UIView.appearance().semanticContentAttribute = .forceRightToLeft
+            UINavigationBar.appearance().semanticContentAttribute = .forceRightToLeft
+        }
         let w = UIWindow(frame: UIScreen.main.bounds)
         // Style on the window BEFORE makeRoot so the first capture (and
         // every semantic colour resolved at view construction) sees it.
         // Light stays `.light` (the previous hardcoded pin); `--dark` /
         // script `"style":"dark"` pins `.dark`.
         w.overrideUserInterfaceStyle = style == "dark" ? .dark : .light
+        // Direction on the window BEFORE makeRoot so the first layout
+        // sees it. LTR stays unspecified (the previous pin); `--rtl` /
+        // script `"direction":"rtl"` pins `.forceRightToLeft`.
+        if direction == "rtl" {
+            w.semanticContentAttribute = .forceRightToLeft
+        }
         // A dismissed alert or sheet leaves the process's tint dimmed
         // (docs/ORACLE_FLOW.md capture hazards); NavFlow dismisses a sheet
         // halfway through its script, so pin the tint for the whole run.
@@ -418,7 +448,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         if w.bounds.size != entry.windowSize {
             print("confprobe: WARNING device \(w.bounds.size) != app \(entry.windowSize)")
         }
-        print("confprobe: style=\(style)")
+        print("confprobe: style=\(style) direction=\(direction)")
         tracing = ProcessInfo.processInfo.environment["CONFPROBE_TRACE"] != nil
         // Let the first frame commit before the timeline starts: UIKit skips
         // presentation work for a hierarchy that has never been displayed,
@@ -714,7 +744,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         // conversion and P3-raw (78, 121, 211) without it — 14 counts, over
         // PIXEL_TOL 6, 99.8 % of each generated card. compare.py / PIL read
         // PNG bytes without the ICC, so the golden has to be untagged sRGB.
-        let suffix = ConformanceClock.captureSuffix(for: t, style: style)
+        let suffix = ConformanceClock.captureSuffix(for: t, style: style,
+                                                    direction: direction)
         try! normalizedSRGB(img).pngData()!.write(
             to: URL(fileURLWithPath: "\(docsDir)/\(appName).\(suffix).png"))
 
@@ -747,6 +778,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             "name": "\(appName).\(suffix)",
             "t": round3(CGFloat(t)),
             "style": style,
+            "direction": direction,
             "clock": clock,
             "screen": ["scale": Double(UIScreen.main.scale),
                        "bounds": [round3(w.bounds.width), round3(w.bounds.height)],

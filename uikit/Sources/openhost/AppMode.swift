@@ -90,6 +90,10 @@ final class HostAppDelegate: UIResponder, UIApplicationDelegate {
     /// resolve against the style the first capture sees. Default light
     /// matches the previous conformance pin.
     var style: UIUserInterfaceStyle = .light
+    /// Applied to the window BEFORE `makeRoot()` so
+    /// `semanticContentAttribute` is in place for the first layout.
+    /// Default false matches the previous LTR pin.
+    var rtl = false
 
     /// openhost owns this concrete delegate instance and supplies it directly
     /// to `UIApplicationMain(delegate:)`; no class-name construction is
@@ -105,6 +109,14 @@ final class HostAppDelegate: UIResponder, UIApplicationDelegate {
                      launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let w = UIWindow(frame: UIScreen.main.bounds)
         w.overrideUserInterfaceStyle = style
+        if rtl {
+            // Same pin as confprobe --rtl. MEASURED /tmp/rtlprobe, iPhone SE
+            // 2x / iOS 26.1: appearance before the first UIView, then the
+            // window. Window-only does not propagate (1/76 `uiDir=rtl`).
+            UIView.appearance().semanticContentAttribute = .forceRightToLeft
+            UINavigationBar.appearance().semanticContentAttribute = .forceRightToLeft
+            w.semanticContentAttribute = .forceRightToLeft
+        }
         let vc = makeRoot()
         w.rootViewController = vc
         w.makeKeyAndVisible()
@@ -139,7 +151,8 @@ final class HostAppDelegate: UIResponder, UIApplicationDelegate {
 
 @MainActor
 func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
-                   style: UIUserInterfaceStyle = .light) -> HostScene {
+                   style: UIUserInterfaceStyle = .light,
+                   rtl: Bool = false) -> HostScene {
     guard let app = appRegistry[appName] else {
         let names = appRegistry.keys.sorted().joined(separator: ", ")
         fatalError("unknown app \"\(appName)\" (available: \(names))")
@@ -170,6 +183,7 @@ func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
 
     let delegate = HostAppDelegate(name: appName, makeRoot: app.makeRoot)
     delegate.style = style
+    delegate.rtl = rtl
     _appDelegate = delegate
     UIApplicationMain(delegate: delegate)
 
@@ -182,6 +196,9 @@ func buildAppScene(_ appName: String, scaleOverride: CGFloat?,
         window._setSafeAreaInsets(RealAppScreen.padSafeArea)
     }
     window.overrideUserInterfaceStyle = style
+    if rtl {
+        window.semanticContentAttribute = .forceRightToLeft
+    }
     window.setNeedsLayout()
     window.layoutIfNeeded()
     // M14 real-app screen: OpenUIKit's UIWindow does not run an appearance
