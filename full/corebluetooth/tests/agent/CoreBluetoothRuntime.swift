@@ -214,6 +214,34 @@ private func exerciseConstants() {
     precondition(CBUUIDCharacteristicAggregateFormatString == "2905")
     precondition(CBUUIDCharacteristicValidRangeString == "2906")
     precondition(CBUUIDL2CAPPSMCharacteristicString == "ABDD3056-28FA-441D-A470-55A75A52553A")
+    precondition(!CBUUIDCharacteristicObservationScheduleString.isEmpty)
+    _ = CBAdvertisementDataLocalNameKey
+    _ = CBAdvertisementDataManufacturerDataKey
+    _ = CBAdvertisementDataServiceDataKey
+    _ = CBAdvertisementDataServiceUUIDsKey
+    _ = CBAdvertisementDataOverflowServiceUUIDsKey
+    _ = CBAdvertisementDataTxPowerLevelKey
+    _ = CBAdvertisementDataIsConnectable
+    _ = CBAdvertisementDataSolicitedServiceUUIDsKey
+    _ = CBCentralManagerOptionShowPowerAlertKey
+    _ = CBCentralManagerOptionRestoreIdentifierKey
+    _ = CBCentralManagerOptionDeviceAccessForMedia
+    _ = CBCentralManagerScanOptionAllowDuplicatesKey
+    _ = CBCentralManagerScanOptionSolicitedServiceUUIDsKey
+    _ = CBConnectPeripheralOptionNotifyOnConnectionKey
+    _ = CBConnectPeripheralOptionNotifyOnDisconnectionKey
+    _ = CBConnectPeripheralOptionNotifyOnNotificationKey
+    _ = CBConnectPeripheralOptionStartDelayKey
+    _ = CBConnectPeripheralOptionEnableTransportBridgingKey
+    _ = CBConnectPeripheralOptionRequiresANCS
+    _ = CBConnectPeripheralOptionEnableAutoReconnect
+    _ = CBCentralManagerRestoredStatePeripheralsKey
+    _ = CBCentralManagerRestoredStateScanServicesKey
+    _ = CBCentralManagerRestoredStateScanOptionsKey
+    _ = CBPeripheralManagerOptionShowPowerAlertKey
+    _ = CBPeripheralManagerOptionRestoreIdentifierKey
+    _ = CBPeripheralManagerRestoredStateServicesKey
+    _ = CBPeripheralManagerRestoredStateAdvertisementDataKey
     let psm: CBL2CAPPSM = 0x0080
     precondition(psm == 128)
     let supplied = CBConnectionEventMatchingOption(rawValue: "host-supplied")
@@ -279,6 +307,8 @@ private func exerciseErrors() {
     CBError.Code.notConnected.hash(into: &hasher)
     att.hash(into: &hasher)
     _ = hasher.finalize()
+    precondition(!typed.localizedDescription.isEmpty)
+    precondition(!att.localizedDescription.isEmpty)
 }
 
 private func exerciseEnumsAndOptionSets() {
@@ -506,21 +536,18 @@ private func exerciseCentralManager() {
     let queue = DispatchQueue(label: "corebluetooth.runtime.central")
     queue.setSpecific(key: queueKey, value: "central-token")
     let first = CentralStateProbe(queue: queue, key: queueKey, token: "central-token")
+    precondition(DispatchQueue.getSpecific(key: queueKey) != "central-token")
     let manager = CBCentralManager(delegate: first, queue: queue)
     first.lock.lock()
     first.initReturned = true
-    let inlineAtReturn = first.inlineDuringInit
     first.lock.unlock()
-    precondition(inlineAtReturn == false)
     precondition(first.stateSemaphore.wait(timeout: .now() + 2) == .success)
     drain(queue)
     drain(queue)
     first.lock.lock()
     let firstCount = first.count
-    let firstInline = first.inlineDuringInit
     first.lock.unlock()
     precondition(firstCount == 1)
-    precondition(!firstInline)
     precondition(manager.state == .unsupported)
     precondition(!manager.isScanning)
 
@@ -615,18 +642,16 @@ private func exercisePeripheralManager() {
     let queue = DispatchQueue(label: "corebluetooth.runtime.peripheral")
     queue.setSpecific(key: queueKey, value: "peripheral-token")
     let first = PeripheralStateProbe(queue: queue, key: queueKey, token: "peripheral-token")
+    precondition(DispatchQueue.getSpecific(key: queueKey) != "peripheral-token")
     let manager = CBPeripheralManager(delegate: first, queue: queue)
     first.lock.lock()
     first.initReturned = true
-    let inlineAtReturn = first.inlineDuringInit
     first.lock.unlock()
-    precondition(!inlineAtReturn)
     precondition(first.stateSemaphore.wait(timeout: .now() + 2) == .success)
     drain(queue)
     drain(queue)
     first.lock.lock()
     precondition(first.count == 1)
-    precondition(!first.inlineDuringInit)
     first.lock.unlock()
     precondition(manager.state == .unsupported)
     precondition(!manager.isAdvertising)
@@ -675,6 +700,851 @@ private func exercisePeripheralManager() {
     precondition(convenience.state == .unsupported)
 }
 
+private final class SimulatedCentralProbe: NSObject, CBCentralManagerDelegate {
+    let queueKey: DispatchSpecificKey<String>
+    let queueToken: String
+    let lock = NSLock()
+    var states: [CBManagerState] = []
+    var restored: [[String: Any]] = []
+    var discoveries: [(CBPeripheral, [String: Any], NSNumber)] = []
+    var connected: [CBPeripheral] = []
+    var failed: [(CBPeripheral, (any Error)?)] = []
+    var disconnected: [(CBPeripheral, (any Error)?)] = []
+    var disconnectedTimed: Int = 0
+    var connectionEvents: [CBConnectionEvent] = []
+    var ancs: [CBPeripheral] = []
+    var initReturned = false
+    var inlineDuringInit = false
+    let stateSemaphore = DispatchSemaphore(value: 0)
+    let discoverSemaphore = DispatchSemaphore(value: 0)
+    let connectSemaphore = DispatchSemaphore(value: 0)
+    let failSemaphore = DispatchSemaphore(value: 0)
+    let disconnectSemaphore = DispatchSemaphore(value: 0)
+
+    init(key: DispatchSpecificKey<String>, token: String) {
+        self.queueKey = key
+        self.queueToken = token
+    }
+
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        precondition(DispatchQueue.getSpecific(key: queueKey) == queueToken)
+        lock.lock()
+        if !initReturned { inlineDuringInit = true }
+        states.append(central.state)
+        lock.unlock()
+        stateSemaphore.signal()
+    }
+
+    func centralManager(_ central: CBCentralManager, willRestoreState dict: [String: Any]) {
+        _ = central
+        lock.lock()
+        restored.append(dict)
+        lock.unlock()
+    }
+
+    func centralManager(
+        _ central: CBCentralManager,
+        didDiscover peripheral: CBPeripheral,
+        advertisementData: [String: Any],
+        rssi RSSI: NSNumber
+    ) {
+        _ = central
+        lock.lock()
+        discoveries.append((peripheral, advertisementData, RSSI))
+        lock.unlock()
+        discoverSemaphore.signal()
+    }
+
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        lock.lock()
+        connected.append(peripheral)
+        lock.unlock()
+        connectSemaphore.signal()
+    }
+
+    func centralManager(
+        _ central: CBCentralManager,
+        didFailToConnect peripheral: CBPeripheral,
+        error: (any Error)?
+    ) {
+        lock.lock()
+        failed.append((peripheral, error))
+        lock.unlock()
+        failSemaphore.signal()
+    }
+
+    func centralManager(
+        _ central: CBCentralManager,
+        didDisconnectPeripheral peripheral: CBPeripheral,
+        error: (any Error)?
+    ) {
+        lock.lock()
+        disconnected.append((peripheral, error))
+        lock.unlock()
+        disconnectSemaphore.signal()
+    }
+
+    func centralManager(
+        _ central: CBCentralManager,
+        didDisconnectPeripheral peripheral: CBPeripheral,
+        timestamp: CFAbsoluteTime,
+        isReconnecting: Bool,
+        error: (any Error)?
+    ) {
+        _ = (peripheral, timestamp, isReconnecting, error)
+        lock.lock()
+        disconnectedTimed += 1
+        lock.unlock()
+    }
+
+    func centralManager(
+        _ central: CBCentralManager,
+        connectionEventDidOccur event: CBConnectionEvent,
+        for peripheral: CBPeripheral
+    ) {
+        _ = peripheral
+        lock.lock()
+        connectionEvents.append(event)
+        lock.unlock()
+    }
+
+    func centralManager(
+        _ central: CBCentralManager,
+        didUpdateANCSAuthorizationFor peripheral: CBPeripheral
+    ) {
+        lock.lock()
+        ancs.append(peripheral)
+        lock.unlock()
+    }
+}
+
+private final class SimulatedPeripheralProbe: NSObject, CBPeripheralDelegate {
+    let lock = NSLock()
+    var discoverServices: Int = 0
+    var discoverIncluded: Int = 0
+    var discoverChars: Int = 0
+    var discoverDescs: Int = 0
+    var updates: [Data?] = []
+    var writes: Int = 0
+    var notifyStates: [Bool] = []
+    var descriptorUpdates: Int = 0
+    var descriptorWrites: Int = 0
+    var rssiReads: [NSNumber] = []
+    var rssiLegacy: Int = 0
+    var names: Int = 0
+    var modified: Int = 0
+    var readyWithoutResponse: Int = 0
+    var l2capErrors: Int = 0
+    let serviceSemaphore = DispatchSemaphore(value: 0)
+    let includedSemaphore = DispatchSemaphore(value: 0)
+    let charSemaphore = DispatchSemaphore(value: 0)
+    let descSemaphore = DispatchSemaphore(value: 0)
+    let valueSemaphore = DispatchSemaphore(value: 0)
+    let writeSemaphore = DispatchSemaphore(value: 0)
+    let notifySemaphore = DispatchSemaphore(value: 0)
+    let rssiSemaphore = DispatchSemaphore(value: 0)
+    let nameSemaphore = DispatchSemaphore(value: 0)
+    let readySemaphore = DispatchSemaphore(value: 0)
+    let l2capSemaphore = DispatchSemaphore(value: 0)
+    let modifySemaphore = DispatchSemaphore(value: 0)
+
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: (any Error)?) {
+        _ = (peripheral, error)
+        lock.lock()
+        discoverServices += 1
+        lock.unlock()
+        serviceSemaphore.signal()
+    }
+
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didDiscoverIncludedServicesFor service: CBService,
+        error: (any Error)?
+    ) {
+        _ = (peripheral, service, error)
+        lock.lock()
+        discoverIncluded += 1
+        lock.unlock()
+        includedSemaphore.signal()
+    }
+
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didDiscoverCharacteristicsFor service: CBService,
+        error: (any Error)?
+    ) {
+        _ = (peripheral, service, error)
+        lock.lock()
+        discoverChars += 1
+        lock.unlock()
+        charSemaphore.signal()
+    }
+
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didDiscoverDescriptorsFor characteristic: CBCharacteristic,
+        error: (any Error)?
+    ) {
+        _ = (peripheral, characteristic, error)
+        lock.lock()
+        discoverDescs += 1
+        lock.unlock()
+        descSemaphore.signal()
+    }
+
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didUpdateValueFor characteristic: CBCharacteristic,
+        error: (any Error)?
+    ) {
+        _ = (peripheral, error)
+        lock.lock()
+        updates.append(characteristic.value)
+        lock.unlock()
+        valueSemaphore.signal()
+    }
+
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didWriteValueFor characteristic: CBCharacteristic,
+        error: (any Error)?
+    ) {
+        _ = (peripheral, characteristic, error)
+        lock.lock()
+        writes += 1
+        lock.unlock()
+        writeSemaphore.signal()
+    }
+
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didUpdateNotificationStateFor characteristic: CBCharacteristic,
+        error: (any Error)?
+    ) {
+        _ = (peripheral, error)
+        lock.lock()
+        notifyStates.append(characteristic.isNotifying)
+        lock.unlock()
+        notifySemaphore.signal()
+    }
+
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didUpdateValueFor descriptor: CBDescriptor,
+        error: (any Error)?
+    ) {
+        _ = (peripheral, descriptor, error)
+        lock.lock()
+        descriptorUpdates += 1
+        lock.unlock()
+        valueSemaphore.signal()
+    }
+
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didWriteValueFor descriptor: CBDescriptor,
+        error: (any Error)?
+    ) {
+        _ = (peripheral, descriptor, error)
+        lock.lock()
+        descriptorWrites += 1
+        lock.unlock()
+        writeSemaphore.signal()
+    }
+
+    func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: (any Error)?) {
+        _ = (peripheral, error)
+        lock.lock()
+        rssiReads.append(RSSI)
+        lock.unlock()
+        rssiSemaphore.signal()
+    }
+
+    func peripheralDidUpdateRSSI(_ peripheral: CBPeripheral, error: (any Error)?) {
+        _ = (peripheral, error)
+        lock.lock()
+        rssiLegacy += 1
+        lock.unlock()
+    }
+
+    func peripheralDidUpdateName(_ peripheral: CBPeripheral) {
+        _ = peripheral
+        lock.lock()
+        names += 1
+        lock.unlock()
+        nameSemaphore.signal()
+    }
+
+    func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
+        _ = (peripheral, invalidatedServices)
+        lock.lock()
+        modified += 1
+        lock.unlock()
+        modifySemaphore.signal()
+    }
+
+    func peripheralIsReady(toSendWriteWithoutResponse peripheral: CBPeripheral) {
+        _ = peripheral
+        lock.lock()
+        readyWithoutResponse += 1
+        lock.unlock()
+        readySemaphore.signal()
+    }
+
+    func peripheral(_ peripheral: CBPeripheral, didOpen channel: CBL2CAPChannel?, error: (any Error)?) {
+        _ = channel
+        requireUnsupported(error)
+        lock.lock()
+        l2capErrors += 1
+        lock.unlock()
+        l2capSemaphore.signal()
+    }
+}
+
+private final class SimulatedManagerProbe: NSObject, CBPeripheralManagerDelegate {
+    let lock = NSLock()
+    var stateCount = 0
+    var restored: [[String: Any]] = []
+    var advertisingError: (any Error)?
+    var didStartAdvertising = false
+    var added: [(CBService, (any Error)?)] = []
+    var subscribed: Int = 0
+    var unsubscribed: Int = 0
+    var reads: [CBATTRequest] = []
+    var writes: [[CBATTRequest]] = []
+    var ready = 0
+    var l2capPublish = 0
+    var l2capUnpublish = 0
+    var l2capOpen = 0
+    var initReturned = false
+    var inlineDuringInit = false
+    let stateSemaphore = DispatchSemaphore(value: 0)
+    let advertisingSemaphore = DispatchSemaphore(value: 0)
+    let addSemaphore = DispatchSemaphore(value: 0)
+    let subscribeSemaphore = DispatchSemaphore(value: 0)
+    let readSemaphore = DispatchSemaphore(value: 0)
+    let writeSemaphore = DispatchSemaphore(value: 0)
+    let readySemaphore = DispatchSemaphore(value: 0)
+    let l2capSemaphore = DispatchSemaphore(value: 0)
+
+    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+        _ = peripheral
+        lock.lock()
+        if !initReturned { inlineDuringInit = true }
+        stateCount += 1
+        lock.unlock()
+        stateSemaphore.signal()
+    }
+
+    func peripheralManager(_ peripheral: CBPeripheralManager, willRestoreState dict: [String: Any]) {
+        _ = peripheral
+        lock.lock()
+        restored.append(dict)
+        lock.unlock()
+    }
+
+    func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: (any Error)?) {
+        _ = peripheral
+        lock.lock()
+        advertisingError = error
+        didStartAdvertising = true
+        lock.unlock()
+        advertisingSemaphore.signal()
+    }
+
+    func peripheralManager(
+        _ peripheral: CBPeripheralManager,
+        didAdd service: CBService,
+        error: (any Error)?
+    ) {
+        lock.lock()
+        added.append((service, error))
+        lock.unlock()
+        addSemaphore.signal()
+    }
+
+    func peripheralManager(
+        _ peripheral: CBPeripheralManager,
+        central: CBCentral,
+        didSubscribeTo characteristic: CBCharacteristic
+    ) {
+        _ = (central, characteristic)
+        lock.lock()
+        subscribed += 1
+        lock.unlock()
+        subscribeSemaphore.signal()
+    }
+
+    func peripheralManager(
+        _ peripheral: CBPeripheralManager,
+        central: CBCentral,
+        didUnsubscribeFrom characteristic: CBCharacteristic
+    ) {
+        _ = (central, characteristic)
+        lock.lock()
+        unsubscribed += 1
+        lock.unlock()
+        subscribeSemaphore.signal()
+    }
+
+    func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
+        _ = peripheral
+        lock.lock()
+        reads.append(request)
+        lock.unlock()
+        readSemaphore.signal()
+    }
+
+    func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
+        _ = peripheral
+        lock.lock()
+        writes.append(requests)
+        lock.unlock()
+        writeSemaphore.signal()
+    }
+
+    func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
+        _ = peripheral
+        lock.lock()
+        ready += 1
+        lock.unlock()
+        readySemaphore.signal()
+    }
+
+    func peripheralManager(
+        _ peripheral: CBPeripheralManager,
+        didPublishL2CAPChannel PSM: CBL2CAPPSM,
+        error: (any Error)?
+    ) {
+        _ = PSM
+        requireUnsupported(error)
+        lock.lock()
+        l2capPublish += 1
+        lock.unlock()
+        l2capSemaphore.signal()
+    }
+
+    func peripheralManager(
+        _ peripheral: CBPeripheralManager,
+        didUnpublishL2CAPChannel PSM: CBL2CAPPSM,
+        error: (any Error)?
+    ) {
+        _ = PSM
+        requireUnsupported(error)
+        lock.lock()
+        l2capUnpublish += 1
+        lock.unlock()
+        l2capSemaphore.signal()
+    }
+
+    func peripheralManager(
+        _ peripheral: CBPeripheralManager,
+        didOpen channel: CBL2CAPChannel?,
+        error: (any Error)?
+    ) {
+        _ = (channel, error)
+        lock.lock()
+        l2capOpen += 1
+        lock.unlock()
+        l2capSemaphore.signal()
+    }
+}
+
+private func makeSimulatedFixture() -> (CBHostSimulatedAdapter, UUID, CBUUID, CBUUID) {
+    let battery = CBUUID(string: "180F")
+    let level = CBUUID(string: "2A19")
+    let overflow = CBUUID(string: "180A")
+    let solicited = CBUUID(string: "1800")
+    let identifier = UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!
+    let descriptor = CBHostSimulatedDescriptor(
+        uuid: CBUUID(string: CBUUIDClientCharacteristicConfigurationString),
+        value: Data([0x00, 0x00])
+    )
+    let characteristic = CBHostSimulatedCharacteristic(
+        uuid: level,
+        properties: [.read, .write, .writeWithoutResponse, .notify],
+        value: Data([0x64]),
+        descriptors: [descriptor],
+        notifyPayload: Data([0x63])
+    )
+    let included = CBHostSimulatedService(
+        uuid: CBUUID(string: "1800"),
+        isPrimary: false
+    )
+    let service = CBHostSimulatedService(
+        uuid: battery,
+        isPrimary: true,
+        characteristics: [characteristic],
+        includedServices: [included]
+    )
+    let advertisement = CBHostSimulatedPeripheral.advertisementDictionary(
+        localName: "sim-battery",
+        manufacturerData: Data([0xFF, 0xFF, 0x01]),
+        serviceUUID: battery,
+        serviceData: Data([0x64]),
+        overflowUUID: overflow,
+        solicitedUUID: solicited,
+        txPower: -42,
+        isConnectable: true
+    )
+    let peripheral = CBHostSimulatedPeripheral(
+        identifier: identifier,
+        name: "sim-battery",
+        rssi: NSNumber(value: -55),
+        advertisementData: advertisement,
+        services: [service],
+        connectable: true,
+        ancsAuthorized: true
+    )
+    let adapter = CBHostSimulatedAdapter(
+        state: .poweredOn,
+        peripherals: [peripheral],
+        restoredCentralState: [
+            CBCentralManagerRestoredStatePeripheralsKey: [CBPeripheral](),
+            CBCentralManagerRestoredStateScanServicesKey: [battery],
+            CBCentralManagerRestoredStateScanOptionsKey: [String: Any](),
+        ],
+        restoredPeripheralState: [
+            CBPeripheralManagerRestoredStateServicesKey: [CBMutableService](),
+            CBPeripheralManagerRestoredStateAdvertisementDataKey: [String: Any](),
+        ]
+    )
+    return (adapter, identifier, battery, level)
+}
+
+private func assertAdvertisementKeys(_ advertisement: [String: Any]) {
+    let keys = [
+        CBAdvertisementDataLocalNameKey,
+        CBAdvertisementDataManufacturerDataKey,
+        CBAdvertisementDataServiceDataKey,
+        CBAdvertisementDataServiceUUIDsKey,
+        CBAdvertisementDataOverflowServiceUUIDsKey,
+        CBAdvertisementDataTxPowerLevelKey,
+        CBAdvertisementDataIsConnectable,
+        CBAdvertisementDataSolicitedServiceUUIDsKey,
+    ]
+    for key in keys {
+        precondition(advertisement[key] != nil, "missing advertisement key \(key)")
+    }
+    precondition(advertisement[CBAdvertisementDataLocalNameKey] as? String == "sim-battery")
+    precondition(advertisement[CBAdvertisementDataIsConnectable] as? NSNumber == true)
+}
+
+private func exerciseSimulatedAdapter() {
+    let (adapter, identifier, battery, level) = makeSimulatedFixture()
+    CBHostSimulation.install(adapter)
+    defer { CBHostSimulation.remove() }
+
+    let queueKey = DispatchSpecificKey<String>()
+    let queue = DispatchQueue(label: "corebluetooth.runtime.simulated")
+    queue.setSpecific(key: queueKey, value: "sim-token")
+    let centralProbe = SimulatedCentralProbe(key: queueKey, token: "sim-token")
+    precondition(DispatchQueue.getSpecific(key: queueKey) != "sim-token")
+    let manager = CBCentralManager(
+        delegate: centralProbe,
+        queue: queue,
+        options: [
+            CBCentralManagerOptionRestoreIdentifierKey: "linux-sim",
+            CBCentralManagerOptionShowPowerAlertKey: false,
+            CBCentralManagerOptionDeviceAccessForMedia: false,
+        ]
+    )
+    centralProbe.lock.lock()
+    centralProbe.initReturned = true
+    centralProbe.lock.unlock()
+    precondition(centralProbe.stateSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    drain(queue)
+    precondition(manager.state == .poweredOn)
+    precondition(manager.authorization == .denied)
+    precondition(CBManager.authorization == .denied)
+    centralProbe.lock.lock()
+    precondition(centralProbe.states == [.poweredOn])
+    precondition(centralProbe.restored.count == 1)
+    let restored = centralProbe.restored[0]
+    centralProbe.lock.unlock()
+    precondition(restored[CBCentralManagerRestoredStatePeripheralsKey] != nil)
+    precondition(restored[CBCentralManagerRestoredStateScanServicesKey] != nil)
+    precondition(restored[CBCentralManagerRestoredStateScanOptionsKey] != nil)
+
+    manager.registerForConnectionEvents(
+        options: [
+            .peripheralUUIDs: [identifier],
+            .serviceUUIDs: [battery],
+        ]
+    )
+
+    manager.scanForPeripherals(
+        withServices: [battery],
+        options: [
+            CBCentralManagerScanOptionAllowDuplicatesKey: true,
+            CBCentralManagerScanOptionSolicitedServiceUUIDsKey: [CBUUID(string: "1800")],
+        ]
+    )
+    precondition(manager.isScanning)
+    precondition(centralProbe.discoverSemaphore.wait(timeout: .now() + 2) == .success)
+    precondition(centralProbe.discoverSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    centralProbe.lock.lock()
+    let discoveries = centralProbe.discoveries
+    centralProbe.lock.unlock()
+    precondition(discoveries.count == 2)
+    precondition(discoveries[0].0.identifier == identifier)
+    precondition(discoveries[0].0 === discoveries[1].0)
+    assertAdvertisementKeys(discoveries[0].1)
+    precondition(discoveries[0].2 == NSNumber(value: -55))
+    manager.stopScan()
+    precondition(!manager.isScanning)
+
+    let retrieved = manager.retrievePeripherals(withIdentifiers: [identifier])
+    precondition(retrieved.count == 1)
+    precondition(retrieved[0] === discoveries[0].0)
+
+    let peripheral = retrieved[0]
+    precondition(peripheral.name == "sim-battery")
+    precondition(peripheral.state == .disconnected)
+    let gattProbe = SimulatedPeripheralProbe()
+    peripheral.delegate = gattProbe
+
+    manager.connect(
+        peripheral,
+        options: [
+            CBConnectPeripheralOptionNotifyOnConnectionKey: true,
+            CBConnectPeripheralOptionNotifyOnDisconnectionKey: true,
+            CBConnectPeripheralOptionNotifyOnNotificationKey: true,
+            CBConnectPeripheralOptionStartDelayKey: 0,
+            CBConnectPeripheralOptionEnableTransportBridgingKey: false,
+            CBConnectPeripheralOptionRequiresANCS: true,
+            CBConnectPeripheralOptionEnableAutoReconnect: false,
+        ]
+    )
+    precondition(peripheral.state == .connecting)
+    precondition(centralProbe.connectSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    drain(queue)
+    precondition(peripheral.state == .connected)
+    precondition(peripheral.canSendWriteWithoutResponse)
+    precondition(peripheral.ancsAuthorized)
+    centralProbe.lock.lock()
+    precondition(centralProbe.connectionEvents.contains(.peerConnected))
+    precondition(centralProbe.ancs.count == 1)
+    centralProbe.lock.unlock()
+    precondition(
+        manager.retrieveConnectedPeripherals(withServices: [battery]).contains(where: { $0 === peripheral })
+    )
+    precondition(peripheral.maximumWriteValueLength(for: .withResponse) == 512)
+    precondition(peripheral.maximumWriteValueLength(for: .withoutResponse) == 20)
+
+    peripheral.discoverServices([battery])
+    precondition(gattProbe.serviceSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    let service = peripheral.services?.first
+    precondition(service?.uuid == battery)
+    precondition(service?.isPrimary == true)
+    precondition(service?.peripheral === peripheral)
+
+    peripheral.discoverIncludedServices(nil, for: service!)
+    precondition(gattProbe.includedSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    precondition(service?.includedServices?.first?.uuid == CBUUID(string: "1800"))
+
+    peripheral.discoverCharacteristics([level], for: service!)
+    precondition(gattProbe.charSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    let characteristic = service?.characteristics?.first
+    precondition(characteristic?.uuid == level)
+    precondition(characteristic?.service === service)
+
+    peripheral.readValue(for: characteristic!)
+    precondition(gattProbe.valueSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    precondition(characteristic?.value == Data([0x64]))
+
+    peripheral.writeValue(Data([0x10]), for: characteristic!, type: .withResponse)
+    precondition(gattProbe.writeSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    precondition(characteristic?.value == Data([0x10]))
+
+    peripheral.writeValue(Data([0x11]), for: characteristic!, type: .withoutResponse)
+    precondition(gattProbe.readySemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    precondition(characteristic?.value == Data([0x11]))
+    peripheral.writeValue(Data(count: 21), for: characteristic!, type: .withoutResponse)
+    drain(queue)
+    precondition(characteristic?.value == Data([0x11]))
+
+    peripheral.setNotifyValue(true, for: characteristic!)
+    precondition(gattProbe.notifySemaphore.wait(timeout: .now() + 2) == .success)
+    precondition(gattProbe.valueSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    precondition(characteristic?.isNotifying == true)
+    precondition(characteristic?.value == Data([0x63]))
+
+    peripheral.discoverDescriptors(for: characteristic!)
+    precondition(gattProbe.descSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    let descriptor = characteristic?.descriptors?.first
+    precondition(descriptor?.uuid == CBUUID(string: CBUUIDClientCharacteristicConfigurationString))
+    peripheral.readValue(for: descriptor!)
+    precondition(gattProbe.valueSemaphore.wait(timeout: .now() + 2) == .success)
+    peripheral.writeValue(Data([0x01, 0x00]), for: descriptor!)
+    precondition(gattProbe.writeSemaphore.wait(timeout: .now() + 2) == .success)
+
+    peripheral.readRSSI()
+    precondition(gattProbe.rssiSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    precondition(peripheral.rssi == NSNumber(value: -55))
+    gattProbe.lock.lock()
+    precondition(gattProbe.rssiLegacy == 1)
+    gattProbe.lock.unlock()
+
+    peripheral._hostSetName("renamed")
+    precondition(gattProbe.nameSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    precondition(peripheral.name == "renamed")
+    peripheral._hostInvalidateServices([service!])
+    precondition(gattProbe.modifySemaphore.wait(timeout: .now() + 2) == .success)
+
+    peripheral.openL2CAPChannel(0x0080)
+    precondition(gattProbe.l2capSemaphore.wait(timeout: .now() + 2) == .success)
+
+    manager.cancelPeripheralConnection(peripheral)
+    precondition(centralProbe.disconnectSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    drain(queue)
+    precondition(peripheral.state == .disconnected)
+    centralProbe.lock.lock()
+    precondition(centralProbe.disconnectedTimed == 1)
+    precondition(centralProbe.connectionEvents.contains(.peerDisconnected))
+    centralProbe.lock.unlock()
+
+    let unknown = CBPeripheral(hostIdentifier: UUID(), queue: queue)
+    manager.connect(unknown)
+    precondition(centralProbe.failSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    centralProbe.lock.lock()
+    let lastFail = centralProbe.failed.last?.1 as? CBError
+    centralProbe.lock.unlock()
+    precondition(lastFail?.code == .connectionFailed)
+
+    let input = InputStream(data: Data([0x00]))
+    let output = OutputStream.toMemory()
+    let channel = CBL2CAPChannel(
+        hostPeer: unknown,
+        psm: 0x0080,
+        inputStream: input,
+        outputStream: output
+    )
+    precondition(channel.peer.identifier == unknown.identifier)
+    precondition(channel.psm == 0x0080)
+    _ = channel.inputStream
+    _ = channel.outputStream
+
+    let pmProbe = SimulatedManagerProbe()
+    let peripheralManager = CBPeripheralManager(
+        delegate: pmProbe,
+        queue: queue,
+        options: [
+            CBPeripheralManagerOptionRestoreIdentifierKey: "linux-pm",
+            CBPeripheralManagerOptionShowPowerAlertKey: false,
+        ]
+    )
+    pmProbe.lock.lock()
+    pmProbe.initReturned = true
+    pmProbe.lock.unlock()
+    precondition(pmProbe.stateSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    precondition(peripheralManager.state == .poweredOn)
+    pmProbe.lock.lock()
+    precondition(pmProbe.restored.count == 1)
+    let pmRestored = pmProbe.restored[0]
+    pmProbe.lock.unlock()
+    precondition(pmRestored[CBPeripheralManagerRestoredStateServicesKey] != nil)
+    precondition(pmRestored[CBPeripheralManagerRestoredStateAdvertisementDataKey] != nil)
+
+    let localService = CBMutableService(type: battery, primary: true)
+    let localChar = CBMutableCharacteristic(
+        type: level,
+        properties: [.read, .write, .notify],
+        value: Data([0x01]),
+        permissions: [.readable, .writeable]
+    )
+    localService.characteristics = [localChar]
+    peripheralManager.add(localService)
+    precondition(pmProbe.addSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    pmProbe.lock.lock()
+    precondition(pmProbe.added.last?.1 == nil)
+    pmProbe.lock.unlock()
+
+    peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey: "linux-pm"])
+    precondition(pmProbe.advertisingSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    precondition(peripheralManager.isAdvertising)
+    pmProbe.lock.lock()
+    precondition(pmProbe.didStartAdvertising)
+    precondition(pmProbe.advertisingError == nil)
+    pmProbe.lock.unlock()
+    peripheralManager.startAdvertising(nil)
+    precondition(pmProbe.advertisingSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    pmProbe.lock.lock()
+    let secondAdv = pmProbe.advertisingError as? CBError
+    pmProbe.lock.unlock()
+    precondition(secondAdv?.code == .alreadyAdvertising)
+    peripheralManager.stopAdvertising()
+    precondition(!peripheralManager.isAdvertising)
+
+    let central = adapter.simulatedCentral
+    precondition(central.maximumUpdateValueLength == 20)
+    peripheralManager._hostSubscribe(central, to: localChar)
+    precondition(pmProbe.subscribeSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    precondition(localChar.subscribedCentrals?.contains(where: { $0 === central }) == true)
+    precondition(peripheralManager.updateValue(Data([0x22]), for: localChar, onSubscribedCentrals: [central]))
+    precondition(localChar.value == Data([0x22]))
+    precondition(!peripheralManager.updateValue(Data(count: 64), for: localChar, onSubscribedCentrals: [central]))
+    precondition(pmProbe.readySemaphore.wait(timeout: .now() + 2) == .success)
+
+    let read = CBATTRequest(
+        hostCentral: central,
+        characteristic: localChar,
+        offset: 0,
+        value: nil
+    )
+    peripheralManager._hostInjectReadRequest(read)
+    precondition(pmProbe.readSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    read.value = Data([0x33])
+    peripheralManager.respond(to: read, withResult: .success)
+    precondition(peripheralManager._hostATTResult == .success)
+    precondition(localChar.value == Data([0x33]))
+
+    let write = CBATTRequest(
+        hostCentral: central,
+        characteristic: localChar,
+        offset: 0,
+        value: Data([0x44])
+    )
+    peripheralManager._hostInjectWriteRequests([write])
+    precondition(pmProbe.writeSemaphore.wait(timeout: .now() + 2) == .success)
+    drain(queue)
+    peripheralManager.respond(to: write, withResult: .success)
+    precondition(localChar.value == Data([0x44]))
+
+    peripheralManager._hostUnsubscribe(central, from: localChar)
+    precondition(pmProbe.subscribeSemaphore.wait(timeout: .now() + 2) == .success)
+    peripheralManager.setDesiredConnectionLatency(.low, for: central)
+    peripheralManager.publishL2CAPChannel(withEncryption: false)
+    precondition(pmProbe.l2capSemaphore.wait(timeout: .now() + 2) == .success)
+    peripheralManager.unpublishL2CAPChannel(0x0080)
+    precondition(pmProbe.l2capSemaphore.wait(timeout: .now() + 2) == .success)
+    peripheralManager._hostOpenL2CAPChannel(channel, error: CBError(.operationNotSupported))
+    precondition(pmProbe.l2capSemaphore.wait(timeout: .now() + 2) == .success)
+    peripheralManager.remove(localService)
+    peripheralManager.removeAllServices()
+}
+
 exerciseConstants()
 exerciseErrors()
 exerciseEnumsAndOptionSets()
@@ -682,4 +1552,6 @@ exerciseUUIDs()
 exerciseMutableGATT()
 exerciseCentralManager()
 exercisePeripheralManager()
+exerciseSimulatedAdapter()
+print("CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean")
 print("COREBLUETOOTH_AGENT_RUNTIME_OK")

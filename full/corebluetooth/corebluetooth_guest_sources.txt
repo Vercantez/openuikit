@@ -1,4 +1,5 @@
 full/corebluetooth/CBGATT.swift
+full/corebluetooth/CBHostSimulation.swift
 full/corebluetooth/CBManagers.swift
 full/corebluetooth/CBUUID.swift
 full/corebluetooth/CoreBluetooth.swift

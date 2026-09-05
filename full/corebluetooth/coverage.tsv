@@ -1,39 +1,39 @@
 precise	status	evidence	notes
 c:@CBATTErrorDomain	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:@CBAdvertisementDataIsConnectable	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBAdvertisementDataLocalNameKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBAdvertisementDataManufacturerDataKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBAdvertisementDataOverflowServiceUUIDsKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBAdvertisementDataServiceDataKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBAdvertisementDataServiceUUIDsKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBAdvertisementDataSolicitedServiceUUIDsKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBAdvertisementDataTxPowerLevelKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBCentralManagerOptionDeviceAccessForMedia	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBCentralManagerOptionRestoreIdentifierKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBCentralManagerOptionShowPowerAlertKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBCentralManagerRestoredStatePeripheralsKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBCentralManagerRestoredStateScanOptionsKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBCentralManagerRestoredStateScanServicesKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBCentralManagerScanOptionAllowDuplicatesKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBCentralManagerScanOptionSolicitedServiceUUIDsKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBConnectPeripheralOptionEnableAutoReconnect	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBConnectPeripheralOptionEnableTransportBridgingKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBConnectPeripheralOptionNotifyOnConnectionKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBConnectPeripheralOptionNotifyOnDisconnectionKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBConnectPeripheralOptionNotifyOnNotificationKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBConnectPeripheralOptionRequiresANCS	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBConnectPeripheralOptionStartDelayKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBConnectionEventMatchingOptionPeripheralUUIDs	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBConnectionEventMatchingOptionServiceUUIDs	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBAdvertisementDataIsConnectable	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBAdvertisementDataLocalNameKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBAdvertisementDataManufacturerDataKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBAdvertisementDataOverflowServiceUUIDsKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBAdvertisementDataServiceDataKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBAdvertisementDataServiceUUIDsKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBAdvertisementDataSolicitedServiceUUIDsKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBAdvertisementDataTxPowerLevelKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBCentralManagerOptionDeviceAccessForMedia	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBCentralManagerOptionRestoreIdentifierKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBCentralManagerOptionShowPowerAlertKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBCentralManagerRestoredStatePeripheralsKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBCentralManagerRestoredStateScanOptionsKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBCentralManagerRestoredStateScanServicesKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBCentralManagerScanOptionAllowDuplicatesKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBCentralManagerScanOptionSolicitedServiceUUIDsKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBConnectPeripheralOptionEnableAutoReconnect	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBConnectPeripheralOptionEnableTransportBridgingKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBConnectPeripheralOptionNotifyOnConnectionKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBConnectPeripheralOptionNotifyOnDisconnectionKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBConnectPeripheralOptionNotifyOnNotificationKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBConnectPeripheralOptionRequiresANCS	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBConnectPeripheralOptionStartDelayKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBConnectionEventMatchingOptionPeripheralUUIDs	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBConnectionEventMatchingOptionServiceUUIDs	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:@CBErrorDomain	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:@CBPeripheralManagerOptionRestoreIdentifierKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBPeripheralManagerOptionShowPowerAlertKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBPeripheralManagerRestoredStateAdvertisementDataKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
-c:@CBPeripheralManagerRestoredStateServicesKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBPeripheralManagerOptionRestoreIdentifierKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBPeripheralManagerOptionShowPowerAlertKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBPeripheralManagerRestoredStateAdvertisementDataKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:@CBPeripheralManagerRestoredStateServicesKey	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:@CBUUIDCharacteristicAggregateFormatString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:@CBUUIDCharacteristicExtendedPropertiesString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:@CBUUIDCharacteristicFormatString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:@CBUUIDCharacteristicObservationScheduleString	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBUUIDCharacteristicObservationScheduleString	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:@CBUUIDCharacteristicUserDescriptionString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:@CBUUIDCharacteristicValidRangeString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:@CBUUIDClientCharacteristicConfigurationString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
@@ -142,15 +142,15 @@ c:@E@CBPeripheralState@CBPeripheralStateDisconnected	implemented	tests/agent/Cor
 c:@E@CBPeripheralState@CBPeripheralStateDisconnecting	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:@T@CBConnectionEventMatchingOption	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:@T@CBL2CAPPSM	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CBATTRequest	declared	CBGATT.swift	compiles; instance path not exercised
-c:objc(cs)CBATTRequest(py)central	declared	CBGATT.swift	compiles; instance path not exercised
-c:objc(cs)CBATTRequest(py)characteristic	declared	CBGATT.swift	compiles; instance path not exercised
-c:objc(cs)CBATTRequest(py)offset	declared	CBGATT.swift	compiles; instance path not exercised
-c:objc(cs)CBATTRequest(py)value	declared	CBGATT.swift	compiles; instance path not exercised
+c:objc(cs)CBATTRequest	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBATTRequest(py)central	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBATTRequest(py)characteristic	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBATTRequest(py)offset	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBATTRequest(py)value	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:objc(cs)CBAttribute	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBAttribute(py)UUID	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CBCentral	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBCentral(py)maximumUpdateValueLength	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBCentral	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBCentral(py)maximumUpdateValueLength	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:objc(cs)CBCentralManager	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBCentralManager(cm)supportsFeatures:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBCentralManager(im)cancelPeripheralConnection:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
@@ -175,11 +175,11 @@ c:objc(cs)CBCharacteristic(py)value	implemented	tests/agent/CoreBluetoothRuntime
 c:objc(cs)CBDescriptor	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBDescriptor(py)characteristic	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBDescriptor(py)value	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CBL2CAPChannel	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBL2CAPChannel(py)PSM	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBL2CAPChannel(py)inputStream	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBL2CAPChannel(py)outputStream	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBL2CAPChannel(py)peer	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBL2CAPChannel	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBL2CAPChannel(py)PSM	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBL2CAPChannel(py)inputStream	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBL2CAPChannel(py)outputStream	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBL2CAPChannel(py)peer	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:objc(cs)CBManager	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBManager(cpy)authorization	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBManager(py)authorization	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
@@ -197,27 +197,27 @@ c:objc(cs)CBMutableService	implemented	tests/agent/CoreBluetoothRuntime.swift	fo
 c:objc(cs)CBMutableService(im)initWithType:primary:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBMutableService(py)characteristics	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBMutableService(py)includedServices	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CBPeer	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeer	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:objc(cs)CBPeer(py)identifier	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBPeripheral	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CBPeripheral(im)discoverCharacteristics:forService:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(im)discoverDescriptorsForCharacteristic:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(im)discoverIncludedServices:forService:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(im)discoverServices:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(im)maximumWriteValueLengthForType:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(im)openL2CAPChannel:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(im)readRSSI	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(im)readValueForCharacteristic:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(im)readValueForDescriptor:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(im)setNotifyValue:forCharacteristic:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(im)writeValue:forCharacteristic:type:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(im)writeValue:forDescriptor:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(py)RSSI	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(py)ancsAuthorized	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(py)canSendWriteWithoutResponse	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(py)delegate	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(py)name	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheral(py)services	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(im)discoverCharacteristics:forService:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(im)discoverDescriptorsForCharacteristic:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(im)discoverIncludedServices:forService:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(im)discoverServices:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(im)maximumWriteValueLengthForType:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(im)openL2CAPChannel:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(im)readRSSI	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(im)readValueForCharacteristic:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(im)readValueForDescriptor:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(im)setNotifyValue:forCharacteristic:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(im)writeValue:forCharacteristic:type:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(im)writeValue:forDescriptor:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(py)RSSI	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(py)ancsAuthorized	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(py)canSendWriteWithoutResponse	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(py)delegate	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(py)name	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheral(py)services	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:objc(cs)CBPeripheral(py)state	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBPeripheralManager	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBPeripheralManager(cm)authorizationStatus	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
@@ -225,14 +225,14 @@ c:objc(cs)CBPeripheralManager(im)addService:	implemented	tests/agent/CoreBluetoo
 c:objc(cs)CBPeripheralManager(im)init	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBPeripheralManager(im)initWithDelegate:queue:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBPeripheralManager(im)initWithDelegate:queue:options:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CBPeripheralManager(im)publishL2CAPChannelWithEncryption:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheralManager(im)publishL2CAPChannelWithEncryption:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:objc(cs)CBPeripheralManager(im)removeAllServices	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBPeripheralManager(im)removeService:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CBPeripheralManager(im)respondToRequest:withResult:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(cs)CBPeripheralManager(im)setDesiredConnectionLatency:forCentral:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheralManager(im)respondToRequest:withResult:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(cs)CBPeripheralManager(im)setDesiredConnectionLatency:forCentral:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:objc(cs)CBPeripheralManager(im)startAdvertising:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBPeripheralManager(im)stopAdvertising	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CBPeripheralManager(im)unpublishL2CAPChannel:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheralManager(im)unpublishL2CAPChannel:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:objc(cs)CBPeripheralManager(im)updateValue:forCharacteristic:onSubscribedCentrals:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBPeripheralManager(py)delegate	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBPeripheralManager(py)isAdvertising	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
@@ -251,44 +251,44 @@ c:objc(cs)CBUUID(cm)UUIDWithString:	implemented	tests/agent/CoreBluetoothRuntime
 c:objc(cs)CBUUID(py)UUIDString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(cs)CBUUID(py)data	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(pl)CBCentralManagerDelegate	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:connectionEventDidOccur:forPeripheral:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:didConnectPeripheral:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDisconnectPeripheral:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDisconnectPeripheral:timestamp:isReconnecting:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDiscoverPeripheral:advertisementData:RSSI:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:connectionEventDidOccur:forPeripheral:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didConnectPeripheral:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDisconnectPeripheral:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDisconnectPeripheral:timestamp:isReconnecting:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDiscoverPeripheral:advertisementData:RSSI:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:objc(pl)CBCentralManagerDelegate(im)centralManager:didFailToConnectPeripheral:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:didUpdateANCSAuthorizationForPeripheral:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:willRestoreState:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didUpdateANCSAuthorizationForPeripheral:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:willRestoreState:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:objc(pl)CBCentralManagerDelegate(im)centralManagerDidUpdateState:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(pl)CBPeripheralDelegate	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverCharacteristicsForService:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverDescriptorsForCharacteristic:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverIncludedServicesForService:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverServices:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didModifyServices:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didOpenL2CAPChannel:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didReadRSSI:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateNotificationStateForCharacteristic:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateValueForCharacteristic:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateValueForDescriptor:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didWriteValueForCharacteristic:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didWriteValueForDescriptor:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheralDidUpdateName:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheralDidUpdateRSSI:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralDelegate(im)peripheralIsReadyToSendWriteWithoutResponse:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverCharacteristicsForService:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverDescriptorsForCharacteristic:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverIncludedServicesForService:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverServices:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didModifyServices:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didOpenL2CAPChannel:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didReadRSSI:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateNotificationStateForCharacteristic:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateValueForCharacteristic:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateValueForDescriptor:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didWriteValueForCharacteristic:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didWriteValueForDescriptor:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheralDidUpdateName:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheralDidUpdateRSSI:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate(im)peripheralIsReadyToSendWriteWithoutResponse:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:objc(pl)CBPeripheralManagerDelegate	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:central:didSubscribeToCharacteristic:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:central:didUnsubscribeFromCharacteristic:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:central:didSubscribeToCharacteristic:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:central:didUnsubscribeFromCharacteristic:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didAddService:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didOpenL2CAPChannel:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didPublishL2CAPChannel:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didReceiveReadRequest:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didReceiveWriteRequests:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didUnpublishL2CAPChannel:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:willRestoreState:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didOpenL2CAPChannel:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didPublishL2CAPChannel:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didReceiveReadRequest:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didReceiveWriteRequests:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didUnpublishL2CAPChannel:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:willRestoreState:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerDidStartAdvertising:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerDidUpdateState:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerIsReadyToUpdateSubscribers:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerIsReadyToUpdateSubscribers:	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; typed-origin as? may preserve the value; fresh NSError is not _BridgedStoredNSError
 s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; typed-origin as? may preserve the value; fresh NSError is not _BridgedStoredNSError
 s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; typed-origin as? may preserve the value; fresh NSError is not _BridgedStoredNSError
@@ -299,8 +299,8 @@ s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CBA
 s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
 s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
-s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
-s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
 s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
 s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
@@ -438,8 +438,8 @@ s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CBCent
 s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CBConnectionEventMatchingOption	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CBConnectionEventMatchingOption	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CBATTError	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CBError	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	simulated adapter / fail-closed Linux runtime evidence
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
