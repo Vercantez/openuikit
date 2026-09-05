@@ -43,7 +43,7 @@ SDK depth expansion for `AudioToolbox` (3234 IDs). Isolated Linux now hosts an o
 - **AudioComponent / AudioUnit.** `FindNext` / `Count` return documented built-ins (GenericOutput, MultiChannelMixer, RemoteIO). `Initialize` / `Render` succeed for GenericOutput (silence) and Mixer (offline PCM mix of empty inputs). RemoteIO initialize/render fail closed.
 - **MusicSequence / MusicPlayer.** SMF parse (`MThd`/`MTrk`, VLQ, tempo meta 0x51, note on/off). Offline `MusicPlayerStart` advances time from a tempo map (default 120 BPM).
 
-Coverage after this pass: **729 implemented / 300 declared / 1793 deferred / 412 unavailable**.
+Coverage after this pass: **730 implemented / 299 declared / 1793 deferred / 412 unavailable**.
 
 ### Fail-closed boundaries (depth)
 
@@ -55,7 +55,16 @@ Coverage after this pass: **729 implemented / 300 declared / 1793 deferred / 412
 ### Tests and gate
 
 - Agent tests: `tests/agent/AudioToolboxCoreTests.swift`, `tests/agent/AudioToolboxDepthTests.swift` (including `testAudioToolboxConstantCatalog`).
-- Sealed host gate: `bash full/audiotoolbox/tests/acceptance/test_host.sh` (this Linux environment is the host; no docker).
+- Sealed host gate: `bash full/audiotoolbox/tests/acceptance/test_host.sh` (this Linux environment is the host; no docker). Exact marker output from the green run:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AudioToolbox lane=large-partitioned symbols=3234
+FRAMEWORK_FANOUT_REFERENCE_OK
+AUDIOTOOLBOX_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AudioToolbox dylib=libAudioToolbox.dylib
+```
+
+The campaign environment token `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory stamp, not printed by the sealed framework gate. Swift 6.2.4 / linux was used to compile `libAudioToolbox.dylib`.
 
 ### Unresolved behavioral questions
 
