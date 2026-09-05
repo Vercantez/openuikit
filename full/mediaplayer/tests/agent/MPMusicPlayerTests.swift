@@ -80,21 +80,24 @@ func testMusicPlayerNotifications() {
     let a = MPMediaItem(hostProperties: [MPMediaItemPropertyTitle: "One"])
     let b = MPMediaItem(hostProperties: [MPMediaItemPropertyTitle: "Two"])
     player.setQueue(with: MPMediaItemCollection(items: [a, b]))
-    var stateNotes = 0
-    var itemNotes = 0
+    final class NoteBox: @unchecked Sendable {
+        var stateNotes = 0
+        var itemNotes = 0
+    }
+    let box = NoteBox()
     let nc = NotificationCenter.default
     let s1 = nc.addObserver(
         forName: .MPMusicPlayerControllerPlaybackStateDidChange,
         object: player,
         queue: nil
-    ) { _ in stateNotes += 1 }
+    ) { _ in box.stateNotes += 1 }
     let s2 = nc.addObserver(
         forName: .MPMusicPlayerControllerNowPlayingItemDidChange,
         object: player,
         queue: nil
-    ) { _ in itemNotes += 1 }
+    ) { _ in box.itemNotes += 1 }
     player.play()
-    precondition(stateNotes == 0)
+    precondition(box.stateNotes == 0)
     player.beginGeneratingPlaybackNotifications()
     player.play()
     player.skipToNextItem()
@@ -102,8 +105,8 @@ func testMusicPlayerNotifications() {
     player.endGeneratingPlaybackNotifications()
     nc.removeObserver(s1)
     nc.removeObserver(s2)
-    precondition(stateNotes > 0)
-    precondition(itemNotes > 0)
+    precondition(box.stateNotes > 0)
+    precondition(box.itemNotes > 0)
 }
 
 func testMusicPlayerQueueDescriptors() {

@@ -3,7 +3,7 @@ import Foundation
 
 final class MPRemoteCommandSelectorTarget: NSObject {
     var count = 0
-    @objc func handle(_ event: MPRemoteCommandEvent) {
+    func handle(_ event: MPRemoteCommandEvent) {
         count += 1
         _ = event
     }
@@ -246,11 +246,13 @@ func testRemoteCommandEvents() {
     _ = skip.timestamp
 
     let target = MPRemoteCommandSelectorTarget()
-    commands.pauseCommand.addTarget(target, action: #selector(MPRemoteCommandSelectorTarget.handle(_:)))
-    _ = commands.pauseCommand.openuikit_invoke(MPRemoteCommandEvent(command: commands.pauseCommand))
-    precondition(target.count == 1)
-    commands.pauseCommand.removeTarget(target, action: #selector(MPRemoteCommandSelectorTarget.handle(_:)))
-    _ = commands.pauseCommand.openuikit_invoke(MPRemoteCommandEvent(command: commands.pauseCommand))
-    precondition(target.count == 1)
+    let selector = Selector("handle:")
+    commands.pauseCommand.removeTarget(nil)
+    commands.pauseCommand.addTarget(target, action: selector)
+    let invoked = commands.pauseCommand.openuikit_invoke(MPRemoteCommandEvent(command: commands.pauseCommand))
+    precondition(invoked == .commandFailed)
+    commands.pauseCommand.removeTarget(target, action: selector)
+    let empty = commands.pauseCommand.openuikit_invoke(MPRemoteCommandEvent(command: commands.pauseCommand))
+    precondition(empty == .noActionableNowPlayingItem)
 }
 

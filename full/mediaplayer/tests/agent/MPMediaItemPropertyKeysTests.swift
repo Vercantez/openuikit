@@ -88,7 +88,7 @@ func testNotificationNames() {
         precondition(name.rawValue == expected)
     }
     precondition(
-        MPMediaPlayback.MPMediaPlaybackIsPreparedToPlayDidChange
+        MPMusicPlayerController.MPMediaPlaybackIsPreparedToPlayDidChange
             == .MPMediaPlaybackIsPreparedToPlayDidChange
     )
 }

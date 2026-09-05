@@ -1,4 +1,3 @@
-import CoreGraphics
 import Foundation
 @_spi(OpenUIKitHost) import MediaPlayer
 
@@ -469,7 +468,7 @@ func testNotificationNames() {
         precondition(name.rawValue == expected)
     }
     precondition(
-        MPMediaPlayback.MPMediaPlaybackIsPreparedToPlayDidChange
+        MPMusicPlayerController.MPMediaPlaybackIsPreparedToPlayDidChange
             == .MPMediaPlaybackIsPreparedToPlayDidChange
     )
 }
@@ -1044,21 +1043,24 @@ func testMusicPlayerNotifications() {
     let a = MPMediaItem(hostProperties: [MPMediaItemPropertyTitle: "One"])
     let b = MPMediaItem(hostProperties: [MPMediaItemPropertyTitle: "Two"])
     player.setQueue(with: MPMediaItemCollection(items: [a, b]))
-    var stateNotes = 0
-    var itemNotes = 0
+    final class NoteBox: @unchecked Sendable {
+        var stateNotes = 0
+        var itemNotes = 0
+    }
+    let box = NoteBox()
     let nc = NotificationCenter.default
     let s1 = nc.addObserver(
         forName: .MPMusicPlayerControllerPlaybackStateDidChange,
         object: player,
         queue: nil
-    ) { _ in stateNotes += 1 }
+    ) { _ in box.stateNotes += 1 }
     let s2 = nc.addObserver(
         forName: .MPMusicPlayerControllerNowPlayingItemDidChange,
         object: player,
         queue: nil
-    ) { _ in itemNotes += 1 }
+    ) { _ in box.itemNotes += 1 }
     player.play()
-    precondition(stateNotes == 0)
+    precondition(box.stateNotes == 0)
     player.beginGeneratingPlaybackNotifications()
     player.play()
     player.skipToNextItem()
@@ -1066,8 +1068,8 @@ func testMusicPlayerNotifications() {
     player.endGeneratingPlaybackNotifications()
     nc.removeObserver(s1)
     nc.removeObserver(s2)
-    precondition(stateNotes > 0)
-    precondition(itemNotes > 0)
+    precondition(box.stateNotes > 0)
+    precondition(box.itemNotes > 0)
 }
 
 func testMusicPlayerQueueDescriptors() {
@@ -1468,7 +1470,7 @@ func testPlayableContentFailClosed() {
 
 final class MPRemoteCommandSelectorTarget: NSObject {
     var count = 0
-    @objc func handle(_ event: MPRemoteCommandEvent) {
+    func handle(_ event: MPRemoteCommandEvent) {
         count += 1
         _ = event
     }
@@ -1711,12 +1713,14 @@ func testRemoteCommandEvents() {
     _ = skip.timestamp
 
     let target = MPRemoteCommandSelectorTarget()
-    commands.pauseCommand.addTarget(target, action: #selector(MPRemoteCommandSelectorTarget.handle(_:)))
-    _ = commands.pauseCommand.openuikit_invoke(MPRemoteCommandEvent(command: commands.pauseCommand))
-    precondition(target.count == 1)
-    commands.pauseCommand.removeTarget(target, action: #selector(MPRemoteCommandSelectorTarget.handle(_:)))
-    _ = commands.pauseCommand.openuikit_invoke(MPRemoteCommandEvent(command: commands.pauseCommand))
-    precondition(target.count == 1)
+    let selector = Selector("handle:")
+    commands.pauseCommand.removeTarget(nil)
+    commands.pauseCommand.addTarget(target, action: selector)
+    let invoked = commands.pauseCommand.openuikit_invoke(MPRemoteCommandEvent(command: commands.pauseCommand))
+    precondition(invoked == .commandFailed)
+    commands.pauseCommand.removeTarget(target, action: selector)
+    let empty = commands.pauseCommand.openuikit_invoke(MPRemoteCommandEvent(command: commands.pauseCommand))
+    precondition(empty == .noActionableNowPlayingItem)
 }
 
 
@@ -1821,6 +1825,6 @@ Task {
     mpGroup.leave()
 }
 while mpGroup.wait(timeout: .now() + .milliseconds(50)) == .timedOut {
-    RunLoop.current.run(mode: .default, before: Date().addingTimeInterval(0.05))
+    _ = RunLoop.current.run(mode: .default, before: Date().addingTimeInterval(0.05))
 }
 print("MEDIAPLAYER_AGENT_RUNTIME_OK")

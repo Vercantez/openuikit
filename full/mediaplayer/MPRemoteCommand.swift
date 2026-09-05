@@ -75,9 +75,13 @@ open class MPRemoteCommand: NSObject {
         }
         for pair in targetActions {
             ran = true
+            _ = pair.target
+            _ = pair.action
+            #if canImport(ObjectiveC)
             if let object = pair.target as? NSObject {
                 _ = object.perform(pair.action, with: event)
             }
+            #endif
         }
         if !ran {
             return .noActionableNowPlayingItem

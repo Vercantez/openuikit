@@ -1,5 +1,7 @@
 import Foundation
+#if canImport(CoreGraphics)
 import CoreGraphics
+#endif
 
 /// Artwork request handler. Isolated host uses MPHostTypes.UIImage;
 /// guest uses OpenUIKit.UIImage.

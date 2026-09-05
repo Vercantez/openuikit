@@ -55,6 +55,12 @@ Xcode 26.1 iPhoneOS Swift surface, 895 precise IDs.
 - Volume-settings alerts never become visible.
 - Isolated-host `UIImage`/`UIView`/`UIViewController` in `MPHostTypes.swift`
   are not UIKit identity; the guest imports OpenUIKit.
+- Isolated-host `CGSize`/`CGRect` in `MPHostTypes.swift` are not CoreGraphics
+  identity. The sealed Linux gate has no CoreGraphics module; guest builds
+  `canImport(CoreGraphics)` and use the real types.
+- Isolated-host `Selector` is a name-only lookalike because this Swift
+  toolchain has Objective-C interoperability disabled. Closure handlers
+  dispatch; `addTarget(_:action:)` records targets but does not `perform`.
 
 ## Tests
 
@@ -84,7 +90,9 @@ source-file list on all 869 `implemented` rows. This pass:
 
 Deferred AVFoundation overlays and unavailable CoreMedia/UIKit view types are
 unchanged. Isolated-host `UIImage` / `UIView` / `UIViewController` in
-`MPHostTypes.swift` are still not UIKit identity.
+`MPHostTypes.swift` are still not UIKit identity. This host has no
+CoreGraphics module and no Objective-C interop, so `CGSize`/`CGRect`/`Selector`
+are lookalikes behind `canImport` — the same honesty rule as the UIKit stubs.
 
 Sealed gate: `bash full/mediaplayer/tests/acceptance/test_host.sh` (Linux host,
 no docker). Expected markers:

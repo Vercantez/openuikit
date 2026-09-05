@@ -1,5 +1,7 @@
 import Foundation
+#if canImport(CoreGraphics)
 import CoreGraphics
+#endif
 
 /// Fail-closed volume chrome. MEASURED /tmp/mp_oracle.json, iPhone SE 2x /
 /// iOS 26.1: `MPVolumeView()` frame is `.zero`, `showsRouteButton` is
