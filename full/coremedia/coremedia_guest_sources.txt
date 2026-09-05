@@ -1,7 +1,13 @@
 full/coremedia/CMBlockBuffer.swift
+full/coremedia/CMClock.swift
 full/coremedia/CMDependencyBridges.swift
+full/coremedia/CMErrors.swift
+full/coremedia/CMFailClosed.swift
 full/coremedia/CMFormatDescription.swift
+full/coremedia/CMKeys.swift
 full/coremedia/CMMediaTypes.swift
+full/coremedia/CMMetadata.swift
+full/coremedia/CMOverlay.swift
 full/coremedia/CMSampleBuffer.swift
 full/coremedia/CMTime.swift
 full/coremedia/CMTimeRange.swift

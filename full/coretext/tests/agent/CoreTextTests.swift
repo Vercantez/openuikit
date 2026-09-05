@@ -507,14 +507,16 @@ func testRunDelegateAndStringKeys() {
     }
     precondition(box.deallocated)
 
-    precondition(ctString(kCTFontAttributeName) == "kCTFontAttributeName")
-    precondition(ctString(kCTForegroundColorAttributeName) == "kCTForegroundColorAttributeName")
-    precondition(ctString(kCTParagraphStyleAttributeName) == "kCTParagraphStyleAttributeName")
-    precondition(ctString(kCTFontFamilyNameAttribute) == "kCTFontFamilyNameAttribute")
-    precondition(ctString(kCTFontNameAttribute) == "kCTFontNameAttribute")
-    precondition(ctString(kCTFontSizeAttribute) == "kCTFontSizeAttribute")
-    precondition(ctString(kCTRubyAnnotationAttributeName) == "kCTRubyAnnotationAttributeName")
-    precondition(ctString(kCTTrackingAttributeName) == "kCTTrackingAttributeName")
+    precondition(ctString(kCTFontAttributeName) == "NSFont")
+    precondition(ctString(kCTForegroundColorAttributeName) == "CTForegroundColor")
+    precondition(ctString(kCTParagraphStyleAttributeName) == "NSParagraphStyle")
+    precondition(ctString(kCTKernAttributeName) == "NSKern")
+    precondition(ctString(kCTUnderlineStyleAttributeName) == "NSUnderline")
+    precondition(ctString(kCTFontFamilyNameAttribute) == "NSFontFamilyAttribute")
+    precondition(ctString(kCTFontNameAttribute) == "NSFontNameAttribute")
+    precondition(ctString(kCTFontSizeAttribute) == "NSFontSizeAttribute")
+    precondition(ctString(kCTRubyAnnotationAttributeName) == "CTRubyAnnotation")
+    precondition(ctString(kCTTrackingAttributeName) == "CTTracking")
 }
 
 func testAttributedStringCoreTextExtensions() {
@@ -550,4 +552,37 @@ func testClassHashableAndInequality() {
     precondition(collectionA != collectionB)
     precondition(CTCharacterCollection.adobeGB1 != .adobeCNS1)
     precondition(CTFontSymbolicTraits.boldTrait != .italicTrait)
+
+    let string = NSAttributedString(string: "Hi")
+    let typesetterA = CTTypesetterCreateWithAttributedString(string)
+    let typesetterB = CTTypesetterCreateWithAttributedString(string)
+    precondition(typesetterA != typesetterB)
+    precondition(CTLineCreateWithAttributedString(string) != CTLineCreateWithAttributedString(string))
+    let framesetterA = CTFramesetterCreateWithAttributedString(string)
+    let framesetterB = CTFramesetterCreateWithAttributedString(string)
+    precondition(framesetterA != framesetterB)
+    let tabA = CTTextTabCreate(.left, 10, nil)
+    let tabB = CTTextTabCreate(.left, 10, nil)
+    precondition(tabA != tabB)
+    let rubyA = CTRubyAnnotationCreateWithAttributes(.auto, .auto, .before, ctCFString("a"), nil)
+    let rubyB = CTRubyAnnotationCreateWithAttributes(.auto, .auto, .before, ctCFString("a"), nil)
+    precondition(rubyA != rubyB)
+    let styleA = CTParagraphStyleCreate(nil, 0)
+    let styleB = CTParagraphStyleCreate(nil, 0)
+    precondition(styleA != styleB)
+    var hasher2 = Hasher()
+    typesetterA.hash(into: &hasher2)
+    framesetterA.hash(into: &hasher2)
+    tabA.hash(into: &hasher2)
+    rubyA.hash(into: &hasher2)
+    styleA.hash(into: &hasher2)
+    _ = hasher2.finalize()
+    _ = typesetterA.hashValue
+    _ = framesetterA.hashValue
+    _ = styleA.hashValue
+    precondition(CTFontFormat.unrecognized != .trueType)
+    precondition(CTFontManagerError.fileNotFound != .notRegistered)
+    precondition(CTParagraphStyleSpecifier.alignment != .count)
+    precondition(CTTextAlignment.left != .right)
+    precondition(CTWritingDirection.natural != .leftToRight)
 }

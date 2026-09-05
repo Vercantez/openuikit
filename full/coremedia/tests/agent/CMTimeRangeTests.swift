@@ -8,7 +8,9 @@ func testCMTimeRangeMakeAndEnd() {
     let range = CMTimeRangeMake(start: start, duration: duration)
     precondition(range.isValid)
     precondition(!range.isEmpty)
+    precondition(CMTimeRangeGetEnd(range) == CMTime(value: 3, timescale: 1))
     precondition(range.end == CMTime(value: 3, timescale: 1))
+    precondition(CMTimeRangeContainsTime(range, time: CMTime(value: 2, timescale: 1)))
     precondition(range.containsTime(CMTime(value: 2, timescale: 1)))
     precondition(!range.containsTime(CMTime(value: 3, timescale: 1)))
     precondition(!range.containsTime(CMTime(value: 0, timescale: 1)))
@@ -38,14 +40,19 @@ func testCMTimeRangeIntersectionUnion() {
         start: CMTime(value: 5, timescale: 1),
         duration: CMTime(value: 10, timescale: 1)
     )
-    let inter = a.intersection(b)
+    let inter = CMTimeRangeGetIntersection(a, otherRange: b)
     precondition(inter.start == CMTime(value: 5, timescale: 1))
     precondition(inter.duration == CMTime(value: 5, timescale: 1))
-    let uni = a.union(b)
+    precondition(a.intersection(b) == inter)
+    let uni = CMTimeRangeGetUnion(a, otherRange: b)
     precondition(uni.start == .zero)
     precondition(uni.end == CMTime(value: 15, timescale: 1))
+    precondition(a.union(b) == uni)
+    precondition(CMTimeRangeContainsTimeRange(a, otherRange: inter))
     precondition(a.containsTimeRange(inter))
-    precondition(!a.containsTimeRange(b))
+    precondition(!CMTimeRangeContainsTimeRange(a, otherRange: b))
+    precondition(CMTimeRangeEqual(a, a))
+    precondition(a != b)
 }
 
 func testCMTimeRangeDictionaryRoundTrip() {

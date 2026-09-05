@@ -3,7 +3,7 @@ import Foundation
 import Observation
 #endif
 
-#if !canImport(SwiftUI)
+#if !canImport(SwiftUI) || os(macOS)
 
 public protocol Publisher {
     associatedtype Output
@@ -342,11 +342,11 @@ public struct EdgeInsets: Sendable, Hashable {
     public init() {}
 }
 
-public struct EmptyMatchedTransitionSourceConfiguration: Sendable, Hashable {
+public struct EmptyMatchedTransitionSourceConfiguration: MatchedTransitionSourceConfiguration, Sendable, Hashable {
     public init() {}
 }
 
-public struct EmptyVisualEffect: Sendable, Hashable {
+public struct EmptyVisualEffect: VisualEffect, Sendable, Hashable {
     public init() {}
 }
 

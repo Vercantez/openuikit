@@ -537,6 +537,36 @@ open class ASCredentialIdentityStore: NSObject {
         throw ASCredentialIdentityStoreError(.storeDisabled)
     }
 
+    public func saveCredentialIdentities(
+        _ credentialIdentities: [ASPasswordCredentialIdentity],
+        completion: @escaping (Bool, (any Error)?) -> Void
+    ) {
+        AuthenticationServicesHostCallback.queue.async {
+            completion(false, ASCredentialIdentityStoreError(.storeDisabled))
+        }
+        _ = credentialIdentities
+    }
+
+    public func replaceCredentialIdentities(
+        with newCredentialIdentities: [ASPasswordCredentialIdentity],
+        completion: @escaping (Bool, (any Error)?) -> Void
+    ) {
+        AuthenticationServicesHostCallback.queue.async {
+            completion(false, ASCredentialIdentityStoreError(.storeDisabled))
+        }
+        _ = newCredentialIdentities
+    }
+
+    public func removeCredentialIdentities(
+        _ credentialIdentities: [ASPasswordCredentialIdentity],
+        completion: @escaping (Bool, (any Error)?) -> Void
+    ) {
+        AuthenticationServicesHostCallback.queue.async {
+            completion(false, ASCredentialIdentityStoreError(.storeDisabled))
+        }
+        _ = credentialIdentities
+    }
+
     public func credentialIdentities(
         forService serviceIdentifier: ASCredentialServiceIdentifier? = nil,
         credentialIdentityTypes: IdentityTypes = []
@@ -657,10 +687,26 @@ extension ASAccountAuthenticationModificationControllerDelegate {
 
 open class ASAccountAuthenticationModificationController: NSObject {
     public weak var delegate: (any ASAccountAuthenticationModificationControllerDelegate)?
+    public weak var presentationContextProvider:
+        (any ASAccountAuthenticationModificationControllerPresentationContextProviding)?
 
     public func perform(_ request: ASAccountAuthenticationModificationRequest) {
-        _ = request
+        let error = ASAuthorizationError(.notHandled)
+        AuthenticationServicesHostCallback.queue.async { [weak self] in
+            guard let self else { return }
+            self.delegate?.accountAuthenticationModificationController(
+                self,
+                didFail: request,
+                error: error
+            )
+        }
     }
+}
+
+public protocol ASAccountAuthenticationModificationControllerPresentationContextProviding: NSObjectProtocol {
+    func presentationAnchor(
+        for controller: ASAccountAuthenticationModificationController
+    ) -> ASPresentationAnchor
 }
 
 open class ASAccountAuthenticationModificationExtensionContext: NSObject {
@@ -774,7 +820,6 @@ open class ASAuthorizationProviderExtensionAuthorizationRequest: NSObject {
     }
 }
 
-@MainActor
 public protocol ASAuthorizationProviderExtensionAuthorizationRequestHandler: NSObjectProtocol {
     func beginAuthorization(with request: ASAuthorizationProviderExtensionAuthorizationRequest)
     func cancelAuthorization(with request: ASAuthorizationProviderExtensionAuthorizationRequest)

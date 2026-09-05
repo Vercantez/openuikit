@@ -55,6 +55,7 @@ public final class CGImageSource: @unchecked Sendable {
     var uniformType: CFString?
     var status: CGImageSourceStatus
     var metadata = ImageHeaderMetadata.empty
+    var parsed = ImageIOParsedFile()
     var isFinal = false
     let isIncremental: Bool
 
@@ -75,6 +76,7 @@ public final class CGImageSource: @unchecked Sendable {
         self.images = decoded.images
         self.frameDelays = decoded.frameDelays
         self.metadata = metadata
+        self.parsed = imageioParseFile(data)
         self.isFinal = true
         self.status = .statusComplete
     }
@@ -297,39 +299,39 @@ func imageHeaderMetadata(_ data: Data, type: CFString?) -> ImageHeaderMetadata {
     return .empty
 }
 
-private func gifLoopCount(_ data: Data) -> Int? {
-    let bytes = Array(data)
-    let application = Array("NETSCAPE2.0".utf8)
-    guard bytes.count >= application.count + 5 else { return nil }
-    for start in 0...(bytes.count - application.count - 5) {
-        guard Array(bytes[start..<(start + application.count)]) == application else {
-            continue
-        }
-        let subBlock = start + application.count
-        guard bytes[subBlock] == 3, bytes[subBlock + 1] == 1 else { continue }
-        return littleEndianUInt16(bytes, subBlock + 2)
-    }
-    return nil
-}
-
-private func refreshIncrementalSource(_ source: CGImageSource) {
-    source.uniformType = imageType(source.data)
+private func refreshSource(_ source: CGImageSource) {
+    source.parsed = imageioParseFile(source.data)
+    source.uniformType = source.parsed.type
     source.metadata = imageHeaderMetadata(source.data, type: source.uniformType)
     guard let type = source.uniformType else {
         source.images.removeAll(keepingCapacity: false)
         source.frameDelays.removeAll(keepingCapacity: false)
-        source.status = source.isFinal ? .statusUnknownType : .statusInvalidData
+        source.status = .statusInvalidData
+        return
+    }
+    if !imageioTypeAllowed(type) {
+        source.images.removeAll(keepingCapacity: false)
+        source.frameDelays.removeAll(keepingCapacity: false)
+        source.uniformType = nil
+        source.status = .statusUnknownType
         return
     }
 
     if let decoded = decodedImages(source.data, type: type) {
         source.images = decoded.images
         source.frameDelays = decoded.frameDelays
+        if source.parsed.frameDelays.isEmpty {
+            source.parsed.frameDelays = decoded.frameDelays
+        }
         source.status = source.isFinal ? .statusComplete : .statusIncomplete
     } else {
         source.images.removeAll(keepingCapacity: false)
         source.frameDelays.removeAll(keepingCapacity: false)
-        source.status = source.isFinal ? .statusUnexpectedEOF : .statusIncomplete
+        // MEASURED 2026-09-05: CreateWithData of a 10-byte PNG prefix (typed,
+        // no pixels) reports statusComplete because the blob is final.
+        // Incremental of the same prefix reports statusIncomplete until
+        // UpdateData(..., true).
+        source.status = source.isFinal ? .statusComplete : .statusIncomplete
     }
 }
 
@@ -338,16 +340,18 @@ public func CGImageSourceCreateWithData(
     _ options: CFDictionary?
 ) -> CGImageSource? {
     _ = options
-    guard let type = imageType(data), imageioTypeAllowed(type),
-          let decoded = decodedImages(data, type: type) else {
+    // MEASURED 2026-09-05 Apple ImageIO: empty and garbage bytes still
+    // return a source (statusInvalidData, count 0). Truncated PNG of 10+
+    // bytes returns a typed source with statusComplete and no image.
+    let detected = imageioDetectType(data)
+    if let detected, !imageioTypeAllowed(detected) {
         return nil
     }
-    return CGImageSource(
-        data: data,
-        type: type,
-        decoded: decoded,
-        metadata: imageHeaderMetadata(data, type: type)
-    )
+    let source = CGImageSource(incremental: false)
+    source.data = data
+    source.isFinal = true
+    refreshSource(source)
+    return source
 }
 
 public func CGImageSourceCreateIncremental(
@@ -365,7 +369,7 @@ public func CGImageSourceUpdateData(
     guard source.isIncremental else { return }
     source.data = data
     source.isFinal = final
-    refreshIncrementalSource(source)
+    refreshSource(source)
 }
 
 public func CGImageSourceGetStatus(_ source: CGImageSource) -> CGImageSourceStatus {
@@ -384,6 +388,8 @@ public func CGImageSourceGetStatusAtIndex(
 
 public func CGImageSourceGetCount(_ source: CGImageSource) -> Int {
     if !source.images.isEmpty { return source.images.count }
+    if source.parsed.frameCount > 0 { return source.parsed.frameCount }
+    if source.uniformType == imageioTypeGIF { return 0 }
     return source.uniformType == nil ? 0 : 1
 }
 
@@ -406,10 +412,10 @@ public func CGImageSourceCreateThumbnailAtIndex(
     _ index: Int,
     _ options: CFDictionary?
 ) -> CGImage? {
-    // The renderer currently has no ImageIO resampling primitive. Returning
-    // the actual decoded image is lossless and lets callers resample through
-    // CGContext; it never fabricates a thumbnail or changes orientation.
-    CGImageSourceCreateImageAtIndex(source, index, options)
+    guard let image = CGImageSourceCreateImageAtIndex(source, index, options) else {
+        return nil
+    }
+    return imageioThumbnail(image, options: options, orientation: source.parsed.orientation)
 }
 
 public func CGImageSourceCopyProperties(
@@ -418,15 +424,10 @@ public func CGImageSourceCopyProperties(
 ) -> CFDictionary? {
     _ = options
     guard source.uniformType != nil else { return nil }
-    var properties: CFDictionary = [:]
-    if source.uniformType == imageioTypeGIF {
-        var gif: [CFString: Any] = [:]
-        if let loopCount = gifLoopCount(source.data) {
-            gif[kCGImagePropertyGIFLoopCount] = loopCount
-        }
-        properties[kCGImagePropertyGIFDictionary] = gif
-    }
-    return properties
+    return imageioProperties(
+        source.parsed, image: nil, index: 0,
+        fileSize: source.data.count, container: true
+    )
 }
 
 public func CGImageSourceCopyPropertiesAtIndex(
@@ -437,27 +438,8 @@ public func CGImageSourceCopyPropertiesAtIndex(
     _ = options
     guard index >= 0, index < CGImageSourceGetCount(source) else { return nil }
     let image = index < source.images.count ? source.images[index] : nil
-    let width = image?.width ?? source.metadata.width
-    let height = image?.height ?? source.metadata.height
-    var properties: CFDictionary = [
-        kCGImagePropertyOrientation: source.metadata.orientation,
-    ]
-    if let width { properties[kCGImagePropertyPixelWidth] = width }
-    if let height { properties[kCGImagePropertyPixelHeight] = height }
-
-    if source.uniformType == imageioTypeGIF {
-        let delay = index < source.frameDelays.count
-            ? source.frameDelays[index] : 0
-        properties[kCGImagePropertyGIFDictionary] = [
-            kCGImagePropertyGIFDelayTime: delay,
-            kCGImagePropertyGIFUnclampedDelayTime: delay,
-        ] as [CFString: Any]
-    } else if source.uniformType == imageioTypeJPEG {
-        properties[kCGImagePropertyJFIFDictionary] = [
-            kCGImagePropertyJFIFIsProgressive: source.metadata.isProgressiveJPEG,
-        ] as [CFString: Any]
-    } else if source.uniformType == imageioTypePNG {
-        properties[kCGImagePropertyPNGDictionary] = [:] as [CFString: Any]
-    }
-    return properties
+    return imageioProperties(
+        source.parsed, image: image, index: index,
+        fileSize: source.data.count, container: false
+    )
 }

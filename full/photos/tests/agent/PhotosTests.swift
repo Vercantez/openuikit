@@ -1,7 +1,7 @@
 @_spi(OpenUIKitHost) import Photos
 import Foundation
 
-private func photosWait(_ body: @escaping @Sendable () async -> Void) {
+func photosWait(_ body: @escaping @Sendable () async -> Void) {
     let semaphore = DispatchSemaphore(value: 0)
     Task {
         await body()
@@ -176,6 +176,7 @@ func testFetchResultEnumeration() {
 }
 
 func testPhotosErrorCodes() {
+    PHPhotoLibraryPortable._reset()
     precondition(PHPhotosErrorDomain == "PHPhotosErrorDomain")
     precondition(PHPhotosError.Code.internalError.rawValue == -1)
     precondition(PHPhotosError.Code.userCancelled.rawValue == 3072)
@@ -192,7 +193,7 @@ func testPhotosErrorCodes() {
         precondition(false, "performChangesAndWait must fail closed")
     } catch {
         let photosError = error as? PHPhotosError
-        precondition(photosError?.code == .changeNotSupported)
+        precondition(photosError?.code == .accessUserDenied)
     }
 }
 
@@ -213,13 +214,25 @@ func testCollectionsTransientAndEmpty() {
     precondition(transient.assetCollectionType == .album)
     let fetched = PHAsset.fetchAssets(in: transient, options: nil)
     precondition(fetched.count == 1)
-    precondition(
-        PHAssetCollection.fetchAssetCollections(
-            with: .smartAlbum,
-            subtype: .any,
-            options: nil
-        ).count == 0
+    let smart = PHAssetCollection.fetchAssetCollections(
+        with: .smartAlbum,
+        subtype: .any,
+        options: nil
     )
+    precondition(smart.count == 21)
+    let recents = PHAssetCollection.fetchAssetCollections(
+        with: .smartAlbum,
+        subtype: .smartAlbumUserLibrary,
+        options: nil
+    )
+    precondition(recents.count == 1)
+    precondition(recents[0].localizedTitle == "Recents")
+    _ = recents[0].assetCollectionSubtype
+    _ = recents[0].estimatedAssetCount
+    _ = recents[0].startDate
+    _ = recents[0].endDate
+    _ = recents[0].localizedLocationNames
+    precondition(PHAsset.fetchAssets(in: recents[0], options: nil).count == 1)
     let list = PHCollectionList.transientCollectionList(with: [transient], title: "Folder")
     precondition(list.canContainCollections)
     precondition(list.collectionListType == .folder)
@@ -294,14 +307,19 @@ func testResourceManagerFailClosed() {
     precondition(resources[0].type == .photo)
     var received = false
     var completionError: (any Error)?
+    var payload: Data?
     _ = PHAssetResourceManager.default().requestData(
         for: resources[0],
         options: nil,
-        dataReceivedHandler: { _ in received = true },
+        dataReceivedHandler: {
+            received = true
+            payload = $0
+        },
         completionHandler: { completionError = $0 }
     )
     precondition(received)
-    precondition((completionError as? PHPhotosError)?.code == .missingResource)
+    precondition(payload == Data("x".utf8))
+    precondition(completionError == nil)
 }
 
 func testCachingImageManagerNoOps() {
@@ -333,4 +351,12 @@ func testAdjustmentAndEditingTypes() {
     let options = PHContentEditingInputRequestOptions()
     precondition(options.isNetworkAccessAllowed == false)
     precondition(options.canHandleAdjustmentData(data) == false)
+    let asset = PHAsset(localIdentifier: "edit", mediaType: .image)
+    asset.cancelContentEditingInputRequest(0)
+    _ = asset.requestContentEditingInput(with: options) { _, _ in }
+    _ = PHAssetCollection.fetchMoments(with: nil)
+    _ = PHAssetCollection.fetchMoments(
+        inMomentList: PHCollectionList.transientCollectionList(with: [], title: nil),
+        options: nil
+    )
 }

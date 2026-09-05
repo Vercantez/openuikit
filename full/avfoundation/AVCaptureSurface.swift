@@ -191,7 +191,7 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
   }
   open class DiscoverySession: NSObject, @unchecked Sendable {
     public override init() { super.init() }
-    convenience init(deviceTypes: [AVCaptureDevice.DeviceType], mediaType: AVMediaType?, position: AVCaptureDevice.Position) { self.init() }
+    public convenience init(deviceTypes: [AVCaptureDevice.DeviceType], mediaType: AVMediaType?, position: AVCaptureDevice.Position) { self.init() }
     public var devices: [AVCaptureDevice] { [] }
     public var supportedMultiCamDeviceSets: [Set<AVCaptureDevice>] { [] }
   }
@@ -571,8 +571,16 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
   public func cancelVideoZoomRamp() {}
   public var dualCameraSwitchOverVideoZoomFactor: CGFloat { 0 }
   public var displayVideoZoomFactorMultiplier: CGFloat { 0 }
-  public class func authorizationStatus(for mediaType: AVMediaType) -> AVAuthorizationStatus { AVAuthorizationStatus(rawValue: 0)! }
-  public class func requestAccess(for mediaType: AVMediaType) async -> Bool { false }
+  // Linux has no capture hardware. Measured testAVCaptureAuthorizationDenied:
+  // authorizationStatus(for:) == .denied; requestAccess(for:) == false.
+  public class func authorizationStatus(for mediaType: AVMediaType) -> AVAuthorizationStatus {
+    _ = mediaType
+    return .denied
+  }
+  public class func requestAccess(for mediaType: AVMediaType) async -> Bool {
+    _ = mediaType
+    return false
+  }
   public var automaticallyAdjustsVideoHDREnabled: Bool {
       get { false }
       set { _ = newValue }
@@ -1363,6 +1371,7 @@ open class AVCaptureSession: NSObject, @unchecked Sendable {
   public func removeControl(_ control: AVCaptureControl) {}
   public func beginConfiguration() {}
   public func commitConfiguration() {}
+  // Measured testAVCaptureSessionFailClosed: startRunning() leaves isRunning false.
   public var isRunning: Bool { false }
   public var isInterrupted: Bool { false }
   public var isMultitaskingCameraAccessSupported: Bool { false }
