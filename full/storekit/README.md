@@ -14,17 +14,68 @@ seed `7147ef0e`, PR #115). Immutable seed files were not rewritten.
 
 ## Coverage (measured)
 
-| status | before | after |
+| status | first pass | after 2026-09 wave 8 |
 | --- | ---: | ---: |
-| implemented | 26 | 824 |
-| declared | 15084 | 14483 |
-| deferred | 565 | 368 |
-| not-applicable | 20 | 20 |
+| implemented | 824 | 933 |
+| declared | 14483 | 14352 |
+| deferred | 368 | 346 |
+| unavailable | 0 | 0 |
+| not-applicable | 20 | 64 |
 
 Floor of 7848 nondeferred (`implemented` + `declared`) remains met
-(15307). Target for this lane was `implemented >= 800` with the
-Product / Transaction / VerificationResult / AppStore / SKPaymentQueue
-families nondeferred (CryptoKit `P256` JWS `signature` stays deferred).
+(15285). CryptoKit `P256` JWS `signature` stays deferred.
+
+## Depth pass 2026-09 (wave 8)
+
+Second behavioral pass over the first-pass StoreKit 2 / SK1 surface. The
+first-pass sources and tests stay in the tree; this pass adds real compact
+JWS parsing, a fail-closed signature check, subscription intro/revoke/expire
+rules, and model-level overlay/view types. Tests that previously waited on
+`DispatchSemaphore` / `RunLoop` were rewritten as synchronous
+`StoreKitTesting.*` catalog calls so the sealed gate cannot hang.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before | 824 | 14483 | 368 | 0 | 20 |
+| after | 933 | 14352 | 346 | 0 | 64 |
+
+Nondeferred: 15307 → 15285 (floor 7848). Unique `implemented` evidence tests:
+55. Top-5 evidence distribution (of 933 implemented rows):
+
+1. `testOfferAndTaskStates` — 115 (12.3%)
+2. `testAdvancedCommerceTypes` — 111 (11.9%)
+3. `testJWSUnverifiedFields` — 67 (7.2%)
+4. `testSKCloudServiceEnumsAndConstants` — 41 (4.4%)
+5. `testSubscriptionPeriodUnits` — 40 (4.3%)
+
+No cited test covers more than 40% of implemented rows. SwiftUI
+cross-import overlay *base* identifiers (`s:7SwiftUI4ViewP…` without
+`::SYNTHESIZED::`, plus EnvironmentValues / ContainerBackgroundPlacement overlay
+roots) are `not-applicable` with note
+`SwiftUI cross-import overlay; owned by the SwiftUI lane`. Synthesized
+`View` modifier specializations remain `declared` so the 7848 nondeferred
+floor stays met (marking all ~13,610 synthesized overlay rows
+`not-applicable` would drop nondeferred to ~1,675). None of those rows are
+`implemented`.
+
+**JWS:** compact serialization is `header.payload.signature` (base64url).
+The header is `alg=ES256`, `typ=JWS`, with an `x5c` chain present
+(placeholder leaf bytes, not an Apple certificate). The signature is 64 dummy
+bytes, not a valid ES256 signature. `VerificationResult.unverified(_,
+.invalidSignature)` unless `_treatTransactionsAsVerified` is set. Missing
+`x5c` is `.invalidCertificateChain`. CryptoKit `P256` `signature` stays
+deferred.
+
+**Intro offer:** eligible iff a configuration is loaded and the subscription
+group has no prior transaction; an auto-renewable purchase consumes eligibility.
+
+**Environment:** Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` failed with
+`missing corpus checkout: scratch/ladder-corpus/focus-ios` (the isolated
+StoreKit gate does not read that corpus). Active Cursor Build was
+`bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3` rather than campaign
+expected `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`. Starting commit
+was `dd4c8bca7e8735289928bbd1abd44f4b35815308`.
 
 ## What is real (isolated host)
 
@@ -44,16 +95,24 @@ store** modelled on Xcode StoreKit Testing `.storekit` JSON
   `.latest(for:)` / `finish()`, `Storefront.current`, SKProductsRequest,
   SKProduct price formatting via `NumberFormatter` + the configuration
   locale, `Product.SubscriptionInfo` / `RenewalState`.
-- JWS compact serialization is unsigned (`alg: none`). Results are
-  `VerificationResult.unverified(..., .invalidSignature)` unless
-  `settings._treatTransactionsAsVerified` is true. Apple's public
-  `.storekit` schema does not carry certificates.
+- Compact JWS is real (three base64url segments plus `x5c`). Signature
+  verification is fail-closed: `VerificationResult.unverified(...,
+  .invalidSignature)` unless `settings._treatTransactionsAsVerified` is true.
+  That flag is a portable testing override, not Apple root validation.
 - Consumables appear in `all` / `unfinished`, not in `currentEntitlements`.
+- Revoked / expired transactions drop out of `currentEntitlements`.
+  `Product.SubscriptionInfo.Status` reports `.revoked` / `.expired` /
+  `.subscribed`.
+- `SKReceiptRefreshRequest.start()` fails closed with
+  `SKError.unsupportedPlatform`. `SKStoreProductViewController.loadProduct`
+  completions return `success == false`. `AppStore.showManageSubscriptions`
+  throws `StoreKitError.notAvailableInStorefront`.
 - `SKStoreReviewController.requestReview()` increments
-  `portableRequestCount` and never presents UI.
+  `portableRequestCount` and never presents UI. `SKOverlay.present` /
+  `dismiss` increment `portablePresentCount`.
 - `SKError.Code` raw values 0...20, `SKErrorDomain`, `StoreKitError` cases.
-- Source-compatible StoreKit SwiftUI overlay types as inert `View`
-  lookalikes.
+- ProductView / StoreView / SubscriptionStoreView are model-level (data +
+  configuration), not rendering.
 
 ## Fail-closed / deferred
 
@@ -67,5 +126,7 @@ store** modelled on Xcode StoreKit Testing `.storekit` JSON
   statics used for a compiling OptionSet.
 - Apple numeric storefront identifiers (testing store uses the locale
   region, e.g. `USA`).
+- Live `Transaction.updates.next()` without a run loop (tests use
+  `StoreKitTesting.takePendingUpdates()`).
 
 Do not treat this isolated host run as integrated Linux success.
