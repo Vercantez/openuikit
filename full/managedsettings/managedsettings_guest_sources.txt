@@ -1,0 +1,5 @@
+full/managedsettings/ManagedSettings.swift
+full/managedsettings/ManagedSettingsGroups.swift
+full/managedsettings/ManagedSettingsIdentities.swift
+full/managedsettings/ManagedSettingsShield.swift
+full/managedsettings/ManagedSettingsStore.swift
