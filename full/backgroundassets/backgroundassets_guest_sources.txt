@@ -1,0 +1,6 @@
+full/backgroundassets/AssetPack.swift
+full/backgroundassets/AssetPackManager.swift
+full/backgroundassets/BADownload.swift
+full/backgroundassets/BADownloadManager.swift
+full/backgroundassets/BADownloaderExtension.swift
+full/backgroundassets/BackgroundAssets.swift
