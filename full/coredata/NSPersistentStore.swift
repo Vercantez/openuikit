@@ -153,7 +153,7 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
     public private(set) var persistentStores: [NSPersistentStore] = []
     private let _lock = NSRecursiveLock()
     private static let _registryLock = NSLock()
-    private static var _registry: [String: AnyClass] = [
+    private nonisolated(unsafe) static var _registry: [String: AnyClass] = [
         NSInMemoryStoreType: _CDInMemoryPersistentStore.self
     ]
 
@@ -165,6 +165,10 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
     public func lock() { _lock.lock() }
     public func unlock() { _lock.unlock() }
     public func tryLock() -> Bool { _lock.try() }
+
+    public func withLock<R>(_ body: () throws -> R) rethrows -> R {
+        try performAndWait(body)
+    }
 
     public func perform(_ block: @escaping () -> Void) {
         DispatchQueue.global().async {
@@ -195,7 +199,7 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
         defer { _registryLock.unlock() }
         var types: [String: NSValue] = [:]
         for key in _registry.keys {
-            types[key] = NSValue()
+            types[key] = NSNumber(value: 1)
         }
         return types
     }

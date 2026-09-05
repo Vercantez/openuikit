@@ -237,11 +237,13 @@ open class NSEntityMapping: NSObject {
     public var relationshipMappings: [NSPropertyMapping]?
     public var entityMigrationPolicyClassName: String?
     public var userInfo: [AnyHashable: Any]?
+    public var sourceExpression: NSExpression?
 }
 
 open class NSPropertyMapping: NSObject {
     public var name: String?
     public var userInfo: [AnyHashable: Any]?
+    public var valueExpression: NSExpression?
 }
 
 open class NSMappingModel: NSObject {
@@ -488,8 +490,8 @@ open class NSAtomicStoreCacheNode: NSObject {
         super.init()
     }
 
-    open func value(forKey key: String) -> Any? { propertyCache?[key] }
-    open func setValue(_ value: Any?, forKey key: String) {
+    open override func value(forKey key: String) -> Any? { propertyCache?[key] }
+    open override func setValue(_ value: Any?, forKey key: String) {
         if let value {
             propertyCache?[key] = value
         } else {
@@ -619,4 +621,32 @@ open class NSIncrementalStore: NSPersistentStore {
     }
 
     open func referenceObject(for objectID: NSManagedObjectID) -> Any { objectID.reference }
+}
+
+open class NSFetchRequestExpression: NSExpression {
+    public let requestExpression: NSExpression
+    public let contextExpression: NSExpression
+    public let isCountOnlyRequest: Bool
+
+    public init(request: NSExpression, context: NSExpression, countOnly: Bool) {
+        self.requestExpression = request
+        self.contextExpression = context
+        self.isCountOnlyRequest = countOnly
+        super.init(expressionType: NSFetchRequestExpressionType)
+    }
+
+    public required init?(coder: NSCoder) {
+        self.requestExpression = NSExpression(forConstantValue: nil)
+        self.contextExpression = NSExpression(forConstantValue: nil)
+        self.isCountOnlyRequest = false
+        super.init(coder: coder)
+    }
+
+    open class func expression(
+        forFetch fetch: NSExpression,
+        context: NSExpression,
+        countOnly countFlag: Bool
+    ) -> NSExpression {
+        NSFetchRequestExpression(request: fetch, context: context, countOnly: countFlag)
+    }
 }

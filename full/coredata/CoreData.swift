@@ -365,6 +365,10 @@ public var NSCoreDataVersionNumber_iPhoneOS_9_0: Double { 640.0 }
 public var NSCoreDataVersionNumber_iPhoneOS_9_2: Double { 641.2 }
 public var NSCoreDataVersionNumber_iPhoneOS_9_3: Double { 641.6 }
 
+/// Measured against Apple CoreData on macOS (host swift -e),
+/// `NSFetchRequestExpressionType.rawValue == 50`.
+public let NSFetchRequestExpressionType: NSExpression.ExpressionType = NSExpression.ExpressionType(rawValue: 50)!
+
 // MARK: - Enumerations
 
 public enum NSAttributeType: UInt, Hashable, Sendable {

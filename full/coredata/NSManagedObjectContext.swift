@@ -1,6 +1,6 @@
 import Foundation
 
-open class NSManagedObjectContext: NSObject, NSLocking {
+open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
     public struct ConcurrencyType: RawRepresentable, Hashable, Sendable {
         public var rawValue: NSManagedObjectContextConcurrencyType
         public init(rawValue: NSManagedObjectContextConcurrencyType) { self.rawValue = rawValue }
@@ -45,12 +45,33 @@ open class NSManagedObjectContext: NSObject, NSLocking {
     public var mergePolicy: Any = NSMergePolicy.error
     public let userInfo = NSMutableDictionary()
     public private(set) var queryGenerationToken: NSQueryGenerationToken?
+    /// Undo is disabled on this Linux in-memory port. The setter is ignored so
+    /// `undo()` / `redo()` stay no-ops (measured: Apple still posts undo
+    /// registrations when an UndoManager is attached; we do not invent that).
+    public var undoManager: UndoManager? {
+        get { nil }
+        set { _ = newValue }
+    }
 
     public weak var persistentStoreCoordinator: NSPersistentStoreCoordinator?
     public weak var parent: NSManagedObjectContext? {
         didSet {
+            if let observer = _parentSaveObserver {
+                NotificationCenter.default.removeObserver(observer)
+                _parentSaveObserver = nil
+            }
             if let parent {
                 persistentStoreCoordinator = parent.persistentStoreCoordinator
+                _parentSaveObserver = NotificationCenter.default.addObserver(
+                    forName: .NSManagedObjectContextDidSave,
+                    object: parent,
+                    queue: nil
+                ) { [weak self] note in
+                    guard let self, self.automaticallyMergesChangesFromParent else { return }
+                    self.perform {
+                        self.mergeChanges(fromContextDidSave: note)
+                    }
+                }
             }
         }
     }
@@ -62,6 +83,8 @@ open class NSManagedObjectContext: NSObject, NSLocking {
     private var _updated: [ObjectIdentifier: NSManagedObject] = [:]
     private var _deleted: [ObjectIdentifier: NSManagedObject] = [:]
     private var _registered: [String: NSManagedObject] = [:]
+    private var _parentSaveObserver: NSObjectProtocol?
+    private var _fetchedResultsControllers: [_CDWeakBox] = []
 
     public var insertedObjects: Set<NSManagedObject> { Set(_inserted.values) }
     public var updatedObjects: Set<NSManagedObject> { Set(_updated.values) }
@@ -181,15 +204,48 @@ open class NSManagedObjectContext: NSObject, NSLocking {
         _postChange()
     }
 
+    public func withLock<R>(_ body: () throws -> R) rethrows -> R {
+        try _runImmediate(body)
+    }
+
     public func delete(_ object: NSManagedObject) {
         lock()
         defer { unlock() }
+        _delete(object, propagating: true)
+    }
+
+    private func _delete(_ object: NSManagedObject, propagating: Bool) {
+        if object.isDeleted { return }
         object.prepareForDeletion()
+        if propagating && propagatesDeletesAtEndOfEvent {
+            _applyDeleteRules(for: object)
+        }
         object.isDeleted = true
         _deleted[ObjectIdentifier(object)] = object
         _inserted.removeValue(forKey: ObjectIdentifier(object))
         _updated.removeValue(forKey: ObjectIdentifier(object))
         _postChange()
+    }
+
+    private func _applyDeleteRules(for object: NSManagedObject) {
+        for relationship in object.entity.relationshipsByName.values {
+            let related = _CDRelatedObjects(object.primitiveValue(forKey: relationship.name))
+            switch relationship.deleteRule {
+            case .cascadeDeleteRule:
+                for target in related {
+                    _delete(target, propagating: true)
+                }
+            case .nullifyDeleteRule:
+                if let inverse = relationship.inverseRelationship {
+                    for target in related {
+                        _CDRemoveInverse(on: target, inverse: inverse, of: object)
+                    }
+                }
+                object.setPrimitiveValue(relationship.isToMany ? Set<NSManagedObject>() : nil, forKey: relationship.name)
+            case .denyDeleteRule, .noActionDeleteRule:
+                break
+            }
+        }
     }
 
     func _noteUpdated(_ object: NSManagedObject) {
@@ -273,10 +329,17 @@ open class NSManagedObjectContext: NSObject, NSLocking {
     }
 
     public func refresh(_ object: NSManagedObject, mergeChanges flag: Bool) {
-        if flag { return }
+        if flag {
+            if object.isFault {
+                _fulfillFault(object)
+            }
+            object.awake(fromSnapshotEvents: .refresh)
+            return
+        }
         object.willTurnIntoFault()
         object.isFault = true
         object.didTurnIntoFault()
+        object.awake(fromSnapshotEvents: .refresh)
     }
 
     public func reset() {
@@ -345,9 +408,22 @@ open class NSManagedObjectContext: NSObject, NSLocking {
                 userInfo: [
                     NSInsertedObjectsKey: inserted,
                     NSUpdatedObjectsKey: updated,
-                    NSDeletedObjectsKey: deleted
+                    NSDeletedObjectsKey: deleted,
+                    NSInsertedObjectIDsKey: Set(inserted.map(\.objectID)),
+                    NSUpdatedObjectIDsKey: Set(updated.map(\.objectID)),
+                    NSDeletedObjectIDsKey: Set(deleted.map(\.objectID))
                 ]
             )
+            NotificationCenter.default.post(
+                name: Self.didSaveObjectIDsNotification,
+                object: self,
+                userInfo: [
+                    NSInsertedObjectIDsKey: Set(inserted.map(\.objectID)),
+                    NSUpdatedObjectIDsKey: Set(updated.map(\.objectID)),
+                    NSDeletedObjectIDsKey: Set(deleted.map(\.objectID))
+                ]
+            )
+            _notifyFetchedResultsControllers()
         }
     }
 
@@ -369,11 +445,30 @@ open class NSManagedObjectContext: NSObject, NSLocking {
     }
 
     public func count(for request: NSFetchRequest<any NSFetchRequestResult>) throws -> Int {
-        try fetch(request).count
+        let counting = NSFetchRequest<any NSFetchRequestResult>()
+        counting.entity = request.entity
+        counting._entityName = request.entityName ?? request._entityName
+        counting.predicate = request.predicate
+        counting.includesPendingChanges = request.includesPendingChanges
+        counting.includesSubentities = request.includesSubentities
+        counting.affectedStores = request.affectedStores
+        counting.resultType = .countResultType
+        let result = try fetch(counting)
+        if let number = result.first as? NSNumber {
+            return number.intValue
+        }
+        return result.count
     }
 
     public func count<T>(for request: NSFetchRequest<T>) throws -> Int {
-        try fetch(request).count
+        let untyped = NSFetchRequest<any NSFetchRequestResult>()
+        untyped.entity = request.entity
+        untyped._entityName = request.entityName ?? request._entityName
+        untyped.predicate = request.predicate
+        untyped.includesPendingChanges = request.includesPendingChanges
+        untyped.includesSubentities = request.includesSubentities
+        untyped.affectedStores = request.affectedStores
+        return try count(for: untyped)
     }
 
     public func fetch<T>(_ request: NSFetchRequest<T>) throws -> [T] {
@@ -423,17 +518,12 @@ open class NSManagedObjectContext: NSObject, NSLocking {
             }
 
             if let predicate = request.predicate {
-                objects = objects.filter { predicate.evaluate(with: $0) }
+                objects = objects.filter { _CDMatchesPredicate(predicate, object: $0) }
             }
 
             if let descriptors = request.sortDescriptors, !descriptors.isEmpty {
                 objects.sort { lhs, rhs in
-                    for descriptor in descriptors {
-                        let order = descriptor.compare(lhs, to: rhs)
-                        if order == .orderedAscending { return true }
-                        if order == .orderedDescending { return false }
-                    }
-                    return false
+                    _CDSort(lhs, rhs, descriptors: descriptors)
                 }
             }
 
@@ -466,22 +556,42 @@ open class NSManagedObjectContext: NSObject, NSLocking {
 
     public func mergeChanges(fromContextDidSave notification: Notification) {
         guard let userInfo = notification.userInfo else { return }
-        if let inserted = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject> {
-            for object in inserted {
-                _ = self.object(with: object.objectID)
-            }
-        }
-        if let updated = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject> {
-            for object in updated {
-                refresh(object, mergeChanges: true)
-            }
-        }
-        if let deleted = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject> {
-            for object in deleted {
-                if let registered = registeredObject(for: object.objectID) {
-                    refresh(registered, mergeChanges: false)
+        performAndWait {
+            if let inserted = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject> {
+                for object in inserted {
+                    _ = self.object(with: object.objectID)
+                    if let registered = self.registeredObject(for: object.objectID) {
+                        registered._applyBoxedSnapshot(object._snapshotValues(), trackChanges: false)
+                    }
                 }
             }
+            if let updated = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject> {
+                for object in updated {
+                    if let registered = self.registeredObject(for: object.objectID) {
+                        if registered.isFault {
+                            self._fulfillFault(registered)
+                        }
+                        try? _CDApplyMergePolicy(
+                            self.mergePolicy,
+                            object: registered,
+                            incoming: object._snapshotValues()
+                        )
+                    }
+                }
+            }
+            if let deleted = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject> {
+                for object in deleted {
+                    if let registered = registeredObject(for: object.objectID) {
+                        refresh(registered, mergeChanges: false)
+                    }
+                }
+            }
+            NotificationCenter.default.post(
+                name: Self.didMergeChangesObjectIDsNotification,
+                object: self,
+                userInfo: userInfo
+            )
+            _notifyFetchedResultsControllers()
         }
     }
 
@@ -633,7 +743,25 @@ open class NSManagedObjectContext: NSObject, NSLocking {
         for name in object.entity.attributesByName.keys {
             snapshot[name] = _CDBox(object.primitiveValue(forKey: name))
         }
+        for (name, relationship) in object.entity.relationshipsByName {
+            snapshot[name] = _CDStoreRelationshipValue(
+                object.primitiveValue(forKey: name),
+                isToMany: relationship.isToMany
+            )
+        }
         target._applyBoxedSnapshot(snapshot, trackChanges: trackChanges)
+    }
+
+    func _registerFetchedResultsController(_ controller: NSObject) {
+        _fetchedResultsControllers.removeAll { $0.value == nil }
+        _fetchedResultsControllers.append(_CDWeakBox(value: controller))
+    }
+
+    private func _notifyFetchedResultsControllers() {
+        _fetchedResultsControllers.removeAll { $0.value == nil }
+        for box in _fetchedResultsControllers {
+            (box.value as? _CDFetchedResultsControllerNotifying)?.controllerDidObserveContextSave()
+        }
     }
 
     private func _pushToStore() throws {
@@ -750,6 +878,15 @@ private func _cdUnwrapResult<T>(_ result: Result<T, Error>) throws -> T {
     case .failure(let error):
         throw error
     }
+}
+
+final class _CDWeakBox {
+    weak var value: NSObject?
+    init(value: NSObject?) { self.value = value }
+}
+
+protocol _CDFetchedResultsControllerNotifying: AnyObject {
+    func controllerDidObserveContextSave()
 }
 
 extension Notification.Name {
