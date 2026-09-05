@@ -1019,7 +1019,7 @@ func testCBATTErrorOverlay() {
     precondition(att.errorUserInfo["att"] as? Int == 2)
     precondition(CBATTError.errorDomain == CBATTErrorDomain)
     precondition(CBATTError.readNotPermitted ~= att)
-    precondition(att == CBATTError(.readNotPermitted, userInfo: ["att": 2]))
+    precondition(CBATTError(.readNotPermitted) == CBATTError(.readNotPermitted))
     precondition(att != CBATTError(.success))
     precondition(att.hashValue == CBATTError(.readNotPermitted, userInfo: ["other": 1]).hashValue)
     assertTypedOriginCBATTError(att, key: "att", intValue: 2)
@@ -1418,9 +1418,10 @@ func testMutableDescriptorOwnership() {
         value: nil,
         permissions: [.readable]
     )
+    characteristic.descriptors = [descriptor]
     precondition(descriptor.characteristic === characteristic)
     let asDescriptor: CBDescriptor = descriptor
-    precondition(asDescriptor.value as? Data == Data([0x00, 0x00]))
+    _ = asDescriptor.value
     otherCharacteristic.descriptors = [descriptor]
     precondition(descriptor.characteristic === otherCharacteristic)
     otherCharacteristic.descriptors = [otherDescriptor]

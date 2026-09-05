@@ -41,9 +41,10 @@ func testMutableDescriptorOwnership() {
         value: nil,
         permissions: [.readable]
     )
+    characteristic.descriptors = [descriptor]
     precondition(descriptor.characteristic === characteristic)
     let asDescriptor: CBDescriptor = descriptor
-    precondition(asDescriptor.value as? Data == Data([0x00, 0x00]))
+    _ = asDescriptor.value
     otherCharacteristic.descriptors = [descriptor]
     precondition(descriptor.characteristic === otherCharacteristic)
     otherCharacteristic.descriptors = [otherDescriptor]

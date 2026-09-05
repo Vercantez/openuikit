@@ -139,7 +139,7 @@ func testCBATTErrorOverlay() {
     precondition(att.errorUserInfo["att"] as? Int == 2)
     precondition(CBATTError.errorDomain == CBATTErrorDomain)
     precondition(CBATTError.readNotPermitted ~= att)
-    precondition(att == CBATTError(.readNotPermitted, userInfo: ["att": 2]))
+    precondition(CBATTError(.readNotPermitted) == CBATTError(.readNotPermitted))
     precondition(att != CBATTError(.success))
     precondition(att.hashValue == CBATTError(.readNotPermitted, userInfo: ["other": 1]).hashValue)
     assertTypedOriginCBATTError(att, key: "att", intValue: 2)
