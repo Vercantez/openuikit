@@ -614,9 +614,10 @@ open class UIView: UIResponder, CALayerDelegate {
     public var isHidden = false
     public var isOpaque = true
     /// iOS 26 liquid-glass chrome (tab-bar / toolbar / bar-button platters,
-    /// floating sheet). The Canvas backdrop-filter path applies
-    /// `_UIGlassMaterial`; Catalyst ignores the flag.
-    var _usesIOSGlass = false
+    /// floating sheet, SwiftUI `.glassEffect` on the iOS cut). The Canvas
+    /// backdrop-filter path applies `_UIGlassMaterial`; Catalyst ignores
+    /// the flag. Public so the SwiftUI module can set it.
+    public var _usesIOSGlass = false
     /// Clip path for `_UIGlassMaterial`. Bar platters are capsules; the
     /// floating sheet overrides with independent top/bottom radii.
     func _iosGlassPath(in bounds: CGRect) -> Path {

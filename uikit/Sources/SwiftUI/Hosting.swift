@@ -943,23 +943,11 @@ private final class _SwiftUINavigationNodeController: UIViewController {
     private func applyNavigationMetadata() {
         title = configuration.title
         navigationItem.hidesBackButton = configuration.backButtonHidden
-        guard let toolbar = configuration.toolbar else {
-            toolbarHost = nil
-            navigationItem.rightBarButtonItem = nil
-            return
-        }
-        let host: _SwiftUIHostingView
-        if let existing = toolbarHost {
-            existing.node = toolbar
-            host = existing
-        } else {
-            host = _SwiftUIHostingView(node: toolbar)
-            host.accessibilityIdentifier = "SwiftUI.NavigationStack.toolbar"
-            toolbarHost = host
-        }
-        host.frame = CGRect(x: 0, y: 0, width: 120, height: 44)
-        host.layoutIfNeeded()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: host)
+        toolbarHost = _openApplyNavigationChrome(
+            to: navigationItem,
+            configuration: configuration,
+            existingTitleHost: toolbarHost
+        )
     }
 }
 
@@ -1102,6 +1090,214 @@ final class _SwiftUINavigationStackController: UINavigationController,
     }
 }
 
+/// MEASURED realapp_hackers_feed_light, iPhone 16 @3x / iOS 26.1:
+/// `_UINavigationBarTitleControl` / HostedViewWrapper is 36 pt tall at
+/// bar-local y 4 (centre 22). Inner glass is 44 pt at y = −4.
+private let _openIOSToolbarTitleViewHeight: CGFloat = 36
+
+@MainActor
+private func _openToolbarEntries(
+    _ node: _OpenViewNode
+) -> [(ToolbarItemPlacement, _OpenViewNode)] {
+    var result: [(ToolbarItemPlacement, _OpenViewNode)] = []
+    func visit(_ node: _OpenViewNode) {
+        switch node.kind {
+        case .empty:
+            break
+        case .group(let children):
+            children.forEach(visit)
+        case .modified(let content, let modification):
+            if case .toolbarItem(let placement) = modification {
+                result.append((placement, content))
+            } else {
+                result.append((.automatic, node))
+            }
+        default:
+            result.append((.automatic, node))
+        }
+    }
+    visit(node)
+    return result
+}
+
+@MainActor
+private func _openNodeIsSpacer(_ node: _OpenViewNode) -> Bool {
+    switch node.kind {
+    case .spacer:
+        return true
+    case .modified(let content, _):
+        return _openNodeIsSpacer(content)
+    default:
+        return false
+    }
+}
+
+@MainActor
+private func _openFirstSystemImageName(in node: _OpenViewNode) -> String? {
+    switch node.kind {
+    case .image(let source):
+        if case .system(let name) = source { return name }
+        return nil
+    case .modified(let content, _):
+        return _openFirstSystemImageName(in: content)
+    case .group(let children), .hStack(let children, _, _),
+         .vStack(let children, _, _), .zStack(let children, _):
+        for child in children {
+            if let name = _openFirstSystemImageName(in: child) { return name }
+        }
+        return nil
+    case .button(let label, _, _, _), .menu(let label, _, _),
+         .navigationLink(let label, _), .link(let label, _),
+         .toggle(let label, _, _):
+        return _openFirstSystemImageName(in: label)
+    default:
+        return nil
+    }
+}
+
+@MainActor
+private func _openFirstButtonAction(
+    in node: _OpenViewNode
+) -> (@MainActor () -> Void)? {
+    switch node.kind {
+    case .button(_, _, _, let action):
+        return action
+    case .modified(let content, _):
+        return _openFirstButtonAction(in: content)
+    case .group(let children), .hStack(let children, _, _),
+         .vStack(let children, _, _), .zStack(let children, _):
+        for child in children {
+            if let action = _openFirstButtonAction(in: child) { return action }
+        }
+        return nil
+    default:
+        return nil
+    }
+}
+
+@MainActor
+private func _openImageBarButtonItem(from node: _OpenViewNode) -> UIBarButtonItem? {
+    guard let name = _openFirstSystemImageName(in: node) else { return nil }
+    // Only the search system item is a vector we can draw. Other SF names
+    // (gearshape, xmark) stay SwiftUI custom views so tests still find
+    // `SwiftUI.Image.systemName.*`, sitting in a 44×44 glass platter.
+    guard name == "magnifyingglass" else { return nil }
+    let item = UIBarButtonItem(barButtonSystemItem: .search, target: nil, action: nil)
+    if let action = _openFirstButtonAction(in: node) {
+        item.primaryAction = UIAction(title: "", handler: { _ in action() })
+    }
+    item._isolatesPlatter = true
+    return item
+}
+
+@MainActor
+private func _openCustomBarButtonItem(from node: _OpenViewNode) -> UIBarButtonItem {
+    let host = _SwiftUIHostingView(node: node)
+    let isImage = _openFirstSystemImageName(in: node) != nil
+    let size = host.intrinsicContentSize
+    let width = isImage ? _UIBarMetrics.platterHeight : max(44, min(120, size.width))
+    host.frame = CGRect(x: 0, y: 0, width: width, height: 44)
+    host.layoutIfNeeded()
+    let item = UIBarButtonItem(customView: host)
+    if isImage {
+        // MEASURED realapp_hackers_feed_light settings `[277, 0, 44, 44]`.
+        item._showsPlatterWithCustomView = true
+        item._isolatesPlatter = true
+    }
+    return item
+}
+
+@MainActor
+private func _openApplyNavigationChrome(
+    to item: UINavigationItem,
+    configuration: _OpenNavigationConfiguration,
+    existingTitleHost: _SwiftUIHostingView?
+) -> _SwiftUIHostingView? {
+    var leading: [UIBarButtonItem] = []
+    var trailing: [UIBarButtonItem] = []
+    var principal: _OpenViewNode?
+    var titleHost = existingTitleHost
+
+    if let toolbar = configuration.toolbar {
+        for (placement, content) in _openToolbarEntries(toolbar) {
+            if placement == .bottomBar { continue }
+            if _openNodeIsSpacer(content) { continue }
+            if placement == .principal {
+                principal = content
+                continue
+            }
+            let barItem = _openImageBarButtonItem(from: content)
+                ?? _openCustomBarButtonItem(from: content)
+            if placement == .navigationBarLeading
+                || placement == .cancellationAction {
+                leading.append(barItem)
+            } else {
+                trailing.append(barItem)
+            }
+        }
+    }
+
+    if configuration.searchIsToolbar {
+        // MEASURED realapp_hackers_feed_light, iPhone 16 @3x / iOS 26.1:
+        // `.searchable(..., placement: .toolbar)` +
+        // `.searchToolbarBehavior(.minimize)` is a 44×44 trailing-most
+        // platter at `[333, 0]` (side margin 16), not a UISearchBar in the
+        // content. Probe /tmp/glass-navplatters: a
+        // `navigationItem.searchController` is a bottom 48 pt field
+        // `[28, 835, 337, 48]` — a different spelling.
+        let searchItem = UIBarButtonItem(
+            barButtonSystemItem: .search, target: nil, action: nil)
+        searchItem._isolatesPlatter = true
+        trailing.insert(searchItem, at: 0)
+    }
+
+    if let principal {
+        let host: _SwiftUIHostingView
+        if let existing = titleHost {
+            existing.node = principal
+            host = existing
+        } else {
+            host = _SwiftUIHostingView(node: principal)
+            host.accessibilityIdentifier = "SwiftUI.Navigation.titleView"
+            titleHost = host
+        }
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            host.collapsesToolbarVerticalPadding = true
+            var environment = _RenderEnvironment.default
+            environment.collapsesToolbarVerticalPadding = true
+            let size = _ViewRenderer.measure(
+                principal,
+                proposed: CGSize(width: 10_000, height: 10_000),
+                environment: environment
+            )
+            host.frame = CGRect(
+                x: 0,
+                y: 0,
+                width: size.width,
+                height: _openIOSToolbarTitleViewHeight
+            )
+        } else {
+            host.collapsesToolbarVerticalPadding = false
+            let size = host.intrinsicContentSize
+            host.frame = CGRect(
+                x: 0,
+                y: 0,
+                width: max(44, size.width),
+                height: 44
+            )
+        }
+        host.layoutIfNeeded()
+        item.titleView = host
+    } else {
+        titleHost = nil
+        item.titleView = nil
+    }
+
+    item.leftBarButtonItems = leading.isEmpty ? nil : leading
+    item.rightBarButtonItems = trailing.isEmpty ? nil : trailing
+    return titleHost
+}
+
 /// OpenUIKit-backed host for the SwiftUI tree and its retained dynamic state.
 @preconcurrency @MainActor
 open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
@@ -1119,6 +1315,8 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
     private var hostIsVisible = false
     private var appliedRootNavigationTitle: String?
     private var appliedRootBackButtonHidden = false
+    private var appliedSwiftUINavigationChrome = false
+    private var navigationChromeTitleHost: _SwiftUIHostingView?
     private var lastAppliedAnimation: Animation?
 
     public var rootView: Content {
@@ -1167,6 +1365,15 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
             navigationItem.hidesBackButton = configuration.backButtonHidden
         }
         appliedRootBackButtonHidden = configuration.backButtonHidden
+        let hasChrome = configuration.toolbar != nil || configuration.searchIsToolbar
+        if hasChrome || appliedSwiftUINavigationChrome {
+            navigationChromeTitleHost = _openApplyNavigationChrome(
+                to: navigationItem,
+                configuration: configuration,
+                existingTitleHost: navigationChromeTitleHost
+            )
+            appliedSwiftUINavigationChrome = hasChrome
+        }
         return node
     }
 
@@ -1554,6 +1761,8 @@ private func _openAppearanceActions(
 @MainActor
 private final class _SwiftUIHostingView: UIView {
     var didCompleteLayout: (@MainActor () -> Void)?
+    /// See `_RenderEnvironment.collapsesToolbarVerticalPadding`.
+    var collapsesToolbarVerticalPadding = false
     var node: _OpenViewNode {
         didSet { setNeedsLayout() }
     }
@@ -1567,6 +1776,12 @@ private final class _SwiftUIHostingView: UIView {
 
     required init?(coder: NSCoder) {
         nil
+    }
+
+    private var renderEnvironment: _RenderEnvironment {
+        var environment = _RenderEnvironment.default
+        environment.collapsesToolbarVerticalPadding = collapsesToolbarVerticalPadding
+        return environment
     }
 
     override func layoutSubviews() {
@@ -1587,7 +1802,7 @@ private final class _SwiftUIHostingView: UIView {
         }
         clipsToBounds = false
         layer.cornerRadius = 0
-        _ViewRenderer.place(node, in: bounds, on: self, environment: .default)
+        _ViewRenderer.place(node, in: bounds, on: self, environment: renderEnvironment)
         didCompleteLayout?()
     }
 
@@ -1595,7 +1810,18 @@ private final class _SwiftUIHostingView: UIView {
         _ViewRenderer.measure(
             node,
             proposed: CGSize(width: 10_000, height: 10_000),
-            environment: .default
+            environment: renderEnvironment
+        )
+    }
+
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        _ViewRenderer.measure(
+            node,
+            proposed: CGSize(
+                width: size.width > 0 ? size.width : 10_000,
+                height: size.height > 0 ? size.height : 10_000
+            ),
+            environment: renderEnvironment
         )
     }
 }
@@ -1641,6 +1867,11 @@ private struct _RenderEnvironment {
     var scrollIndicatorVisibility: Visibility = .automatic
     var listStyle: ListStyle = .automatic
     var menuIndicatorVisibility: Visibility = .automatic
+    /// MEASURED realapp_hackers_feed_light, iPhone 16 @3x: the principal
+    /// `HostedViewWrapper` is 36 pt (`_UINavigationBarTitleControl`); the
+    /// label's `.padding(.vertical, 16)` around a 44 pt glass capsule is
+    /// collapsed so the glass centres at y = −4 inside that 36 pt host.
+    var collapsesToolbarVerticalPadding = false
 
     static let `default` = _RenderEnvironment()
 }
@@ -2222,8 +2453,11 @@ private enum _ViewRenderer {
                 let amount = max(0, length ?? 16)
                 let horizontal = (edges.contains(.leading) ? amount : 0)
                     + (edges.contains(.trailing) ? amount : 0)
-                let vertical = (edges.contains(.top) ? amount : 0)
+                var vertical = (edges.contains(.top) ? amount : 0)
                     + (edges.contains(.bottom) ? amount : 0)
+                if environment.collapsesToolbarVerticalPadding {
+                    vertical = 0
+                }
                 let inner = CGSize(
                     width: max(0, proposed.width - horizontal),
                     height: max(0, proposed.height - vertical)
@@ -2306,7 +2540,8 @@ private enum _ViewRenderer {
                 return measure(content, proposed: proposed, environment: environment)
             case .effect, .navigationTitle, .navigationBarHidden,
                  .navigationBackButtonHidden, .navigationTitleDisplayMode,
-                 .navigationDestination, .toolbar, .tag, .pageTabViewStyle:
+                 .navigationDestination, .toolbar, .toolbarItem, .tag,
+                 .pageTabViewStyle:
                 return measure(content, proposed: proposed, environment: environment)
             }
         }
@@ -3272,12 +3507,16 @@ private enum _ViewRenderer {
                 )
             case .padding(let edges, let length):
                 let amount = max(0, length ?? 16)
-                let inset = UIEdgeInsets(
+                var inset = UIEdgeInsets(
                     top: edges.contains(.top) ? amount : 0,
                     left: edges.contains(.leading) ? amount : 0,
                     bottom: edges.contains(.bottom) ? amount : 0,
                     right: edges.contains(.trailing) ? amount : 0
                 )
+                if environment.collapsesToolbarVerticalPadding {
+                    inset.top = 0
+                    inset.bottom = 0
+                }
                 place(content, in: rect.inset(by: inset), on: surface, environment: environment)
             case .edgeInsetsPadding(let insets):
                 place(
@@ -3627,19 +3866,56 @@ private enum _ViewRenderer {
                 surface.addSubview(host)
                 place(content, in: host.bounds, on: host, environment: environment)
             case .glassEffect:
-                let effectView = UIVisualEffectView(
-                    effect: UIBlurEffect(style: .systemMaterial)
-                )
-                effectView.frame = rect
-                effectView.accessibilityIdentifier = "SwiftUI.GlassEffect"
-                surface.addSubview(effectView)
-                effectView.layoutIfNeeded()
-                place(
-                    content,
-                    in: effectView.contentView.bounds,
-                    on: effectView.contentView,
-                    environment: environment
-                )
+                if OpenUIKitRuntime.systemFontCut == .iOS {
+                    // MEASURED realapp_hackers_feed_light +
+                    // /tmp/glass-navplatters, iPhone 16 @3x / iOS 26.1:
+                    // SwiftUI `.glassEffect(.regular.interactive(), in:
+                    // .capsule)` is `UIPlatformGlassInteractionView` 44
+                    // tall, r = height/2, overflowing the 36 pt
+                    // `_UINavigationBarTitleControl` (host y 4, glass y
+                    // −4). Fill / ring / σ match `_UIGlassMaterial`. A
+                    // UIKit `UIBarButtonItem` with `menu` is a regular
+                    // title platter `[16, 0, 62, 44]`, not this capsule.
+                    // Mix is not retuned for probe frost 198 over filled
+                    // black (same as glass_navbar_iphone16_black Back);
+                    // Focus Done over the unpainted bar is 220.
+                    let measured = measure(
+                        content,
+                        proposed: rect.size,
+                        environment: environment
+                    )
+                    let glassRect = alignedRect(
+                        size: CGSize(width: measured.width, height: measured.height),
+                        in: rect,
+                        alignment: .center
+                    )
+                    let glass = UIView(frame: glassRect)
+                    glass.isOpaque = false
+                    glass.backgroundColor = _UIBarMetrics.platterFill
+                    glass._usesIOSGlass = true
+                    glass.layer.cornerRadius = min(glassRect.width, glassRect.height) / 2
+                    glass.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+                    glass.layer.shadowOpacity = _UIBarMetrics.shadowOpacity
+                    glass.layer.shadowRadius = _UIBarMetrics.shadowRadius
+                    glass.layer.shadowOffset = _UIBarMetrics.shadowOffset
+                    glass.accessibilityIdentifier = "SwiftUI.GlassEffect"
+                    surface.addSubview(glass)
+                    place(content, in: glass.bounds, on: glass, environment: environment)
+                } else {
+                    let effectView = UIVisualEffectView(
+                        effect: UIBlurEffect(style: .systemMaterial)
+                    )
+                    effectView.frame = rect
+                    effectView.accessibilityIdentifier = "SwiftUI.GlassEffect"
+                    surface.addSubview(effectView)
+                    effectView.layoutIfNeeded()
+                    place(
+                        content,
+                        in: effectView.contentView.bounds,
+                        on: effectView.contentView,
+                        environment: environment
+                    )
+                }
             case .buttonBorderShape(let shape):
                 let host = _SwiftUIPassthroughView(frame: rect)
                 switch shape.storage {
@@ -3869,7 +4145,8 @@ private enum _ViewRenderer {
             case .effect, .toolbarVisibility, .toolbarBackgroundVisibility,
                  .navigationTitle, .navigationBarHidden,
                  .navigationBackButtonHidden, .navigationTitleDisplayMode,
-                 .navigationDestination, .toolbar, .tag, .pageTabViewStyle:
+                 .navigationDestination, .toolbar, .toolbarItem, .tag,
+                 .pageTabViewStyle:
                 // NavigationView consumes this metadata while building its
                 // node.  Outside a NavigationView it leaves content intact.
                 place(content, in: rect, on: surface, environment: environment)
