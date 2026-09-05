@@ -1,0 +1,132 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave3-repair-5",
+    "maxActive": 16,
+    "maxRuns": 8
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "coredata": {
+      "agentId": "bc-e86f4081-f1d5-56c2-bc4f-19801f391a2d",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T21:08:34Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/80",
+      "expectedPriorHead": "24912ca7b74c6f195e88b7d0c3bcb775bd1bfa9d",
+      "idempotencyKey": "cf716ae5-817e-5dbf-b7cc-5b47446c4069",
+      "launchStatus": "SENT",
+      "module": "CoreData",
+      "promptBytes": 1247,
+      "promptSha256": "4b349bd381834652a170818f031fed9d0c384fffb3223a745ca5cd82194b062d",
+      "runId": "run-a0548706-b0d1-404c-a2fc-7db74b6cd118",
+      "runStatus": "running",
+      "slug": "coredata"
+    },
+    "healthkit": {
+      "agentId": "bc-1db7a2f3-56f7-5958-b8bf-cec54b17b7a7",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T21:08:40Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/101",
+      "expectedPriorHead": "e265036b77dcf5eb43f04185a3cfe7655b862e28",
+      "idempotencyKey": "e39a1268-0e6d-5a95-9596-0995bafabf3f",
+      "launchStatus": "SENT",
+      "module": "HealthKit",
+      "promptBytes": 1397,
+      "promptSha256": "b6e4500b65327d72afd34741d38f248e0c0c84b691eb0a169a964f241acdeafe",
+      "runId": "run-6e9ebcb4-8b6d-4b4f-9db4-af8b53e298b5",
+      "runStatus": "running",
+      "slug": "healthkit"
+    },
+    "metal": {
+      "agentId": "bc-e15b3b30-edf2-5908-a10c-f8374b3ba3e4",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T21:08:45Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/106",
+      "expectedPriorHead": "49dd3e06bf979488b27c80ca9e6860ecca24d648",
+      "idempotencyKey": "331c8097-0cb8-537d-b79b-0dba4626f594",
+      "launchStatus": "SENT",
+      "module": "Metal",
+      "promptBytes": 1322,
+      "promptSha256": "3f9f966b54999116cbefa9316023bf009215ff26c2a40a49fb5594b39d560fa2",
+      "runId": "run-240d6a07-18aa-4338-8aeb-4858f26680b6",
+      "runStatus": "running",
+      "slug": "metal"
+    },
+    "networkextension": {
+      "agentId": "bc-3650b62f-cc31-5a45-8ffe-4bbe8e052083",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T21:08:50Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/108",
+      "expectedPriorHead": "e28edda4059d97c67cf46e05673de58d8a55a79e",
+      "idempotencyKey": "cc70daa1-1b72-5199-b846-75982c4b9c3b",
+      "launchStatus": "SENT",
+      "module": "NetworkExtension",
+      "promptBytes": 1400,
+      "promptSha256": "e9335ce81095519dfda32241680f5547a74f745661a1abe26bbb814e183f5a8d",
+      "runId": "run-bdfe32c5-91f1-41db-acc4-42c7110faedd",
+      "runStatus": "running",
+      "slug": "networkextension"
+    },
+    "scenekit": {
+      "agentId": "bc-44a79d2a-d724-5bb2-9e93-e1901ca29da7",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T21:08:55Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/109",
+      "expectedPriorHead": "98d149fdb41e4d66123bbd1c625b44cd069be9f7",
+      "idempotencyKey": "36043746-3252-514f-8f4e-30ae0a3a9d18",
+      "launchStatus": "SENT",
+      "module": "SceneKit",
+      "promptBytes": 1366,
+      "promptSha256": "552adb236c366a942a5f08e499df2ba3782a78e91bf01cdf011fe2313ea7f249",
+      "runId": "run-fa0ff8da-5e37-4a2d-b43d-4891a0191418",
+      "runStatus": "running",
+      "slug": "scenekit"
+    },
+    "speech": {
+      "agentId": "bc-12204320-2cc8-50bc-b38f-e16e3d90d6d1",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T21:09:03Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/105",
+      "expectedPriorHead": "a1542254a6ad791567daa6de42267501a83a62b2",
+      "idempotencyKey": "202eda26-a0e4-59cb-8a02-17b171c63733",
+      "launchStatus": "SENT",
+      "module": "Speech",
+      "promptBytes": 1339,
+      "promptSha256": "19838cd6f57657ac23381a6b2d851629b67b2f46057b3009bd05974e86db1005",
+      "runId": "run-af14bde1-dce1-4c5a-800a-5d82ea2621b7",
+      "runStatus": "running",
+      "slug": "speech"
+    },
+    "videotoolbox": {
+      "agentId": "bc-1e382eb0-7322-5c4b-bbab-6d299dcab726",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-05T21:09:19Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/102",
+      "expectedPriorHead": "047307c452b8095851dacbff8629a4a4bfdbefe4",
+      "idempotencyKey": "c7b55ce8-ce6b-56b8-8399-269b5a38e3fc",
+      "launchStatus": "SENT",
+      "module": "VideoToolbox",
+      "promptBytes": 1375,
+      "promptSha256": "39fa1ad6b9b50d333a3ac78ddc5b74563d862e179a29b6e4cbfaf3c3636a6cbf",
+      "runId": "run-93bf61bf-144e-4288-9812-490222a9a3c9",
+      "runStatus": "running",
+      "slug": "videotoolbox"
+    },
+    "vision": {
+      "agentId": "bc-6e5ae8bb-d249-5c34-9639-175039106043",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/107",
+      "expectedPriorHead": "dd1e8715f8817a0ed9872b456051fde61daa5fe1",
+      "idempotencyKey": "5143fd9b-675b-5149-82b8-7a14f095dd20",
+      "launchStatus": "PENDING",
+      "module": "Vision",
+      "promptBytes": 1340,
+      "promptSha256": "595be289e5c72661d01a508827ac1c8c27aed385eabe56c912375c249b9b8c7c",
+      "slug": "vision"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}
