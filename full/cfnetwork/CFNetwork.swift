@@ -274,11 +274,14 @@ public final class CFHTTPMessage: Hashable {
     var httpVersion: String
     var method: String?
     var url: CFURL?
+    var requestTarget: String?
     var statusCode: CFIndex
     var statusReason: String?
     var headers: [(name: String, value: String)]
     var body: CFData?
     var parseBuffer: [UInt8]
+    var cachedHeaderBytes: [UInt8]?
+    var headersDirty: Bool
 
     init(
         isRequestMessage: Bool,
@@ -286,6 +289,7 @@ public final class CFHTTPMessage: Hashable {
         httpVersion: String,
         method: String? = nil,
         url: CFURL? = nil,
+        requestTarget: String? = nil,
         statusCode: CFIndex = 0,
         statusReason: String? = nil
     ) {
@@ -294,11 +298,14 @@ public final class CFHTTPMessage: Hashable {
         self.httpVersion = httpVersion
         self.method = method
         self.url = url
+        self.requestTarget = requestTarget
         self.statusCode = statusCode
         self.statusReason = statusReason
         self.headers = []
         self.body = nil
         self.parseBuffer = []
+        self.cachedHeaderBytes = nil
+        self.headersDirty = true
     }
 
     public static func == (left: CFHTTPMessage, right: CFHTTPMessage) -> Bool {
@@ -315,6 +322,13 @@ public final class CFHTTPAuthentication: Hashable {
     var scheme: String
     var realm: String?
     var domains: [String]
+    var nonce: String?
+    var opaque: String?
+    var qopOptions: [String]
+    var algorithm: String
+    var stale: Bool
+    var charset: String?
+    var nonceCount: Int
     var isValidAuthentication: Bool
     var requiresUserPassword: Bool
     var requiresAccountDomain: Bool
@@ -324,6 +338,12 @@ public final class CFHTTPAuthentication: Hashable {
         scheme: String,
         realm: String?,
         domains: [String] = [],
+        nonce: String? = nil,
+        opaque: String? = nil,
+        qopOptions: [String] = [],
+        algorithm: String = "MD5",
+        stale: Bool = false,
+        charset: String? = nil,
         isValidAuthentication: Bool,
         requiresUserPassword: Bool,
         requiresAccountDomain: Bool = false,
@@ -332,6 +352,13 @@ public final class CFHTTPAuthentication: Hashable {
         self.scheme = scheme
         self.realm = realm
         self.domains = domains
+        self.nonce = nonce
+        self.opaque = opaque
+        self.qopOptions = qopOptions
+        self.algorithm = algorithm
+        self.stale = stale
+        self.charset = charset
+        self.nonceCount = 0
         self.isValidAuthentication = isValidAuthentication
         self.requiresUserPassword = requiresUserPassword
         self.requiresAccountDomain = requiresAccountDomain
