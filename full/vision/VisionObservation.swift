@@ -5,6 +5,7 @@ open class VNObservation: NSObject, NSCopying, NSSecureCoding {
 
     public let uuid: UUID
     public let confidence: VNConfidence
+    public var timeRange: CMTimeRange = .zero
 
     public init(uuid: UUID = UUID(), confidence: VNConfidence = 1) {
         self.uuid = uuid
@@ -31,6 +32,7 @@ open class VNObservation: NSObject, NSCopying, NSSecureCoding {
 
 open class VNDetectedObjectObservation: VNObservation {
     public let boundingBox: CGRect
+    public var globalSegmentationMask: VNPixelBufferObservation?
 
     public convenience init(boundingBox: CGRect) {
         self.init(requestRevision: VNRequestRevisionUnspecified, boundingBox: boundingBox)
@@ -352,5 +354,205 @@ open class VNHumanBodyPose3DObservation: VNObservation {
     public enum HeightEstimation: Int, CaseIterable, Sendable {
         case reference = 0
         case measured = 1
+    }
+}
+
+open class VNContoursObservation: VNObservation {
+    public let topLevelContours: [VNContour]
+
+    public var topLevelContourCount: Int { topLevelContours.count }
+
+    public var contourCount: Int {
+        topLevelContours.reduce(0) { $0 + 1 + countContours($1.childContours) }
+    }
+
+    public var normalizedPath: CGPath {
+        let path = CGPath()
+        for contour in topLevelContours {
+            appendContour(contour, to: path)
+        }
+        return path
+    }
+
+    public init(topLevelContours: [VNContour], confidence: VNConfidence = 1, uuid: UUID = UUID()) {
+        self.topLevelContours = topLevelContours
+        super.init(uuid: uuid, confidence: confidence)
+    }
+
+    public required init?(coder: NSCoder) {
+        topLevelContours = []
+        super.init(coder: coder)
+    }
+
+    public func contour(at contourIndex: Int) throws -> VNContour {
+        let flat = flatten(topLevelContours)
+        guard flat.indices.contains(contourIndex) else {
+            throw vnMakeError(.outOfBoundsError, description: "contourIndex")
+        }
+        return flat[contourIndex]
+    }
+
+    public func contour(at indexPath: IndexPath) throws -> VNContour {
+        guard let first = indexPath.first else {
+            throw vnMakeError(.invalidArgument, description: "empty indexPath")
+        }
+        var current = try topLevelIndex(first)
+        for component in indexPath.dropFirst() {
+            current = try current.childContour(at: component)
+        }
+        return current
+    }
+
+    private func topLevelIndex(_ index: Int) throws -> VNContour {
+        guard topLevelContours.indices.contains(index) else {
+            throw vnMakeError(.outOfBoundsError, description: "indexPath")
+        }
+        return topLevelContours[index]
+    }
+}
+
+open class VNFeaturePrintObservation: VNObservation {
+    public let elementType: VNElementType
+    public let data: Data
+
+    public var elementCount: Int {
+        let size = max(1, VNElementTypeSize(elementType))
+        return data.count / size
+    }
+
+    public init(
+        elementType: VNElementType,
+        data: Data,
+        confidence: VNConfidence = 1,
+        uuid: UUID = UUID()
+    ) {
+        self.elementType = elementType
+        self.data = data
+        super.init(uuid: uuid, confidence: confidence)
+    }
+
+    public required init?(coder: NSCoder) {
+        elementType = .float
+        data = Data()
+        super.init(coder: coder)
+    }
+
+    public func computeDistance(
+        _ outDistance: UnsafeMutablePointer<Float>,
+        to featurePrint: VNFeaturePrintObservation
+    ) throws {
+        guard elementType == featurePrint.elementType else {
+            throw vnMakeError(.invalidArgument, description: "feature print element type")
+        }
+        guard elementCount == featurePrint.elementCount else {
+            throw vnMakeError(.invalidArgument, description: "feature print length")
+        }
+        if elementType == .float {
+            let lhs = data.withUnsafeBytes { Array($0.bindMemory(to: Float.self)) }
+            let rhs = featurePrint.data.withUnsafeBytes { Array($0.bindMemory(to: Float.self)) }
+            var sum: Float = 0
+            for index in 0..<min(lhs.count, rhs.count) {
+                let delta = lhs[index] - rhs[index]
+                sum += delta * delta
+            }
+            outDistance.pointee = sum.squareRoot()
+            return
+        }
+        throw vnMakeError(.notImplemented, description: "non-float feature print distance")
+    }
+}
+
+open class VNImageAlignmentObservation: VNObservation {}
+
+open class VNImageTranslationAlignmentObservation: VNImageAlignmentObservation {
+    public let alignmentTransform: CGAffineTransform
+
+    public init(alignmentTransform: CGAffineTransform, confidence: VNConfidence = 1, uuid: UUID = UUID()) {
+        self.alignmentTransform = alignmentTransform
+        super.init(uuid: uuid, confidence: confidence)
+    }
+
+    public required init?(coder: NSCoder) {
+        alignmentTransform = .identity
+        super.init(coder: coder)
+    }
+}
+
+open class VNImageHomographicAlignmentObservation: VNImageAlignmentObservation {
+    public var warpTransform: matrix_float3x3 = .identity
+}
+
+open class VNPixelBufferObservation: VNObservation {
+    public let pixelBuffer: CVPixelBuffer
+    public let featureName: String?
+
+    public init(
+        pixelBuffer: CVPixelBuffer,
+        featureName: String? = nil,
+        confidence: VNConfidence = 1,
+        uuid: UUID = UUID()
+    ) {
+        self.pixelBuffer = pixelBuffer
+        self.featureName = featureName
+        super.init(uuid: uuid, confidence: confidence)
+    }
+
+    public required init?(coder: NSCoder) {
+        pixelBuffer = CVPixelBuffer(width: 0, height: 0)
+        featureName = nil
+        super.init(coder: coder)
+    }
+}
+
+open class VNClassificationObservation: VNObservation {
+    public let identifier: String
+
+    public init(identifier: String, confidence: VNConfidence, uuid: UUID = UUID()) {
+        self.identifier = identifier
+        super.init(uuid: uuid, confidence: confidence)
+    }
+
+    public required init?(coder: NSCoder) {
+        identifier = ""
+        super.init(coder: coder)
+    }
+}
+
+open class VNHorizonObservation: VNObservation {
+    public var angle: Double = 0
+}
+
+open class VNHumanObservation: VNDetectedObjectObservation {
+    public var upperBodyOnly: Bool = false
+}
+
+open class VNInstanceMaskObservation: VNObservation {}
+open class VNSaliencyImageObservation: VNPixelBufferObservation {}
+open class VNRecognizedObjectObservation: VNDetectedObjectObservation {}
+open class VNImageAestheticsScoresObservation: VNObservation {}
+open class VNTrajectoryObservation: VNObservation {}
+
+private func countContours(_ contours: [VNContour]) -> Int {
+    contours.reduce(0) { $0 + 1 + countContours($1.childContours) }
+}
+
+private func flatten(_ contours: [VNContour]) -> [VNContour] {
+    var output: [VNContour] = []
+    for contour in contours {
+        output.append(contour)
+        output.append(contentsOf: flatten(contour.childContours))
+    }
+    return output
+}
+
+private func appendContour(_ contour: VNContour, to path: CGPath) {
+    guard let first = contour.normalizedPoints.first else { return }
+    path.move(to: CGPoint(x: Double(first.x), y: Double(first.y)))
+    for point in contour.normalizedPoints.dropFirst() {
+        path.addLine(to: CGPoint(x: Double(point.x), y: Double(point.y)))
+    }
+    path.closeSubpath()
+    for child in contour.childContours {
+        appendContour(child, to: path)
     }
 }

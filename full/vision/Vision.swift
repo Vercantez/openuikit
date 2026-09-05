@@ -30,6 +30,20 @@ public let VNDetectDocumentSegmentationRequestRevision1: Int = 1
 public let VNGenerateAttentionBasedSaliencyImageRequestRevision1: Int = 1
 public let VNGenerateAttentionBasedSaliencyImageRequestRevision2: Int = 2
 
+public let VNClassifyImageRequestRevision1: Int = 1
+public let VNClassifyImageRequestRevision2: Int = 2
+public let VNCoreMLRequestRevision1: Int = 1
+/// Public graph spelling omits the plural *s* used by the class name.
+public let VNDetectContourRequestRevision1: Int = 1
+public let VNDetectContoursRequestRevision1: Int = VNDetectContourRequestRevision1
+public let VNDetectHumanBodyPoseRequestRevision1: Int = 1
+public let VNGenerateImageFeaturePrintRequestRevision1: Int = 1
+public let VNGenerateImageFeaturePrintRequestRevision2: Int = 2
+public let VNHomographicImageRegistrationRequestRevision1: Int = 1
+public let VNTrackObjectRequestRevision1: Int = 1
+public let VNTrackObjectRequestRevision2: Int = 2
+public let VNTranslationalImageRegistrationRequestRevision1: Int = 1
+
 /// Identity rectangle in Vision's normalized coordinate space.
 public let VNNormalizedIdentityRect = CGRect(x: 0, y: 0, width: 1, height: 1)
 
@@ -50,5 +64,47 @@ public enum VisionHost {
 
     public static func makeError(_ code: VNErrorCode, description: String? = nil) -> NSError {
         vnMakeError(code, description: description)
+    }
+
+    public static func makeCGImage(width: Int, height: Int, rgba: [UInt8]) -> CGImage {
+        CGImage(width: width, height: height, pixels: rgba)
+    }
+
+    public static func encodeNetpbm(_ image: CGImage) -> Data {
+        VisionRaster(cgImage: image).netpbmData()
+    }
+
+    public static func encodeRaw(_ image: CGImage) -> Data {
+        VisionImageCodec.encodeRaw(VisionRaster(cgImage: image))
+    }
+
+    public static func makeQRImage(payload: String, moduleSize: Int = 4, quietZone: Int = 4) throws -> CGImage {
+        try QRCode.encode(payload).raster(moduleSize: moduleSize, quietZone: quietZone).makeCGImage()
+    }
+
+    public static func makeCode128Image(
+        payload: String,
+        moduleWidth: Int = 2,
+        barHeight: Int = 48,
+        quiet: Int = 16
+    ) throws -> CGImage {
+        try Code128.encode(payload).raster(
+            moduleWidth: moduleWidth,
+            barHeight: barHeight,
+            quiet: quiet
+        ).makeCGImage()
+    }
+
+    public static func makeEAN13Image(
+        payload: String,
+        moduleWidth: Int = 2,
+        barHeight: Int = 48,
+        quiet: Int = 16
+    ) throws -> CGImage {
+        try EAN13.encode(payload).raster(
+            moduleWidth: moduleWidth,
+            barHeight: barHeight,
+            quiet: quiet
+        ).makeCGImage()
     }
 }
