@@ -22,7 +22,14 @@ extension AppIntentsPackage {
 
 public protocol AppIntentsExtension: AppExtension {}
 
-public protocol OpenIntent: SystemIntent {}
+public protocol OpenIntent: SystemIntent {
+    associatedtype Value: AppEntity
+    var target: Value { get set }
+}
+
+extension OpenIntent {
+    public static var openAppWhenRun: Bool { true }
+}
 
 public protocol DeleteIntent: SystemIntent {}
 
