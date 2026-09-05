@@ -75,9 +75,10 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     // (always `.large` here) — MEASURED dtmetrics probe, iPhone 16 /
     // iOS 26.1: icons stay 24×24 at every window override.
     //
-    // `userInterfaceIdiom: .pad` is the iPad (A16) row
-    // (realapp_settings_light_ipad): form-sheet geometry, nav/table
-    // chrome and readable-width margins all key off this trait.
+        // `userInterfaceIdiom: .pad` is the iPad (A16) rows
+        // (realapp_settings_light_ipad / history / storage): form-sheet
+        // geometry, nav/table chrome and readable-width margins all key
+        // off this trait.
     UITraitCollection.current = UITraitCollection(
         userInterfaceStyle: variant.style,
         displayScale: scale,
