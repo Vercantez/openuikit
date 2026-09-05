@@ -49,6 +49,21 @@ open class NSFileProviderDomain: NSObject, @unchecked Sendable {
         self.userEnabled = true
         super.init()
     }
+
+    open override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? NSFileProviderDomain else { return false }
+        return identifier == other.identifier
+            && displayName == other.displayName
+            && pathRelativeToDocumentStorage == other.pathRelativeToDocumentStorage
+    }
+
+    open override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(identifier)
+        hasher.combine(displayName)
+        hasher.combine(pathRelativeToDocumentStorage)
+        return hasher.finalize()
+    }
 }
 
 /// Monotonic domain version used as a change token.
@@ -89,6 +104,15 @@ open class NSFileProviderDomainVersion: NSObject, NSSecureCoding, Comparable, @u
         rhs: NSFileProviderDomainVersion
     ) -> Bool {
         lhs.generation < rhs.generation
+    }
+
+    open override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? NSFileProviderDomainVersion else { return false }
+        return generation == other.generation
+    }
+
+    open override var hash: Int {
+        Int(truncatingIfNeeded: generation)
     }
 }
 

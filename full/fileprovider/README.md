@@ -7,6 +7,56 @@ cloud runner's Foundation only. That isolated gate is **not** integrated
 Linux success with guest CoreGraphics / UniformTypeIdentifiers / Foundation
 XPC types.
 
+## Depth pass 2026-09
+
+This pass implements the app-side manager and a **process-local in-process
+provider host**. It is not `fileproviderd`, Files.app, or an NSExtension.
+Coverage is 568 `implemented` / 2 `deferred` of 570 exact IDs.
+
+What the local host does:
+
+- `NSFileProviderManager.add` / `remove` / `domains()` /
+  `getDomainsWithCompletionHandler` persist domains as JSON under the port
+  documents directory and post `NSFileProviderDomainDidChange`.
+- `init(for:)` / `init(forDomain:)` return a manager only for a registered
+  domain. `temporaryDirectoryURL` is a real directory under provider storage.
+- `getUserVisibleURL` / `getIdentifierForUserVisibleFile` map items to a
+  per-domain mount under that documents tree. Paths outside the mount fail
+  closed with `noSuchItem` / `providerDomainNotFound`.
+- `signalEnumerator(for:)` delivers `enumerateChanges` to enumerators created
+  by the local replicated extension. `waitForChanges` / `waitForStabilization`
+  drain in-flight mutations.
+- `reimportItems`, `evictItem`, `requestModification`, and
+  `requestDownloadForItem` call the local `NSFileProviderReplicatedExtension`.
+- Create / modify / delete honor `NSFileProviderItemFields`,
+  `mayAlreadyExist`, `deletionConflicted`, `failOnConflict`, recursive delete,
+  `directoryNotEmpty`, and `filenameCollision`.
+- `NSFileProviderPage.initialPageSortedByName` / `SortedByDate` are the UTF-8
+  ObjC symbol names; enumerators sort and page from those sentinels.
+- `NSFileProviderItemIdentifier.rootContainer` /
+  `trashContainer` / `workingSet` use the exact ObjC identifier strings.
+- Testing-mode domains (`alwaysEnabled` / `interactive`) list and run the
+  declared `NSFileProviderTestingOperation` shapes.
+- `NSFileProviderDomain` / `NSFileProviderDomainIdentifier` /
+  `NSFileProviderDomainVersion` use identifier/generation value equality;
+  domain versions round-trip `NSSecureCoding`.
+
+Fail-closed in this pass (unchanged honesty):
+
+- `getService` / `NSFileProviderServiceSource` XPC. No local
+  `NSFileProviderService` class. `makeListenerEndpoint` stays deferred until
+  guest Foundation vends `NSXPCListenerEndpoint`.
+- `NSFileProviderItem.contentType` stays deferred until
+  UniformTypeIdentifiers is on the compile path.
+- `NSFileProviderExtension` action methods (legacy appex) still throw
+  `applicationExtensionNotFound` / `providerNotFound`. Thumbnails return no
+  image data.
+- `fileProviderMaterializedSetDidChange` and
+  `fileProviderPendingSetDidChange` are never posted.
+- Placeholder writes persist Linux JSON sidecars, not Apple placeholder
+  files. Exact Apple page/anchor bytes and `beforeFirstSyncComponent` remain
+  oracle questions.
+
 ## What is real (isolated gate)
 
 - Identifier newtypes, option sets, content policy, testing-operation enums,
@@ -14,25 +64,17 @@ XPC types.
 - `NSFileProviderDomain` values, monotonic `NSFileProviderDomainVersion`,
   `NSFileProviderItemVersion`, and `NSFileProviderRequest`.
 - `NSFileProviderItemProtocol` (except `contentType`, deferred here),
-  enumerator / observer protocols, and fail-closed `NSFileProviderExtension`.
+  enumerator / observer protocols, and fail-closed `NSFileProviderExtension`
+  appex actions.
 - `NSFileProviderManager.placeholderURL(for:)` as a local URL transform.
-- Completion-handler APIs (`removeAllDomains`, identifier lookup, `getService`,
-  stabilization, download, thumbnails) deliver **asynchronously, exactly once**,
-  and fail closed without a host adapter.
+- Completion-handler APIs deliver **asynchronously, exactly once**.
 
 ## Fail-closed boundaries
 
-Public manager add/remove/list/import and daemon operations throw
-`NSFileProviderError.providerNotFound` (or a more specific code) unless a
-Linux host installs `@_spi(OpenUIKitHost) FileProviderHostAdapter` via
-`NSFileProviderManager._installHostAdapter`. Public APIs do **not** post
-`fileProviderDomainDidChange` on the unhosted path and do **not** write
-Apple-compatible placeholder files. JSON sidecars live only on
-`NSFileProviderManager._writeLinuxPlaceholderJSON` (host SPI).
-
-`enumeratorForMaterializedItems()` and `enumeratorForPendingItems()` return
-enumerators that finish with `providerNotFound`; they never report a successful
-empty system set.
+XPC services, Files.app materialized/pending daemon notifications, and the
+legacy application-extension host are not fabricated. Public `getService`
+throws `NSFileProviderError.providerNotFound`. Extension create/rename/
+trash/import paths throw `applicationExtensionNotFound`.
 
 `NSXPCListenerEndpoint` and `NSFileProviderService` are not FileProvider-owned
 in the canonical graph (no class identifier, no TBD export) and are not
@@ -44,6 +86,11 @@ configuration used by the future EC2 identity run), service-source and
 Testing helpers absent from the graph (`NSFileProviderMemoryEnumerator`,
 `NSFileProviderCollectingObserver`, `NSFileProviderEnumeratedItem`) are not
 part of this module.
+
+A host may still replace the local registry through
+`@_spi(OpenUIKitHost) FileProviderHostAdapter` via
+`NSFileProviderManager._installHostAdapter`. Passing `nil` restores the
+process-local host.
 
 ## Future EC2 dependency identity
 
@@ -58,7 +105,7 @@ isolated host gate. A later clean EC2 run must:
 4. Pass `Foundation.NSXPCListenerEndpoint`, `CoreGraphics.CGSize`, and
    `UniformTypeIdentifiers.UTType` through public APIs, exercise protocol
    existentials, prove callback non-reentrancy / exactly-once delivery, and
-   verify manager registration fails closed without a host adapter.
+   verify `getService` remains fail-closed without XPC.
 5. Run with `LD_LIBRARY_PATH` and confirm `libFileProvider.dylib` loaded
    after `FILEPROVIDER_DEPENDENCY_IDENTITY_OK`.
 
