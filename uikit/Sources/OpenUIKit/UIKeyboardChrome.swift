@@ -58,6 +58,11 @@ public enum _UIKeyboardChrome {
     /// SE default keyboard + QuickType. MEASURED Forms t1200 / kbprobe
     /// keyboardFrameEnd height, iPhone SE 2x / iOS 26.1.
     public static let overlap: CGFloat = 260
+    /// Compact-height (SE landscapeLeft 667×375) alphabetic + QuickType.
+    /// MEASURED Forms t1200.landscape golden (simctl shot rotated 90° CW),
+    /// iPhone SE 2x / iOS 26.1: panel top y=169, 375−169=206; table
+    /// `adjustedContentInset.bottom` **206**.
+    public static let compactOverlap: CGFloat = 206
     /// Number pad has no QuickType. MEASURED kbstateprobe numberpad,
     /// iPhone SE 2x / iOS 26.1: frameEnd [0, 434, 375, 233].
     public static let numberPadOverlap: CGFloat = 233
@@ -89,7 +94,8 @@ public enum _UIKeyboardChrome {
 
     /// Height of the keyboard currently shown, or the SE alphabetic 260.
     /// Phone number pad is 233 (kbstateprobe numberpad). Pad docked
-    /// alphabetic is 337 (kbstateprobe iPad has_text).
+    /// alphabetic is 337 (kbstateprobe iPad has_text). Compact-height
+    /// alphabetic is 206 (Forms t1200.landscape).
     public static var currentOverlap: CGFloat {
         attached?.panel.state.overlap ?? overlap
     }
@@ -371,6 +377,9 @@ final class _UIKeyboardPanel: UIView {
         } else if state.isPad {
             buildPadAlphabetic(width: width, shifted: state.shifted,
                                 returnStyle: state.returnStyle)
+        } else if state.isCompactHeight {
+            buildPhoneLandscapeAlphabetic(width: width, shifted: state.shifted,
+                                           returnStyle: state.returnStyle)
         } else {
             buildPhoneAlphabetic(width: width, shifted: state.shifted,
                                   returnStyle: state.returnStyle)
@@ -468,6 +477,69 @@ final class _UIKeyboardPanel: UIView {
         // panel 226; dark mid (54, 54, 58) over panel ~27.
         addQuickTypeDivider(x: 125.5 * sx)
         addQuickTypeDivider(x: 247.5 * sx)
+    }
+
+    /// Compact-height alphabetic (SE landscapeLeft 667×375).
+    /// MEASURED Forms t1200.landscape golden after 90° CW, iPhone SE 2x /
+    /// iOS 26.1: panel [0, 169, 667, 206]; letter 47×32; v-gap 8; left
+    /// 72; row y 219 / 259 / 299 / 339; QT 50 (row1−panelTop); dividers
+    /// x 221.5 / 443.5, y 14–36 panel-local (window 183–205).
+    func buildPhoneLandscapeAlphabetic(width: CGFloat, shifted: Bool,
+                                       returnStyle: _UIKeyboardResolved.ReturnStyle) {
+        let sx = width / 667
+        let kh: CGFloat = 32
+        let y0: CGFloat = 50
+        let gap: CGFloat = 8
+        let letters: [[String]] = [
+            ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+            ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+            ["Z", "X", "C", "V", "B", "N", "M"],
+        ]
+        let row1X: [CGFloat] = [72, 125, 178, 230.5, 283.5, 336.5, 389.5, 442.5, 495, 548]
+        let row1W: [CGFloat] = [47, 47, 46.5, 47, 47, 47, 47, 46.5, 47, 47]
+        let row2X: [CGFloat] = [98.5, 151.5, 204.5, 257, 310, 363, 416, 469, 521.5]
+        let row2W: [CGFloat] = [47, 47, 46.5, 47, 47, 47, 47, 46.5, 47]
+        let row3LetterX: [CGFloat] = [151.5, 204.5, 257, 310, 363, 416, 469]
+        let row3LetterW: [CGFloat] = [47, 46.5, 47, 47, 47, 47, 46.5]
+
+        func letterText(_ s: String) -> String {
+            _UIKeyboardPanel.folded(s, up: shifted)
+        }
+        func addLetter(text: String, x: CGFloat, y: CGFloat, w: CGFloat) {
+            let key = _UIKeyboardKey(kind: .letter)
+            key.frame = CGRect(x: x * sx, y: y, width: w * sx, height: kh)
+            key.installLabel(letterText(text), size: _UIKeyboardChrome.letterFontSize)
+            addSubview(key)
+        }
+        var i = 0
+        while i < letters[0].count {
+            addLetter(text: letters[0][i], x: row1X[i], y: y0, w: row1W[i])
+            i += 1
+        }
+        i = 0
+        while i < letters[1].count {
+            addLetter(text: letters[1][i], x: row2X[i], y: y0 + kh + gap, w: row2W[i])
+            i += 1
+        }
+        let y3 = y0 + 2 * (kh + gap)
+        addGlyph(shifted ? .shiftOn : .shiftOff, x: 72 * sx, y: y3, w: 63 * sx, h: kh)
+        i = 0
+        while i < letters[2].count {
+            addLetter(text: letters[2][i], x: row3LetterX[i], y: y3, w: row3LetterW[i])
+            i += 1
+        }
+        addGlyph(.delete, x: 532 * sx, y: y3, w: 63 * sx, h: kh)
+
+        let y4 = y0 + 3 * (kh + gap)
+        addDigitKey(x: 72 * sx, y: y4, w: 47 * sx, h: kh)
+        addGlyph(.emoji, x: 125 * sx, y: y4, w: 47 * sx, h: kh)
+        addGlyph(.mic, x: 178 * sx, y: y4, w: 36 * sx, h: kh)
+        let space = _UIKeyboardKey(kind: .space)
+        space.frame = CGRect(x: 220 * sx, y: y4, width: 269 * sx, height: kh)
+        addSubview(space)
+        addReturn(style: returnStyle, x: 495 * sx, y: y4, w: 100 * sx, h: kh)
+        addQuickTypeDivider(x: 221.5 * sx, y: 14, h: 22)
+        addQuickTypeDivider(x: 443.5 * sx, y: 14, h: 22)
     }
 
     /// MEASURED kbstateprobe numberpad, iPhone SE 2x / iOS 26.1:

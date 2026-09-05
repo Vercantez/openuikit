@@ -374,7 +374,8 @@ open class UIScrollView: UIView {
     /// the delta in `adjustedContentInset.bottom` (Forms t1200 vs t200).
     /// Pad: Forms-ipad t1200, iPad (A16) 820×1180 @2x / iOS 26.1: table
     /// `adjustedContentInset.bottom` rest **25** (window SA) → focused
-    /// **337**. Overlap = 337 − 25 = **312**. Phone stays 260.
+    /// **337**. Overlap = 337 − 25 = **312**. Phone portrait stays 260;
+    /// compact-height (SE landscape) is 206 (Forms t1200.landscape).
     static var iOSKeyboardOverlap: CGFloat {
         if OpenUIKitRuntime.systemFontCut == .iOS,
            (UITraitCollection.current.userInterfaceIdiom == .pad

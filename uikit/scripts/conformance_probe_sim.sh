@@ -97,6 +97,19 @@ if [[ -z "$STATE" ]]; then
   xcrun simctl boot "$UDID"
   xcrun simctl bootstatus "$UDID"
 fi
+# Slide to Type / gesture-keyboard onboarding covers the first focused
+# capture on a fresh device (Forms t1200 round-17 golden scored 60.37
+# with "Continue" at [150.5, 627] and 1 view animating). MEASURED
+# merge-keyboard.md + Chromium iossim_util: these four flags in
+# com.apple.keyboard.preferences skip the card. Set every run so a
+# new SIM_DEVICE_SUFFIX device is at rest.
+for flag in DidShowContinuousPathIntroduction \
+            KeyboardDidShowProductivityTutorial \
+            DidShowGestureKeyboardIntroduction \
+            UIKeyboardDidShowInternationalInfoIntroduction; do
+  xcrun simctl spawn "$UDID" defaults write com.apple.keyboard.preferences \
+    "$flag" -bool true >/dev/null 2>&1 || true
+done
 # Landscape: rotate the SE to landscapeLeft BEFORE launch so
 # UIScreen.main.bounds is 667×375 when the window is created. Portrait
 # is restored after the copy so a later portrait recapture on this

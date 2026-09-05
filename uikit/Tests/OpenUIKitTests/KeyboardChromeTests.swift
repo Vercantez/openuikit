@@ -179,4 +179,47 @@ final class KeyboardChromeTests: XCTestCase {
         XCTAssertEqual(focused.pixels[o + 3], 255)
         _ = tf.resignFirstResponder()
     }
+
+    func testCompactHeightUsesMeasuredLandscapePanel() throws {
+        // MEASURED Forms t1200.landscape golden (90° CW), iPhone SE 2x /
+        // iOS 26.1: panel [0, 169, 667, 206], Q at [72, 219, 47, 32].
+        OpenUIKitRuntime.systemFontCut = .iOS
+        let savedBounds = UIScreen.main.bounds
+        let savedScale = UIScreen.main.scale
+        let savedTraits = UITraitCollection.current
+        UIScreen.main._hostConfigure(
+            bounds: CGRect(x: 0, y: 0, width: 667, height: 375), scale: 2)
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light,
+            displayScale: 2,
+            horizontalSizeClass: .compact,
+            verticalSizeClass: .compact)
+        defer {
+            UIScreen.main._hostConfigure(bounds: savedBounds, scale: savedScale)
+            UITraitCollection.current = savedTraits
+        }
+        let w = UIWindow(frame: CGRect(x: 0, y: 0, width: 667, height: 375))
+        w.backgroundColor = .white
+        let tf = UITextField(frame: CGRect(x: 16, y: 80, width: 400, height: 34))
+        w.addSubview(tf)
+        w.layoutIfNeeded()
+        XCTAssertTrue(_UIKeyboardResolved.isCompactHeightPhone())
+        XCTAssertTrue(tf.becomeFirstResponder())
+        let kb = try XCTUnwrap(keyboardWindow())
+        XCTAssertEqual(kb.bounds.size, CGSize(width: 667, height: 375))
+        XCTAssertEqual(kb.restPanelFrame,
+                       CGRect(x: 0, y: 169, width: 667, height: 206))
+        XCTAssertEqual(kb.panel.frame.origin.y, 169, accuracy: 0.01)
+        var q: _UIKeyboardKey?
+        for sub in kb.panel.subviews {
+            guard let key = sub as? _UIKeyboardKey, key.label?.text == "Q" else {
+                continue
+            }
+            q = key
+            break
+        }
+        let key = try XCTUnwrap(q)
+        XCTAssertEqual(key.frame, CGRect(x: 72, y: 50, width: 47, height: 32))
+        _ = tf.resignFirstResponder()
+    }
 }

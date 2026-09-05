@@ -249,6 +249,42 @@ final class KeyboardAvoidanceInsetTests: XCTestCase {
         XCTAssertEqual(table.adjustedContentInset.bottom, 0)
     }
 
+    /// MEASURED Forms t1200.landscape dump `adjustedContentInset.bottom`
+    /// **206**, iPhone SE 2x landscapeLeft / iOS 26.1.
+    func testCompactHeightTableKeyboardOverlapIs206() {
+        let savedCut = OpenUIKitRuntime.systemFontCut
+        let savedBounds = UIScreen.main.bounds
+        let savedScale = UIScreen.main.scale
+        let savedTraits = UITraitCollection.current
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIScreen.main._hostConfigure(
+            bounds: CGRect(x: 0, y: 0, width: 667, height: 375), scale: 2)
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light,
+            displayScale: 2,
+            horizontalSizeClass: .compact,
+            verticalSizeClass: .compact)
+        defer {
+            OpenUIKitRuntime.systemFontCut = savedCut
+            UIScreen.main._hostConfigure(bounds: savedBounds, scale: savedScale)
+            UITraitCollection.current = savedTraits
+        }
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 667, height: 375))
+        let table = UITableView(frame: window.bounds, style: .grouped)
+        let field = UITextField(frame: CGRect(x: 16, y: 10, width: 400, height: 22))
+        table.addSubview(field)
+        window.addSubview(table)
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.adjustedContentInset.bottom, 0)
+        XCTAssertTrue(field.becomeFirstResponder())
+        XCTAssertEqual(table.contentInset.bottom, 0)
+        XCTAssertEqual(table.adjustedContentInset.bottom, 206)
+        _ = field.resignFirstResponder()
+        XCTAssertEqual(table.adjustedContentInset.bottom, 0)
+    }
+
     /// MEASURED Forms-ipad t1200, iPad (A16) 820×1180 @2x / iOS 26.1:
     /// focused table `adjustedContentInset.bottom` **337** vs rest **25**.
     /// Overlap 337 − 25 = **312**. Phone stays 260.

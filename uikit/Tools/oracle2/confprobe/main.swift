@@ -84,6 +84,23 @@ func round3(_ v: CGFloat) -> Double {
 /// extended-range renderer tags Display P3, and PIL/compare.py read the
 /// PNG bytes without converting the ICC (Feed t200 card centre: P3-raw
 /// (78, 121, 211) vs sRGB (64, 122, 217) for UIColor(0.25, 0.48, 0.85)).
+/// `simctl io screenshot` of landscapeLeft is the portrait framebuffer
+/// (SE 750×1334) with the interface rotated 90° CCW. MEASURED Forms
+/// t1200.landscape golden vs drawHierarchy t200.landscape 1334×750,
+/// iPhone SE 2x / iOS 26.1: 90° CW restores the interface bitmap.
+func rotateScreenshot90CW(_ img: UIImage) -> UIImage {
+    guard let cg = img.cgImage else { return img }
+    let oriented = UIImage(cgImage: cg, scale: 1, orientation: .right)
+    let size = CGSize(width: cg.height, height: cg.width)
+    let fmt = UIGraphicsImageRendererFormat()
+    fmt.scale = 1
+    fmt.opaque = true
+    fmt.preferredRange = .standard
+    return UIGraphicsImageRenderer(size: size, format: fmt).image { _ in
+        oriented.draw(in: CGRect(origin: .zero, size: size))
+    }
+}
+
 func normalizedSRGB(_ img: UIImage) -> UIImage {
     guard let cg = img.cgImage else { return img }
     let w = cg.width, h = cg.height
@@ -908,7 +925,14 @@ func capture(at t: Double, frame: Int, link: CADisplayLink,
         let img: UIImage
         if keyboardIsOnScreen(),
            let shot = waitForFramebufferShot(named: pngName) {
-            img = shot
+            // NEED_SHOT writes the raw framebuffer. LandscapeLeft is a
+            // portrait-sized PNG until we rotate (rotateScreenshot90CW).
+            if orientation == "landscape",
+               let cg = shot.cgImage, cg.width < cg.height {
+                img = rotateScreenshot90CW(shot)
+            } else {
+                img = shot
+            }
         } else {
             let fmt = UIGraphicsImageRendererFormat()
             fmt.scale = UIScreen.main.scale
