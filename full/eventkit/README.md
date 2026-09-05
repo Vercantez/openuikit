@@ -75,13 +75,14 @@ See `oracle-questions.tsv`.
 
 ## Depth pass 2026-09
 
-Second pass on `origin/agent/fw-eventkit`. The local on-disk store is
-unchanged. The first pass was refused because every implemented
-`coverage.tsv` row cited `tests/agent/EventKitRuntime.swift` rather than
-a focused test.
+Second pass on `origin/agent/fw-eventkit`, pushed as `agent/fw-eventkit2`.
+The on-disk local store remains Application Support
+`OpenUIKit/EventKit/store.json`. The first pass was refused because every
+implemented `coverage.tsv` row cited `tests/agent/EventKitRuntime.swift`
+rather than a focused test.
 
 **Ledger.** 511 exact IDs: 504 `implemented`, 7 `declared`. Implemented
-evidence uses `test:full/eventkit/tests/agent/*Tests.swift#testFunction`.
+evidence uses `test:full/eventkit/tests/agent/<Family>Tests.swift#testFunction`.
 Declared rows are Linux-host compile-outs, cited as product sources:
 
 - `EKCalendar.cgColor` — needs CoreGraphics
@@ -105,6 +106,18 @@ which invokes every `test*` function):
 | `EventKitErrorTests.swift` | all 38 codes; thrown validation codes |
 | `EventKitTypeTests.swift` | enum raw values, Hashable, OptionSet algebra |
 
+**Host repairs exercised by those tests**
+
+- Persist `store.json` with an atomic write. Linux Foundation's
+  `replaceItemAt` is not a reliable rename; a second authorization grant
+  previously returned `true` without updating reminder status.
+- `EKSpan.thisEvent` save both detaches the instance and records an
+  EXDATE; expansion prefers the detached record so the edited occurrence
+  stays visible.
+- `EKSpan.futureEvents` on a COUNT-limited series keeps the remaining
+  COUNT on the continuation (a 6-occurrence daily split at the fourth
+  instance is 3 + 3, not 3 + 6).
+
 **Gate markers** (Linux host, `bash full/eventkit/tests/acceptance/test_host.sh`):
 
 ```
@@ -114,8 +127,19 @@ EVENTKIT_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=EventKit dylib=libEventKit.dylib
 ```
 
+Exact sealed-gate stdout from this pass:
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+EVENTKIT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=EventKit dylib=libEventKit.dylib
+```
+
 The sealed `test_host.sh` does not print the Swift environment line; that
-marker is recorded here from `swiftc --version` (`Swift version 6.2.4`,
+marker is recorded here from `swift --version` (`Swift version 6.2.4`,
 `Target: x86_64-unknown-linux-gnu`) plus a clean products tree (no
-framework `.build` / `build` / `scratch`). Unresolved Apple-oracle
-questions remain in `oracle-questions.tsv`.
+framework `.build` / `build` / `scratch`).
+`.cursor/verify-cloud-environment.sh` still fails here with
+`missing corpus checkout: scratch/ladder-corpus/focus-ios`; the host
+toolchain itself matches the required Swift 6.2.4 Linux marker.
+Unresolved Apple-oracle questions remain in `oracle-questions.tsv`.
