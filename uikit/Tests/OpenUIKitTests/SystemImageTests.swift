@@ -100,6 +100,71 @@ final class SystemImageTests: XCTestCase {
         XCTAssertEqual(UITabBar.filledSymbolName("calendar"), "calendar")
         XCTAssertEqual(UITabBar.filledSymbolName("plus.circle.fill"),
                        "plus.circle.fill")
+        // MEASURED t2000 golden vs symbolinkprobe, SE 2x / iOS 26.1:
+        // selected clock crop corr 0.999997 with outline `clock`, 0.34
+        // with `clock.fill`. The bar tints the same name.
+        let savedCut = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = savedCut }
+        let item = UITabBarItem(title: "Scroll",
+                                image: UIImage(systemName: "clock"), tag: 0)
+        let selected = try XCTUnwrap(UITabBar.resolvedItemImage(item, selected: true))
+        let unselected = try XCTUnwrap(UITabBar.resolvedItemImage(item, selected: false))
+        XCTAssertEqual(selected.bitmap.pixels, unselected.bitmap.pixels)
+    }
+
+    /// MEASURED symbolinkprobe, iPhone SE 2x / iOS 26.1: opaque-label
+    /// coverage of calendar at 18 pt medium large sums to 243587 over the
+    /// 46×42 ink box, padded to the 58×50 alignment image. iOS cut only.
+    func testTabBarHarvestedSymbolInkMatchesProbe() throws {
+        let savedCut = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        OpenUIKitRuntime.imageScreenScale = 2
+        defer { OpenUIKitRuntime.systemFontCut = savedCut }
+        let configuration = UIImage.SymbolConfiguration(
+            pointSize: 18, weight: .medium, scale: .large)
+        let calendar = try XCTUnwrap(UIImage(systemName: "calendar",
+                                              withConfiguration: configuration))
+        XCTAssertEqual(calendar.size, CGSize(width: 29, height: 25))
+        XCTAssertEqual(calendar.bitmap.width, 58)
+        XCTAssertEqual(calendar.bitmap.height, 50)
+        var inkSum = 0
+        var inkPixels = 0
+        var i = 3
+        while i < calendar.bitmap.pixels.count {
+            let a = Int(calendar.bitmap.pixels[i])
+            if a > 0 { inkSum += a; inkPixels += 1 }
+            i += 4
+        }
+        XCTAssertEqual(inkPixels, 1109)
+        XCTAssertEqual(inkSum, 243587)
+
+        let clockFill = try XCTUnwrap(UIImage(systemName: "clock.fill",
+                                               withConfiguration: configuration))
+        XCTAssertEqual(clockFill.size, CGSize(width: 27.5, height: 27.5))
+        XCTAssertEqual(clockFill.bitmap.width, 55)
+        var fillPixels = 0
+        i = 3
+        while i < clockFill.bitmap.pixels.count {
+            if clockFill.bitmap.pixels[i] > 0 { fillPixels += 1 }
+            i += 4
+        }
+        XCTAssertEqual(fillPixels, 1714)
+
+        OpenUIKitRuntime.imageScreenScale = 3
+        let clock3 = try XCTUnwrap(UIImage(systemName: "clock",
+                                            withConfiguration: configuration))
+        XCTAssertEqual(clock3.bitmap.width, 82)
+        XCTAssertEqual(clock3.bitmap.height, 82)
+        XCTAssertEqual(clock3.size.width, 82 / 3, accuracy: 0.001)
+
+        // Names the table harvested but the procedural set does not carry.
+        XCTAssertNotNil(UIImage(systemName: "house",
+                                withConfiguration: configuration))
+        OpenUIKitRuntime.systemFontCut = .macOS
+        XCTAssertNil(UIImage(systemName: "house",
+                             withConfiguration: configuration))
+        XCTAssertNil(UIImage(systemName: "magnifyingglass"))
     }
 
     func testReminderConfiguredPlusSizeAndAutomaticMode() throws {
