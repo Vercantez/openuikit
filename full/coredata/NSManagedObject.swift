@@ -73,6 +73,8 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
     var _committed: [String: Any] = [:]
     var _changedValues: [String: Any] = [:]
     var _eventChangedValues: [String: Any] = [:]
+    var _relationshipFaults: Set<String> = []
+    var _updatingInverse = false
 
     open class var contextShouldIgnoreUnmodeledPropertyChanges: Bool { true }
 
@@ -145,12 +147,22 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
     open func value(forKey key: String) -> Any? {
         willAccessValue(forKey: key)
         defer { didAccessValue(forKey: key) }
+        if let fetched = entity.propertiesByName[key] as? NSFetchedPropertyDescription,
+           let request = fetched.fetchRequest,
+           let context = managedObjectContext {
+            return try? context.fetch(request)
+        }
         return primitiveValue(forKey: key)
     }
 
     open func setValue(_ value: Any?, forKey key: String) {
         willChangeValue(forKey: key)
+        let old = primitiveValue(forKey: key)
         setPrimitiveValue(value, forKey: key)
+        if let relationship = entity.relationshipsByName[key] {
+            _relationshipFaults.remove(key)
+            _maintainInverse(for: relationship, oldValue: old, newValue: value)
+        }
         didChangeValue(forKey: key)
         if !isInserted && !isDeleted {
             isUpdated = !_changedValues.isEmpty
@@ -162,7 +174,15 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
         if isFault {
             managedObjectContext?._fulfillFault(self)
         }
-        return _values[key]
+        if _relationshipFaults.contains(key) {
+            _fulfillRelationship(named: key)
+        }
+        let stored = _values[key]
+        if stored is _CDRelationshipToken {
+            _fulfillRelationship(named: key)
+            return _values[key]
+        }
+        return stored
     }
 
     open func setPrimitiveValue(_ value: Any?, forKey key: String) {
@@ -189,6 +209,77 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
     open func didAccessValue(forKey key: String?) { _ = key }
     open func willChangeValue(forKey key: String) { _ = key }
     open func didChangeValue(forKey key: String) { _ = key }
+
+    open func willChangeValue(
+        forKey inKey: String,
+        withSetMutation inMutationKind: NSKeyValueSetMutationKind,
+        using inObjects: Set<AnyHashable>
+    ) {
+        _ = (inKey, inMutationKind, inObjects)
+        willChangeValue(forKey: inKey)
+    }
+
+    open func didChangeValue(
+        forKey inKey: String,
+        withSetMutation inMutationKind: NSKeyValueSetMutationKind,
+        using inObjects: Set<AnyHashable>
+    ) {
+        _ = (inKey, inMutationKind, inObjects)
+        didChangeValue(forKey: inKey)
+    }
+
+    /// Linux Foundation has no `AutoreleasingUnsafeMutablePointer`. Validation
+    /// still throws the documented missing-mandatory / count error codes.
+    open func validateValue(
+        _ value: Any?,
+        forKey key: String
+    ) throws {
+        let current = value
+        if let attribute = entity.attributesByName[key] {
+            if current == nil && !attribute.isOptional && attribute.defaultValue == nil {
+                throw _CDMakeError(
+                    NSValidationMissingMandatoryPropertyError,
+                    "missing required attribute \(key)",
+                    userInfo: [NSValidationKeyErrorKey: key]
+                )
+            }
+            for predicate in attribute.validationPredicates {
+                if !predicate.evaluate(with: current) {
+                    throw _CDMakeError(
+                        NSManagedObjectValidationError,
+                        "validation predicate failed for \(key)",
+                        userInfo: [
+                            NSValidationKeyErrorKey: key,
+                            NSValidationPredicateErrorKey: predicate,
+                            NSValidationValueErrorKey: current as Any
+                        ]
+                    )
+                }
+            }
+        }
+        if let relationship = entity.relationshipsByName[key] {
+            let count: Int
+            if let set = current as? Set<AnyHashable> {
+                count = set.count
+            } else if current == nil {
+                count = 0
+            } else {
+                count = 1
+            }
+            if relationship.minCount > 0 && count < relationship.minCount {
+                throw _CDMakeError(
+                    NSValidationRelationshipLacksMinimumCountError,
+                    "\(key) lacks minimum count \(relationship.minCount)"
+                )
+            }
+            if relationship.maxCount > 0 && count > relationship.maxCount {
+                throw _CDMakeError(
+                    NSValidationRelationshipExceedsMaximumCountError,
+                    "\(key) exceeds maximum count \(relationship.maxCount)"
+                )
+            }
+        }
+    }
 
     open func awakeFromInsert() {}
     open func awakeFromFetch() {}
@@ -222,8 +313,8 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
     }
 
     open func hasFault(forRelationshipNamed key: String) -> Bool {
-        _ = key
-        return isFault
+        if isFault { return true }
+        return _relationshipFaults.contains(key) || _values[key] is _CDRelationshipToken
     }
 
     open func objectIDs(forRelationshipNamed key: String) -> [NSManagedObjectID] {
@@ -243,8 +334,8 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
         return []
     }
 
-    open func validateForInsert() throws { try _validateRequiredAttributes() }
-    open func validateForUpdate() throws { try _validateRequiredAttributes() }
+    open func validateForInsert() throws { try _validateRequiredAttributes(); try _validateRelationships() }
+    open func validateForUpdate() throws { try _validateRequiredAttributes(); try _validateRelationships() }
     open func validateForDelete() throws {
         for relationship in entity.relationshipsByName.values where relationship.deleteRule == .denyDeleteRule {
             let related = objectIDs(forRelationshipNamed: relationship.name)
@@ -263,9 +354,69 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
                 throw _CDMakeError(
                     NSValidationMissingMandatoryPropertyError,
                     "missing required attribute \(name)",
-                    userInfo: [NSValidationKeyErrorKey: name]
+                    userInfo: [NSValidationKeyErrorKey: name, NSValidationObjectErrorKey: self]
                 )
             }
+        }
+    }
+
+    private func _validateRelationships() throws {
+        for (name, relationship) in entity.relationshipsByName {
+            let related = objectIDs(forRelationshipNamed: name)
+            if relationship.minCount > 0 && related.count < relationship.minCount {
+                throw _CDMakeError(
+                    NSValidationRelationshipLacksMinimumCountError,
+                    "\(name) lacks minimum count \(relationship.minCount)"
+                )
+            }
+            if relationship.maxCount > 0 && related.count > relationship.maxCount {
+                throw _CDMakeError(
+                    NSValidationRelationshipExceedsMaximumCountError,
+                    "\(name) exceeds maximum count \(relationship.maxCount)"
+                )
+            }
+        }
+    }
+
+    func _fulfillRelationship(named key: String) {
+        guard let context = managedObjectContext,
+              let relationship = entity.relationshipsByName[key] else {
+            _relationshipFaults.remove(key)
+            return
+        }
+        let uris = _CDURIList(from: _values[key])
+        _relationshipFaults.remove(key)
+        if relationship.isToMany {
+            var related: Set<NSManagedObject> = []
+            for uri in uris {
+                if let objectID = context.persistentStoreCoordinator?.managedObjectID(for: uri) {
+                    related.insert(context.object(with: objectID))
+                }
+            }
+            _values[key] = related
+        } else if let uri = uris.first,
+                  let objectID = context.persistentStoreCoordinator?.managedObjectID(for: uri) {
+            _values[key] = context.object(with: objectID)
+        } else {
+            _values.removeValue(forKey: key)
+        }
+    }
+
+    func _maintainInverse(
+        for relationship: NSRelationshipDescription,
+        oldValue: Any?,
+        newValue: Any?
+    ) {
+        guard !_updatingInverse, let inverse = relationship.inverseRelationship else { return }
+        _updatingInverse = true
+        defer { _updatingInverse = false }
+        let oldObjects = _CDRelatedObjects(oldValue)
+        let newObjects = _CDRelatedObjects(newValue)
+        for object in oldObjects.subtracting(newObjects) {
+            _CDRemoveInverse(on: object, inverse: inverse, of: self)
+        }
+        for object in newObjects.subtracting(oldObjects) {
+            _CDAddInverse(on: object, inverse: inverse, of: self)
         }
     }
 
@@ -281,8 +432,8 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
         for name in entity.attributesByName.keys {
             snapshot[name] = _CDBox(_values[name])
         }
-        for name in entity.relationshipsByName.keys {
-            snapshot[name] = _CDBox(_values[name])
+        for (name, relationship) in entity.relationshipsByName {
+            snapshot[name] = _CDStoreRelationshipValue(_values[name], isToMany: relationship.isToMany)
         }
         return snapshot
     }
@@ -295,8 +446,12 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
 
     func _loadPersistentValues(_ stored: [String: Any]) {
         _values.removeAll()
+        _relationshipFaults.removeAll()
         for (key, boxed) in stored {
-            if let value = _CDUnbox(boxed) {
+            if let token = boxed as? _CDRelationshipToken {
+                _values[key] = token
+                _relationshipFaults.insert(key)
+            } else if let value = _CDUnbox(boxed) {
                 _values[key] = value
             }
         }
@@ -306,6 +461,18 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
 
     func _applyBoxedSnapshot(_ snapshot: [String: Any], trackChanges: Bool) {
         for (key, boxed) in snapshot {
+            if let token = boxed as? _CDRelationshipToken {
+                if trackChanges {
+                    _values[key] = token
+                    _relationshipFaults.insert(key)
+                    _changedValues[key] = token
+                    isUpdated = true
+                } else {
+                    _values[key] = token
+                    _relationshipFaults.insert(key)
+                }
+                continue
+            }
             let value = _CDUnbox(boxed)
             if trackChanges {
                 setValue(value, forKey: key)
@@ -337,6 +504,43 @@ func _CDUnbox(_ value: Any?) -> Any? {
         return nil
     }
     return value
+}
+
+func _CDRelatedObjects(_ value: Any?) -> Set<NSManagedObject> {
+    if let object = value as? NSManagedObject {
+        return [object]
+    }
+    if let set = value as? Set<NSManagedObject> {
+        return set
+    }
+    if let objects = value as? [NSManagedObject] {
+        return Set(objects)
+    }
+    return []
+}
+
+func _CDAddInverse(on object: NSManagedObject, inverse: NSRelationshipDescription, of source: NSManagedObject) {
+    if inverse.isToMany {
+        var set = _CDRelatedObjects(object.primitiveValue(forKey: inverse.name))
+        set.insert(source)
+        object.setPrimitiveValue(set, forKey: inverse.name)
+        object._relationshipFaults.remove(inverse.name)
+    } else {
+        object.setPrimitiveValue(source, forKey: inverse.name)
+        object._relationshipFaults.remove(inverse.name)
+    }
+}
+
+func _CDRemoveInverse(on object: NSManagedObject, inverse: NSRelationshipDescription, of source: NSManagedObject) {
+    if inverse.isToMany {
+        var set = _CDRelatedObjects(object.primitiveValue(forKey: inverse.name))
+        set.remove(source)
+        object.setPrimitiveValue(set, forKey: inverse.name)
+        object._relationshipFaults.remove(inverse.name)
+    } else if (object.primitiveValue(forKey: inverse.name) as? NSManagedObject) === source {
+        object.setPrimitiveValue(nil, forKey: inverse.name)
+        object._relationshipFaults.remove(inverse.name)
+    }
 }
 
 func _CDValuesEqual(_ lhs: Any?, _ rhs: Any?) -> Bool {

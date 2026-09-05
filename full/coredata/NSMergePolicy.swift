@@ -20,7 +20,17 @@ open class NSMergePolicy: NSObject {
 
     public func resolve(mergeConflicts list: [Any]) throws {
         if mergeType == .errorMergePolicyType, !list.isEmpty {
-            throw _CDMakeError(NSManagedObjectMergeError, "merge conflicts are not auto-resolved by the error merge policy")
+            throw _CDMakeError(
+                NSManagedObjectMergeError,
+                "merge conflicts are not auto-resolved by the error merge policy",
+                userInfo: [NSPersistentStoreSaveConflictsErrorKey: list]
+            )
+        }
+        for item in list {
+            if let conflict = item as? NSMergeConflict {
+                let incoming = conflict.persistedSnapshot ?? conflict.cachedSnapshot ?? [:]
+                try _CDApplyMergePolicy(self, object: conflict.sourceObject, incoming: incoming)
+            }
         }
     }
 

@@ -89,7 +89,7 @@ open class NSCompositeAttributeDescription: NSAttributeDescription {
 }
 
 open class NSDerivedAttributeDescription: NSAttributeDescription {
-    // NSExpression is deprecated in swift-corelibs-foundation.
+    // NSExpression is deprecated in swift-corelibs-foundation; omitted.
 }
 
 open class NSRelationshipDescription: NSPropertyDescription {
@@ -128,6 +128,7 @@ open class NSFetchedPropertyDescription: NSPropertyDescription {
 }
 
 open class NSExpressionDescription: NSPropertyDescription {
+    // NSExpression is deprecated in swift-corelibs-foundation; omitted.
     public var expressionResultType: NSAttributeType = .undefinedAttributeType
     public var resultType: NSAttributeDescription.AttributeType {
         get { NSAttributeDescription.AttributeType(rawValue: expressionResultType) }

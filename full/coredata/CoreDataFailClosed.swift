@@ -237,11 +237,13 @@ open class NSEntityMapping: NSObject {
     public var relationshipMappings: [NSPropertyMapping]?
     public var entityMigrationPolicyClassName: String?
     public var userInfo: [AnyHashable: Any]?
+    // NSExpression is deprecated in swift-corelibs-foundation; omitted.
 }
 
 open class NSPropertyMapping: NSObject {
     public var name: String?
     public var userInfo: [AnyHashable: Any]?
+    // NSExpression is deprecated in swift-corelibs-foundation; omitted.
 }
 
 open class NSMappingModel: NSObject {
@@ -619,4 +621,25 @@ open class NSIncrementalStore: NSPersistentStore {
     }
 
     open func referenceObject(for objectID: NSManagedObjectID) -> Any { objectID.reference }
+}
+
+open class NSFetchRequestExpression: NSObject {
+    public let isCountOnlyRequest: Bool
+
+    public init(countOnly: Bool) {
+        self.isCountOnlyRequest = countOnly
+        super.init()
+    }
+
+    public init?(coder: NSCoder) {
+        self.isCountOnlyRequest = false
+        super.init()
+        _ = coder
+    }
+
+    /// Linux stand-in: Foundation has no `NSExpression`, so this does not
+    /// claim Apple's `expression(forFetch:context:countOnly:)` signature.
+    open class func expression(countOnly countFlag: Bool) -> NSFetchRequestExpression {
+        NSFetchRequestExpression(countOnly: countFlag)
+    }
 }

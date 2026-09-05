@@ -297,13 +297,16 @@ open class NSFetchedResultsController<ResultType>: NSObject {
         self.sectionNameKeyPath = sectionNameKeyPath
         self.cacheName = name
         super.init()
+        context._registerFetchedResultsController(self)
     }
 
     open class func deleteCache(withName name: String?) { _ = name }
 
     public func performFetch() throws {
+        let previous = fetchedObjects
         let objects = try managedObjectContext.fetch(fetchRequest)
         fetchedObjects = objects
+        let previousSections = sections
         if let keyPath = sectionNameKeyPath {
             var grouped: [String: [ResultType]] = [:]
             var order: [String] = []
@@ -323,7 +326,7 @@ open class NSFetchedResultsController<ResultType>: NSObject {
             sections = order.map { name in
                 _CDFetchedSection(
                     name: name,
-                    indexTitle: String(name.prefix(1)),
+                    indexTitle: sectionIndexTitle(forSectionName: name),
                     objects: grouped[name]
                 )
             }
@@ -332,9 +335,7 @@ open class NSFetchedResultsController<ResultType>: NSObject {
                 _CDFetchedSection(name: "", indexTitle: nil, objects: objects)
             ]
         }
-        if let untyped = self as? NSFetchedResultsController<any NSFetchRequestResult> {
-            delegate?.controllerDidChangeContent(untyped)
-        }
+        _notifyDelegateChanges(previous: previous, previousSections: previousSections, current: objects)
     }
 
     public func object(at indexPath: IndexPath) -> ResultType {
@@ -370,10 +371,117 @@ open class NSFetchedResultsController<ResultType>: NSObject {
     }
 
     public func sectionIndexTitle(forSectionName sectionName: String) -> String? {
-        if let untyped = self as? NSFetchedResultsController<any NSFetchRequestResult> {
-            return delegate?.controller(untyped, sectionIndexTitleForSectionName: sectionName)
+        if let untyped = _untypedController() {
+            if let title = delegate?.controller(untyped, sectionIndexTitleForSectionName: sectionName) {
+                return title
+            }
         }
+        if sectionName.isEmpty { return nil }
         return String(sectionName.prefix(1))
+    }
+
+    private func _untypedController() -> NSFetchedResultsController<any NSFetchRequestResult>? {
+        self as? NSFetchedResultsController<any NSFetchRequestResult>
+    }
+
+    private func _notifyDelegateChanges(
+        previous: [ResultType]?,
+        previousSections: [any NSFetchedResultsSectionInfo]?,
+        current: [ResultType]
+    ) {
+        guard previous != nil else { return }
+        guard let delegate, let untyped = _untypedController() else { return }
+        let oldIDs = _objectIDs(previous)
+        let newIDs = _objectIDs(current)
+        let oldSet = Set(oldIDs)
+        let newSet = Set(newIDs)
+        let deleted = oldIDs.filter { !newSet.contains($0) }
+        let inserted = newIDs.filter { !oldSet.contains($0) }
+        let movedOrUpdated = newIDs.filter { oldSet.contains($0) }
+
+        // Documented FRC callback order used here: willChange, section
+        // deletes/inserts, object deletes, inserts, moves, updates, didChange.
+        delegate.controllerWillChangeContent(untyped)
+
+        let oldSectionNames = previousSections?.map(\.name) ?? []
+        let newSectionNames = sections?.map(\.name) ?? []
+        for (index, name) in oldSectionNames.enumerated() where !newSectionNames.contains(name) {
+            if let info = previousSections?[index] {
+                delegate.controller(untyped, didChange: info, atSectionIndex: index, for: .delete)
+            }
+        }
+        for (index, name) in newSectionNames.enumerated() where !oldSectionNames.contains(name) {
+            if let info = sections?[index] {
+                delegate.controller(untyped, didChange: info, atSectionIndex: index, for: .insert)
+            }
+        }
+
+        for objectID in deleted {
+            if let object = _object(with: objectID, in: previous),
+               let indexPath = _indexPath(of: objectID, in: previous, sections: previousSections) {
+                delegate.controller(untyped, didChange: object, at: indexPath, for: .delete, newIndexPath: nil)
+            }
+        }
+        for objectID in inserted {
+            if let object = _object(with: objectID, in: current),
+               let indexPath = _indexPath(of: objectID, in: current, sections: sections) {
+                delegate.controller(untyped, didChange: object, at: nil, for: .insert, newIndexPath: indexPath)
+            }
+        }
+        for objectID in movedOrUpdated {
+            let oldPath = _indexPath(of: objectID, in: previous, sections: previousSections)
+            let newPath = _indexPath(of: objectID, in: current, sections: sections)
+            if let object = _object(with: objectID, in: current) {
+                if oldPath != newPath {
+                    delegate.controller(untyped, didChange: object, at: oldPath, for: .move, newIndexPath: newPath)
+                } else {
+                    delegate.controller(untyped, didChange: object, at: oldPath, for: .update, newIndexPath: newPath)
+                }
+            }
+        }
+        delegate.controllerDidChangeContent(untyped)
+        if previous != nil {
+            let diff = newIDs.difference(from: oldIDs)
+            delegate.controller(untyped, didChangeContentWith: diff)
+        }
+    }
+
+    private func _objectIDs(_ objects: [ResultType]?) -> [NSManagedObjectID] {
+        guard let objects else { return [] }
+        return objects.compactMap { ($0 as? NSManagedObject)?.objectID }
+    }
+
+    private func _object(with objectID: NSManagedObjectID, in objects: [ResultType]?) -> Any? {
+        objects?.first { ($0 as? NSManagedObject)?.objectID == objectID }
+    }
+
+    private func _indexPath(
+        of objectID: NSManagedObjectID,
+        in objects: [ResultType]?,
+        sections: [any NSFetchedResultsSectionInfo]?
+    ) -> IndexPath? {
+        if let sections {
+            for (sectionIndex, section) in sections.enumerated() {
+                if let items = section.objects {
+                    for (item, candidate) in items.enumerated() {
+                        if (candidate as? NSManagedObject)?.objectID == objectID {
+                            return IndexPath(indexes: [sectionIndex, item])
+                        }
+                    }
+                }
+            }
+        }
+        if let objects,
+           let index = objects.firstIndex(where: { ($0 as? NSManagedObject)?.objectID == objectID }) {
+            return IndexPath(indexes: [index])
+        }
+        return nil
+    }
+}
+
+extension NSFetchedResultsController: _CDFetchedResultsControllerNotifying {
+    func controllerDidObserveContextSave() {
+        try? performFetch()
     }
 }
 
