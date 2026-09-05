@@ -110,13 +110,13 @@
       "launchStatus": "CREATED",
       "module": "AVFAudio",
       "priority": 100,
-      "resultBytes": 1197,
-      "resultSha256": "eb0bca9a7807a4c636a8a3e77cfdd2811b79677bd3b23492ad51f8d8e7e1d3b9",
-      "runCreatedAt": "2026-09-05T19:11:18.755Z",
-      "runDurationMs": 1810482,
-      "runId": "run-3bbdec13-d4ab-42ce-bb23-eb5aab548a6f",
+      "resultBytes": 767,
+      "resultSha256": "8a86b4b43a15af9fa3948ca5a925e5395e6f5157ce200f0390a8dea486ca3d97",
+      "runCreatedAt": "2026-09-05T22:17:29.106Z",
+      "runDurationMs": 669478,
+      "runId": "run-655efc9c-a081-4e11-9d86-5e0ea73c8349",
       "runStatus": "FINISHED",
-      "runUpdatedAt": "2026-09-05T19:41:29.772Z"
+      "runUpdatedAt": "2026-09-05T22:28:39.331Z"
     },
     "carplay": {
       "agentId": "bc-11212748-23b8-581d-a533-8fc8fd2de32c",
@@ -310,13 +310,13 @@
       "launchStatus": "CREATED",
       "module": "CoreData",
       "priority": 100,
-      "resultBytes": 1020,
-      "resultSha256": "eeef4f03b60db1efb907b7ca89622ec8054c2b68b78d319c2b7313682547e439",
-      "runCreatedAt": "2026-09-05T21:08:35.983Z",
-      "runDurationMs": 1289560,
-      "runId": "run-a0548706-b0d1-404c-a2fc-7db74b6cd118",
+      "resultBytes": 806,
+      "resultSha256": "ddf441a995b32336c3a102bb81735c53ed5eb2f1d5bd0569d8654976dbb45c0e",
+      "runCreatedAt": "2026-09-05T22:18:02.096Z",
+      "runDurationMs": 455803,
+      "runId": "run-f7bd2d4c-efe5-4c2b-997e-dd99cfd3e3be",
       "runStatus": "FINISHED",
-      "runUpdatedAt": "2026-09-05T21:30:06.539Z"
+      "runUpdatedAt": "2026-09-05T22:25:38.751Z"
     },
     "coreml": {
       "agentId": "bc-7ca94ace-137d-5727-8cd4-4eae995a0291",
@@ -710,13 +710,13 @@
       "launchStatus": "CREATED",
       "module": "Speech",
       "priority": 100,
-      "resultBytes": 1230,
-      "resultSha256": "cd3e89c3b70b65584e2f1b2d0e06a44dab8249a418abe1635c0ae95f66bf80c0",
-      "runCreatedAt": "2026-09-05T21:09:07.364Z",
-      "runDurationMs": 1225343,
-      "runId": "run-af14bde1-dce1-4c5a-800a-5d82ea2621b7",
+      "resultBytes": 1074,
+      "resultSha256": "effa0f98b09926e53357432aa5f3be6e660f267595558f2046b59ec795e34d4f",
+      "runCreatedAt": "2026-09-05T22:18:07.242Z",
+      "runDurationMs": 422166,
+      "runId": "run-970202b8-ba1f-4779-96ec-b20ade18bb8d",
       "runStatus": "FINISHED",
-      "runUpdatedAt": "2026-09-05T21:29:41.751Z"
+      "runUpdatedAt": "2026-09-05T22:25:10.207Z"
     },
     "videotoolbox": {
       "agentId": "bc-1e382eb0-7322-5c4b-bbab-6d299dcab726",
@@ -746,7 +746,7 @@
     "vision": {
       "agentId": "bc-6e5ae8bb-d249-5c34-9639-175039106043",
       "agentName": "Port Vision to Linux",
-      "agentStatus": "IDLE",
+      "agentStatus": "ACTIVE",
       "agentUrl": "https://cursor.com/agents/bc-6e5ae8bb-d249-5c34-9639-175039106043",
       "branches": [
         {
@@ -762,11 +762,11 @@
       "priority": 100,
       "resultBytes": 2024,
       "resultSha256": "7aaf0e21fc35a4d1a244d990696bd30a442f5f30ca92ace448edd17c22dac53b",
-      "runCreatedAt": "2026-09-05T19:59:46.344Z",
+      "runCreatedAt": "2026-09-05T22:17:50.194Z",
       "runDurationMs": 1810189,
-      "runId": "run-bd58985e-f2dc-47dc-81ba-eecc22be080e",
-      "runStatus": "FINISHED",
-      "runUpdatedAt": "2026-09-05T20:29:57.096Z"
+      "runId": "run-6611c99f-48dd-4fcf-bc9c-6541ea543df1",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-05T22:17:51.208Z"
     }
   },
   "model": {
@@ -779,5 +779,5 @@
     "url": "https://github.com/Vercantez/openuikit-linux-platform"
   },
   "schema": "openuikit.cursor-framework-campaign-state.v1",
-  "updatedAt": "2026-09-05T22:08:40Z"
+  "updatedAt": "2026-09-05T22:31:34Z"
 }
