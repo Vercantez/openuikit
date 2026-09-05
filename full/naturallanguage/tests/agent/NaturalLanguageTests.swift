@@ -497,9 +497,16 @@ func testNLEmbeddingAndModelAppleAssetsUnavailable() {
 }
 
 func testNLContextualEmbeddingUnavailable() {
-    precondition(NLContextualEmbedding(language: .english) == nil)
-    precondition(NLContextualEmbedding(script: .latin) == nil)
-    precondition(NLContextualEmbedding(modelIdentifier: "missing") == nil)
+    let languageEmbedding = NLContextualEmbedding(language: .english)
+    precondition(languageEmbedding != nil)
+    precondition(languageEmbedding?.hasAvailableAssets == false)
+    let scriptEmbedding = NLContextualEmbedding(script: .latin)
+    precondition(scriptEmbedding != nil)
+    precondition(scriptEmbedding?.hasAvailableAssets == false)
+    let identified = NLContextualEmbedding(modelIdentifier: "com.example.missing")
+    precondition(identified != nil)
+    precondition(identified?.modelIdentifier == "com.example.missing")
+    precondition(NLContextualEmbedding(modelIdentifier: "") == nil)
     precondition(
         NLContextualEmbedding.contextualEmbeddings(forValues: [
             .languages: [NLLanguage.english]
@@ -517,15 +524,16 @@ func testNLTaggerTokenRangeHelpers() {
 }
 
 func testNLTaggerRequestAssetsFailClosed() {
-    let semaphore = DispatchSemaphore(value: 0)
     var local: NLTagger.AssetsResult?
     var remote: NLTagger.AssetsResult?
-    Task {
-        local = try await NLTagger.requestAssets(for: .english, tagScheme: .tokenType)
-        remote = try await NLTagger.requestAssets(for: .english, tagScheme: .lemma)
-        semaphore.signal()
+    NLTagger.requestAssets(for: .english, tagScheme: .tokenType) { result, error in
+        local = result
+        precondition(error == nil)
     }
-    precondition(semaphore.wait(timeout: .now() + 5) == .success)
+    NLTagger.requestAssets(for: .english, tagScheme: .lemma) { result, error in
+        remote = result
+        precondition(error == nil)
+    }
     precondition(local == .available)
     precondition(remote == .notAvailable)
 }

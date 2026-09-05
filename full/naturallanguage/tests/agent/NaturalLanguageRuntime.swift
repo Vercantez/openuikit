@@ -14,6 +14,8 @@ tokenizer.string = "Hello world"
 precondition(!tokenizer.tokens(for: tokenizer.string!.startIndex..<tokenizer.string!.endIndex).isEmpty)
 
 precondition(NLEmbedding.wordEmbedding(for: .english) == nil)
-precondition(NLContextualEmbedding(language: .english) == nil)
+let contextual = NLContextualEmbedding(language: .english)
+precondition(contextual != nil)
+precondition(contextual?.hasAvailableAssets == false)
 
 print("NATURALLANGUAGE_AGENT_RUNTIME_OK")

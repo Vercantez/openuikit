@@ -49,9 +49,22 @@ public final class NLTagger: NSObject {
 
     public class func requestAssets(
         for language: NLLanguage,
+        tagScheme: NLTagScheme,
+        completionHandler: @escaping (NLTagger.AssetsResult, (any Error)?) -> Void
+    ) {
+        _ = language
+        completionHandler(assetsResult(for: tagScheme), nil)
+    }
+
+    public class func requestAssets(
+        for language: NLLanguage,
         tagScheme: NLTagScheme
     ) async throws -> NLTagger.AssetsResult {
         _ = language
+        return assetsResult(for: tagScheme)
+    }
+
+    private class func assetsResult(for tagScheme: NLTagScheme) -> AssetsResult {
         switch tagScheme {
         case .tokenType, .language, .script:
             return .available

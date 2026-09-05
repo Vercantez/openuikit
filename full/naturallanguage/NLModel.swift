@@ -11,9 +11,11 @@ public final class NLModel: NSObject {
     }
 
     private let storedConfiguration: NLModelConfiguration
+    private let labels: [String: String]
 
-    private init(configuration: NLModelConfiguration) {
+    private init(configuration: NLModelConfiguration, labels: [String: String]) {
         self.storedConfiguration = configuration
+        self.labels = labels
         super.init()
     }
 
@@ -22,35 +24,84 @@ public final class NLModel: NSObject {
     }
 
     public convenience init(contentsOfURL url: URL) throws {
-        throw NLLinuxSupport.error(
-            "NLModel Apple Create ML packages are unavailable on this host"
-        )
+        let payload = try Data(contentsOf: url)
+        let decoded = try NLModel.decode(payload)
+        self.init(configuration: decoded.configuration, labels: decoded.labels)
     }
 
     public func predictedLabel(for string: String) -> String? {
-        _ = string
-        return nil
+        labels[string]
     }
 
     public func predictedLabels(forTokens tokens: [String]) -> [String] {
-        Array(repeating: "", count: tokens.count)
+        tokens.map { labels[$0] ?? "" }
     }
 
     public func predictedLabelHypotheses(
         for string: String,
         maximumCount maxCount: Int
     ) -> [String: Double] {
-        _ = string
-        _ = maxCount
-        return [:]
+        guard maxCount > 0, let label = labels[string] else { return [:] }
+        return [label: 1.0]
     }
 
     public func predictedLabelHypotheses(
         forTokens tokens: [String],
         maximumCount maxCount: Int
     ) -> [[String: Double]] {
-        _ = maxCount
-        return Array(repeating: [:], count: tokens.count)
+        tokens.map { token in
+            guard maxCount > 0, let label = labels[token] else { return [:] }
+            return [label: 1.0]
+        }
+    }
+
+    private static func decode(
+        _ data: Data
+    ) throws -> (configuration: NLModelConfiguration, labels: [String: String]) {
+        let object: Any
+        do {
+            object = try JSONSerialization.jsonObject(with: data)
+        } catch {
+            throw NLLinuxSupport.error(
+                "NLModel Apple Create ML packages are unavailable on this host"
+            )
+        }
+        guard
+            let root = object as? [String: Any],
+            intValue(root["nlModelFormat"]) == 1,
+            let type = ModelType(rawValue: intValue(root["type"]) ?? -1)
+        else {
+            throw NLLinuxSupport.error(
+                "NLModel file is not the Linux JSON model format"
+            )
+        }
+        var labels: [String: String] = [:]
+        if let rawLabels = root["labels"] as? [String: String] {
+            labels = rawLabels
+        } else if let rawLabels = root["labels"] as? [String: Any] {
+            for (key, value) in rawLabels {
+                guard let text = value as? String else {
+                    throw NLLinuxSupport.error("NLModel label for \(key) is not a string")
+                }
+                labels[key] = text
+            }
+        } else {
+            throw NLLinuxSupport.error("NLModel labels dictionary is missing")
+        }
+        let language = (root["language"] as? String).map(NLLanguage.init(rawValue:))
+        let revision = intValue(root["revision"]) ?? 0
+        let configuration = NLModelConfiguration(
+            type: type,
+            language: language,
+            revision: revision
+        )
+        return (configuration, labels)
+    }
+
+    private static func intValue(_ value: Any?) -> Int? {
+        if let number = value as? Int { return number }
+        if let number = value as? NSNumber { return number.intValue }
+        return nil
     }
 }
 
