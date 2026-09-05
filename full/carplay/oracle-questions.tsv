@@ -11,4 +11,3 @@ c:objc(cs)CPTabBarTemplate(cpy)maximumTabCount	Does CPTabBarTemplate.maximumTabC
 c:objc(cs)CPAlertTemplate(cpy)maximumActionCount	Is CPAlertTemplate.maximumActionCount 2 or 3 on iPhoneOS 26.1?	ui	Historical programming guides say two alert actions; this port caps at 2 without an SDK-byte observation.
 c:objc(cs)CPListTemplate(cpy)maximumItemCount	Is CPListTemplate.maximumItemCount still 12 on iPhoneOS 26.1, including when limitedUserInterfaces contains lists?	ui	The class property exists but the integer is unobserved; this port uses the documented 12 and does not auto-shrink for limited UI.
 c:objc(cs)CPInterfaceController(im)popToTemplate:animated:completion:	What NSError code does Apple use when popping a template that is not in the stack?	vehicle	This port uses CarPlayErrorDomain code 4 (templateNotInHierarchy); Apple's numeric codes are unobserved.
-
