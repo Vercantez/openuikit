@@ -565,11 +565,11 @@ final class UIPageViewControllerTests: XCTestCase {
         XCTAssertTrue(page.viewControllers?.first === b)
     }
 
-    /// MEASURED Pager page-next, iPhone SE 2x / iOS 26.1, named 60 Hz
-    /// frames (confprobe wait): 375 → 750 then queue reset at n=18:
+    /// MEASURED pager-clock probe, iPhone SE 2x / iOS 26.1, 10 live traces:
+    /// cosine ease-in-out over 0.3 s, named frame = Nth animator tick after
+    /// first motion (local n=1). 375 → 750 then queue reset at n=18:
     /// n=0:375 (t400) n=6:469 (t500) n=12:656.5 (t600) n=18:375 (t700).
-    /// Ease-in-out over 0.3 s, no extra delay (n=1 already 378 on a live
-    /// CADisplayLink probe of the same setter).
+    /// Cubic bezier(0.42,0,0.58,1) is 458 / 667 at n=6/12.
     func testIOSProgrammaticScrollSamplesMatchPagerProbe() {
         let saved = OpenUIKitRuntime.systemFontCut
         OpenUIKitRuntime.systemFontCut = .iOS
@@ -600,11 +600,11 @@ final class UIPageViewControllerTests: XCTestCase {
             LayerBridge.presentationState(of: page.scrollView, at: t).bounds.origin.x
         }
         XCTAssertEqual(origin(at: 0), center, accuracy: 1)
-        XCTAssertEqual(origin(at: 1.0 / 60.0), 378, accuracy: 2)
-        XCTAssertEqual(origin(at: 6.0 / 60.0), 469, accuracy: 15)
-        XCTAssertEqual(origin(at: 8.0 / 60.0), 530, accuracy: 15)
-        XCTAssertEqual(origin(at: 12.0 / 60.0), 656.5, accuracy: 15)
-        XCTAssertEqual(origin(at: 17.0 / 60.0), 747, accuracy: 5)
+        XCTAssertEqual(origin(at: 1.0 / 60.0), 378, accuracy: 1)
+        XCTAssertEqual(origin(at: 6.0 / 60.0), 469, accuracy: 1)
+        XCTAssertEqual(origin(at: 8.0 / 60.0), 530, accuracy: 1)
+        XCTAssertEqual(origin(at: 12.0 / 60.0), 656.5, accuracy: 1)
+        XCTAssertEqual(origin(at: 17.0 / 60.0), 747, accuracy: 1)
 
         let bmp = UIRenderer.render(window, scale: 1)
         let o = (100 * bmp.width + 187) * 4

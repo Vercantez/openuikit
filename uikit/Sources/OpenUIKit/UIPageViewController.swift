@@ -223,11 +223,9 @@ open class UIPageViewController: UIViewController {
     private var transitionToken: UInt64 = 0
     private var pageControl: UIPageControl?
 
-    /// MEASURED Pager page-next, iPhone SE 2x / iOS 26.1, named 60 Hz
-    /// frames (confprobe wait): 375 → 750 then queue reset at n=18:
-    /// n=0:375 (t400) n=6:469 (t500) n=12:656.5 (t600) n=18:375 (t700).
-    /// Ease-in-out over 0.3 s, no extra delay. Catalyst keeps 0.32 so the
-    /// 0.31/0.32 completion ticks stay put.
+    /// MEASURED pager-clock probe, iPhone SE 2x / iOS 26.1: cosine
+    /// ease-in-out over 0.3 s (n=0:375 n=6:469 n=12:656.5 n=18:375 reset).
+    /// Catalyst keeps 0.32 so the 0.31/0.32 completion ticks stay put.
     static var programmaticScrollDuration: Double {
         OpenUIKitRuntime.systemFontCut == .iOS ? 0.3 : 0.32
     }
@@ -424,10 +422,8 @@ open class UIPageViewController: UIViewController {
         refreshPageControl()
 
         let destination = offset(for: direction)
-        UIView.animate(
+        UIView.animateScrollCurve(
             withDuration: Self.programmaticScrollDuration,
-            delay: 0,
-            options: [.curveEaseInOut],
             animations: { self.scrollView.contentOffset = destination },
             completion: { [weak self] finished in
                 guard let self, self.transitionToken == token else { return }
@@ -766,10 +762,8 @@ open class UIPageViewController: UIViewController {
 
         transitionToken &+= 1
         let token = transitionToken
-        UIView.animate(
+        UIView.animateScrollCurve(
             withDuration: Self.programmaticScrollDuration,
-            delay: 0,
-            options: [.curveEaseInOut],
             animations: { self.scrollView.contentOffset = self.offset(for: direction) },
             completion: { [weak self] finished in
                 guard let self, self.transitionToken == token else { return }
