@@ -1,0 +1,16 @@
+full/tabulardata/TabularData.swift
+full/tabulardata/TabularDataAnyColumn.swift
+full/tabulardata/TabularDataArithmetic.swift
+full/tabulardata/TabularDataCollections.swift
+full/tabulardata/TabularDataColumn.swift
+full/tabulardata/TabularDataErrors.swift
+full/tabulardata/TabularDataFrame.swift
+full/tabulardata/TabularDataFrameNested.swift
+full/tabulardata/TabularDataGrouping.swift
+full/tabulardata/TabularDataIO.swift
+full/tabulardata/TabularDataOptions.swift
+full/tabulardata/TabularDataProtocolOps.swift
+full/tabulardata/TabularDataProtocols.swift
+full/tabulardata/TabularDataSlices.swift
+full/tabulardata/TabularDataSummaries.swift
+full/tabulardata/TabularDataTypes.swift
