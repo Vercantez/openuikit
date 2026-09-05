@@ -728,6 +728,19 @@ open class UIDatePicker: UIControl {
         if let tz = storedTimeZone { calendar.timeZone = tz }
         let c = calendar.dateComponents([.year, .month, .day], from: _date)
         guard let y = c.year, let m = c.month, let d = c.day else { return "" }
+        // MEASURED Forms t200.ax1, iPhone SE 2x / iOS 26.1: at
+        // `.accessibilityLarge` the compact capsule is still 34 pt and the
+        // inner UILabel is **20 pt** tall (17 pt body) at abs y 407.5
+        // (capsule 400.5 + 7). The title spelling is short numeric
+        // **"9/4/26"**, not medium "Sep 4, 2026". Non-accessibility stays
+        // the medium spelling. The previous 33 pt reading was the table
+        // cell's body size, not this label's frame.
+        if OpenUIKitRuntime.systemFontCut == .iOS,
+           traitCollection.preferredContentSizeCategory.isAccessibilityCategory {
+            let yy = y % 100
+            let yyStr = yy < 10 ? "0\(yy)" : "\(yy)"
+            return "\(m)/\(d)/\(yyStr)"
+        }
         return "\(monthTitle(m, short: true)) \(d), \(y)"
     }
 
@@ -785,7 +798,16 @@ open class UIDatePicker: UIControl {
             compactLabel.frame = bounds
             return
         }
-        compactLabel.font = .systemFont(ofSize: 17)
+        compactLabel.font = .preferredFont(
+            forTextStyle: .body,
+            compatibleWith: UITraitCollection(preferredContentSizeCategory: .large))
+        // Title is recomputed here: `refreshPresentation` may have run
+        // before the picker joined the window, freezing the `.large`
+        // medium spelling. MEASURED Forms t200.ax1: **"9/4/26"** in a
+        // **20 pt** inner label (17 pt body line) inside the still-34 pt
+        // capsule — not 33 pt body. Only the spelling follows the window
+        // accessibility category.
+        compactLabel.text = compactTitle
         compactLabel.textColor = .label
         compactLabel.backgroundColor = .tertiarySystemFill
         let height: CGFloat = datePickerMode == .date ? 34 : 36

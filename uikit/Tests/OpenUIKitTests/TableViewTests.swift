@@ -12,7 +12,9 @@ import Foundation
 // MARK: - Helpers
 
 /// Counts live/total instances so reuse can be proven.
+#if !os(Linux)
 @MainActor
+#endif
 private final class CountingCell: UITableViewCell {
     static var created = 0
     override init(style: CellStyle = .default, reuseIdentifier: String? = nil) {
@@ -76,7 +78,9 @@ private final class CustomGrandchildHeader: GrandchildBaseHeader {
     required init?(coder: NSCoder) { fatalError() }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class BigTableSource: UITableViewDataSource, UITableViewDelegate {
     var rows = 10_000
     var selected: [IndexPath] = []
@@ -98,7 +102,9 @@ private final class BigTableSource: UITableViewDataSource, UITableViewDelegate {
 }
 
 /// The tableview_plain fixture's data (3 sections, 7 rows).
+#if !os(Linux)
 @MainActor
+#endif
 private final class PlainFixtureSource: UITableViewDataSource, UITableViewDelegate {
     let sections: [(header: String, rows: [String])] = [
         ("Fruits", ["Apple", "Banana", "Cherry"]),
@@ -120,7 +126,9 @@ private final class PlainFixtureSource: UITableViewDataSource, UITableViewDelega
 }
 
 /// The tableview_grouped fixture's shape (heights only matter here).
+#if !os(Linux)
 @MainActor
+#endif
 private final class GroupedFixtureSource: UITableViewDataSource, UITableViewDelegate {
     // (style, header, footer, row styles)
     let sections: [(header: String, footer: String, styles: [UITableViewCell.CellStyle])] = [
@@ -152,7 +160,9 @@ private final class GroupedFixtureSource: UITableViewDataSource, UITableViewDele
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewReuseTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -245,7 +255,9 @@ final class TableViewReuseTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewCompatibilityTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -338,7 +350,9 @@ final class TableViewCompatibilityTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewMetricsTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -441,7 +455,9 @@ final class TableViewMetricsTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewSelectionTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -533,7 +549,9 @@ final class TableViewSelectionTests: XCTestCase {
 
 // MARK: - UITableViewController
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class TestTableController: UITableViewController {
     var didSelect: [IndexPath] = []
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -554,7 +572,9 @@ private final class TestTableController: UITableViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -588,9 +608,13 @@ final class TableViewControllerTests: XCTestCase {
 
 /// Two sections holding reference-typed items, so an item's identity is
 /// stable while it moves between them (the Tasks app's shape).
+#if !os(Linux)
 @MainActor
+#endif
 private final class MovableSource: UITableViewDataSource, UITableViewDelegate {
+    #if !os(Linux)
     @MainActor
+    #endif
     final class Item { let name: String; init(_ n: String) { name = n } }
     var sections: [[Item]] = [
         [Item("a"), Item("b"), Item("c")],
@@ -620,9 +644,13 @@ private final class MovableSource: UITableViewDataSource, UITableViewDelegate {
 /// Explicit row arrays for UIKit-compatible `moveRow(at:to:)` tests. The
 /// reference-typed item lets the assertions distinguish item identity from an
 /// index path whose meaning changes during the move.
+#if !os(Linux)
 @MainActor
+#endif
 private final class RowMoveSource: UITableViewDataSource {
+    #if !os(Linux)
     @MainActor
+    #endif
     final class Item {
         let name: String
         init(_ name: String) { self.name = name }
@@ -660,7 +688,9 @@ private final class RowMoveSource: UITableViewDataSource {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewRowMoveTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -938,7 +968,9 @@ final class TableViewRowMoveTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewAnimatedUpdateTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -1077,7 +1109,9 @@ final class TableViewAnimatedUpdateTests: XCTestCase {
 
 // MARK: - iOS plain subtitle + edit chrome (TableEditor conformance)
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class SubtitleListSource: UITableViewDataSource, UITableViewDelegate {
     var titles = ["Alpha", "Bravo", "Charlie"]
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -1092,7 +1126,9 @@ private final class SubtitleListSource: UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool { true }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class DefaultListSource: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 3 }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -1102,7 +1138,9 @@ private final class DefaultListSource: UITableViewDataSource {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewIOSEditChromeTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut!
     override func setUp() {
@@ -1282,11 +1320,33 @@ final class TableViewIOSEditChromeTests: XCTestCase {
         XCTAssertEqual(fill.green, 56.0 / 255.0, accuracy: 1e-9)
         XCTAssertEqual(fill.blue, 60.0 / 255.0, accuracy: 1e-9)
     }
+
+    /// MEASURED TableEditor t900.dark / t3800.dark, SE 2x: reorder bars
+    /// are `.tertiaryLabel` source-over (70,70,73) on black, (111,111,115)
+    /// on selected systemGray4. Light over white stays (197,197,199).
+    func testReorderInkIsTertiaryLabelOnIOS() {
+        let dark = UITraitCollection(userInterfaceStyle: .dark, displayScale: 2)
+        let light = UITraitCollection(userInterfaceStyle: .light, displayScale: 2)
+        let d = UITableViewCellReorderControl.ink.resolvedCGColor(with: dark)
+        XCTAssertEqual(d.red, 0.921569, accuracy: 0.001)
+        XCTAssertEqual(d.green, 0.921569, accuracy: 0.001)
+        XCTAssertEqual(d.blue, 0.960784, accuracy: 0.001)
+        XCTAssertEqual(d.alpha, 0.298039, accuracy: 0.001)
+        let l = UITableViewCellReorderControl.ink.resolvedCGColor(with: light)
+        XCTAssertEqual(l.red, 0.235294, accuracy: 0.001)
+        XCTAssertEqual(l.alpha, 0.298039, accuracy: 0.001)
+        OpenUIKitRuntime.systemFontCut = .macOS
+        let c = UITableViewCellReorderControl.ink.resolvedCGColor(with: light)
+        XCTAssertEqual((c.red * 255).rounded(), 197)
+        XCTAssertEqual(c.alpha, 1, accuracy: 1e-9)
+    }
 }
 
 // MARK: - iOS row insert/delete spring (TableEditor t1350 / t2350)
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewIOSRowAnimationTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut!
     override func setUp() {
@@ -1452,5 +1512,52 @@ final class TableViewIOSRowAnimationTests: XCTestCase {
         XCTAssertNil(charlie.superview)
         XCTAssertEqual(table.visibleCells.count, 2)
         XCTAssertTrue(table.visibleCells.allSatisfy { $0.animations.isEmpty })
+    }
+
+    func testRTLMirrorsDisclosureAndValue1Labels() {
+        // MEASURED /tmp/rtlprobe + NavFlow t200.rtl, iPhone SE 2x / iOS 26.1:
+        // disclosure abs.x 16; value1 primary sits on the leading (right)
+        // edge. Unspecified cells (every existing test) stay LTR.
+        let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
+        cell.semanticContentAttribute = .forceRightToLeft
+        cell.accessoryType = .disclosureIndicator
+        cell.textLabel.text = "Notifications"
+        cell.detailTextLabel?.text = "On"
+        cell.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
+        cell.layoutIfNeeded()
+        XCTAssertEqual(cell._accessoryGlyphView.frame.origin.x, 16, accuracy: 0.51)
+        XCTAssertGreaterThan(cell.textLabel.frame.origin.x, cell.detailTextLabel!.frame.origin.x)
+        XCTAssertGreaterThan(cell.textLabel.frame.origin.x, 200)
+    }
+
+    /// MEASURED TableEditor t2350.ax1, iPhone SE 2x / iOS 26.1.
+    func testEditModeChromeGrowsAtAccessibilityLarge() {
+        let savedTraits = UITraitCollection.current
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .large)
+        defer { UITraitCollection.current = savedTraits }
+
+        let source = SubtitleListSource()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
+        let table = UITableView(frame: window.bounds, style: .plain)
+        table.dataSource = source
+        table.delegate = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+        table.setEditing(true, animated: false)
+        window.layoutIfNeeded()
+
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertEqual(cell.bounds.height, 117, accuracy: 0.01)
+        XCTAssertEqual(cell.contentView.frame.origin.x, 55, accuracy: 0.001)
+        XCTAssertEqual(cell.textLabel.frame.origin.x, 16, accuracy: 0.001)
+        let edit = cell._editControl
+        XCTAssertEqual(edit?.frame, CGRect(x: 16, y: 33, width: 39, height: 38))
+        let reorder = cell._reorderControl!
+        XCTAssertEqual(reorder.frame.origin.x, 318, accuracy: 0.001)
+        XCTAssertEqual(reorder.frame.width, 41, accuracy: 0.001)
+        XCTAssertEqual(reorder.frame.height, 117, accuracy: 0.001)
     }
 }

@@ -142,12 +142,21 @@ final class UITableCellAccessoryView: UIView {
             break
         case .disclosureIndicator:
             // 10.5x14 box; ink fitted to the golden chevron (2 pt stroke,
-            // round caps, apex right of center).
+            // round caps, apex right of center). RTL (MEASURED /tmp/rtlprobe,
+            // iPhone SE 2x / iOS 26.1, disclosure abs.x = 16): the chevron
+            // points toward trailing (left), mirrored in the 10.5 box.
             let color = UIColor.tertiaryLabel.resolvedCGColor(with: traitCollection)
-            strokePolyline([CGPoint(x: 3.2, y: 1.1),
-                            CGPoint(x: 8.0, y: 5.85),
-                            CGPoint(x: 3.2, y: 10.6)],
-                           width: 2, in: canvas, color: color)
+            let points: [CGPoint]
+            if _layoutIsRTL {
+                points = [CGPoint(x: 7.3, y: 1.1),
+                          CGPoint(x: 2.5, y: 5.85),
+                          CGPoint(x: 7.3, y: 10.6)]
+            } else {
+                points = [CGPoint(x: 3.2, y: 1.1),
+                          CGPoint(x: 8.0, y: 5.85),
+                          CGPoint(x: 3.2, y: 10.6)]
+            }
+            strokePolyline(points, width: 2, in: canvas, color: color)
         case .checkmark:
             // 19x18 box; tintColor stroke fitted to the golden checkmark.
             let color = tintColor.resolvedCGColor(with: traitCollection)
@@ -257,12 +266,20 @@ final class UITableViewCellEditControl: UIView {
 
 /// Three-line reorder handle. MEASURED TableEditor t900, SE 2x: control
 /// [332, cellY, 27, 62], glyph [332, cellY+24, 27, 15], three 1.5 pt
-/// bars at glyph-local y 2.0 / 6.5 / 11.5, ink (197, 197, 199).
+/// bars at glyph-local y 2.0 / 6.5 / 11.5. iOS ink is `.tertiaryLabel`
+/// (not the opaque (197, 197, 199) that happens to match it over white):
+/// TableEditor t900.dark over black → (70, 70, 73); t3800.dark over
+/// selected systemGray4 (58, 58, 60) → (111, 111, 115); light t900 over
+/// white → (197, 197, 199); light t3800 over selected (209, 209, 214) →
+/// (165, 165, 170). Catalyst keeps the opaque light-over-white constant.
 @preconcurrency @MainActor
 final class UITableViewCellReorderControl: UIView {
     static let glyphSize = CGSize(width: 27, height: 15)
-    static let ink = UIColor(red: 197.0 / 255.0, green: 197.0 / 255.0,
-                             blue: 199.0 / 255.0, alpha: 1)
+    static var ink: UIColor {
+        if UITableView.isIOSChrome { return .tertiaryLabel }
+        return UIColor(red: 197.0 / 255.0, green: 197.0 / 255.0,
+                       blue: 199.0 / 255.0, alpha: 1)
+    }
     static let lineHeight: CGFloat = 1.5
     static let lineOrigins: [CGFloat] = [2.0, 6.5, 11.5]
     static let lineInsetX: CGFloat = 2.5
@@ -373,6 +390,14 @@ open class UITableViewCell: UIView, ReusableView {
     /// Plain iOS subtitle detail origin. MEASURED TableEditor t200, SE 2x:
     /// "First item" abs y 148.5, cell y 116 → **32.5** (9 + 20.5 + 3 pt gap).
     static let plainSubtitleDetailY: CGFloat = 32.5
+    /// Accessibility-size plain subtitle layout. MEASURED TableEditor
+    /// t200.ax1, iPhone SE 2x / iOS 26.1: cell **117**, primary 33 pt
+    /// h=39.5 at y **15** (= `layoutMargins.top`), detail 30 pt h=36 at
+    /// y **60.5** (15+39.5+**6**), bottom pad **20.5** (117−96.5).
+    /// `.large` keeps 62 / 9 / 32.5.
+    static let plainSubtitleAccessibilityTop: CGFloat = 15
+    static let plainSubtitleAccessibilityGap: CGFloat = 6
+    static let plainSubtitleAccessibilityBottom: CGFloat = 20.5
     /// Edit-mode contentView.x. MEASURED TableEditor t900, SE 2x: content
     /// view abs [40, cellY, 292, 62] with labels at x 56 (= 40 + 16).
     static let editLeadingGutter: CGFloat = 40
@@ -384,9 +409,33 @@ open class UITableViewCell: UIView, ReusableView {
     /// abs [332, cellY, 27, 62] — 27 wide, 16 pt (SE system margin) from the
     /// trailing edge (375 − 16 − 27 = 332).
     static let reorderWidth: CGFloat = 27
+    /// MEASURED TableEditor t2350.ax1, iPhone SE 2x / iOS 26.1: at
+    /// `.accessibilityLarge` the delete control is **[16, cellY+33, 39, 38]**,
+    /// content view x **55** (= 16+39), reorder **[318, cellY, 41, 117]**
+    /// (375−16−41). Labels at x **71** (= 55+16). `.large` stays 15/26/40/27.
+    static let accessibilityEditControlSize = CGSize(width: 39, height: 38)
+    static let accessibilityEditControlX: CGFloat = 16
+    static let accessibilityEditLeadingGutter: CGFloat = 55
+    static let accessibilityReorderWidth: CGFloat = 41
+    static let accessibilityEditControlY: CGFloat = 33
     /// iOS: the window's system layout margin (20 on the iPhone 16, 16 on
     /// the SE — see UITableView.iOSSystemMargin).
     var trailingMargin: CGFloat { UITableViewCell.isIOSChrome ? iOSMargin : 16 }
+
+    /// Window `traitOverrides` `.accessibilityLarge` grows the edit chrome.
+    /// Guarded by the iOS cut; Catalyst keeps the `.large` 26/40/27 numbers.
+    var usesAccessibilityEditChrome: Bool {
+        UITableViewCell.isIOSChrome
+            && traitCollection.preferredContentSizeCategory.isAccessibilityCategory
+    }
+    var effectiveEditLeadingGutter: CGFloat {
+        usesAccessibilityEditChrome ? UITableViewCell.accessibilityEditLeadingGutter
+            : UITableViewCell.editLeadingGutter
+    }
+    var effectiveReorderWidth: CGFloat {
+        usesAccessibilityEditChrome ? UITableViewCell.accessibilityReorderWidth
+            : UITableViewCell.reorderWidth
+    }
 
     /// A cell's layout margins are the window's system margin horizontally
     /// and a flat 15 vertically — NOT `UIView`'s 8 pt default. Invisible
@@ -398,13 +447,26 @@ open class UITableViewCell: UIView, ReusableView {
     /// `SwitchCell.layoutMargins` and its content view's are [15, 20, 15, 20]
     /// on the iPhone 16 (393 pt) and [15, 16, 15, 16] on the SE (375 pt) —
     /// the same 390 pt threshold `UITableView.iOSSystemMargin` already
-    /// carries, confirmed here on a second view class. Pad (A16) 820 pt is
-    /// 16, not that 20 — see `iOSMargin`.
+    /// carries, confirmed here on a second view class. Pad (A16) 820 pt
+    /// stays **16** (`iOSPadCellMargin` / `iOSMargin`): SwitchCell switch
+    /// at x 741 = 820 − 16 − 63, `layoutMargins` `[15, 16, 15, 16]`.
+    /// Forms-ipad t200 fields sit at x 20 against `layoutMarginsGuide`;
+    /// flipping this default to 20 dropped `realapp_storage_light_ipad`
+    /// 99.689 → 99.554. Two samples disagree; the xib oracle wins and
+    /// Forms-ipad x=20 stays OPEN.
     override var _defaultBaseLayoutMargins: UIEdgeInsets {
         UIEdgeInsets(top: 15, left: trailingMargin, bottom: 15, right: trailingMargin)
     }
     var iOSMargin: CGFloat {
-        if UITableView.isPadChrome { return UITableView.iOSPadCellMargin }
+        if UITableView.isPadChrome {
+            // MEASURED `/tmp/ipad-open-cap` table_inset / table_grouped,
+            // iPad (A16) 820×1180 @2x / iOS 26.1: inset-grouped
+            // `layoutMargins` `[15, 20, 15, 20]`; grouped / plain stay 16.
+            if tableView?.style == .insetGrouped {
+                return UITableView.iOSPadInsetGroupedInnerInset
+            }
+            return UITableView.iOSPadCellMargin
+        }
         return UITableView.iOSSystemMargin(width: window?.bounds.width ?? tableView?.bounds.width ?? bounds.width)
     }
     /// Right edge of a value1 detail label with no accessory (16 in on iOS).
@@ -608,6 +670,41 @@ open class UITableViewCell: UIView, ReusableView {
         addSubview(topSeparatorView)
     }
 
+    /// MEASURED TableEditor t200.ax1, iPhone SE 2x / iOS 26.1: a plain
+    /// `.subtitle` cell's `UITableViewLabel`s follow the window
+    /// `traitOverrides` (primary **33 pt** body, detail **30 pt**
+    /// subheadline) even though `UIFont.preferredFont(forTextStyle:)` at
+    /// construction still reads process `.large` (Forms/Feed custom
+    /// labels stay 17). `.large` is 17/15 — the previous hardcoded sizes.
+    func applyIOSPreferredFonts() {
+        guard UITableViewCell.isIOSChrome else { return }
+        let traits = traitCollection
+        switch style {
+        case .subtitle:
+            textLabel.font = .preferredFont(forTextStyle: .body, compatibleWith: traits)
+            detailTextLabel?.font = .preferredFont(forTextStyle: .subheadline,
+                                                   compatibleWith: traits)
+        case .default:
+            break
+        case .value1, .value2:
+            break
+        }
+    }
+
+    /// Self-sized height of a plain subtitle cell. `.large` stays **62**.
+    /// Accessibility: 15 + primaryH + 6 + detailH + 20.5 (**117** at ax1).
+    func iOSPlainSubtitleFittingHeight() -> CGFloat {
+        applyIOSPreferredFonts()
+        guard traitCollection.preferredContentSizeCategory.isAccessibilityCategory else {
+            return UITableViewCell.plainSubtitleRowHeight
+        }
+        let p = textLabel.intrinsicContentSize.height
+        let d = detailTextLabel?.intrinsicContentSize.height ?? 0
+        return UITableViewCell.plainSubtitleAccessibilityTop
+            + p + UITableViewCell.plainSubtitleAccessibilityGap
+            + d + UITableViewCell.plainSubtitleAccessibilityBottom
+    }
+
     // MARK: Reuse
 
     open func prepareForReuse() {
@@ -706,9 +803,9 @@ open class UITableViewCell: UIView, ReusableView {
     var contentWidth: CGFloat {
         var leading: CGFloat = 0
         var trailing: CGFloat = 0
-        if showsDeleteControl { leading = UITableViewCell.editLeadingGutter }
+        if showsDeleteControl { leading = effectiveEditLeadingGutter }
         if showsReorderControlNow {
-            trailing = UITableViewCell.reorderWidth + trailingMargin
+            trailing = effectiveReorderWidth + trailingMargin
         }
         let available = max(0, bounds.width - leading - trailing)
         if let accessoryView {
@@ -758,14 +855,21 @@ open class UITableViewCell: UIView, ReusableView {
                 _editControl = v
                 control = v
             }
-            let size = UITableViewCell.editControlSize
-            // MEASURED TableEditor t900: image at cellY+18 in a 62 pt row,
-            // (62 − 26) / 2 = 18. Control view itself sat 1 pt higher; the
-            // disc is what the pixels show.
-            let y = UITableView.iOSFloorToPixel((h - size) / 2)
+            let size = usesAccessibilityEditChrome
+                ? UITableViewCell.accessibilityEditControlSize
+                : CGSize(width: UITableViewCell.editControlSize,
+                         height: UITableViewCell.editControlSize)
+            let x = usesAccessibilityEditChrome
+                ? UITableViewCell.accessibilityEditControlX
+                : UITableViewCell.editControlX
+            // `.large`: centred in the row, (62−26)/2 = 18.
+            // ax1: MEASURED y 33 in the 117 pt cell (not (117−38)/2 = 39.5).
+            let y = usesAccessibilityEditChrome
+                ? UITableViewCell.accessibilityEditControlY
+                : UITableView.iOSFloorToPixel((h - size.height) / 2)
             control.isHidden = false
-            control.frame = CGRect(x: UITableViewCell.editControlX, y: pad + y,
-                                   width: size, height: size)
+            control.frame = CGRect(x: x, y: pad + y,
+                                   width: size.width, height: size.height)
         } else {
             _editControl?.isHidden = true
         }
@@ -782,9 +886,9 @@ open class UITableViewCell: UIView, ReusableView {
                 control = v
             }
             control.isHidden = false
-            control.frame = CGRect(x: w - trailingMargin - UITableViewCell.reorderWidth,
+            control.frame = CGRect(x: w - trailingMargin - effectiveReorderWidth,
                                    y: pad,
-                                   width: UITableViewCell.reorderWidth, height: h)
+                                   width: effectiveReorderWidth, height: h)
         } else {
             _reorderControl?.isHidden = true
         }
@@ -792,6 +896,7 @@ open class UITableViewCell: UIView, ReusableView {
 
     open override func layoutSubviews() {
         super.layoutSubviews()
+        applyIOSPreferredFonts()
         let w = bounds.width
         let pad = _leadingPadding
         let h = bounds.height - pad
@@ -799,9 +904,9 @@ open class UITableViewCell: UIView, ReusableView {
         selectedBackgroundView?.frame = bounds
         if let tableView {
             _textInset = tableView.style == .plain
-                ? tableView.plainTextInset : UITableViewCell.labelX
+                ? tableView.plainTextInset : tableView.groupedTextInset
         }
-        let lead = showsDeleteControl ? UITableViewCell.editLeadingGutter : 0
+        let lead = showsDeleteControl ? effectiveEditLeadingGutter : 0
         contentView.frame = CGRect(x: lead, y: pad, width: contentWidth, height: h)
         layoutEditChrome(pad: pad, height: h, width: w)
 
@@ -880,7 +985,13 @@ open class UITableViewCell: UIView, ReusableView {
         // centres the 17 pt line in that box (`drawContent` iOS y0).
         // Catalyst and subtitle / value1 keep the intrinsic box.
         let primaryY: CGFloat
-        if UITableViewCell.isIOSChrome, style == .subtitle {
+        let accessibilitySubtitle = UITableViewCell.isIOSChrome
+            && style == .subtitle
+            && tableView?.style == .plain
+            && traitCollection.preferredContentSizeCategory.isAccessibilityCategory
+        if accessibilitySubtitle {
+            primaryY = UITableViewCell.plainSubtitleAccessibilityTop
+        } else if UITableViewCell.isIOSChrome, style == .subtitle {
             primaryY = tableView?.style == .plain
                 ? UITableViewCell.plainSubtitlePrimaryY
                 : UITableViewCell.subtitlePrimaryY
@@ -905,9 +1016,16 @@ open class UITableViewCell: UIView, ReusableView {
                                           height: h))
             switch style {
             case .subtitle:
-                let detailY = (UITableViewCell.isIOSChrome && tableView?.style == .plain)
-                    ? UITableViewCell.plainSubtitleDetailY
-                    : UITableViewCell.subtitleDetailY
+                let detailY: CGFloat
+                if accessibilitySubtitle {
+                    detailY = UITableViewCell.plainSubtitleAccessibilityTop
+                        + primary.height
+                        + UITableViewCell.plainSubtitleAccessibilityGap
+                } else if UITableViewCell.isIOSChrome && tableView?.style == .plain {
+                    detailY = UITableViewCell.plainSubtitleDetailY
+                } else {
+                    detailY = UITableViewCell.subtitleDetailY
+                }
                 d.frame = CGRect(x: labelX,
                                  y: detailY,
                                  width: min(s.width, max(0, maxTextW)),
@@ -935,6 +1053,33 @@ open class UITableViewCell: UIView, ReusableView {
             x: inset.left, y: 0,
             width: separatorWidth,
             height: UITableViewCell.separatorThickness)
+
+        // MEASURED NavFlow t200.rtl / TableEditor t200.rtl, iPhone SE 2x /
+        // iOS 26.1: appearance-RTL mirrors stock chrome about the cell
+        // width. Notifications primary 247 vs LTR 32; Alpha 315.5 =
+        // 375 − 16 − 43.5; disclosure abs.x 16. Auto Layout children of
+        // contentView (Forms `pinTrailingControl`) are already placed by
+        // leading/trailing and must not be mirrored again.
+        if _layoutIsRTL {
+            func mirror(_ v: UIView, inWidth span: CGFloat) {
+                var f = v.frame
+                f.origin.x = span - f.maxX
+                v.frame = f
+            }
+            var cf = contentView.frame
+            cf.origin.x = w - cf.maxX
+            contentView.frame = cf
+            mirror(_accessoryGlyphView, inWidth: w)
+            if let custom = accessoryView { mirror(custom, inWidth: w) }
+            if let edit = _editControl { mirror(edit, inWidth: w) }
+            if let reorder = _reorderControl { mirror(reorder, inWidth: w) }
+            mirror(separatorView, inWidth: w)
+            mirror(topSeparatorView, inWidth: w)
+            let cw = contentView.bounds.width
+            mirror(textLabel, inWidth: cw)
+            if let d = detailTextLabel { mirror(d, inWidth: cw) }
+            if let img = imageView, !img.isHidden { mirror(img, inWidth: cw) }
+        }
     }
 }
 
@@ -1061,8 +1206,15 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
         if _wholePointLabelHeight, kind == .header { s.height = textLabel.font.lineHeight.rounded(.up) }
         let y = kind == .header ? _headerLabelY
                                 : UITableViewHeaderFooterView.footerLabelY
-        textLabel.frame = CGRect(x: labelX, y: y,
-                                 width: min(s.width, maxW), height: s.height)
+        var lf = CGRect(x: labelX, y: y,
+                         width: min(s.width, maxW), height: s.height)
+        // MEASURED NavFlow t200.rtl, iPhone SE 2x / iOS 26.1: "General"
+        // header abs.x 281 vs LTR 32 — leading inset mirrored about the
+        // header width.
+        if _layoutIsRTL {
+            lf.origin.x = bounds.width - lf.maxX
+        }
+        textLabel.frame = lf
     }
 }
 

@@ -108,14 +108,20 @@ public enum ConformanceClock {
     }
 
     /// Frame-file suffix. Light stays `t200` so existing goldens keep their
-    /// names; dark appends `.dark` (`t200.dark`) so a dark timeline of the
-    /// same app does not collide on the scoreboard (`NavFlow:t200` vs
-    /// `NavFlow:t200.dark`).
-    public static func captureSuffix(for t: Double, style: String = "light") -> String {
+    /// names. Optional axes append in this order: `.dark`, then `.rtl`, then
+    /// `.ax1` / `.xxxl` (`t200.dark.rtl.ax1`). Default LTR / `.large` is
+    /// unsuffixed so existing goldens do not move.
+    public static func captureSuffix(for t: Double, style: String = "light",
+                                     direction: String = "ltr",
+                                     contentSize: String = "large") -> String {
         var ms = "\(Int((t * 1000).rounded()))"
         while ms.count < 3 { ms = "0" + ms }
-        if style == "dark" { return "t" + ms + ".dark" }
-        return "t" + ms
+        var suffix = "t" + ms
+        if style == "dark" { suffix += ".dark" }
+        if direction == "rtl" { suffix += ".rtl" }
+        if contentSize == "ax1" { suffix += ".ax1" }
+        if contentSize == "xxxl" { suffix += ".xxxl" }
+        return suffix
     }
 
     /// Style a replay should use. `CONFPROBE_STYLE` / `OPENUIKIT_APP_STYLE`
@@ -126,5 +132,37 @@ public enum ConformanceClock {
         if let environment, environment == "dark" { return "dark" }
         if script == "dark" { return "dark" }
         return "light"
+    }
+
+    /// Layout direction a replay should use. `CONFPROBE_DIRECTION` /
+    /// `OPENUIKIT_APP_DIRECTION` (set by `conformance_flow.sh --rtl`) wins
+    /// so an LTR `script.json` can still drive an RTL timeline; otherwise the
+    /// script's `direction` field; otherwise LTR. Equality only.
+    public static func resolvedDirection(script: String, environment: String?) -> String {
+        if let environment, environment == "rtl" { return "rtl" }
+        if script == "rtl" { return "rtl" }
+        return "ltr"
+    }
+
+    /// Content-size token a replay should use. `CONFPROBE_CONTENT_SIZE` /
+    /// `OPENUIKIT_APP_CONTENT_SIZE` (set by `conformance_flow.sh --ax1` /
+    /// `--xxxl`) win. Default `large` is a device's shipped category —
+    /// identity for every UIFontMetrics factor, so existing goldens do
+    /// not move. Equality only — no `String.contains`.
+    public static func resolvedContentSize(environment: String?) -> String {
+        if let environment {
+            if environment == "ax1" { return "ax1" }
+            if environment == "xxxl" { return "xxxl" }
+        }
+        return "large"
+    }
+
+    /// Map a suffix token onto `UIContentSizeCategory`. `ax1` is
+    /// `.accessibilityLarge` (the Settings `_ax1` row); `xxxl` is
+    /// `.extraExtraExtraLarge`.
+    public static func contentSizeCategory(for token: String) -> UIContentSizeCategory {
+        if token == "ax1" { return .accessibilityLarge }
+        if token == "xxxl" { return .extraExtraExtraLarge }
+        return .large
     }
 }

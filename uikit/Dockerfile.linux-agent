@@ -1,0 +1,15 @@
+# Linux agent image: Swift 6.2.4 + the packages a fidelity agent needs.
+# Linux trial 2026-09-05: stock swift:6.2-noble has no zsh, no PIL, no numpy.
+#
+#   docker build -f Dockerfile.linux-agent -t openuikit-linux-agent .
+#
+# No Apple SFNS fonts (not redistributable; a Linux VM has none). The iOS cut
+# renders text from Resources/glyph_ink_ios*.json; a missing (family, size,
+# weight, phase, scalar) key fails with OPENUIKIT_IOS_INK_MISS. Catalyst
+# still needs a font file — mount one via OPENUIKIT_FONT_DIR if you render
+# the macOS cut.
+FROM swift:6.2-noble
+ENV DEBIAN_FRONTEND=noninteractive
+COPY scripts/linux_setup.sh /tmp/linux_setup.sh
+RUN bash /tmp/linux_setup.sh && rm -f /tmp/linux_setup.sh
+WORKDIR /work

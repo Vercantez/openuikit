@@ -11,7 +11,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UIRefreshControlTests: XCTestCase {
 
     private func makeScrollView() -> (UIScrollView, UIRefreshControl) {
@@ -111,7 +113,9 @@ final class UIRefreshControlTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UIRefreshControlIOSCutTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut!
 
@@ -227,7 +231,9 @@ final class UIRefreshControlIOSCutTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UISearchBarTests: XCTestCase {
 
     /// Measured: (width, 44) at every height.
@@ -293,7 +299,9 @@ final class UISearchBarTests: XCTestCase {
     }
 
     func testDelegateHearsTextChanges() {
+        #if !os(Linux)
         @MainActor
+        #endif
         final class D: UISearchBarDelegate {
             var seen: [String] = []
             func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -323,7 +331,9 @@ final class UISearchBarTests: XCTestCase {
 /// and `searchbar_text_clear` on the iPhone 16 at 3x, plus the /tmp geometry,
 /// fill and dark probes — see the `UISearchBar.swift` header). The class
 /// above pins the Catalyst cut; this one pins the iOS cut.
+#if !os(Linux)
 @MainActor
+#endif
 final class UISearchBarIOSCutTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut!
     private var savedBounds: CGRect!
@@ -429,9 +439,26 @@ final class UISearchBarIOSCutTests: XCTestCase {
         XCTAssertEqual(sb.searchTextField.layer.shadowRadius, 16, accuracy: 1e-9)
         XCTAssertEqual(sb.searchTextField.layer.shadowOffset.height, 7.5, accuracy: 1e-9)
     }
+
+    /// MEASURED Tabs t4000.rtl, iPhone SE 2x / iOS 26.1: dismiss is on the
+    /// trailing (left) edge — field abs [71, 18, 288, 44] = 16 + 44 + 11.
+    func testNavInlineRTLPutsDismissOnTheTrailingEdge() {
+        let sb = UISearchBar(frame: CGRect(x: 0, y: 0, width: 375, height: 80))
+        sb.semanticContentAttribute = .forceRightToLeft
+        sb._navInlineActive = true
+        sb.layoutIfNeeded()
+        XCTAssertEqual(sb.searchTextField.frame,
+                       CGRect(x: 71, y: UISearchBar.navInlineFieldY, width: 288,
+                              height: UISearchBar.fieldHeight))
+        let dismiss = sb.subviews.compactMap { $0 as? UIButton }.first
+        XCTAssertEqual(dismiss?.frame,
+                       CGRect(x: 16, y: UISearchBar.navInlineFieldY, width: 44, height: 44))
+    }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UIStepperTests: XCTestCase {
 
     /// Measured intrinsic size and UIKit's documented defaults, both read off

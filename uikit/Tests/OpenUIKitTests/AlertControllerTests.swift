@@ -11,7 +11,9 @@ import Foundation
 
 // MARK: - Actions
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UIAlertActionModelTests: XCTestCase {
     func testActionsKeepAddOrder() {
         let ac = UIAlertController(title: "T", message: "M", preferredStyle: .alert)
@@ -119,7 +121,9 @@ final class UIAlertActionModelTests: XCTestCase {
 
 // MARK: - Measured layout
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UIAlertLayoutTests: XCTestCase {
     private func card(_ title: String?, _ message: String?,
                       _ actions: [(String, UIAlertAction.Style)],

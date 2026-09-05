@@ -618,10 +618,18 @@ open class UIView: UIResponder, CALayerDelegate {
     /// `_UIGlassMaterial`; Catalyst ignores the flag.
     /// Public so the SwiftUI module can set it (`.glassEffect` on the iOS cut).
     public var _usesIOSGlass = false
-    /// Dark floating sheet only. Bar platters keep the measured dark flats
-    /// (19 / 25); the sheet's systemBackground fill tracks the dimmed
+    /// Which measured glass mix `_UIGlassMaterial` applies. Bar platters
+    /// keep `.platter`. Pad popovers are two other mixes (content vs
+    /// action-sheet) — they do not share α with the platter or each other.
+    var _iosGlassKind: _UIGlassKind = .platter
+    /// Dark floating sheet only. Bar platters use `_usesIOSDarkBarGlass`
+    /// (MEASURED /tmp/glass-dark-out, SE 2x: 19 over black, not the
+    /// sheet's 57). The sheet's systemBackground fill tracks the dimmed
     /// backdrop (MEASURED /tmp/sheetfill_dark, SE 2x).
     var _usesIOSDarkGlass = false
+    /// Dark tab-bar / toolbar platters. Distinct from the floating-sheet
+    /// mix; nav-bar platters keep the measured dark flats + refraction.
+    var _usesIOSDarkBarGlass = false
     /// Clip path for `_UIGlassMaterial`. Bar platters are capsules; the
     /// floating sheet overrides with independent top/bottom radii.
     func _iosGlassPath(in bounds: CGRect) -> Path {
@@ -751,6 +759,10 @@ open class UIView: UIResponder, CALayerDelegate {
 
     /// Trait override; `.unspecified` inherits from superview / current.
     public var overrideUserInterfaceStyle: UIUserInterfaceStyle = .unspecified
+    /// iOS 17 window/view trait overrides. Mutate in place
+    /// (`window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge`)
+    /// the way real UIKit does; unspecified inherits `UITraitCollection.current`.
+    public var traitOverrides = UITraitOverrides()
     /// `open`, as UIKit declares it: pocket-casts' TintableImageView overrides
     /// it to re-tint its image on assignment.
     open var tintColor: UIColor! {
@@ -763,6 +775,16 @@ open class UIView: UIResponder, CALayerDelegate {
         super.init()
         if !UIView._constructingAppearanceProxy {
             _tintColor = UIView._appearanceProxy?._tintColor
+            // MEASURED /tmp/rtlprobe, iPhone SE 2x / iOS 26.1:
+            // `UIView.appearance().semanticContentAttribute = .forceRightToLeft`
+            // stamps every subsequently constructed UIView (74/76 views
+            // dump `uiDir=rtl`). Window-only assignment stamps the window
+            // (1/76) and does not propagate — `effectiveUserInterfaceLayoutDirection`
+            // of an unspecified child stays LTR (UIButtonTests).
+            if let proxy = UIView._appearanceProxy,
+               proxy._semanticContentAttribute != .unspecified {
+                _semanticContentAttribute = proxy._semanticContentAttribute
+            }
         }
         self.frame = frame
     }
@@ -1043,6 +1065,13 @@ open class UIView: UIResponder, CALayerDelegate {
         type(of: self).userInterfaceLayoutDirection(for: semanticContentAttribute)
     }
 
+    /// Whether this view arranges its own content right-to-left.
+    /// Unspecified still resolves LTR (UIButtonTests: a child of an RTL
+    /// parent does not inherit).
+    var _layoutIsRTL: Bool {
+        effectiveUserInterfaceLayoutDirection == .rightToLeft
+    }
+
     open var traitCollection: UITraitCollection {
         // UIKit supplies a complete environment even before a view joins a
         // hierarchy. OpenUIKit's process-wide collection may intentionally
@@ -1052,6 +1081,9 @@ open class UIView: UIResponder, CALayerDelegate {
         var t = superview?.traitCollection ?? UIScreen.main._currentTraitsResolvingSizeClasses
         if overrideUserInterfaceStyle != .unspecified {
             t.userInterfaceStyle = overrideUserInterfaceStyle
+        }
+        if traitOverrides.preferredContentSizeCategory != .unspecified {
+            t.preferredContentSizeCategory = traitOverrides.preferredContentSizeCategory
         }
         return t
     }

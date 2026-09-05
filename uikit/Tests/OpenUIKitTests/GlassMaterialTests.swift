@@ -3,7 +3,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class GlassMaterialTests: XCTestCase {
 
     private func px(_ b: Bitmap, _ x: Int, _ y: Int) -> (r: Int, g: Int, b: Int, a: Int) {
@@ -123,5 +125,116 @@ final class GlassMaterialTests: XCTestCase {
         XCTAssertEqual(_UIBarItemLayout.sharedPlatterFrames([a, b]), [])
         XCTAssertFalse(a._platterHiddenByGroup)
         XCTAssertFalse(b._platterHiddenByGroup)
+    }
+
+    func testDarkBarGlassMixOverBlackIs19() {
+        // MEASURED /tmp/glass-dark-out glass_tabbar_dark_black, SE 2x:
+        // α=190/255, T=19/190 over black → 19. Sheet mix is 57.
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark,
+                                                      displayScale: 2)
+        let root = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 80))
+        root.overrideUserInterfaceStyle = .dark
+        root.backgroundColor = .black
+        let glass = UIView(frame: CGRect(x: 20, y: 16, width: 60, height: 48))
+        glass.isOpaque = false
+        glass._usesIOSGlass = true
+        glass._usesIOSDarkBarGlass = true
+        glass.layer.cornerRadius = 24
+        root.addSubview(glass)
+        let bmp = UIRenderer.render(root, scale: 2)
+        let p = px(bmp, 100, 80)
+        XCTAssertEqual(p.a, 255)
+        XCTAssertLessThanOrEqual(abs(p.r - 19), 2, "\(p)")
+        XCTAssertLessThanOrEqual(abs(p.g - 19), 2, "\(p)")
+        XCTAssertLessThanOrEqual(abs(p.b - 19), 2, "\(p)")
+    }
+
+    func testDarkBarGlassMixOverWhiteIs84() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark,
+                                                      displayScale: 2)
+        let root = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 80))
+        root.overrideUserInterfaceStyle = .dark
+        root.backgroundColor = .white
+        let glass = UIView(frame: CGRect(x: 20, y: 16, width: 60, height: 48))
+        glass.isOpaque = false
+        glass._usesIOSGlass = true
+        glass._usesIOSDarkBarGlass = true
+        glass.layer.cornerRadius = 24
+        root.addSubview(glass)
+        let bmp = UIRenderer.render(root, scale: 2)
+        let p = px(bmp, 100, 80)
+        XCTAssertEqual(p.a, 255)
+        XCTAssertLessThanOrEqual(abs(p.r - 84), 2, "\(p)")
+        XCTAssertLessThanOrEqual(abs(p.g - 84), 2, "\(p)")
+        XCTAssertLessThanOrEqual(abs(p.b - 84), 2, "\(p)")
+    }
+
+    func testToolbarPlatterUsesDarkBarGlassAndNavDoesNot() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        let toolbarItem = UIBarButtonItem(title: "Left", style: .plain, target: nil, action: nil)
+        let toolbar = _UIBarButtonItemView(item: toolbarItem)
+        toolbar.appliesRefraction = false
+        toolbar.applyColors()
+        XCTAssertTrue(toolbar.platter._usesIOSDarkBarGlass)
+        let navItem = UIBarButtonItem(title: "Left", style: .plain, target: nil, action: nil)
+        let nav = _UIBarButtonItemView(item: navItem)
+        nav.applyColors()
+        XCTAssertFalse(nav.platter._usesIOSDarkBarGlass)
+    }
+
+    /// MEASURED `/tmp/ipad-open-cap` popover_actionsheet_{white,black},
+    /// iPad (A16) 820×1180 @2x / iOS 26.1: interiors 246 / 178.
+    func testPadActionSheetPopoverMix() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light,
+                                                      displayScale: 2)
+        func render(over color: UIColor) -> (r: Int, g: Int, b: Int, a: Int) {
+            let root = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 80))
+            root.backgroundColor = color
+            let glass = UIView(frame: CGRect(x: 20, y: 16, width: 60, height: 48))
+            glass.isOpaque = false
+            glass._usesIOSGlass = true
+            glass._iosGlassKind = .padActionSheetPopover
+            glass.layer.cornerRadius = 24
+            root.addSubview(glass)
+            return px(UIRenderer.render(root, scale: 2), 100, 80)
+        }
+        let w = render(over: .white)
+        XCTAssertLessThanOrEqual(abs(w.r - 246), 2, "\(w)")
+        let b = render(over: .black)
+        XCTAssertLessThanOrEqual(abs(b.r - 178), 2, "\(b)")
+    }
+
+    /// MEASURED `/tmp/ipad-open-cap` popover_{white,black}: interiors 252 / 215.
+    func testPadContentPopoverMix() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light,
+                                                      displayScale: 2)
+        func render(over color: UIColor) -> (r: Int, g: Int, b: Int, a: Int) {
+            let root = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 80))
+            root.backgroundColor = color
+            let glass = UIView(frame: CGRect(x: 20, y: 16, width: 60, height: 48))
+            glass.isOpaque = false
+            glass._usesIOSGlass = true
+            glass._iosGlassKind = .padContentPopover
+            root.addSubview(glass)
+            return px(UIRenderer.render(root, scale: 2), 100, 80)
+        }
+        let w = render(over: .white)
+        XCTAssertLessThanOrEqual(abs(w.r - 252), 2, "\(w)")
+        let b = render(over: .black)
+        XCTAssertLessThanOrEqual(abs(b.r - 215), 2, "\(b)")
     }
 }

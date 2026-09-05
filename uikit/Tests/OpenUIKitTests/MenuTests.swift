@@ -16,7 +16,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class MenuLayoutTests: XCTestCase {
 
     private func action(_ title: String, subtitle: String? = nil,
@@ -148,7 +150,9 @@ final class MenuLayoutTests: XCTestCase {
 
 // MARK: - Pixels (against the measured device framebuffer)
 
+#if !os(Linux)
 @MainActor
+#endif
 final class MenuRenderTests: XCTestCase {
 
     private var savedBackend: RenderBackend = CanvasBackendSelection.current

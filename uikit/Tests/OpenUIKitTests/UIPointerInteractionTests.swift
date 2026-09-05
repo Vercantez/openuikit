@@ -1,7 +1,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class PointerStyleDelegate: UIPointerInteractionDelegate {
     var styleRequests = 0
 
@@ -13,10 +15,14 @@ private final class PointerStyleDelegate: UIPointerInteractionDelegate {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class DefaultPointerDelegate: UIPointerInteractionDelegate {}
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class TrackingInteraction: UIInteraction {
     private(set) weak var view: UIView?
     var moves: [String] = []
@@ -31,7 +37,9 @@ private final class TrackingInteraction: UIInteraction {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UIPointerInteractionTests: XCTestCase {
     func testInteractionDefaultsAndAttachmentLifecycle() {
         let delegate = PointerStyleDelegate()

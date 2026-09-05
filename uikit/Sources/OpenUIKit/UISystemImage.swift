@@ -348,12 +348,13 @@ private enum _UISystemImageRenderer {
         }
 
         // MEASURED symbolinkprobe, SE 2x / iPhone 16 3x / iOS 26.1:
-        // tab-bar UIImageView.preferredSymbolConfiguration is 18 pt
-        // medium large; the harvested label-opaque coverage (Resources/
-        // symbol_ink_ios.json / _3x) is the glyph the bar actually
-        // stamps. Procedural paths missed that ink (Tabs t1000 calendar
-        // blob 59 at [91.5, 597.5, 22.5, 21]; t2000 clock.fill 246 at
-        // [264, 598.5, 19, 19]). Catalyst keeps the vectors below.
+        // harvested label-opaque coverage (Resources/symbol_ink_ios.json
+        // / _3x) at the configurations real apps use (default
+        // 17|regular|unspecified, tab bar 18|medium|large, bar-button
+        // 17|medium|large). Procedural paths missed that ink (Tabs t1000
+        // calendar blob 59 at [91.5, 597.5, 22.5, 21]). Catalyst keeps
+        // the vectors below. A harvested name at a harvested
+        // configuration whose key is missing fails loudly.
         if let stamped = SymbolInkTable.stampTemplate(
             name: name, configuration: symbolConfiguration, scale: scale
         ) {

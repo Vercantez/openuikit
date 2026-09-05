@@ -2,7 +2,9 @@ import Foundation
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SystemImageTests: XCTestCase {
     private var savedImageScale: CGFloat = 2
     private var savedBackend: RenderBackend = .quartz
@@ -161,10 +163,50 @@ final class SystemImageTests: XCTestCase {
         // Names the table harvested but the procedural set does not carry.
         XCTAssertNotNil(UIImage(systemName: "house",
                                 withConfiguration: configuration))
+        XCTAssertNotNil(UIImage(systemName: "magnifyingglass"))
+        XCTAssertNotNil(UIImage(systemName: "gearshape"))
+        XCTAssertNotNil(UIImage(systemName: "chevron.right"))
         OpenUIKitRuntime.systemFontCut = .macOS
         XCTAssertNil(UIImage(systemName: "house",
                              withConfiguration: configuration))
         XCTAssertNil(UIImage(systemName: "magnifyingglass"))
+        XCTAssertNil(UIImage(systemName: "gearshape"))
+    }
+
+    /// MEASURED symbolinkprobe, iPhone SE 2x / iOS 26.1: unconfigured
+    /// UIImage(systemName:) is byte-identical to 17 pt regular unspecified
+    /// (73/73 names). magnifyingglass default alignment 41×37 (20.5×18.5);
+    /// bar-button 17 medium large plus is 46×44 (23×22 pt).
+    func testHarvestedDefaultAndBarButtonSymbolInk() throws {
+        let savedCut = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        OpenUIKitRuntime.imageScreenScale = 2
+        defer { OpenUIKitRuntime.systemFontCut = savedCut }
+
+        let glass = try XCTUnwrap(UIImage(systemName: "magnifyingglass"))
+        XCTAssertEqual(glass.size, CGSize(width: 20.5, height: 18.5))
+        XCTAssertEqual(glass.bitmap.width, 41)
+        XCTAssertEqual(glass.bitmap.height, 37)
+
+        let bar = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium,
+                                            scale: .large)
+        let plus = try XCTUnwrap(UIImage(systemName: "plus",
+                                           withConfiguration: bar))
+        XCTAssertEqual(plus.size, CGSize(width: 23, height: 22))
+        XCTAssertEqual(plus.bitmap.width, 46)
+        XCTAssertEqual(plus.bitmap.height, 44)
+
+        OpenUIKitRuntime.imageScreenScale = 3
+        let house3 = try XCTUnwrap(UIImage(systemName: "house"))
+        XCTAssertEqual(house3.bitmap.width, 72)
+        XCTAssertEqual(house3.bitmap.height, 59)
+        XCTAssertEqual(house3.size.width, 24, accuracy: 0.001)
+        XCTAssertEqual(house3.size.height, 59 / 3, accuracy: 0.001)
+
+        // Unharvested names stay nil (fail closed). A harvested name at a
+        // harvested configuration whose key is missing fails loudly in
+        // SymbolInkTable (preconditionFailure), not here.
+        XCTAssertNil(UIImage(systemName: "airplane"))
     }
 
     func testReminderConfiguredPlusSizeAndAutomaticMode() throws {

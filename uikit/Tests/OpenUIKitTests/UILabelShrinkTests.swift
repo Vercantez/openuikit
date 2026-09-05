@@ -1,7 +1,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UILabelShrinkTests: XCTestCase {
     private func makeLabel(text: String, font: UIFont, width: CGFloat,
                            adjusts: Bool, minimum: CGFloat) -> UILabel {

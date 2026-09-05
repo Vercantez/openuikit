@@ -1,0 +1,260 @@
+pattern.en_US_POSIX.GMT.dd MMM	29 Feb
+pattern.en_US_POSIX.GMT.EEE, dd MMMM	Thu, 29 February
+pattern.en_US_POSIX.GMT.yyyy-MM-dd HH:mm:ss	2024-02-29 17:25:09
+pattern.en_US_POSIX.GMT.h:mm a	5:25 PM
+pattern.en_US_POSIX.GMT.yyyy-MM-dd'T'HH:mm:ss.SSSXXX	2024-02-29T17:25:09.125Z
+pattern.en_US_POSIX.GMT.hh 'o''clock' a	05 o'clock PM
+pattern.en_US_POSIX.GMT.G yyyy MMMM d EEEE	AD 2024 February 29 Thursday
+pattern.en_US_POSIX.GMT.D	60
+pattern.en_US_POSIX.GMT.HH:mm:ssZ	17:25:09+0000
+pattern.en_US_POSIX.GMT.yyyy-MM-dd HH:mm:ss z	2024-02-29 17:25:09 GMT
+pattern.en_US_POSIX.GMT.yyyy-MM-dd HH:mm:ss zzzz	2024-02-29 17:25:09 Greenwich Mean Time
+pattern.en_US_POSIX.America/Chicago.dd MMM	29 Feb
+pattern.en_US_POSIX.America/Chicago.EEE, dd MMMM	Thu, 29 February
+pattern.en_US_POSIX.America/Chicago.yyyy-MM-dd HH:mm:ss	2024-02-29 11:25:09
+pattern.en_US_POSIX.America/Chicago.h:mm a	11:25 AM
+pattern.en_US_POSIX.America/Chicago.yyyy-MM-dd'T'HH:mm:ss.SSSXXX	2024-02-29T11:25:09.125-06:00
+pattern.en_US_POSIX.America/Chicago.hh 'o''clock' a	11 o'clock AM
+pattern.en_US_POSIX.America/Chicago.G yyyy MMMM d EEEE	AD 2024 February 29 Thursday
+pattern.en_US_POSIX.America/Chicago.D	60
+pattern.en_US_POSIX.America/Chicago.HH:mm:ssZ	11:25:09-0600
+pattern.en_US_POSIX.America/Chicago.yyyy-MM-dd HH:mm:ss z	2024-02-29 11:25:09 CST
+pattern.en_US_POSIX.America/Chicago.yyyy-MM-dd HH:mm:ss zzzz	2024-02-29 11:25:09 Central Standard Time
+pattern.en_US.GMT.dd MMM	29 Feb
+pattern.en_US.GMT.EEE, dd MMMM	Thu, 29 February
+pattern.en_US.GMT.yyyy-MM-dd HH:mm:ss	2024-02-29 17:25:09
+pattern.en_US.GMT.h:mm a	5:25 PM
+pattern.en_US.GMT.yyyy-MM-dd'T'HH:mm:ss.SSSXXX	2024-02-29T17:25:09.125Z
+pattern.en_US.GMT.hh 'o''clock' a	05 o'clock PM
+pattern.en_US.GMT.G yyyy MMMM d EEEE	AD 2024 February 29 Thursday
+pattern.en_US.GMT.D	60
+pattern.en_US.GMT.HH:mm:ssZ	17:25:09+0000
+pattern.en_US.GMT.yyyy-MM-dd HH:mm:ss z	2024-02-29 17:25:09 GMT
+pattern.en_US.GMT.yyyy-MM-dd HH:mm:ss zzzz	2024-02-29 17:25:09 Greenwich Mean Time
+pattern.en_US.America/Chicago.dd MMM	29 Feb
+pattern.en_US.America/Chicago.EEE, dd MMMM	Thu, 29 February
+pattern.en_US.America/Chicago.yyyy-MM-dd HH:mm:ss	2024-02-29 11:25:09
+pattern.en_US.America/Chicago.h:mm a	11:25 AM
+pattern.en_US.America/Chicago.yyyy-MM-dd'T'HH:mm:ss.SSSXXX	2024-02-29T11:25:09.125-06:00
+pattern.en_US.America/Chicago.hh 'o''clock' a	11 o'clock AM
+pattern.en_US.America/Chicago.G yyyy MMMM d EEEE	AD 2024 February 29 Thursday
+pattern.en_US.America/Chicago.D	60
+pattern.en_US.America/Chicago.HH:mm:ssZ	11:25:09-0600
+pattern.en_US.America/Chicago.yyyy-MM-dd HH:mm:ss z	2024-02-29 11:25:09 CST
+pattern.en_US.America/Chicago.yyyy-MM-dd HH:mm:ss zzzz	2024-02-29 11:25:09 Central Standard Time
+pattern.en_GB.GMT.dd MMM	29 Feb
+pattern.en_GB.GMT.EEE, dd MMMM	Thu, 29 February
+pattern.en_GB.GMT.yyyy-MM-dd HH:mm:ss	2024-02-29 17:25:09
+pattern.en_GB.GMT.h:mm a	5:25 pm
+pattern.en_GB.GMT.yyyy-MM-dd'T'HH:mm:ss.SSSXXX	2024-02-29T17:25:09.125Z
+pattern.en_GB.GMT.hh 'o''clock' a	05 o'clock pm
+pattern.en_GB.GMT.G yyyy MMMM d EEEE	AD 2024 February 29 Thursday
+pattern.en_GB.GMT.D	60
+pattern.en_GB.GMT.HH:mm:ssZ	17:25:09+0000
+pattern.en_GB.GMT.yyyy-MM-dd HH:mm:ss z	2024-02-29 17:25:09 GMT
+pattern.en_GB.GMT.yyyy-MM-dd HH:mm:ss zzzz	2024-02-29 17:25:09 Greenwich Mean Time
+pattern.en_GB.America/Chicago.dd MMM	29 Feb
+pattern.en_GB.America/Chicago.EEE, dd MMMM	Thu, 29 February
+pattern.en_GB.America/Chicago.yyyy-MM-dd HH:mm:ss	2024-02-29 11:25:09
+pattern.en_GB.America/Chicago.h:mm a	11:25 am
+pattern.en_GB.America/Chicago.yyyy-MM-dd'T'HH:mm:ss.SSSXXX	2024-02-29T11:25:09.125-06:00
+pattern.en_GB.America/Chicago.hh 'o''clock' a	11 o'clock am
+pattern.en_GB.America/Chicago.G yyyy MMMM d EEEE	AD 2024 February 29 Thursday
+pattern.en_GB.America/Chicago.D	60
+pattern.en_GB.America/Chicago.HH:mm:ssZ	11:25:09-0600
+pattern.en_GB.America/Chicago.yyyy-MM-dd HH:mm:ss z	2024-02-29 11:25:09 GMT-6
+pattern.en_GB.America/Chicago.yyyy-MM-dd HH:mm:ss zzzz	2024-02-29 11:25:09 Central Standard Time
+pattern.de_DE.GMT.dd MMM	29 Feb.
+pattern.de_DE.GMT.EEE, dd MMMM	Do., 29 Februar
+pattern.de_DE.GMT.yyyy-MM-dd HH:mm:ss	2024-02-29 17:25:09
+pattern.de_DE.GMT.h:mm a	5:25 PM
+pattern.de_DE.GMT.yyyy-MM-dd'T'HH:mm:ss.SSSXXX	2024-02-29T17:25:09.125Z
+pattern.de_DE.GMT.hh 'o''clock' a	05 o'clock PM
+pattern.de_DE.GMT.G yyyy MMMM d EEEE	n. Chr. 2024 Februar 29 Donnerstag
+pattern.de_DE.GMT.D	60
+pattern.de_DE.GMT.HH:mm:ssZ	17:25:09+0000
+pattern.de_DE.GMT.yyyy-MM-dd HH:mm:ss z	2024-02-29 17:25:09 GMT+0
+pattern.de_DE.GMT.yyyy-MM-dd HH:mm:ss zzzz	2024-02-29 17:25:09 Mittlere Greenwich-Zeit
+pattern.de_DE.America/Chicago.dd MMM	29 Feb.
+pattern.de_DE.America/Chicago.EEE, dd MMMM	Do., 29 Februar
+pattern.de_DE.America/Chicago.yyyy-MM-dd HH:mm:ss	2024-02-29 11:25:09
+pattern.de_DE.America/Chicago.h:mm a	11:25 AM
+pattern.de_DE.America/Chicago.yyyy-MM-dd'T'HH:mm:ss.SSSXXX	2024-02-29T11:25:09.125-06:00
+pattern.de_DE.America/Chicago.hh 'o''clock' a	11 o'clock AM
+pattern.de_DE.America/Chicago.G yyyy MMMM d EEEE	n. Chr. 2024 Februar 29 Donnerstag
+pattern.de_DE.America/Chicago.D	60
+pattern.de_DE.America/Chicago.HH:mm:ssZ	11:25:09-0600
+pattern.de_DE.America/Chicago.yyyy-MM-dd HH:mm:ss z	2024-02-29 11:25:09 GMT-6
+pattern.de_DE.America/Chicago.yyyy-MM-dd HH:mm:ss zzzz	2024-02-29 11:25:09 Nordamerikanische Zentral-Normalzeit
+pattern.fr_FR.GMT.dd MMM	29 févr.
+pattern.fr_FR.GMT.EEE, dd MMMM	jeu., 29 février
+pattern.fr_FR.GMT.yyyy-MM-dd HH:mm:ss	2024-02-29 17:25:09
+pattern.fr_FR.GMT.h:mm a	5:25 PM
+pattern.fr_FR.GMT.yyyy-MM-dd'T'HH:mm:ss.SSSXXX	2024-02-29T17:25:09.125Z
+pattern.fr_FR.GMT.hh 'o''clock' a	05 o'clock PM
+pattern.fr_FR.GMT.G yyyy MMMM d EEEE	ap. J.-C. 2024 février 29 jeudi
+pattern.fr_FR.GMT.D	60
+pattern.fr_FR.GMT.HH:mm:ssZ	17:25:09+0000
+pattern.fr_FR.GMT.yyyy-MM-dd HH:mm:ss z	2024-02-29 17:25:09 UTC+0
+pattern.fr_FR.GMT.yyyy-MM-dd HH:mm:ss zzzz	2024-02-29 17:25:09 heure moyenne de Greenwich
+pattern.ja_JP.GMT.dd MMM	29 2月
+pattern.ja_JP.GMT.EEE, dd MMMM	木, 29 2月
+pattern.ja_JP.GMT.yyyy-MM-dd HH:mm:ss	2024-02-29 17:25:09
+pattern.ja_JP.GMT.h:mm a	5:25 午後
+pattern.ja_JP.GMT.yyyy-MM-dd'T'HH:mm:ss.SSSXXX	2024-02-29T17:25:09.125Z
+pattern.ja_JP.GMT.hh 'o''clock' a	05 o'clock 午後
+pattern.ja_JP.GMT.G yyyy MMMM d EEEE	西暦 2024 2月 29 木曜日
+pattern.ja_JP.GMT.D	60
+pattern.ja_JP.GMT.HH:mm:ssZ	17:25:09+0000
+pattern.ja_JP.GMT.yyyy-MM-dd HH:mm:ss z	2024-02-29 17:25:09 GMT+0
+pattern.ja_JP.GMT.yyyy-MM-dd HH:mm:ss zzzz	2024-02-29 17:25:09 グリニッジ標準時
+style.en_US_POSIX.0.1	5:25 PM
+style.en_US_POSIX.0.2	5:25:09 PM
+style.en_US_POSIX.0.3	5:25:09 PM GMT
+style.en_US_POSIX.0.4	5:25:09 PM Greenwich Mean Time
+style.en_US_POSIX.1.0	2/29/24
+style.en_US_POSIX.1.1	2/29/24, 5:25 PM
+style.en_US_POSIX.1.2	2/29/24, 5:25:09 PM
+style.en_US_POSIX.1.3	2/29/24, 5:25:09 PM GMT
+style.en_US_POSIX.1.4	2/29/24, 5:25:09 PM Greenwich Mean Time
+style.en_US_POSIX.2.0	Feb 29, 2024
+style.en_US_POSIX.2.1	Feb 29, 2024 at 5:25 PM
+style.en_US_POSIX.2.2	Feb 29, 2024 at 5:25:09 PM
+style.en_US_POSIX.2.3	Feb 29, 2024 at 5:25:09 PM GMT
+style.en_US_POSIX.2.4	Feb 29, 2024 at 5:25:09 PM Greenwich Mean Time
+style.en_US_POSIX.3.0	February 29, 2024
+style.en_US_POSIX.3.1	February 29, 2024 at 5:25 PM
+style.en_US_POSIX.3.2	February 29, 2024 at 5:25:09 PM
+style.en_US_POSIX.3.3	February 29, 2024 at 5:25:09 PM GMT
+style.en_US_POSIX.3.4	February 29, 2024 at 5:25:09 PM Greenwich Mean Time
+style.en_US_POSIX.4.0	Thursday, February 29, 2024
+style.en_US_POSIX.4.1	Thursday, February 29, 2024 at 5:25 PM
+style.en_US_POSIX.4.2	Thursday, February 29, 2024 at 5:25:09 PM
+style.en_US_POSIX.4.3	Thursday, February 29, 2024 at 5:25:09 PM GMT
+style.en_US_POSIX.4.4	Thursday, February 29, 2024 at 5:25:09 PM Greenwich Mean Time
+style.en_US.0.1	5:25 PM
+style.en_US.0.2	5:25:09 PM
+style.en_US.0.3	5:25:09 PM GMT
+style.en_US.0.4	5:25:09 PM Greenwich Mean Time
+style.en_US.1.0	2/29/24
+style.en_US.1.1	2/29/24, 5:25 PM
+style.en_US.1.2	2/29/24, 5:25:09 PM
+style.en_US.1.3	2/29/24, 5:25:09 PM GMT
+style.en_US.1.4	2/29/24, 5:25:09 PM Greenwich Mean Time
+style.en_US.2.0	Feb 29, 2024
+style.en_US.2.1	Feb 29, 2024 at 5:25 PM
+style.en_US.2.2	Feb 29, 2024 at 5:25:09 PM
+style.en_US.2.3	Feb 29, 2024 at 5:25:09 PM GMT
+style.en_US.2.4	Feb 29, 2024 at 5:25:09 PM Greenwich Mean Time
+style.en_US.3.0	February 29, 2024
+style.en_US.3.1	February 29, 2024 at 5:25 PM
+style.en_US.3.2	February 29, 2024 at 5:25:09 PM
+style.en_US.3.3	February 29, 2024 at 5:25:09 PM GMT
+style.en_US.3.4	February 29, 2024 at 5:25:09 PM Greenwich Mean Time
+style.en_US.4.0	Thursday, February 29, 2024
+style.en_US.4.1	Thursday, February 29, 2024 at 5:25 PM
+style.en_US.4.2	Thursday, February 29, 2024 at 5:25:09 PM
+style.en_US.4.3	Thursday, February 29, 2024 at 5:25:09 PM GMT
+style.en_US.4.4	Thursday, February 29, 2024 at 5:25:09 PM Greenwich Mean Time
+style.en_GB.0.1	17:25
+style.en_GB.0.2	17:25:09
+style.en_GB.0.3	17:25:09 GMT
+style.en_GB.0.4	17:25:09 Greenwich Mean Time
+style.en_GB.1.0	29/02/2024
+style.en_GB.1.1	29/02/2024, 17:25
+style.en_GB.1.2	29/02/2024, 17:25:09
+style.en_GB.1.3	29/02/2024, 17:25:09 GMT
+style.en_GB.1.4	29/02/2024, 17:25:09 Greenwich Mean Time
+style.en_GB.2.0	29 Feb 2024
+style.en_GB.2.1	29 Feb 2024 at 17:25
+style.en_GB.2.2	29 Feb 2024 at 17:25:09
+style.en_GB.2.3	29 Feb 2024 at 17:25:09 GMT
+style.en_GB.2.4	29 Feb 2024 at 17:25:09 Greenwich Mean Time
+style.en_GB.3.0	29 February 2024
+style.en_GB.3.1	29 February 2024 at 17:25
+style.en_GB.3.2	29 February 2024 at 17:25:09
+style.en_GB.3.3	29 February 2024 at 17:25:09 GMT
+style.en_GB.3.4	29 February 2024 at 17:25:09 Greenwich Mean Time
+style.en_GB.4.0	Thursday, 29 February 2024
+style.en_GB.4.1	Thursday, 29 February 2024 at 17:25
+style.en_GB.4.2	Thursday, 29 February 2024 at 17:25:09
+style.en_GB.4.3	Thursday, 29 February 2024 at 17:25:09 GMT
+style.en_GB.4.4	Thursday, 29 February 2024 at 17:25:09 Greenwich Mean Time
+style.de_DE.0.1	17:25
+style.de_DE.0.2	17:25:09
+style.de_DE.0.3	17:25:09 GMT+0
+style.de_DE.0.4	17:25:09 Mittlere Greenwich-Zeit
+style.de_DE.1.0	29.02.24
+style.de_DE.1.1	29.02.24, 17:25
+style.de_DE.1.2	29.02.24, 17:25:09
+style.de_DE.1.3	29.02.24, 17:25:09 GMT+0
+style.de_DE.1.4	29.02.24, 17:25:09 Mittlere Greenwich-Zeit
+style.de_DE.2.0	29.02.2024
+style.de_DE.2.1	29.02.2024, 17:25
+style.de_DE.2.2	29.02.2024, 17:25:09
+style.de_DE.2.3	29.02.2024, 17:25:09 GMT+0
+style.de_DE.2.4	29.02.2024, 17:25:09 Mittlere Greenwich-Zeit
+style.de_DE.3.0	29. Februar 2024
+style.de_DE.3.1	29. Februar 2024 um 17:25
+style.de_DE.3.2	29. Februar 2024 um 17:25:09
+style.de_DE.3.3	29. Februar 2024 um 17:25:09 GMT+0
+style.de_DE.3.4	29. Februar 2024 um 17:25:09 Mittlere Greenwich-Zeit
+style.de_DE.4.0	Donnerstag, 29. Februar 2024
+style.de_DE.4.1	Donnerstag, 29. Februar 2024 um 17:25
+style.de_DE.4.2	Donnerstag, 29. Februar 2024 um 17:25:09
+style.de_DE.4.3	Donnerstag, 29. Februar 2024 um 17:25:09 GMT+0
+style.de_DE.4.4	Donnerstag, 29. Februar 2024 um 17:25:09 Mittlere Greenwich-Zeit
+style.fr_FR.0.1	17:25
+style.fr_FR.0.2	17:25:09
+style.fr_FR.0.3	17:25:09 UTC+0
+style.fr_FR.0.4	17:25:09 heure moyenne de Greenwich
+style.fr_FR.1.0	29/02/2024
+style.fr_FR.1.1	29/02/2024 17:25
+style.fr_FR.1.2	29/02/2024 17:25:09
+style.fr_FR.1.3	29/02/2024 17:25:09 UTC+0
+style.fr_FR.1.4	29/02/2024 17:25:09 heure moyenne de Greenwich
+style.fr_FR.2.0	29 févr. 2024
+style.fr_FR.2.1	29 févr. 2024 à 17:25
+style.fr_FR.2.2	29 févr. 2024 à 17:25:09
+style.fr_FR.2.3	29 févr. 2024 à 17:25:09 UTC+0
+style.fr_FR.2.4	29 févr. 2024 à 17:25:09 heure moyenne de Greenwich
+style.fr_FR.3.0	29 février 2024
+style.fr_FR.3.1	29 février 2024 à 17:25
+style.fr_FR.3.2	29 février 2024 à 17:25:09
+style.fr_FR.3.3	29 février 2024 à 17:25:09 UTC+0
+style.fr_FR.3.4	29 février 2024 à 17:25:09 heure moyenne de Greenwich
+style.fr_FR.4.0	jeudi 29 février 2024
+style.fr_FR.4.1	jeudi 29 février 2024 à 17:25
+style.fr_FR.4.2	jeudi 29 février 2024 à 17:25:09
+style.fr_FR.4.3	jeudi 29 février 2024 à 17:25:09 UTC+0
+style.fr_FR.4.4	jeudi 29 février 2024 à 17:25:09 heure moyenne de Greenwich
+style.ja_JP.0.1	17:25
+style.ja_JP.0.2	17:25:09
+style.ja_JP.0.3	17:25:09 GMT+0
+style.ja_JP.0.4	17時25分09秒 グリニッジ標準時
+style.ja_JP.1.0	2024/02/29
+style.ja_JP.1.1	2024/02/29 17:25
+style.ja_JP.1.2	2024/02/29 17:25:09
+style.ja_JP.1.3	2024/02/29 17:25:09 GMT+0
+style.ja_JP.1.4	2024/02/29 17時25分09秒 グリニッジ標準時
+style.ja_JP.2.0	2024/02/29
+style.ja_JP.2.1	2024/02/29 17:25
+style.ja_JP.2.2	2024/02/29 17:25:09
+style.ja_JP.2.3	2024/02/29 17:25:09 GMT+0
+style.ja_JP.2.4	2024/02/29 17時25分09秒 グリニッジ標準時
+style.ja_JP.3.0	2024年2月29日
+style.ja_JP.3.1	2024年2月29日 17:25
+style.ja_JP.3.2	2024年2月29日 17:25:09
+style.ja_JP.3.3	2024年2月29日 17:25:09 GMT+0
+style.ja_JP.3.4	2024年2月29日 17時25分09秒 グリニッジ標準時
+style.ja_JP.4.0	2024年2月29日 木曜日
+style.ja_JP.4.1	2024年2月29日 木曜日 17:25
+style.ja_JP.4.2	2024年2月29日 木曜日 17:25:09
+style.ja_JP.4.3	2024年2月29日 木曜日 17:25:09 GMT+0
+style.ja_JP.4.4	2024年2月29日 木曜日 17時25分09秒 グリニッジ標準時
+parse.posix	1709227509.0
+parse.roundtrip	2024-02-29 17:25:09
+parse.iso	1709227509.125
+parse.short	1709164800.0
+parse.quoted	05 o'clock PM
+calendar.de	Donnerstag, 29. Februar 2024

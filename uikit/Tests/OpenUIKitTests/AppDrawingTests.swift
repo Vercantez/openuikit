@@ -9,7 +9,9 @@ import Foundation
 @testable import OpenUIKit
 
 /// A view that draws through the app-facing `draw(_ rect:)` hook.
+#if !os(Linux)
 @MainActor
+#endif
 private final class CustomDrawView: UIView {
     var fillColor: UIColor = .red
     var drawCount = 0
@@ -21,7 +23,9 @@ private final class CustomDrawView: UIView {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class AppDrawingTests: XCTestCase {
 
     private var savedSearchPaths: [String] = []
@@ -538,6 +542,19 @@ final class AppDrawingTests: XCTestCase {
         XCTAssertEqual(large.currentStep, 1)
         large.stopAnimating()
         XCTAssertEqual(large.currentStep, 0)
+
+        // MEASURED Pager t200.dark, SE 2x: 9 o'clock core (120,120,125)
+        // over black at blade α=217/255 inverts to (141,141,147).
+        let savedTraits = UITraitCollection.current
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark,
+                                                      displayScale: 2)
+        let dark = UIActivityIndicatorView.defaultColor
+            .resolvedCGColor(with: UITraitCollection.current)
+        UITraitCollection.current = savedTraits
+        XCTAssertEqual((dark.red * 255).rounded(), 141)
+        XCTAssertEqual((dark.green * 255).rounded(), 141)
+        XCTAssertEqual((dark.blue * 255).rounded(), 147)
+        XCTAssertEqual(dark.alpha, 1, accuracy: 1e-9)
     }
 
     func testPageControlLayoutMatchesTheOracleRules() {
@@ -570,6 +587,20 @@ final class AppDrawingTests: XCTestCase {
         window.sendTouch(.ended, at: CGPoint(x: 200, y: 15), timestamp: 0.1, touchID: 0)
         XCTAssertEqual(pc.currentPage, 2)
         XCTAssertEqual(changes, 1)
+    }
+
+    /// MEASURED Pager t200.rtl, iPhone SE 2x / iOS 26.1: page 0 paints the
+    /// rightmost dot. Visual index = n − 1 − index. LTR centres stay put.
+    func testPageControlRTLReversesVisualIndex() {
+        let pc = UIPageControl(frame: CGRect(x: 0, y: 0, width: 280, height: 30))
+        pc.numberOfPages = 3
+        pc.currentPage = 0
+        let ltr0 = pc.indicatorCenter(at: 0).x
+        let ltr2 = pc.indicatorCenter(at: 2).x
+        pc.semanticContentAttribute = .forceRightToLeft
+        XCTAssertEqual(pc.indicatorCenter(at: 0).x, ltr2, accuracy: 0.001)
+        XCTAssertEqual(pc.indicatorCenter(at: 2).x, ltr0, accuracy: 0.001)
+        XCTAssertEqual(pc.indicatorCenter(at: 1).x, (ltr0 + ltr2) / 2, accuracy: 0.001)
     }
 
     func testStoppedIndicatorDrawsNothingWhenItHidesWhenStopped() {

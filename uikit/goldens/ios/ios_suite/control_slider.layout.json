@@ -1,0 +1,989 @@
+{
+  "name" : "control_slider",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        320,
+        220
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        220
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        280,
+        34
+      ],
+      "class" : "UISlider",
+      "frame" : [
+        20,
+        20,
+        280,
+        34
+      ],
+      "intrinsic" : [
+        -1,
+        34
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        280,
+        34
+      ],
+      "class" : "_UISliderGlassVisualElement",
+      "frame" : [
+        0,
+        0,
+        280,
+        34
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        34,
+        280,
+        6
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        14,
+        280,
+        6
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        34,
+        280,
+        6
+      ],
+      "bg" : [
+        0,
+        0,
+        0,
+        0.10000000000000001
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        280,
+        6
+      ],
+      "path" : "1.0.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        34,
+        0,
+        6
+      ],
+      "bg" : [
+        0,
+        0.53300000000000003,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        0,
+        0,
+        6
+      ],
+      "path" : "1.0.0.1"
+    },
+    {
+      "absFrame" : [
+        20,
+        25,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        5,
+        37,
+        24
+      ],
+      "path" : "1.0.1"
+    },
+    {
+      "absFrame" : [
+        20,
+        25,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.1.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        25,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        60,
+        280,
+        34
+      ],
+      "class" : "UISlider",
+      "frame" : [
+        20,
+        60,
+        280,
+        34
+      ],
+      "intrinsic" : [
+        -1,
+        34
+      ],
+      "path" : "2"
+    },
+    {
+      "absFrame" : [
+        20,
+        60,
+        280,
+        34
+      ],
+      "class" : "_UISliderGlassVisualElement",
+      "frame" : [
+        0,
+        0,
+        280,
+        34
+      ],
+      "path" : "2.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        74,
+        280,
+        6
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        14,
+        280,
+        6
+      ],
+      "path" : "2.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        74,
+        280,
+        6
+      ],
+      "bg" : [
+        0,
+        0,
+        0,
+        0.10000000000000001
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        280,
+        6
+      ],
+      "path" : "2.0.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        74,
+        103.55,
+        6
+      ],
+      "bg" : [
+        0,
+        0.53300000000000003,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        0,
+        103.55,
+        6
+      ],
+      "path" : "2.0.0.1"
+    },
+    {
+      "absFrame" : [
+        105,
+        65,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        85,
+        5,
+        37,
+        24
+      ],
+      "path" : "2.0.1"
+    },
+    {
+      "absFrame" : [
+        105,
+        65,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "2.0.1.0"
+    },
+    {
+      "absFrame" : [
+        105,
+        65,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "2.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        100,
+        280,
+        34
+      ],
+      "class" : "UISlider",
+      "frame" : [
+        20,
+        100,
+        280,
+        34
+      ],
+      "intrinsic" : [
+        -1,
+        34
+      ],
+      "path" : "3"
+    },
+    {
+      "absFrame" : [
+        20,
+        100,
+        280,
+        34
+      ],
+      "class" : "_UISliderGlassVisualElement",
+      "frame" : [
+        0,
+        0,
+        280,
+        34
+      ],
+      "path" : "3.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        114,
+        280,
+        6
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        14,
+        280,
+        6
+      ],
+      "path" : "3.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        114,
+        280,
+        6
+      ],
+      "bg" : [
+        0,
+        0,
+        0,
+        0.10000000000000001
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        280,
+        6
+      ],
+      "path" : "3.0.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        114,
+        280,
+        6
+      ],
+      "bg" : [
+        0,
+        0.53300000000000003,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        0,
+        280,
+        6
+      ],
+      "path" : "3.0.0.1"
+    },
+    {
+      "absFrame" : [
+        263,
+        105,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        243,
+        5,
+        37,
+        24
+      ],
+      "path" : "3.0.1"
+    },
+    {
+      "absFrame" : [
+        263,
+        105,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "3.0.1.0"
+    },
+    {
+      "absFrame" : [
+        263,
+        105,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "3.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        140,
+        280,
+        40
+      ],
+      "class" : "UISlider",
+      "frame" : [
+        20,
+        140,
+        280,
+        40
+      ],
+      "intrinsic" : [
+        -1,
+        34
+      ],
+      "path" : "4"
+    },
+    {
+      "absFrame" : [
+        20,
+        140,
+        280,
+        40
+      ],
+      "class" : "_UISliderGlassVisualElement",
+      "frame" : [
+        0,
+        0,
+        280,
+        40
+      ],
+      "path" : "4.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        157,
+        280,
+        6
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        17,
+        280,
+        6
+      ],
+      "path" : "4.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        157,
+        280,
+        6
+      ],
+      "bg" : [
+        0,
+        0,
+        0,
+        0.10000000000000001
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        280,
+        6
+      ],
+      "path" : "4.0.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        157,
+        140,
+        6
+      ],
+      "bg" : [
+        0.20399999999999999,
+        0.78000000000000003,
+        0.34899999999999998,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        0,
+        140,
+        6
+      ],
+      "path" : "4.0.0.1"
+    },
+    {
+      "absFrame" : [
+        142,
+        148,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        122,
+        8,
+        37,
+        24
+      ],
+      "path" : "4.0.1"
+    },
+    {
+      "absFrame" : [
+        142,
+        148,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "4.0.1.0"
+    },
+    {
+      "absFrame" : [
+        142,
+        148,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "4.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        180,
+        200,
+        34
+      ],
+      "class" : "UISlider",
+      "frame" : [
+        20,
+        180,
+        200,
+        34
+      ],
+      "intrinsic" : [
+        -1,
+        34
+      ],
+      "path" : "5"
+    },
+    {
+      "absFrame" : [
+        20,
+        180,
+        200,
+        34
+      ],
+      "class" : "_UISliderGlassVisualElement",
+      "frame" : [
+        0,
+        0,
+        200,
+        34
+      ],
+      "path" : "5.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        194,
+        200,
+        6
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        14,
+        200,
+        6
+      ],
+      "path" : "5.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        194,
+        200,
+        6
+      ],
+      "bg" : [
+        1,
+        0.80000000000000004,
+        0,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        200,
+        6
+      ],
+      "path" : "5.0.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        194,
+        100,
+        6
+      ],
+      "bg" : [
+        0,
+        0.53300000000000003,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        0,
+        100,
+        6
+      ],
+      "path" : "5.0.0.1"
+    },
+    {
+      "absFrame" : [
+        102,
+        185,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        82,
+        5,
+        37,
+        24
+      ],
+      "path" : "5.0.1"
+    },
+    {
+      "absFrame" : [
+        102,
+        185,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "5.0.1.0"
+    },
+    {
+      "absFrame" : [
+        102,
+        185,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "5.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        230,
+        176,
+        80,
+        42
+      ],
+      "bg" : [
+        0.20399999999999999,
+        0.78000000000000003,
+        0.34899999999999998,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        230,
+        176,
+        80,
+        42
+      ],
+      "path" : "6"
+    },
+    {
+      "absFrame" : [
+        234,
+        180,
+        72,
+        34
+      ],
+      "class" : "UISlider",
+      "frame" : [
+        234,
+        180,
+        72,
+        34
+      ],
+      "intrinsic" : [
+        -1,
+        34
+      ],
+      "path" : "7"
+    },
+    {
+      "absFrame" : [
+        234,
+        180,
+        72,
+        34
+      ],
+      "class" : "_UISliderGlassVisualElement",
+      "frame" : [
+        0,
+        0,
+        72,
+        34
+      ],
+      "path" : "7.0"
+    },
+    {
+      "absFrame" : [
+        234,
+        194,
+        72,
+        6
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        14,
+        72,
+        6
+      ],
+      "path" : "7.0.0"
+    },
+    {
+      "absFrame" : [
+        234,
+        194,
+        72,
+        6
+      ],
+      "bg" : [
+        0,
+        0,
+        0,
+        0.10000000000000001
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        72,
+        6
+      ],
+      "path" : "7.0.0.0"
+    },
+    {
+      "absFrame" : [
+        234,
+        194,
+        36,
+        6
+      ],
+      "bg" : [
+        0,
+        0.53300000000000003,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        0,
+        36,
+        6
+      ],
+      "path" : "7.0.0.1"
+    },
+    {
+      "absFrame" : [
+        252,
+        185,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        18,
+        5,
+        37,
+        24
+      ],
+      "path" : "7.0.1"
+    },
+    {
+      "absFrame" : [
+        252,
+        185,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "7.0.1.0"
+    },
+    {
+      "absFrame" : [
+        252,
+        185,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "7.0.1.0.0"
+    }
+  ]
+}

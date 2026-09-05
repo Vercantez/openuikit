@@ -154,6 +154,20 @@ public enum UIAlertMetrics {
     /// How far outside the card the shadow view reaches.
     static let shadowSpill: CGFloat = 44
 
+    /// Pad action-sheet popover shadow. MEASURED `/tmp/ipad-open-cap`
+    /// popover_actionsheet_white, iPad (A16) 820×1180 @2x / iOS 26.1:
+    /// `_UIRoundedRectShadowView` frame `[-150, -150, 588, 548]` around the
+    /// 288×248 card ⇒ spill **150**. Halo over white peaks at **21** counts
+    /// (255−234) on both the top and the side ⇒ offsetY **0**. 10–90 % of
+    /// the left halo is 23…189 device px = 11.5…94.5 pt (width **83** pt);
+    /// Gaussian 10–90 is 2.563σ ⇒ σ = 83/2.563. Canvas `blur` is 2σ
+    /// (sigma = blur/2). Phone alert ring-shadow (spill 44, offset 8,
+    /// blur 22, α 0.085) is a different chrome and is not reused.
+    public static let iOSPadActionSheetShadowSpill: CGFloat = 150
+    public static let iOSPadActionSheetShadowOffsetY: CGFloat = 0
+    public static let iOSPadActionSheetShadowAlpha: CGFloat = 21.0 / 255.0
+    public static let iOSPadActionSheetShadowBlur: CGFloat = 83.0 / 2.563 * 2
+
     /// Dim-fade spring: MEASURED ω = 22.88 rad/s, critically damped, which is
     /// a UIKit spring of duration ω·D = 9.2334134764.
     public static let dimSpringOmega: Double = 22.88
@@ -206,6 +220,9 @@ final class _UIAlertShadowView: UIView {
     /// The card's rect in this view's coordinates.
     var cardRect: CGRect = .zero
     var cornerRadius: CGFloat = UIAlertMetrics.cardCornerRadius
+    var shadowOffsetY: CGFloat = UIAlertMetrics.shadowOffsetY
+    var shadowBlur: CGFloat = UIAlertMetrics.shadowBlur
+    var shadowAlpha: CGFloat = UIAlertMetrics.shadowAlpha
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -226,9 +243,9 @@ final class _UIAlertShadowView: UIView {
         canvas.save()
         canvas.clip(to: ring)
         canvas.setShadow(color: CGColor(red: 0, green: 0, blue: 0,
-                                        alpha: UIAlertMetrics.shadowAlpha),
-                         offset: CGSize(width: 0, height: UIAlertMetrics.shadowOffsetY),
-                         blur: UIAlertMetrics.shadowBlur)
+                                        alpha: shadowAlpha),
+                         offset: CGSize(width: 0, height: shadowOffsetY),
+                         blur: shadowBlur)
         canvas.drawShadow(of: Path.roundedRect(cardRect, cornerRadius: cornerRadius))
         canvas.restore()
     }
@@ -662,16 +679,29 @@ final class _UIAlertPresentationController: UIPresentationController {
         card.frame = frame
         card.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin,
                                  .flexibleTopMargin, .flexibleBottomMargin]
-
-        if !isPadActionSheetPopover {
-            let spill = UIAlertMetrics.shadowSpill
-            shadow.frame = frame.insetBy(dx: -spill, dy: -spill)
-            shadow.cardRect = CGRect(x: spill, y: spill,
-                                     width: frame.width, height: frame.height)
-            shadow.autoresizingMask = card.autoresizingMask
-            shadow.setNeedsDisplay()
-            container.addSubview(shadow)
+        if isPadActionSheetPopover {
+            // MEASURED `/tmp/ipad-open-cap` popover_actionsheet_{white,black,
+            // red,grad}: glass interiors 246/178, not the phone cardFill.
+            card._usesIOSGlass = true
+            card._iosGlassKind = .padActionSheetPopover
+            card.backgroundColor = nil
+            card.isOpaque = false
         }
+
+        let spill = isPadActionSheetPopover
+            ? UIAlertMetrics.iOSPadActionSheetShadowSpill
+            : UIAlertMetrics.shadowSpill
+        shadow.frame = frame.insetBy(dx: -spill, dy: -spill)
+        shadow.cardRect = CGRect(x: spill, y: spill,
+                                 width: frame.width, height: frame.height)
+        shadow.autoresizingMask = card.autoresizingMask
+        if isPadActionSheetPopover {
+            shadow.shadowOffsetY = UIAlertMetrics.iOSPadActionSheetShadowOffsetY
+            shadow.shadowBlur = UIAlertMetrics.iOSPadActionSheetShadowBlur
+            shadow.shadowAlpha = UIAlertMetrics.iOSPadActionSheetShadowAlpha
+        }
+        shadow.setNeedsDisplay()
+        container.addSubview(shadow)
         container.addSubview(card)
     }
 

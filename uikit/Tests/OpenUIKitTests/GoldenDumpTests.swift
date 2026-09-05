@@ -7,7 +7,9 @@ import Foundation
 
 private typealias CGColor = OpenCoreGraphics.CGColor
 
+#if !os(Linux)
 @MainActor
+#endif
 final class GoldenDumpTests: XCTestCase {
     func testDumpCornerRadiusGeometry() throws {
         guard let out = ProcessInfo.processInfo.environment["RASTER_DUMP"] else {

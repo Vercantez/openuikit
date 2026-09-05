@@ -8,7 +8,9 @@ import XCTest
 
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ProgressViewTests: XCTestCase {
     func testIntrinsicSize() {
         let p = UIProgressView()
@@ -48,7 +50,9 @@ final class ProgressViewTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class StackViewTests: XCTestCase {
     // Disambiguate from AppKit/Foundation NSLayoutConstraint on Darwin.
     private typealias Axis = OpenUIKit.NSLayoutConstraint.Axis
@@ -134,7 +138,9 @@ final class StackViewTests: XCTestCase {
 
     /// Stand-in for a UILabel-like view with a fixed intrinsic size, so the
     /// .fill tests don't depend on font rendering.
+    #if !os(Linux)
     @MainActor
+    #endif
     private final class IntrinsicView: UIView {
         let size: CGSize
         init(_ w: CGFloat, _ h: CGFloat) {

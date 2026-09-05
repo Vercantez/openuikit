@@ -3,7 +3,14 @@
 // Swift object graphs used by Foundation clients; no transport or app-specific
 // schema is embedded here.
 
+#if FOUNDATION_GUEST_SERVICES_HOST
+import Foundation
+#if canImport(CoreFoundation)
+import CoreFoundation
+#endif
+#else
 import FoundationEssentials
+#endif
 
 public let NSJSONSerializationErrorIndex = "NSJSONSerializationErrorIndex"
 
@@ -40,7 +47,13 @@ open class JSONSerialization {
         options opt: ReadingOptions = []
     ) throws -> Any {
         do {
-            let value = try JSONDecoder().decode(_FoundationGuestJSONValue.self, from: data)
+            // Apple JSONSerialization accepts a single trailing comma before
+            // `]` / `}` (16 RFC-invalid documents in the 2026-09-05 golden).
+            // Double commas and comma-only containers stay rejected.
+            let value = try JSONDecoder().decode(
+                _FoundationGuestJSONValue.self,
+                from: _stripJSONTrailingCommas(data)
+            )
             if !opt.contains(.fragmentsAllowed), !value.isContainer {
                 throw _foundationGuestJSONError(
                     "JSON text did not start with array or object and option to allow fragments not set."
@@ -51,7 +64,9 @@ open class JSONSerialization {
             // shape for mutableContainers/mutableLeaves without inventing an
             // incompatible parallel NSMutableDictionary identity.
             return value.foundationValue
-        } catch let error as NSError {
+        } catch let error as NSError
+            where error.domain == NSCocoaErrorDomain
+            && error.code == NSPropertyListReadCorruptError {
             throw error
         } catch {
             throw _foundationGuestJSONError(
@@ -179,12 +194,12 @@ private enum _FoundationGuestJSONValue: Codable {
 private func _foundationGuestJSONValue(_ value: Any) -> _FoundationGuestJSONValue? {
     if value is NSNull { return .null }
     if let value = value as? NSNumber {
-        if value._foundationGuestIsBoolean { return .bool(value.boolValue) }
-        if value._foundationGuestIsFloatingPoint {
+        if value._foundationGuestJSONIsBoolean { return .bool(value.boolValue) }
+        if value._foundationGuestJSONIsFloatingPoint {
             let number = value.doubleValue
             return number.isFinite ? .number(number) : nil
         }
-        if value._foundationGuestIsUnsigned {
+        if value._foundationGuestJSONIsUnsigned {
             return .unsignedInteger(value.uint64Value)
         }
         return .integer(value.int64Value)
@@ -234,11 +249,107 @@ private func _foundationGuestJSONValue(_ value: Any) -> _FoundationGuestJSONValu
     return nil
 }
 
+private extension NSNumber {
+    var _foundationGuestJSONIsBoolean: Bool {
+        #if FOUNDATION_GUEST_SERVICES_HOST
+        CFGetTypeID(self) == CFBooleanGetTypeID()
+        #else
+        _foundationGuestIsBoolean
+        #endif
+    }
+
+    var _foundationGuestJSONIsFloatingPoint: Bool {
+        #if FOUNDATION_GUEST_SERVICES_HOST
+        let type = String(cString: objCType)
+        return type == "f" || type == "d"
+        #else
+        _foundationGuestIsFloatingPoint
+        #endif
+    }
+
+    var _foundationGuestJSONIsUnsigned: Bool {
+        #if FOUNDATION_GUEST_SERVICES_HOST
+        let type = String(cString: objCType)
+        return type == "I" || type == "L" || type == "Q" || type == "S" || type == "C"
+        #else
+        _foundationGuestIsUnsigned
+        #endif
+    }
+}
+
+private func _stripJSONTrailingCommas(_ data: Data) -> Data {
+    let bytes = [UInt8](data)
+    var output: [UInt8] = []
+    output.reserveCapacity(bytes.count)
+    var index = 0
+    var inString = false
+    var escaped = false
+    func previousNonspace() -> UInt8? {
+        var cursor = output.count - 1
+        while cursor >= 0 {
+            let byte = output[cursor]
+            if byte != 0x20 && byte != 0x09 && byte != 0x0a && byte != 0x0d {
+                return byte
+            }
+            cursor -= 1
+        }
+        return nil
+    }
+    while index < bytes.count {
+        let byte = bytes[index]
+        if inString {
+            output.append(byte)
+            if escaped {
+                escaped = false
+            } else if byte == 0x5c {
+                escaped = true
+            } else if byte == 0x22 {
+                inString = false
+            }
+            index += 1
+            continue
+        }
+        if byte == 0x22 {
+            inString = true
+            output.append(byte)
+            index += 1
+            continue
+        }
+        if byte == 0x2c {
+            var look = index + 1
+            while look < bytes.count {
+                let next = bytes[look]
+                if next == 0x20 || next == 0x09 || next == 0x0a || next == 0x0d {
+                    look += 1
+                    continue
+                }
+                break
+            }
+            if look < bytes.count {
+                let closer = bytes[look]
+                let previous = previousNonspace()
+                if (closer == 0x7d || closer == 0x5d),
+                   previous != 0x7b, previous != 0x5b, previous != 0x2c, previous != nil {
+                    index += 1
+                    continue
+                }
+            }
+        }
+        output.append(byte)
+        index += 1
+    }
+    return Data(output)
+}
+
 private func _foundationGuestJSONError(
     _ debugDescription: String,
-    underlying: (any Error)? = nil
+    underlying: (any Error)? = nil,
+    index: Int = 0
 ) -> NSError {
-    var userInfo: [String: Any] = [NSDebugDescriptionErrorKey: debugDescription]
+    var userInfo: [String: Any] = [
+        NSDebugDescriptionErrorKey: debugDescription,
+        NSJSONSerializationErrorIndex: index,
+    ]
     if let underlying { userInfo[NSUnderlyingErrorKey] = underlying }
     return NSError(
         domain: NSCocoaErrorDomain,

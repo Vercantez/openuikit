@@ -2,7 +2,9 @@ import XCTest
 import Foundation
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class DatePickerTests: XCTestCase {
     private var savedBackend: RenderBackend = .quartz
     private var savedCompositor: RenderCompositor = .layers
@@ -762,5 +764,41 @@ extension DatePickerTests {
         XCTAssertEqual(label.frame.maxX, 128, accuracy: 0.5)
         XCTAssertGreaterThan(label.frame.width, 100)
         XCTAssertLessThan(label.frame.minX, 16)
+    }
+
+    /// MEASURED Forms t200.ax1, iPhone SE 2x / iOS 26.1: the compact
+    /// capsule stays 34 pt but the title is short numeric **"9/4/26"** at
+    /// 33 pt body. Layout must recompute after the picker joins a window
+    /// with `traitOverrides` `.accessibilityLarge`.
+    func testIOSCompactDateTitleShortensAtAccessibilityLarge() throws {
+        let savedCut = OpenUIKitRuntime.systemFontCut
+        let savedTraits = UITraitCollection.current
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .large)
+        defer {
+            OpenUIKitRuntime.systemFontCut = savedCut
+            UITraitCollection.current = savedTraits
+        }
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
+        let picker = UIDatePicker(frame: CGRect(x: 0, y: 0, width: 128, height: 34))
+        picker.calendar = utcCalendar()
+        picker.timeZone = TimeZone(secondsFromGMT: 0)
+        picker.locale = Locale(identifier: "en_US_POSIX")
+        picker.datePickerMode = .date
+        picker.preferredDatePickerStyle = .compact
+        picker.date = date(2026, 9, 4)
+        window.addSubview(picker)
+        picker.layoutIfNeeded()
+
+        let label = try XCTUnwrap(
+            picker.subviews.compactMap { $0 as? UILabel }
+                .first { $0.text == "9/4/26" },
+            "ax1 compact title should be short numeric")
+        XCTAssertEqual(label.font.pointSize, 17)
+        XCTAssertEqual(label.frame.height, 34)
     }
 }

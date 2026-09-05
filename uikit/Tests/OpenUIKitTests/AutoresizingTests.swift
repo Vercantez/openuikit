@@ -4,7 +4,9 @@ import XCTest
 
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 
+#if !os(Linux)
 @MainActor
+#endif
 final class AutoresizingTests: XCTestCase {
 
     private func makeParent(_ w: CGFloat = 100, _ h: CGFloat = 100) -> UIView {

@@ -19,14 +19,16 @@ set -e
 cd "$(dirname "$0")/.."
 REPO="$PWD"
 WORK="${1:-/tmp/openuikit-realapp-verify}"
-IMAGE="swift:6.2-noble"
+IMAGE="${OPENUIKIT_LINUX_IMAGE:-openuikit-linux-agent}"
 REPO_ROOT=$(git rev-parse --show-toplevel)
 
 rm -rf "$WORK"
 mkdir -p "$WORK"/{fonts,linux_out,mac_out,linux_host,mac_host}
 
-# Apple's fonts are not redistributable; copy the local ones in so the
-# container can render glyphs that are not in the harvested ink table.
+# Apple's fonts are not redistributable. The macOS reference render can use
+# the host's SFNS. The inner Linux iOS-cut half draws harvested 2x masks
+# with no FONT_DIR, then uses /out/fonts for unharvested 3x realapp glyphs
+# when the Mac host copied SFNS (glyph_ink_ios_3x.json is 848 keys).
 for f in SFNS.ttf SFNSMono.ttf SFNSItalic.ttf; do
   [ -f "/System/Library/Fonts/$f" ] && cp -f "/System/Library/Fonts/$f" "$WORK/fonts/$f"
 done
@@ -46,6 +48,9 @@ cat > "$WORK/run.sh" <<'INNER'
 set -e
 SRC=${INNER_SRC:-/src}
 OUT=${INNER_OUT:-/out}
+if ! python3 -c "import PIL, numpy" >/dev/null 2>&1 || ! command -v zsh >/dev/null 2>&1; then
+  bash "$SRC/scripts/linux_setup.sh"
+fi
 if ! pkg-config --exists sdl2 >/dev/null 2>&1; then
   export DEBIAN_FRONTEND=noninteractive
   apt-get update -qq >/dev/null && apt-get install -y -qq libsdl2-dev >/dev/null
@@ -59,19 +64,101 @@ fi
 swift --version
 
 echo "==> build (library + openrender + openhost + RealAppProbe)"
-swift build -c release --product openrender 2>&1 | grep -E "error" && exit 1
-swift build -c release --product openhost 2>&1 | grep -E "error" && exit 1
+swift build -c release --product openrender
+swift build -c release --product openhost
 echo "    built clean -- the vendored app source compiles off Darwin"
 
-echo "==> headless render"
-OPENUIKIT_FONT_DIR="$OUT/fonts" OPENUIKIT_BACKEND=quartz \
+echo "==> unit tests (Linux 6.2.4 XCTest bundle)"
+# `swift test` blocks in poll() with no TTY (docs/PORTABILITY.md). One
+# process with every class also hangs (linux-env: 3/3 unfiltered launches,
+# and a 14-suite comma-list hung at GlyphInkTableTests after 40 s). Two
+# smaller groups finish: the selector set from linux_selector_verify, plus
+# the ink / CA / registry / stub set this branch needs. The trial's miss
+# was compile; `swift build --build-tests` is the gate.
+swift build --build-tests
+BUNDLE="$(swift build --build-tests --show-bin-path | tail -1)/OpenUIKitPackageTests.xctest"
+run_suites() {
+  local name=$1 suites=$2
+  local ok=0 attempt
+  : > "$OUT/tests-$name.log"
+  for attempt in 1 2 3 4; do
+    if SWIFT_BACKTRACE=enable=no timeout 60 "$BUNDLE" "$suites" >"$OUT/tests-$name.log" 2>&1; then
+      ok=1; break
+    fi
+    echo "    (attempt $attempt $name hung -- known Linux XCTest flake, retrying)"
+  done
+  tail -3 "$OUT/tests-$name.log"
+  [ "$ok" = 1 ] || { echo "    $name tests did not complete"; exit 1; }
+  if grep -qE "Executed [0-9]+ tests, with [1-9][0-9]* failures" "$OUT/tests-$name.log"; then
+    echo "    $name tests had failures"; exit 1
+  fi
+  grep -qE "Executed [0-9]+ tests, with 0 failures" "$OUT/tests-$name.log"
+}
+run_suites selector \
+  OpenUIKitTests.SelectorNameTests,OpenUIKitTests.ActionTableTests,OpenUIKitTests.SelectorDispatchDeliveryTests,OpenUIKitTests.ControlSelectorTargetTests,OpenUIKitTests.GestureSelectorTargetTests,OpenUIKitTests.SelectorDemoAppTests,OpenUIKitTests.ApplicationShellCompatibilityTests
+run_suites ink \
+  OpenUIKitTests.GlyphInkTableTests,OpenUIKitTests.CoreAnimationCompatibilityTests,OpenUIKitTests.ConformanceRegistryTests,OpenUIKitTests.GeometryTests,OpenUIKitTests.ColorTests,OpenUIKitCTests.ABITests,SwiftUITests.SwiftUILinuxStubTests
+echo "    unit tests passed"
+
+echo "==> no-font iOS cut (2x harvested masks; Linux trial had blank labels)"
+# glyph_ink_ios.json 6152 keys (2026-09-05). "Hello" at 17 pt regular F0.0 is
+# a HIT for H/e/l/o (383 opaque pixels measured). "Q" (U+0051) has metrics
+# but is not in that table — U+2603 sizeToFits to width 0 and never draws.
+# No OPENUIKIT_FONT_DIR on this path.
+unset OPENUIKIT_FONT_DIR
+python3 - <<'PY'
+import json, os
+os.makedirs("/tmp/inkprobe", exist_ok=True)
+hit = {
+  "name": "linux_ink_hit", "size": [320, 80], "scale": 2, "style": "light",
+  "ios": True,
+  "root": {"class": "UIView", "backgroundColor": "systemBackground",
+           "subviews": [{"class": "UILabel", "frame": [16, 24, 0, 0],
+                         "text": "Hello", "fontSize": 17, "sizeToFit": True}]}
+}
+miss = json.loads(json.dumps(hit)); miss["name"] = "linux_ink_miss"
+miss["root"]["subviews"][0]["text"] = "Q"
+json.dump(hit, open("/tmp/inkprobe/hit.json", "w"))
+json.dump(miss, open("/tmp/inkprobe/miss.json", "w"))
+PY
+OPENUIKIT_FORCE_IOS=1 OPENUIKIT_BACKEND=quartz \
+  ./.build/release/openrender render /tmp/inkprobe/hit-out /tmp/inkprobe/hit.json
+python3 - <<'PY'
+from PIL import Image
+import numpy as np, glob
+paths = glob.glob("/tmp/inkprobe/hit-out/*.png")
+assert paths, "no-font iOS render wrote no PNG"
+im = np.array(Image.open(paths[0]))
+ink = int((im[:, :, 3] > 200).sum())
+print(f"    no-font Hello opaque pixels (alpha>200): {ink}")
+assert ink > 50, "harvested iOS masks must draw without SFNS.ttf"
+PY
+if OPENUIKIT_FORCE_IOS=1 OPENUIKIT_BACKEND=quartz \
+     ./.build/release/openrender render /tmp/inkprobe/miss-out /tmp/inkprobe/miss.json \
+     >/tmp/inkprobe/miss.log 2>&1; then
+  echo "    expected OPENUIKIT_IOS_INK_MISS for Q (U+0051)"; cat /tmp/inkprobe/miss.log; exit 1
+fi
+grep -F "OPENUIKIT_IOS_INK_MISS:" /tmp/inkprobe/miss.log | head -1
+grep -F "OPENUIKIT_IOS_INK_MISS: I|system-regular|17|light|F0.0|81" /tmp/inkprobe/miss.log
+
+echo "==> headless render (iOS cut; 3x realapp)"
+# 3x table is 848 keys — unharvested glyphs still need a font file
+# (docs/PORTABILITY.md). Use /out/fonts when the Mac host copied SFNS.
+if [ -f "$OUT/fonts/SFNS.ttf" ]; then
+  export OPENUIKIT_FONT_DIR="$OUT/fonts"
+  echo "    OPENUIKIT_FONT_DIR=$OPENUIKIT_FONT_DIR (unharvested 3x fallback)"
+else
+  unset OPENUIKIT_FONT_DIR
+  echo "    no SFNS; unharvested 3x keys abort with OPENUIKIT_IOS_INK_MISS"
+fi
+OPENUIKIT_BACKEND=quartz \
   ./.build/release/openrender realapp "$OUT/linux_out"
 n=$(ls "$OUT/linux_out"/*.png | wc -l | tr -d ' ')
 [ "$n" -eq 12 ] || { echo "expected 12 realapp screens, got $n"; ls "$OUT/linux_out"; exit 1; }
 echo "==> scripted live replay"
 replay=0
 for attempt in 1 2 3 4; do
-  if SDL_VIDEODRIVER=dummy OPENUIKIT_FONT_DIR="$OUT/fonts" OPENUIKIT_BACKEND=quartz \
+  if SDL_VIDEODRIVER=dummy OPENUIKIT_BACKEND=quartz \
      timeout 180 ./.build/release/openhost --app pocketcasts \
      --script scripts/realapp_interaction.json --record "$OUT/linux_host" >/dev/null 2>&1; then
     replay=1; break
@@ -84,6 +171,10 @@ INNER
 
 echo "==> Linux build + render + replay ($IMAGE)"
 if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
+  echo "==> building $IMAGE from Dockerfile.linux-agent"
+  docker build -f Dockerfile.linux-agent -t "$IMAGE" .
+fi
 docker run --rm -v "$REPO":/src:ro -v "$WORK":/out "$IMAGE" bash /out/run.sh
 elif bash "$REPO_ROOT/.cursor/attest-cursor-env.sh"; then
 echo "CURSOR_ENV_TOOLCHAIN_ATTESTED running linux_realapp_verify in-VM (docker pins swift:6.2-noble only)"

@@ -5,7 +5,9 @@ import Foundation
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class GlyphRenderTests: XCTestCase {
     override func setUp() {
         super.setUp()

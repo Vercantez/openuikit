@@ -37,7 +37,7 @@ no application source or schema is embedded in it.
   they are never accepted as no-ops.
 
 The ordered production manifest is
-`full/foundation/foundation_guest_sources.txt`. Its 38 entries place the shared
+`full/foundation/foundation_guest_sources.txt`. Its 41 entries place the shared
 OpenUIKit value aliases before these concrete types and are consumed by both
 the Focus onboarding builder and the reusable core package builder.
 The added localized-resource surface and its separate Apple/cold-runtime proof

@@ -3,7 +3,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class FontVariationsTests: XCTestCase {
 
     private func systemFontIfAvailable() -> GlyphFont? {
