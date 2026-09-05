@@ -70,8 +70,19 @@ Those five are table-driven enum-member / raw-value tests. After that
 family is excluded, no remaining test exceeds 9.1% of the remaining
 implemented rows (largest: `testFlashingLightsProcessorResultFields` at 4).
 
-The sealed host gate is:
+The sealed host gate was run as `bash full/mediaaccessibility/tests/acceptance/test_host.sh`
+and ended:
 
 ```
-bash full/mediaaccessibility/tests/acceptance/test_host.sh
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=MediaAccessibility lane=leaf-full symbols=102
+FRAMEWORK_FANOUT_REFERENCE_OK
+MEDIAACCESSIBILITY_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=MediaAccessibility dylib=libMediaAccessibility.dylib
 ```
+
+`swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` does not print
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` on this
+snapshot (`scratch/ladder-corpus/focus-ios` is missing). That campaign token
+is the host-inventory stamp; the sealed framework gate prints the four lines
+above.
