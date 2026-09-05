@@ -70,5 +70,3 @@ extension StorageAndDataUseViewController: SelectorDispatching {
         Self.actions.perform(name, on: self, with: sender)
     }
 }
-
-}
