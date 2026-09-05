@@ -96,7 +96,7 @@ Linux corelibs compile notes, carried from guest-trial and still true:
 
 Graded only by `queue_box.sh arm64 verify <sha>` log lines
 (`build_full rc=0`, `TBD_CHECK_OK`, `difftest rc=0`, `GATE_B_PASS`,
-`GUEST_REALAPP_SCREENS=13`). Filled in after the push.
+`GUEST_REALAPP_SCREENS=13`).
 
 Attempt 1 (guest-trial, 16ee0569, recorded at 214fc803): `TBD_CHECK_OK`,
 `difftest rc=0`, then `die 'Foundation guest source manifest must contain
