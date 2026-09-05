@@ -1560,4 +1560,43 @@ final class TableViewIOSRowAnimationTests: XCTestCase {
         XCTAssertEqual(reorder.frame.width, 41, accuracy: 0.001)
         XCTAssertEqual(reorder.frame.height, 117, accuracy: 0.001)
     }
+
+    /// MEASURED TableEditor t200.xxxl / t900.xxxl, iPhone SE 2x / iOS 26.1:
+    /// cell **83**, primary y **11**, detail y **42.5**; edit control
+    /// **[14.5, 21, 34.5, 34.5]**, content x **47.5**, reorder width **36.5**.
+    func testPlainSubtitleRowAndEditChromeAtXxxxl() {
+        let savedTraits = UITraitCollection.current
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .large)
+        defer { UITraitCollection.current = savedTraits }
+
+        let source = SubtitleListSource()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .extraExtraExtraLarge
+        let table = UITableView(frame: window.bounds, style: .plain)
+        table.dataSource = source
+        table.delegate = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertEqual(cell.bounds.height, 83, accuracy: 0.01)
+        XCTAssertEqual(cell.textLabel.frame.origin.y, 11, accuracy: 0.01)
+        XCTAssertEqual(cell.detailTextLabel!.frame.origin.y, 42.5, accuracy: 0.01)
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 1, section: 0))!.frame.minY,
+                       83, accuracy: 0.01)
+
+        table.setEditing(true, animated: false)
+        window.layoutIfNeeded()
+        let editing = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertEqual(editing.contentView.frame.origin.x, 47.5, accuracy: 0.001)
+        XCTAssertEqual(editing.textLabel.frame.origin.x, 16, accuracy: 0.001)
+        let edit = editing._editControl
+        XCTAssertEqual(edit?.frame, CGRect(x: 14.5, y: 21, width: 34.5, height: 34.5))
+        let reorder = editing._reorderControl!
+        XCTAssertEqual(reorder.frame.origin.x, 322.5, accuracy: 0.001)
+        XCTAssertEqual(reorder.frame.width, 36.5, accuracy: 0.001)
+        XCTAssertEqual(reorder.frame.height, 83, accuracy: 0.001)
+    }
 }
