@@ -20,7 +20,8 @@ public func CMBlockBufferAccessDataBytes(
         destination: temporaryBlock
     )
     if status == 0 {
-        returnedPointerOut.pointee = temporaryBlock.assumingMemoryBound(to: CChar.self)
+        returnedPointerOut.pointee = theBuffer.dataPointer(at: offset)
+            ?? temporaryBlock.assumingMemoryBound(to: CChar.self)
     } else {
         returnedPointerOut.pointee = nil
     }
@@ -34,13 +35,25 @@ public func CMBlockBufferGetDataPointer(
     totalLengthOut: UnsafeMutablePointer<Int>?,
     dataPointerOut: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>?
 ) -> OSStatus {
-    // Interior pointers into Swift Array storage are not exposed (oracle:
-    // CMBlockBufferAccessDataBytes). Callers must use AccessDataBytes/copy.
-    _ = (theBuffer, offset)
-    lengthAtOffsetOut?.pointee = 0
-    totalLengthOut?.pointee = CMBlockBufferGetDataLength(theBuffer)
-    dataPointerOut?.pointee = nil
-    return kCMBlockBufferUnallocatedBlockErr
+    if !CMBlockBufferIsRangeValid(theBuffer, atOffset: offset, dataLength: 0) {
+        dataPointerOut?.pointee = nil
+        return kCMBlockBufferBadOffsetParameterErr
+    }
+    let length = theBuffer.dataLength
+    if length == 0 {
+        lengthAtOffsetOut?.pointee = 0
+        totalLengthOut?.pointee = 0
+        dataPointerOut?.pointee = nil
+        return kCMBlockBufferUnallocatedBlockErr
+    }
+    guard let pointer = theBuffer.dataPointer(at: offset) else {
+        dataPointerOut?.pointee = nil
+        return kCMBlockBufferUnallocatedBlockErr
+    }
+    lengthAtOffsetOut?.pointee = length - offset
+    totalLengthOut?.pointee = length
+    dataPointerOut?.pointee = pointer
+    return kCMBlockBufferNoErr
 }
 
 public func CMSampleBufferGetOutputDuration(_ sbuf: CMSampleBuffer) -> CMTime {
@@ -72,14 +85,16 @@ public func CMSampleBufferHasDataFailed(
     _ sbuf: CMSampleBuffer,
     statusOut: UnsafeMutablePointer<OSStatus>?
 ) -> Bool {
-    _ = sbuf
-    statusOut?.pointee = 0
-    return false
+    guard let failed = sbuf.currentDataFailedStatus() else {
+        statusOut?.pointee = 0
+        return false
+    }
+    statusOut?.pointee = failed
+    return true
 }
 
 public func CMSampleBufferSetDataFailed(_ sbuf: CMSampleBuffer, status: OSStatus) -> OSStatus {
-    _ = status
-    sbuf.forceNotReady()
+    sbuf.applyDataFailed(status)
     return 0
 }
 
@@ -87,17 +102,17 @@ public func CMSampleBufferTrackDataReadiness(
     _ sbuf: CMSampleBuffer,
     sampleBufferToTrack: CMSampleBuffer
 ) -> OSStatus {
-    _ = (sbuf, sampleBufferToTrack)
-    return kCMSampleBufferError_RequiredParameterMissing
+    if CMSampleBufferDataIsReady(sampleBufferToTrack) {
+        return CMSampleBufferSetDataReady(sbuf)
+    }
+    return kCMSampleBufferError_BufferNotReady
 }
 
 public func CMSampleBufferGetSampleAttachmentsArray(
     _ sbuf: CMSampleBuffer,
     createIfNecessary: Bool
 ) -> CFArray? {
-    _ = createIfNecessary
-    if sbuf.sampleAttachments.isEmpty { return nil }
-    return nil
+    sbuf.sampleAttachmentsArray(createIfNecessary: createIfNecessary)
 }
 
 public func CMSampleBufferGetSampleTimingInfoArray(
@@ -469,9 +484,36 @@ public func CMVideoFormatDescriptionGetCleanAperture(
     _ videoDesc: CMVideoFormatDescription,
     originIsAtTopLeft: Bool
 ) -> CGRect {
-    _ = originIsAtTopLeft
     let dims = CMVideoFormatDescriptionGetDimensions(videoDesc)
-    return CGRect(x: 0, y: 0, width: CGFloat(dims.width), height: CGFloat(dims.height))
+    let codedWidth = CGFloat(dims.width)
+    let codedHeight = CGFloat(dims.height)
+    var width = codedWidth
+    var height = codedHeight
+    var horiz: CGFloat = 0
+    var vert: CGFloat = 0
+    if let raw = videoDesc.extension(for: kCMFormatDescriptionExtension_CleanAperture) {
+        let dict = unsafeBitCast(raw, to: CFDictionary.self)
+        if let w = cmCFNumberDouble(cmCFDictionaryValue(dict, key: kCMFormatDescriptionKey_CleanApertureWidth)) {
+            width = CGFloat(w)
+        }
+        if let h = cmCFNumberDouble(cmCFDictionaryValue(dict, key: kCMFormatDescriptionKey_CleanApertureHeight)) {
+            height = CGFloat(h)
+        }
+        if let x = cmCFNumberDouble(
+            cmCFDictionaryValue(dict, key: kCMFormatDescriptionKey_CleanApertureHorizontalOffset)
+        ) {
+            horiz = CGFloat(x)
+        }
+        if let y = cmCFNumberDouble(
+            cmCFDictionaryValue(dict, key: kCMFormatDescriptionKey_CleanApertureVerticalOffset)
+        ) {
+            vert = CGFloat(y)
+        }
+    }
+    let x = (codedWidth - width) / 2 + horiz
+    let yBottom = (codedHeight - height) / 2 + vert
+    let y = originIsAtTopLeft ? (codedHeight - yBottom - height) : yBottom
+    return CGRect(x: x, y: y, width: width, height: height)
 }
 
 public func CMVideoFormatDescriptionGetPresentationDimensions(
@@ -479,9 +521,31 @@ public func CMVideoFormatDescriptionGetPresentationDimensions(
     usePixelAspectRatio: Bool,
     useCleanAperture: Bool
 ) -> CGSize {
-    _ = (usePixelAspectRatio, useCleanAperture)
-    let dims = CMVideoFormatDescriptionGetDimensions(videoDesc)
-    return CGSize(width: CGFloat(dims.width), height: CGFloat(dims.height))
+    var size = CGSize(
+        width: CGFloat(videoDesc.dimensions.width),
+        height: CGFloat(videoDesc.dimensions.height)
+    )
+    if useCleanAperture {
+        let aperture = CMVideoFormatDescriptionGetCleanAperture(videoDesc, originIsAtTopLeft: true)
+        if aperture.width > 0 && aperture.height > 0 {
+            size = CGSize(width: aperture.width, height: aperture.height)
+        }
+    }
+    if usePixelAspectRatio,
+       let raw = videoDesc.extension(for: kCMFormatDescriptionExtension_PixelAspectRatio)
+    {
+        let dict = unsafeBitCast(raw, to: CFDictionary.self)
+        let hs = cmCFNumberDouble(
+            cmCFDictionaryValue(dict, key: kCMFormatDescriptionKey_PixelAspectRatioHorizontalSpacing)
+        ) ?? 1.0
+        let vs = cmCFNumberDouble(
+            cmCFDictionaryValue(dict, key: kCMFormatDescriptionKey_PixelAspectRatioVerticalSpacing)
+        ) ?? 1.0
+        if vs != 0 {
+            size.width = size.width * CGFloat(hs / vs)
+        }
+    }
+    return size
 }
 
 public func CMVideoFormatDescriptionGetExtensionKeysCommonWithImageBuffers() -> CFArray {
@@ -611,7 +675,12 @@ public func CMTextFormatDescriptionGetDisplayFlags(
     _ desc: CMTextFormatDescription,
     displayFlagsOut: UnsafeMutablePointer<CMTextDisplayFlags>
 ) -> OSStatus {
-    _ = desc
+    if let raw = desc.extension(for: kCMTextFormatDescriptionExtension_DisplayFlags),
+       let value = cmCFNumberDouble(raw)
+    {
+        displayFlagsOut.pointee = CMTextDisplayFlags(value)
+        return 0
+    }
     displayFlagsOut.pointee = 0
     return kCMFormatDescriptionError_ValueNotAvailable
 }
@@ -621,10 +690,24 @@ public func CMTextFormatDescriptionGetJustification(
     horizontalOut: UnsafeMutablePointer<CMTextJustificationValue>?,
     verticalOut: UnsafeMutablePointer<CMTextJustificationValue>?
 ) -> OSStatus {
-    _ = desc
-    horizontalOut?.pointee = kCMTextJustification_left_top
-    verticalOut?.pointee = kCMTextJustification_left_top
-    return kCMFormatDescriptionError_ValueNotAvailable
+    var found = false
+    if let raw = desc.extension(for: kCMTextFormatDescriptionExtension_HorizontalJustification),
+       let value = cmCFNumberDouble(raw)
+    {
+        horizontalOut?.pointee = CMTextJustificationValue(value)
+        found = true
+    } else {
+        horizontalOut?.pointee = kCMTextJustification_left_top
+    }
+    if let raw = desc.extension(for: kCMTextFormatDescriptionExtension_VerticalJustification),
+       let value = cmCFNumberDouble(raw)
+    {
+        verticalOut?.pointee = CMTextJustificationValue(value)
+        found = true
+    } else {
+        verticalOut?.pointee = kCMTextJustification_left_top
+    }
+    return found ? 0 : kCMFormatDescriptionError_ValueNotAvailable
 }
 
 public func CMTextFormatDescriptionGetDefaultTextBox(
@@ -633,7 +716,21 @@ public func CMTextFormatDescriptionGetDefaultTextBox(
     heightOfTextTrack: CGFloat,
     defaultTextBoxOut: UnsafeMutablePointer<CGRect>
 ) -> OSStatus {
-    _ = (desc, originIsAtTopLeft, heightOfTextTrack)
+    _ = (originIsAtTopLeft, heightOfTextTrack)
+    if let raw = desc.extension(for: kCMTextFormatDescriptionExtension_DefaultTextBox) {
+        let dict = unsafeBitCast(raw, to: CFDictionary.self)
+        let left = cmCFNumberDouble(cmCFDictionaryValue(dict, key: kCMTextFormatDescriptionRect_Left)) ?? 0
+        let top = cmCFNumberDouble(cmCFDictionaryValue(dict, key: kCMTextFormatDescriptionRect_Top)) ?? 0
+        let right = cmCFNumberDouble(cmCFDictionaryValue(dict, key: kCMTextFormatDescriptionRect_Right)) ?? 0
+        let bottom = cmCFNumberDouble(cmCFDictionaryValue(dict, key: kCMTextFormatDescriptionRect_Bottom)) ?? 0
+        defaultTextBoxOut.pointee = CGRect(
+            x: CGFloat(left),
+            y: CGFloat(top),
+            width: CGFloat(right - left),
+            height: CGFloat(bottom - top)
+        )
+        return 0
+    }
     defaultTextBoxOut.pointee = .zero
     return kCMFormatDescriptionError_ValueNotAvailable
 }
@@ -647,7 +744,26 @@ public func CMTextFormatDescriptionGetDefaultStyle(
     fontSizeOut: UnsafeMutablePointer<CGFloat>?,
     colorComponentsOut: UnsafeMutablePointer<CGFloat>?
 ) -> OSStatus {
-    _ = desc
+    if let raw = desc.extension(for: kCMTextFormatDescriptionExtension_DefaultStyle) {
+        let dict = unsafeBitCast(raw, to: CFDictionary.self)
+        localFontIDOut?.pointee = UInt16(
+            cmCFNumberDouble(cmCFDictionaryValue(dict, key: kCMTextFormatDescriptionStyle_Font)) ?? 0
+        )
+        let face = cmCFNumberDouble(cmCFDictionaryValue(dict, key: kCMTextFormatDescriptionStyle_FontFace)) ?? 0
+        boldOut?.pointee = (UInt8(face) & 1) != 0
+        italicOut?.pointee = (UInt8(face) & 2) != 0
+        underlineOut?.pointee = (UInt8(face) & 4) != 0
+        fontSizeOut?.pointee = CGFloat(
+            cmCFNumberDouble(cmCFDictionaryValue(dict, key: kCMTextFormatDescriptionStyle_FontSize)) ?? 0
+        )
+        if let colorComponentsOut {
+            colorComponentsOut[0] = 0
+            colorComponentsOut[1] = 0
+            colorComponentsOut[2] = 0
+            colorComponentsOut[3] = 1
+        }
+        return 0
+    }
     localFontIDOut?.pointee = 0
     fontSizeOut?.pointee = 0
     return kCMFormatDescriptionError_ValueNotAvailable
@@ -658,7 +774,11 @@ public func CMTextFormatDescriptionGetFontName(
     localFontID: UInt16,
     fontNameOut: UnsafeMutablePointer<CFString?>
 ) -> OSStatus {
-    _ = (desc, localFontID)
+    _ = localFontID
+    if let raw = desc.extension(for: kCMTextFormatDescriptionExtension_DefaultFontName) {
+        fontNameOut.pointee = unsafeBitCast(raw, to: CFString.self)
+        return 0
+    }
     fontNameOut.pointee = nil
     return kCMFormatDescriptionError_ValueNotAvailable
 }
@@ -703,14 +823,19 @@ public func CMTimeCodeFormatDescriptionCreate(
     extensions: CFDictionary?,
     formatDescriptionOut: UnsafeMutablePointer<CMTimeCodeFormatDescription?>
 ) -> OSStatus {
-    _ = (frameDuration, frameQuanta, flags)
-    return CMFormatDescriptionCreate(
+    let status = CMFormatDescriptionCreate(
         allocator: allocator,
         mediaType: kCMMediaType_TimeCode,
         mediaSubType: timeCodeFormatType,
         extensions: extensions,
         formatDescriptionOut: formatDescriptionOut
     )
+    if status == 0, let desc = formatDescriptionOut.pointee {
+        desc.timeCodeFrameDuration = frameDuration
+        desc.timeCodeFrameQuanta = frameQuanta
+        desc.timeCodeFlagBits = flags
+    }
+    return status
 }
 
 public func CMTimeCodeFormatDescriptionCopyAsBigEndianTimeCodeDescriptionBlockBuffer(
@@ -747,20 +872,27 @@ public func CMTimeCodeFormatDescriptionCreateFromBigEndianTimeCodeDescriptionDat
 public func CMTimeCodeFormatDescriptionGetFrameDuration(
     _ timeCodeFormatDescription: CMTimeCodeFormatDescription
 ) -> CMTime {
-    _ = timeCodeFormatDescription
-    return .invalid
+    timeCodeFormatDescription.timeCodeFrameDuration
 }
 
 public func CMTimeCodeFormatDescriptionGetFrameQuanta(
     _ timeCodeFormatDescription: CMTimeCodeFormatDescription
 ) -> UInt32 {
-    _ = timeCodeFormatDescription
-    return 0
+    timeCodeFormatDescription.timeCodeFrameQuanta
 }
 
 public func CMTimeCodeFormatDescriptionGetTimeCodeFlags(
     _ desc: CMTimeCodeFormatDescription
 ) -> UInt32 {
-    _ = desc
-    return 0
+    desc.timeCodeFlagBits
+}
+
+/// Linux has no SoundDescription parser; CBR sample-table layout is never required.
+public func CMDoesBigEndianSoundDescriptionRequireLegacyCBRSampleTableLayout(
+    _ soundDescriptionBlockBuffer: CMBlockBuffer,
+    flavor: CFString?
+) -> Bool {
+    _ = soundDescriptionBlockBuffer
+    _ = flavor
+    return false
 }

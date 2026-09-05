@@ -47,7 +47,27 @@ public typealias CMAttachmentMode = UInt32
 public typealias CMBlockBufferFlags = UInt32
 public typealias CMPersistentTrackID = Int32
 public typealias CMAudioFormatDescriptionMask = UInt32
+/// Linux stand-in for Darwin's `DarwinBoolean` used by CoreMedia C callbacks.
+public struct DarwinBoolean: ExpressibleByBooleanLiteral, Equatable, Sendable {
+    public var boolValue: Bool
+    public init(_ value: Bool) { self.boolValue = value }
+    public init(booleanLiteral value: Bool) { self.boolValue = value }
+}
+
 public typealias CMBufferQueueTriggerCondition = Int32
+public typealias CMBufferQueueTriggerToken = OpaquePointer
+public typealias CMBufferGetTimeCallback = (CMBuffer, UnsafeMutableRawPointer?) -> CMTime
+public typealias CMBufferGetTimeHandler = (CMBuffer) -> CMTime
+public typealias CMBufferGetBooleanCallback = (CMBuffer, UnsafeMutableRawPointer?) -> DarwinBoolean
+public typealias CMBufferGetBooleanHandler = (CMBuffer) -> Bool
+public typealias CMBufferGetSizeCallback = (CMBuffer, UnsafeMutableRawPointer?) -> Int
+public typealias CMBufferGetSizeHandler = (CMBuffer) -> Int
+public typealias CMBufferCompareCallback = (CMBuffer, CMBuffer, UnsafeMutableRawPointer?) -> CFComparisonResult
+public typealias CMBufferCompareHandler = (CMBuffer, CMBuffer) -> CFComparisonResult
+public typealias CMBufferQueueTriggerCallback = (UnsafeMutableRawPointer?, CMBufferQueueTriggerToken) -> Void
+public typealias CMBufferQueueTriggerHandler = (CMBufferQueueTriggerToken) -> Void
+public typealias CMBufferValidationCallback = (CMBufferQueue, CMBuffer, UnsafeMutableRawPointer?) -> OSStatus
+public typealias CMBufferValidationHandler = (CMBufferQueue, CMBuffer) -> OSStatus
 public typealias CMTextDisplayFlags = UInt32
 public typealias CMTextJustificationValue = Int8
 public typealias CMBaseClassVersion = UInt
@@ -167,7 +187,7 @@ internal func cmNSError(code: Int) -> NSError {
 }
 
 internal final class CMUnfairLock: @unchecked Sendable {
-    private let lock = NSLock()
+    private let lock = NSRecursiveLock()
 
     func locked<T>(_ body: () throws -> T) rethrows -> T {
         lock.lock()
