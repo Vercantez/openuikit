@@ -74,11 +74,69 @@ private final class ATAudioComponentRecord: ATObject {
     }
 }
 
-private final class ATAudioComponentInstanceRecord: ATObject {
-    let component: OpaquePointer
-    init(component: OpaquePointer) {
-        self.component = component
+internal final class ATAudioUnitObject: ATObject {
+    let description: AudioComponentDescription
+    var initialized = false
+    var inputCount: UInt32 = 1
+    var outputCount: UInt32 = 1
+    var inputFormat = ATASBD.pcm(sampleRate: 44100, channels: 2, bits: 16, floating: false)
+    var outputFormat = ATASBD.pcm(sampleRate: 44100, channels: 2, bits: 16, floating: false)
+    var lastRenderError: Int32 = 0
+    var maximumFrames: UInt32 = 4096
+    var parameters: [UInt32: Float32] = [:]
+
+    var isRemoteIO: Bool {
+        description.componentSubType == kAudioUnitSubType_RemoteIO
+            || description.componentSubType == kAudioUnitSubType_VoiceProcessingIO
     }
+
+    var isMixer: Bool {
+        description.componentType == kAudioUnitType_Mixer
+            || description.componentSubType == kAudioUnitSubType_MultiChannelMixer
+            || description.componentSubType == kAudioUnitSubType_AUAudioMix
+    }
+
+    var isGenericOutput: Bool {
+        description.componentSubType == kAudioUnitSubType_GenericOutput
+    }
+
+    init(description: AudioComponentDescription) {
+        self.description = description
+        if description.componentType == kAudioUnitType_Mixer
+            || description.componentSubType == kAudioUnitSubType_MultiChannelMixer
+            || description.componentSubType == kAudioUnitSubType_AUAudioMix
+        {
+            inputCount = 2
+        }
+    }
+}
+
+private let builtinComponents: [ATAudioComponentRecord] = {
+    let specs: [(UInt32, UInt32)] = [
+        (kAudioUnitType_Output, kAudioUnitSubType_GenericOutput),
+        (kAudioUnitType_Mixer, kAudioUnitSubType_MultiChannelMixer),
+        (kAudioUnitType_Output, kAudioUnitSubType_RemoteIO),
+    ]
+    return specs.map { type, subtype in
+        ATAudioComponentRecord(
+            description: AudioComponentDescription(
+                componentType: type,
+                componentSubType: subtype,
+                componentManufacturer: kAudioUnitManufacturer_Apple,
+                componentFlags: 0,
+                componentFlagsMask: 0
+            )
+        )
+    }
+}()
+
+private func atComponentMatches(_ value: AudioComponentDescription, _ query: AudioComponentDescription) -> Bool {
+    if query.componentType != 0 && query.componentType != value.componentType { return false }
+    if query.componentSubType != 0 && query.componentSubType != value.componentSubType { return false }
+    if query.componentManufacturer != 0 && query.componentManufacturer != value.componentManufacturer {
+        return false
+    }
+    return true
 }
 
 private let instantiateGate = NSLock()
@@ -87,16 +145,30 @@ private var instantiateDepth = 0
 public func AudioComponentCount(
     _ inDesc: UnsafePointer<AudioComponentDescription>?
 ) -> UInt32 {
-    guard inDesc != nil else { return 0 }
-    return 0
+    guard let inDesc else { return 0 }
+    return UInt32(builtinComponents.filter { atComponentMatches($0.description, inDesc.pointee) }.count)
 }
 
 public func AudioComponentFindNext(
     _ inComponent: AudioComponent?,
     _ inDesc: UnsafePointer<AudioComponentDescription>?
 ) -> AudioComponent? {
-    _ = inComponent
-    guard inDesc != nil else { return nil }
+    guard let inDesc else { return nil }
+    let query = inDesc.pointee
+    let matches = builtinComponents.filter { atComponentMatches($0.description, query) }
+    if let inComponent,
+       let current = ATRegistry.shared.lookup(inComponent, as: ATAudioComponentRecord.self),
+       let index = matches.firstIndex(where: { $0 === current })
+    {
+        let next = index + 1
+        if next < matches.count {
+            return ATRegistry.shared.retain(matches[next])
+        }
+        return nil
+    }
+    if let first = matches.first {
+        return ATRegistry.shared.retain(first)
+    }
     return nil
 }
 
@@ -106,10 +178,15 @@ public func AudioComponentInstanceNew(
     _ outInstance: UnsafeMutablePointer<AudioComponentInstance?>?
 ) -> Int32 {
     outInstance?.pointee = nil
-    guard ATRegistry.shared.lookup(inComponent, as: ATAudioComponentRecord.self) != nil else {
+    guard let record = ATRegistry.shared.lookup(inComponent, as: ATAudioComponentRecord.self) else {
         return kAudioComponentErr_UnsupportedType
     }
-    return kAudioComponentErr_UnsupportedType
+    let unit = ATAudioUnitObject(description: record.description)
+    if unit.isMixer {
+        unit.inputCount = 2
+    }
+    outInstance?.pointee = ATRegistry.shared.retain(unit)
+    return 0
 }
 
 @_cdecl("AudioComponentInstanceDispose")
@@ -150,8 +227,9 @@ public func AudioComponentGetVersion(
 public func AudioComponentInstanceGetComponent(
     _ inInstance: AudioComponentInstance?
 ) -> AudioComponent {
-    if let record = ATRegistry.shared.lookup(inInstance, as: ATAudioComponentInstanceRecord.self) {
-        return record.component
+    if let unit = ATRegistry.shared.lookup(inInstance, as: ATAudioUnitObject.self) {
+        var description = unit.description
+        return AudioComponentFindNext(nil, &description) ?? AudioComponent(bitPattern: 1)!
     }
     return AudioComponent(bitPattern: 1)!
 }
@@ -161,7 +239,7 @@ public func AudioComponentInstanceCanDo(
     _ inSelectorID: Int16
 ) -> Bool {
     _ = inSelectorID
-    return ATRegistry.shared.lookup(inInstance, as: ATAudioComponentInstanceRecord.self) != nil
+    return ATRegistry.shared.lookup(inInstance, as: ATAudioUnitObject.self) != nil
 }
 
 public func AudioComponentInstantiate(
