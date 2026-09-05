@@ -34,8 +34,10 @@ echo "==> $BR: $(git log --oneline -1 "$BR") — $ADDS commit(s) over main"
 [[ "$ADDS" -gt 0 ]] || { echo "REFUSED: $BR adds no commits over main (stale base branch?)"; exit 3; }
 echo "==> files changed vs main:"
 git diff --stat main..."$BR" | tail -15
-if git diff --name-only main..."$BR" | grep -vE '^uikit/' | grep -q .; then
-  echo "REFUSED: the branch touches files outside uikit/:"; git diff --name-only main..."$BR" | grep -vE '^uikit/'; exit 3
+# ALLOW_PATHS='^full/foundation/|^full/scripts/build_full\.sh$' widens the scope for
+# a named task (the guest Foundation, the guest builder); pin files stay refused.
+if git diff --name-only main..."$BR" | grep -vE '^uikit/' | grep -vE "${ALLOW_PATHS:-^$}" | grep -q .; then
+  echo "REFUSED: the branch touches files outside uikit/ (and outside ALLOW_PATHS):"; git diff --name-only main..."$BR" | grep -vE '^uikit/' | grep -vE "${ALLOW_PATHS:-^$}"; exit 3
 fi
 if git diff --name-only main..."$BR" | grep -qE '^(scripts/vendor_pins.sh|env/|scripts/env/)'; then
   echo "REFUSED: the branch touches the pin files"; exit 3
