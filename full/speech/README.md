@@ -6,9 +6,28 @@ of Apple behavioral parity.
 
 ## Depth pass 2026-09
 
-SDK depth for `Speech` (602 IDs): **564 implemented / 5 declared / 33 unavailable / 0 deferred**.
-There is still **no speech engine**. Recognition succeeds only when a documented
-`@_spi(OpenUIKitHost)` hook registers a scripted recognizer.
+SDK depth for `Speech` (602 IDs). The refused merge at `a1542254` claimed
+**564 implemented / 5 declared / 33 unavailable / 0 deferred**, but every
+`implemented` row cited `tests/agent/SpeechRuntime.swift` (a file path, not
+`test:full/speech/tests/agent/<File>Tests.swift#testName`).
+
+This repair: **563 implemented / 6 declared / 33 unavailable / 0 deferred**.
+`AttributeDynamicLookup.subscript(dynamicMember:)` moved to `declared` because
+Linux `AttributedString` has no `AttributeScopes.speech` member, so that
+subscript is not callable. There is still **no speech engine**. Recognition
+succeeds only when a documented `@_spi(OpenUIKitHost)` hook registers a scripted
+recognizer.
+
+Top-5 `implemented` evidence (563 rows; no non-enum test exceeds 40% of the
+397 remaining non-enum/constant rows):
+
+| Rows | Evidence |
+| ---: | --- |
+| 42 | `test:full/speech/tests/agent/SpeechErrorTests.swift#testSFSpeechErrorCodes` |
+| 32 | `test:full/speech/tests/agent/SpeechCustomLanguageModelTests.swift#testCustomLanguageModelInsert` |
+| 29 | `test:full/speech/tests/agent/SpeechEnumTests.swift#testDictationTranscriberEnums` |
+| 28 | `test:full/speech/tests/agent/SpeechEnumTests.swift#testSpeechClassicEnums` |
+| 27 | `test:full/speech/tests/agent/SpeechEnumTests.swift#testSpeechTranscriberEnums` |
 
 ### Public surface that is real
 
@@ -74,7 +93,9 @@ There is still **no speech engine**. Recognition succeeds only when a documented
 
 ### Tests
 
-`tests/agent/SpeechRuntime.swift` prints `SPEECH_AGENT_RUNTIME_OK`.
+Focused top-level `func test*()` checks live in `tests/agent/*Tests.swift`.
+The schema-v1 host compiles `tests/agent/SpeechRuntime.swift`, which stitches
+those functions and prints `SPEECH_AGENT_RUNTIME_OK`.
 
 Run `bash tests/acceptance/test_host.sh` from this directory (or
 `bash full/speech/tests/acceptance/test_host.sh` from the repo root). Keep
