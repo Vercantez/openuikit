@@ -1,0 +1,11 @@
+full/groupactivities/BroadcastOptions.swift
+full/groupactivities/GroupActivities.swift
+full/groupactivities/GroupActivityMetadata.swift
+full/groupactivities/GroupActivitySharingResult.swift
+full/groupactivities/GroupSession.swift
+full/groupactivities/GroupSessionEvent.swift
+full/groupactivities/GroupSessionJournal.swift
+full/groupactivities/GroupSessionMessenger.swift
+full/groupactivities/GroupStateObserver.swift
+full/groupactivities/Participant.swift
+full/groupactivities/SceneAssociationBehavior.swift
