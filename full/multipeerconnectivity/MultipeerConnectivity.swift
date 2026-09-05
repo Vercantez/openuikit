@@ -1,5 +1,4 @@
 @_exported import Foundation
-@preconcurrency import Dispatch
 
 // MARK: - Public constants
 //
@@ -13,6 +12,10 @@ public let MCErrorDomain = "MCErrorDomain"
 
 public let kMCSessionMinimumNumberOfPeers: Int = 2
 public let kMCSessionMaximumNumberOfPeers: Int = 8
+
+func mcClampPeerCount(_ value: Int) -> Int {
+    min(max(value, kMCSessionMinimumNumberOfPeers), kMCSessionMaximumNumberOfPeers)
+}
 
 // MARK: - Enums
 //
@@ -94,52 +97,15 @@ func mcNSError(_ code: MCError.Code, userInfo: [String: Any]? = nil) -> NSError 
     NSError(domain: MCErrorDomain, code: code.rawValue, userInfo: userInfo)
 }
 
-// MARK: - Completion delivery
-//
-// Advertiser/browser start failures, resource-send completions, and nearby
-// connection-data continuations hop once onto this serial queue with `async`,
-// never `sync`. Exactly-once is one scheduled block plus a per-invocation flag.
-
-private struct MCUncheckedWork: @unchecked Sendable {
-    let body: () -> Void
-}
-
-final class MCOnceFlag: @unchecked Sendable {
-    private let lock = NSLock()
-    private var delivered = false
-
-    func take() -> Bool {
-        lock.lock()
-        defer { lock.unlock() }
-        if delivered {
-            return false
-        }
-        delivered = true
-        return true
-    }
-}
-
-let mcCompletionQueue = DispatchQueue(
-    label: "MultipeerConnectivity.completion",
-    qos: .utility
-)
-
 /// Linux host-test control. Hidden from ordinary `import MultipeerConnectivity`
 /// clients and absent from the pinned Apple surface.
 @_spi(OpenUIKitHost)
 public enum MultipeerConnectivityHostControl {
+    /// Fail-closed paths deliver on the caller thread. This probe runs `body`
+    /// immediately so a runner without a run loop cannot hang waiting on a queue.
     public static func enqueueCompletionProbe(
         _ body: @escaping @Sendable () -> Void
     ) {
-        mcCompletionQueue.async(execute: body)
-    }
-}
-
-func mcDeliver(_ body: @escaping () -> Void) {
-    let once = MCOnceFlag()
-    let work = MCUncheckedWork(body: body)
-    mcCompletionQueue.async {
-        guard once.take() else { return }
-        work.body()
+        body()
     }
 }
