@@ -24,6 +24,7 @@ open class CXAction: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
         self.timeoutDate = (aDecoder.decodeObject(of: NSDate.self, forKey: "timeoutDate") as Date?)
             ?? Date.distantFuture
         self.isComplete = aDecoder.decodeBool(forKey: "isComplete")
+        self.failed = aDecoder.decodeBool(forKey: "failed")
         super.init()
     }
 
@@ -31,6 +32,7 @@ open class CXAction: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
         coder.encode(uuid.uuidString as NSString, forKey: "uuid")
         coder.encode(timeoutDate as NSDate, forKey: "timeoutDate")
         coder.encode(isComplete, forKey: "isComplete")
+        coder.encode(failed, forKey: "failed")
     }
 
     public static var supportsSecureCoding: Bool { true }
@@ -47,6 +49,10 @@ open class CXAction: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
 
     open func fail() {
         complete(failed: true)
+    }
+
+    func hostSetTimeoutDate(_ date: Date) {
+        timeoutDate = date
     }
 
     func complete(failed: Bool) {
@@ -157,6 +163,14 @@ open class CXStartCallAction: CXCallAction, @unchecked Sendable {
 open class CXAnswerCallAction: CXCallAction, @unchecked Sendable {
     public private(set) var dateConnected: Date?
 
+    public override init(callUUID: UUID) {
+        super.init(callUUID: callUUID)
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
     public func fulfill(withDateConnected dateConnected: Date) {
         self.dateConnected = dateConnected
         _ = CallKitRegistry.shared.applyAnswer(uuid: callUUID, connectedAt: dateConnected)
@@ -171,6 +185,14 @@ open class CXAnswerCallAction: CXCallAction, @unchecked Sendable {
 
 open class CXEndCallAction: CXCallAction, @unchecked Sendable {
     public private(set) var dateEnded: Date?
+
+    public override init(callUUID: UUID) {
+        super.init(callUUID: callUUID)
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
 
     public func fulfill(withDateEnded dateEnded: Date) {
         self.dateEnded = dateEnded
@@ -431,12 +453,38 @@ open class CXTransaction: NSObject, NSCopying, NSSecureCoding, @unchecked Sendab
             return nil
         }
         self.uuid = decoded
-        self.storedActions = []
+        let allowed: [AnyClass] = [
+            NSArray.self,
+            CXAction.self,
+            CXCallAction.self,
+            CXStartCallAction.self,
+            CXAnswerCallAction.self,
+            CXEndCallAction.self,
+            CXSetHeldCallAction.self,
+            CXSetMutedCallAction.self,
+            CXSetGroupCallAction.self,
+            CXPlayDTMFCallAction.self,
+            CXSetTranslatingCallAction.self,
+            CXHandle.self,
+            NSString.self,
+            NSDate.self,
+        ]
+        let decodedActions: [CXAction]
+        if let array = coder.decodeObject(of: allowed, forKey: "actions") as? NSArray {
+            decodedActions = array.compactMap { $0 as? CXAction }
+        } else {
+            decodedActions = []
+        }
+        self.storedActions = decodedActions
         super.init()
+        for action in decodedActions {
+            action.owningTransaction = self
+        }
     }
 
     open func encode(with coder: NSCoder) {
         coder.encode(uuid.uuidString as NSString, forKey: "uuid")
+        coder.encode(actions as NSArray, forKey: "actions")
     }
 
     public static var supportsSecureCoding: Bool { true }
@@ -454,16 +502,14 @@ open class CXTransaction: NSObject, NSCopying, NSSecureCoding, @unchecked Sendab
 
     func actionDidComplete(_ action: CXAction) {
         _ = action
-        if isComplete {
+        guard isComplete else { return }
+        if actions.contains(where: \.failed) {
+            CallKitRegistry.shared.finishPending(
+                transactionUUID: uuid,
+                error: CXErrorCodeRequestTransactionError(.invalidAction)
+            )
+        } else {
             CallKitRegistry.shared.finishPending(transactionUUID: uuid, error: nil)
-        } else if actions.contains(where: { $0.isComplete && $0.failed }) {
-            let failed = actions.contains(where: { $0.failed })
-            if failed && actions.allSatisfy(\.isComplete) {
-                CallKitRegistry.shared.finishPending(
-                    transactionUUID: uuid,
-                    error: CXErrorCodeRequestTransactionError(.invalidAction)
-                )
-            }
         }
     }
 }
