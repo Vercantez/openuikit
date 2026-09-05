@@ -67,6 +67,16 @@ if git diff main..."$BR" -- 'uikit/Sources/OpenUIKit/*.swift' 'uikit/Sources/CQu
   echo "REFUSED: the branch adds a Foundation API the guest LIBRARY route does not have (DateFormatter & co. in OpenUIKit/CQuartz) — use Calendar/DateComponents or the port's own formatting"; exit 3
 fi
 
+# An unguarded `import Foundation` in a LIBRARY source breaks the guest library
+# route the same way (verify66 @ 302e119b: NSUbiquitousKeyValueStore.swift). The
+# siblings guard it: `#if canImport(Foundation)` / `#elseif canImport(Foundation)`
+# on the line before. Refuse an added `import Foundation` whose previous diff
+# line does not name canImport(Foundation).
+if git diff main..."$BR" -- 'uikit/Sources/OpenUIKit/*.swift' 'uikit/Sources/CQuartz/*' \
+   | awk '/^\+import Foundation$/ { if (prev !~ /canImport\(Foundation\)/) { bad=1 } } { prev=$0 } END { exit !bad }'; then
+  echo "REFUSED: the branch adds an unguarded 'import Foundation' to a library source (guest library route has no Foundation module) — guard it with #if canImport(Foundation) like its siblings"; exit 3
+fi
+
 # Stale temp worktrees from runs that died (disk full, killed) are 1.1 GB
 # each; 25 of them once filled the disk. Reap any not attached to a live run.
 for stale in /tmp/agent_merge.*/; do

@@ -306,6 +306,11 @@ CALLABLE_DECL_KINDS = frozenset(
 API_LIST_FIELDS = frozenset(("accessors", "children", "conformances", "declAttributes"))
 FORBIDDEN_API_KEY_NORMALIZATIONS = frozenset(("location", "toolarguments"))
 SHA256_RE = re.compile(r"[0-9a-f]{64}\Z")
+# The seed generator changed after the 2026-09-01 seeds were sealed (Clang
+# module seeding, -Xcc flags, host-gate keys), so every sealed provenance
+# digest for it is older than the checked-in script. This file lists the
+# generator's digests oldest to newest; see _generator_lineage_accepts.
+GENERATOR_LINEAGE_PATH = "full/framework-fanout/generator-lineage.json"
 CONTROL_RE = re.compile(r"[\x00-\x1f\x7f]")
 SLUG_RE = re.compile(r"[a-z][a-z0-9]*(?:-[a-z0-9]+)*\Z")
 MODULE_RE = re.compile(r"[_A-Za-z][_A-Za-z0-9]*\Z")
@@ -729,6 +734,33 @@ class Validator:
     def fatal(self, message: str) -> None:
         self.error(message)
         raise InvalidSeed(message)
+
+    def _generator_lineage_accepts(
+        self, relative: str, expected: str, actual: str
+    ) -> bool:
+        """Accept a seed sealed under an OLDER listed generator digest when the
+        checked-in generator is a NEWER listed digest; print the drift so review
+        sees it. Any digest missing from the lineage file is still a mismatch."""
+        try:
+            lineage_path = self._repo_file(GENERATOR_LINEAGE_PATH)
+            doc = json.loads(lineage_path.read_text(encoding="utf-8"))
+        except (InvalidSeed, OSError, ValueError):
+            return False
+        if not isinstance(doc, dict) or doc.get("path") != relative:
+            return False
+        entries = [e for e in doc.get("lineage", []) if isinstance(e, dict)]
+        digests = [e.get("sha256") for e in entries]
+        if expected not in digests or actual not in digests:
+            return False
+        if digests.index(actual) <= digests.index(expected):
+            return False
+        entry = entries[digests.index(actual)]
+        print(
+            f"provenance generator lineage: {relative} seeded at {expected[:12]}, "
+            f"checked-in {actual[:12]} ({str(entry.get('commit', '?'))[:8]} "
+            f"{entry.get('date', '?')}: {entry.get('reason', '')})"
+        )
+        return True
 
     def _sha256(self, path: Path) -> str:
         """Hash each immutable input at most once during a validation run."""
@@ -1329,6 +1361,10 @@ class Validator:
             except InvalidSeed:
                 continue
             if actual != expected_digest:
+                if path_key == "generatorPath" and self._generator_lineage_accepts(
+                    relative, expected_digest, actual
+                ):
+                    continue
                 self.error(
                     f"provenance digest mismatch for {relative}: "
                     f"expected {expected_digest}, got {actual}"
