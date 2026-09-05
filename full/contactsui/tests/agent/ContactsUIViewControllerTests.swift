@@ -47,7 +47,8 @@ private func makeAda() -> CNMutableContact {
 func testViewControllerClass() {
     let editor = CNContactViewController(for: makeAda())
     precondition(type(of: editor) === CNContactViewController.self)
-    precondition(editor is UIViewController)
+    let asController: UIViewController = editor
+    precondition(asController === editor)
 }
 
 @MainActor
