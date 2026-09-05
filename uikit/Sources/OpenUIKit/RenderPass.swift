@@ -324,7 +324,8 @@ public enum UIRenderer {
                 c.restore()
             }
             _UIGlassMaterial.apply(in: c, path: path, bounds: bounds,
-                                   dark: v.traitCollection.userInterfaceStyle == .dark)
+                                   dark: v.traitCollection.userInterfaceStyle == .dark,
+                                   bar: v._usesIOSDarkBarGlass)
             backgroundDrawn = true
         } else if let bg = v.backgroundColor {
             let color = bg.resolvedCGColor(with: v.traitCollection)

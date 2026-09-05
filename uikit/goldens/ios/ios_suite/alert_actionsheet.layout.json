@@ -1,0 +1,72 @@
+{
+  "name" : "alert_actionsheet",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        393,
+        852
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        393,
+        852
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        24,
+        80,
+        300,
+        24
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Semibold",
+        20
+      ],
+      "frame" : [
+        24,
+        80,
+        300,
+        24
+      ],
+      "intrinsic" : [
+        112,
+        24
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        112,
+        24
+      ],
+      "text" : "Base screen"
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "name" : "label_mono_italic",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        158,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".AppleSystemUIFontMonospaced-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        20,
+        158,
+        20.5
+      ],
+      "intrinsic" : [
+        158,
+        20.5
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        158,
+        20.5
+      ],
+      "text" : "Monospaced 0123"
+    },
+    {
+      "absFrame" : [
+        20,
+        50,
+        158,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".AppleSystemUIFontMonospaced-Bold",
+        17
+      ],
+      "frame" : [
+        20,
+        50,
+        158,
+        20.5
+      ],
+      "intrinsic" : [
+        158,
+        20.5
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        158,
+        20.5
+      ],
+      "text" : "Monospaced bold"
+    },
+    {
+      "absFrame" : [
+        20,
+        80,
+        129,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-RegularItalic",
+        17
+      ],
+      "frame" : [
+        20,
+        80,
+        129,
+        20.5
+      ],
+      "intrinsic" : [
+        129,
+        20.5
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        129,
+        20.5
+      ],
+      "text" : "Italic system font"
+    }
+  ]
+}

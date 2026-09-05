@@ -1282,6 +1282,26 @@ final class TableViewIOSEditChromeTests: XCTestCase {
         XCTAssertEqual(fill.green, 56.0 / 255.0, accuracy: 1e-9)
         XCTAssertEqual(fill.blue, 60.0 / 255.0, accuracy: 1e-9)
     }
+
+    /// MEASURED TableEditor t900.dark / t3800.dark, SE 2x: reorder bars
+    /// are `.tertiaryLabel` source-over (70,70,73) on black, (111,111,115)
+    /// on selected systemGray4. Light over white stays (197,197,199).
+    func testReorderInkIsTertiaryLabelOnIOS() {
+        let dark = UITraitCollection(userInterfaceStyle: .dark, displayScale: 2)
+        let light = UITraitCollection(userInterfaceStyle: .light, displayScale: 2)
+        let d = UITableViewCellReorderControl.ink.resolvedCGColor(with: dark)
+        XCTAssertEqual(d.red, 0.921569, accuracy: 0.001)
+        XCTAssertEqual(d.green, 0.921569, accuracy: 0.001)
+        XCTAssertEqual(d.blue, 0.960784, accuracy: 0.001)
+        XCTAssertEqual(d.alpha, 0.298039, accuracy: 0.001)
+        let l = UITableViewCellReorderControl.ink.resolvedCGColor(with: light)
+        XCTAssertEqual(l.red, 0.235294, accuracy: 0.001)
+        XCTAssertEqual(l.alpha, 0.298039, accuracy: 0.001)
+        OpenUIKitRuntime.systemFontCut = .macOS
+        let c = UITableViewCellReorderControl.ink.resolvedCGColor(with: light)
+        XCTAssertEqual((c.red * 255).rounded(), 197)
+        XCTAssertEqual(c.alpha, 1, accuracy: 1e-9)
+    }
 }
 
 // MARK: - iOS row insert/delete spring (TableEditor t1350 / t2350)
@@ -1452,5 +1472,21 @@ final class TableViewIOSRowAnimationTests: XCTestCase {
         XCTAssertNil(charlie.superview)
         XCTAssertEqual(table.visibleCells.count, 2)
         XCTAssertTrue(table.visibleCells.allSatisfy { $0.animations.isEmpty })
+    }
+
+    func testRTLMirrorsDisclosureAndValue1Labels() {
+        // MEASURED /tmp/rtlprobe + NavFlow t200.rtl, iPhone SE 2x / iOS 26.1:
+        // disclosure abs.x 16; value1 primary sits on the leading (right)
+        // edge. Unspecified cells (every existing test) stay LTR.
+        let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
+        cell.semanticContentAttribute = .forceRightToLeft
+        cell.accessoryType = .disclosureIndicator
+        cell.textLabel.text = "Notifications"
+        cell.detailTextLabel?.text = "On"
+        cell.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
+        cell.layoutIfNeeded()
+        XCTAssertEqual(cell._accessoryGlyphView.frame.origin.x, 16, accuracy: 0.51)
+        XCTAssertGreaterThan(cell.textLabel.frame.origin.x, cell.detailTextLabel!.frame.origin.x)
+        XCTAssertGreaterThan(cell.textLabel.frame.origin.x, 200)
     }
 }

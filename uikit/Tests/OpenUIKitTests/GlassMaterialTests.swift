@@ -124,4 +124,67 @@ final class GlassMaterialTests: XCTestCase {
         XCTAssertFalse(a._platterHiddenByGroup)
         XCTAssertFalse(b._platterHiddenByGroup)
     }
+
+    func testDarkBarGlassMixOverBlackIs19() {
+        // MEASURED /tmp/glass-dark-out glass_tabbar_dark_black, SE 2x:
+        // α=190/255, T=19/190 over black → 19. Sheet mix is 57.
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark,
+                                                      displayScale: 2)
+        let root = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 80))
+        root.overrideUserInterfaceStyle = .dark
+        root.backgroundColor = .black
+        let glass = UIView(frame: CGRect(x: 20, y: 16, width: 60, height: 48))
+        glass.isOpaque = false
+        glass._usesIOSGlass = true
+        glass._usesIOSDarkBarGlass = true
+        glass.layer.cornerRadius = 24
+        root.addSubview(glass)
+        let bmp = UIRenderer.render(root, scale: 2)
+        let p = px(bmp, 100, 80)
+        XCTAssertEqual(p.a, 255)
+        XCTAssertLessThanOrEqual(abs(p.r - 19), 2, "\(p)")
+        XCTAssertLessThanOrEqual(abs(p.g - 19), 2, "\(p)")
+        XCTAssertLessThanOrEqual(abs(p.b - 19), 2, "\(p)")
+    }
+
+    func testDarkBarGlassMixOverWhiteIs84() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark,
+                                                      displayScale: 2)
+        let root = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 80))
+        root.overrideUserInterfaceStyle = .dark
+        root.backgroundColor = .white
+        let glass = UIView(frame: CGRect(x: 20, y: 16, width: 60, height: 48))
+        glass.isOpaque = false
+        glass._usesIOSGlass = true
+        glass._usesIOSDarkBarGlass = true
+        glass.layer.cornerRadius = 24
+        root.addSubview(glass)
+        let bmp = UIRenderer.render(root, scale: 2)
+        let p = px(bmp, 100, 80)
+        XCTAssertEqual(p.a, 255)
+        XCTAssertLessThanOrEqual(abs(p.r - 84), 2, "\(p)")
+        XCTAssertLessThanOrEqual(abs(p.g - 84), 2, "\(p)")
+        XCTAssertLessThanOrEqual(abs(p.b - 84), 2, "\(p)")
+    }
+
+    func testToolbarPlatterUsesDarkBarGlassAndNavDoesNot() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        let toolbarItem = UIBarButtonItem(title: "Left", style: .plain, target: nil, action: nil)
+        let toolbar = _UIBarButtonItemView(item: toolbarItem)
+        toolbar.appliesRefraction = false
+        toolbar.applyColors()
+        XCTAssertTrue(toolbar.platter._usesIOSDarkBarGlass)
+        let navItem = UIBarButtonItem(title: "Left", style: .plain, target: nil, action: nil)
+        let nav = _UIBarButtonItemView(item: navItem)
+        nav.applyColors()
+        XCTAssertFalse(nav.platter._usesIOSDarkBarGlass)
+    }
 }

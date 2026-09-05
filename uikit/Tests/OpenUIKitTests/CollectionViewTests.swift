@@ -916,4 +916,48 @@ final class CompositionalLayoutTests: XCTestCase {
         XCTAssertEqual(cv.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))?.frame,
                        CGRect(x: 16, y: 0, width: 343, height: 193))
     }
+
+    /// MEASURED Feed-ipad t200: cards `[16, 298, 788, 533.5]` at window
+    /// 820. `shouldInvalidateLayout` must compare `newBounds` to the size
+    /// `prepare()` last used, not `cv.bounds` (the setter applies the new
+    /// size first). 358 = 390 − 32, the loadView default.
+    func testPadCompositionalCardsInvalidateFrom390To820() {
+        let savedCut = OpenUIKitRuntime.systemFontCut
+        let savedIdiom = UIDevice.current.userInterfaceIdiom
+        let savedTraits = UITraitCollection.current
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIDevice.current.userInterfaceIdiom = .pad
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2, userInterfaceIdiom: .pad)
+        defer {
+            OpenUIKitRuntime.systemFontCut = savedCut
+            UIDevice.current.userInterfaceIdiom = savedIdiom
+            UITraitCollection.current = savedTraits
+        }
+
+        let itemSize = OpenUIKit.NSCollectionLayoutSize(
+            widthDimension: OpenUIKit.NSCollectionLayoutDimension.fractionalWidth(1.0),
+            heightDimension: OpenUIKit.NSCollectionLayoutDimension.fractionalWidth(9.0 / 16.0))
+        let item = OpenUIKit.NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = OpenUIKit.NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
+        let section = OpenUIKit.NSCollectionLayoutSection(group: group)
+        section.contentInsets = OpenUIKit.NSDirectionalEdgeInsets(top: 0, leading: 16,
+                                                                      bottom: 0, trailing: 16)
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        let cv = UICollectionView(frame: CGRect(x: 0, y: 0, width: 390, height: 400),
+                                   collectionViewLayout: layout)
+        cv.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "c")
+        let src = CompSource([1])
+        keptCompSources.append(src)
+        cv.dataSource = src
+        cv.layoutIfNeeded()
+        let narrow = cv.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))?.frame.width
+        XCTAssertEqual(narrow ?? -1, 358, accuracy: 0.5)
+
+        cv.frame.size = CGSize(width: 820, height: 1180)
+        cv.layoutIfNeeded()
+        let wide = cv.layoutAttributesForItem(at: IndexPath(item: 0, section: 0))?.frame
+        XCTAssertEqual(wide?.minX ?? -1, 16, accuracy: 0.01)
+        XCTAssertEqual(wide?.width ?? -1, 788, accuracy: 0.01)
+    }
 }

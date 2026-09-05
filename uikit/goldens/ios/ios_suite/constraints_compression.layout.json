@@ -1,0 +1,167 @@
+{
+  "name" : "constraints_compression",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        320,
+        100
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        100
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        12,
+        16,
+        183.5,
+        18
+      ],
+      "bg" : [
+        1,
+        0.80000000000000004,
+        0,
+        1
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        15
+      ],
+      "frame" : [
+        12,
+        16,
+        183.5,
+        18
+      ],
+      "intrinsic" : [
+        183.5,
+        18
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        183.5,
+        18
+      ],
+      "text" : "Resists compression firmly"
+    },
+    {
+      "absFrame" : [
+        203.5,
+        16,
+        104.5,
+        18
+      ],
+      "bg" : [
+        0.20399999999999999,
+        0.78000000000000003,
+        0.34899999999999998,
+        1
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        15
+      ],
+      "frame" : [
+        203.5,
+        16,
+        104.5,
+        18
+      ],
+      "intrinsic" : [
+        165.5,
+        18
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        165.5,
+        18
+      ],
+      "text" : "gives way and truncates"
+    },
+    {
+      "absFrame" : [
+        12,
+        66,
+        106,
+        18
+      ],
+      "bg" : [
+        0,
+        0.76500000000000001,
+        0.81599999999999995,
+        1
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        15
+      ],
+      "frame" : [
+        12,
+        66,
+        106,
+        18
+      ],
+      "intrinsic" : [
+        173,
+        18
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        173,
+        18
+      ],
+      "text" : "squeezed on the left side"
+    },
+    {
+      "absFrame" : [
+        126,
+        66,
+        182,
+        18
+      ],
+      "bg" : [
+        1,
+        0.17599999999999999,
+        0.33300000000000002,
+        1
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        15
+      ],
+      "frame" : [
+        126,
+        66,
+        182,
+        18
+      ],
+      "intrinsic" : [
+        182,
+        18
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        182,
+        18
+      ],
+      "text" : "holds its full intrinsic width"
+    }
+  ]
+}
