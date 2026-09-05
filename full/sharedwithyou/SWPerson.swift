@@ -19,14 +19,15 @@ open class SWPerson: NSObject, NSSecureCoding {
 
         public static var supportsSecureCoding: Bool { true }
 
-        public required init?(coder: NSCoder) {
-            guard let rootHash = coder.decodeObject(of: NSData.self, forKey: "rootHash") as Data?
-            else {
-                return nil
-            }
-            self.rootHash = rootHash
-            super.init()
+    public required init?(coder: NSCoder) {
+        guard coder.containsValue(forKey: "rootHash") else { return nil }
+        guard let rootHash = coder.decodeObject(of: NSData.self, forKey: "rootHash") as Data?
+        else {
+            return nil
         }
+        self.rootHash = rootHash
+        super.init()
+    }
 
         public func encode(with coder: NSCoder) {
             coder.encode(rootHash as NSData, forKey: "rootHash")
@@ -66,6 +67,7 @@ open class SWPerson: NSObject, NSSecureCoding {
         public static var supportsSecureCoding: Bool { true }
 
         public required init?(coder: NSCoder) {
+            guard coder.containsValue(forKey: "signatureData") else { return nil }
             guard let signatureData = coder.decodeObject(
                 of: NSData.self,
                 forKey: "signatureData"
@@ -105,10 +107,20 @@ open class SWPerson: NSObject, NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
 
     public required init?(coder: NSCoder) {
-        self.handle = coder.decodeObject(of: NSString.self, forKey: "handle") as String?
-        self.identity = coder.decodeObject(of: Identity.self, forKey: "identity")
-        self.displayName = coder.decodeObject(of: NSString.self, forKey: "displayName") as String? ?? ""
-        self.thumbnailImageData = coder.decodeObject(of: NSData.self, forKey: "thumbnail") as Data?
+        self.handle = coder.containsValue(forKey: "handle")
+            ? coder.decodeObject(of: NSString.self, forKey: "handle") as String?
+            : nil
+        self.identity = coder.containsValue(forKey: "identity")
+            ? coder.decodeObject(of: Identity.self, forKey: "identity")
+            : nil
+        if coder.containsValue(forKey: "displayName") {
+            self.displayName = coder.decodeObject(of: NSString.self, forKey: "displayName") as String? ?? ""
+        } else {
+            self.displayName = ""
+        }
+        self.thumbnailImageData = coder.containsValue(forKey: "thumbnail")
+            ? coder.decodeObject(of: NSData.self, forKey: "thumbnail") as Data?
+            : nil
         super.init()
     }
 

@@ -30,6 +30,9 @@ open class SWHighlightChangeEvent: NSObject, SWHighlightEvent, NSCopying, NSSecu
     public static var supportsSecureCoding: Bool { true }
 
     public required init?(coder: NSCoder) {
+        guard coder.containsValue(forKey: "trigger"), coder.containsValue(forKey: "highlightURL") else {
+            return nil
+        }
         let raw = coder.decodeInteger(forKey: "trigger")
         guard
             let trigger = SWHighlightChangeEventTrigger(rawValue: raw),
@@ -69,6 +72,9 @@ open class SWHighlightMembershipEvent: NSObject, SWHighlightEvent, NSCopying, NS
     public static var supportsSecureCoding: Bool { true }
 
     public required init?(coder: NSCoder) {
+        guard coder.containsValue(forKey: "trigger"), coder.containsValue(forKey: "highlightURL") else {
+            return nil
+        }
         let raw = coder.decodeInteger(forKey: "trigger")
         guard
             let trigger = SWHighlightMembershipEventTrigger(rawValue: raw),
@@ -114,6 +120,9 @@ open class SWHighlightMentionEvent: NSObject, SWHighlightEvent, NSCopying, NSSec
     public static var supportsSecureCoding: Bool { true }
 
     public required init?(coder: NSCoder) {
+        guard coder.containsValue(forKey: "handle"), coder.containsValue(forKey: "highlightURL") else {
+            return nil
+        }
         guard
             let handle = coder.decodeObject(of: NSString.self, forKey: "handle") as String?,
             let url = coder.decodeObject(of: NSURL.self, forKey: "highlightURL") as URL?
@@ -152,6 +161,9 @@ open class SWHighlightPersistenceEvent: NSObject, SWHighlightEvent, NSCopying, N
     public static var supportsSecureCoding: Bool { true }
 
     public required init?(coder: NSCoder) {
+        guard coder.containsValue(forKey: "trigger"), coder.containsValue(forKey: "highlightURL") else {
+            return nil
+        }
         let raw = coder.decodeInteger(forKey: "trigger")
         guard
             let trigger = SWHighlightPersistenceEventTrigger(rawValue: raw),

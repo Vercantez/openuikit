@@ -37,6 +37,9 @@ open class SWCollaborationHighlight: SWHighlight {
 
     public required init?(coder: NSCoder) {
         guard
+            coder.containsValue(forKey: "collaborationIdentifier"),
+            coder.containsValue(forKey: "creationDate"),
+            coder.containsValue(forKey: "contentType"),
             let collaborationIdentifier = coder.decodeObject(
                 of: NSString.self,
                 forKey: "collaborationIdentifier"
@@ -50,7 +53,11 @@ open class SWCollaborationHighlight: SWHighlight {
             return nil
         }
         self.collaborationIdentifier = collaborationIdentifier
-        self.title = coder.decodeObject(of: NSString.self, forKey: "title") as String?
+        if coder.containsValue(forKey: "title") {
+            self.title = coder.decodeObject(of: NSString.self, forKey: "title") as String?
+        } else {
+            self.title = nil
+        }
         self.creationDate = creationDate
         self.contentType = UTType(identifier: contentIdentifier)
         super.init(coder: coder)

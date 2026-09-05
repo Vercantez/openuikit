@@ -23,6 +23,9 @@ open class SWHighlight: NSObject, NSCopying, NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
 
     public required init?(coder: NSCoder) {
+        guard coder.containsValue(forKey: "url"), coder.containsValue(forKey: "identifier") else {
+            return nil
+        }
         guard let url = coder.decodeObject(of: NSURL.self, forKey: "url") as URL? else {
             return nil
         }
