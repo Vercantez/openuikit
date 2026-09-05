@@ -6,58 +6,89 @@ symbol graph, API digester, TBD exports, and the pinned `dotnet/macios`
 bindings. It is not wired into the shared guest package; that integration
 is a later central-review step.
 
-The original lane's fail-closed `LAContext` is preserved and extended: Linux
-has no Secure Enclave, biometry sensor, or authentication daemon, so
-evaluation never succeeds.
+Linux has no Secure Enclave, biometric sensor, companion device, or
+authentication daemon. Evaluation never invents hardware success.
+
+## What was measured (2026-09-05)
+
+Mac probe `/tmp/la-oracle.swift` against SDK LocalAuthentication
+(Xcode 26.1 / macOS 26.0):
+
+| symbol | value |
+|---|---|
+| `LAErrorDomain` | `com.apple.LocalAuthentication` |
+| `kLAErrorDomain` | `com.apple.LocalAuthentication` |
+| `LATouchIDAuthenticationMaximumAllowableReuseDuration` | `300.0` |
+| default `touchIDAuthenticationAllowableReuseDuration` | `0.0` |
+| assigning `10000` to the reuse property | reads back `10000.0` (not clamped on set) |
+| `LABiometryType` raw values | none 0, touchID 1, faceID 2, opticID 4 |
+| `LARight.State` raw values | unknown 0, authorizing 1, authorized 2, notAuthorized 3 |
+
+`LAPublicDefines.h` (same SDK, not vendored) corroborates the domain string
+(`#define kLAErrorDomain "com.apple.LocalAuthentication"`), error codes
+(`-1` … `-11`, `-1004`), policy numbers `1…5`, and the 5-minute reuse
+bound documented on `LAContext.h`.
+
+`docker exec uikit-linux`: Linux Swift 6.2.4 Foundation has no
+`NSErrorPointer` typealias. The overlay keeps
+`UnsafeMutablePointer<LAError?>?` so in-tree guests (`var authError: LAError?`)
+compile.
 
 ## What is real
 
-- `LAError` is a `@frozen` `Foundation._BridgedStoredNSError` wrapper around a
-  stored `NSError`. `LAError.Code` matches the API-digester overlay: the
-  `touchID*` cases are the enum elements; `biometry*` names are static aliases
-  with the same raw values. Raw values come from the pinned macios `LAStatus`
-  enum (`authenticationFailed = -1` … `companionNotAvailable = -11`,
-  `notInteractive = -1004`).
-- `LAErrorDomain` / `kLAErrorDomain` use the C identifier as process-local
-  identity. Apple's binary NSError string payload is unconfirmed.
-- `LAPolicy`, `LABiometryType` (including `opticID = 4` and `LABiometryNone`),
-  `LACompanionType` (`mac = 2`, `vision = 4`), `LACredentialType`
-  (`smartCardPIN = -3`), `LAAccessControlOperation`, and `LARight.State` use
-  the macios explicit raw values. Matching `kLA*` `Int32` macros are declared.
-- `LAContext` remains a mutable request object. `canEvaluatePolicy` and both
-  the completion-handler and `async` `evaluatePolicy` overlays fail closed
-  with `biometryNotAvailable`, or `invalidContext` after `invalidate()`.
-  Linux Foundation has no `NSErrorPointer`; the existing
-  `UnsafeMutablePointer<LAError?>?` out-pointer is kept so in-tree guests
-  (`var authError: LAError?`) keep compiling.
-- Application-password credentials are stored on the context instance only.
-  Smart-card PIN never sets. Domain state, environment mechanisms, and
-  `LARight` / `LARightStore` APIs exist as fail-closed in-memory objects.
+- `LAError` is a `@frozen` `Foundation._BridgedStoredNSError` wrapper.
+  `LAError.Code` matches the API-digester overlay: `touchID*` cases are the
+  enum elements; `biometry*` names are static aliases with the same raw
+  values.
+- `LAPolicy`, `LABiometryType`, `LACompanionType`, `LACredentialType`,
+  `LAAccessControlOperation`, `LARight.State`, and matching `kLA*` `Int32`
+  macros.
+- `LAContext` is a mutable request object.
+  - `biometryType` is always `.none`.
+  - `canEvaluatePolicy` is synchronous: biometric policies →
+    `biometryNotAvailable`; `deviceOwnerAuthentication` → `passcodeNotSet`
+    unless `LocalAuthenticationTestHook.setSimulatedDevicePasscodeEnabled(true)`;
+    companion policies → `companionNotAvailable`.
+  - `evaluatePolicy` (completion and async) delivers the same errors on the
+    private serial queue `LocalAuthentication.reply` (Apple: LAContext.h,
+    non-inline). Empty `localizedReason` traps (Apple: NSInvalidArgumentException).
+  - `invalidate()` cancels in-flight evaluations with `appCancel`; later
+    calls fail with `invalidContext` (LAContext.h).
+  - `interactionNotAllowed` → `notInteractive` (LAContext.h).
+  - `evaluatedPolicyDomainState` stays nil (no successful biometric evaluation).
+  - Application-password credentials are stored on the context instance.
+    Smart-card PIN never sets.
+- `LARight` follows the documented state order in LARight.h:
+  `unknown → authorizing → authorized | notAuthorized`. Default / passcode
+  fallback rights honor the simulated-passcode hook; biometry-only rights
+  stay `biometryNotAvailable`.
+- `LARightStore.shared` is an in-memory store on Linux (save / load / remove
+  round-trip in-process). `LAPublicKey.exportBytes` and unauthorized
+  `LASecret.loadData` fail closed with `invalidContext` (no Secure Enclave).
+- `LAEnvironment.currentUser` reports a non-usable biometry mechanism and
+  an unset user password. Observer callbacks never fire.
 
 `canImport(Combine)` still `@_exported import Combine` when that module is
 present (guest package). Isolated host compilation imports Foundation only.
 
 ## Fail-closed boundaries
 
-- Policy evaluation never returns success and never presents UI.
-- `LARight.authorize` / `checkCanAuthorize` and `LARightStore` save/load/remove
-  paths fail with `biometryNotAvailable`. They do not persist secrets.
-- `LAEnvironment.currentUser` reports a non-usable biometry mechanism
-  (`biometryType == .none`, not enrolled) and an unset user password. No
-  companion devices. Observer callbacks never fire: environment state does
-  not change on Linux.
-- `LAPublicKey.exportBytes` and `LASecret.loadData` complete with
-  `biometryNotAvailable`. Completions run synchronously; that timing is a
-  Linux host choice, not an Apple observation.
+- No biometric or companion evaluation succeeds.
+- `LocalAuthenticationTestHook` is a documented Linux test hook, not an
+  Apple API. It only simulates a device passcode.
+- Completions hop onto `LocalAuthentication.reply` with `async`, never
+  `sync`. Nested calls enqueue behind the running handler.
 
-## Deferred
+## Deferred (13 identifiers)
 
 - `LAContext.evaluateAccessControl` and every `SecKeyAlgorithm` member on
   `LAPrivateKey` / `LAPublicKey`: Security is not a declared dependency, and
   a public lookalike is forbidden.
 - `objectWillChange` / `ObjectWillChangePublisher`: Combine is not a declared
   dependency on the isolated host.
-- `LATouchIDAuthenticationMaximumAllowableReuseDuration`: the graph records
-  the symbol, not the numeric payload.
 
-See `oracle-questions.tsv` for questions that need a central Apple-oracle probe.
+`LAAuthenticationView` is not in the iPhoneOS 26.1 `LocalAuthentication`
+public surface (247 IDs). It is likely `LocalAuthenticationEmbeddedUI` /
+SwiftUI; see `oracle-questions.tsv`.
+
+Coverage: 234 implemented / 13 deferred / 0 declared.
