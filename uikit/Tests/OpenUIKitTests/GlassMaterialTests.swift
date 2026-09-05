@@ -49,6 +49,31 @@ final class GlassMaterialTests: XCTestCase {
         XCTAssertLessThanOrEqual(abs(p.b - 220), 2, "\(p)")
     }
 
+    func testDarkFloatingGlassMixOverBlackIs57() {
+        // MEASURED /tmp/sheetfill_dark medium_black, SE 2x / iOS 26.1:
+        // α=203/255, T=57/203 over black → 57.
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark,
+                                                      displayScale: 2)
+        let root = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 80))
+        root.overrideUserInterfaceStyle = .dark
+        root.backgroundColor = .black
+        let glass = UIView(frame: CGRect(x: 20, y: 16, width: 60, height: 48))
+        glass.isOpaque = false
+        glass._usesIOSGlass = true
+        glass._usesIOSDarkGlass = true
+        glass.layer.cornerRadius = 24
+        root.addSubview(glass)
+        let bmp = UIRenderer.render(root, scale: 2)
+        let p = px(bmp, 100, 80)
+        XCTAssertEqual(p.a, 255)
+        XCTAssertLessThanOrEqual(abs(p.r - 57), 2, "\(p)")
+        XCTAssertLessThanOrEqual(abs(p.g - 57), 2, "\(p)")
+        XCTAssertLessThanOrEqual(abs(p.b - 57), 2, "\(p)")
+    }
+
     func testCatalystKeepsTheFlatFill() {
         let bmp = renderGlass(over: .black, cut: .macOS)
         let p = px(bmp, 100, 80)
@@ -76,5 +101,27 @@ final class GlassMaterialTests: XCTestCase {
         let v = _UIBarButtonItemView(item: item)
         v.applyColors()
         XCTAssertTrue(v.platter._usesIOSGlass)
+    }
+
+    func testIsolatedImageItemsDoNotShareAPlatter() {
+        // MEASURED realapp_hackers_feed_light, iPhone 16 @3x: settings
+        // `[277, 0, 44, 44]` and search `[333, 0, 44, 44]` (gap 12, not the
+        // grouped 8) — two platters.
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        let img = UIImage(bitmap: Bitmap(width: 66, height: 66), scale: 3)
+        let aItem = UIBarButtonItem(image: img)
+        let bItem = UIBarButtonItem(image: img)
+        aItem._isolatesPlatter = true
+        bItem._isolatesPlatter = true
+        let a = _UIBarButtonItemView(item: aItem)
+        let b = _UIBarButtonItemView(item: bItem)
+        a.frame = CGRect(x: 277, y: 0, width: 44, height: 44)
+        b.frame = CGRect(x: 333, y: 0, width: 44, height: 44)
+        XCTAssertEqual(_UIBarItemLayout.gapBefore([a, b], 1), 12)
+        XCTAssertEqual(_UIBarItemLayout.sharedPlatterFrames([a, b]), [])
+        XCTAssertFalse(a._platterHiddenByGroup)
+        XCTAssertFalse(b._platterHiddenByGroup)
     }
 }

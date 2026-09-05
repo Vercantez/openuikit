@@ -1,6 +1,6 @@
 {
- "head": "4238d07f",
- "date": "2026-09-05T04:29Z",
+ "head": "34507ca8",
+ "date": "2026-09-05T06:28Z",
  "suite": {
   "pass": 112,
   "total": 113
@@ -10,6 +10,83 @@
   "total": 124
  },
  "rows": [
+  {
+   "scene": "Feed-ipad:t3800",
+   "category": "conformance",
+   "score": 8.921,
+   "blob": 429111.8,
+   "layout_issues": 20,
+   "captured": "2026-09-05T01:20",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Feed-ipad:t4800",
+   "category": "conformance",
+   "score": 8.921,
+   "blob": 429111.8,
+   "layout_issues": 20,
+   "captured": "2026-09-05T01:20",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Feed-ipad:t2800",
+   "category": "conformance",
+   "score": 14.239,
+   "blob": 444341.8,
+   "layout_issues": 20,
+   "captured": "2026-09-05T01:20",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Feed-ipad:t200",
+   "category": "conformance",
+   "score": 35.891,
+   "blob": 248660.8,
+   "layout_issues": 17,
+   "captured": "2026-09-05T01:20",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Feed-ipad:t1800",
+   "category": "conformance",
+   "score": 35.891,
+   "blob": 248660.8,
+   "layout_issues": 17,
+   "captured": "2026-09-05T01:20",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Feed-ipad:t700",
+   "category": "conformance",
+   "score": 45.608,
+   "blob": 248660.8,
+   "layout_issues": 17,
+   "captured": "2026-09-05T01:20",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs-ipad:t2000",
+   "category": "conformance",
+   "score": 45.747,
+   "blob": 59876.0,
+   "layout_issues": 19,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
   {
    "scene": "realapp_focus_settings_light",
    "category": "realapp",
@@ -21,12 +98,44 @@
    "status": "pass"
   },
   {
+   "scene": "Modal-ipad:t7200",
+   "category": "conformance",
+   "score": 84.245,
+   "blob": 66.8,
+   "layout_issues": 9,
+   "captured": "2026-09-05T01:23",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "realapp_hackers_feed_light",
+   "category": "realapp",
+   "score": 84.582,
+   "blob": 174.4,
+   "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 84.4,
+   "status": "pass"
+  },
+  {
    "scene": "Tabs:t2000",
    "category": "conformance",
-   "score": 84.598,
-   "blob": 246.0,
-   "layout_issues": 8,
-   "captured": "2026-09-04T23:29",
+   "score": 84.63,
+   "blob": 119.8,
+   "layout_issues": 7,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs:t2000.dark",
+   "category": "conformance",
+   "score": 84.907,
+   "blob": 271.8,
+   "layout_issues": 7,
+   "captured": "2026-09-05T01:27",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -34,10 +143,54 @@
   {
    "scene": "Tabs:t6000",
    "category": "conformance",
-   "score": 88.251,
+   "score": 88.371,
    "blob": 79.5,
-   "layout_issues": 31,
-   "captured": "2026-09-04T23:29",
+   "layout_issues": 28,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs:t6000.dark",
+   "category": "conformance",
+   "score": 89.12,
+   "blob": 81.2,
+   "layout_issues": 28,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Feed:t3800.dark",
+   "category": "conformance",
+   "score": 89.434,
+   "blob": 13656.8,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:21",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Feed:t4800.dark",
+   "category": "conformance",
+   "score": 89.434,
+   "blob": 13656.8,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:21",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Feed:t2800.dark",
+   "category": "conformance",
+   "score": 89.435,
+   "blob": 13656.8,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:21",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -45,10 +198,21 @@
   {
    "scene": "Tabs:t7000",
    "category": "conformance",
-   "score": 92.255,
-   "blob": 59.0,
-   "layout_issues": 35,
-   "captured": "2026-09-04T23:29",
+   "score": 92.375,
+   "blob": 47.2,
+   "layout_issues": 32,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs-ipad:t7000",
+   "category": "conformance",
+   "score": 92.693,
+   "blob": 639.5,
+   "layout_issues": 63,
+   "captured": "2026-09-05T01:27",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -56,10 +220,21 @@
   {
    "scene": "Tabs:t4000",
    "category": "conformance",
-   "score": 92.794,
+   "score": 92.914,
    "blob": 79.5,
    "layout_issues": 33,
-   "captured": "2026-09-04T23:29",
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs:t7000.dark",
+   "category": "conformance",
+   "score": 92.928,
+   "blob": 49.2,
+   "layout_issues": 32,
+   "captured": "2026-09-05T01:27",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -67,10 +242,10 @@
   {
    "scene": "Tabs:t5000",
    "category": "conformance",
-   "score": 93.015,
+   "score": 93.135,
    "blob": 79.5,
    "layout_issues": 34,
-   "captured": "2026-09-04T23:29",
+   "captured": "2026-09-05T01:27",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -78,10 +253,10 @@
   {
    "scene": "Tabs:t200",
    "category": "conformance",
-   "score": 93.068,
+   "score": 93.188,
    "blob": 79.5,
-   "layout_issues": 31,
-   "captured": "2026-09-04T23:29",
+   "layout_issues": 28,
+   "captured": "2026-09-05T01:27",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -89,10 +264,175 @@
   {
    "scene": "Tabs:t3000",
    "category": "conformance",
-   "score": 93.308,
+   "score": 93.428,
    "blob": 79.5,
-   "layout_issues": 31,
-   "captured": "2026-09-04T23:29",
+   "layout_issues": 28,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs-ipad:t3000",
+   "category": "conformance",
+   "score": 93.467,
+   "blob": 639.0,
+   "layout_issues": 57,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs-ipad:t200",
+   "category": "conformance",
+   "score": 93.522,
+   "blob": 638.8,
+   "layout_issues": 57,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs-ipad:t4000",
+   "category": "conformance",
+   "score": 93.625,
+   "blob": 638.8,
+   "layout_issues": 61,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs:t4000.dark",
+   "category": "conformance",
+   "score": 93.63,
+   "blob": 82.2,
+   "layout_issues": 33,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs-ipad:t6000",
+   "category": "conformance",
+   "score": 93.753,
+   "blob": 638.8,
+   "layout_issues": 57,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs:t5000.dark",
+   "category": "conformance",
+   "score": 93.819,
+   "blob": 82.2,
+   "layout_issues": 34,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs:t200.dark",
+   "category": "conformance",
+   "score": 93.901,
+   "blob": 82.2,
+   "layout_issues": 28,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs:t3000.dark",
+   "category": "conformance",
+   "score": 94.135,
+   "blob": 82.2,
+   "layout_issues": 28,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs-ipad:t5000",
+   "category": "conformance",
+   "score": 95.735,
+   "blob": 639.5,
+   "layout_issues": 29,
+   "captured": "2026-09-05T01:27",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "TableEditor:t2350.dark",
+   "category": "conformance",
+   "score": 96.47,
+   "blob": 22.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:26",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "TableEditor:t1350.dark",
+   "category": "conformance",
+   "score": 96.687,
+   "blob": 22.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:26",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "TableEditor:t2900.dark",
+   "category": "conformance",
+   "score": 97.298,
+   "blob": 22.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:26",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "TableEditor:t3800.dark",
+   "category": "conformance",
+   "score": 97.298,
+   "blob": 22.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:26",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "TableEditor:t900.dark",
+   "category": "conformance",
+   "score": 97.304,
+   "blob": 22.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:26",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "TableEditor:t1900.dark",
+   "category": "conformance",
+   "score": 97.314,
+   "blob": 22.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:26",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -106,6 +446,28 @@
    "verdict": "PASS",
    "threshold": 97.0,
    "status": "pass"
+  },
+  {
+   "scene": "Modal:t600.dark",
+   "category": "conformance",
+   "score": 97.428,
+   "blob": 22.5,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:23",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Modal:t1200.dark",
+   "category": "conformance",
+   "score": 97.467,
+   "blob": 7.5,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:23",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
   },
   {
    "scene": "label_align",
@@ -143,18 +505,51 @@
    "score": 97.578,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:26",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
   },
   {
-   "scene": "NavFlow:t3000",
+   "scene": "Forms:t4800.dark",
    "category": "conformance",
-   "score": 97.585,
-   "blob": 97.2,
-   "layout_issues": 2,
-   "captured": "2026-09-04T23:28",
+   "score": 97.619,
+   "blob": 43.0,
+   "layout_issues": 6,
+   "captured": "2026-09-05T01:22",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t3900.dark",
+   "category": "conformance",
+   "score": 97.624,
+   "blob": 43.0,
+   "layout_issues": 6,
+   "captured": "2026-09-05T01:22",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t200.dark",
+   "category": "conformance",
+   "score": 97.633,
+   "blob": 11.8,
+   "layout_issues": 5,
+   "captured": "2026-09-05T01:22",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t1200.dark",
+   "category": "conformance",
+   "score": 97.633,
+   "blob": 11.8,
+   "layout_issues": 5,
+   "captured": "2026-09-05T01:22",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -165,7 +560,51 @@
    "score": 97.639,
    "blob": 34.8,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:22",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t3000.dark",
+   "category": "conformance",
+   "score": 97.645,
+   "blob": 43.0,
+   "layout_issues": 6,
+   "captured": "2026-09-05T01:22",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t2100.dark",
+   "category": "conformance",
+   "score": 97.652,
+   "blob": 11.8,
+   "layout_issues": 6,
+   "captured": "2026-09-05T01:22",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms:t5700.dark",
+   "category": "conformance",
+   "score": 97.654,
+   "blob": 11.8,
+   "layout_issues": 6,
+   "captured": "2026-09-05T01:22",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t5200.dark",
+   "category": "conformance",
+   "score": 97.707,
+   "blob": 3.0,
+   "layout_issues": 6,
+   "captured": "2026-09-05T01:23",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -186,7 +625,18 @@
    "score": 97.842,
    "blob": 4.5,
    "layout_issues": 6,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:22",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Tabs-ipad:t1000",
+   "category": "conformance",
+   "score": 97.866,
+   "blob": 651.8,
+   "layout_issues": 44,
+   "captured": "2026-09-05T01:27",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -197,7 +647,7 @@
    "score": 97.937,
    "blob": 9.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:22",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -233,6 +683,17 @@
    "status": "pass"
   },
   {
+   "scene": "Pager-ipad:t1800",
+   "category": "conformance",
+   "score": 98.167,
+   "blob": 16510.0,
+   "layout_issues": 2,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "attrtext_underline_strike",
    "category": "text",
    "score": 98.194,
@@ -243,12 +704,23 @@
    "status": "pass"
   },
   {
+   "scene": "NavFlow:t3000",
+   "category": "conformance",
+   "score": 98.196,
+   "blob": 97.2,
+   "layout_issues": 2,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "TableEditor:t1350",
    "category": "conformance",
    "score": 98.206,
    "blob": 14.5,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:26",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -284,12 +756,34 @@
    "status": "pass"
   },
   {
-   "scene": "NavFlow:t4800",
+   "scene": "Pager-ipad:t600",
    "category": "conformance",
-   "score": 98.426,
-   "blob": 6.2,
+   "score": 98.338,
+   "blob": 14859.0,
+   "layout_issues": 2,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t3200.dark",
+   "category": "conformance",
+   "score": 98.405,
+   "blob": 8.5,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t7200.dark",
+   "category": "conformance",
+   "score": 98.43,
+   "blob": 3.2,
+   "layout_issues": 10,
+   "captured": "2026-09-05T01:23",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -305,12 +799,23 @@
    "status": "pass"
   },
   {
+   "scene": "NavFlow-ipad:t1200",
+   "category": "conformance",
+   "score": 98.461,
+   "blob": 78.5,
+   "layout_issues": 16,
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "Modal:t7200",
    "category": "conformance",
    "score": 98.523,
    "blob": 6.2,
    "layout_issues": 10,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:22",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -346,6 +851,17 @@
    "status": "pass"
   },
   {
+   "scene": "Modal:t9200.dark",
+   "category": "conformance",
+   "score": 98.589,
+   "blob": 8.8,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "control_segmented",
    "category": "control",
    "score": 98.631,
@@ -366,6 +882,17 @@
    "status": "pass"
   },
   {
+   "scene": "Modal-ipad:t3200",
+   "category": "conformance",
+   "score": 98.641,
+   "blob": 97.5,
+   "layout_issues": 3,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "switch_dark",
    "category": "control",
    "score": 98.648,
@@ -373,6 +900,17 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor:t200.dark",
+   "category": "conformance",
+   "score": 98.675,
+   "blob": 12.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:26",
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -396,6 +934,17 @@
    "status": "pass"
   },
   {
+   "scene": "NavFlow:t1200.dark",
+   "category": "conformance",
+   "score": 98.705,
+   "blob": 10.8,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "deep_mixed",
    "category": "control",
    "score": 98.723,
@@ -403,6 +952,17 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "NavFlow:t4800",
+   "category": "conformance",
+   "score": 98.731,
+   "blob": 6.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -416,12 +976,89 @@
    "status": "pass"
   },
   {
+   "scene": "NavFlow:t3000.dark",
+   "category": "conformance",
+   "score": 98.775,
+   "blob": 98.2,
+   "layout_issues": 2,
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "NavFlow:t3900.dark",
+   "category": "conformance",
+   "score": 98.792,
+   "blob": 98.2,
+   "layout_issues": 2,
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "NavFlow:t3900",
    "category": "conformance",
    "score": 98.796,
    "blob": 97.5,
    "layout_issues": 2,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Tabs:t1000.dark",
+   "category": "conformance",
+   "score": 98.799,
+   "blob": 15.2,
+   "layout_issues": 21,
+   "captured": "2026-09-05T01:27",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal-ipad:t1200",
+   "category": "conformance",
+   "score": 98.8,
+   "blob": 107.2,
+   "layout_issues": 3,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal-ipad:t600",
+   "category": "conformance",
+   "score": 98.825,
+   "blob": 130.2,
+   "layout_issues": 3,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor-ipad:t2350",
+   "category": "conformance",
+   "score": 98.855,
+   "blob": 105.2,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:26",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t3267",
+   "category": "conformance",
+   "score": 98.874,
+   "blob": 68.0,
+   "layout_issues": 4,
+   "captured": "2026-09-05T01:25",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -440,9 +1077,20 @@
    "scene": "Forms:t1200",
    "category": "conformance",
    "score": 98.895,
-   "blob": 17.8,
+   "blob": 40.5,
    "layout_issues": 5,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:21",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal-ipad:t9200",
+   "category": "conformance",
+   "score": 98.898,
+   "blob": 68.5,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:23",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -463,7 +1111,7 @@
    "score": 98.91,
    "blob": 17.8,
    "layout_issues": 5,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:21",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -474,7 +1122,7 @@
    "score": 98.923,
    "blob": 42.5,
    "layout_issues": 6,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:21",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -495,7 +1143,7 @@
    "score": 98.931,
    "blob": 42.5,
    "layout_issues": 6,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:21",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -506,7 +1154,7 @@
    "score": 98.944,
    "blob": 42.0,
    "layout_issues": 6,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:21",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -517,7 +1165,7 @@
    "score": 98.951,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:26",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -528,7 +1176,7 @@
    "score": 98.962,
    "blob": 17.8,
    "layout_issues": 6,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:21",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -539,7 +1187,7 @@
    "score": 98.962,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:26",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -550,7 +1198,7 @@
    "score": 98.966,
    "blob": 17.8,
    "layout_issues": 6,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:21",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -561,7 +1209,7 @@
    "score": 98.983,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:26",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -572,7 +1220,7 @@
    "score": 98.983,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:26",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -618,12 +1266,23 @@
    "status": "pass"
   },
   {
+   "scene": "NavFlow-ipad:t4800",
+   "category": "conformance",
+   "score": 99.024,
+   "blob": 75.5,
+   "layout_issues": 12,
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "Feed:t3800",
    "category": "conformance",
    "score": 99.038,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:19",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -634,7 +1293,7 @@
    "score": 99.038,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:19",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -645,7 +1304,7 @@
    "score": 99.042,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:19",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -666,7 +1325,7 @@
    "score": 99.051,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:26",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -677,7 +1336,7 @@
    "score": 99.106,
    "blob": 11.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:22",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -698,7 +1357,7 @@
    "score": 99.117,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:22",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -734,6 +1393,28 @@
    "status": "pass"
   },
   {
+   "scene": "TableEditor-ipad:t1350",
+   "category": "conformance",
+   "score": 99.17,
+   "blob": 105.2,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:26",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor:t4800.dark",
+   "category": "conformance",
+   "score": 99.194,
+   "blob": 12.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:26",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "navbar_inline",
    "category": "chrome",
    "score": 99.199,
@@ -744,11 +1425,110 @@
    "status": "pass"
   },
   {
+   "scene": "Forms-ipad:t3900",
+   "category": "conformance",
+   "score": 99.204,
+   "blob": 122.0,
+   "layout_issues": 23,
+   "captured": "2026-09-05T01:21",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms-ipad:t3000",
+   "category": "conformance",
+   "score": 99.208,
+   "blob": 121.5,
+   "layout_issues": 23,
+   "captured": "2026-09-05T01:21",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "alert_actionsheet",
    "category": "chrome",
    "score": 99.21,
    "blob": 0.0,
    "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms-ipad:t2100",
+   "category": "conformance",
+   "score": 99.211,
+   "blob": 97.0,
+   "layout_issues": 23,
+   "captured": "2026-09-05T01:21",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms-ipad:t4800",
+   "category": "conformance",
+   "score": 99.211,
+   "blob": 122.0,
+   "layout_issues": 23,
+   "captured": "2026-09-05T01:21",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms-ipad:t5700",
+   "category": "conformance",
+   "score": 99.218,
+   "blob": 122.0,
+   "layout_issues": 23,
+   "captured": "2026-09-05T01:21",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms-ipad:t1200",
+   "category": "conformance",
+   "score": 99.221,
+   "blob": 97.0,
+   "layout_issues": 24,
+   "captured": "2026-09-05T01:21",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Forms-ipad:t200",
+   "category": "conformance",
+   "score": 99.224,
+   "blob": 97.0,
+   "layout_issues": 24,
+   "captured": "2026-09-05T01:21",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "NavFlow-ipad:t200",
+   "category": "conformance",
+   "score": 99.226,
+   "blob": 75.5,
+   "layout_issues": 12,
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "NavFlow-ipad:t2100",
+   "category": "conformance",
+   "score": 99.226,
+   "blob": 75.5,
+   "layout_issues": 12,
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -769,7 +1549,7 @@
    "score": 99.248,
    "blob": 2.2,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:23",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -785,6 +1565,17 @@
    "status": "pass"
   },
   {
+   "scene": "NavFlow:t4800.dark",
+   "category": "conformance",
+   "score": 99.296,
+   "blob": 6.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "alert_dark",
    "category": "chrome",
    "score": 99.299,
@@ -795,12 +1586,34 @@
    "status": "pass"
   },
   {
-   "scene": "Tabs:t1000",
+   "scene": "NavFlow:t200.dark",
    "category": "conformance",
-   "score": 99.306,
-   "blob": 59.0,
-   "layout_issues": 20,
-   "captured": "2026-09-04T23:29",
+   "score": 99.307,
+   "blob": 6.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "NavFlow:t2100.dark",
+   "category": "conformance",
+   "score": 99.307,
+   "blob": 6.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t3133",
+   "category": "conformance",
+   "score": 99.308,
+   "blob": 58.5,
+   "layout_issues": 4,
+   "captured": "2026-09-05T01:25",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -816,6 +1629,17 @@
    "status": "pass"
   },
   {
+   "scene": "Feed:t700.dark",
+   "category": "conformance",
+   "score": 99.345,
+   "blob": 1.5,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:21",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "control_refresh",
    "category": "control",
    "score": 99.359,
@@ -826,6 +1650,39 @@
    "status": "pass"
   },
   {
+   "scene": "TableEditor-ipad:t3800",
+   "category": "conformance",
+   "score": 99.368,
+   "blob": 105.2,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:26",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor-ipad:t2900",
+   "category": "conformance",
+   "score": 99.371,
+   "blob": 105.2,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:26",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor-ipad:t900",
+   "category": "conformance",
+   "score": 99.376,
+   "blob": 105.2,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:26",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "switch_onoff",
    "category": "control",
    "score": 99.381,
@@ -833,6 +1690,17 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "Tabs:t1000",
+   "category": "conformance",
+   "score": 99.402,
+   "blob": 31.2,
+   "layout_issues": 21,
+   "captured": "2026-09-05T01:27",
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -847,6 +1715,17 @@
    "open_reason": "99.41 vs 99.5: every rounded corner on iOS carries a near-tangent coverage ramp about r/2 pt long along the curve (measured 2026-09-04/05 at radii 2-20, 2x and 3x); no closed-form rule fit every sample. A score-targeted parameter fit (exp shoulder + 0.172 radius bias) reached exactly 99.500 and was rejected as a fudge. Needs a rasteriser-level model (filtered SDF?) derived from the per-pixel samples, not tuned to the score."
   },
   {
+   "scene": "TableEditor-ipad:t1900",
+   "category": "conformance",
+   "score": 99.413,
+   "blob": 105.2,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:26",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "control_segmented_three_2x",
    "category": "control",
    "score": 99.414,
@@ -854,6 +1733,17 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal-ipad:t5200",
+   "category": "conformance",
+   "score": 99.419,
+   "blob": 32.5,
+   "layout_issues": 7,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -872,6 +1762,28 @@
    "score": 99.434,
    "blob": 0.0,
    "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Feed:t200.dark",
+   "category": "conformance",
+   "score": 99.435,
+   "blob": 1.5,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:21",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Feed:t1800.dark",
+   "category": "conformance",
+   "score": 99.435,
+   "blob": 1.5,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:21",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -932,7 +1844,7 @@
    "score": 99.478,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:19",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -978,6 +1890,17 @@
    "status": "pass"
   },
   {
+   "scene": "NavFlow-ipad:t3000",
+   "category": "conformance",
+   "score": 99.538,
+   "blob": 59.5,
+   "layout_issues": 2,
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "navbar_large",
    "category": "chrome",
    "score": 99.544,
@@ -1003,7 +1926,7 @@
    "score": 99.556,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:26",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1034,7 +1957,7 @@
    "score": 99.622,
    "blob": 6.2,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:23",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1045,7 +1968,7 @@
    "score": 99.622,
    "blob": 6.2,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:23",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1066,6 +1989,72 @@
    "score": 99.637,
    "blob": 4.8,
    "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t200.dark",
+   "category": "conformance",
+   "score": 99.648,
+   "blob": 4.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t2100.dark",
+   "category": "conformance",
+   "score": 99.648,
+   "blob": 4.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t4100.dark",
+   "category": "conformance",
+   "score": 99.648,
+   "blob": 4.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t6100.dark",
+   "category": "conformance",
+   "score": 99.648,
+   "blob": 4.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t8100.dark",
+   "category": "conformance",
+   "score": 99.648,
+   "blob": 4.2,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t10100.dark",
+   "category": "conformance",
+   "score": 99.649,
+   "blob": 4.2,
+   "layout_issues": 5,
+   "captured": "2026-09-05T01:23",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1096,7 +2085,7 @@
    "score": 99.658,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:19",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1107,7 +2096,7 @@
    "score": 99.658,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:19",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1120,6 +2109,17 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "NavFlow-ipad:t3900",
+   "category": "conformance",
+   "score": 99.687,
+   "blob": 59.5,
+   "layout_issues": 2,
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -1138,6 +2138,39 @@
    "score": 99.723,
    "blob": 3.2,
    "layout_issues": 0,
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t1800.dark",
+   "category": "conformance",
+   "score": 99.723,
+   "blob": 127.0,
+   "layout_issues": 2,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t4650.dark",
+   "category": "conformance",
+   "score": 99.723,
+   "blob": 0.5,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t1900.dark",
+   "category": "conformance",
+   "score": 99.729,
+   "blob": 127.0,
+   "layout_issues": 2,
+   "captured": "2026-09-05T01:25",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1168,7 +2201,18 @@
    "score": 99.745,
    "blob": 127.0,
    "layout_issues": 2,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t3133.dark",
+   "category": "conformance",
+   "score": 99.745,
+   "blob": 0.2,
+   "layout_issues": 4,
+   "captured": "2026-09-05T01:25",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1209,7 +2253,29 @@
    "score": 99.769,
    "blob": 127.0,
    "layout_issues": 2,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t500.dark",
+   "category": "conformance",
+   "score": 99.771,
+   "blob": 0.8,
+   "layout_issues": 2,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t600.dark",
+   "category": "conformance",
+   "score": 99.777,
+   "blob": 0.5,
+   "layout_issues": 2,
+   "captured": "2026-09-05T01:25",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1250,7 +2316,40 @@
    "score": 99.797,
    "blob": 0.5,
    "layout_issues": 2,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t3267.dark",
+   "category": "conformance",
+   "score": 99.801,
+   "blob": 0.5,
+   "layout_issues": 4,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t3500.dark",
+   "category": "conformance",
+   "score": 99.802,
+   "blob": 0.5,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t4000.dark",
+   "category": "conformance",
+   "score": 99.802,
+   "blob": 0.5,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1261,7 +2360,7 @@
    "score": 99.805,
    "blob": 0.5,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1307,12 +2406,122 @@
    "status": "pass"
   },
   {
+   "scene": "TableEditor-ipad:t4800",
+   "category": "conformance",
+   "score": 99.815,
+   "blob": 80.5,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:26",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t200.dark",
+   "category": "conformance",
+   "score": 99.816,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t400.dark",
+   "category": "conformance",
+   "score": 99.816,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t2000.dark",
+   "category": "conformance",
+   "score": 99.816,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t2500.dark",
+   "category": "conformance",
+   "score": 99.816,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t3000.dark",
+   "category": "conformance",
+   "score": 99.816,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "Pager:t500",
    "category": "conformance",
    "score": 99.818,
    "blob": 0.0,
    "layout_issues": 2,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t700.dark",
+   "category": "conformance",
+   "score": 99.818,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t1200.dark",
+   "category": "conformance",
+   "score": 99.818,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager:t1700.dark",
+   "category": "conformance",
+   "score": 99.818,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "TableEditor-ipad:t200",
+   "category": "conformance",
+   "score": 99.82,
+   "blob": 80.5,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:26",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1333,7 +2542,7 @@
    "score": 99.834,
    "blob": 4.2,
    "layout_issues": 5,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:22",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1344,7 +2553,7 @@
    "score": 99.839,
    "blob": 4.2,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:22",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1355,7 +2564,7 @@
    "score": 99.839,
    "blob": 4.2,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:22",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1366,7 +2575,7 @@
    "score": 99.839,
    "blob": 4.2,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:22",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1377,7 +2586,7 @@
    "score": 99.839,
    "blob": 4.2,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:22",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1388,7 +2597,7 @@
    "score": 99.839,
    "blob": 4.2,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:27",
+   "captured": "2026-09-05T01:22",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1399,7 +2608,7 @@
    "score": 99.844,
    "blob": 0.0,
    "layout_issues": 4,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1410,7 +2619,7 @@
    "score": 99.863,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1421,7 +2630,7 @@
    "score": 99.863,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1432,7 +2641,7 @@
    "score": 99.863,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1473,7 +2682,7 @@
    "score": 99.888,
    "blob": 0.5,
    "layout_issues": 4,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1484,7 +2693,7 @@
    "score": 99.888,
    "blob": 0.5,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1495,7 +2704,7 @@
    "score": 99.888,
    "blob": 0.5,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1506,7 +2715,7 @@
    "score": 99.903,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1517,7 +2726,7 @@
    "score": 99.903,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1528,7 +2737,7 @@
    "score": 99.903,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1539,7 +2748,7 @@
    "score": 99.903,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1550,7 +2759,7 @@
    "score": 99.903,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-04T23:28",
+   "captured": "2026-09-05T01:24",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -1593,6 +2802,83 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal-ipad:t200",
+   "category": "conformance",
+   "score": 99.939,
+   "blob": 72.2,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal-ipad:t2100",
+   "category": "conformance",
+   "score": 99.939,
+   "blob": 72.2,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal-ipad:t4100",
+   "category": "conformance",
+   "score": 99.939,
+   "blob": 72.2,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal-ipad:t6100",
+   "category": "conformance",
+   "score": 99.939,
+   "blob": 72.2,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal-ipad:t8100",
+   "category": "conformance",
+   "score": 99.939,
+   "blob": 72.2,
+   "layout_issues": 1,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal-ipad:t10100",
+   "category": "conformance",
+   "score": 99.939,
+   "blob": 72.0,
+   "layout_issues": 6,
+   "captured": "2026-09-05T01:23",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t4650",
+   "category": "conformance",
+   "score": 99.95,
+   "blob": 0.5,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {
@@ -1646,6 +2932,83 @@
    "status": "pass"
   },
   {
+   "scene": "Pager-ipad:t700",
+   "category": "conformance",
+   "score": 99.965,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t1200",
+   "category": "conformance",
+   "score": 99.965,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t1700",
+   "category": "conformance",
+   "score": 99.965,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t500",
+   "category": "conformance",
+   "score": 99.97,
+   "blob": 0.0,
+   "layout_issues": 2,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t1900",
+   "category": "conformance",
+   "score": 99.97,
+   "blob": 0.0,
+   "layout_issues": 2,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t3500",
+   "category": "conformance",
+   "score": 99.971,
+   "blob": 0.5,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t4000",
+   "category": "conformance",
+   "score": 99.971,
+   "blob": 0.5,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "progress_views",
    "category": "control",
    "score": 99.975,
@@ -1653,6 +3016,61 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 96.0,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t200",
+   "category": "conformance",
+   "score": 99.975,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t400",
+   "category": "conformance",
+   "score": 99.975,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t2000",
+   "category": "conformance",
+   "score": 99.975,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t2500",
+   "category": "conformance",
+   "score": 99.975,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t3000",
+   "category": "conformance",
+   "score": 99.975,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-05T01:25",
+   "verdict": "PASS",
+   "threshold": 97.5,
    "status": "pass"
   },
   {

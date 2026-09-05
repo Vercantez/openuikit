@@ -1199,6 +1199,53 @@ final class TableViewIOSEditChromeTests: XCTestCase {
                        0, accuracy: 0.001)
     }
 
+    /// MEASURED Forms t200.dark, iPhone SE 2x / iOS 26.1: `.grouped` cells
+    /// with a nil background paint secondarySystemGroupedBackground
+    /// (28, 28, 30). Light both resolve to white so light captures do not
+    /// move; Catalyst keeps systemBackground.
+    func testGroupedCellUsesSecondarySystemGroupedBackgroundOnIOSDark() {
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark,
+                                                      displayScale: 2)
+        defer {
+            UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light,
+                                                          displayScale: 2)
+        }
+        let source = DefaultListSource()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.overrideUserInterfaceStyle = .dark
+        let table = UITableView(frame: window.bounds, style: .grouped)
+        table.dataSource = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertNotNil(cell.backgroundColor)
+        if case .semantic(let name) = cell.backgroundColor!.storage {
+            XCTAssertEqual(name, "secondarySystemGroupedBackground")
+        } else {
+            XCTFail("expected semantic secondarySystemGroupedBackground")
+        }
+        let c = cell.backgroundColor!.resolvedCGColor(with: UITraitCollection.current)
+        XCTAssertEqual(c.red, 28.0 / 255.0, accuracy: 0.002)
+        XCTAssertEqual(c.green, 28.0 / 255.0, accuracy: 0.002)
+        XCTAssertEqual(c.blue, 30.0 / 255.0, accuracy: 0.002)
+    }
+
+    func testGroupedCellKeepsSystemBackgroundOnCatalyst() {
+        OpenUIKitRuntime.systemFontCut = .macOS
+        let source = DefaultListSource()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        let table = UITableView(frame: window.bounds, style: .grouped)
+        table.dataSource = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        if case .semantic(let name) = cell.backgroundColor!.storage {
+            XCTAssertEqual(name, "systemBackground")
+        } else {
+            XCTFail("expected semantic systemBackground")
+        }
+    }
+
     /// MEASURED TableEditor t900, iPhone SE 2x: content view at x 40 width
     /// 292, delete control [15, 18, 26, 26] in a 62 pt row, reorder at
     /// x 332 width 27.

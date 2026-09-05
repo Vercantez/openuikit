@@ -23,14 +23,13 @@
 //
 // POPOVERS. Real UIKit shows a popover only in a horizontally REGULAR
 // environment; on an iPhone-width screen it adapts, and the default
-// adaptation is `.fullScreen`. OpenUIKit targets iPhone geometry and has no
-// measured popover chrome, so `UIPopoverPresentationController` ALWAYS takes
-// the adaptive path — it is a presentation controller that asks its delegate
-// for an adaptive style and presents as that style (default `.pageSheet`,
-// which is what `.automatic`/`.fullScreen` resolve to here). That is real
-// UIKit behaviour on this device class, not a stub, but an app running on an
-// iPad-sized window would get a sheet where UIKit draws an arrow-anchored
-// popover. See docs/KNOWN_GAPS.md.
+// adaptation is `.fullScreen`. Compact-width OpenUIKit still ALWAYS takes
+// the adaptive path (default `.pageSheet`) — that is real UIKit behaviour
+// on the phone, and `DelegateProtocolTests.testPopoverAdaptsToASheet`
+// pins it. Pad regular width does not adapt: MEASURED Modal-ipad t9200,
+// iPad (A16) 820×1180 @2x / iOS 26.1, `_UIPopoverView [561, 62, 240, 180]`
+// with trailing inset 19 and y = SA.top + 30; t7200 action sheet is a
+// 288×248 popover centred on sourceRect, cancel dropped, dim alpha 0.
 
 // MARK: - UIAdaptivePresentationControllerDelegate
 
@@ -132,19 +131,78 @@ open class UIPopoverPresentationController: UIPresentationController {
         set { delegate = newValue }
     }
 
-    /// The style this popover adapts to on this device class. The delegate
-    /// gets UIKit's say; `.automatic` and `.fullScreen` both land on the
-    /// sheet, which is what OpenUIKit can actually draw.
+    /// iOS cut AND pad idiom. Compact-width (phone) still adapts to a
+    /// sheet; regular-width pad stays a popover.
+    var isPadRegular: Bool {
+        OpenUIKitRuntime.systemFontCut == .iOS
+            && (UITraitCollection.current.userInterfaceIdiom == .pad
+                || UIDevice.current.userInterfaceIdiom == .pad)
+    }
+
+    /// The style this popover adapts to on this device class. Compact
+    /// width (phone) adapts to a sheet. Pad regular width stays a popover.
+    /// MEASURED Modal-ipad t9200, iPad (A16) 820×1180 @2x / iOS 26.1:
+    /// `_UIPopoverView [561, 62, 240, 180]` (preferredContentSize); phone
+    /// still adapts (DelegateProtocolTests.testPopoverAdaptsToASheet).
     public var adaptedStyle: UIModalPresentationStyle {
+        if isPadRegular { return .popover }
         let style = delegate?.adaptivePresentationStyle(for: self) ?? .automatic
         switch style {
-        // `.popover` here would mean "stay a popover", which this device
-        // class never does — it adapts, like UIKit on a compact width.
+        // `.popover` here would mean "stay a popover", which compact width
+        // never does — it adapts, like UIKit on an iPhone.
         case .automatic, .fullScreen, .popover, .formSheet: return .pageSheet
         case .pageSheet, .alert, .currentContext, .custom,
              .overFullScreen, .overCurrentContext, .none:
             return style
         }
+    }
+
+    /// MEASURED Modal-ipad t9200: popover trailing edge is 19 pt from the
+    /// 820 pt window (`820 − 240 − 561 = 19`).
+    static let iOSPadTrailingInset: CGFloat = 19
+    /// MEASURED Modal-ipad t9200: popover y = window SA.top + 30
+    /// (32 + 30 = 62) for a bar-button source in the 54 pt inline bar.
+    static let iOSPadTopBelowSafeArea: CGFloat = 30
+
+    let dim = _UIDimmingView()
+
+    /// MEASURED Modal-ipad t9200: `_UIPopoverView [561, 62, 240, 180]` =
+    /// `preferredContentSize`, trailing inset 19, y = SA.top + 30.
+    /// Action-sheet popovers are laid out by `_UIAlertPresentationController`
+    /// (Modal-ipad t7200).
+    public override var frameOfPresentedViewInContainerView: CGRect {
+        guard let c = containerView else { return .zero }
+        let size = presentedViewController.preferredContentSize
+        guard size.width > 0, size.height > 0 else { return c.bounds }
+        let x = c.bounds.width - size.width - Self.iOSPadTrailingInset
+        let y = c.safeAreaInsets.top + Self.iOSPadTopBelowSafeArea
+        return CGRect(x: x, y: y, width: size.width, height: size.height)
+    }
+
+    public override func presentationTransitionWillBegin() {
+        guard let container = containerView else { return }
+        dim.frame = container.bounds
+        dim.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        // MEASURED Modal-ipad t9200 / t7200: `_UIPopoverDimmingView`
+        // `bg [0, 0, 0, 0]` — the presenter is not dimmed. Phone sheets
+        // keep the 0.2 black dim.
+        dim.backgroundColor = .clear
+        dim.alpha = 0
+        container.addSubview(dim)
+        presentedViewController.loadViewIfNeeded()
+        let cv = presentedViewController.view!
+        if cv.backgroundColor == nil { cv.backgroundColor = .systemBackground }
+        cv.frame = frameOfPresentedViewInContainerView
+        cv.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin,
+                               .flexibleTopMargin, .flexibleBottomMargin]
+        container.addSubview(cv)
+    }
+
+    public override func dismissalTransitionDidEnd(_ completed: Bool) {
+        guard completed else { return }
+        presentedViewController.viewIfLoaded?.removeFromSuperview()
+        dim.removeFromSuperview()
+        containerView?.removeFromSuperview()
     }
 }
 
