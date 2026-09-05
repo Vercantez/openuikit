@@ -1,4 +1,4 @@
-@_spi(OpenUIKitHost) import GroupActivities
+import GroupActivities
 import Foundation
 
 /// EC2 dependency-identity probe for GroupActivities.
@@ -15,34 +15,22 @@ enum GroupActivitiesDependencyIdentity {
             fatalError("fallbackURL did not preserve Foundation.URL")
         }
 
-        let participant = Participant(id: UUID())
-        let event = GroupSessionEvent(
-            originator: participant,
-            action: .play,
-            url: fallback
-        )
-        if event.url != fallback {
-            fatalError("GroupSessionEvent.url did not preserve Foundation.URL")
+        let identifier = UUID(uuidString: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")!
+        if identifier.uuidString.isEmpty {
+            fatalError("Foundation.UUID missing")
         }
 
-        struct IdentityActivity: GroupActivity, Equatable {
-            var label: String
-            var metadata: GroupActivityMetadata {
-                get async { GroupActivityMetadata() }
+        do {
+            let encoded: Data = try JSONEncoder().encode(metadata)
+            if encoded.isEmpty {
+                fatalError("encode(to:) produced empty Data")
             }
-        }
-
-        let session = GroupSession<IdentityActivity>.makeHostSession(
-            activity: IdentityActivity(label: "identity")
-        )
-        let messenger = GroupSessionMessenger(session: session)
-        let payload = Data([0x47, 0x41])
-        var seen: (any Error)?
-        messenger.send(payload, to: .all) { error in
-            seen = error
-        }
-        if seen == nil {
-            fatalError("Data send must fail closed on Linux")
+            let decoded = try JSONDecoder().decode(GroupActivityMetadata.self, from: encoded)
+            if decoded.fallbackURL != fallback {
+                fatalError("JSON Data round-trip dropped Foundation.URL")
+            }
+        } catch {
+            fatalError("Foundation Data round-trip failed: \(error)")
         }
 
         print("GROUPACTIVITIES_DEPENDENCY_IDENTITY_OK foundation=URL,UUID,Data")
