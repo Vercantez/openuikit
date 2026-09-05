@@ -2,6 +2,7 @@ full/webkit/WebKit.swift
 full/webkit/WebKitConfiguration.swift
 full/webkit/WebKitContent.swift
 full/webkit/WebKitError.swift
+full/webkit/WebKitExtensionManifest.swift
 full/webkit/WebKitExtensions.swift
 full/webkit/WebKitNavigation.swift
 full/webkit/WebKitOptionSets.swift
