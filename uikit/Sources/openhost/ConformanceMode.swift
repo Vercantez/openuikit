@@ -39,9 +39,9 @@ struct ConformanceStep {
     let action: String
 }
 
-/// Parse `{"events": [{"t": , "action": }...], "captures": [t...], "style"?}`.
+/// Parse `{"events": [{"t": , "action": }...], "captures": [t...], "style"?, "direction"?}`.
 func parseConformanceScript(_ script: JSONValue)
-    -> (steps: [ConformanceStep], captures: [Double], style: String) {
+    -> (steps: [ConformanceStep], captures: [Double], style: String, direction: String) {
     let steps: [ConformanceStep] = (script["events"]?.arrayValue ?? []).map { e in
         guard let j = e.objectValue, let t = j["t"]?.doubleValue,
               let action = j["action"]?.stringValue else {
@@ -52,7 +52,8 @@ func parseConformanceScript(_ script: JSONValue)
     let captures = (script["captures"]?.arrayValue ?? []).compactMap { $0.doubleValue }
     guard !captures.isEmpty else { fatalError("script needs non-empty \"captures\"") }
     let scriptStyle = script["style"]?.stringValue ?? "light"
-    return (steps, captures, scriptStyle)
+    let scriptDirection = script["direction"]?.stringValue ?? "ltr"
+    return (steps, captures, scriptStyle, scriptDirection)
 }
 
 // MARK: - Layout dump
@@ -101,6 +102,9 @@ func dumpConformanceLayout(_ v: UIView, path: String, absOrigin: CGPoint,
         // struct font, whose identity is (pointSize, weight, design).
         entry["fontSize"] = .number(round3(l.font.pointSize))
         entry["fontName"] = .string(l.font.weight.name)
+    }
+    if v.effectiveUserInterfaceLayoutDirection == .rightToLeft {
+        entry["uiDir"] = .string("rtl")
     }
     if v is UILabel || v is UIButton || v is UISwitch || v is UIImageView
         || v is UITextField || v is UITextView {
@@ -163,7 +167,7 @@ func rectJSON(_ r: CGRect) -> JSONValue {
 @MainActor
 func runConformanceScripted(_ scene: HostScene, app: String,
                             steps: [ConformanceStep], captures: [Double],
-                            style: String, outdir: String) throws -> [String] {
+                            style: String, direction: String, outdir: String) throws -> [String] {
     guard let perform = ConformanceApps.registry[app]?.perform else {
         fatalError("no conformance action table for app \"\(app)\"")
     }
@@ -190,6 +194,7 @@ func runConformanceScripted(_ scene: HostScene, app: String,
             let ct = sortedCaptures[nextCapture]
             written.append(try captureConformance(scene, app: app, t: ct,
                                                   frame: frame, style: style,
+                                                  direction: direction,
                                                   outdir: outdir))
             nextCapture += 1
         }
@@ -207,10 +212,12 @@ func runConformanceScripted(_ scene: HostScene, app: String,
 
 @MainActor
 func captureConformance(_ scene: HostScene, app: String, t: Double,
-                        frame: Int, style: String, outdir: String) throws -> String {
+                        frame: Int, style: String, direction: String,
+                        outdir: String) throws -> String {
     scene.window.layoutIfNeeded()
     let bmp = UIRenderer.render(scene.window, scale: scene.scale)
-    let suffix = ConformanceClock.captureSuffix(for: t, style: style)
+    let suffix = ConformanceClock.captureSuffix(for: t, style: style,
+                                               direction: direction)
     let png = "\(app).\(suffix).png"
     try writeBinaryFile(bmp.pngData(), path: "\(outdir)/\(png)")
 
@@ -220,6 +227,7 @@ func captureConformance(_ scene: HostScene, app: String, t: Double,
         "name": .string("\(app).\(suffix)"),
         "t": .number(round3(CGFloat(t))),
         "style": .string(style),
+        "direction": .string(direction),
         "clock": .object([
             "frame": .number(Double(frame)),
             "hz": .number(Double(ConformanceClock.hz)),
