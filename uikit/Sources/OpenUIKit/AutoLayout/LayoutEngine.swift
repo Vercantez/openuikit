@@ -347,17 +347,41 @@ enum LayoutEngine {
             guard let first = c.firstItem,
                   let firstVV = vars[ObjectIdentifier(first)] else { continue }
             var expr = attributeExpression(firstVV)(c.firstAttribute)
+            var constant = Double(c.constant)
+            var flipAxis = false
             if let second = c.secondItem {
                 guard let secondVV = vars[ObjectIdentifier(second)] else { continue }
                 let rhs = attributeExpression(secondVV)(c.secondAttribute)
                 expr.add(rhs, multiplier: -Double(c.multiplier))
+                // MEASURED NavFlow t3900.rtl, iPhone SE 2x / iOS 26.1:
+                // `switchLabel.leading = card.leading + 16` puts "Allow
+                // Notifications" at abs.x 201.5 (16 pt inward from the
+                // card's right). Forms t200.rtl: `label.trailing <=
+                // control.leading - 8` is still a MINIMUM 8 pt gap after
+                // the axis reverse (Enabled stays 61.5 wide at x 297.5,
+                // not stretched). Negate the constant and swap ≤/≥.
+                if (isLogicalHorizontal(c.firstAttribute) && isRTL(firstVV))
+                    || (isLogicalHorizontal(c.secondAttribute) && isRTL(secondVV)) {
+                    flipAxis = true
+                }
+            } else if isLogicalHorizontal(c.firstAttribute) && isRTL(firstVV) {
+                flipAxis = true
             }
-            expr.constant -= Double(c.constant)
-            let rel: Cassowary.Relation
+            if flipAxis { constant = -constant }
+            expr.constant -= constant
+            var rel: Cassowary.Relation
             switch c.relation {
             case .equal: rel = .equal
             case .lessThanOrEqual: rel = .lessThanOrEqual
             case .greaterThanOrEqual: rel = .greaterThanOrEqual
+            }
+            if flipAxis {
+                switch rel {
+                case .lessThanOrEqual: rel = .greaterThanOrEqual
+                case .greaterThanOrEqual: rel = .lessThanOrEqual
+                case .equal: break
+                default: break
+                }
             }
             let p = c.priority.rawValue
             let strength = p >= 1000 ? Cassowary.requiredStrength : Double(p)
@@ -469,17 +493,36 @@ enum LayoutEngine {
     }
 
     /// Expression for a UIKit attribute in root-space variables.
-    /// Leading/trailing assume LTR (no RTL support yet).
+    /// `.left` / `.right` stay physical. `.leading` / `.trailing` follow
+    /// the item's `effectiveUserInterfaceLayoutDirection`.
     private static func attributeExpression(
         _ vv: ViewVars
     ) -> (NSLayoutConstraint.Attribute) -> Cassowary.Expression {
         { attr in
             var e = Cassowary.Expression()
             switch attr {
-            case .left, .leading:
+            case .left:
                 e.add(vv.left, 1)
-            case .right, .trailing:
+            case .right:
                 e.add(vv.left, 1); e.add(vv.width, 1)
+            // MEASURED Forms t200.rtl + NavFlow t3900.rtl, iPhone SE 2x /
+            // iOS 26.1: appearance-RTL `label.leading = guide.leading`
+            // (constant 0) puts Enabled at abs.x 297.5 (physical right);
+            // `switch.trailing = guide.trailing` puts the switch at x=16.
+            // The constant is not flipped — leading is the right edge,
+            // trailing is the left edge. Unspecified still resolves LTR.
+            case .leading:
+                if isRTL(vv) {
+                    e.add(vv.left, 1); e.add(vv.width, 1)
+                } else {
+                    e.add(vv.left, 1)
+                }
+            case .trailing:
+                if isRTL(vv) {
+                    e.add(vv.left, 1)
+                } else {
+                    e.add(vv.left, 1); e.add(vv.width, 1)
+                }
             case .top:
                 e.add(vv.top, 1)
             case .bottom:
@@ -506,16 +549,28 @@ enum LayoutEngine {
                     e.add(vv.top, 1); e.add(vv.height, 1)
                 }
             // The margin attributes are the item's own layout-margins guide
-            // spelled as an attribute: UIKit resolves `leftMargin` to the same
-            // edge as `layoutMarginsGuide.leadingAnchor`. Margins are read as
-            // a constant at solve time, exactly as intrinsic sizes and
-            // baselines above are — `layoutMargins` already folds in the safe
-            // area (UILayoutGuide.swift). LTR only, like leading/trailing.
-            case .leftMargin, .leadingMargin:
+            // spelled as an attribute. `leftMargin` / `rightMargin` stay
+            // physical; `.leadingMargin` / `.trailingMargin` follow the
+            // item direction (same samples as `.leading` / `.trailing`).
+            case .leftMargin:
                 e.add(vv.left, 1); e.constant = Double(margins(vv).left)
-            case .rightMargin, .trailingMargin:
+            case .rightMargin:
                 e.add(vv.left, 1); e.add(vv.width, 1)
                 e.constant = -Double(margins(vv).right)
+            case .leadingMargin:
+                if isRTL(vv) {
+                    e.add(vv.left, 1); e.add(vv.width, 1)
+                    e.constant = -Double(margins(vv).right)
+                } else {
+                    e.add(vv.left, 1); e.constant = Double(margins(vv).left)
+                }
+            case .trailingMargin:
+                if isRTL(vv) {
+                    e.add(vv.left, 1); e.constant = Double(margins(vv).left)
+                } else {
+                    e.add(vv.left, 1); e.add(vv.width, 1)
+                    e.constant = -Double(margins(vv).right)
+                }
             case .topMargin:
                 e.add(vv.top, 1); e.constant = Double(margins(vv).top)
             case .bottomMargin:
@@ -541,6 +596,20 @@ enum LayoutEngine {
     /// contributes zero and the attribute degenerates to its plain edge.
     private static func margins(_ vv: ViewVars) -> UIEdgeInsets {
         vv.view?.layoutMargins ?? .zero
+    }
+
+    /// Direction of the constrained item. A layout guide follows its
+    /// owning view (Forms `contentView.layoutMarginsGuide.leading` with the
+    /// appearance stamp on contentView).
+    private static func isRTL(_ vv: ViewVars) -> Bool {
+        (vv.view ?? vv.guide?.owningView)?._layoutIsRTL == true
+    }
+
+    private static func isLogicalHorizontal(_ attr: NSLayoutConstraint.Attribute) -> Bool {
+        switch attr {
+        case .leading, .trailing, .leadingMargin, .trailingMargin: return true
+        default: return false
+        }
     }
 
     // MARK: - Oracle-fitted rounding (docs/SCENE_SPEC.md, Constraints v4.3)

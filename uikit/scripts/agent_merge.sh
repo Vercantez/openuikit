@@ -83,6 +83,8 @@ swift build -c release --product openrender 2>&1 | grep -E 'error|Build of' | ta
 rm -rf /tmp/agent_merge_gate; ./.build/release/openrender render /tmp/agent_merge_gate fixtures/scenes/*.json >/dev/null
 python3 Tools/compare/compare.py --out /tmp/agent_merge_gate 2>&1 | grep -E '^FAIL|scenes pass' | tail -5
 python3 Tools/compare/compare.py --out /tmp/agent_merge_gate 2>&1 | grep -q '^FAIL' && { echo "GATE RED"; exit 5; }
+echo "==> test bundle builds (a keep-both on a test file once merged an unbalanced class)"
+swift build --build-tests > /tmp/agent_merge_tests.log 2>&1 || { grep -E 'error:' /tmp/agent_merge_tests.log | head -5; echo "TEST BUNDLE RED"; exit 5; }
 echo "==> real-app screens"
 rm -rf /tmp/agent_merge_app; OPENUIKIT_REALAPP_SCALE=3 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender realapp /tmp/agent_merge_app >/dev/null
 python3 Tools/compare/compare_realapp.py --golden /tmp/golden_realapp_ios --out /tmp/agent_merge_app --scale 3 2>&1 | grep pixels | cut -c1-80
@@ -123,6 +125,13 @@ for app in Sources/ConformanceApps/*(/:t); do
     for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" ]] && { skipd=""; rm -rf /tmp/agent_merge_conf-$app-dark/golden; echo "   $app-dark: recapturing goldens with the merged probe"; }; done
     SKIP_CAPTURE=$skipd zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-dark $app --dark > /tmp/agent_merge_conf-$app-dark.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --dark (see /tmp/agent_merge_conf-$app-dark.log)"; exit 9; }
+  fi
+  if [[ -d /tmp/hc-conformance-$app-rtl/golden ]]; then
+    rm -rf /tmp/agent_merge_conf-$app-rtl; cp -r /tmp/hc-conformance-$app-rtl /tmp/agent_merge_conf-$app-rtl
+    skipr=1
+    for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" ]] && { skipr=""; rm -rf /tmp/agent_merge_conf-$app-rtl/golden; echo "   $app-rtl: recapturing goldens with the merged probe"; }; done
+    SKIP_CAPTURE=$skipr zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-rtl $app --rtl > /tmp/agent_merge_conf-$app-rtl.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --rtl (see /tmp/agent_merge_conf-$app-rtl.log)"; exit 9; }
   fi
 done
 python3 - <<'PY' || exit 9

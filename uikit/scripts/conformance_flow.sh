@@ -1,5 +1,5 @@
 #!/bin/zsh
-# conformance_flow.sh <workdir> <app> [--dark] — the whole conformance-app
+# conformance_flow.sh <workdir> <app> [--dark] [--rtl] — the whole conformance-app
 # loop for one app, in one command (docs/HILLCLIMB.md, docs/ORACLE_FLOW.md).
 #
 #   1. replay the app's script.json with REAL UIKit on the iOS 26 simulator
@@ -11,13 +11,14 @@
 #      premultiplied and straight are the same bytes) plus an absolute-frame
 #      layout diff, and write
 #        <workdir>/report/<t>/{sheet,diff,golden,ours}.png + report.txt
-#        <workdir>/summary.json  {app, style, captures: [{name, score, blob,
+#        <workdir>/summary.json  {app, style, direction, captures: [{name, score, blob,
 #                                                  layout_issues}]}
 #      which scripts/scoreboard.py reads with --conformance <workdir>.
 #
 #   scripts/conformance_flow.sh /tmp/conf NavFlow
 #   scripts/conformance_flow.sh /tmp/conf NavFlow --ipad
 #   scripts/conformance_flow.sh /tmp/conf-dark NavFlow --dark
+#   scripts/conformance_flow.sh /tmp/conf-rtl NavFlow --rtl
 #   SKIP_CAPTURE=1 scripts/conformance_flow.sh /tmp/conf NavFlow
 #
 # --ipad captures on a private "iPad (A16)" (820×1180 @2x portrait) and
@@ -29,20 +30,29 @@
 # capture on both sides and suffixes capture names `.dark` (`t200.dark`).
 # Light names stay `t200` so existing goldens do not move.
 #
+# `--rtl` (or a `"direction": "rtl"` field in script.json) pins
+# `UIView.appearance().semanticContentAttribute = .forceRightToLeft`
+# then the window, before the first capture on both sides, and suffixes
+# capture names `.rtl` (`t200.rtl`). Window-only does not propagate
+# (measured /tmp/rtlprobe: 1/76 `uiDir=rtl`); appearance stamps the tree.
+# LTR names stay `t200` so existing goldens do not move.
+#
 # SIM_DEVICE_SUFFIX gives the run its own simulator devices.
 set -e
 setopt null_glob
 cd "$(dirname "$0")/.."
-OUT=${1:?usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark]}
-APPNAME=${2:?usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark]}
+OUT=${1:?usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark] [--rtl]}
+APPNAME=${2:?usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark] [--rtl]}
 shift 2
 IPAD=0
 STYLE=light
+DIRECTION=ltr
 for arg in "$@"; do
   case $arg in
     --ipad) IPAD=1 ;;
     --dark) STYLE=dark ;;
-    *) echo "usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark]" >&2; exit 2 ;;
+    --rtl) DIRECTION=rtl ;;
+    *) echo "usage: conformance_flow.sh <workdir> <app> [--ipad] [--dark] [--rtl]" >&2; exit 2 ;;
   esac
 done
 SCRIPT="Sources/ConformanceApps/$APPNAME/script.json"
@@ -50,9 +60,11 @@ SCRIPT="Sources/ConformanceApps/$APPNAME/script.json"
 mkdir -p "$OUT/golden" "$OUT/ours" "$OUT/report"
 export CONFPROBE_STYLE=$STYLE
 export OPENUIKIT_APP_STYLE=$STYLE
+export CONFPROBE_DIRECTION=$DIRECTION
+export OPENUIKIT_APP_DIRECTION=$DIRECTION
 
 if [[ -z "${SKIP_CAPTURE:-}" ]]; then
-  echo "==> real iOS replay ($OUT/golden) style=$STYLE ipad=$IPAD"
+  echo "==> real iOS replay ($OUT/golden) style=$STYLE direction=$DIRECTION ipad=$IPAD"
   if [[ $IPAD -eq 1 ]]; then
     zsh scripts/conformance_probe_sim.sh "$APPNAME" "$OUT/golden" --ipad | tail -1
   else
@@ -79,7 +91,7 @@ else
   fi
 fi
 
-echo "==> OpenUIKit replay, iOS cut ($OUT/ours) style=$STYLE"
+echo "==> OpenUIKit replay, iOS cut ($OUT/ours) style=$STYLE direction=$DIRECTION"
 swift build -c release --product openhost >/dev/null
 rm -rf "$OUT/ours"; mkdir -p "$OUT/ours"
 typeset -a HOST_ARGS
@@ -91,10 +103,11 @@ if [[ $IPAD -eq 1 ]]; then HOST_ARGS+=(--ipad); fi
 echo "==> compare"
 # File names stay <App>.t<ms>.png (confprobe / openhost). The summary's
 # "app" field is <App>-ipad so the scoreboard can register both rounds;
-# dark captures keep the app name and carry the `.dark` capture suffix.
+# dark / rtl captures keep the app name and carry the `.dark` / `.rtl`
+# capture suffix.
 SUMMARY_APP="$APPNAME"
 if [[ $IPAD -eq 1 ]]; then SUMMARY_APP="${APPNAME}-ipad"; fi
-python3 - "$OUT" "$APPNAME" "$SCRIPT" "$STYLE" "$SUMMARY_APP" <<'PY'
+python3 - "$OUT" "$APPNAME" "$SCRIPT" "$STYLE" "$SUMMARY_APP" "$DIRECTION" <<'PY'
 import json, os, shutil, sys
 sys.path.insert(0, os.path.join(os.getcwd(), "Tools/compare"))
 import compare                                   # the suite's own pixel gate
@@ -102,15 +115,22 @@ from PIL import Image, ImageChops
 
 out, app, script_path, cli_style = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 summary_app = sys.argv[5] if len(sys.argv) > 5 else app
+cli_direction = sys.argv[6] if len(sys.argv) > 6 else "ltr"
 script = json.load(open(script_path))
 # CLI --dark / CONFPROBE_STYLE wins over the script field (same as both
 # probes): a light script.json can still drive a dark timeline.
 style = "dark" if (cli_style == "dark" or script.get("style") == "dark") else "light"
+# CLI --rtl / CONFPROBE_DIRECTION wins the same way for layout direction.
+direction = "rtl" if (cli_direction == "rtl" or script.get("direction") == "rtl") else "ltr"
 scale = None
 
 def suffix(t):
     s = compare.capture_suffix(t)
-    return s + ".dark" if style == "dark" else s
+    if style == "dark":
+        s += ".dark"
+    if direction == "rtl":
+        s += ".rtl"
+    return s
 
 def abs_rows(dump):
     """(text, abs-frame) for every view the two trees can be matched on.
@@ -215,10 +235,10 @@ for t in script["captures"]:
     captures.append(entry)
     print(lines[0])
 
-summary = {"app": summary_app, "style": style, "captures": captures}
+summary = {"app": summary_app, "style": style, "direction": direction, "captures": captures}
 json.dump(summary, open(f"{out}/summary.json", "w"), indent=1)
 scores = [c["score"] for c in captures]
-print(f"\n{app} ({style}): {len(captures)} capture(s), worst {min(scores):.3f}, "
+print(f"\n{app} ({style}/{direction}): {len(captures)} capture(s), worst {min(scores):.3f}, "
       f"mean {sum(scores) / len(scores):.3f}")
 PY
 echo "reports: $OUT/report/<t>/{sheet,diff,golden,ours}.png + report.txt; $OUT/summary.json"

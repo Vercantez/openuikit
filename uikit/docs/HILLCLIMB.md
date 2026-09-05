@@ -44,8 +44,14 @@ the reason). The climb only assigns `fail` rows.
    `scripts/conformance_flow.sh <workdir> <app> --dark` replays the same
    script with `overrideUserInterfaceStyle = .dark` on the window before
    the first capture and suffixes capture names `.dark`. A `"style"` field
-   in script.json is honoured by both confprobe and openhost. The round
-   scores `/tmp/hc-conformance-<App>` and `/tmp/hc-conformance-<App>-dark`.
+   in script.json is honoured by both confprobe and openhost.
+   `scripts/conformance_flow.sh <workdir> <app> --rtl` pins
+   `UIView.appearance().semanticContentAttribute = .forceRightToLeft` and
+   the window before the first capture (window-only does not propagate;
+   appearance stamps the tree — /tmp/rtlprobe, iPhone SE 2x / iOS 26.1)
+   and suffixes capture names `.rtl`. A `"direction"` field in script.json
+   is honoured the same way. The round scores `/tmp/hc-conformance-<App>`,
+   `/tmp/hc-conformance-<App>-dark` and `/tmp/hc-conformance-<App>-rtl`.
 
    Adding an app is one directory (`Sources/ConformanceApps/<Name>/` with
    `<Name>App.swift` exposing `windowSize` / `makeRoot()` / `perform(_:)`,
@@ -82,8 +88,9 @@ agent can grade `SKIP_CAPTURE=1` without a simulator. `hillclimb.sh` and
 ## What a round actually reads (the false greens it has had)
 
 - `scripts/hillclimb.sh N` recaptures the iOS suite AND every app under
-  `Sources/ConformanceApps/` into `/tmp/hc-conformance-<App>` (light) and
-  `/tmp/hc-conformance-<App>-dark` (the same script, window style dark) —
+  `Sources/ConformanceApps/` into `/tmp/hc-conformance-<App>` (light),
+  `/tmp/hc-conformance-<App>-dark` (window style dark), and
+  `/tmp/hc-conformance-<App>-rtl` (appearance + window forceRightToLeft) —
   its own directories. `/tmp/conformance-<App>` belongs to the agents; rounds 3–6
   once scored reports agents had left there and fanned out on rows the
   merged code had already fixed. The board stamps each app's capture time

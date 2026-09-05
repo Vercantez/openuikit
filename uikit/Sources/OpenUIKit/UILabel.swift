@@ -46,6 +46,16 @@ open class UILabel: UIView {
     public var font: UIFont = .systemFont(ofSize: 17)
     public var textColor: UIColor = .label
     public var textAlignment: NSTextAlignment = .natural
+    /// `.natural` follows `effectiveUserInterfaceLayoutDirection`.
+    /// MEASURED Forms t200.rtl / NavFlow t200.rtl, iPhone SE 2x / iOS 26.1:
+    /// full-width default-style cell labels and form fields pin their ink
+    /// to the leading (right) edge when the frame itself is not tight.
+    var _resolvedTextAlignment: NSTextAlignment {
+        if textAlignment == .natural {
+            return _layoutIsRTL ? .right : .left
+        }
+        return textAlignment
+    }
     public var numberOfLines: Int = 1
     public var lineBreakMode: NSLineBreakMode = .byTruncatingTail
     /// Shrink single-line plain text to fit the label's width. UIKit keeps
@@ -296,7 +306,7 @@ open class UILabel: UIView {
             AttributedTextLayout.draw(t, lines: lines,
                                       in: AttributedTextLayout.DrawContext(
                                         canvas: canvas, traits: traitCollection,
-                                        bounds: bounds, alignment: textAlignment))
+                                        bounds: bounds, alignment: _resolvedTextAlignment))
             canvas.restore()
             return
         }
@@ -407,7 +417,7 @@ open class UILabel: UIView {
 
         for (i, line) in drawLines.enumerated() {
             var penX: CGFloat
-            switch textAlignment {
+            switch _resolvedTextAlignment {
             case .left, .natural, .justified:
                 penX = 0
             case .center:

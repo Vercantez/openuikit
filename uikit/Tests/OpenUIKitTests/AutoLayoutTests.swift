@@ -304,4 +304,75 @@ final class AutoLayoutEngineTests: XCTestCase {
         root.layoutIfNeeded()
         XCTAssertEqual(child.frame, CGRect(x: 1, y: 2, width: 3, height: 4))
     }
+
+    func testLeadingTrailingFollowItemLayoutDirection() {
+        // MEASURED Forms t200.rtl (Enabled abs.x 297.5, switch x=16) and
+        // NavFlow t3900.rtl (switch abs.x 32 vs LTR 282), iPhone SE 2x /
+        // iOS 26.1. `leading = leading + 16` in RTL pins the child's
+        // right edge 16 pt from the parent's right. Unspecified (the
+        // test above) still resolves LTR.
+        let root = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+        root.semanticContentAttribute = .forceRightToLeft
+        let child = UIView()
+        child.semanticContentAttribute = .forceRightToLeft
+        child.translatesAutoresizingMaskIntoConstraints = false
+        root.addSubview(child)
+        NSLayoutConstraint.activate([
+            child.leadingAnchor.constraint(equalTo: root.leadingAnchor, constant: 16),
+            child.topAnchor.constraint(equalTo: root.topAnchor, constant: 8),
+            child.widthAnchor.constraint(equalToConstant: 40),
+            child.heightAnchor.constraint(equalToConstant: 20),
+        ])
+        root.layoutIfNeeded()
+        XCTAssertEqual(child.frame, CGRect(x: 144, y: 8, width: 40, height: 20))
+    }
+
+    func testTrailingControlPinsToPhysicalLeftInRTL() {
+        let root = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+        root.semanticContentAttribute = .forceRightToLeft
+        let child = UIView()
+        child.semanticContentAttribute = .forceRightToLeft
+        child.translatesAutoresizingMaskIntoConstraints = false
+        root.addSubview(child)
+        NSLayoutConstraint.activate([
+            child.trailingAnchor.constraint(equalTo: root.trailingAnchor),
+            child.centerYAnchor.constraint(equalTo: root.centerYAnchor),
+            child.widthAnchor.constraint(equalToConstant: 51),
+            child.heightAnchor.constraint(equalToConstant: 31),
+        ])
+        root.layoutIfNeeded()
+        XCTAssertEqual(child.frame.origin.x, 0)
+        XCTAssertEqual(child.frame.width, 51)
+    }
+
+    func testRTLMinGapKeepsIntrinsicWidthOnLeadingSide() {
+        // MEASURED Forms t200.rtl, iPhone SE 2x / iOS 26.1: Enabled
+        // `[297.5, …, 61.5, …]` — hugging the leading (right) edge, not
+        // stretched across the cell by the trailing≤leading−8 spacer.
+        let root = UIView(frame: CGRect(x: 0, y: 0, width: 343, height: 44))
+        root.semanticContentAttribute = .forceRightToLeft
+        let label = UILabel()
+        label.semanticContentAttribute = .forceRightToLeft
+        label.text = "Enabled"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        let control = UIView()
+        control.semanticContentAttribute = .forceRightToLeft
+        control.translatesAutoresizingMaskIntoConstraints = false
+        root.addSubview(label)
+        root.addSubview(control)
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: root.leadingAnchor),
+            label.centerYAnchor.constraint(equalTo: root.centerYAnchor),
+            control.trailingAnchor.constraint(equalTo: root.trailingAnchor),
+            control.centerYAnchor.constraint(equalTo: root.centerYAnchor),
+            control.widthAnchor.constraint(equalToConstant: 51),
+            control.heightAnchor.constraint(equalToConstant: 31),
+            label.trailingAnchor.constraint(lessThanOrEqualTo: control.leadingAnchor,
+                                            constant: -8),
+        ])
+        root.layoutIfNeeded()
+        XCTAssertEqual(control.frame.origin.x, 0, accuracy: 0.51)
+        XCTAssertEqual(label.frame.width, label.intrinsicContentSize.width, accuracy: 0.51)
+        XCTAssertEqual(label.frame.maxX, 343, accuracy: 0.51)
+    }
 }

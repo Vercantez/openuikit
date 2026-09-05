@@ -538,6 +538,19 @@ final class AppDrawingTests: XCTestCase {
         XCTAssertEqual(large.currentStep, 1)
         large.stopAnimating()
         XCTAssertEqual(large.currentStep, 0)
+
+        // MEASURED Pager t200.dark, SE 2x: 9 o'clock core (120,120,125)
+        // over black at blade α=217/255 inverts to (141,141,147).
+        let savedTraits = UITraitCollection.current
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark,
+                                                      displayScale: 2)
+        let dark = UIActivityIndicatorView.defaultColor
+            .resolvedCGColor(with: UITraitCollection.current)
+        UITraitCollection.current = savedTraits
+        XCTAssertEqual((dark.red * 255).rounded(), 141)
+        XCTAssertEqual((dark.green * 255).rounded(), 141)
+        XCTAssertEqual((dark.blue * 255).rounded(), 147)
+        XCTAssertEqual(dark.alpha, 1, accuracy: 1e-9)
     }
 
     func testPageControlLayoutMatchesTheOracleRules() {
