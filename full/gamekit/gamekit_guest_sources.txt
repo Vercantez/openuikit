@@ -1,0 +1,12 @@
+full/gamekit/GKAchievements.swift
+full/gamekit/GKEnums.swift
+full/gamekit/GKError.swift
+full/gamekit/GKGameActivity.swift
+full/gamekit/GKLeaderboards.swift
+full/gamekit/GKMatchmaking.swift
+full/gamekit/GKPlayers.swift
+full/gamekit/GKProtocols.swift
+full/gamekit/GKSessions.swift
+full/gamekit/GKTurnBased.swift
+full/gamekit/GKUI.swift
+full/gamekit/GameKit.swift
