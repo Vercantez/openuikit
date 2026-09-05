@@ -203,19 +203,20 @@ enum EKLocalStoreIO {
             at: EKLocalStoreRoot.directory,
             withIntermediateDirectories: true
         )
+        let object = encode(snapshot)
+        guard JSONSerialization.isValidJSONObject(object) else {
+            throw CocoaError(.fileWriteUnknown)
+        }
         let data = try JSONSerialization.data(
-            withJSONObject: encode(snapshot),
+            withJSONObject: object,
             options: [.prettyPrinted]
         )
-        let tmp = url.appendingPathExtension("tmp")
-        try data.write(to: tmp, options: [.atomic])
-        if FileManager.default.fileExists(atPath: url.path) {
-            _ = try FileManager.default.replaceItemAt(url, withItemAt: tmp)
-        } else {
-            try FileManager.default.moveItem(at: tmp, to: url)
-        }
+        // Linux Foundation's `replaceItemAt` is not a reliable rename. Write
+        // the snapshot atomically onto `store.json` itself.
+        try data.write(to: url, options: [.atomic])
         EKLocalStoreRoot.snapshot = snapshot
-        EKLocalStoreRoot.fileDate = Date()
+        EKLocalStoreRoot.fileDate = (try? url.resourceValues(forKeys: [.contentModificationDateKey]))
+            .flatMap(\.contentModificationDate) ?? Date()
     }
 
     static func fileChanged() -> Bool {
@@ -307,7 +308,9 @@ enum EKLocalStoreIO {
             "calendars": snapshot.calendars.map(encodeCalendar),
             "events": snapshot.events.map(encodeEvent),
             "reminders": snapshot.reminders.map(encodeReminder),
-            "exceptionDates": snapshot.exceptionDates.mapValues { $0 as Any },
+            "exceptionDates": snapshot.exceptionDates.reduce(into: [String: Any]()) { dict, pair in
+                dict[pair.key] = pair.value.map { NSNumber(value: $0) }
+            },
         ]
     }
 

@@ -141,8 +141,11 @@ open class EKEventStore: NSObject {
     /// Swift overlay of `requestAccessToEntityType:completion:`. Denied access
     /// returns `false` without throwing (`granted == NO`, `error == nil`).
     open func requestAccess(to entityType: EKEntityType) async throws -> Bool {
-        await Task.yield()
-        return grantAccess(to: entityType, status: .fullAccess)
+        await withCheckedContinuation { continuation in
+            EKCallbackDelivery.asynchronously {
+                continuation.resume(returning: self.grantAccess(to: entityType, status: .fullAccess))
+            }
+        }
     }
 
     open func requestFullAccessToEvents(
@@ -579,7 +582,12 @@ open class EKEventStore: NSObject {
             case .event: snapshot.eventAuthorization = .denied
             case .reminder: snapshot.reminderAuthorization = .denied
             }
-            try? EKLocalStoreIO.saveLocked(snapshot)
+            do {
+                try EKLocalStoreIO.saveLocked(snapshot)
+            } catch {
+                EKLocalStoreRoot.lock.unlock()
+                return false
+            }
             EKLocalStoreRoot.lock.unlock()
             reloadFromDisk(creatingIfNeeded: false)
             return false
@@ -605,7 +613,12 @@ open class EKEventStore: NSObject {
             snapshot.reminderAuthorization = next
             EKLocalStoreIO.ensureLocalCalendars(&snapshot, events: false, reminders: true)
         }
-        try? EKLocalStoreIO.saveLocked(snapshot)
+        do {
+            try EKLocalStoreIO.saveLocked(snapshot)
+        } catch {
+            EKLocalStoreRoot.lock.unlock()
+            return false
+        }
         EKLocalStoreRoot.lock.unlock()
         reloadFromDisk(creatingIfNeeded: false)
         return next == .fullAccess || next == .writeOnly
