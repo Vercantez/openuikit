@@ -1,16 +1,12 @@
-@_spi(OpenUIKitHost) import CoreLocationUI
-import Foundation
-
-#if canImport(CoreLocation)
+import CoreLocationUI
 import CoreLocation
-#endif
-#if canImport(UIKit)
+import Foundation
 import UIKit
-#endif
+@_spi(OpenUIKitHost) import CoreLocationUI
 
 // Future clean EC2 dependency-identity client. Isolated host-gate success
 // against toolchain Foundation is not integrated guest CoreLocation/UIKit
-// success.
+// success. This file is not compiled by the sealed host gate.
 //
 // Expected EC2 steps (no local Docker):
 // 1. Build guest CoreLocation, Foundation, UIKit (and their dylibs).
@@ -37,7 +33,6 @@ func assertFoundationIdentity() {
     _ = Foundation.Data.self
 }
 
-#if canImport(UIKit)
 func assertUIKitIdentity() {
     let button = CLLocationButton(frame: .zero)
     precondition(button is UIControl)
@@ -45,7 +40,6 @@ func assertUIKitIdentity() {
     button.sendActions(for: .touchUpInside)
 }
 
-#if canImport(CoreLocation)
 func assertCoreLocationIdentity() {
     // CoreLocationUI does not take CLLocation values. Importing CoreLocation
     // and constructing a coordinate next to a button proves the modules share
@@ -62,18 +56,10 @@ func assertCoreLocationIdentity() {
     }
     _ = coordinate.latitude
 }
-#endif
-#endif
 
 func coreLocationUIDependencyIdentityMain() {
     assertFoundationIdentity()
-    #if canImport(UIKit)
     assertUIKitIdentity()
-    #endif
-    #if canImport(CoreLocation)
-    #if canImport(UIKit)
     assertCoreLocationIdentity()
-    #endif
-    #endif
     print("CORELOCATIONUI_DEPENDENCY_IDENTITY_OK")
 }

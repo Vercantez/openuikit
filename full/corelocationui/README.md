@@ -38,6 +38,17 @@ absent on this VM. The sealed gate compiles with a clean product tree
 `origin/agent/fw-corelocationui` did not exist; this pass publishes that
 branch from the Cursor-created work branch.
 
+`bash full/corelocationui/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=CoreLocationUI lane=leaf-full symbols=805
+FRAMEWORK_FANOUT_REFERENCE_OK
+CORELOCATIONUI_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CoreLocationUI dylib=libCoreLocationUI.dylib
+```
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. `swiftc` is Swift 6.2.4 / linux and the gate compiled with a clean product tree.
+
 ### What is real
 
 - `CLLocationButtonIcon` is `.none` (0), `.arrowFilled` (1), `.arrowOutline`
