@@ -1,0 +1,16 @@
+init.host	name=host;value=one;domain=example.test;path=/secure;secure=false;httpOnly=false;session=true
+init.dot-domain	name=domain;value=two;domain=.example.test;path=/;secure=false;httpOnly=false;session=true
+init.missing-name	nil
+init.relative-path	name=bad;value=x;domain=example.test;path=no-slash;secure=false;httpOnly=false;session=true
+parse.basic.0	name=id;value=abc;domain=.example.test;path=/;secure=false;httpOnly=false;session=true
+parse.httponly-secure.0	name=sid;value=1;domain=www.example.test;path=/account;secure=true;httpOnly=true;session=true
+parse.max-age.0	name=tmp;value=1;domain=www.example.test;path=/;secure=false;httpOnly=false;session=false
+parse.expires-imf.0	name=old;value=1;domain=www.example.test;path=/;secure=false;httpOnly=false;session=false;expires=1445412480.0
+parse.ignore-other	empty
+parse.default-path.0	name=p;value=1;domain=www.example.test;path=/account;secure=false;httpOnly=false;session=true
+store.expired-dropped	false
+store.https-secure-child	ouik-sf-domain,ouik-sf-host
+store.subdomain	ouik-sf-domain
+store.path-miss	ouik-sf-domain
+header.cookie	ouik-sf-domain=two; ouik-sf-host=one
+store.replace-expired-deletes	true
