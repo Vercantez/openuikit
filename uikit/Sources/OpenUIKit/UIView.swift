@@ -616,7 +616,11 @@ open class UIView: UIResponder, CALayerDelegate {
     /// iOS 26 liquid-glass chrome (tab-bar / toolbar / bar-button platters,
     /// floating sheet). The Canvas backdrop-filter path applies
     /// `_UIGlassMaterial`; Catalyst ignores the flag.
-    var _usesIOSGlass = false
+    /// Public so the SwiftUI module can set it (`.glassEffect` on the iOS cut).
+    public var _usesIOSGlass = false
+    /// Dark floating sheet only. Bar platters keep the measured dark flats
+    /// (19 / 25); the sheet's systemBackground fill tracks the dimmed
+    /// backdrop (MEASURED /tmp/sheetfill_dark, SE 2x).
     /// Dark floating sheet only. Bar platters use `_usesIOSDarkBarGlass`
     /// (MEASURED /tmp/glass-dark-out, SE 2x: 19 over black, not the
     /// sheet's 57).

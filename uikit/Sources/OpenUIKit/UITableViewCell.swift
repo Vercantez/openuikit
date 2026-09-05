@@ -335,14 +335,24 @@ open class UITableViewCell: UIView, ReusableView {
     // MEASURED 2026-09-04 on the iPhone 16 simulator (see UITableView.swift,
     // "iOS 26.1 chrome").
     static var isIOSChrome: Bool { UITableView.isIOSChrome }
-    /// iOS default / value1 row height. MEASURED `tableview_grouped` /
-    /// `tableview_plain` on iPhone SE 2x / iOS 26.1 (fresh ios_suite
-    /// capture): stock cells that go through
-    /// `defaultContentConfiguration()` are **53**. Tabs' classic
-    /// `textLabel` table is 52 (`contentSize` 1560 / 30 rows) — that 1 pt
-    /// is left OPEN; changing this constant to 52 drops
-    /// `tableview_grouped` (blob 94 > 80). Catalyst stays 51.5.
+    /// iOS `defaultContentConfiguration()` / grouped row height. MEASURED
+    /// `tableview_grouped` / `tableview_plain` and rowprobe `*_config_*`
+    /// on iPhone SE 2x / iOS 26.1: content-configuration cells are **53**.
+    /// Classic `textLabel` cells on the same device are 52 — see
+    /// `plainClassicRowHeight`. Catalyst stays 51.5.
     public static var defaultRowHeight: CGFloat { isIOSChrome ? 53 : 51.5 }
+    /// iOS plain-style classic `textLabel` row height. MEASURED Tabs t200
+    /// golden PNG + dump, iPhone SE 2x / iOS 26.1: separators at pixel
+    /// rows 128–129 / 230–231 / 334–335 / … (pt 64, 115, 167, … stride
+    /// **52**), RGB (232,232,232); text ink top 84.0 + 52·n; dump cell
+    /// `[0, 64+52·n, 375, 52]`, label `[16, 0, 343, 52]`, `contentSize.height`
+    /// 1560 = 30×52. Dump and pixels agree (the inset-grouped card-x dump
+    /// was the one that lied). rowprobe on the same device: every classic
+    /// case is 52 (plain / grouped / insetGrouped / header / accessory /
+    /// value1 / UITableViewController); every `defaultContentConfiguration()`
+    /// case is 53. Grouped stays `defaultRowHeight` 53 so tableview_grouped
+    /// and Focus do not drop. Catalyst stays 51.5.
+    static var plainClassicRowHeight: CGFloat { isIOSChrome ? 52 : 51.5 }
     /// iOS: 49 above the 17 pt primary label's device-pixel height
     /// (69.333 at 3x, 69.5 at 2x — both measured).
     public static var subtitleRowHeight: CGFloat {
