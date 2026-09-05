@@ -19,16 +19,26 @@ public struct simd_float4x4: Equatable, Sendable {
         self.columns = columns
     }
 
-    public static var identity: simd_float4x4 {
-        simd_float4x4(
-            columns: (
-                SIMD4<Float>(1, 0, 0, 0),
-                SIMD4<Float>(0, 1, 0, 0),
-                SIMD4<Float>(0, 0, 1, 0),
-                SIMD4<Float>(0, 0, 0, 1)
-            )
-        )
+    public static func == (lhs: simd_float4x4, rhs: simd_float4x4) -> Bool {
+        lhs.columns.0 == rhs.columns.0
+            && lhs.columns.1 == rhs.columns.1
+            && lhs.columns.2 == rhs.columns.2
+            && lhs.columns.3 == rhs.columns.3
     }
+
+    public static let identity = simd_float4x4(
+        columns: (
+            SIMD4<Float>(1, 0, 0, 0),
+            SIMD4<Float>(0, 1, 0, 0),
+            SIMD4<Float>(0, 0, 1, 0),
+            SIMD4<Float>(0, 0, 0, 1)
+        )
+    )
+}
+
+internal func niSecureDecode<T: NSObject & NSCoding>(_ type: T.Type, from coder: NSCoder, key: String) -> T? {
+    guard coder.containsValue(forKey: key) else { return nil }
+    return coder.decodeObject(of: type, forKey: key)
 }
 
 /// ARKit is not a declared dependency of this seed. `NISession.setARSession`
@@ -95,6 +105,16 @@ public struct NIError: Foundation._BridgedStoredNSError, @unchecked Sendable {
         var hasher = Hasher()
         hash(into: &hasher)
         return hasher.finalize()
+    }
+}
+
+extension NIError.Code {
+    public static func ~= (match: NIError.Code, error: any Error) -> Bool {
+        if let typed = error as? NIError {
+            return typed.code == match
+        }
+        let nsError = error as NSError
+        return nsError.domain == NIErrorDomain && nsError.code == match.rawValue
     }
 }
 
@@ -216,7 +236,14 @@ public class NIAlgorithmConvergence: NSObject, NSCopying, NSSecureCoding {
         case 2:
             self.status = .converged
         case 1:
-            let raws = (coder.decodeObject(of: [NSArray.self, NSString.self], forKey: "reasons") as? [String]) ?? []
+            let raws: [String]
+            if coder.containsValue(forKey: "reasons"),
+               let decoded = coder.decodeObject(of: [NSArray.self, NSString.self], forKey: "reasons") as? [String]
+            {
+                raws = decoded
+            } else {
+                raws = []
+            }
             self.status = .notConverged(raws.map { NIAlgorithmConvergenceStatus.Reason(rawValue: $0) })
         default:
             return nil

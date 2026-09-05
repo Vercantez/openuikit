@@ -55,7 +55,7 @@ public class NINearbyObject: NSObject, NSCopying, NSSecureCoding {
     }
 
     public required init?(coder: NSCoder) {
-        guard let token = coder.decodeObject(of: NIDiscoveryToken.self, forKey: "discoveryToken") else {
+        guard let token = niSecureDecode(NIDiscoveryToken.self, from: coder, key: "discoveryToken") else {
             return nil
         }
         self.discoveryToken = token

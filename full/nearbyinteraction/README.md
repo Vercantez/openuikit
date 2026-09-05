@@ -55,7 +55,7 @@ Top-5 implemented evidence distribution:
 | 13 | `NearbyInteractionConvergenceTests.swift#testNIAlgorithmConvergenceStatusReasonRawValues` |
 | 10 | `NearbyInteractionEnumTests.swift#testNINearbyObjectVerticalDirectionEstimateRawValues` |
 | 10 | `NearbyInteractionDelegateTests.swift#testNISessionDelegateCallbacks` |
-| 9 | `NearbyInteractionErrorTests.swift#testNIErrorConstructionAndUserInfo` |
+| 9 | `NearbyInteractionObjectTests.swift#testNIDLTDOAMeasurementProperties` |
 
 `testNIErrorCodes` is a table-driven enum-member and static `NIError.*`
 code test. `testNIAlgorithmConvergenceStatusReasonRawValues` and
@@ -63,12 +63,19 @@ code test. `testNIAlgorithmConvergenceStatusReasonRawValues` and
 enum/constant value tests. Delegate and construction tests cover distinct
 non-enum families and stay well under the 40% bulk-relabel bound.
 
-The sealed host gate was run as `bash full/nearbyinteraction/tests/acceptance/test_host.sh`.
-`.cursor/verify-cloud-environment.sh` did not print
-`CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
-missing from this snapshot. The compile used Swift 6.2.4 targeting linux
-(`swiftc --version`). The campaign token
-`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
-is the host-inventory stamp; the sealed framework gate prints
-`FRAMEWORK_FANOUT_DELIVERABLE_OK`, `FRAMEWORK_FANOUT_REFERENCE_OK`,
-`NEARBYINTERACTION_AGENT_RUNTIME_OK`, and `FRAMEWORK_FANOUT_HOST_OK`.
+The sealed host gate was run as `bash full/nearbyinteraction/tests/acceptance/test_host.sh`
+and ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=NearbyInteraction lane=leaf-full symbols=158
+FRAMEWORK_FANOUT_REFERENCE_OK
+NEARBYINTERACTION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=NearbyInteraction dylib=libNearbyInteraction.dylib
+```
+
+`swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` does not print
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` on this
+snapshot (`scratch/ladder-corpus/focus-ios` is missing). That campaign token
+is the host-inventory stamp; the sealed framework gate prints the four lines
+above.

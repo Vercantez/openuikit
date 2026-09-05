@@ -43,7 +43,7 @@ func testNIErrorConstructionAndUserInfo() {
     let empty = NIError(.sessionFailed)
     precondition(empty.code == .sessionFailed)
     precondition(empty.errorCode == -5887)
-    precondition(empty.errorDomain == NIErrorDomain)
+    precondition(NIError.errorDomain == NIErrorDomain)
     precondition(!empty.localizedDescription.isEmpty)
 
     let sentinel = NIError(.userDidNotAllow, userInfo: ["sentinel": "value"])

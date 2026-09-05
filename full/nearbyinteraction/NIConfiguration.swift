@@ -45,7 +45,7 @@ public class NIDiscoveryToken: NSObject, NSCopying, NSSecureCoding {
     }
 
     public required init?(coder: NSCoder) {
-        guard let uuidString = coder.decodeObject(of: NSString.self, forKey: "identifier") as String?,
+        guard let uuidString = niSecureDecode(NSString.self, from: coder, key: "identifier") as String?,
               let uuid = UUID(uuidString: uuidString)
         else {
             return nil
@@ -83,7 +83,7 @@ public class NINearbyPeerConfiguration: NIConfiguration {
     }
 
     public required init?(coder: NSCoder) {
-        guard let token = coder.decodeObject(of: NIDiscoveryToken.self, forKey: "peerDiscoveryToken") else {
+        guard let token = niSecureDecode(NIDiscoveryToken.self, from: coder, key: "peerDiscoveryToken") else {
             return nil
         }
         self.peerDiscoveryToken = token
@@ -141,12 +141,14 @@ public class NINearbyAccessoryConfiguration: NIConfiguration {
     }
 
     public required init?(coder: NSCoder) {
-        guard let token = coder.decodeObject(of: NIDiscoveryToken.self, forKey: "accessoryDiscoveryToken") else {
+        guard let token = niSecureDecode(NIDiscoveryToken.self, from: coder, key: "accessoryDiscoveryToken") else {
             return nil
         }
         self.accessoryDiscoveryToken = token
-        if let uuidString = coder.decodeObject(of: NSString.self, forKey: "bluetoothPeerIdentifier") as String? {
-            self.bluetoothPeerIdentifier = UUID(uuidString: uuidString)
+        if let uuidString = niSecureDecode(NSString.self, from: coder, key: "bluetoothPeerIdentifier") as String?,
+           let uuid = UUID(uuidString: uuidString)
+        {
+            self.bluetoothPeerIdentifier = uuid
         } else {
             self.bluetoothPeerIdentifier = nil
         }
