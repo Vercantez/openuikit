@@ -1,0 +1,1743 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MessagesDefines",
+        "printedName": "Messages.MessagesDefines"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "UIKit",
+        "printedName": "UIKit"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MSMessagesAppViewController",
+        "printedName": "Messages.MSMessagesAppViewController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MSConversation",
+        "printedName": "Messages.MSConversation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MSMessage",
+        "printedName": "Messages.MSMessage"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MSMessageLayout",
+        "printedName": "Messages.MSMessageLayout"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MSMessageTemplateLayout",
+        "printedName": "Messages.MSMessageTemplateLayout"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MSMessageLiveLayout",
+        "printedName": "Messages.MSMessageLiveLayout"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MSSession",
+        "printedName": "Messages.MSSession"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MSSticker",
+        "printedName": "Messages.MSSticker"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MSStickerBrowserView",
+        "printedName": "Messages.MSStickerBrowserView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MSStickerBrowserViewController",
+        "printedName": "Messages.MSStickerBrowserViewController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MSStickerBrowserViewDataSource",
+        "printedName": "Messages.MSStickerBrowserViewDataSource"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MSStickerView",
+        "printedName": "Messages.MSStickerView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages.MSMessageError",
+        "printedName": "Messages.MSMessageError"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "DeveloperToolsSupport",
+        "printedName": "DeveloperToolsSupport"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "Messages",
+        "printedName": "Messages"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Messages",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSCriticalMessagingError",
+                    "printedName": "Messages.MSCriticalMessagingError",
+                    "usr": "s:8Messages24MSCriticalMessagingErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "MSCriticalMessagingError",
+                        "printedName": "Messages.MSCriticalMessagingError",
+                        "usr": "s:8Messages24MSCriticalMessagingErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Messages.MSCriticalMessagingError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Messages.MSCriticalMessagingError.Type) -> Messages.MSCriticalMessagingError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s8Messages24MSCriticalMessagingErrorO7unknownyA2CmF",
+            "moduleName": "Messages",
+            "name": "unknown",
+            "printedName": "unknown",
+            "usr": "s:8Messages24MSCriticalMessagingErrorO7unknownyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSCriticalMessagingError",
+                    "printedName": "Messages.MSCriticalMessagingError",
+                    "usr": "s:8Messages24MSCriticalMessagingErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "MSCriticalMessagingError",
+                        "printedName": "Messages.MSCriticalMessagingError",
+                        "usr": "s:8Messages24MSCriticalMessagingErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Messages.MSCriticalMessagingError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Messages.MSCriticalMessagingError.Type) -> Messages.MSCriticalMessagingError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s8Messages24MSCriticalMessagingErrorO28invalidAuthenticationRequestyA2CmF",
+            "moduleName": "Messages",
+            "name": "invalidAuthenticationRequest",
+            "printedName": "invalidAuthenticationRequest",
+            "usr": "s:8Messages24MSCriticalMessagingErrorO28invalidAuthenticationRequestyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSCriticalMessagingError",
+                    "printedName": "Messages.MSCriticalMessagingError",
+                    "usr": "s:8Messages24MSCriticalMessagingErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "MSCriticalMessagingError",
+                        "printedName": "Messages.MSCriticalMessagingError",
+                        "usr": "s:8Messages24MSCriticalMessagingErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Messages.MSCriticalMessagingError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Messages.MSCriticalMessagingError.Type) -> Messages.MSCriticalMessagingError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s8Messages24MSCriticalMessagingErrorO12notSupportedyA2CmF",
+            "moduleName": "Messages",
+            "name": "notSupported",
+            "printedName": "notSupported",
+            "usr": "s:8Messages24MSCriticalMessagingErrorO12notSupportedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSCriticalMessagingError",
+                    "printedName": "Messages.MSCriticalMessagingError",
+                    "usr": "s:8Messages24MSCriticalMessagingErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "MSCriticalMessagingError",
+                        "printedName": "Messages.MSCriticalMessagingError",
+                        "usr": "s:8Messages24MSCriticalMessagingErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Messages.MSCriticalMessagingError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Messages.MSCriticalMessagingError.Type) -> Messages.MSCriticalMessagingError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s8Messages24MSCriticalMessagingErrorO13notAuthorizedyA2CmF",
+            "moduleName": "Messages",
+            "name": "notAuthorized",
+            "printedName": "notAuthorized",
+            "usr": "s:8Messages24MSCriticalMessagingErrorO13notAuthorizedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSCriticalMessagingError",
+                    "printedName": "Messages.MSCriticalMessagingError",
+                    "usr": "s:8Messages24MSCriticalMessagingErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "MSCriticalMessagingError",
+                        "printedName": "Messages.MSCriticalMessagingError",
+                        "usr": "s:8Messages24MSCriticalMessagingErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Messages.MSCriticalMessagingError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Messages.MSCriticalMessagingError.Type) -> Messages.MSCriticalMessagingError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s8Messages24MSCriticalMessagingErrorO10sendFailedyA2CmF",
+            "moduleName": "Messages",
+            "name": "sendFailed",
+            "printedName": "sendFailed",
+            "usr": "s:8Messages24MSCriticalMessagingErrorO10sendFailedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSCriticalMessagingError",
+                    "printedName": "Messages.MSCriticalMessagingError",
+                    "usr": "s:8Messages24MSCriticalMessagingErrorO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Messages.MSCriticalMessagingError?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s8Messages24MSCriticalMessagingErrorO8rawValueACSgSi_tcfc",
+            "moduleName": "Messages",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:8Messages24MSCriticalMessagingErrorO8rawValueACSgSi_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_iOS": "18.2",
+            "kind": "TypeAlias",
+            "mangledName": "$s8Messages24MSCriticalMessagingErrorO8RawValuea",
+            "moduleName": "Messages",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:8Messages24MSCriticalMessagingErrorO8RawValuea"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8Messages24MSCriticalMessagingErrorO8rawValueSivg",
+                "moduleName": "Messages",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8Messages24MSCriticalMessagingErrorO8rawValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s8Messages24MSCriticalMessagingErrorO8rawValueSivp",
+            "moduleName": "Messages",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:8Messages24MSCriticalMessagingErrorO8rawValueSivp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s8Messages24MSCriticalMessagingErrorO16errorDescriptionSSSgvg",
+                "moduleName": "Messages",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8Messages24MSCriticalMessagingErrorO16errorDescriptionSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s8Messages24MSCriticalMessagingErrorO16errorDescriptionSSSgvp",
+            "moduleName": "Messages",
+            "name": "errorDescription",
+            "printedName": "errorDescription",
+            "usr": "s:8Messages24MSCriticalMessagingErrorO16errorDescriptionSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s8Messages24MSCriticalMessagingErrorO11errorDomainSSvgZ",
+                "moduleName": "Messages",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:8Messages24MSCriticalMessagingErrorO11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s8Messages24MSCriticalMessagingErrorO11errorDomainSSvpZ",
+            "moduleName": "Messages",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:8Messages24MSCriticalMessagingErrorO11errorDomainSSvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s8Messages24MSCriticalMessagingErrorO9errorCodeSivg",
+                "moduleName": "Messages",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8Messages24MSCriticalMessagingErrorO9errorCodeSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s8Messages24MSCriticalMessagingErrorO9errorCodeSivp",
+            "moduleName": "Messages",
+            "name": "errorCode",
+            "printedName": "errorCode",
+            "usr": "s:8Messages24MSCriticalMessagingErrorO9errorCodeSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation14LocalizedErrorP",
+            "name": "LocalizedError",
+            "printedName": "LocalizedError",
+            "usr": "s:10Foundation14LocalizedErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "Messages.MSCriticalMessagingError.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          }
+        ],
+        "declAttributes": [
+          "Available"
+        ],
+        "declKind": "Enum",
+        "enumRawTypeName": "Int",
+        "intro_iOS": "18.2",
+        "kind": "TypeDecl",
+        "mangledName": "$s8Messages24MSCriticalMessagingErrorO",
+        "moduleName": "Messages",
+        "name": "MSCriticalMessagingError",
+        "printedName": "MSCriticalMessagingError",
+        "usr": "s:8Messages24MSCriticalMessagingErrorO"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSCriticalMessagingAuthorizationStatus",
+                    "printedName": "Messages.MSCriticalMessagingAuthorizationStatus",
+                    "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "MSCriticalMessagingAuthorizationStatus",
+                        "printedName": "Messages.MSCriticalMessagingAuthorizationStatus",
+                        "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Messages.MSCriticalMessagingAuthorizationStatus.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Messages.MSCriticalMessagingAuthorizationStatus.Type) -> Messages.MSCriticalMessagingAuthorizationStatus"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s8Messages38MSCriticalMessagingAuthorizationStatusO7unknownyA2CmF",
+            "moduleName": "Messages",
+            "name": "unknown",
+            "printedName": "unknown",
+            "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO7unknownyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSCriticalMessagingAuthorizationStatus",
+                    "printedName": "Messages.MSCriticalMessagingAuthorizationStatus",
+                    "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "MSCriticalMessagingAuthorizationStatus",
+                        "printedName": "Messages.MSCriticalMessagingAuthorizationStatus",
+                        "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Messages.MSCriticalMessagingAuthorizationStatus.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Messages.MSCriticalMessagingAuthorizationStatus.Type) -> Messages.MSCriticalMessagingAuthorizationStatus"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s8Messages38MSCriticalMessagingAuthorizationStatusO6deniedyA2CmF",
+            "moduleName": "Messages",
+            "name": "denied",
+            "printedName": "denied",
+            "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO6deniedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSCriticalMessagingAuthorizationStatus",
+                    "printedName": "Messages.MSCriticalMessagingAuthorizationStatus",
+                    "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "MSCriticalMessagingAuthorizationStatus",
+                        "printedName": "Messages.MSCriticalMessagingAuthorizationStatus",
+                        "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "Messages.MSCriticalMessagingAuthorizationStatus.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Messages.MSCriticalMessagingAuthorizationStatus.Type) -> Messages.MSCriticalMessagingAuthorizationStatus"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s8Messages38MSCriticalMessagingAuthorizationStatusO8approvedyA2CmF",
+            "moduleName": "Messages",
+            "name": "approved",
+            "printedName": "approved",
+            "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO8approvedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSCriticalMessagingAuthorizationStatus",
+                    "printedName": "Messages.MSCriticalMessagingAuthorizationStatus",
+                    "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Messages.MSCriticalMessagingAuthorizationStatus?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s8Messages38MSCriticalMessagingAuthorizationStatusO8rawValueACSgSi_tcfc",
+            "moduleName": "Messages",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO8rawValueACSgSi_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_iOS": "18.2",
+            "kind": "TypeAlias",
+            "mangledName": "$s8Messages38MSCriticalMessagingAuthorizationStatusO8RawValuea",
+            "moduleName": "Messages",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO8RawValuea"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8Messages38MSCriticalMessagingAuthorizationStatusO8rawValueSivg",
+                "moduleName": "Messages",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO8rawValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s8Messages38MSCriticalMessagingAuthorizationStatusO8rawValueSivp",
+            "moduleName": "Messages",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO8rawValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "Messages.MSCriticalMessagingAuthorizationStatus.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          }
+        ],
+        "declAttributes": [
+          "Available"
+        ],
+        "declKind": "Enum",
+        "enumRawTypeName": "Int",
+        "intro_iOS": "18.2",
+        "kind": "TypeDecl",
+        "mangledName": "$s8Messages38MSCriticalMessagingAuthorizationStatusO",
+        "moduleName": "Messages",
+        "name": "MSCriticalMessagingAuthorizationStatus",
+        "printedName": "MSCriticalMessagingAuthorizationStatus",
+        "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8Messages11MSRecipientV11phoneNumberSSvg",
+                "moduleName": "Messages",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8Messages11MSRecipientV11phoneNumberSSvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8Messages11MSRecipientV11phoneNumberSSvs",
+                "moduleName": "Messages",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:8Messages11MSRecipientV11phoneNumberSSvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s8Messages11MSRecipientV11phoneNumberSSvp",
+            "moduleName": "Messages",
+            "name": "phoneNumber",
+            "printedName": "phoneNumber",
+            "usr": "s:8Messages11MSRecipientV11phoneNumberSSvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MSRecipient",
+                "printedName": "Messages.MSRecipient",
+                "usr": "s:8Messages11MSRecipientV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s8Messages11MSRecipientV11phoneNumberACSS_tcfc",
+            "moduleName": "Messages",
+            "name": "init",
+            "printedName": "init(phoneNumber:)",
+            "usr": "s:8Messages11MSRecipientV11phoneNumberACSS_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MSRecipient",
+                "printedName": "Messages.MSRecipient",
+                "usr": "s:8Messages11MSRecipientV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MSRecipient",
+                "printedName": "Messages.MSRecipient",
+                "usr": "s:8Messages11MSRecipientV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8Messages11MSRecipientV2eeoiySbAC_ACtFZ",
+            "moduleName": "Messages",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:8Messages11MSRecipientV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8Messages11MSRecipientV4hash4intoys6HasherVz_tF",
+            "moduleName": "Messages",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:8Messages11MSRecipientV4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8Messages11MSRecipientV9hashValueSivg",
+                "moduleName": "Messages",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8Messages11MSRecipientV9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s8Messages11MSRecipientV9hashValueSivp",
+            "moduleName": "Messages",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:8Messages11MSRecipientV9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "18.2",
+        "kind": "TypeDecl",
+        "mangledName": "$s8Messages11MSRecipientV",
+        "moduleName": "Messages",
+        "name": "MSRecipient",
+        "printedName": "MSRecipient",
+        "usr": "s:8Messages11MSRecipientV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8Messages17MSCriticalMessageV11messageTextSSvg",
+                "moduleName": "Messages",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8Messages17MSCriticalMessageV11messageTextSSvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s8Messages17MSCriticalMessageV11messageTextSSvs",
+                "moduleName": "Messages",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:8Messages17MSCriticalMessageV11messageTextSSvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s8Messages17MSCriticalMessageV11messageTextSSvp",
+            "moduleName": "Messages",
+            "name": "messageText",
+            "printedName": "messageText",
+            "usr": "s:8Messages17MSCriticalMessageV11messageTextSSvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MSCriticalMessage",
+                "printedName": "Messages.MSCriticalMessage",
+                "usr": "s:8Messages17MSCriticalMessageV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s8Messages17MSCriticalMessageV11messageTextACSS_tcfc",
+            "moduleName": "Messages",
+            "name": "init",
+            "printedName": "init(messageText:)",
+            "usr": "s:8Messages17MSCriticalMessageV11messageTextACSS_tcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "18.2",
+        "kind": "TypeDecl",
+        "mangledName": "$s8Messages17MSCriticalMessageV",
+        "moduleName": "Messages",
+        "name": "MSCriticalMessage",
+        "printedName": "MSCriticalMessage",
+        "usr": "s:8Messages17MSCriticalMessageV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MSCriticalSMSMessenger",
+                "printedName": "Messages.MSCriticalSMSMessenger",
+                "usr": "c:@M@Messages@objc(cs)MSCriticalSMSMessenger"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Override"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s8Messages22MSCriticalSMSMessengerCACycfc",
+            "moduleName": "Messages",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:@M@Messages@objc(cs)MSCriticalSMSMessenger(im)init"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSRecipient",
+                    "printedName": "Messages.MSRecipient",
+                    "usr": "s:8Messages11MSRecipientV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSCriticalMessagingAuthorizationStatus",
+                    "printedName": "Messages.MSCriticalMessagingAuthorizationStatus",
+                    "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Messages.MSRecipient : Messages.MSCriticalMessagingAuthorizationStatus]",
+                "usr": "s:SD"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSRecipient",
+                    "printedName": "Messages.MSRecipient",
+                    "usr": "s:8Messages11MSRecipientV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Messages.MSRecipient]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8Messages22MSCriticalSMSMessengerC20requestAuthorization3forSDyAA11MSRecipientVAA0b9MessagingE6StatusOGSayAGG_tYaKF",
+            "moduleName": "Messages",
+            "name": "requestAuthorization",
+            "printedName": "requestAuthorization(for:)",
+            "throwing": true,
+            "usr": "s:8Messages22MSCriticalSMSMessengerC20requestAuthorization3forSDyAA11MSRecipientVAA0b9MessagingE6StatusOGSayAGG_tYaKF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSRecipient",
+                    "printedName": "Messages.MSRecipient",
+                    "usr": "s:8Messages11MSRecipientV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSCriticalMessagingAuthorizationStatus",
+                    "printedName": "Messages.MSCriticalMessagingAuthorizationStatus",
+                    "usr": "s:8Messages38MSCriticalMessagingAuthorizationStatusO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Messages.MSRecipient : Messages.MSCriticalMessagingAuthorizationStatus]",
+                "usr": "s:SD"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MSRecipient",
+                    "printedName": "Messages.MSRecipient",
+                    "usr": "s:8Messages11MSRecipientV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Messages.MSRecipient]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8Messages22MSCriticalSMSMessengerC24checkAuthorizationStatus3forSDyAA11MSRecipientVAA0b9MessagingeF0OGSayAGG_tYaKF",
+            "moduleName": "Messages",
+            "name": "checkAuthorizationStatus",
+            "printedName": "checkAuthorizationStatus(for:)",
+            "throwing": true,
+            "usr": "s:8Messages22MSCriticalSMSMessengerC24checkAuthorizationStatus3forSDyAA11MSRecipientVAA0b9MessagingeF0OGSayAGG_tYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MSCriticalMessage",
+                "printedName": "Messages.MSCriticalMessage",
+                "usr": "s:8Messages17MSCriticalMessageV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MSRecipient",
+                "printedName": "Messages.MSRecipient",
+                "usr": "s:8Messages11MSRecipientV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8Messages22MSCriticalSMSMessengerC4send_2toSbAA0B7MessageV_AA11MSRecipientVtYaKF",
+            "moduleName": "Messages",
+            "name": "send",
+            "printedName": "send(_:to:)",
+            "throwing": true,
+            "usr": "s:8Messages22MSCriticalSMSMessengerC4send_2toSbAA0B7MessageV_AA11MSRecipientVtYaKF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8Messages22MSCriticalSMSMessengerC34maximumCriticalMessagingRecipientsSivg",
+                "moduleName": "Messages",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8Messages22MSCriticalSMSMessengerC34maximumCriticalMessagingRecipientsSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s8Messages22MSCriticalSMSMessengerC34maximumCriticalMessagingRecipientsSivp",
+            "moduleName": "Messages",
+            "name": "maximumCriticalMessagingRecipients",
+            "printedName": "maximumCriticalMessagingRecipients",
+            "usr": "s:8Messages22MSCriticalSMSMessengerC34maximumCriticalMessagingRecipientsSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "18.2",
+        "kind": "TypeDecl",
+        "mangledName": "$s8Messages22MSCriticalSMSMessengerC",
+        "moduleName": "Messages",
+        "name": "MSCriticalSMSMessenger",
+        "printedName": "MSCriticalSMSMessenger",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:@M@Messages@objc(cs)MSCriticalSMSMessenger"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "Messages",
+    "printedName": "Messages"
+  }
+}

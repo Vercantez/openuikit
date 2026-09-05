@@ -1,0 +1,4439 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.ModelIOExports",
+        "printedName": "ModelIO.ModelIOExports"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLAsset",
+        "printedName": "ModelIO.MDLAsset"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLAssetResolver",
+        "printedName": "ModelIO.MDLAssetResolver"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLCamera",
+        "printedName": "ModelIO.MDLCamera"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLLight",
+        "printedName": "ModelIO.MDLLight"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLMaterial",
+        "printedName": "ModelIO.MDLMaterial"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLMesh",
+        "printedName": "ModelIO.MDLMesh"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLMeshBuffer",
+        "printedName": "ModelIO.MDLMeshBuffer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLObject",
+        "printedName": "ModelIO.MDLObject"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLSubmesh",
+        "printedName": "ModelIO.MDLSubmesh"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLTexture",
+        "printedName": "ModelIO.MDLTexture"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLTransform",
+        "printedName": "ModelIO.MDLTransform"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLTransformStack",
+        "printedName": "ModelIO.MDLTransformStack"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLTypes",
+        "printedName": "ModelIO.MDLTypes"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLVertexDescriptor",
+        "printedName": "ModelIO.MDLVertexDescriptor"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLVoxelArray",
+        "printedName": "ModelIO.MDLVoxelArray"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLAnimation",
+        "printedName": "ModelIO.MDLAnimation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO.MDLUtility",
+        "printedName": "ModelIO.MDLUtility"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "ModelIO",
+        "printedName": "ModelIO"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ModelIO",
+        "name": "simd",
+        "printedName": "simd"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "simd_float4x4",
+                            "printedName": "simd.simd_float4x4",
+                            "usr": "c:@SA@simd_float4x4"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "float4x4",
+                        "printedName": "simd.float4x4"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[simd.float4x4]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo17MDLMatrix4x4ArrayC7ModelIOE08float4x4B0SaySo05simd_E0aGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So17MDLMatrix4x4ArrayC7ModelIOE08float4x4B0SaySo05simd_E0aGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "simd_float4x4",
+                            "printedName": "simd.simd_float4x4",
+                            "usr": "c:@SA@simd_float4x4"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "float4x4",
+                        "printedName": "simd.float4x4"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[simd.float4x4]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo17MDLMatrix4x4ArrayC7ModelIOE08float4x4B0SaySo05simd_E0aGvs",
+                "moduleName": "ModelIO",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:So17MDLMatrix4x4ArrayC7ModelIOE08float4x4B0SaySo05simd_E0aGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "simd_float4x4",
+                        "printedName": "simd.simd_float4x4",
+                        "usr": "c:@SA@simd_float4x4"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "float4x4",
+                    "printedName": "simd.float4x4"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.float4x4]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo17MDLMatrix4x4ArrayC7ModelIOE08float4x4B0SaySo05simd_E0aGvp",
+            "moduleName": "ModelIO",
+            "name": "float4x4Array",
+            "printedName": "float4x4Array",
+            "usr": "s:So17MDLMatrix4x4ArrayC7ModelIOE08float4x4B0SaySo05simd_E0aGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "simd_double4x4",
+                            "printedName": "simd.simd_double4x4",
+                            "usr": "c:@SA@simd_double4x4"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "double4x4",
+                        "printedName": "simd.double4x4"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[simd.double4x4]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo17MDLMatrix4x4ArrayC7ModelIOE09double4x4B0SaySo05simd_E0aGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So17MDLMatrix4x4ArrayC7ModelIOE09double4x4B0SaySo05simd_E0aGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "simd_double4x4",
+                            "printedName": "simd.simd_double4x4",
+                            "usr": "c:@SA@simd_double4x4"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "double4x4",
+                        "printedName": "simd.double4x4"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[simd.double4x4]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo17MDLMatrix4x4ArrayC7ModelIOE09double4x4B0SaySo05simd_E0aGvs",
+                "moduleName": "ModelIO",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:So17MDLMatrix4x4ArrayC7ModelIOE09double4x4B0SaySo05simd_E0aGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "simd_double4x4",
+                        "printedName": "simd.simd_double4x4",
+                        "usr": "c:@SA@simd_double4x4"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "double4x4",
+                    "printedName": "simd.double4x4"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.double4x4]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo17MDLMatrix4x4ArrayC7ModelIOE09double4x4B0SaySo05simd_E0aGvp",
+            "moduleName": "ModelIO",
+            "name": "double4x4Array",
+            "printedName": "double4x4Array",
+            "usr": "s:So17MDLMatrix4x4ArrayC7ModelIOE09double4x4B0SaySo05simd_E0aGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "11.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ModelIO",
+        "name": "MDLMatrix4x4Array",
+        "objc_name": "MDLMatrix4x4Array",
+        "printedName": "MDLMatrix4x4Array",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)MDLMatrix4x4Array"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Double",
+                            "printedName": "Swift.Double",
+                            "usr": "s:Sd"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "TimeInterval",
+                        "printedName": "Foundation.TimeInterval"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Foundation.TimeInterval]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo16MDLAnimatedValueC7ModelIOE5timesSaySdGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So16MDLAnimatedValueC7ModelIOE5timesSaySdGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo16MDLAnimatedValueC7ModelIOE5timesSaySdGvp",
+            "moduleName": "ModelIO",
+            "name": "times",
+            "printedName": "times",
+            "usr": "s:So16MDLAnimatedValueC7ModelIOE5timesSaySdGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "11.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ModelIO",
+        "name": "MDLAnimatedValue",
+        "objc_name": "MDLAnimatedValue",
+        "printedName": "MDLAnimatedValue",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)MDLAnimatedValue"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Float",
+                    "printedName": "Swift.Float",
+                    "usr": "s:Sf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Float]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo22MDLAnimatedScalarArrayC7ModelIOE3set05floatC06atTimeySaySfG_SdtF",
+            "moduleName": "ModelIO",
+            "name": "set",
+            "printedName": "set(floatArray:atTime:)",
+            "usr": "s:So22MDLAnimatedScalarArrayC7ModelIOE3set05floatC06atTimeySaySfG_SdtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Double]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo22MDLAnimatedScalarArrayC7ModelIOE3set06doubleC06atTimeySaySdG_SdtF",
+            "moduleName": "ModelIO",
+            "name": "set",
+            "printedName": "set(doubleArray:atTime:)",
+            "usr": "s:So22MDLAnimatedScalarArrayC7ModelIOE3set06doubleC06atTimeySaySdG_SdtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Float",
+                    "printedName": "Swift.Float",
+                    "usr": "s:Sf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Float]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo22MDLAnimatedScalarArrayC7ModelIOE05floatC06atTimeSaySfGSd_tF",
+            "moduleName": "ModelIO",
+            "name": "floatArray",
+            "printedName": "floatArray(atTime:)",
+            "usr": "s:So22MDLAnimatedScalarArrayC7ModelIOE05floatC06atTimeSaySfGSd_tF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Double]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo22MDLAnimatedScalarArrayC7ModelIOE06doubleC06atTimeSaySdGSd_tF",
+            "moduleName": "ModelIO",
+            "name": "doubleArray",
+            "printedName": "doubleArray(atTime:)",
+            "usr": "s:So22MDLAnimatedScalarArrayC7ModelIOE06doubleC06atTimeSaySdGSd_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Float",
+                    "printedName": "Swift.Float",
+                    "usr": "s:Sf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Float]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo22MDLAnimatedScalarArrayC7ModelIOE5reset05floatC07atTimesySaySfG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(floatArray:atTimes:)",
+            "usr": "s:So22MDLAnimatedScalarArrayC7ModelIOE5reset05floatC07atTimesySaySfG_SaySdGtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Double]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo22MDLAnimatedScalarArrayC7ModelIOE5reset06doubleC07atTimesySaySdG_AGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(doubleArray:atTimes:)",
+            "usr": "s:So22MDLAnimatedScalarArrayC7ModelIOE5reset06doubleC07atTimesySaySdG_AGtF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.Float]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo22MDLAnimatedScalarArrayC7ModelIOE05floatC0SaySfGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So22MDLAnimatedScalarArrayC7ModelIOE05floatC0SaySfGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Float",
+                    "printedName": "Swift.Float",
+                    "usr": "s:Sf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Float]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo22MDLAnimatedScalarArrayC7ModelIOE05floatC0SaySfGvp",
+            "moduleName": "ModelIO",
+            "name": "floatArray",
+            "printedName": "floatArray",
+            "usr": "s:So22MDLAnimatedScalarArrayC7ModelIOE05floatC0SaySfGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.Double]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo22MDLAnimatedScalarArrayC7ModelIOE06doubleC0SaySdGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So22MDLAnimatedScalarArrayC7ModelIOE06doubleC0SaySdGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Double]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo22MDLAnimatedScalarArrayC7ModelIOE06doubleC0SaySdGvp",
+            "moduleName": "ModelIO",
+            "name": "doubleArray",
+            "printedName": "doubleArray",
+            "usr": "s:So22MDLAnimatedScalarArrayC7ModelIOE06doubleC0SaySdGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "11.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ModelIO",
+        "name": "MDLAnimatedScalarArray",
+        "objc_name": "MDLAnimatedScalarArray",
+        "printedName": "MDLAnimatedScalarArray",
+        "superclassNames": [
+          "ModelIO.MDLAnimatedValue",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)MDLAnimatedValue",
+        "usr": "c:objc(cs)MDLAnimatedScalarArray"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD3",
+                    "printedName": "Swift.SIMD3<Swift.Float>",
+                    "usr": "s:s5SIMD3V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD3<Swift.Float>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo23MDLAnimatedVector3ArrayC7ModelIOE3set06float3C06atTimeySays5SIMD3VySfGG_SdtF",
+            "moduleName": "ModelIO",
+            "name": "set",
+            "printedName": "set(float3Array:atTime:)",
+            "usr": "s:So23MDLAnimatedVector3ArrayC7ModelIOE3set06float3C06atTimeySays5SIMD3VySfGG_SdtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD3",
+                    "printedName": "Swift.SIMD3<Swift.Double>",
+                    "usr": "s:s5SIMD3V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD3<Swift.Double>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo23MDLAnimatedVector3ArrayC7ModelIOE3set07double3C06atTimeySays5SIMD3VySdGG_SdtF",
+            "moduleName": "ModelIO",
+            "name": "set",
+            "printedName": "set(double3Array:atTime:)",
+            "usr": "s:So23MDLAnimatedVector3ArrayC7ModelIOE3set07double3C06atTimeySays5SIMD3VySdGG_SdtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD3",
+                    "printedName": "Swift.SIMD3<Swift.Float>",
+                    "usr": "s:s5SIMD3V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD3<Swift.Float>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo23MDLAnimatedVector3ArrayC7ModelIOE06float3C06atTimeSays5SIMD3VySfGGSd_tF",
+            "moduleName": "ModelIO",
+            "name": "float3Array",
+            "printedName": "float3Array(atTime:)",
+            "usr": "s:So23MDLAnimatedVector3ArrayC7ModelIOE06float3C06atTimeSays5SIMD3VySfGGSd_tF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD3",
+                    "printedName": "Swift.SIMD3<Swift.Double>",
+                    "usr": "s:s5SIMD3V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD3<Swift.Double>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo23MDLAnimatedVector3ArrayC7ModelIOE07double3C06atTimeSays5SIMD3VySdGGSd_tF",
+            "moduleName": "ModelIO",
+            "name": "double3Array",
+            "printedName": "double3Array(atTime:)",
+            "usr": "s:So23MDLAnimatedVector3ArrayC7ModelIOE07double3C06atTimeSays5SIMD3VySdGGSd_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD3",
+                    "printedName": "Swift.SIMD3<Swift.Float>",
+                    "usr": "s:s5SIMD3V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD3<Swift.Float>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo23MDLAnimatedVector3ArrayC7ModelIOE5reset06float3C07atTimesySays5SIMD3VySfGG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(float3Array:atTimes:)",
+            "usr": "s:So23MDLAnimatedVector3ArrayC7ModelIOE5reset06float3C07atTimesySays5SIMD3VySfGG_SaySdGtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD3",
+                    "printedName": "Swift.SIMD3<Swift.Double>",
+                    "usr": "s:s5SIMD3V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD3<Swift.Double>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo23MDLAnimatedVector3ArrayC7ModelIOE5reset07double3C07atTimesySays5SIMD3VySdGG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(double3Array:atTimes:)",
+            "usr": "s:So23MDLAnimatedVector3ArrayC7ModelIOE5reset07double3C07atTimesySays5SIMD3VySdGG_SaySdGtF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Float",
+                            "printedName": "Swift.Float",
+                            "usr": "s:Sf"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "SIMD3",
+                        "printedName": "Swift.SIMD3<Swift.Float>",
+                        "usr": "s:s5SIMD3V"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.SIMD3<Swift.Float>]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo23MDLAnimatedVector3ArrayC7ModelIOE06float3C0Says5SIMD3VySfGGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So23MDLAnimatedVector3ArrayC7ModelIOE06float3C0Says5SIMD3VySfGGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD3",
+                    "printedName": "Swift.SIMD3<Swift.Float>",
+                    "usr": "s:s5SIMD3V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD3<Swift.Float>]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo23MDLAnimatedVector3ArrayC7ModelIOE06float3C0Says5SIMD3VySfGGvp",
+            "moduleName": "ModelIO",
+            "name": "float3Array",
+            "printedName": "float3Array",
+            "usr": "s:So23MDLAnimatedVector3ArrayC7ModelIOE06float3C0Says5SIMD3VySfGGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Double",
+                            "printedName": "Swift.Double",
+                            "usr": "s:Sd"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "SIMD3",
+                        "printedName": "Swift.SIMD3<Swift.Double>",
+                        "usr": "s:s5SIMD3V"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.SIMD3<Swift.Double>]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo23MDLAnimatedVector3ArrayC7ModelIOE07double3C0Says5SIMD3VySdGGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So23MDLAnimatedVector3ArrayC7ModelIOE07double3C0Says5SIMD3VySdGGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD3",
+                    "printedName": "Swift.SIMD3<Swift.Double>",
+                    "usr": "s:s5SIMD3V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD3<Swift.Double>]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo23MDLAnimatedVector3ArrayC7ModelIOE07double3C0Says5SIMD3VySdGGvp",
+            "moduleName": "ModelIO",
+            "name": "double3Array",
+            "printedName": "double3Array",
+            "usr": "s:So23MDLAnimatedVector3ArrayC7ModelIOE07double3C0Says5SIMD3VySdGGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "11.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ModelIO",
+        "name": "MDLAnimatedVector3Array",
+        "objc_name": "MDLAnimatedVector3Array",
+        "printedName": "MDLAnimatedVector3Array",
+        "superclassNames": [
+          "ModelIO.MDLAnimatedValue",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)MDLAnimatedValue",
+        "usr": "c:objc(cs)MDLAnimatedVector3Array"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "simd_quatf",
+                    "printedName": "simd.simd_quatf",
+                    "usr": "c:@SA@simd_quatf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.simd_quatf]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo26MDLAnimatedQuaternionArrayC7ModelIOE3set05floatbC06atTimeySaySo10simd_quatfaG_SdtF",
+            "moduleName": "ModelIO",
+            "name": "set",
+            "printedName": "set(floatQuaternionArray:atTime:)",
+            "usr": "s:So26MDLAnimatedQuaternionArrayC7ModelIOE3set05floatbC06atTimeySaySo10simd_quatfaG_SdtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "simd_quatd",
+                    "printedName": "simd.simd_quatd",
+                    "usr": "c:@SA@simd_quatd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.simd_quatd]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo26MDLAnimatedQuaternionArrayC7ModelIOE3set06doublebC06atTimeySaySo10simd_quatdaG_SdtF",
+            "moduleName": "ModelIO",
+            "name": "set",
+            "printedName": "set(doubleQuaternionArray:atTime:)",
+            "usr": "s:So26MDLAnimatedQuaternionArrayC7ModelIOE3set06doublebC06atTimeySaySo10simd_quatdaG_SdtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "simd_quatf",
+                    "printedName": "simd.simd_quatf",
+                    "usr": "c:@SA@simd_quatf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.simd_quatf]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo26MDLAnimatedQuaternionArrayC7ModelIOE05floatbC06atTimeSaySo10simd_quatfaGSd_tF",
+            "moduleName": "ModelIO",
+            "name": "floatQuaternionArray",
+            "printedName": "floatQuaternionArray(atTime:)",
+            "usr": "s:So26MDLAnimatedQuaternionArrayC7ModelIOE05floatbC06atTimeSaySo10simd_quatfaGSd_tF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "simd_quatd",
+                    "printedName": "simd.simd_quatd",
+                    "usr": "c:@SA@simd_quatd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.simd_quatd]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo26MDLAnimatedQuaternionArrayC7ModelIOE06doublebC06atTimeSaySo10simd_quatdaGSd_tF",
+            "moduleName": "ModelIO",
+            "name": "doubleQuaternionArray",
+            "printedName": "doubleQuaternionArray(atTime:)",
+            "usr": "s:So26MDLAnimatedQuaternionArrayC7ModelIOE06doublebC06atTimeSaySo10simd_quatdaGSd_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "simd_quatf",
+                    "printedName": "simd.simd_quatf",
+                    "usr": "c:@SA@simd_quatf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.simd_quatf]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo26MDLAnimatedQuaternionArrayC7ModelIOE5reset05floatbC07atTimesySaySo10simd_quatfaG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(floatQuaternionArray:atTimes:)",
+            "usr": "s:So26MDLAnimatedQuaternionArrayC7ModelIOE5reset05floatbC07atTimesySaySo10simd_quatfaG_SaySdGtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "simd_quatd",
+                    "printedName": "simd.simd_quatd",
+                    "usr": "c:@SA@simd_quatd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.simd_quatd]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo26MDLAnimatedQuaternionArrayC7ModelIOE5reset06doublebC07atTimesySaySo10simd_quatdaG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(doubleQuaternionArray:atTimes:)",
+            "usr": "s:So26MDLAnimatedQuaternionArrayC7ModelIOE5reset06doublebC07atTimesySaySo10simd_quatdaG_SaySdGtF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "simd_quatf",
+                        "printedName": "simd.simd_quatf",
+                        "usr": "c:@SA@simd_quatf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[simd.simd_quatf]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo26MDLAnimatedQuaternionArrayC7ModelIOE05floatbC0SaySo10simd_quatfaGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So26MDLAnimatedQuaternionArrayC7ModelIOE05floatbC0SaySo10simd_quatfaGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "simd_quatf",
+                    "printedName": "simd.simd_quatf",
+                    "usr": "c:@SA@simd_quatf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.simd_quatf]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo26MDLAnimatedQuaternionArrayC7ModelIOE05floatbC0SaySo10simd_quatfaGvp",
+            "moduleName": "ModelIO",
+            "name": "floatQuaternionArray",
+            "printedName": "floatQuaternionArray",
+            "usr": "s:So26MDLAnimatedQuaternionArrayC7ModelIOE05floatbC0SaySo10simd_quatfaGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "simd_quatd",
+                        "printedName": "simd.simd_quatd",
+                        "usr": "c:@SA@simd_quatd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[simd.simd_quatd]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo26MDLAnimatedQuaternionArrayC7ModelIOE06doublebC0SaySo10simd_quatdaGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So26MDLAnimatedQuaternionArrayC7ModelIOE06doublebC0SaySo10simd_quatdaGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "simd_quatd",
+                    "printedName": "simd.simd_quatd",
+                    "usr": "c:@SA@simd_quatd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.simd_quatd]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo26MDLAnimatedQuaternionArrayC7ModelIOE06doublebC0SaySo10simd_quatdaGvp",
+            "moduleName": "ModelIO",
+            "name": "doubleQuaternionArray",
+            "printedName": "doubleQuaternionArray",
+            "usr": "s:So26MDLAnimatedQuaternionArrayC7ModelIOE06doublebC0SaySo10simd_quatdaGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "11.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ModelIO",
+        "name": "MDLAnimatedQuaternionArray",
+        "objc_name": "MDLAnimatedQuaternionArray",
+        "printedName": "MDLAnimatedQuaternionArray",
+        "superclassNames": [
+          "ModelIO.MDLAnimatedValue",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)MDLAnimatedValue",
+        "usr": "c:objc(cs)MDLAnimatedQuaternionArray"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Float",
+                    "printedName": "Swift.Float",
+                    "usr": "s:Sf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Float]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo17MDLAnimatedScalarC7ModelIOE5reset10floatArray7atTimesySaySfG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(floatArray:atTimes:)",
+            "usr": "s:So17MDLAnimatedScalarC7ModelIOE5reset10floatArray7atTimesySaySfG_SaySdGtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Double]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo17MDLAnimatedScalarC7ModelIOE5reset11doubleArray7atTimesySaySdG_AGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(doubleArray:atTimes:)",
+            "usr": "s:So17MDLAnimatedScalarC7ModelIOE5reset11doubleArray7atTimesySaySdG_AGtF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.Float]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo17MDLAnimatedScalarC7ModelIOE10floatArraySaySfGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So17MDLAnimatedScalarC7ModelIOE10floatArraySaySfGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Float",
+                    "printedName": "Swift.Float",
+                    "usr": "s:Sf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Float]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo17MDLAnimatedScalarC7ModelIOE10floatArraySaySfGvp",
+            "moduleName": "ModelIO",
+            "name": "floatArray",
+            "printedName": "floatArray",
+            "usr": "s:So17MDLAnimatedScalarC7ModelIOE10floatArraySaySfGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.Double]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo17MDLAnimatedScalarC7ModelIOE11doubleArraySaySdGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So17MDLAnimatedScalarC7ModelIOE11doubleArraySaySdGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.Double]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo17MDLAnimatedScalarC7ModelIOE11doubleArraySaySdGvp",
+            "moduleName": "ModelIO",
+            "name": "doubleArray",
+            "printedName": "doubleArray",
+            "usr": "s:So17MDLAnimatedScalarC7ModelIOE11doubleArraySaySdGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "11.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ModelIO",
+        "name": "MDLAnimatedScalar",
+        "objc_name": "MDLAnimatedScalar",
+        "printedName": "MDLAnimatedScalar",
+        "superclassNames": [
+          "ModelIO.MDLAnimatedValue",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)MDLAnimatedValue",
+        "usr": "c:objc(cs)MDLAnimatedScalar"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD2",
+                    "printedName": "Swift.SIMD2<Swift.Float>",
+                    "usr": "s:s5SIMD2V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD2<Swift.Float>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo18MDLAnimatedVector2C7ModelIOE5reset11float2Array7atTimesySays5SIMD2VySfGG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(float2Array:atTimes:)",
+            "usr": "s:So18MDLAnimatedVector2C7ModelIOE5reset11float2Array7atTimesySays5SIMD2VySfGG_SaySdGtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD2",
+                    "printedName": "Swift.SIMD2<Swift.Double>",
+                    "usr": "s:s5SIMD2V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD2<Swift.Double>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo18MDLAnimatedVector2C7ModelIOE5reset12double2Array7atTimesySays5SIMD2VySdGG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(double2Array:atTimes:)",
+            "usr": "s:So18MDLAnimatedVector2C7ModelIOE5reset12double2Array7atTimesySays5SIMD2VySdGG_SaySdGtF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Float",
+                            "printedName": "Swift.Float",
+                            "usr": "s:Sf"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "SIMD2",
+                        "printedName": "Swift.SIMD2<Swift.Float>",
+                        "usr": "s:s5SIMD2V"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.SIMD2<Swift.Float>]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo18MDLAnimatedVector2C7ModelIOE11float2ArraySays5SIMD2VySfGGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So18MDLAnimatedVector2C7ModelIOE11float2ArraySays5SIMD2VySfGGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD2",
+                    "printedName": "Swift.SIMD2<Swift.Float>",
+                    "usr": "s:s5SIMD2V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD2<Swift.Float>]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo18MDLAnimatedVector2C7ModelIOE11float2ArraySays5SIMD2VySfGGvp",
+            "moduleName": "ModelIO",
+            "name": "float2Array",
+            "printedName": "float2Array",
+            "usr": "s:So18MDLAnimatedVector2C7ModelIOE11float2ArraySays5SIMD2VySfGGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Double",
+                            "printedName": "Swift.Double",
+                            "usr": "s:Sd"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "SIMD2",
+                        "printedName": "Swift.SIMD2<Swift.Double>",
+                        "usr": "s:s5SIMD2V"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.SIMD2<Swift.Double>]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo18MDLAnimatedVector2C7ModelIOE12double2ArraySays5SIMD2VySdGGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So18MDLAnimatedVector2C7ModelIOE12double2ArraySays5SIMD2VySdGGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD2",
+                    "printedName": "Swift.SIMD2<Swift.Double>",
+                    "usr": "s:s5SIMD2V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD2<Swift.Double>]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo18MDLAnimatedVector2C7ModelIOE12double2ArraySays5SIMD2VySdGGvp",
+            "moduleName": "ModelIO",
+            "name": "double2Array",
+            "printedName": "double2Array",
+            "usr": "s:So18MDLAnimatedVector2C7ModelIOE12double2ArraySays5SIMD2VySdGGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "11.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ModelIO",
+        "name": "MDLAnimatedVector2",
+        "objc_name": "MDLAnimatedVector2",
+        "printedName": "MDLAnimatedVector2",
+        "superclassNames": [
+          "ModelIO.MDLAnimatedValue",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)MDLAnimatedValue",
+        "usr": "c:objc(cs)MDLAnimatedVector2"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD3",
+                    "printedName": "Swift.SIMD3<Swift.Float>",
+                    "usr": "s:s5SIMD3V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD3<Swift.Float>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo18MDLAnimatedVector3C7ModelIOE5reset11float3Array7atTimesySays5SIMD3VySfGG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(float3Array:atTimes:)",
+            "usr": "s:So18MDLAnimatedVector3C7ModelIOE5reset11float3Array7atTimesySays5SIMD3VySfGG_SaySdGtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD3",
+                    "printedName": "Swift.SIMD3<Swift.Double>",
+                    "usr": "s:s5SIMD3V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD3<Swift.Double>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo18MDLAnimatedVector3C7ModelIOE5reset12double3Array7atTimesySays5SIMD3VySdGG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(double3Array:atTimes:)",
+            "usr": "s:So18MDLAnimatedVector3C7ModelIOE5reset12double3Array7atTimesySays5SIMD3VySdGG_SaySdGtF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Float",
+                            "printedName": "Swift.Float",
+                            "usr": "s:Sf"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "SIMD3",
+                        "printedName": "Swift.SIMD3<Swift.Float>",
+                        "usr": "s:s5SIMD3V"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.SIMD3<Swift.Float>]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo18MDLAnimatedVector3C7ModelIOE11float3ArraySays5SIMD3VySfGGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So18MDLAnimatedVector3C7ModelIOE11float3ArraySays5SIMD3VySfGGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD3",
+                    "printedName": "Swift.SIMD3<Swift.Float>",
+                    "usr": "s:s5SIMD3V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD3<Swift.Float>]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo18MDLAnimatedVector3C7ModelIOE11float3ArraySays5SIMD3VySfGGvp",
+            "moduleName": "ModelIO",
+            "name": "float3Array",
+            "printedName": "float3Array",
+            "usr": "s:So18MDLAnimatedVector3C7ModelIOE11float3ArraySays5SIMD3VySfGGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Double",
+                            "printedName": "Swift.Double",
+                            "usr": "s:Sd"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "SIMD3",
+                        "printedName": "Swift.SIMD3<Swift.Double>",
+                        "usr": "s:s5SIMD3V"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.SIMD3<Swift.Double>]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo18MDLAnimatedVector3C7ModelIOE12double3ArraySays5SIMD3VySdGGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So18MDLAnimatedVector3C7ModelIOE12double3ArraySays5SIMD3VySdGGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD3",
+                    "printedName": "Swift.SIMD3<Swift.Double>",
+                    "usr": "s:s5SIMD3V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD3<Swift.Double>]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo18MDLAnimatedVector3C7ModelIOE12double3ArraySays5SIMD3VySdGGvp",
+            "moduleName": "ModelIO",
+            "name": "double3Array",
+            "printedName": "double3Array",
+            "usr": "s:So18MDLAnimatedVector3C7ModelIOE12double3ArraySays5SIMD3VySdGGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "11.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ModelIO",
+        "name": "MDLAnimatedVector3",
+        "objc_name": "MDLAnimatedVector3",
+        "printedName": "MDLAnimatedVector3",
+        "superclassNames": [
+          "ModelIO.MDLAnimatedValue",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)MDLAnimatedValue",
+        "usr": "c:objc(cs)MDLAnimatedVector3"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD4",
+                    "printedName": "Swift.SIMD4<Swift.Float>",
+                    "usr": "s:s5SIMD4V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD4<Swift.Float>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo18MDLAnimatedVector4C7ModelIOE5reset11float4Array7atTimesySays5SIMD4VySfGG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(float4Array:atTimes:)",
+            "usr": "s:So18MDLAnimatedVector4C7ModelIOE5reset11float4Array7atTimesySays5SIMD4VySfGG_SaySdGtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD4",
+                    "printedName": "Swift.SIMD4<Swift.Double>",
+                    "usr": "s:s5SIMD4V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD4<Swift.Double>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo18MDLAnimatedVector4C7ModelIOE5reset12double4Array7atTimesySays5SIMD4VySdGG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(double4Array:atTimes:)",
+            "usr": "s:So18MDLAnimatedVector4C7ModelIOE5reset12double4Array7atTimesySays5SIMD4VySdGG_SaySdGtF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Float",
+                            "printedName": "Swift.Float",
+                            "usr": "s:Sf"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "SIMD4",
+                        "printedName": "Swift.SIMD4<Swift.Float>",
+                        "usr": "s:s5SIMD4V"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.SIMD4<Swift.Float>]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo18MDLAnimatedVector4C7ModelIOE11float4ArraySays5SIMD4VySfGGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So18MDLAnimatedVector4C7ModelIOE11float4ArraySays5SIMD4VySfGGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD4",
+                    "printedName": "Swift.SIMD4<Swift.Float>",
+                    "usr": "s:s5SIMD4V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD4<Swift.Float>]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo18MDLAnimatedVector4C7ModelIOE11float4ArraySays5SIMD4VySfGGvp",
+            "moduleName": "ModelIO",
+            "name": "float4Array",
+            "printedName": "float4Array",
+            "usr": "s:So18MDLAnimatedVector4C7ModelIOE11float4ArraySays5SIMD4VySfGGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Double",
+                            "printedName": "Swift.Double",
+                            "usr": "s:Sd"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "SIMD4",
+                        "printedName": "Swift.SIMD4<Swift.Double>",
+                        "usr": "s:s5SIMD4V"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.SIMD4<Swift.Double>]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo18MDLAnimatedVector4C7ModelIOE12double4ArraySays5SIMD4VySdGGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So18MDLAnimatedVector4C7ModelIOE12double4ArraySays5SIMD4VySdGGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD4",
+                    "printedName": "Swift.SIMD4<Swift.Double>",
+                    "usr": "s:s5SIMD4V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD4<Swift.Double>]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo18MDLAnimatedVector4C7ModelIOE12double4ArraySays5SIMD4VySdGGvp",
+            "moduleName": "ModelIO",
+            "name": "double4Array",
+            "printedName": "double4Array",
+            "usr": "s:So18MDLAnimatedVector4C7ModelIOE12double4ArraySays5SIMD4VySdGGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "11.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ModelIO",
+        "name": "MDLAnimatedVector4",
+        "objc_name": "MDLAnimatedVector4",
+        "printedName": "MDLAnimatedVector4",
+        "superclassNames": [
+          "ModelIO.MDLAnimatedValue",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)MDLAnimatedValue",
+        "usr": "c:objc(cs)MDLAnimatedVector4"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "simd_float4x4",
+                        "printedName": "simd.simd_float4x4",
+                        "usr": "c:@SA@simd_float4x4"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "float4x4",
+                    "printedName": "simd.float4x4"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.float4x4]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo20MDLAnimatedMatrix4x4C7ModelIOE5reset13float4x4Array7atTimesySaySo05simd_F0aG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(float4x4Array:atTimes:)",
+            "usr": "s:So20MDLAnimatedMatrix4x4C7ModelIOE5reset13float4x4Array7atTimesySaySo05simd_F0aG_SaySdGtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "simd_double4x4",
+                        "printedName": "simd.simd_double4x4",
+                        "usr": "c:@SA@simd_double4x4"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "double4x4",
+                    "printedName": "simd.double4x4"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.double4x4]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo20MDLAnimatedMatrix4x4C7ModelIOE5reset12double4Array7atTimesySaySo14simd_double4x4aG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(double4Array:atTimes:)",
+            "usr": "s:So20MDLAnimatedMatrix4x4C7ModelIOE5reset12double4Array7atTimesySaySo14simd_double4x4aG_SaySdGtF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "simd_float4x4",
+                            "printedName": "simd.simd_float4x4",
+                            "usr": "c:@SA@simd_float4x4"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "float4x4",
+                        "printedName": "simd.float4x4"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[simd.float4x4]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo20MDLAnimatedMatrix4x4C7ModelIOE13float4x4ArraySaySo05simd_E0aGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So20MDLAnimatedMatrix4x4C7ModelIOE13float4x4ArraySaySo05simd_E0aGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "simd_float4x4",
+                        "printedName": "simd.simd_float4x4",
+                        "usr": "c:@SA@simd_float4x4"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "float4x4",
+                    "printedName": "simd.float4x4"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.float4x4]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo20MDLAnimatedMatrix4x4C7ModelIOE13float4x4ArraySaySo05simd_E0aGvp",
+            "moduleName": "ModelIO",
+            "name": "float4x4Array",
+            "printedName": "float4x4Array",
+            "usr": "s:So20MDLAnimatedMatrix4x4C7ModelIOE13float4x4ArraySaySo05simd_E0aGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "simd_double4x4",
+                            "printedName": "simd.simd_double4x4",
+                            "usr": "c:@SA@simd_double4x4"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "double4x4",
+                        "printedName": "simd.double4x4"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[simd.double4x4]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo20MDLAnimatedMatrix4x4C7ModelIOE14double4x4ArraySaySo05simd_E0aGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So20MDLAnimatedMatrix4x4C7ModelIOE14double4x4ArraySaySo05simd_E0aGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "simd_double4x4",
+                        "printedName": "simd.simd_double4x4",
+                        "usr": "c:@SA@simd_double4x4"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "double4x4",
+                    "printedName": "simd.double4x4"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.double4x4]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo20MDLAnimatedMatrix4x4C7ModelIOE14double4x4ArraySaySo05simd_E0aGvp",
+            "moduleName": "ModelIO",
+            "name": "double4x4Array",
+            "printedName": "double4x4Array",
+            "usr": "s:So20MDLAnimatedMatrix4x4C7ModelIOE14double4x4ArraySaySo05simd_E0aGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "11.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ModelIO",
+        "name": "MDLAnimatedMatrix4x4",
+        "objc_name": "MDLAnimatedMatrix4x4",
+        "printedName": "MDLAnimatedMatrix4x4",
+        "superclassNames": [
+          "ModelIO.MDLAnimatedValue",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)MDLAnimatedValue",
+        "usr": "c:objc(cs)MDLAnimatedMatrix4x4"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "simd_quatf",
+                    "printedName": "simd.simd_quatf",
+                    "usr": "c:@SA@simd_quatf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.simd_quatf]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo21MDLAnimatedQuaternionC7ModelIOE5reset05floatB5Array7atTimesySaySo10simd_quatfaG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(floatQuaternionArray:atTimes:)",
+            "usr": "s:So21MDLAnimatedQuaternionC7ModelIOE5reset05floatB5Array7atTimesySaySo10simd_quatfaG_SaySdGtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "simd_quatd",
+                    "printedName": "simd.simd_quatd",
+                    "usr": "c:@SA@simd_quatd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.simd_quatd]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.TimeInterval]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo21MDLAnimatedQuaternionC7ModelIOE5reset06doubleB5Array7atTimesySaySo10simd_quatdaG_SaySdGtF",
+            "moduleName": "ModelIO",
+            "name": "reset",
+            "printedName": "reset(doubleQuaternionArray:atTimes:)",
+            "usr": "s:So21MDLAnimatedQuaternionC7ModelIOE5reset06doubleB5Array7atTimesySaySo10simd_quatdaG_SaySdGtF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "simd_quatf",
+                        "printedName": "simd.simd_quatf",
+                        "usr": "c:@SA@simd_quatf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[simd.simd_quatf]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo21MDLAnimatedQuaternionC7ModelIOE05floatB5ArraySaySo10simd_quatfaGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So21MDLAnimatedQuaternionC7ModelIOE05floatB5ArraySaySo10simd_quatfaGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "simd_quatf",
+                    "printedName": "simd.simd_quatf",
+                    "usr": "c:@SA@simd_quatf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.simd_quatf]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo21MDLAnimatedQuaternionC7ModelIOE05floatB5ArraySaySo10simd_quatfaGvp",
+            "moduleName": "ModelIO",
+            "name": "floatQuaternionArray",
+            "printedName": "floatQuaternionArray",
+            "usr": "s:So21MDLAnimatedQuaternionC7ModelIOE05floatB5ArraySaySo10simd_quatfaGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "simd_quatd",
+                        "printedName": "simd.simd_quatd",
+                        "usr": "c:@SA@simd_quatd"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[simd.simd_quatd]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo21MDLAnimatedQuaternionC7ModelIOE06doubleB5ArraySaySo10simd_quatdaGvg",
+                "moduleName": "ModelIO",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So21MDLAnimatedQuaternionC7ModelIOE06doubleB5ArraySaySo10simd_quatdaGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "simd_quatd",
+                    "printedName": "simd.simd_quatd",
+                    "usr": "c:@SA@simd_quatd"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[simd.simd_quatd]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo21MDLAnimatedQuaternionC7ModelIOE06doubleB5ArraySaySo10simd_quatdaGvp",
+            "moduleName": "ModelIO",
+            "name": "doubleQuaternionArray",
+            "printedName": "doubleQuaternionArray",
+            "usr": "s:So21MDLAnimatedQuaternionC7ModelIOE06doubleB5ArraySaySo10simd_quatdaGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "12.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "ModelIO",
+        "name": "MDLAnimatedQuaternion",
+        "objc_name": "MDLAnimatedQuaternion",
+        "printedName": "MDLAnimatedQuaternion",
+        "superclassNames": [
+          "ModelIO.MDLAnimatedValue",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)MDLAnimatedValue",
+        "usr": "c:objc(cs)MDLAnimatedQuaternion"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "ModelIO",
+    "printedName": "ModelIO"
+  }
+}

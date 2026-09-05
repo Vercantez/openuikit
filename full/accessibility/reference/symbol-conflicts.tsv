@@ -1,0 +1,3 @@
+precise	payloadSHA256	graphPath	ownershipTier	occurrenceCount	canonicalSelection	kind	title	symbolPath	declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@AXFeatureOverrideSessionError	fda5d814ec30d0001efba28965ef54b2ba739fefec70b795edf89f0f0972a69d	reference/symbol-graphs/Accessibility.symbols.json	0	1	1	swift.func.op	!=(_:_:)	AXFeatureOverrideSessionError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@AXFeatureOverrideSessionError	1640a43e36b8ec3fba72d252c133ee1c3a6d681a29511781f60d90b9959a9927	reference/symbol-graphs/Accessibility.symbols.json	0	1	0	swift.func.op	!=(_:_:)	AXFeatureOverrideSessionError.Code.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool

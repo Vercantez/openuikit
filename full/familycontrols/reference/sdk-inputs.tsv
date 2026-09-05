@@ -1,0 +1,3 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/FamilyControls.framework/FamilyControls.tbd	63440	4c287c016ec67ca69a11663edc9b1fd7928f0ebb963b9ac9ef8c2280b2d358b7
+swiftinterface	System/Library/Frameworks/FamilyControls.framework/Modules/FamilyControls.swiftmodule/arm64e-apple-ios.swiftinterface	13032	20401a923197100435420588cbdbc06dc7e192dbe671c852dc29ef0b79a92add

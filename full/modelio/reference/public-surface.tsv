@@ -1,0 +1,940 @@
+precise	kind	title	path	declaration
+c:@E@MDLAnimatedValueInterpolation	swift.enum	MDLAnimatedValueInterpolation	MDLAnimatedValueInterpolation	enum MDLAnimatedValueInterpolation
+c:@E@MDLAnimatedValueInterpolation@MDLAnimatedValueInterpolationConstant	swift.enum.case	MDLAnimatedValueInterpolation.constant	MDLAnimatedValueInterpolation.constant	case constant
+c:@E@MDLAnimatedValueInterpolation@MDLAnimatedValueInterpolationLinear	swift.enum.case	MDLAnimatedValueInterpolation.linear	MDLAnimatedValueInterpolation.linear	case linear
+c:@E@MDLCameraProjection	swift.enum	MDLCameraProjection	MDLCameraProjection	enum MDLCameraProjection
+c:@E@MDLCameraProjection@MDLCameraProjectionOrthographic	swift.enum.case	MDLCameraProjection.orthographic	MDLCameraProjection.orthographic	case orthographic
+c:@E@MDLCameraProjection@MDLCameraProjectionPerspective	swift.enum.case	MDLCameraProjection.perspective	MDLCameraProjection.perspective	case perspective
+c:@E@MDLDataPrecision	swift.enum	MDLDataPrecision	MDLDataPrecision	enum MDLDataPrecision
+c:@E@MDLDataPrecision@MDLDataPrecisionDouble	swift.enum.case	MDLDataPrecision.double	MDLDataPrecision.double	case double
+c:@E@MDLDataPrecision@MDLDataPrecisionFloat	swift.enum.case	MDLDataPrecision.float	MDLDataPrecision.float	case float
+c:@E@MDLDataPrecision@MDLDataPrecisionUndefined	swift.enum.case	MDLDataPrecision.undefined	MDLDataPrecision.undefined	case undefined
+c:@E@MDLGeometryType	swift.enum	MDLGeometryType	MDLGeometryType	enum MDLGeometryType
+c:@E@MDLGeometryType@MDLGeometryTypeLines	swift.enum.case	MDLGeometryType.lines	MDLGeometryType.lines	case lines
+c:@E@MDLGeometryType@MDLGeometryTypePoints	swift.enum.case	MDLGeometryType.points	MDLGeometryType.points	case points
+c:@E@MDLGeometryType@MDLGeometryTypeQuads	swift.enum.case	MDLGeometryType.quads	MDLGeometryType.quads	case quads
+c:@E@MDLGeometryType@MDLGeometryTypeTriangleStrips	swift.enum.case	MDLGeometryType.triangleStrips	MDLGeometryType.triangleStrips	case triangleStrips
+c:@E@MDLGeometryType@MDLGeometryTypeTriangles	swift.enum.case	MDLGeometryType.triangles	MDLGeometryType.triangles	case triangles
+c:@E@MDLGeometryType@MDLGeometryTypeVariableTopology	swift.enum.case	MDLGeometryType.variableTopology	MDLGeometryType.variableTopology	case variableTopology
+c:@E@MDLIndexBitDepth	swift.enum	MDLIndexBitDepth	MDLIndexBitDepth	enum MDLIndexBitDepth
+c:@E@MDLIndexBitDepth@MDLIndexBitDepthInvalid	swift.enum.case	MDLIndexBitDepth.invalid	MDLIndexBitDepth.invalid	case invalid
+c:@E@MDLIndexBitDepth@MDLIndexBitDepthUInt16	swift.enum.case	MDLIndexBitDepth.uInt16	MDLIndexBitDepth.uInt16	case uInt16
+c:@E@MDLIndexBitDepth@MDLIndexBitDepthUInt32	swift.enum.case	MDLIndexBitDepth.uInt32	MDLIndexBitDepth.uInt32	case uInt32
+c:@E@MDLIndexBitDepth@MDLIndexBitDepthUInt8	swift.enum.case	MDLIndexBitDepth.uInt8	MDLIndexBitDepth.uInt8	case uInt8
+c:@E@MDLIndexBitDepth@MDLIndexBitDepthUint16	swift.type.property	uint16	MDLIndexBitDepth.uint16	static var uint16: MDLIndexBitDepth { get }
+c:@E@MDLIndexBitDepth@MDLIndexBitDepthUint32	swift.type.property	uint32	MDLIndexBitDepth.uint32	static var uint32: MDLIndexBitDepth { get }
+c:@E@MDLIndexBitDepth@MDLIndexBitDepthUint8	swift.type.property	uint8	MDLIndexBitDepth.uint8	static var uint8: MDLIndexBitDepth { get }
+c:@E@MDLLightType	swift.enum	MDLLightType	MDLLightType	enum MDLLightType
+c:@E@MDLLightType@MDLLightTypeAmbient	swift.enum.case	MDLLightType.ambient	MDLLightType.ambient	case ambient
+c:@E@MDLLightType@MDLLightTypeDirectional	swift.enum.case	MDLLightType.directional	MDLLightType.directional	case directional
+c:@E@MDLLightType@MDLLightTypeDiscArea	swift.enum.case	MDLLightType.discArea	MDLLightType.discArea	case discArea
+c:@E@MDLLightType@MDLLightTypeEnvironment	swift.enum.case	MDLLightType.environment	MDLLightType.environment	case environment
+c:@E@MDLLightType@MDLLightTypeLinear	swift.enum.case	MDLLightType.linear	MDLLightType.linear	case linear
+c:@E@MDLLightType@MDLLightTypePhotometric	swift.enum.case	MDLLightType.photometric	MDLLightType.photometric	case photometric
+c:@E@MDLLightType@MDLLightTypePoint	swift.enum.case	MDLLightType.point	MDLLightType.point	case point
+c:@E@MDLLightType@MDLLightTypeProbe	swift.enum.case	MDLLightType.probe	MDLLightType.probe	case probe
+c:@E@MDLLightType@MDLLightTypeRectangularArea	swift.enum.case	MDLLightType.rectangularArea	MDLLightType.rectangularArea	case rectangularArea
+c:@E@MDLLightType@MDLLightTypeSpot	swift.enum.case	MDLLightType.spot	MDLLightType.spot	case spot
+c:@E@MDLLightType@MDLLightTypeSuperElliptical	swift.enum.case	MDLLightType.superElliptical	MDLLightType.superElliptical	case superElliptical
+c:@E@MDLLightType@MDLLightTypeUnknown	swift.enum.case	MDLLightType.unknown	MDLLightType.unknown	case unknown
+c:@E@MDLMaterialFace	swift.enum	MDLMaterialFace	MDLMaterialFace	enum MDLMaterialFace
+c:@E@MDLMaterialFace@MDLMaterialFaceBack	swift.enum.case	MDLMaterialFace.back	MDLMaterialFace.back	case back
+c:@E@MDLMaterialFace@MDLMaterialFaceDoubleSided	swift.enum.case	MDLMaterialFace.doubleSided	MDLMaterialFace.doubleSided	case doubleSided
+c:@E@MDLMaterialFace@MDLMaterialFaceFront	swift.enum.case	MDLMaterialFace.front	MDLMaterialFace.front	case front
+c:@E@MDLMaterialMipMapFilterMode	swift.enum	MDLMaterialMipMapFilterMode	MDLMaterialMipMapFilterMode	enum MDLMaterialMipMapFilterMode
+c:@E@MDLMaterialMipMapFilterMode@MDLMaterialMipMapFilterModeLinear	swift.enum.case	MDLMaterialMipMapFilterMode.linear	MDLMaterialMipMapFilterMode.linear	case linear
+c:@E@MDLMaterialMipMapFilterMode@MDLMaterialMipMapFilterModeNearest	swift.enum.case	MDLMaterialMipMapFilterMode.nearest	MDLMaterialMipMapFilterMode.nearest	case nearest
+c:@E@MDLMaterialPropertyType	swift.enum	MDLMaterialPropertyType	MDLMaterialPropertyType	enum MDLMaterialPropertyType
+c:@E@MDLMaterialPropertyType@MDLMaterialPropertyTypeBuffer	swift.enum.case	MDLMaterialPropertyType.buffer	MDLMaterialPropertyType.buffer	case buffer
+c:@E@MDLMaterialPropertyType@MDLMaterialPropertyTypeColor	swift.enum.case	MDLMaterialPropertyType.color	MDLMaterialPropertyType.color	case color
+c:@E@MDLMaterialPropertyType@MDLMaterialPropertyTypeFloat	swift.enum.case	MDLMaterialPropertyType.float	MDLMaterialPropertyType.float	case float
+c:@E@MDLMaterialPropertyType@MDLMaterialPropertyTypeFloat2	swift.enum.case	MDLMaterialPropertyType.float2	MDLMaterialPropertyType.float2	case float2
+c:@E@MDLMaterialPropertyType@MDLMaterialPropertyTypeFloat3	swift.enum.case	MDLMaterialPropertyType.float3	MDLMaterialPropertyType.float3	case float3
+c:@E@MDLMaterialPropertyType@MDLMaterialPropertyTypeFloat4	swift.enum.case	MDLMaterialPropertyType.float4	MDLMaterialPropertyType.float4	case float4
+c:@E@MDLMaterialPropertyType@MDLMaterialPropertyTypeMatrix44	swift.enum.case	MDLMaterialPropertyType.matrix44	MDLMaterialPropertyType.matrix44	case matrix44
+c:@E@MDLMaterialPropertyType@MDLMaterialPropertyTypeNone	swift.enum.case	MDLMaterialPropertyType.none	MDLMaterialPropertyType.none	case none
+c:@E@MDLMaterialPropertyType@MDLMaterialPropertyTypeString	swift.enum.case	MDLMaterialPropertyType.string	MDLMaterialPropertyType.string	case string
+c:@E@MDLMaterialPropertyType@MDLMaterialPropertyTypeTexture	swift.enum.case	MDLMaterialPropertyType.texture	MDLMaterialPropertyType.texture	case texture
+c:@E@MDLMaterialPropertyType@MDLMaterialPropertyTypeURL	swift.enum.case	MDLMaterialPropertyType.URL	MDLMaterialPropertyType.URL	case URL
+c:@E@MDLMaterialSemantic	swift.enum	MDLMaterialSemantic	MDLMaterialSemantic	enum MDLMaterialSemantic
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticAmbientOcclusion	swift.enum.case	MDLMaterialSemantic.ambientOcclusion	MDLMaterialSemantic.ambientOcclusion	case ambientOcclusion
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticAmbientOcclusionScale	swift.enum.case	MDLMaterialSemantic.ambientOcclusionScale	MDLMaterialSemantic.ambientOcclusionScale	case ambientOcclusionScale
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticAnisotropic	swift.enum.case	MDLMaterialSemantic.anisotropic	MDLMaterialSemantic.anisotropic	case anisotropic
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticAnisotropicRotation	swift.enum.case	MDLMaterialSemantic.anisotropicRotation	MDLMaterialSemantic.anisotropicRotation	case anisotropicRotation
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticBaseColor	swift.enum.case	MDLMaterialSemantic.baseColor	MDLMaterialSemantic.baseColor	case baseColor
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticBump	swift.enum.case	MDLMaterialSemantic.bump	MDLMaterialSemantic.bump	case bump
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticClearcoat	swift.enum.case	MDLMaterialSemantic.clearcoat	MDLMaterialSemantic.clearcoat	case clearcoat
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticClearcoatGloss	swift.enum.case	MDLMaterialSemantic.clearcoatGloss	MDLMaterialSemantic.clearcoatGloss	case clearcoatGloss
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticDisplacement	swift.enum.case	MDLMaterialSemantic.displacement	MDLMaterialSemantic.displacement	case displacement
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticDisplacementScale	swift.enum.case	MDLMaterialSemantic.displacementScale	MDLMaterialSemantic.displacementScale	case displacementScale
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticEmission	swift.enum.case	MDLMaterialSemantic.emission	MDLMaterialSemantic.emission	case emission
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticInterfaceIndexOfRefraction	swift.enum.case	MDLMaterialSemantic.interfaceIndexOfRefraction	MDLMaterialSemantic.interfaceIndexOfRefraction	case interfaceIndexOfRefraction
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticMaterialIndexOfRefraction	swift.enum.case	MDLMaterialSemantic.materialIndexOfRefraction	MDLMaterialSemantic.materialIndexOfRefraction	case materialIndexOfRefraction
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticMetallic	swift.enum.case	MDLMaterialSemantic.metallic	MDLMaterialSemantic.metallic	case metallic
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticNone	swift.enum.case	MDLMaterialSemantic.none	MDLMaterialSemantic.none	case none
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticObjectSpaceNormal	swift.enum.case	MDLMaterialSemantic.objectSpaceNormal	MDLMaterialSemantic.objectSpaceNormal	case objectSpaceNormal
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticOpacity	swift.enum.case	MDLMaterialSemantic.opacity	MDLMaterialSemantic.opacity	case opacity
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticRoughness	swift.enum.case	MDLMaterialSemantic.roughness	MDLMaterialSemantic.roughness	case roughness
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticSheen	swift.enum.case	MDLMaterialSemantic.sheen	MDLMaterialSemantic.sheen	case sheen
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticSheenTint	swift.enum.case	MDLMaterialSemantic.sheenTint	MDLMaterialSemantic.sheenTint	case sheenTint
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticSpecular	swift.enum.case	MDLMaterialSemantic.specular	MDLMaterialSemantic.specular	case specular
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticSpecularExponent	swift.enum.case	MDLMaterialSemantic.specularExponent	MDLMaterialSemantic.specularExponent	case specularExponent
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticSpecularTint	swift.enum.case	MDLMaterialSemantic.specularTint	MDLMaterialSemantic.specularTint	case specularTint
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticSubsurface	swift.enum.case	MDLMaterialSemantic.subsurface	MDLMaterialSemantic.subsurface	case subsurface
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticTangentSpaceNormal	swift.enum.case	MDLMaterialSemantic.tangentSpaceNormal	MDLMaterialSemantic.tangentSpaceNormal	case tangentSpaceNormal
+c:@E@MDLMaterialSemantic@MDLMaterialSemanticUserDefined	swift.enum.case	MDLMaterialSemantic.userDefined	MDLMaterialSemantic.userDefined	case userDefined
+c:@E@MDLMaterialTextureFilterMode	swift.enum	MDLMaterialTextureFilterMode	MDLMaterialTextureFilterMode	enum MDLMaterialTextureFilterMode
+c:@E@MDLMaterialTextureFilterMode@MDLMaterialTextureFilterModeLinear	swift.enum.case	MDLMaterialTextureFilterMode.linear	MDLMaterialTextureFilterMode.linear	case linear
+c:@E@MDLMaterialTextureFilterMode@MDLMaterialTextureFilterModeNearest	swift.enum.case	MDLMaterialTextureFilterMode.nearest	MDLMaterialTextureFilterMode.nearest	case nearest
+c:@E@MDLMaterialTextureWrapMode	swift.enum	MDLMaterialTextureWrapMode	MDLMaterialTextureWrapMode	enum MDLMaterialTextureWrapMode
+c:@E@MDLMaterialTextureWrapMode@MDLMaterialTextureWrapModeClamp	swift.enum.case	MDLMaterialTextureWrapMode.clamp	MDLMaterialTextureWrapMode.clamp	case clamp
+c:@E@MDLMaterialTextureWrapMode@MDLMaterialTextureWrapModeMirror	swift.enum.case	MDLMaterialTextureWrapMode.mirror	MDLMaterialTextureWrapMode.mirror	case mirror
+c:@E@MDLMaterialTextureWrapMode@MDLMaterialTextureWrapModeRepeat	swift.enum.case	MDLMaterialTextureWrapMode.repeat	MDLMaterialTextureWrapMode.repeat	case `repeat`
+c:@E@MDLMeshBufferType	swift.enum	MDLMeshBufferType	MDLMeshBufferType	enum MDLMeshBufferType
+c:@E@MDLMeshBufferType@MDLMeshBufferTypeCustom	swift.enum.case	MDLMeshBufferType.custom	MDLMeshBufferType.custom	case custom
+c:@E@MDLMeshBufferType@MDLMeshBufferTypeIndex	swift.enum.case	MDLMeshBufferType.index	MDLMeshBufferType.index	case index
+c:@E@MDLMeshBufferType@MDLMeshBufferTypeVertex	swift.enum.case	MDLMeshBufferType.vertex	MDLMeshBufferType.vertex	case vertex
+c:@E@MDLProbePlacement	swift.enum	MDLProbePlacement	MDLProbePlacement	enum MDLProbePlacement
+c:@E@MDLProbePlacement@MDLProbePlacementIrradianceDistribution	swift.enum.case	MDLProbePlacement.irradianceDistribution	MDLProbePlacement.irradianceDistribution	case irradianceDistribution
+c:@E@MDLProbePlacement@MDLProbePlacementUniformGrid	swift.enum.case	MDLProbePlacement.uniformGrid	MDLProbePlacement.uniformGrid	case uniformGrid
+c:@E@MDLTextureChannelEncoding	swift.enum	MDLTextureChannelEncoding	MDLTextureChannelEncoding	enum MDLTextureChannelEncoding
+c:@E@MDLTextureChannelEncoding@MDLTextureChannelEncodingFloat16	swift.enum.case	MDLTextureChannelEncoding.float16	MDLTextureChannelEncoding.float16	case float16
+c:@E@MDLTextureChannelEncoding@MDLTextureChannelEncodingFloat16SR	swift.enum.case	MDLTextureChannelEncoding.float16SR	MDLTextureChannelEncoding.float16SR	case float16SR
+c:@E@MDLTextureChannelEncoding@MDLTextureChannelEncodingFloat32	swift.enum.case	MDLTextureChannelEncoding.float32	MDLTextureChannelEncoding.float32	case float32
+c:@E@MDLTextureChannelEncoding@MDLTextureChannelEncodingUInt16	swift.enum.case	MDLTextureChannelEncoding.uInt16	MDLTextureChannelEncoding.uInt16	case uInt16
+c:@E@MDLTextureChannelEncoding@MDLTextureChannelEncodingUInt24	swift.enum.case	MDLTextureChannelEncoding.uInt24	MDLTextureChannelEncoding.uInt24	case uInt24
+c:@E@MDLTextureChannelEncoding@MDLTextureChannelEncodingUInt32	swift.enum.case	MDLTextureChannelEncoding.uInt32	MDLTextureChannelEncoding.uInt32	case uInt32
+c:@E@MDLTextureChannelEncoding@MDLTextureChannelEncodingUInt8	swift.enum.case	MDLTextureChannelEncoding.uInt8	MDLTextureChannelEncoding.uInt8	case uInt8
+c:@E@MDLTextureChannelEncoding@MDLTextureChannelEncodingUint16	swift.type.property	uint16	MDLTextureChannelEncoding.uint16	static var uint16: MDLTextureChannelEncoding { get }
+c:@E@MDLTextureChannelEncoding@MDLTextureChannelEncodingUint24	swift.type.property	uint24	MDLTextureChannelEncoding.uint24	static var uint24: MDLTextureChannelEncoding { get }
+c:@E@MDLTextureChannelEncoding@MDLTextureChannelEncodingUint32	swift.type.property	uint32	MDLTextureChannelEncoding.uint32	static var uint32: MDLTextureChannelEncoding { get }
+c:@E@MDLTextureChannelEncoding@MDLTextureChannelEncodingUint8	swift.type.property	uint8	MDLTextureChannelEncoding.uint8	static var uint8: MDLTextureChannelEncoding { get }
+c:@E@MDLTransformOpRotationOrder	swift.enum	MDLTransformOpRotationOrder	MDLTransformOpRotationOrder	enum MDLTransformOpRotationOrder
+c:@E@MDLTransformOpRotationOrder@MDLTransformOpRotationOrderXYZ	swift.enum.case	MDLTransformOpRotationOrder.XYZ	MDLTransformOpRotationOrder.XYZ	case XYZ
+c:@E@MDLTransformOpRotationOrder@MDLTransformOpRotationOrderXZY	swift.enum.case	MDLTransformOpRotationOrder.XZY	MDLTransformOpRotationOrder.XZY	case XZY
+c:@E@MDLTransformOpRotationOrder@MDLTransformOpRotationOrderYXZ	swift.enum.case	MDLTransformOpRotationOrder.YXZ	MDLTransformOpRotationOrder.YXZ	case YXZ
+c:@E@MDLTransformOpRotationOrder@MDLTransformOpRotationOrderYZX	swift.enum.case	MDLTransformOpRotationOrder.YZX	MDLTransformOpRotationOrder.YZX	case YZX
+c:@E@MDLTransformOpRotationOrder@MDLTransformOpRotationOrderZXY	swift.enum.case	MDLTransformOpRotationOrder.ZXY	MDLTransformOpRotationOrder.ZXY	case ZXY
+c:@E@MDLTransformOpRotationOrder@MDLTransformOpRotationOrderZYX	swift.enum.case	MDLTransformOpRotationOrder.ZYX	MDLTransformOpRotationOrder.ZYX	case ZYX
+c:@E@MDLVertexFormat	swift.enum	MDLVertexFormat	MDLVertexFormat	enum MDLVertexFormat
+c:@E@MDLVertexFormat@MDLVertexFormatChar	swift.enum.case	MDLVertexFormat.char	MDLVertexFormat.char	case char
+c:@E@MDLVertexFormat@MDLVertexFormatChar2	swift.enum.case	MDLVertexFormat.char2	MDLVertexFormat.char2	case char2
+c:@E@MDLVertexFormat@MDLVertexFormatChar2Normalized	swift.enum.case	MDLVertexFormat.char2Normalized	MDLVertexFormat.char2Normalized	case char2Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatChar3	swift.enum.case	MDLVertexFormat.char3	MDLVertexFormat.char3	case char3
+c:@E@MDLVertexFormat@MDLVertexFormatChar3Normalized	swift.enum.case	MDLVertexFormat.char3Normalized	MDLVertexFormat.char3Normalized	case char3Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatChar4	swift.enum.case	MDLVertexFormat.char4	MDLVertexFormat.char4	case char4
+c:@E@MDLVertexFormat@MDLVertexFormatChar4Normalized	swift.enum.case	MDLVertexFormat.char4Normalized	MDLVertexFormat.char4Normalized	case char4Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatCharBits	swift.enum.case	MDLVertexFormat.charBits	MDLVertexFormat.charBits	case charBits
+c:@E@MDLVertexFormat@MDLVertexFormatCharNormalized	swift.enum.case	MDLVertexFormat.charNormalized	MDLVertexFormat.charNormalized	case charNormalized
+c:@E@MDLVertexFormat@MDLVertexFormatCharNormalizedBits	swift.enum.case	MDLVertexFormat.charNormalizedBits	MDLVertexFormat.charNormalizedBits	case charNormalizedBits
+c:@E@MDLVertexFormat@MDLVertexFormatFloat	swift.enum.case	MDLVertexFormat.float	MDLVertexFormat.float	case float
+c:@E@MDLVertexFormat@MDLVertexFormatFloat2	swift.enum.case	MDLVertexFormat.float2	MDLVertexFormat.float2	case float2
+c:@E@MDLVertexFormat@MDLVertexFormatFloat3	swift.enum.case	MDLVertexFormat.float3	MDLVertexFormat.float3	case float3
+c:@E@MDLVertexFormat@MDLVertexFormatFloat4	swift.enum.case	MDLVertexFormat.float4	MDLVertexFormat.float4	case float4
+c:@E@MDLVertexFormat@MDLVertexFormatFloatBits	swift.enum.case	MDLVertexFormat.floatBits	MDLVertexFormat.floatBits	case floatBits
+c:@E@MDLVertexFormat@MDLVertexFormatHalf	swift.enum.case	MDLVertexFormat.half	MDLVertexFormat.half	case half
+c:@E@MDLVertexFormat@MDLVertexFormatHalf2	swift.enum.case	MDLVertexFormat.half2	MDLVertexFormat.half2	case half2
+c:@E@MDLVertexFormat@MDLVertexFormatHalf3	swift.enum.case	MDLVertexFormat.half3	MDLVertexFormat.half3	case half3
+c:@E@MDLVertexFormat@MDLVertexFormatHalf4	swift.enum.case	MDLVertexFormat.half4	MDLVertexFormat.half4	case half4
+c:@E@MDLVertexFormat@MDLVertexFormatHalfBits	swift.enum.case	MDLVertexFormat.halfBits	MDLVertexFormat.halfBits	case halfBits
+c:@E@MDLVertexFormat@MDLVertexFormatInt	swift.enum.case	MDLVertexFormat.int	MDLVertexFormat.int	case int
+c:@E@MDLVertexFormat@MDLVertexFormatInt1010102Normalized	swift.enum.case	MDLVertexFormat.int1010102Normalized	MDLVertexFormat.int1010102Normalized	case int1010102Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatInt2	swift.enum.case	MDLVertexFormat.int2	MDLVertexFormat.int2	case int2
+c:@E@MDLVertexFormat@MDLVertexFormatInt3	swift.enum.case	MDLVertexFormat.int3	MDLVertexFormat.int3	case int3
+c:@E@MDLVertexFormat@MDLVertexFormatInt4	swift.enum.case	MDLVertexFormat.int4	MDLVertexFormat.int4	case int4
+c:@E@MDLVertexFormat@MDLVertexFormatIntBits	swift.enum.case	MDLVertexFormat.intBits	MDLVertexFormat.intBits	case intBits
+c:@E@MDLVertexFormat@MDLVertexFormatInvalid	swift.enum.case	MDLVertexFormat.invalid	MDLVertexFormat.invalid	case invalid
+c:@E@MDLVertexFormat@MDLVertexFormatPackedBit	swift.enum.case	MDLVertexFormat.packedBit	MDLVertexFormat.packedBit	case packedBit
+c:@E@MDLVertexFormat@MDLVertexFormatShort	swift.enum.case	MDLVertexFormat.short	MDLVertexFormat.short	case short
+c:@E@MDLVertexFormat@MDLVertexFormatShort2	swift.enum.case	MDLVertexFormat.short2	MDLVertexFormat.short2	case short2
+c:@E@MDLVertexFormat@MDLVertexFormatShort2Normalized	swift.enum.case	MDLVertexFormat.short2Normalized	MDLVertexFormat.short2Normalized	case short2Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatShort3	swift.enum.case	MDLVertexFormat.short3	MDLVertexFormat.short3	case short3
+c:@E@MDLVertexFormat@MDLVertexFormatShort3Normalized	swift.enum.case	MDLVertexFormat.short3Normalized	MDLVertexFormat.short3Normalized	case short3Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatShort4	swift.enum.case	MDLVertexFormat.short4	MDLVertexFormat.short4	case short4
+c:@E@MDLVertexFormat@MDLVertexFormatShort4Normalized	swift.enum.case	MDLVertexFormat.short4Normalized	MDLVertexFormat.short4Normalized	case short4Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatShortBits	swift.enum.case	MDLVertexFormat.shortBits	MDLVertexFormat.shortBits	case shortBits
+c:@E@MDLVertexFormat@MDLVertexFormatShortNormalized	swift.enum.case	MDLVertexFormat.shortNormalized	MDLVertexFormat.shortNormalized	case shortNormalized
+c:@E@MDLVertexFormat@MDLVertexFormatShortNormalizedBits	swift.enum.case	MDLVertexFormat.shortNormalizedBits	MDLVertexFormat.shortNormalizedBits	case shortNormalizedBits
+c:@E@MDLVertexFormat@MDLVertexFormatUChar	swift.enum.case	MDLVertexFormat.uChar	MDLVertexFormat.uChar	case uChar
+c:@E@MDLVertexFormat@MDLVertexFormatUChar2	swift.enum.case	MDLVertexFormat.uChar2	MDLVertexFormat.uChar2	case uChar2
+c:@E@MDLVertexFormat@MDLVertexFormatUChar2Normalized	swift.enum.case	MDLVertexFormat.uChar2Normalized	MDLVertexFormat.uChar2Normalized	case uChar2Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatUChar3	swift.enum.case	MDLVertexFormat.uChar3	MDLVertexFormat.uChar3	case uChar3
+c:@E@MDLVertexFormat@MDLVertexFormatUChar3Normalized	swift.enum.case	MDLVertexFormat.uChar3Normalized	MDLVertexFormat.uChar3Normalized	case uChar3Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatUChar4	swift.enum.case	MDLVertexFormat.uChar4	MDLVertexFormat.uChar4	case uChar4
+c:@E@MDLVertexFormat@MDLVertexFormatUChar4Normalized	swift.enum.case	MDLVertexFormat.uChar4Normalized	MDLVertexFormat.uChar4Normalized	case uChar4Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatUCharBits	swift.enum.case	MDLVertexFormat.uCharBits	MDLVertexFormat.uCharBits	case uCharBits
+c:@E@MDLVertexFormat@MDLVertexFormatUCharNormalized	swift.enum.case	MDLVertexFormat.uCharNormalized	MDLVertexFormat.uCharNormalized	case uCharNormalized
+c:@E@MDLVertexFormat@MDLVertexFormatUCharNormalizedBits	swift.enum.case	MDLVertexFormat.uCharNormalizedBits	MDLVertexFormat.uCharNormalizedBits	case uCharNormalizedBits
+c:@E@MDLVertexFormat@MDLVertexFormatUInt	swift.enum.case	MDLVertexFormat.uInt	MDLVertexFormat.uInt	case uInt
+c:@E@MDLVertexFormat@MDLVertexFormatUInt1010102Normalized	swift.enum.case	MDLVertexFormat.uInt1010102Normalized	MDLVertexFormat.uInt1010102Normalized	case uInt1010102Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatUInt2	swift.enum.case	MDLVertexFormat.uInt2	MDLVertexFormat.uInt2	case uInt2
+c:@E@MDLVertexFormat@MDLVertexFormatUInt3	swift.enum.case	MDLVertexFormat.uInt3	MDLVertexFormat.uInt3	case uInt3
+c:@E@MDLVertexFormat@MDLVertexFormatUInt4	swift.enum.case	MDLVertexFormat.uInt4	MDLVertexFormat.uInt4	case uInt4
+c:@E@MDLVertexFormat@MDLVertexFormatUIntBits	swift.enum.case	MDLVertexFormat.uIntBits	MDLVertexFormat.uIntBits	case uIntBits
+c:@E@MDLVertexFormat@MDLVertexFormatUShort	swift.enum.case	MDLVertexFormat.uShort	MDLVertexFormat.uShort	case uShort
+c:@E@MDLVertexFormat@MDLVertexFormatUShort2	swift.enum.case	MDLVertexFormat.uShort2	MDLVertexFormat.uShort2	case uShort2
+c:@E@MDLVertexFormat@MDLVertexFormatUShort2Normalized	swift.enum.case	MDLVertexFormat.uShort2Normalized	MDLVertexFormat.uShort2Normalized	case uShort2Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatUShort3	swift.enum.case	MDLVertexFormat.uShort3	MDLVertexFormat.uShort3	case uShort3
+c:@E@MDLVertexFormat@MDLVertexFormatUShort3Normalized	swift.enum.case	MDLVertexFormat.uShort3Normalized	MDLVertexFormat.uShort3Normalized	case uShort3Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatUShort4	swift.enum.case	MDLVertexFormat.uShort4	MDLVertexFormat.uShort4	case uShort4
+c:@E@MDLVertexFormat@MDLVertexFormatUShort4Normalized	swift.enum.case	MDLVertexFormat.uShort4Normalized	MDLVertexFormat.uShort4Normalized	case uShort4Normalized
+c:@E@MDLVertexFormat@MDLVertexFormatUShortBits	swift.enum.case	MDLVertexFormat.uShortBits	MDLVertexFormat.uShortBits	case uShortBits
+c:@E@MDLVertexFormat@MDLVertexFormatUShortNormalized	swift.enum.case	MDLVertexFormat.uShortNormalized	MDLVertexFormat.uShortNormalized	case uShortNormalized
+c:@E@MDLVertexFormat@MDLVertexFormatUShortNormalizedBits	swift.enum.case	MDLVertexFormat.uShortNormalizedBits	MDLVertexFormat.uShortNormalizedBits	case uShortNormalizedBits
+c:@MDLVertexAttributeAnisotropy	swift.var	MDLVertexAttributeAnisotropy	MDLVertexAttributeAnisotropy	let MDLVertexAttributeAnisotropy: String
+c:@MDLVertexAttributeBinormal	swift.var	MDLVertexAttributeBinormal	MDLVertexAttributeBinormal	let MDLVertexAttributeBinormal: String
+c:@MDLVertexAttributeBitangent	swift.var	MDLVertexAttributeBitangent	MDLVertexAttributeBitangent	let MDLVertexAttributeBitangent: String
+c:@MDLVertexAttributeColor	swift.var	MDLVertexAttributeColor	MDLVertexAttributeColor	let MDLVertexAttributeColor: String
+c:@MDLVertexAttributeEdgeCrease	swift.var	MDLVertexAttributeEdgeCrease	MDLVertexAttributeEdgeCrease	let MDLVertexAttributeEdgeCrease: String
+c:@MDLVertexAttributeJointIndices	swift.var	MDLVertexAttributeJointIndices	MDLVertexAttributeJointIndices	let MDLVertexAttributeJointIndices: String
+c:@MDLVertexAttributeJointWeights	swift.var	MDLVertexAttributeJointWeights	MDLVertexAttributeJointWeights	let MDLVertexAttributeJointWeights: String
+c:@MDLVertexAttributeNormal	swift.var	MDLVertexAttributeNormal	MDLVertexAttributeNormal	let MDLVertexAttributeNormal: String
+c:@MDLVertexAttributeOcclusionValue	swift.var	MDLVertexAttributeOcclusionValue	MDLVertexAttributeOcclusionValue	let MDLVertexAttributeOcclusionValue: String
+c:@MDLVertexAttributePosition	swift.var	MDLVertexAttributePosition	MDLVertexAttributePosition	let MDLVertexAttributePosition: String
+c:@MDLVertexAttributeShadingBasisU	swift.var	MDLVertexAttributeShadingBasisU	MDLVertexAttributeShadingBasisU	let MDLVertexAttributeShadingBasisU: String
+c:@MDLVertexAttributeShadingBasisV	swift.var	MDLVertexAttributeShadingBasisV	MDLVertexAttributeShadingBasisV	let MDLVertexAttributeShadingBasisV: String
+c:@MDLVertexAttributeSubdivisionStencil	swift.var	MDLVertexAttributeSubdivisionStencil	MDLVertexAttributeSubdivisionStencil	let MDLVertexAttributeSubdivisionStencil: String
+c:@MDLVertexAttributeTangent	swift.var	MDLVertexAttributeTangent	MDLVertexAttributeTangent	let MDLVertexAttributeTangent: String
+c:@MDLVertexAttributeTextureCoordinate	swift.var	MDLVertexAttributeTextureCoordinate	MDLVertexAttributeTextureCoordinate	let MDLVertexAttributeTextureCoordinate: String
+c:@SA@MDLAxisAlignedBoundingBox	swift.struct	MDLAxisAlignedBoundingBox	MDLAxisAlignedBoundingBox	struct MDLAxisAlignedBoundingBox
+c:@SA@MDLAxisAlignedBoundingBox@FI@maxBounds	swift.property	maxBounds	MDLAxisAlignedBoundingBox.maxBounds	var maxBounds: vector_float3
+c:@SA@MDLAxisAlignedBoundingBox@FI@minBounds	swift.property	minBounds	MDLAxisAlignedBoundingBox.minBounds	var minBounds: vector_float3
+c:@SA@MDLVoxelIndexExtent	swift.struct	MDLVoxelIndexExtent	MDLVoxelIndexExtent	struct MDLVoxelIndexExtent
+c:@SA@MDLVoxelIndexExtent@FI@maximumExtent	swift.property	maximumExtent	MDLVoxelIndexExtent.maximumExtent	var maximumExtent: MDLVoxelIndex
+c:@SA@MDLVoxelIndexExtent@FI@minimumExtent	swift.property	minimumExtent	MDLVoxelIndexExtent.minimumExtent	var minimumExtent: MDLVoxelIndex
+c:@T@MDLVoxelIndex	swift.typealias	MDLVoxelIndex	MDLVoxelIndex	typealias MDLVoxelIndex = vector_int4
+c:@kUTType3dObject	swift.var	kUTType3dObject	kUTType3dObject	let kUTType3dObject: String
+c:@kUTTypeAlembic	swift.var	kUTTypeAlembic	kUTTypeAlembic	let kUTTypeAlembic: String
+c:@kUTTypePolygon	swift.var	kUTTypePolygon	kUTTypePolygon	let kUTTypePolygon: String
+c:@kUTTypeStereolithography	swift.var	kUTTypeStereolithography	kUTTypeStereolithography	let kUTTypeStereolithography: String
+c:@kUTTypeUniversalSceneDescription	swift.var	kUTTypeUniversalSceneDescription	kUTTypeUniversalSceneDescription	let kUTTypeUniversalSceneDescription: String
+c:@kUTTypeUniversalSceneDescriptionMobile	swift.var	kUTTypeUniversalSceneDescriptionMobile	kUTTypeUniversalSceneDescriptionMobile	let kUTTypeUniversalSceneDescriptionMobile: String
+c:objc(cs)MDLAnimatedMatrix4x4	swift.class	MDLAnimatedMatrix4x4	MDLAnimatedMatrix4x4	class MDLAnimatedMatrix4x4
+c:objc(cs)MDLAnimatedMatrix4x4(im)double4x4AtTime:	swift.method	double4x4Value(atTime:)	MDLAnimatedMatrix4x4.double4x4Value(atTime:)	func double4x4Value(atTime time: TimeInterval) -> matrix_double4x4
+c:objc(cs)MDLAnimatedMatrix4x4(im)float4x4AtTime:	swift.method	float4x4Value(atTime:)	MDLAnimatedMatrix4x4.float4x4Value(atTime:)	func float4x4Value(atTime time: TimeInterval) -> matrix_float4x4
+c:objc(cs)MDLAnimatedMatrix4x4(im)setDouble4x4:atTime:	swift.method	setDouble4x4(_:atTime:)	MDLAnimatedMatrix4x4.setDouble4x4(_:atTime:)	func setDouble4x4(_ value: matrix_double4x4, atTime time: TimeInterval)
+c:objc(cs)MDLAnimatedMatrix4x4(im)setFloat4x4:atTime:	swift.method	setFloat4x4(_:atTime:)	MDLAnimatedMatrix4x4.setFloat4x4(_:atTime:)	func setFloat4x4(_ value: matrix_float4x4, atTime time: TimeInterval)
+c:objc(cs)MDLAnimatedQuaternion	swift.class	MDLAnimatedQuaternion	MDLAnimatedQuaternion	class MDLAnimatedQuaternion
+c:objc(cs)MDLAnimatedQuaternion(im)doubleQuaternionAtTime:	swift.method	doubleQuaternionValue(atTime:)	MDLAnimatedQuaternion.doubleQuaternionValue(atTime:)	func doubleQuaternionValue(atTime time: TimeInterval) -> simd_quatd
+c:objc(cs)MDLAnimatedQuaternion(im)floatQuaternionAtTime:	swift.method	floatQuaternionValue(atTime:)	MDLAnimatedQuaternion.floatQuaternionValue(atTime:)	func floatQuaternionValue(atTime time: TimeInterval) -> simd_quatf
+c:objc(cs)MDLAnimatedQuaternion(im)setDoubleQuaternion:atTime:	swift.method	setDoubleQuaternion(_:atTime:)	MDLAnimatedQuaternion.setDoubleQuaternion(_:atTime:)	func setDoubleQuaternion(_ value: simd_quatd, atTime time: TimeInterval)
+c:objc(cs)MDLAnimatedQuaternion(im)setFloatQuaternion:atTime:	swift.method	setFloatQuaternion(_:atTime:)	MDLAnimatedQuaternion.setFloatQuaternion(_:atTime:)	func setFloatQuaternion(_ value: simd_quatf, atTime time: TimeInterval)
+c:objc(cs)MDLAnimatedQuaternionArray	swift.class	MDLAnimatedQuaternionArray	MDLAnimatedQuaternionArray	class MDLAnimatedQuaternionArray
+c:objc(cs)MDLAnimatedQuaternionArray(im)initWithElementCount:	swift.init	init(elementCount:)	MDLAnimatedQuaternionArray.init(elementCount:)	init(elementCount arrayElementCount: UInt)
+c:objc(cs)MDLAnimatedQuaternionArray(py)elementCount	swift.property	elementCount	MDLAnimatedQuaternionArray.elementCount	var elementCount: UInt { get }
+c:objc(cs)MDLAnimatedScalar	swift.class	MDLAnimatedScalar	MDLAnimatedScalar	class MDLAnimatedScalar
+c:objc(cs)MDLAnimatedScalar(im)doubleAtTime:	swift.method	doubleValue(atTime:)	MDLAnimatedScalar.doubleValue(atTime:)	func doubleValue(atTime time: TimeInterval) -> Double
+c:objc(cs)MDLAnimatedScalar(im)floatAtTime:	swift.method	floatValue(atTime:)	MDLAnimatedScalar.floatValue(atTime:)	func floatValue(atTime time: TimeInterval) -> Float
+c:objc(cs)MDLAnimatedScalar(im)setDouble:atTime:	swift.method	setDouble(_:atTime:)	MDLAnimatedScalar.setDouble(_:atTime:)	func setDouble(_ value: Double, atTime time: TimeInterval)
+c:objc(cs)MDLAnimatedScalar(im)setFloat:atTime:	swift.method	setFloat(_:atTime:)	MDLAnimatedScalar.setFloat(_:atTime:)	func setFloat(_ value: Float, atTime time: TimeInterval)
+c:objc(cs)MDLAnimatedScalarArray	swift.class	MDLAnimatedScalarArray	MDLAnimatedScalarArray	class MDLAnimatedScalarArray
+c:objc(cs)MDLAnimatedScalarArray(im)initWithElementCount:	swift.init	init(elementCount:)	MDLAnimatedScalarArray.init(elementCount:)	init(elementCount arrayElementCount: UInt)
+c:objc(cs)MDLAnimatedScalarArray(py)elementCount	swift.property	elementCount	MDLAnimatedScalarArray.elementCount	var elementCount: UInt { get }
+c:objc(cs)MDLAnimatedValue	swift.class	MDLAnimatedValue	MDLAnimatedValue	class MDLAnimatedValue
+c:objc(cs)MDLAnimatedValue(im)clear	swift.method	clear()	MDLAnimatedValue.clear()	func clear()
+c:objc(cs)MDLAnimatedValue(im)isAnimated	swift.method	isAnimated()	MDLAnimatedValue.isAnimated()	func isAnimated() -> Bool
+c:objc(cs)MDLAnimatedValue(py)interpolation	swift.property	interpolation	MDLAnimatedValue.interpolation	var interpolation: MDLAnimatedValueInterpolation { get set }
+c:objc(cs)MDLAnimatedValue(py)keyTimes	swift.property	keyTimes	MDLAnimatedValue.keyTimes	var keyTimes: [NSNumber] { get }
+c:objc(cs)MDLAnimatedValue(py)maximumTime	swift.property	maximumTime	MDLAnimatedValue.maximumTime	var maximumTime: TimeInterval { get }
+c:objc(cs)MDLAnimatedValue(py)minimumTime	swift.property	minimumTime	MDLAnimatedValue.minimumTime	var minimumTime: TimeInterval { get }
+c:objc(cs)MDLAnimatedValue(py)precision	swift.property	precision	MDLAnimatedValue.precision	var precision: MDLDataPrecision { get }
+c:objc(cs)MDLAnimatedValue(py)timeSampleCount	swift.property	timeSampleCount	MDLAnimatedValue.timeSampleCount	var timeSampleCount: UInt { get }
+c:objc(cs)MDLAnimatedVector2	swift.class	MDLAnimatedVector2	MDLAnimatedVector2	class MDLAnimatedVector2
+c:objc(cs)MDLAnimatedVector2(im)double2AtTime:	swift.method	double2Value(atTime:)	MDLAnimatedVector2.double2Value(atTime:)	func double2Value(atTime time: TimeInterval) -> vector_double2
+c:objc(cs)MDLAnimatedVector2(im)float2AtTime:	swift.method	float2Value(atTime:)	MDLAnimatedVector2.float2Value(atTime:)	func float2Value(atTime time: TimeInterval) -> vector_float2
+c:objc(cs)MDLAnimatedVector2(im)setDouble2:atTime:	swift.method	setDouble2(_:atTime:)	MDLAnimatedVector2.setDouble2(_:atTime:)	func setDouble2(_ value: vector_double2, atTime time: TimeInterval)
+c:objc(cs)MDLAnimatedVector2(im)setFloat2:atTime:	swift.method	setFloat2(_:atTime:)	MDLAnimatedVector2.setFloat2(_:atTime:)	func setFloat2(_ value: vector_float2, atTime time: TimeInterval)
+c:objc(cs)MDLAnimatedVector3	swift.class	MDLAnimatedVector3	MDLAnimatedVector3	class MDLAnimatedVector3
+c:objc(cs)MDLAnimatedVector3(im)double3AtTime:	swift.method	double3Value(atTime:)	MDLAnimatedVector3.double3Value(atTime:)	func double3Value(atTime time: TimeInterval) -> vector_double3
+c:objc(cs)MDLAnimatedVector3(im)float3AtTime:	swift.method	float3Value(atTime:)	MDLAnimatedVector3.float3Value(atTime:)	func float3Value(atTime time: TimeInterval) -> vector_float3
+c:objc(cs)MDLAnimatedVector3(im)setDouble3:atTime:	swift.method	setDouble3(_:atTime:)	MDLAnimatedVector3.setDouble3(_:atTime:)	func setDouble3(_ value: vector_double3, atTime time: TimeInterval)
+c:objc(cs)MDLAnimatedVector3(im)setFloat3:atTime:	swift.method	setFloat3(_:atTime:)	MDLAnimatedVector3.setFloat3(_:atTime:)	func setFloat3(_ value: vector_float3, atTime time: TimeInterval)
+c:objc(cs)MDLAnimatedVector3Array	swift.class	MDLAnimatedVector3Array	MDLAnimatedVector3Array	class MDLAnimatedVector3Array
+c:objc(cs)MDLAnimatedVector3Array(im)initWithElementCount:	swift.init	init(elementCount:)	MDLAnimatedVector3Array.init(elementCount:)	init(elementCount arrayElementCount: UInt)
+c:objc(cs)MDLAnimatedVector3Array(py)elementCount	swift.property	elementCount	MDLAnimatedVector3Array.elementCount	var elementCount: UInt { get }
+c:objc(cs)MDLAnimatedVector4	swift.class	MDLAnimatedVector4	MDLAnimatedVector4	class MDLAnimatedVector4
+c:objc(cs)MDLAnimatedVector4(im)double4AtTime:	swift.method	double4Value(atTime:)	MDLAnimatedVector4.double4Value(atTime:)	func double4Value(atTime time: TimeInterval) -> vector_double4
+c:objc(cs)MDLAnimatedVector4(im)float4AtTime:	swift.method	float4Value(atTime:)	MDLAnimatedVector4.float4Value(atTime:)	func float4Value(atTime time: TimeInterval) -> vector_float4
+c:objc(cs)MDLAnimatedVector4(im)setDouble4:atTime:	swift.method	setDouble4(_:atTime:)	MDLAnimatedVector4.setDouble4(_:atTime:)	func setDouble4(_ value: vector_double4, atTime time: TimeInterval)
+c:objc(cs)MDLAnimatedVector4(im)setFloat4:atTime:	swift.method	setFloat4(_:atTime:)	MDLAnimatedVector4.setFloat4(_:atTime:)	func setFloat4(_ value: vector_float4, atTime time: TimeInterval)
+c:objc(cs)MDLAnimationBindComponent	swift.class	MDLAnimationBindComponent	MDLAnimationBindComponent	class MDLAnimationBindComponent
+c:objc(cs)MDLAnimationBindComponent(py)geometryBindTransform	swift.property	geometryBindTransform	MDLAnimationBindComponent.geometryBindTransform	var geometryBindTransform: matrix_double4x4 { get set }
+c:objc(cs)MDLAnimationBindComponent(py)jointAnimation	swift.property	jointAnimation	MDLAnimationBindComponent.jointAnimation	var jointAnimation: (any MDLJointAnimation)? { get set }
+c:objc(cs)MDLAnimationBindComponent(py)jointPaths	swift.property	jointPaths	MDLAnimationBindComponent.jointPaths	var jointPaths: [String]? { get set }
+c:objc(cs)MDLAnimationBindComponent(py)skeleton	swift.property	skeleton	MDLAnimationBindComponent.skeleton	var skeleton: MDLSkeleton? { get set }
+c:objc(cs)MDLAreaLight	swift.class	MDLAreaLight	MDLAreaLight	class MDLAreaLight
+c:objc(cs)MDLAreaLight(py)areaRadius	swift.property	areaRadius	MDLAreaLight.areaRadius	var areaRadius: Float { get set }
+c:objc(cs)MDLAreaLight(py)aspect	swift.property	aspect	MDLAreaLight.aspect	var aspect: Float { get set }
+c:objc(cs)MDLAreaLight(py)superEllipticPower	swift.property	superEllipticPower	MDLAreaLight.superEllipticPower	var superEllipticPower: vector_float2 { get set }
+c:objc(cs)MDLAsset	swift.class	MDLAsset	MDLAsset	class MDLAsset
+c:objc(cs)MDLAsset(cm)canExportFileExtension:	swift.type.method	canExportFileExtension(_:)	MDLAsset.canExportFileExtension(_:)	class func canExportFileExtension(_ extension: String) -> Bool
+c:objc(cs)MDLAsset(cm)canImportFileExtension:	swift.type.method	canImportFileExtension(_:)	MDLAsset.canImportFileExtension(_:)	class func canImportFileExtension(_ extension: String) -> Bool
+c:objc(cs)MDLAsset(cm)placeLightProbesWithDensity:heuristic:usingIrradianceDataSource:	swift.type.method	placeLightProbes(withDensity:heuristic:using:)	MDLAsset.placeLightProbes(withDensity:heuristic:using:)	class func placeLightProbes(withDensity value: Float, heuristic type: MDLProbePlacement, using dataSource: any MDLLightProbeIrradianceDataSource) -> [MDLLightProbe]
+c:objc(cs)MDLAsset(im)addObject:	swift.method	add(_:)	MDLAsset.add(_:)	func add(_ object: MDLObject)
+c:objc(cs)MDLAsset(im)boundingBoxAtTime:	swift.method	boundingBox(atTime:)	MDLAsset.boundingBox(atTime:)	func boundingBox(atTime time: TimeInterval) -> MDLAxisAlignedBoundingBox
+c:objc(cs)MDLAsset(im)childObjectsOfClass:	swift.method	childObjects(of:)	MDLAsset.childObjects(of:)	func childObjects(of objectClass: AnyClass) -> [MDLObject]
+c:objc(cs)MDLAsset(im)exportAssetToURL:error:	swift.method	export(to:)	MDLAsset.export(to:)	func export(to URL: URL) throws
+c:objc(cs)MDLAsset(im)initWithBufferAllocator:	swift.init	init(bufferAllocator:)	MDLAsset.init(bufferAllocator:)	init(bufferAllocator: (any MDLMeshBufferAllocator)?)
+c:objc(cs)MDLAsset(im)initWithURL:	swift.init	init(url:)	MDLAsset.init(url:)	init(url URL: URL)
+c:objc(cs)MDLAsset(im)initWithURL:::SYNTHESIZED::c:objc(cs)MDLAsset	swift.init	init(URL:)	MDLAsset.init(URL:)	init(URL: URL)
+c:objc(cs)MDLAsset(im)initWithURL:vertexDescriptor:bufferAllocator:	swift.init	init(url:vertexDescriptor:bufferAllocator:)	MDLAsset.init(url:vertexDescriptor:bufferAllocator:)	init(url URL: URL?, vertexDescriptor: MDLVertexDescriptor?, bufferAllocator: (any MDLMeshBufferAllocator)?)
+c:objc(cs)MDLAsset(im)initWithURL:vertexDescriptor:bufferAllocator:::SYNTHESIZED::c:objc(cs)MDLAsset	swift.init	init(URL:vertexDescriptor:bufferAllocator:)	MDLAsset.init(URL:vertexDescriptor:bufferAllocator:)	init(URL: URL?, vertexDescriptor: MDLVertexDescriptor?, bufferAllocator: (any MDLMeshBufferAllocator)?)
+c:objc(cs)MDLAsset(im)initWithURL:vertexDescriptor:bufferAllocator:preserveTopology:error:	swift.init	init(url:vertexDescriptor:bufferAllocator:preserveTopology:error:)	MDLAsset.init(url:vertexDescriptor:bufferAllocator:preserveTopology:error:)	init(url URL: URL, vertexDescriptor: MDLVertexDescriptor?, bufferAllocator: (any MDLMeshBufferAllocator)?, preserveTopology: Bool, error: NSErrorPointer)
+c:objc(cs)MDLAsset(im)initWithURL:vertexDescriptor:bufferAllocator:preserveTopology:error:::SYNTHESIZED::c:objc(cs)MDLAsset	swift.init	init(URL:vertexDescriptor:bufferAllocator:preserveTopology:error:)	MDLAsset.init(URL:vertexDescriptor:bufferAllocator:preserveTopology:error:)	init(URL: URL, vertexDescriptor: MDLVertexDescriptor?, bufferAllocator: (any MDLMeshBufferAllocator)?, preserveTopology: Bool, error: NSErrorPointer)
+c:objc(cs)MDLAsset(im)loadTextures	swift.method	loadTextures()	MDLAsset.loadTextures()	func loadTextures()
+c:objc(cs)MDLAsset(im)objectAtIndex:	swift.method	object(at:)	MDLAsset.object(at:)	func object(at index: UInt) -> MDLObject
+c:objc(cs)MDLAsset(im)objectAtIndexedSubscript:	swift.subscript	subscript(_:)	MDLAsset.subscript(_:)	subscript(index: UInt) -> MDLObject? { get }
+c:objc(cs)MDLAsset(im)objectAtPath:	swift.method	object(atPath:)	MDLAsset.object(atPath:)	func object(atPath path: String) -> MDLObject
+c:objc(cs)MDLAsset(im)removeObject:	swift.method	remove(_:)	MDLAsset.remove(_:)	func remove(_ object: MDLObject)
+c:objc(cs)MDLAsset(py)URL	swift.property	url	MDLAsset.url	var url: URL? { get }
+c:objc(cs)MDLAsset(py)animations	swift.property	animations	MDLAsset.animations	var animations: any MDLObjectContainerComponent { get set }
+c:objc(cs)MDLAsset(py)boundingBox	swift.property	boundingBox	MDLAsset.boundingBox	var boundingBox: MDLAxisAlignedBoundingBox { get }
+c:objc(cs)MDLAsset(py)bufferAllocator	swift.property	bufferAllocator	MDLAsset.bufferAllocator	var bufferAllocator: any MDLMeshBufferAllocator { get }
+c:objc(cs)MDLAsset(py)count	swift.property	count	MDLAsset.count	var count: UInt { get }
+c:objc(cs)MDLAsset(py)endTime	swift.property	endTime	MDLAsset.endTime	var endTime: TimeInterval { get set }
+c:objc(cs)MDLAsset(py)frameInterval	swift.property	frameInterval	MDLAsset.frameInterval	var frameInterval: TimeInterval { get set }
+c:objc(cs)MDLAsset(py)masters	swift.property	masters	MDLAsset.masters	var masters: any MDLObjectContainerComponent { get set }
+c:objc(cs)MDLAsset(py)originals	swift.property	originals	MDLAsset.originals	var originals: any MDLObjectContainerComponent { get set }
+c:objc(cs)MDLAsset(py)resolver	swift.property	resolver	MDLAsset.resolver	var resolver: (any MDLAssetResolver)? { get set }
+c:objc(cs)MDLAsset(py)startTime	swift.property	startTime	MDLAsset.startTime	var startTime: TimeInterval { get set }
+c:objc(cs)MDLAsset(py)upAxis	swift.property	upAxis	MDLAsset.upAxis	var upAxis: vector_float3 { get set }
+c:objc(cs)MDLAsset(py)vertexDescriptor	swift.property	vertexDescriptor	MDLAsset.vertexDescriptor	var vertexDescriptor: MDLVertexDescriptor? { get }
+c:objc(cs)MDLBundleAssetResolver	swift.class	MDLBundleAssetResolver	MDLBundleAssetResolver	class MDLBundleAssetResolver
+c:objc(cs)MDLBundleAssetResolver(im)initWithBundle:	swift.init	init(bundle:)	MDLBundleAssetResolver.init(bundle:)	init(bundle path: String)
+c:objc(cs)MDLBundleAssetResolver(py)path	swift.property	path	MDLBundleAssetResolver.path	var path: String { get set }
+c:objc(cs)MDLCamera	swift.class	MDLCamera	MDLCamera	class MDLCamera
+c:objc(cs)MDLCamera(im)bokehKernelWithSize:	swift.method	bokehKernel(withSize:)	MDLCamera.bokehKernel(withSize:)	func bokehKernel(withSize size: vector_int2) -> MDLTexture
+c:objc(cs)MDLCamera(im)frameBoundingBox:setNearAndFar:	swift.method	frameBoundingBox(_:setNearAndFar:)	MDLCamera.frameBoundingBox(_:setNearAndFar:)	func frameBoundingBox(_ boundingBox: MDLAxisAlignedBoundingBox, setNearAndFar: Bool)
+c:objc(cs)MDLCamera(im)lookAt:	swift.method	look(at:)	MDLCamera.look(at:)	func look(at focusPosition: vector_float3)
+c:objc(cs)MDLCamera(im)lookAt:from:	swift.method	look(at:from:)	MDLCamera.look(at:from:)	func look(at focusPosition: vector_float3, from cameraPosition: vector_float3)
+c:objc(cs)MDLCamera(im)rayTo:forViewPort:	swift.method	ray(to:forViewPort:)	MDLCamera.ray(to:forViewPort:)	func ray(to pixel: vector_int2, forViewPort size: vector_int2) -> vector_float3
+c:objc(cs)MDLCamera(py)apertureBladeCount	swift.property	apertureBladeCount	MDLCamera.apertureBladeCount	var apertureBladeCount: UInt { get set }
+c:objc(cs)MDLCamera(py)barrelDistortion	swift.property	barrelDistortion	MDLCamera.barrelDistortion	var barrelDistortion: Float { get set }
+c:objc(cs)MDLCamera(py)chromaticAberration	swift.property	chromaticAberration	MDLCamera.chromaticAberration	var chromaticAberration: Float { get set }
+c:objc(cs)MDLCamera(py)exposure	swift.property	exposure	MDLCamera.exposure	var exposure: vector_float3 { get set }
+c:objc(cs)MDLCamera(py)exposureCompression	swift.property	exposureCompression	MDLCamera.exposureCompression	var exposureCompression: vector_float2 { get set }
+c:objc(cs)MDLCamera(py)fStop	swift.property	fStop	MDLCamera.fStop	var fStop: Float { get set }
+c:objc(cs)MDLCamera(py)farVisibilityDistance	swift.property	farVisibilityDistance	MDLCamera.farVisibilityDistance	var farVisibilityDistance: Float { get set }
+c:objc(cs)MDLCamera(py)fieldOfView	swift.property	fieldOfView	MDLCamera.fieldOfView	var fieldOfView: Float { get set }
+c:objc(cs)MDLCamera(py)fisheyeDistortion	swift.property	fisheyeDistortion	MDLCamera.fisheyeDistortion	var fisheyeDistortion: Float { get set }
+c:objc(cs)MDLCamera(py)flash	swift.property	flash	MDLCamera.flash	var flash: vector_float3 { get set }
+c:objc(cs)MDLCamera(py)focalLength	swift.property	focalLength	MDLCamera.focalLength	var focalLength: Float { get set }
+c:objc(cs)MDLCamera(py)focusDistance	swift.property	focusDistance	MDLCamera.focusDistance	var focusDistance: Float { get set }
+c:objc(cs)MDLCamera(py)maximumCircleOfConfusion	swift.property	maximumCircleOfConfusion	MDLCamera.maximumCircleOfConfusion	var maximumCircleOfConfusion: Float { get set }
+c:objc(cs)MDLCamera(py)nearVisibilityDistance	swift.property	nearVisibilityDistance	MDLCamera.nearVisibilityDistance	var nearVisibilityDistance: Float { get set }
+c:objc(cs)MDLCamera(py)opticalVignetting	swift.property	opticalVignetting	MDLCamera.opticalVignetting	var opticalVignetting: Float { get set }
+c:objc(cs)MDLCamera(py)projection	swift.property	projection	MDLCamera.projection	var projection: MDLCameraProjection { get set }
+c:objc(cs)MDLCamera(py)projectionMatrix	swift.property	projectionMatrix	MDLCamera.projectionMatrix	var projectionMatrix: matrix_float4x4 { get }
+c:objc(cs)MDLCamera(py)sensorAspect	swift.property	sensorAspect	MDLCamera.sensorAspect	var sensorAspect: Float { get set }
+c:objc(cs)MDLCamera(py)sensorEnlargement	swift.property	sensorEnlargement	MDLCamera.sensorEnlargement	var sensorEnlargement: vector_float2 { get set }
+c:objc(cs)MDLCamera(py)sensorShift	swift.property	sensorShift	MDLCamera.sensorShift	var sensorShift: vector_float2 { get set }
+c:objc(cs)MDLCamera(py)sensorVerticalAperture	swift.property	sensorVerticalAperture	MDLCamera.sensorVerticalAperture	var sensorVerticalAperture: Float { get set }
+c:objc(cs)MDLCamera(py)shutterOpenInterval	swift.property	shutterOpenInterval	MDLCamera.shutterOpenInterval	var shutterOpenInterval: TimeInterval { get set }
+c:objc(cs)MDLCamera(py)worldToMetersConversionScale	swift.property	worldToMetersConversionScale	MDLCamera.worldToMetersConversionScale	var worldToMetersConversionScale: Float { get set }
+c:objc(cs)MDLCheckerboardTexture	swift.class	MDLCheckerboardTexture	MDLCheckerboardTexture	class MDLCheckerboardTexture
+c:objc(cs)MDLCheckerboardTexture(im)initWithDivisions:name:dimensions:channelCount:channelEncoding:color1:color2:	swift.init	init(divisions:name:dimensions:channelCount:channelEncoding:color1:color2:)	MDLCheckerboardTexture.init(divisions:name:dimensions:channelCount:channelEncoding:color1:color2:)	init(divisions: Float, name: String?, dimensions: vector_int2, channelCount: Int32, channelEncoding: MDLTextureChannelEncoding, color1: CGColor, color2: CGColor)
+c:objc(cs)MDLCheckerboardTexture(py)color1	swift.property	color1	MDLCheckerboardTexture.color1	var color1: CGColor? { get set }
+c:objc(cs)MDLCheckerboardTexture(py)color2	swift.property	color2	MDLCheckerboardTexture.color2	var color2: CGColor? { get set }
+c:objc(cs)MDLCheckerboardTexture(py)divisions	swift.property	divisions	MDLCheckerboardTexture.divisions	var divisions: Float { get set }
+c:objc(cs)MDLColorSwatchTexture	swift.class	MDLColorSwatchTexture	MDLColorSwatchTexture	class MDLColorSwatchTexture
+c:objc(cs)MDLColorSwatchTexture(im)initWithColorGradientFrom:toColor:name:textureDimensions:	swift.init	init(colorGradientFrom:to:name:textureDimensions:)	MDLColorSwatchTexture.init(colorGradientFrom:to:name:textureDimensions:)	init(colorGradientFrom color1: CGColor, to color2: CGColor, name: String?, textureDimensions: vector_int2)
+c:objc(cs)MDLColorSwatchTexture(im)initWithColorGradientFrom:toColor:name:textureDimensions:::SYNTHESIZED::c:objc(cs)MDLColorSwatchTexture	swift.init	init(colorGradientFrom:toColor:name:textureDimensions:)	MDLColorSwatchTexture.init(colorGradientFrom:toColor:name:textureDimensions:)	init(colorGradientFrom color1: CGColor, toColor color2: CGColor, name: String?, textureDimensions: vector_int2)
+c:objc(cs)MDLColorSwatchTexture(im)initWithColorTemperatureGradientFrom:toColorTemperature:name:textureDimensions:	swift.init	init(colorTemperatureGradientFrom:toColorTemperature:name:textureDimensions:)	MDLColorSwatchTexture.init(colorTemperatureGradientFrom:toColorTemperature:name:textureDimensions:)	init(colorTemperatureGradientFrom colorTemperature1: Float, toColorTemperature colorTemperature2: Float, name: String?, textureDimensions: vector_int2)
+c:objc(cs)MDLLight	swift.class	MDLLight	MDLLight	class MDLLight
+c:objc(cs)MDLLight(im)irradianceAtPoint:	swift.method	irradiance(atPoint:)	MDLLight.irradiance(atPoint:)	func irradiance(atPoint point: vector_float3) -> Unmanaged<CGColor>
+c:objc(cs)MDLLight(im)irradianceAtPoint:colorSpace:	swift.method	irradiance(atPoint:colorSpace:)	MDLLight.irradiance(atPoint:colorSpace:)	func irradiance(atPoint point: vector_float3, colorSpace: CGColorSpace) -> Unmanaged<CGColor>
+c:objc(cs)MDLLight(py)colorSpace	swift.property	colorSpace	MDLLight.colorSpace	var colorSpace: String { get set }
+c:objc(cs)MDLLight(py)lightType	swift.property	lightType	MDLLight.lightType	var lightType: MDLLightType { get set }
+c:objc(cs)MDLLightProbe	swift.class	MDLLightProbe	MDLLightProbe	class MDLLightProbe
+c:objc(cs)MDLLightProbe(cm)lightProbeWithTextureSize:forLocation:lightsToConsider:objectsToConsider:reflectiveCubemap:irradianceCubemap:	swift.init	init(textureSize:forLocation:lightsToConsider:objectsToConsider:reflectiveCubemap:irradianceCubemap:)	MDLLightProbe.init(textureSize:forLocation:lightsToConsider:objectsToConsider:reflectiveCubemap:irradianceCubemap:)	init?(textureSize: Int, forLocation transform: MDLTransform, lightsToConsider: [MDLLight], objectsToConsider: [MDLObject], reflectiveCubemap: MDLTexture?, irradianceCubemap: MDLTexture?)
+c:objc(cs)MDLLightProbe(im)generateSphericalHarmonicsFromIrradiance:	swift.method	generateSphericalHarmonics(fromIrradiance:)	MDLLightProbe.generateSphericalHarmonics(fromIrradiance:)	func generateSphericalHarmonics(fromIrradiance sphericalHarmonicsLevel: UInt)
+c:objc(cs)MDLLightProbe(im)initWithReflectiveTexture:irradianceTexture:	swift.init	init(reflectiveTexture:irradianceTexture:)	MDLLightProbe.init(reflectiveTexture:irradianceTexture:)	init(reflectiveTexture: MDLTexture?, irradianceTexture: MDLTexture?)
+c:objc(cs)MDLLightProbe(py)irradianceTexture	swift.property	irradianceTexture	MDLLightProbe.irradianceTexture	var irradianceTexture: MDLTexture? { get }
+c:objc(cs)MDLLightProbe(py)reflectiveTexture	swift.property	reflectiveTexture	MDLLightProbe.reflectiveTexture	var reflectiveTexture: MDLTexture? { get }
+c:objc(cs)MDLLightProbe(py)sphericalHarmonicsCoefficients	swift.property	sphericalHarmonicsCoefficients	MDLLightProbe.sphericalHarmonicsCoefficients	var sphericalHarmonicsCoefficients: Data? { get }
+c:objc(cs)MDLLightProbe(py)sphericalHarmonicsLevel	swift.property	sphericalHarmonicsLevel	MDLLightProbe.sphericalHarmonicsLevel	var sphericalHarmonicsLevel: UInt { get }
+c:objc(cs)MDLMaterial	swift.class	MDLMaterial	MDLMaterial	class MDLMaterial
+c:objc(cs)MDLMaterial(im)initWithName:scatteringFunction:	swift.init	init(name:scatteringFunction:)	MDLMaterial.init(name:scatteringFunction:)	init(name: String, scatteringFunction: MDLScatteringFunction)
+c:objc(cs)MDLMaterial(im)loadTexturesUsingResolver:	swift.method	loadTextures(using:)	MDLMaterial.loadTextures(using:)	func loadTextures(using resolver: any MDLAssetResolver)
+c:objc(cs)MDLMaterial(im)objectAtIndexedSubscript:	swift.subscript	subscript(_:)	MDLMaterial.subscript(_:)	subscript(idx: UInt) -> MDLMaterialProperty? { get }
+c:objc(cs)MDLMaterial(im)objectForKeyedSubscript:	swift.subscript	subscript(_:)	MDLMaterial.subscript(_:)	subscript(name: String) -> MDLMaterialProperty? { get }
+c:objc(cs)MDLMaterial(im)propertiesWithSemantic:	swift.method	properties(with:)	MDLMaterial.properties(with:)	func properties(with semantic: MDLMaterialSemantic) -> [MDLMaterialProperty]
+c:objc(cs)MDLMaterial(im)propertyNamed:	swift.method	propertyNamed(_:)	MDLMaterial.propertyNamed(_:)	func propertyNamed(_ name: String) -> MDLMaterialProperty?
+c:objc(cs)MDLMaterial(im)propertyWithSemantic:	swift.method	property(with:)	MDLMaterial.property(with:)	func property(with semantic: MDLMaterialSemantic) -> MDLMaterialProperty?
+c:objc(cs)MDLMaterial(im)removeAllProperties	swift.method	removeAllProperties()	MDLMaterial.removeAllProperties()	func removeAllProperties()
+c:objc(cs)MDLMaterial(im)removeProperty:	swift.method	remove(_:)	MDLMaterial.remove(_:)	func remove(_ property: MDLMaterialProperty)
+c:objc(cs)MDLMaterial(im)resolveTexturesWithResolver:	swift.method	resolveTextures(with:)	MDLMaterial.resolveTextures(with:)	func resolveTextures(with resolver: any MDLAssetResolver)
+c:objc(cs)MDLMaterial(im)setProperty:	swift.method	setProperty(_:)	MDLMaterial.setProperty(_:)	func setProperty(_ property: MDLMaterialProperty)
+c:objc(cs)MDLMaterial(py)baseMaterial	swift.property	base	MDLMaterial.base	var base: MDLMaterial? { get set }
+c:objc(cs)MDLMaterial(py)count	swift.property	count	MDLMaterial.count	var count: UInt { get }
+c:objc(cs)MDLMaterial(py)materialFace	swift.property	materialFace	MDLMaterial.materialFace	var materialFace: MDLMaterialFace { get set }
+c:objc(cs)MDLMaterial(py)name	swift.property	name	MDLMaterial.name	var name: String { get set }
+c:objc(cs)MDLMaterial(py)scatteringFunction	swift.property	scatteringFunction	MDLMaterial.scatteringFunction	var scatteringFunction: MDLScatteringFunction { get }
+c:objc(cs)MDLMaterialProperty	swift.class	MDLMaterialProperty	MDLMaterialProperty	class MDLMaterialProperty
+c:objc(cs)MDLMaterialProperty(im)initWithName:semantic:	swift.init	init(name:semantic:)	MDLMaterialProperty.init(name:semantic:)	init(name: String, semantic: MDLMaterialSemantic)
+c:objc(cs)MDLMaterialProperty(im)initWithName:semantic:URL:	swift.init	init(name:semantic:url:)	MDLMaterialProperty.init(name:semantic:url:)	convenience init(name: String, semantic: MDLMaterialSemantic, url URL: URL?)
+c:objc(cs)MDLMaterialProperty(im)initWithName:semantic:URL:::SYNTHESIZED::c:objc(cs)MDLMaterialProperty	swift.init	init(name:semantic:URL:)	MDLMaterialProperty.init(name:semantic:URL:)	convenience init(name: String, semantic: MDLMaterialSemantic, URL: URL?)
+c:objc(cs)MDLMaterialProperty(im)initWithName:semantic:color:	swift.init	init(name:semantic:color:)	MDLMaterialProperty.init(name:semantic:color:)	convenience init(name: String, semantic: MDLMaterialSemantic, color: CGColor)
+c:objc(cs)MDLMaterialProperty(im)initWithName:semantic:float2:	swift.init	init(name:semantic:float2:)	MDLMaterialProperty.init(name:semantic:float2:)	convenience init(name: String, semantic: MDLMaterialSemantic, float2 value: vector_float2)
+c:objc(cs)MDLMaterialProperty(im)initWithName:semantic:float3:	swift.init	init(name:semantic:float3:)	MDLMaterialProperty.init(name:semantic:float3:)	convenience init(name: String, semantic: MDLMaterialSemantic, float3 value: vector_float3)
+c:objc(cs)MDLMaterialProperty(im)initWithName:semantic:float4:	swift.init	init(name:semantic:float4:)	MDLMaterialProperty.init(name:semantic:float4:)	convenience init(name: String, semantic: MDLMaterialSemantic, float4 value: vector_float4)
+c:objc(cs)MDLMaterialProperty(im)initWithName:semantic:float:	swift.init	init(name:semantic:float:)	MDLMaterialProperty.init(name:semantic:float:)	convenience init(name: String, semantic: MDLMaterialSemantic, float value: Float)
+c:objc(cs)MDLMaterialProperty(im)initWithName:semantic:matrix4x4:	swift.init	init(name:semantic:matrix4x4:)	MDLMaterialProperty.init(name:semantic:matrix4x4:)	convenience init(name: String, semantic: MDLMaterialSemantic, matrix4x4 value: matrix_float4x4)
+c:objc(cs)MDLMaterialProperty(im)initWithName:semantic:string:	swift.init	init(name:semantic:string:)	MDLMaterialProperty.init(name:semantic:string:)	convenience init(name: String, semantic: MDLMaterialSemantic, string: String?)
+c:objc(cs)MDLMaterialProperty(im)initWithName:semantic:textureSampler:	swift.init	init(name:semantic:textureSampler:)	MDLMaterialProperty.init(name:semantic:textureSampler:)	convenience init(name: String, semantic: MDLMaterialSemantic, textureSampler: MDLTextureSampler?)
+c:objc(cs)MDLMaterialProperty(im)setProperties:	swift.method	setProperties(_:)	MDLMaterialProperty.setProperties(_:)	func setProperties(_ property: MDLMaterialProperty)
+c:objc(cs)MDLMaterialProperty(py)URLValue	swift.property	urlValue	MDLMaterialProperty.urlValue	var urlValue: URL? { get set }
+c:objc(cs)MDLMaterialProperty(py)color	swift.property	color	MDLMaterialProperty.color	var color: CGColor? { get set }
+c:objc(cs)MDLMaterialProperty(py)float2Value	swift.property	float2Value	MDLMaterialProperty.float2Value	var float2Value: vector_float2 { get set }
+c:objc(cs)MDLMaterialProperty(py)float3Value	swift.property	float3Value	MDLMaterialProperty.float3Value	var float3Value: vector_float3 { get set }
+c:objc(cs)MDLMaterialProperty(py)float4Value	swift.property	float4Value	MDLMaterialProperty.float4Value	var float4Value: vector_float4 { get set }
+c:objc(cs)MDLMaterialProperty(py)floatValue	swift.property	floatValue	MDLMaterialProperty.floatValue	var floatValue: Float { get set }
+c:objc(cs)MDLMaterialProperty(py)luminance	swift.property	luminance	MDLMaterialProperty.luminance	var luminance: Float { get set }
+c:objc(cs)MDLMaterialProperty(py)matrix4x4	swift.property	matrix4x4	MDLMaterialProperty.matrix4x4	var matrix4x4: matrix_float4x4 { get set }
+c:objc(cs)MDLMaterialProperty(py)name	swift.property	name	MDLMaterialProperty.name	var name: String { get set }
+c:objc(cs)MDLMaterialProperty(py)semantic	swift.property	semantic	MDLMaterialProperty.semantic	var semantic: MDLMaterialSemantic { get set }
+c:objc(cs)MDLMaterialProperty(py)stringValue	swift.property	stringValue	MDLMaterialProperty.stringValue	var stringValue: String? { get set }
+c:objc(cs)MDLMaterialProperty(py)textureSamplerValue	swift.property	textureSamplerValue	MDLMaterialProperty.textureSamplerValue	var textureSamplerValue: MDLTextureSampler? { get set }
+c:objc(cs)MDLMaterialProperty(py)type	swift.property	type	MDLMaterialProperty.type	var type: MDLMaterialPropertyType { get set }
+c:objc(cs)MDLMaterialPropertyConnection	swift.class	MDLMaterialPropertyConnection	MDLMaterialPropertyConnection	class MDLMaterialPropertyConnection
+c:objc(cs)MDLMaterialPropertyConnection(im)initWithOutput:input:	swift.init	init(output:input:)	MDLMaterialPropertyConnection.init(output:input:)	init(output: MDLMaterialProperty, input: MDLMaterialProperty)
+c:objc(cs)MDLMaterialPropertyConnection(py)input	swift.property	input	MDLMaterialPropertyConnection.input	weak var input: MDLMaterialProperty? { get }
+c:objc(cs)MDLMaterialPropertyConnection(py)output	swift.property	output	MDLMaterialPropertyConnection.output	weak var output: MDLMaterialProperty? { get }
+c:objc(cs)MDLMaterialPropertyGraph	swift.class	MDLMaterialPropertyGraph	MDLMaterialPropertyGraph	class MDLMaterialPropertyGraph
+c:objc(cs)MDLMaterialPropertyGraph(im)evaluate	swift.method	evaluate()	MDLMaterialPropertyGraph.evaluate()	func evaluate()
+c:objc(cs)MDLMaterialPropertyGraph(im)initWithNodes:connections:	swift.init	init(nodes:connections:)	MDLMaterialPropertyGraph.init(nodes:connections:)	init(nodes: [MDLMaterialPropertyNode], connections: [MDLMaterialPropertyConnection])
+c:objc(cs)MDLMaterialPropertyGraph(py)connections	swift.property	connections	MDLMaterialPropertyGraph.connections	var connections: [MDLMaterialPropertyConnection] { get }
+c:objc(cs)MDLMaterialPropertyGraph(py)nodes	swift.property	nodes	MDLMaterialPropertyGraph.nodes	var nodes: [MDLMaterialPropertyNode] { get }
+c:objc(cs)MDLMaterialPropertyNode	swift.class	MDLMaterialPropertyNode	MDLMaterialPropertyNode	class MDLMaterialPropertyNode
+c:objc(cs)MDLMaterialPropertyNode(im)initWithInputs:outputs:evaluationFunction:	swift.init	init(inputs:outputs:evaluationFunction:)	MDLMaterialPropertyNode.init(inputs:outputs:evaluationFunction:)	init(inputs: [MDLMaterialProperty], outputs: [MDLMaterialProperty], evaluationFunction function: @escaping (MDLMaterialPropertyNode) -> Void)
+c:objc(cs)MDLMaterialPropertyNode(py)evaluationFunction	swift.property	evaluationFunction	MDLMaterialPropertyNode.evaluationFunction	var evaluationFunction: (MDLMaterialPropertyNode) -> Void { get set }
+c:objc(cs)MDLMaterialPropertyNode(py)inputs	swift.property	inputs	MDLMaterialPropertyNode.inputs	var inputs: [MDLMaterialProperty] { get }
+c:objc(cs)MDLMaterialPropertyNode(py)outputs	swift.property	outputs	MDLMaterialPropertyNode.outputs	var outputs: [MDLMaterialProperty] { get }
+c:objc(cs)MDLMatrix4x4Array	swift.class	MDLMatrix4x4Array	MDLMatrix4x4Array	class MDLMatrix4x4Array
+c:objc(cs)MDLMatrix4x4Array(im)clear	swift.method	clear()	MDLMatrix4x4Array.clear()	func clear()
+c:objc(cs)MDLMatrix4x4Array(im)initWithElementCount:	swift.init	init(elementCount:)	MDLMatrix4x4Array.init(elementCount:)	init(elementCount arrayElementCount: UInt)
+c:objc(cs)MDLMatrix4x4Array(py)elementCount	swift.property	elementCount	MDLMatrix4x4Array.elementCount	var elementCount: UInt { get }
+c:objc(cs)MDLMatrix4x4Array(py)precision	swift.property	precision	MDLMatrix4x4Array.precision	var precision: MDLDataPrecision { get }
+c:objc(cs)MDLMesh	swift.class	MDLMesh	MDLMesh	class MDLMesh
+c:objc(cs)MDLMesh(cm)newBoxWithDimensions:segments:geometryType:inwardNormals:allocator:	swift.type.method	newBox(withDimensions:segments:geometryType:inwardNormals:allocator:)	MDLMesh.newBox(withDimensions:segments:geometryType:inwardNormals:allocator:)	class func newBox(withDimensions dimensions: vector_float3, segments: vector_uint3, geometryType: MDLGeometryType, inwardNormals: Bool, allocator: (any MDLMeshBufferAllocator)?) -> Self
+c:objc(cs)MDLMesh(cm)newCapsuleWithHeight:radii:radialSegments:verticalSegments:hemisphereSegments:geometryType:inwardNormals:allocator:	swift.type.method	newCapsule(withHeight:radii:radialSegments:verticalSegments:hemisphereSegments:geometryType:inwardNormals:allocator:)	MDLMesh.newCapsule(withHeight:radii:radialSegments:verticalSegments:hemisphereSegments:geometryType:inwardNormals:allocator:)	class func newCapsule(withHeight height: Float, radii: vector_float2, radialSegments: UInt, verticalSegments: UInt, hemisphereSegments: UInt, geometryType: MDLGeometryType, inwardNormals: Bool, allocator: (any MDLMeshBufferAllocator)?) -> Self
+c:objc(cs)MDLMesh(cm)newCylinderWithHeight:radii:radialSegments:verticalSegments:geometryType:inwardNormals:allocator:	swift.type.method	newCylinder(withHeight:radii:radialSegments:verticalSegments:geometryType:inwardNormals:allocator:)	MDLMesh.newCylinder(withHeight:radii:radialSegments:verticalSegments:geometryType:inwardNormals:allocator:)	class func newCylinder(withHeight height: Float, radii: vector_float2, radialSegments: UInt, verticalSegments: UInt, geometryType: MDLGeometryType, inwardNormals: Bool, allocator: (any MDLMeshBufferAllocator)?) -> Self
+c:objc(cs)MDLMesh(cm)newEllipsoidWithRadii:radialSegments:verticalSegments:geometryType:inwardNormals:hemisphere:allocator:	swift.type.method	newEllipsoid(withRadii:radialSegments:verticalSegments:geometryType:inwardNormals:hemisphere:allocator:)	MDLMesh.newEllipsoid(withRadii:radialSegments:verticalSegments:geometryType:inwardNormals:hemisphere:allocator:)	class func newEllipsoid(withRadii radii: vector_float3, radialSegments: UInt, verticalSegments: UInt, geometryType: MDLGeometryType, inwardNormals: Bool, hemisphere: Bool, allocator: (any MDLMeshBufferAllocator)?) -> Self
+c:objc(cs)MDLMesh(cm)newEllipticalConeWithHeight:radii:radialSegments:verticalSegments:geometryType:inwardNormals:allocator:	swift.type.method	newEllipticalCone(withHeight:radii:radialSegments:verticalSegments:geometryType:inwardNormals:allocator:)	MDLMesh.newEllipticalCone(withHeight:radii:radialSegments:verticalSegments:geometryType:inwardNormals:allocator:)	class func newEllipticalCone(withHeight height: Float, radii: vector_float2, radialSegments: UInt, verticalSegments: UInt, geometryType: MDLGeometryType, inwardNormals: Bool, allocator: (any MDLMeshBufferAllocator)?) -> Self
+c:objc(cs)MDLMesh(cm)newIcosahedronWithRadius:inwardNormals:allocator:	swift.type.method	newIcosahedron(withRadius:inwardNormals:allocator:)	MDLMesh.newIcosahedron(withRadius:inwardNormals:allocator:)	class func newIcosahedron(withRadius radius: Float, inwardNormals: Bool, allocator: (any MDLMeshBufferAllocator)?) -> Self
+c:objc(cs)MDLMesh(cm)newIcosahedronWithRadius:inwardNormals:geometryType:allocator:	swift.type.method	newIcosahedron(withRadius:inwardNormals:geometryType:allocator:)	MDLMesh.newIcosahedron(withRadius:inwardNormals:geometryType:allocator:)	class func newIcosahedron(withRadius radius: Float, inwardNormals: Bool, geometryType: MDLGeometryType, allocator: (any MDLMeshBufferAllocator)?) -> Self
+c:objc(cs)MDLMesh(cm)newPlaneWithDimensions:segments:geometryType:allocator:	swift.type.method	newPlane(withDimensions:segments:geometryType:allocator:)	MDLMesh.newPlane(withDimensions:segments:geometryType:allocator:)	class func newPlane(withDimensions dimensions: vector_float2, segments: vector_uint2, geometryType: MDLGeometryType, allocator: (any MDLMeshBufferAllocator)?) -> Self
+c:objc(cs)MDLMesh(cm)newSubdividedMesh:submeshIndex:subdivisionLevels:	swift.type.method	newSubdividedMesh(_:submeshIndex:subdivisionLevels:)	MDLMesh.newSubdividedMesh(_:submeshIndex:subdivisionLevels:)	class func newSubdividedMesh(_ mesh: MDLMesh, submeshIndex: UInt, subdivisionLevels: UInt) -> Self?
+c:objc(cs)MDLMesh(im)addAttributeWithName:format:	swift.method	addAttribute(withName:format:)	MDLMesh.addAttribute(withName:format:)	func addAttribute(withName name: String, format: MDLVertexFormat)
+c:objc(cs)MDLMesh(im)addAttributeWithName:format:type:data:stride:	swift.method	addAttribute(withName:format:type:data:stride:)	MDLMesh.addAttribute(withName:format:type:data:stride:)	func addAttribute(withName name: String, format: MDLVertexFormat, type: String, data: Data, stride: Int)
+c:objc(cs)MDLMesh(im)addAttributeWithName:format:type:data:stride:time:	swift.method	addAttribute(withName:format:type:data:stride:time:)	MDLMesh.addAttribute(withName:format:type:data:stride:time:)	func addAttribute(withName name: String, format: MDLVertexFormat, type: String, data: Data, stride: Int, time: TimeInterval)
+c:objc(cs)MDLMesh(im)addNormalsWithAttributeNamed:creaseThreshold:	swift.method	addNormals(withAttributeNamed:creaseThreshold:)	MDLMesh.addNormals(withAttributeNamed:creaseThreshold:)	func addNormals(withAttributeNamed attributeName: String?, creaseThreshold: Float)
+c:objc(cs)MDLMesh(im)addOrthTanBasisForTextureCoordinateAttributeNamed:normalAttributeNamed:tangentAttributeNamed:	swift.method	addOrthTanBasis(forTextureCoordinateAttributeNamed:normalAttributeNamed:tangentAttributeNamed:)	MDLMesh.addOrthTanBasis(forTextureCoordinateAttributeNamed:normalAttributeNamed:tangentAttributeNamed:)	func addOrthTanBasis(forTextureCoordinateAttributeNamed textureCoordinateAttributeName: String, normalAttributeNamed normalAttributeName: String, tangentAttributeNamed tangentAttributeName: String)
+c:objc(cs)MDLMesh(im)addTangentBasisForTextureCoordinateAttributeNamed:normalAttributeNamed:tangentAttributeNamed:	swift.method	addTangentBasis(forTextureCoordinateAttributeNamed:normalAttributeNamed:tangentAttributeNamed:)	MDLMesh.addTangentBasis(forTextureCoordinateAttributeNamed:normalAttributeNamed:tangentAttributeNamed:)	func addTangentBasis(forTextureCoordinateAttributeNamed textureCoordinateAttributeName: String, normalAttributeNamed normalAttributeName: String, tangentAttributeNamed tangentAttributeName: String)
+c:objc(cs)MDLMesh(im)addTangentBasisForTextureCoordinateAttributeNamed:tangentAttributeNamed:bitangentAttributeNamed:	swift.method	addTangentBasis(forTextureCoordinateAttributeNamed:tangentAttributeNamed:bitangentAttributeNamed:)	MDLMesh.addTangentBasis(forTextureCoordinateAttributeNamed:tangentAttributeNamed:bitangentAttributeNamed:)	func addTangentBasis(forTextureCoordinateAttributeNamed textureCoordinateAttributeName: String, tangentAttributeNamed tangentAttributeName: String, bitangentAttributeNamed bitangentAttributeName: String?)
+c:objc(cs)MDLMesh(im)addUnwrappedTextureCoordinatesForAttributeNamed:	swift.method	addUnwrappedTextureCoordinates(forAttributeNamed:)	MDLMesh.addUnwrappedTextureCoordinates(forAttributeNamed:)	func addUnwrappedTextureCoordinates(forAttributeNamed textureCoordinateAttributeName: String)
+c:objc(cs)MDLMesh(im)flipTextureCoordinatesInAttributeNamed:	swift.method	flipTextureCoordinates(inAttributeNamed:)	MDLMesh.flipTextureCoordinates(inAttributeNamed:)	func flipTextureCoordinates(inAttributeNamed textureCoordinateAttributeName: String)
+c:objc(cs)MDLMesh(im)generateAmbientOcclusionTextureWithQuality:attenuationFactor:objectsToConsider:vertexAttributeNamed:materialPropertyNamed:	swift.method	generateAmbientOcclusionTexture(withQuality:attenuationFactor:objectsToConsider:vertexAttributeNamed:materialPropertyNamed:)	MDLMesh.generateAmbientOcclusionTexture(withQuality:attenuationFactor:objectsToConsider:vertexAttributeNamed:materialPropertyNamed:)	func generateAmbientOcclusionTexture(withQuality bakeQuality: Float, attenuationFactor: Float, objectsToConsider: [MDLObject], vertexAttributeNamed vertexAttributeName: String, materialPropertyNamed materialPropertyName: String) -> Bool
+c:objc(cs)MDLMesh(im)generateAmbientOcclusionTextureWithSize:raysPerSample:attenuationFactor:objectsToConsider:vertexAttributeNamed:materialPropertyNamed:	swift.method	generateAmbientOcclusionTexture(withSize:raysPerSample:attenuationFactor:objectsToConsider:vertexAttributeNamed:materialPropertyNamed:)	MDLMesh.generateAmbientOcclusionTexture(withSize:raysPerSample:attenuationFactor:objectsToConsider:vertexAttributeNamed:materialPropertyNamed:)	func generateAmbientOcclusionTexture(withSize textureSize: vector_int2, raysPerSample: Int, attenuationFactor: Float, objectsToConsider: [MDLObject], vertexAttributeNamed vertexAttributeName: String, materialPropertyNamed materialPropertyName: String) -> Bool
+c:objc(cs)MDLMesh(im)generateAmbientOcclusionVertexColorsWithQuality:attenuationFactor:objectsToConsider:vertexAttributeNamed:	swift.method	generateAmbientOcclusionVertexColors(withQuality:attenuationFactor:objectsToConsider:vertexAttributeNamed:)	MDLMesh.generateAmbientOcclusionVertexColors(withQuality:attenuationFactor:objectsToConsider:vertexAttributeNamed:)	func generateAmbientOcclusionVertexColors(withQuality bakeQuality: Float, attenuationFactor: Float, objectsToConsider: [MDLObject], vertexAttributeNamed vertexAttributeName: String) -> Bool
+c:objc(cs)MDLMesh(im)generateAmbientOcclusionVertexColorsWithRaysPerSample:attenuationFactor:objectsToConsider:vertexAttributeNamed:	swift.method	generateAmbientOcclusionVertexColors(withRaysPerSample:attenuationFactor:objectsToConsider:vertexAttributeNamed:)	MDLMesh.generateAmbientOcclusionVertexColors(withRaysPerSample:attenuationFactor:objectsToConsider:vertexAttributeNamed:)	func generateAmbientOcclusionVertexColors(withRaysPerSample raysPerSample: Int, attenuationFactor: Float, objectsToConsider: [MDLObject], vertexAttributeNamed vertexAttributeName: String) -> Bool
+c:objc(cs)MDLMesh(im)generateLightMapTextureWithQuality:lightsToConsider:objectsToConsider:vertexAttributeNamed:materialPropertyNamed:	swift.method	generateLightMapTexture(withQuality:lightsToConsider:objectsToConsider:vertexAttributeNamed:materialPropertyNamed:)	MDLMesh.generateLightMapTexture(withQuality:lightsToConsider:objectsToConsider:vertexAttributeNamed:materialPropertyNamed:)	func generateLightMapTexture(withQuality bakeQuality: Float, lightsToConsider: [MDLLight], objectsToConsider: [MDLObject], vertexAttributeNamed vertexAttributeName: String, materialPropertyNamed materialPropertyName: String) -> Bool
+c:objc(cs)MDLMesh(im)generateLightMapTextureWithTextureSize:lightsToConsider:objectsToConsider:vertexAttributeNamed:materialPropertyNamed:	swift.method	generateLightMapTexture(withTextureSize:lightsToConsider:objectsToConsider:vertexAttributeNamed:materialPropertyNamed:)	MDLMesh.generateLightMapTexture(withTextureSize:lightsToConsider:objectsToConsider:vertexAttributeNamed:materialPropertyNamed:)	func generateLightMapTexture(withTextureSize textureSize: vector_int2, lightsToConsider: [MDLLight], objectsToConsider: [MDLObject], vertexAttributeNamed vertexAttributeName: String, materialPropertyNamed materialPropertyName: String) -> Bool
+c:objc(cs)MDLMesh(im)generateLightMapVertexColorsWithLightsToConsider:objectsToConsider:vertexAttributeNamed:	swift.method	generateLightMapVertexColorsWithLights(toConsider:objectsToConsider:vertexAttributeNamed:)	MDLMesh.generateLightMapVertexColorsWithLights(toConsider:objectsToConsider:vertexAttributeNamed:)	func generateLightMapVertexColorsWithLights(toConsider lightsToConsider: [MDLLight], objectsToConsider: [MDLObject], vertexAttributeNamed vertexAttributeName: String) -> Bool
+c:objc(cs)MDLMesh(im)initBoxWithExtent:segments:inwardNormals:geometryType:allocator:	swift.init	init(boxWithExtent:segments:inwardNormals:geometryType:allocator:)	MDLMesh.init(boxWithExtent:segments:inwardNormals:geometryType:allocator:)	init(boxWithExtent extent: vector_float3, segments: vector_uint3, inwardNormals: Bool, geometryType: MDLGeometryType, allocator: (any MDLMeshBufferAllocator)?)
+c:objc(cs)MDLMesh(im)initCapsuleWithExtent:cylinderSegments:hemisphereSegments:inwardNormals:geometryType:allocator:	swift.init	init(capsuleWithExtent:cylinderSegments:hemisphereSegments:inwardNormals:geometryType:allocator:)	MDLMesh.init(capsuleWithExtent:cylinderSegments:hemisphereSegments:inwardNormals:geometryType:allocator:)	init(capsuleWithExtent extent: vector_float3, cylinderSegments segments: vector_uint2, hemisphereSegments: Int32, inwardNormals: Bool, geometryType: MDLGeometryType, allocator: (any MDLMeshBufferAllocator)?)
+c:objc(cs)MDLMesh(im)initConeWithExtent:segments:inwardNormals:cap:geometryType:allocator:	swift.init	init(coneWithExtent:segments:inwardNormals:cap:geometryType:allocator:)	MDLMesh.init(coneWithExtent:segments:inwardNormals:cap:geometryType:allocator:)	init(coneWithExtent extent: vector_float3, segments: vector_uint2, inwardNormals: Bool, cap: Bool, geometryType: MDLGeometryType, allocator: (any MDLMeshBufferAllocator)?)
+c:objc(cs)MDLMesh(im)initCylinderWithExtent:segments:inwardNormals:topCap:bottomCap:geometryType:allocator:	swift.init	init(cylinderWithExtent:segments:inwardNormals:topCap:bottomCap:geometryType:allocator:)	MDLMesh.init(cylinderWithExtent:segments:inwardNormals:topCap:bottomCap:geometryType:allocator:)	init(cylinderWithExtent extent: vector_float3, segments: vector_uint2, inwardNormals: Bool, topCap: Bool, bottomCap: Bool, geometryType: MDLGeometryType, allocator: (any MDLMeshBufferAllocator)?)
+c:objc(cs)MDLMesh(im)initHemisphereWithExtent:segments:inwardNormals:cap:geometryType:allocator:	swift.init	init(hemisphereWithExtent:segments:inwardNormals:cap:geometryType:allocator:)	MDLMesh.init(hemisphereWithExtent:segments:inwardNormals:cap:geometryType:allocator:)	init(hemisphereWithExtent extent: vector_float3, segments: vector_uint2, inwardNormals: Bool, cap: Bool, geometryType: MDLGeometryType, allocator: (any MDLMeshBufferAllocator)?)
+c:objc(cs)MDLMesh(im)initIcosahedronWithExtent:inwardNormals:geometryType:allocator:	swift.init	init(icosahedronWithExtent:inwardNormals:geometryType:allocator:)	MDLMesh.init(icosahedronWithExtent:inwardNormals:geometryType:allocator:)	init(icosahedronWithExtent extent: vector_float3, inwardNormals: Bool, geometryType: MDLGeometryType, allocator: (any MDLMeshBufferAllocator)?)
+c:objc(cs)MDLMesh(im)initMeshBySubdividingMesh:submeshIndex:subdivisionLevels:allocator:	swift.init	init(meshBySubdividingMesh:submeshIndex:subdivisionLevels:allocator:)	MDLMesh.init(meshBySubdividingMesh:submeshIndex:subdivisionLevels:allocator:)	init(meshBySubdividingMesh mesh: MDLMesh, submeshIndex: Int32, subdivisionLevels: UInt32, allocator: (any MDLMeshBufferAllocator)?)
+c:objc(cs)MDLMesh(im)initPlaneWithExtent:segments:geometryType:allocator:	swift.init	init(planeWithExtent:segments:geometryType:allocator:)	MDLMesh.init(planeWithExtent:segments:geometryType:allocator:)	init(planeWithExtent extent: vector_float3, segments: vector_uint2, geometryType: MDLGeometryType, allocator: (any MDLMeshBufferAllocator)?)
+c:objc(cs)MDLMesh(im)initSphereWithExtent:segments:inwardNormals:geometryType:allocator:	swift.init	init(sphereWithExtent:segments:inwardNormals:geometryType:allocator:)	MDLMesh.init(sphereWithExtent:segments:inwardNormals:geometryType:allocator:)	init(sphereWithExtent extent: vector_float3, segments: vector_uint2, inwardNormals: Bool, geometryType: MDLGeometryType, allocator: (any MDLMeshBufferAllocator)?)
+c:objc(cs)MDLMesh(im)initWithBufferAllocator:	swift.init	init(bufferAllocator:)	MDLMesh.init(bufferAllocator:)	init(bufferAllocator: (any MDLMeshBufferAllocator)?)
+c:objc(cs)MDLMesh(im)initWithVertexBuffer:vertexCount:descriptor:submeshes:	swift.init	init(vertexBuffer:vertexCount:descriptor:submeshes:)	MDLMesh.init(vertexBuffer:vertexCount:descriptor:submeshes:)	init(vertexBuffer: any MDLMeshBuffer, vertexCount: UInt, descriptor: MDLVertexDescriptor, submeshes: [MDLSubmesh])
+c:objc(cs)MDLMesh(im)initWithVertexBuffers:vertexCount:descriptor:submeshes:	swift.init	init(vertexBuffers:vertexCount:descriptor:submeshes:)	MDLMesh.init(vertexBuffers:vertexCount:descriptor:submeshes:)	init(vertexBuffers: [any MDLMeshBuffer], vertexCount: UInt, descriptor: MDLVertexDescriptor, submeshes: [MDLSubmesh])
+c:objc(cs)MDLMesh(im)makeVerticesUnique	swift.method	makeVerticesUnique()	MDLMesh.makeVerticesUnique()	func makeVerticesUnique()
+c:objc(cs)MDLMesh(im)makeVerticesUniqueAndReturnError:	swift.method	makeVerticesUniqueAndReturnError()	MDLMesh.makeVerticesUniqueAndReturnError()	func makeVerticesUniqueAndReturnError() throws
+c:objc(cs)MDLMesh(im)removeAttributeNamed:	swift.method	removeAttributeNamed(_:)	MDLMesh.removeAttributeNamed(_:)	func removeAttributeNamed(_ name: String)
+c:objc(cs)MDLMesh(im)replaceAttributeNamed:withData:	swift.method	replaceAttributeNamed(_:with:)	MDLMesh.replaceAttributeNamed(_:with:)	func replaceAttributeNamed(_ name: String, with newData: MDLVertexAttributeData)
+c:objc(cs)MDLMesh(im)updateAttributeNamed:withData:	swift.method	updateAttributeNamed(_:with:)	MDLMesh.updateAttributeNamed(_:with:)	func updateAttributeNamed(_ name: String, with newData: MDLVertexAttributeData)
+c:objc(cs)MDLMesh(im)vertexAttributeDataForAttributeNamed:	swift.method	vertexAttributeData(forAttributeNamed:)	MDLMesh.vertexAttributeData(forAttributeNamed:)	func vertexAttributeData(forAttributeNamed name: String) -> MDLVertexAttributeData?
+c:objc(cs)MDLMesh(im)vertexAttributeDataForAttributeNamed:asFormat:	swift.method	vertexAttributeData(forAttributeNamed:as:)	MDLMesh.vertexAttributeData(forAttributeNamed:as:)	func vertexAttributeData(forAttributeNamed name: String, as format: MDLVertexFormat) -> MDLVertexAttributeData?
+c:objc(cs)MDLMesh(py)allocator	swift.property	allocator	MDLMesh.allocator	var allocator: any MDLMeshBufferAllocator { get }
+c:objc(cs)MDLMesh(py)boundingBox	swift.property	boundingBox	MDLMesh.boundingBox	var boundingBox: MDLAxisAlignedBoundingBox { get }
+c:objc(cs)MDLMesh(py)submeshes	swift.property	submeshes	MDLMesh.submeshes	@NSCopying var submeshes: NSMutableArray? { get set }
+c:objc(cs)MDLMesh(py)vertexBuffers	swift.property	vertexBuffers	MDLMesh.vertexBuffers	var vertexBuffers: [any MDLMeshBuffer] { get set }
+c:objc(cs)MDLMesh(py)vertexCount	swift.property	vertexCount	MDLMesh.vertexCount	var vertexCount: UInt { get set }
+c:objc(cs)MDLMesh(py)vertexDescriptor	swift.property	vertexDescriptor	MDLMesh.vertexDescriptor	@NSCopying var vertexDescriptor: MDLVertexDescriptor { get set }
+c:objc(cs)MDLMeshBufferData	swift.class	MDLMeshBufferData	MDLMeshBufferData	class MDLMeshBufferData
+c:objc(cs)MDLMeshBufferData(im)initWithType:data:	swift.init	init(type:data:)	MDLMeshBufferData.init(type:data:)	init(type: MDLMeshBufferType, data: Data?)
+c:objc(cs)MDLMeshBufferData(im)initWithType:length:	swift.init	init(type:length:)	MDLMeshBufferData.init(type:length:)	init(type: MDLMeshBufferType, length: UInt)
+c:objc(cs)MDLMeshBufferData(py)data	swift.property	data	MDLMeshBufferData.data	var data: Data { get }
+c:objc(cs)MDLMeshBufferDataAllocator	swift.class	MDLMeshBufferDataAllocator	MDLMeshBufferDataAllocator	class MDLMeshBufferDataAllocator
+c:objc(cs)MDLMeshBufferMap	swift.class	MDLMeshBufferMap	MDLMeshBufferMap	class MDLMeshBufferMap
+c:objc(cs)MDLMeshBufferMap(im)initWithBytes:deallocator:	swift.init	init(bytes:deallocator:)	MDLMeshBufferMap.init(bytes:deallocator:)	init(bytes: UnsafeMutableRawPointer, deallocator: (() -> Void)? = nil)
+c:objc(cs)MDLMeshBufferMap(py)bytes	swift.property	bytes	MDLMeshBufferMap.bytes	var bytes: UnsafeMutableRawPointer { get }
+c:objc(cs)MDLMeshBufferZoneDefault	swift.class	MDLMeshBufferZoneDefault	MDLMeshBufferZoneDefault	class MDLMeshBufferZoneDefault
+c:objc(cs)MDLMeshBufferZoneDefault(py)allocator	swift.property	allocator	MDLMeshBufferZoneDefault.allocator	var allocator: any MDLMeshBufferAllocator { get }
+c:objc(cs)MDLMeshBufferZoneDefault(py)capacity	swift.property	capacity	MDLMeshBufferZoneDefault.capacity	var capacity: UInt { get }
+c:objc(cs)MDLNoiseTexture	swift.class	MDLNoiseTexture	MDLNoiseTexture	class MDLNoiseTexture
+c:objc(cs)MDLNoiseTexture(im)initCellularNoiseWithFrequency:name:textureDimensions:channelEncoding:	swift.init	init(cellularNoiseWithFrequency:name:textureDimensions:channelEncoding:)	MDLNoiseTexture.init(cellularNoiseWithFrequency:name:textureDimensions:channelEncoding:)	init(cellularNoiseWithFrequency frequency: Float, name: String?, textureDimensions: vector_int2, channelEncoding: MDLTextureChannelEncoding)
+c:objc(cs)MDLNoiseTexture(im)initScalarNoiseWithSmoothness:name:textureDimensions:channelCount:channelEncoding:grayscale:	swift.init	init(scalarNoiseWithSmoothness:name:textureDimensions:channelCount:channelEncoding:grayscale:)	MDLNoiseTexture.init(scalarNoiseWithSmoothness:name:textureDimensions:channelCount:channelEncoding:grayscale:)	init(scalarNoiseWithSmoothness smoothness: Float, name: String?, textureDimensions: vector_int2, channelCount: Int32, channelEncoding: MDLTextureChannelEncoding, grayscale: Bool)
+c:objc(cs)MDLNoiseTexture(im)initVectorNoiseWithSmoothness:name:textureDimensions:channelEncoding:	swift.init	init(vectorNoiseWithSmoothness:name:textureDimensions:channelEncoding:)	MDLNoiseTexture.init(vectorNoiseWithSmoothness:name:textureDimensions:channelEncoding:)	init(vectorNoiseWithSmoothness smoothness: Float, name: String?, textureDimensions: vector_int2, channelEncoding: MDLTextureChannelEncoding)
+c:objc(cs)MDLNormalMapTexture	swift.class	MDLNormalMapTexture	MDLNormalMapTexture	class MDLNormalMapTexture
+c:objc(cs)MDLNormalMapTexture(im)initByGeneratingNormalMapWithTexture:name:smoothness:contrast:	swift.init	init(byGeneratingNormalMapWith:name:smoothness:contrast:)	MDLNormalMapTexture.init(byGeneratingNormalMapWith:name:smoothness:contrast:)	init(byGeneratingNormalMapWith sourceTexture: MDLTexture, name: String?, smoothness: Float, contrast: Float)
+c:objc(cs)MDLNormalMapTexture(im)initByGeneratingNormalMapWithTexture:name:smoothness:contrast:::SYNTHESIZED::c:objc(cs)MDLNormalMapTexture	swift.init	init(byGeneratingNormalMapWithTexture:name:smoothness:contrast:)	MDLNormalMapTexture.init(byGeneratingNormalMapWithTexture:name:smoothness:contrast:)	init(byGeneratingNormalMapWithTexture sourceTexture: MDLTexture, name: String?, smoothness: Float, contrast: Float)
+c:objc(cs)MDLObject	swift.class	MDLObject	MDLObject	class MDLObject
+c:objc(cs)MDLObject(im)addChild:	swift.method	addChild(_:)	MDLObject.addChild(_:)	func addChild(_ child: MDLObject)
+c:objc(cs)MDLObject(im)boundingBoxAtTime:	swift.method	boundingBox(atTime:)	MDLObject.boundingBox(atTime:)	func boundingBox(atTime time: TimeInterval) -> MDLAxisAlignedBoundingBox
+c:objc(cs)MDLObject(im)componentConformingToProtocol:	swift.method	componentConforming(to:)	MDLObject.componentConforming(to:)	func componentConforming(to protocol: Protocol) -> (any MDLComponent)?
+c:objc(cs)MDLObject(im)enumerateChildObjectsOfClass:root:usingBlock:stopPointer:	swift.method	enumerateChildObjects(of:root:using:stopPointer:)	MDLObject.enumerateChildObjects(of:root:using:stopPointer:)	func enumerateChildObjects(of objectClass: AnyClass, root: MDLObject, using block: @escaping (MDLObject, UnsafeMutablePointer<ObjCBool>) -> Void, stopPointer: UnsafeMutablePointer<ObjCBool>)
+c:objc(cs)MDLObject(im)objectAtPath:	swift.method	atPath(_:)	MDLObject.atPath(_:)	func atPath(_ path: String) -> MDLObject
+c:objc(cs)MDLObject(im)objectForKeyedSubscript:	swift.subscript	subscript(_:)	MDLObject.subscript(_:)	subscript(key: Protocol) -> (any MDLComponent)? { get set }
+c:objc(cs)MDLObject(im)setComponent:forProtocol:	swift.method	setComponent(_:for:)	MDLObject.setComponent(_:for:)	func setComponent(_ component: any MDLComponent, for protocol: Protocol)
+c:objc(cs)MDLObject(py)children	swift.property	children	MDLObject.children	var children: any MDLObjectContainerComponent { get set }
+c:objc(cs)MDLObject(py)components	swift.property	components	MDLObject.components	var components: [any MDLComponent] { get }
+c:objc(cs)MDLObject(py)hidden	swift.property	hidden	MDLObject.hidden	var hidden: Bool { get set }
+c:objc(cs)MDLObject(py)instance	swift.property	instance	MDLObject.instance	var instance: MDLObject? { get set }
+c:objc(cs)MDLObject(py)parent	swift.property	parent	MDLObject.parent	weak var parent: MDLObject? { get set }
+c:objc(cs)MDLObject(py)path	swift.property	path	MDLObject.path	var path: String { get }
+c:objc(cs)MDLObject(py)transform	swift.property	transform	MDLObject.transform	var transform: (any MDLTransformComponent)? { get set }
+c:objc(cs)MDLObjectContainer	swift.class	MDLObjectContainer	MDLObjectContainer	class MDLObjectContainer
+c:objc(cs)MDLPackedJointAnimation	swift.class	MDLPackedJointAnimation	MDLPackedJointAnimation	class MDLPackedJointAnimation
+c:objc(cs)MDLPackedJointAnimation(im)initWithName:jointPaths:	swift.init	init(name:jointPaths:)	MDLPackedJointAnimation.init(name:jointPaths:)	init(name: String, jointPaths: [String])
+c:objc(cs)MDLPackedJointAnimation(py)jointPaths	swift.property	jointPaths	MDLPackedJointAnimation.jointPaths	var jointPaths: [String] { get }
+c:objc(cs)MDLPackedJointAnimation(py)rotations	swift.property	rotations	MDLPackedJointAnimation.rotations	var rotations: MDLAnimatedQuaternionArray { get }
+c:objc(cs)MDLPackedJointAnimation(py)scales	swift.property	scales	MDLPackedJointAnimation.scales	var scales: MDLAnimatedVector3Array { get }
+c:objc(cs)MDLPackedJointAnimation(py)translations	swift.property	translations	MDLPackedJointAnimation.translations	var translations: MDLAnimatedVector3Array { get }
+c:objc(cs)MDLPathAssetResolver	swift.class	MDLPathAssetResolver	MDLPathAssetResolver	class MDLPathAssetResolver
+c:objc(cs)MDLPathAssetResolver(im)initWithPath:	swift.init	init(path:)	MDLPathAssetResolver.init(path:)	init(path: String)
+c:objc(cs)MDLPathAssetResolver(py)path	swift.property	path	MDLPathAssetResolver.path	var path: String { get set }
+c:objc(cs)MDLPhotometricLight	swift.class	MDLPhotometricLight	MDLPhotometricLight	class MDLPhotometricLight
+c:objc(cs)MDLPhotometricLight(im)generateCubemapFromLight:	swift.method	generateCubemap(fromLight:)	MDLPhotometricLight.generateCubemap(fromLight:)	func generateCubemap(fromLight textureSize: UInt)
+c:objc(cs)MDLPhotometricLight(im)generateSphericalHarmonicsFromLight:	swift.method	generateSphericalHarmonics(fromLight:)	MDLPhotometricLight.generateSphericalHarmonics(fromLight:)	func generateSphericalHarmonics(fromLight sphericalHarmonicsLevel: UInt)
+c:objc(cs)MDLPhotometricLight(im)generateTexture:	swift.method	generateTexture(_:)	MDLPhotometricLight.generateTexture(_:)	func generateTexture(_ textureSize: UInt) -> MDLTexture
+c:objc(cs)MDLPhotometricLight(im)initWithIESProfile:	swift.init	init(iesProfile:)	MDLPhotometricLight.init(iesProfile:)	init?(iesProfile URL: URL)
+c:objc(cs)MDLPhotometricLight(im)initWithIESProfile:::SYNTHESIZED::c:objc(cs)MDLPhotometricLight	swift.init	init(IESProfile:)	MDLPhotometricLight.init(IESProfile:)	init?(IESProfile URL: URL)
+c:objc(cs)MDLPhotometricLight(py)lightCubeMap	swift.property	lightCubeMap	MDLPhotometricLight.lightCubeMap	var lightCubeMap: MDLTexture? { get }
+c:objc(cs)MDLPhotometricLight(py)sphericalHarmonicsCoefficients	swift.property	sphericalHarmonicsCoefficients	MDLPhotometricLight.sphericalHarmonicsCoefficients	var sphericalHarmonicsCoefficients: Data? { get }
+c:objc(cs)MDLPhotometricLight(py)sphericalHarmonicsLevel	swift.property	sphericalHarmonicsLevel	MDLPhotometricLight.sphericalHarmonicsLevel	var sphericalHarmonicsLevel: UInt { get }
+c:objc(cs)MDLPhysicallyPlausibleLight	swift.class	MDLPhysicallyPlausibleLight	MDLPhysicallyPlausibleLight	class MDLPhysicallyPlausibleLight
+c:objc(cs)MDLPhysicallyPlausibleLight(im)setColorByTemperature:	swift.method	setColorByTemperature(_:)	MDLPhysicallyPlausibleLight.setColorByTemperature(_:)	func setColorByTemperature(_ temperature: Float)
+c:objc(cs)MDLPhysicallyPlausibleLight(py)attenuationEndDistance	swift.property	attenuationEndDistance	MDLPhysicallyPlausibleLight.attenuationEndDistance	var attenuationEndDistance: Float { get set }
+c:objc(cs)MDLPhysicallyPlausibleLight(py)attenuationStartDistance	swift.property	attenuationStartDistance	MDLPhysicallyPlausibleLight.attenuationStartDistance	var attenuationStartDistance: Float { get set }
+c:objc(cs)MDLPhysicallyPlausibleLight(py)color	swift.property	color	MDLPhysicallyPlausibleLight.color	var color: CGColor? { get set }
+c:objc(cs)MDLPhysicallyPlausibleLight(py)innerConeAngle	swift.property	innerConeAngle	MDLPhysicallyPlausibleLight.innerConeAngle	var innerConeAngle: Float { get set }
+c:objc(cs)MDLPhysicallyPlausibleLight(py)lumens	swift.property	lumens	MDLPhysicallyPlausibleLight.lumens	var lumens: Float { get set }
+c:objc(cs)MDLPhysicallyPlausibleLight(py)outerConeAngle	swift.property	outerConeAngle	MDLPhysicallyPlausibleLight.outerConeAngle	var outerConeAngle: Float { get set }
+c:objc(cs)MDLPhysicallyPlausibleScatteringFunction	swift.class	MDLPhysicallyPlausibleScatteringFunction	MDLPhysicallyPlausibleScatteringFunction	class MDLPhysicallyPlausibleScatteringFunction
+c:objc(cs)MDLPhysicallyPlausibleScatteringFunction(py)anisotropic	swift.property	anisotropic	MDLPhysicallyPlausibleScatteringFunction.anisotropic	var anisotropic: MDLMaterialProperty { get }
+c:objc(cs)MDLPhysicallyPlausibleScatteringFunction(py)anisotropicRotation	swift.property	anisotropicRotation	MDLPhysicallyPlausibleScatteringFunction.anisotropicRotation	var anisotropicRotation: MDLMaterialProperty { get }
+c:objc(cs)MDLPhysicallyPlausibleScatteringFunction(py)clearcoat	swift.property	clearcoat	MDLPhysicallyPlausibleScatteringFunction.clearcoat	var clearcoat: MDLMaterialProperty { get }
+c:objc(cs)MDLPhysicallyPlausibleScatteringFunction(py)clearcoatGloss	swift.property	clearcoatGloss	MDLPhysicallyPlausibleScatteringFunction.clearcoatGloss	var clearcoatGloss: MDLMaterialProperty { get }
+c:objc(cs)MDLPhysicallyPlausibleScatteringFunction(py)metallic	swift.property	metallic	MDLPhysicallyPlausibleScatteringFunction.metallic	var metallic: MDLMaterialProperty { get }
+c:objc(cs)MDLPhysicallyPlausibleScatteringFunction(py)roughness	swift.property	roughness	MDLPhysicallyPlausibleScatteringFunction.roughness	var roughness: MDLMaterialProperty { get }
+c:objc(cs)MDLPhysicallyPlausibleScatteringFunction(py)sheen	swift.property	sheen	MDLPhysicallyPlausibleScatteringFunction.sheen	var sheen: MDLMaterialProperty { get }
+c:objc(cs)MDLPhysicallyPlausibleScatteringFunction(py)sheenTint	swift.property	sheenTint	MDLPhysicallyPlausibleScatteringFunction.sheenTint	var sheenTint: MDLMaterialProperty { get }
+c:objc(cs)MDLPhysicallyPlausibleScatteringFunction(py)specularAmount	swift.property	specularAmount	MDLPhysicallyPlausibleScatteringFunction.specularAmount	var specularAmount: MDLMaterialProperty { get }
+c:objc(cs)MDLPhysicallyPlausibleScatteringFunction(py)specularTint	swift.property	specularTint	MDLPhysicallyPlausibleScatteringFunction.specularTint	var specularTint: MDLMaterialProperty { get }
+c:objc(cs)MDLPhysicallyPlausibleScatteringFunction(py)subsurface	swift.property	subsurface	MDLPhysicallyPlausibleScatteringFunction.subsurface	var subsurface: MDLMaterialProperty { get }
+c:objc(cs)MDLPhysicallyPlausibleScatteringFunction(py)version	swift.property	version	MDLPhysicallyPlausibleScatteringFunction.version	var version: Int { get }
+c:objc(cs)MDLRelativeAssetResolver	swift.class	MDLRelativeAssetResolver	MDLRelativeAssetResolver	class MDLRelativeAssetResolver
+c:objc(cs)MDLRelativeAssetResolver(im)initWithAsset:	swift.init	init(asset:)	MDLRelativeAssetResolver.init(asset:)	init(asset: MDLAsset)
+c:objc(cs)MDLRelativeAssetResolver(py)asset	swift.property	asset	MDLRelativeAssetResolver.asset	weak var asset: MDLAsset? { get set }
+c:objc(cs)MDLScatteringFunction	swift.class	MDLScatteringFunction	MDLScatteringFunction	class MDLScatteringFunction
+c:objc(cs)MDLScatteringFunction(py)ambientOcclusion	swift.property	ambientOcclusion	MDLScatteringFunction.ambientOcclusion	var ambientOcclusion: MDLMaterialProperty { get }
+c:objc(cs)MDLScatteringFunction(py)ambientOcclusionScale	swift.property	ambientOcclusionScale	MDLScatteringFunction.ambientOcclusionScale	var ambientOcclusionScale: MDLMaterialProperty { get }
+c:objc(cs)MDLScatteringFunction(py)baseColor	swift.property	baseColor	MDLScatteringFunction.baseColor	var baseColor: MDLMaterialProperty { get }
+c:objc(cs)MDLScatteringFunction(py)emission	swift.property	emission	MDLScatteringFunction.emission	var emission: MDLMaterialProperty { get }
+c:objc(cs)MDLScatteringFunction(py)interfaceIndexOfRefraction	swift.property	interfaceIndexOfRefraction	MDLScatteringFunction.interfaceIndexOfRefraction	var interfaceIndexOfRefraction: MDLMaterialProperty { get }
+c:objc(cs)MDLScatteringFunction(py)materialIndexOfRefraction	swift.property	materialIndexOfRefraction	MDLScatteringFunction.materialIndexOfRefraction	var materialIndexOfRefraction: MDLMaterialProperty { get }
+c:objc(cs)MDLScatteringFunction(py)name	swift.property	name	MDLScatteringFunction.name	var name: String { get set }
+c:objc(cs)MDLScatteringFunction(py)normal	swift.property	normal	MDLScatteringFunction.normal	var normal: MDLMaterialProperty { get }
+c:objc(cs)MDLScatteringFunction(py)specular	swift.property	specular	MDLScatteringFunction.specular	var specular: MDLMaterialProperty { get }
+c:objc(cs)MDLSkeleton	swift.class	MDLSkeleton	MDLSkeleton	class MDLSkeleton
+c:objc(cs)MDLSkeleton(im)initWithName:jointPaths:	swift.init	init(name:jointPaths:)	MDLSkeleton.init(name:jointPaths:)	init(name: String, jointPaths: [String])
+c:objc(cs)MDLSkeleton(py)jointBindTransforms	swift.property	jointBindTransforms	MDLSkeleton.jointBindTransforms	var jointBindTransforms: MDLMatrix4x4Array { get }
+c:objc(cs)MDLSkeleton(py)jointPaths	swift.property	jointPaths	MDLSkeleton.jointPaths	var jointPaths: [String] { get }
+c:objc(cs)MDLSkeleton(py)jointRestTransforms	swift.property	jointRestTransforms	MDLSkeleton.jointRestTransforms	var jointRestTransforms: MDLMatrix4x4Array { get }
+c:objc(cs)MDLSkyCubeTexture	swift.class	MDLSkyCubeTexture	MDLSkyCubeTexture	class MDLSkyCubeTexture
+c:objc(cs)MDLSkyCubeTexture(im)initWithName:channelEncoding:textureDimensions:turbidity:sunElevation:sunAzimuth:upperAtmosphereScattering:groundAlbedo:	swift.init	init(name:channelEncoding:textureDimensions:turbidity:sunElevation:sunAzimuth:upperAtmosphereScattering:groundAlbedo:)	MDLSkyCubeTexture.init(name:channelEncoding:textureDimensions:turbidity:sunElevation:sunAzimuth:upperAtmosphereScattering:groundAlbedo:)	init(name: String?, channelEncoding: MDLTextureChannelEncoding, textureDimensions: vector_int2, turbidity: Float, sunElevation: Float, sunAzimuth: Float, upperAtmosphereScattering: Float, groundAlbedo: Float)
+c:objc(cs)MDLSkyCubeTexture(im)initWithName:channelEncoding:textureDimensions:turbidity:sunElevation:upperAtmosphereScattering:groundAlbedo:	swift.init	init(name:channelEncoding:textureDimensions:turbidity:sunElevation:upperAtmosphereScattering:groundAlbedo:)	MDLSkyCubeTexture.init(name:channelEncoding:textureDimensions:turbidity:sunElevation:upperAtmosphereScattering:groundAlbedo:)	init(name: String?, channelEncoding: MDLTextureChannelEncoding, textureDimensions: vector_int2, turbidity: Float, sunElevation: Float, upperAtmosphereScattering: Float, groundAlbedo: Float)
+c:objc(cs)MDLSkyCubeTexture(im)updateTexture	swift.method	update()	MDLSkyCubeTexture.update()	func update()
+c:objc(cs)MDLSkyCubeTexture(py)brightness	swift.property	brightness	MDLSkyCubeTexture.brightness	var brightness: Float { get set }
+c:objc(cs)MDLSkyCubeTexture(py)contrast	swift.property	contrast	MDLSkyCubeTexture.contrast	var contrast: Float { get set }
+c:objc(cs)MDLSkyCubeTexture(py)exposure	swift.property	exposure	MDLSkyCubeTexture.exposure	var exposure: Float { get set }
+c:objc(cs)MDLSkyCubeTexture(py)gamma	swift.property	gamma	MDLSkyCubeTexture.gamma	var gamma: Float { get set }
+c:objc(cs)MDLSkyCubeTexture(py)groundAlbedo	swift.property	groundAlbedo	MDLSkyCubeTexture.groundAlbedo	var groundAlbedo: Float { get set }
+c:objc(cs)MDLSkyCubeTexture(py)groundColor	swift.property	groundColor	MDLSkyCubeTexture.groundColor	var groundColor: CGColor? { get set }
+c:objc(cs)MDLSkyCubeTexture(py)highDynamicRangeCompression	swift.property	highDynamicRangeCompression	MDLSkyCubeTexture.highDynamicRangeCompression	var highDynamicRangeCompression: vector_float2 { get set }
+c:objc(cs)MDLSkyCubeTexture(py)horizonElevation	swift.property	horizonElevation	MDLSkyCubeTexture.horizonElevation	var horizonElevation: Float { get set }
+c:objc(cs)MDLSkyCubeTexture(py)saturation	swift.property	saturation	MDLSkyCubeTexture.saturation	var saturation: Float { get set }
+c:objc(cs)MDLSkyCubeTexture(py)sunAzimuth	swift.property	sunAzimuth	MDLSkyCubeTexture.sunAzimuth	var sunAzimuth: Float { get set }
+c:objc(cs)MDLSkyCubeTexture(py)sunElevation	swift.property	sunElevation	MDLSkyCubeTexture.sunElevation	var sunElevation: Float { get set }
+c:objc(cs)MDLSkyCubeTexture(py)turbidity	swift.property	turbidity	MDLSkyCubeTexture.turbidity	var turbidity: Float { get set }
+c:objc(cs)MDLSkyCubeTexture(py)upperAtmosphereScattering	swift.property	upperAtmosphereScattering	MDLSkyCubeTexture.upperAtmosphereScattering	var upperAtmosphereScattering: Float { get set }
+c:objc(cs)MDLStereoscopicCamera	swift.class	MDLStereoscopicCamera	MDLStereoscopicCamera	class MDLStereoscopicCamera
+c:objc(cs)MDLStereoscopicCamera(py)interPupillaryDistance	swift.property	interPupillaryDistance	MDLStereoscopicCamera.interPupillaryDistance	var interPupillaryDistance: Float { get set }
+c:objc(cs)MDLStereoscopicCamera(py)leftProjectionMatrix	swift.property	leftProjectionMatrix	MDLStereoscopicCamera.leftProjectionMatrix	var leftProjectionMatrix: matrix_float4x4 { get }
+c:objc(cs)MDLStereoscopicCamera(py)leftVergence	swift.property	leftVergence	MDLStereoscopicCamera.leftVergence	var leftVergence: Float { get set }
+c:objc(cs)MDLStereoscopicCamera(py)leftViewMatrix	swift.property	leftViewMatrix	MDLStereoscopicCamera.leftViewMatrix	var leftViewMatrix: matrix_float4x4 { get }
+c:objc(cs)MDLStereoscopicCamera(py)overlap	swift.property	overlap	MDLStereoscopicCamera.overlap	var overlap: Float { get set }
+c:objc(cs)MDLStereoscopicCamera(py)rightProjectionMatrix	swift.property	rightProjectionMatrix	MDLStereoscopicCamera.rightProjectionMatrix	var rightProjectionMatrix: matrix_float4x4 { get }
+c:objc(cs)MDLStereoscopicCamera(py)rightVergence	swift.property	rightVergence	MDLStereoscopicCamera.rightVergence	var rightVergence: Float { get set }
+c:objc(cs)MDLStereoscopicCamera(py)rightViewMatrix	swift.property	rightViewMatrix	MDLStereoscopicCamera.rightViewMatrix	var rightViewMatrix: matrix_float4x4 { get }
+c:objc(cs)MDLSubmesh	swift.class	MDLSubmesh	MDLSubmesh	class MDLSubmesh
+c:objc(cs)MDLSubmesh(im)indexBufferAsIndexType:	swift.method	indexBuffer(asIndexType:)	MDLSubmesh.indexBuffer(asIndexType:)	func indexBuffer(asIndexType indexType: MDLIndexBitDepth) -> any MDLMeshBuffer
+c:objc(cs)MDLSubmesh(im)initWithIndexBuffer:indexCount:indexType:geometryType:material:	swift.init	init(indexBuffer:indexCount:indexType:geometryType:material:)	MDLSubmesh.init(indexBuffer:indexCount:indexType:geometryType:material:)	init(indexBuffer: any MDLMeshBuffer, indexCount: UInt, indexType: MDLIndexBitDepth, geometryType: MDLGeometryType, material: MDLMaterial?)
+c:objc(cs)MDLSubmesh(im)initWithMDLSubmesh:indexType:geometryType:	swift.init	init(mdlSubmesh:indexType:geometryType:)	MDLSubmesh.init(mdlSubmesh:indexType:geometryType:)	init?(mdlSubmesh submesh: MDLSubmesh, indexType: MDLIndexBitDepth, geometryType: MDLGeometryType)
+c:objc(cs)MDLSubmesh(im)initWithMDLSubmesh:indexType:geometryType:::SYNTHESIZED::c:objc(cs)MDLSubmesh	swift.init	init(MDLSubmesh:indexType:geometryType:)	MDLSubmesh.init(MDLSubmesh:indexType:geometryType:)	init?(MDLSubmesh submesh: MDLSubmesh, indexType: MDLIndexBitDepth, geometryType: MDLGeometryType)
+c:objc(cs)MDLSubmesh(im)initWithName:indexBuffer:indexCount:indexType:geometryType:material:	swift.init	init(name:indexBuffer:indexCount:indexType:geometryType:material:)	MDLSubmesh.init(name:indexBuffer:indexCount:indexType:geometryType:material:)	init(name: String, indexBuffer: any MDLMeshBuffer, indexCount: UInt, indexType: MDLIndexBitDepth, geometryType: MDLGeometryType, material: MDLMaterial?)
+c:objc(cs)MDLSubmesh(im)initWithName:indexBuffer:indexCount:indexType:geometryType:material:topology:	swift.init	init(name:indexBuffer:indexCount:indexType:geometryType:material:topology:)	MDLSubmesh.init(name:indexBuffer:indexCount:indexType:geometryType:material:topology:)	init(name: String, indexBuffer: any MDLMeshBuffer, indexCount: UInt, indexType: MDLIndexBitDepth, geometryType: MDLGeometryType, material: MDLMaterial?, topology: MDLSubmeshTopology?)
+c:objc(cs)MDLSubmesh(py)geometryType	swift.property	geometryType	MDLSubmesh.geometryType	var geometryType: MDLGeometryType { get }
+c:objc(cs)MDLSubmesh(py)indexBuffer	swift.property	indexBuffer	MDLSubmesh.indexBuffer	var indexBuffer: any MDLMeshBuffer { get }
+c:objc(cs)MDLSubmesh(py)indexCount	swift.property	indexCount	MDLSubmesh.indexCount	var indexCount: UInt { get }
+c:objc(cs)MDLSubmesh(py)indexType	swift.property	indexType	MDLSubmesh.indexType	var indexType: MDLIndexBitDepth { get }
+c:objc(cs)MDLSubmesh(py)material	swift.property	material	MDLSubmesh.material	var material: MDLMaterial? { get set }
+c:objc(cs)MDLSubmesh(py)name	swift.property	name	MDLSubmesh.name	var name: String { get set }
+c:objc(cs)MDLSubmesh(py)topology	swift.property	topology	MDLSubmesh.topology	var topology: MDLSubmeshTopology? { get set }
+c:objc(cs)MDLSubmeshTopology	swift.class	MDLSubmeshTopology	MDLSubmeshTopology	class MDLSubmeshTopology
+c:objc(cs)MDLSubmeshTopology(im)initWithSubmesh:	swift.init	init(submesh:)	MDLSubmeshTopology.init(submesh:)	init(submesh: MDLSubmesh)
+c:objc(cs)MDLSubmeshTopology(py)edgeCreaseCount	swift.property	edgeCreaseCount	MDLSubmeshTopology.edgeCreaseCount	var edgeCreaseCount: UInt { get set }
+c:objc(cs)MDLSubmeshTopology(py)edgeCreaseIndices	swift.property	edgeCreaseIndices	MDLSubmeshTopology.edgeCreaseIndices	var edgeCreaseIndices: (any MDLMeshBuffer)? { get set }
+c:objc(cs)MDLSubmeshTopology(py)edgeCreases	swift.property	edgeCreases	MDLSubmeshTopology.edgeCreases	var edgeCreases: (any MDLMeshBuffer)? { get set }
+c:objc(cs)MDLSubmeshTopology(py)faceCount	swift.property	faceCount	MDLSubmeshTopology.faceCount	var faceCount: UInt { get set }
+c:objc(cs)MDLSubmeshTopology(py)faceTopology	swift.property	faceTopology	MDLSubmeshTopology.faceTopology	var faceTopology: (any MDLMeshBuffer)? { get set }
+c:objc(cs)MDLSubmeshTopology(py)holeCount	swift.property	holeCount	MDLSubmeshTopology.holeCount	var holeCount: UInt { get set }
+c:objc(cs)MDLSubmeshTopology(py)holes	swift.property	holes	MDLSubmeshTopology.holes	var holes: (any MDLMeshBuffer)? { get set }
+c:objc(cs)MDLSubmeshTopology(py)vertexCreaseCount	swift.property	vertexCreaseCount	MDLSubmeshTopology.vertexCreaseCount	var vertexCreaseCount: UInt { get set }
+c:objc(cs)MDLSubmeshTopology(py)vertexCreaseIndices	swift.property	vertexCreaseIndices	MDLSubmeshTopology.vertexCreaseIndices	var vertexCreaseIndices: (any MDLMeshBuffer)? { get set }
+c:objc(cs)MDLSubmeshTopology(py)vertexCreases	swift.property	vertexCreases	MDLSubmeshTopology.vertexCreases	var vertexCreases: (any MDLMeshBuffer)? { get set }
+c:objc(cs)MDLTexture	swift.class	MDLTexture	MDLTexture	class MDLTexture
+c:objc(cs)MDLTexture(cm)irradianceTextureCubeWithTexture:name:dimensions:	swift.type.method	irradianceTextureCube(with:name:dimensions:)	MDLTexture.irradianceTextureCube(with:name:dimensions:)	class func irradianceTextureCube(with texture: MDLTexture, name: String?, dimensions: vector_int2) -> Self
+c:objc(cs)MDLTexture(cm)irradianceTextureCubeWithTexture:name:dimensions:roughness:	swift.type.method	irradianceTextureCube(with:name:dimensions:roughness:)	MDLTexture.irradianceTextureCube(with:name:dimensions:roughness:)	class func irradianceTextureCube(with texture: MDLTexture, name: String?, dimensions: vector_int2, roughness: Float) -> Self
+c:objc(cs)MDLTexture(cm)textureCubeWithImagesNamed:	swift.init	init(cubeWithImagesNamed:)	MDLTexture.init(cubeWithImagesNamed:)	convenience init?(cubeWithImagesNamed names: [String])
+c:objc(cs)MDLTexture(cm)textureCubeWithImagesNamed:bundle:	swift.init	init(cubeWithImagesNamed:bundle:)	MDLTexture.init(cubeWithImagesNamed:bundle:)	convenience init?(cubeWithImagesNamed names: [String], bundle bundleOrNil: Bundle?)
+c:objc(cs)MDLTexture(cm)textureNamed:	swift.init	init(named:)	MDLTexture.init(named:)	convenience init?(named name: String)
+c:objc(cs)MDLTexture(cm)textureNamed:assetResolver:	swift.init	init(named:assetResolver:)	MDLTexture.init(named:assetResolver:)	convenience init?(named name: String, assetResolver resolver: any MDLAssetResolver)
+c:objc(cs)MDLTexture(cm)textureNamed:bundle:	swift.init	init(named:bundle:)	MDLTexture.init(named:bundle:)	convenience init?(named name: String, bundle bundleOrNil: Bundle?)
+c:objc(cs)MDLTexture(im)imageFromTexture	swift.method	imageFromTexture()	MDLTexture.imageFromTexture()	func imageFromTexture() -> Unmanaged<CGImage>?
+c:objc(cs)MDLTexture(im)imageFromTextureAtLevel:	swift.method	imageFromTexture(atLevel:)	MDLTexture.imageFromTexture(atLevel:)	func imageFromTexture(atLevel level: UInt) -> Unmanaged<CGImage>?
+c:objc(cs)MDLTexture(im)init	swift.init	init()	MDLTexture.init()	init()
+c:objc(cs)MDLTexture(im)initWithData:topLeftOrigin:name:dimensions:rowStride:channelCount:channelEncoding:isCube:	swift.init	init(data:topLeftOrigin:name:dimensions:rowStride:channelCount:channelEncoding:isCube:)	MDLTexture.init(data:topLeftOrigin:name:dimensions:rowStride:channelCount:channelEncoding:isCube:)	init(data pixelData: Data?, topLeftOrigin: Bool, name: String?, dimensions: vector_int2, rowStride: Int, channelCount: UInt, channelEncoding: MDLTextureChannelEncoding, isCube: Bool)
+c:objc(cs)MDLTexture(im)texelDataWithBottomLeftOrigin	swift.method	texelDataWithBottomLeftOrigin()	MDLTexture.texelDataWithBottomLeftOrigin()	func texelDataWithBottomLeftOrigin() -> Data?
+c:objc(cs)MDLTexture(im)texelDataWithBottomLeftOriginAtMipLevel:create:	swift.method	texelDataWithBottomLeftOrigin(atMipLevel:create:)	MDLTexture.texelDataWithBottomLeftOrigin(atMipLevel:create:)	func texelDataWithBottomLeftOrigin(atMipLevel level: Int, create: Bool) -> Data?
+c:objc(cs)MDLTexture(im)texelDataWithTopLeftOrigin	swift.method	texelDataWithTopLeftOrigin()	MDLTexture.texelDataWithTopLeftOrigin()	func texelDataWithTopLeftOrigin() -> Data?
+c:objc(cs)MDLTexture(im)texelDataWithTopLeftOriginAtMipLevel:create:	swift.method	texelDataWithTopLeftOrigin(atMipLevel:create:)	MDLTexture.texelDataWithTopLeftOrigin(atMipLevel:create:)	func texelDataWithTopLeftOrigin(atMipLevel level: Int, create: Bool) -> Data?
+c:objc(cs)MDLTexture(im)writeToURL:	swift.method	write(to:)	MDLTexture.write(to:)	func write(to URL: URL) -> Bool
+c:objc(cs)MDLTexture(im)writeToURL:level:	swift.method	write(to:level:)	MDLTexture.write(to:level:)	func write(to URL: URL, level: UInt) -> Bool
+c:objc(cs)MDLTexture(im)writeToURL:type:	swift.method	write(to:type:)	MDLTexture.write(to:type:)	func write(to nsurl: URL, type: CFString) -> Bool
+c:objc(cs)MDLTexture(im)writeToURL:type:level:	swift.method	write(to:type:level:)	MDLTexture.write(to:type:level:)	func write(to nsurl: URL, type: CFString, level: UInt) -> Bool
+c:objc(cs)MDLTexture(py)channelCount	swift.property	channelCount	MDLTexture.channelCount	var channelCount: UInt { get }
+c:objc(cs)MDLTexture(py)channelEncoding	swift.property	channelEncoding	MDLTexture.channelEncoding	var channelEncoding: MDLTextureChannelEncoding { get }
+c:objc(cs)MDLTexture(py)dimensions	swift.property	dimensions	MDLTexture.dimensions	var dimensions: vector_int2 { get }
+c:objc(cs)MDLTexture(py)hasAlphaValues	swift.property	hasAlphaValues	MDLTexture.hasAlphaValues	var hasAlphaValues: Bool { get set }
+c:objc(cs)MDLTexture(py)isCube	swift.property	isCube	MDLTexture.isCube	var isCube: Bool { get set }
+c:objc(cs)MDLTexture(py)mipLevelCount	swift.property	mipLevelCount	MDLTexture.mipLevelCount	var mipLevelCount: UInt { get }
+c:objc(cs)MDLTexture(py)rowStride	swift.property	rowStride	MDLTexture.rowStride	var rowStride: Int { get }
+c:objc(cs)MDLTextureFilter	swift.class	MDLTextureFilter	MDLTextureFilter	class MDLTextureFilter
+c:objc(cs)MDLTextureFilter(py)magFilter	swift.property	magFilter	MDLTextureFilter.magFilter	var magFilter: MDLMaterialTextureFilterMode { get set }
+c:objc(cs)MDLTextureFilter(py)minFilter	swift.property	minFilter	MDLTextureFilter.minFilter	var minFilter: MDLMaterialTextureFilterMode { get set }
+c:objc(cs)MDLTextureFilter(py)mipFilter	swift.property	mipFilter	MDLTextureFilter.mipFilter	var mipFilter: MDLMaterialMipMapFilterMode { get set }
+c:objc(cs)MDLTextureFilter(py)rWrapMode	swift.property	rWrapMode	MDLTextureFilter.rWrapMode	var rWrapMode: MDLMaterialTextureWrapMode { get set }
+c:objc(cs)MDLTextureFilter(py)sWrapMode	swift.property	sWrapMode	MDLTextureFilter.sWrapMode	var sWrapMode: MDLMaterialTextureWrapMode { get set }
+c:objc(cs)MDLTextureFilter(py)tWrapMode	swift.property	tWrapMode	MDLTextureFilter.tWrapMode	var tWrapMode: MDLMaterialTextureWrapMode { get set }
+c:objc(cs)MDLTextureSampler	swift.class	MDLTextureSampler	MDLTextureSampler	class MDLTextureSampler
+c:objc(cs)MDLTextureSampler(py)hardwareFilter	swift.property	hardwareFilter	MDLTextureSampler.hardwareFilter	var hardwareFilter: MDLTextureFilter? { get set }
+c:objc(cs)MDLTextureSampler(py)texture	swift.property	texture	MDLTextureSampler.texture	var texture: MDLTexture? { get set }
+c:objc(cs)MDLTextureSampler(py)transform	swift.property	transform	MDLTextureSampler.transform	var transform: MDLTransform? { get set }
+c:objc(cs)MDLTransform	swift.class	MDLTransform	MDLTransform	class MDLTransform
+c:objc(cs)MDLTransform(im)init	swift.init	init()	MDLTransform.init()	init()
+c:objc(cs)MDLTransform(im)initWithIdentity	swift.init	init(identity:)	MDLTransform.init(identity:)	convenience init(identity: ())
+c:objc(cs)MDLTransform(im)initWithMatrix:	swift.init	init(matrix:)	MDLTransform.init(matrix:)	convenience init(matrix: matrix_float4x4)
+c:objc(cs)MDLTransform(im)initWithMatrix:resetsTransform:	swift.init	init(matrix:resetsTransform:)	MDLTransform.init(matrix:resetsTransform:)	convenience init(matrix: matrix_float4x4, resetsTransform: Bool)
+c:objc(cs)MDLTransform(im)initWithTransformComponent:	swift.init	init(transformComponent:)	MDLTransform.init(transformComponent:)	convenience init(transformComponent component: any MDLTransformComponent)
+c:objc(cs)MDLTransform(im)initWithTransformComponent:resetsTransform:	swift.init	init(transformComponent:resetsTransform:)	MDLTransform.init(transformComponent:resetsTransform:)	convenience init(transformComponent component: any MDLTransformComponent, resetsTransform: Bool)
+c:objc(cs)MDLTransform(im)rotationAtTime:	swift.method	rotation(atTime:)	MDLTransform.rotation(atTime:)	func rotation(atTime time: TimeInterval) -> vector_float3
+c:objc(cs)MDLTransform(im)rotationMatrixAtTime:	swift.method	rotationMatrix(atTime:)	MDLTransform.rotationMatrix(atTime:)	func rotationMatrix(atTime time: TimeInterval) -> matrix_float4x4
+c:objc(cs)MDLTransform(im)scaleAtTime:	swift.method	scale(atTime:)	MDLTransform.scale(atTime:)	func scale(atTime time: TimeInterval) -> vector_float3
+c:objc(cs)MDLTransform(im)setIdentity	swift.method	setIdentity()	MDLTransform.setIdentity()	func setIdentity()
+c:objc(cs)MDLTransform(im)setMatrix:forTime:	swift.method	setMatrix(_:forTime:)	MDLTransform.setMatrix(_:forTime:)	func setMatrix(_ matrix: matrix_float4x4, forTime time: TimeInterval)
+c:objc(cs)MDLTransform(im)setRotation:forTime:	swift.method	setRotation(_:forTime:)	MDLTransform.setRotation(_:forTime:)	func setRotation(_ rotation: vector_float3, forTime time: TimeInterval)
+c:objc(cs)MDLTransform(im)setScale:forTime:	swift.method	setScale(_:forTime:)	MDLTransform.setScale(_:forTime:)	func setScale(_ scale: vector_float3, forTime time: TimeInterval)
+c:objc(cs)MDLTransform(im)setShear:forTime:	swift.method	setShear(_:forTime:)	MDLTransform.setShear(_:forTime:)	func setShear(_ shear: vector_float3, forTime time: TimeInterval)
+c:objc(cs)MDLTransform(im)setTranslation:forTime:	swift.method	setTranslation(_:forTime:)	MDLTransform.setTranslation(_:forTime:)	func setTranslation(_ translation: vector_float3, forTime time: TimeInterval)
+c:objc(cs)MDLTransform(im)shearAtTime:	swift.method	shear(atTime:)	MDLTransform.shear(atTime:)	func shear(atTime time: TimeInterval) -> vector_float3
+c:objc(cs)MDLTransform(im)translationAtTime:	swift.method	translation(atTime:)	MDLTransform.translation(atTime:)	func translation(atTime time: TimeInterval) -> vector_float3
+c:objc(cs)MDLTransform(py)rotation	swift.property	rotation	MDLTransform.rotation	var rotation: vector_float3 { get set }
+c:objc(cs)MDLTransform(py)scale	swift.property	scale	MDLTransform.scale	var scale: vector_float3 { get set }
+c:objc(cs)MDLTransform(py)shear	swift.property	shear	MDLTransform.shear	var shear: vector_float3 { get set }
+c:objc(cs)MDLTransform(py)translation	swift.property	translation	MDLTransform.translation	var translation: vector_float3 { get set }
+c:objc(cs)MDLTransformMatrixOp	swift.class	MDLTransformMatrixOp	MDLTransformMatrixOp	class MDLTransformMatrixOp
+c:objc(cs)MDLTransformMatrixOp(py)animatedValue	swift.property	animatedValue	MDLTransformMatrixOp.animatedValue	var animatedValue: MDLAnimatedMatrix4x4 { get }
+c:objc(cs)MDLTransformMatrixOp(py)name	swift.property	name	MDLTransformMatrixOp.name	var name: String { get }
+c:objc(cs)MDLTransformOrientOp	swift.class	MDLTransformOrientOp	MDLTransformOrientOp	class MDLTransformOrientOp
+c:objc(cs)MDLTransformOrientOp(py)animatedValue	swift.property	animatedValue	MDLTransformOrientOp.animatedValue	var animatedValue: MDLAnimatedQuaternion { get }
+c:objc(cs)MDLTransformOrientOp(py)name	swift.property	name	MDLTransformOrientOp.name	var name: String { get }
+c:objc(cs)MDLTransformRotateOp	swift.class	MDLTransformRotateOp	MDLTransformRotateOp	class MDLTransformRotateOp
+c:objc(cs)MDLTransformRotateOp(py)animatedValue	swift.property	animatedValue	MDLTransformRotateOp.animatedValue	var animatedValue: MDLAnimatedVector3 { get }
+c:objc(cs)MDLTransformRotateOp(py)name	swift.property	name	MDLTransformRotateOp.name	var name: String { get }
+c:objc(cs)MDLTransformRotateXOp	swift.class	MDLTransformRotateXOp	MDLTransformRotateXOp	class MDLTransformRotateXOp
+c:objc(cs)MDLTransformRotateXOp(py)animatedValue	swift.property	animatedValue	MDLTransformRotateXOp.animatedValue	var animatedValue: MDLAnimatedScalar { get }
+c:objc(cs)MDLTransformRotateXOp(py)name	swift.property	name	MDLTransformRotateXOp.name	var name: String { get }
+c:objc(cs)MDLTransformRotateYOp	swift.class	MDLTransformRotateYOp	MDLTransformRotateYOp	class MDLTransformRotateYOp
+c:objc(cs)MDLTransformRotateYOp(py)animatedValue	swift.property	animatedValue	MDLTransformRotateYOp.animatedValue	var animatedValue: MDLAnimatedScalar { get }
+c:objc(cs)MDLTransformRotateYOp(py)name	swift.property	name	MDLTransformRotateYOp.name	var name: String { get }
+c:objc(cs)MDLTransformRotateZOp	swift.class	MDLTransformRotateZOp	MDLTransformRotateZOp	class MDLTransformRotateZOp
+c:objc(cs)MDLTransformRotateZOp(py)animatedValue	swift.property	animatedValue	MDLTransformRotateZOp.animatedValue	var animatedValue: MDLAnimatedScalar { get }
+c:objc(cs)MDLTransformRotateZOp(py)name	swift.property	name	MDLTransformRotateZOp.name	var name: String { get }
+c:objc(cs)MDLTransformScaleOp	swift.class	MDLTransformScaleOp	MDLTransformScaleOp	class MDLTransformScaleOp
+c:objc(cs)MDLTransformScaleOp(py)animatedValue	swift.property	animatedValue	MDLTransformScaleOp.animatedValue	var animatedValue: MDLAnimatedVector3 { get }
+c:objc(cs)MDLTransformScaleOp(py)name	swift.property	name	MDLTransformScaleOp.name	var name: String { get }
+c:objc(cs)MDLTransformStack	swift.class	MDLTransformStack	MDLTransformStack	class MDLTransformStack
+c:objc(cs)MDLTransformStack(im)addMatrixOp:inverse:	swift.method	addMatrixOp(_:inverse:)	MDLTransformStack.addMatrixOp(_:inverse:)	func addMatrixOp(_ animatedValueName: String, inverse: Bool) -> MDLTransformMatrixOp
+c:objc(cs)MDLTransformStack(im)addOrientOp:inverse:	swift.method	addOrientOp(_:inverse:)	MDLTransformStack.addOrientOp(_:inverse:)	func addOrientOp(_ animatedValueName: String, inverse: Bool) -> MDLTransformOrientOp
+c:objc(cs)MDLTransformStack(im)addRotateOp:order:inverse:	swift.method	addRotateOp(_:order:inverse:)	MDLTransformStack.addRotateOp(_:order:inverse:)	func addRotateOp(_ animatedValueName: String, order: MDLTransformOpRotationOrder, inverse: Bool) -> MDLTransformRotateOp
+c:objc(cs)MDLTransformStack(im)addRotateXOp:inverse:	swift.method	addRotateXOp(_:inverse:)	MDLTransformStack.addRotateXOp(_:inverse:)	func addRotateXOp(_ animatedValueName: String, inverse: Bool) -> MDLTransformRotateXOp
+c:objc(cs)MDLTransformStack(im)addRotateYOp:inverse:	swift.method	addRotateYOp(_:inverse:)	MDLTransformStack.addRotateYOp(_:inverse:)	func addRotateYOp(_ animatedValueName: String, inverse: Bool) -> MDLTransformRotateYOp
+c:objc(cs)MDLTransformStack(im)addRotateZOp:inverse:	swift.method	addRotateZOp(_:inverse:)	MDLTransformStack.addRotateZOp(_:inverse:)	func addRotateZOp(_ animatedValueName: String, inverse: Bool) -> MDLTransformRotateZOp
+c:objc(cs)MDLTransformStack(im)addScaleOp:inverse:	swift.method	addScaleOp(_:inverse:)	MDLTransformStack.addScaleOp(_:inverse:)	func addScaleOp(_ animatedValueName: String, inverse: Bool) -> MDLTransformScaleOp
+c:objc(cs)MDLTransformStack(im)addTranslateOp:inverse:	swift.method	addTranslateOp(_:inverse:)	MDLTransformStack.addTranslateOp(_:inverse:)	func addTranslateOp(_ animatedValueName: String, inverse: Bool) -> MDLTransformTranslateOp
+c:objc(cs)MDLTransformStack(im)animatedValueWithName:	swift.method	animatedValue(withName:)	MDLTransformStack.animatedValue(withName:)	func animatedValue(withName name: String) -> MDLAnimatedValue
+c:objc(cs)MDLTransformStack(im)count	swift.method	count()	MDLTransformStack.count()	func count() -> UInt
+c:objc(cs)MDLTransformStack(im)double4x4AtTime:	swift.method	double4x4(atTime:)	MDLTransformStack.double4x4(atTime:)	func double4x4(atTime time: TimeInterval) -> matrix_double4x4
+c:objc(cs)MDLTransformStack(im)float4x4AtTime:	swift.method	float4x4(atTime:)	MDLTransformStack.float4x4(atTime:)	func float4x4(atTime time: TimeInterval) -> matrix_float4x4
+c:objc(cs)MDLTransformStack(im)init	swift.init	init()	MDLTransformStack.init()	init()
+c:objc(cs)MDLTransformStack(py)keyTimes	swift.property	keyTimes	MDLTransformStack.keyTimes	var keyTimes: [NSNumber] { get }
+c:objc(cs)MDLTransformStack(py)transformOps	swift.property	transformOps	MDLTransformStack.transformOps	var transformOps: [any MDLTransformOp] { get }
+c:objc(cs)MDLTransformTranslateOp	swift.class	MDLTransformTranslateOp	MDLTransformTranslateOp	class MDLTransformTranslateOp
+c:objc(cs)MDLTransformTranslateOp(py)animatedValue	swift.property	animatedValue	MDLTransformTranslateOp.animatedValue	var animatedValue: MDLAnimatedVector3 { get }
+c:objc(cs)MDLTransformTranslateOp(py)name	swift.property	name	MDLTransformTranslateOp.name	var name: String { get }
+c:objc(cs)MDLURLTexture	swift.class	MDLURLTexture	MDLURLTexture	class MDLURLTexture
+c:objc(cs)MDLURLTexture(im)initWithURL:name:	swift.init	init(url:name:)	MDLURLTexture.init(url:name:)	init(url URL: URL, name: String?)
+c:objc(cs)MDLURLTexture(im)initWithURL:name:::SYNTHESIZED::c:objc(cs)MDLURLTexture	swift.init	init(URL:name:)	MDLURLTexture.init(URL:name:)	init(URL: URL, name: String?)
+c:objc(cs)MDLURLTexture(py)URL	swift.property	url	MDLURLTexture.url	var url: URL { get set }
+c:objc(cs)MDLUtility	swift.class	MDLUtility	MDLUtility	class MDLUtility
+c:objc(cs)MDLUtility(cm)convertToUSDZ:writeToURL:	swift.type.method	convert(toUSDZ:writeTo:)	MDLUtility.convert(toUSDZ:writeTo:)	class func convert(toUSDZ inputURL: URL, writeTo outputURL: URL)
+c:objc(cs)MDLVertexAttribute	swift.class	MDLVertexAttribute	MDLVertexAttribute	class MDLVertexAttribute
+c:objc(cs)MDLVertexAttribute(im)initWithName:format:offset:bufferIndex:	swift.init	init(name:format:offset:bufferIndex:)	MDLVertexAttribute.init(name:format:offset:bufferIndex:)	init(name: String, format: MDLVertexFormat, offset: UInt, bufferIndex: UInt)
+c:objc(cs)MDLVertexAttribute(py)bufferIndex	swift.property	bufferIndex	MDLVertexAttribute.bufferIndex	var bufferIndex: UInt { get set }
+c:objc(cs)MDLVertexAttribute(py)format	swift.property	format	MDLVertexAttribute.format	var format: MDLVertexFormat { get set }
+c:objc(cs)MDLVertexAttribute(py)initializationValue	swift.property	initializationValue	MDLVertexAttribute.initializationValue	var initializationValue: vector_float4 { get set }
+c:objc(cs)MDLVertexAttribute(py)name	swift.property	name	MDLVertexAttribute.name	var name: String { get set }
+c:objc(cs)MDLVertexAttribute(py)offset	swift.property	offset	MDLVertexAttribute.offset	var offset: UInt { get set }
+c:objc(cs)MDLVertexAttribute(py)time	swift.property	time	MDLVertexAttribute.time	var time: TimeInterval { get set }
+c:objc(cs)MDLVertexAttributeData	swift.class	MDLVertexAttributeData	MDLVertexAttributeData	class MDLVertexAttributeData
+c:objc(cs)MDLVertexAttributeData(py)bufferSize	swift.property	bufferSize	MDLVertexAttributeData.bufferSize	var bufferSize: UInt { get set }
+c:objc(cs)MDLVertexAttributeData(py)dataStart	swift.property	dataStart	MDLVertexAttributeData.dataStart	var dataStart: UnsafeMutableRawPointer { get set }
+c:objc(cs)MDLVertexAttributeData(py)format	swift.property	format	MDLVertexAttributeData.format	var format: MDLVertexFormat { get set }
+c:objc(cs)MDLVertexAttributeData(py)map	swift.property	map	MDLVertexAttributeData.map	var map: MDLMeshBufferMap { get set }
+c:objc(cs)MDLVertexAttributeData(py)stride	swift.property	stride	MDLVertexAttributeData.stride	var stride: UInt { get set }
+c:objc(cs)MDLVertexBufferLayout	swift.class	MDLVertexBufferLayout	MDLVertexBufferLayout	class MDLVertexBufferLayout
+c:objc(cs)MDLVertexBufferLayout(im)initWithStride:	swift.init	init(stride:)	MDLVertexBufferLayout.init(stride:)	init(stride: UInt)
+c:objc(cs)MDLVertexBufferLayout(py)stride	swift.property	stride	MDLVertexBufferLayout.stride	var stride: UInt { get set }
+c:objc(cs)MDLVertexDescriptor	swift.class	MDLVertexDescriptor	MDLVertexDescriptor	class MDLVertexDescriptor
+c:objc(cs)MDLVertexDescriptor(im)addOrReplaceAttribute:	swift.method	addOrReplaceAttribute(_:)	MDLVertexDescriptor.addOrReplaceAttribute(_:)	func addOrReplaceAttribute(_ attribute: MDLVertexAttribute)
+c:objc(cs)MDLVertexDescriptor(im)attributeNamed:	swift.method	attributeNamed(_:)	MDLVertexDescriptor.attributeNamed(_:)	func attributeNamed(_ name: String) -> MDLVertexAttribute?
+c:objc(cs)MDLVertexDescriptor(im)initWithVertexDescriptor:	swift.init	init(vertexDescriptor:)	MDLVertexDescriptor.init(vertexDescriptor:)	init(vertexDescriptor: MDLVertexDescriptor)
+c:objc(cs)MDLVertexDescriptor(im)removeAttributeNamed:	swift.method	removeAttributeNamed(_:)	MDLVertexDescriptor.removeAttributeNamed(_:)	func removeAttributeNamed(_ name: String)
+c:objc(cs)MDLVertexDescriptor(im)reset	swift.method	reset()	MDLVertexDescriptor.reset()	func reset()
+c:objc(cs)MDLVertexDescriptor(im)setPackedOffsets	swift.method	setPackedOffsets()	MDLVertexDescriptor.setPackedOffsets()	func setPackedOffsets()
+c:objc(cs)MDLVertexDescriptor(im)setPackedStrides	swift.method	setPackedStrides()	MDLVertexDescriptor.setPackedStrides()	func setPackedStrides()
+c:objc(cs)MDLVertexDescriptor(py)attributes	swift.property	attributes	MDLVertexDescriptor.attributes	var attributes: NSMutableArray { get set }
+c:objc(cs)MDLVertexDescriptor(py)layouts	swift.property	layouts	MDLVertexDescriptor.layouts	var layouts: NSMutableArray { get set }
+c:objc(cs)MDLVoxelArray	swift.class	MDLVoxelArray	MDLVoxelArray	class MDLVoxelArray
+c:objc(cs)MDLVoxelArray(im)coarseMesh	swift.method	coarseMesh()	MDLVoxelArray.coarseMesh()	func coarseMesh() -> MDLMesh?
+c:objc(cs)MDLVoxelArray(im)coarseMeshUsingAllocator:	swift.method	coarseMesh(using:)	MDLVoxelArray.coarseMesh(using:)	func coarseMesh(using allocator: (any MDLMeshBufferAllocator)?) -> MDLMesh?
+c:objc(cs)MDLVoxelArray(im)convertToSignedShellField	swift.method	convertToSignedShellField()	MDLVoxelArray.convertToSignedShellField()	func convertToSignedShellField()
+c:objc(cs)MDLVoxelArray(im)differenceWithVoxels:	swift.method	difference(with:)	MDLVoxelArray.difference(with:)	func difference(with voxels: MDLVoxelArray)
+c:objc(cs)MDLVoxelArray(im)indexOfSpatialLocation:	swift.method	index(ofSpatialLocation:)	MDLVoxelArray.index(ofSpatialLocation:)	func index(ofSpatialLocation location: vector_float3) -> MDLVoxelIndex
+c:objc(cs)MDLVoxelArray(im)initWithAsset:divisions:patchRadius:	swift.init	init(asset:divisions:patchRadius:)	MDLVoxelArray.init(asset:divisions:patchRadius:)	init(asset: MDLAsset, divisions: Int32, patchRadius: Float)
+c:objc(cs)MDLVoxelArray(im)initWithData:boundingBox:voxelExtent:	swift.init	init(data:boundingBox:voxelExtent:)	MDLVoxelArray.init(data:boundingBox:voxelExtent:)	init(data voxelData: Data, boundingBox: MDLAxisAlignedBoundingBox, voxelExtent: Float)
+c:objc(cs)MDLVoxelArray(im)intersectWithVoxels:	swift.method	intersect(with:)	MDLVoxelArray.intersect(with:)	func intersect(with voxels: MDLVoxelArray)
+c:objc(cs)MDLVoxelArray(im)meshUsingAllocator:	swift.method	mesh(using:)	MDLVoxelArray.mesh(using:)	func mesh(using allocator: (any MDLMeshBufferAllocator)?) -> MDLMesh?
+c:objc(cs)MDLVoxelArray(im)setVoxelAtIndex:	swift.method	setVoxelAtIndex(_:)	MDLVoxelArray.setVoxelAtIndex(_:)	func setVoxelAtIndex(_ index: MDLVoxelIndex)
+c:objc(cs)MDLVoxelArray(im)setVoxelsForMesh:divisions:patchRadius:	swift.method	setVoxelsFor(_:divisions:patchRadius:)	MDLVoxelArray.setVoxelsFor(_:divisions:patchRadius:)	func setVoxelsFor(_ mesh: MDLMesh, divisions: Int32, patchRadius: Float)
+c:objc(cs)MDLVoxelArray(im)spatialLocationOfIndex:	swift.method	spatialLocation(ofIndex:)	MDLVoxelArray.spatialLocation(ofIndex:)	func spatialLocation(ofIndex index: MDLVoxelIndex) -> vector_float3
+c:objc(cs)MDLVoxelArray(im)unionWithVoxels:	swift.method	union(with:)	MDLVoxelArray.union(with:)	func union(with voxels: MDLVoxelArray)
+c:objc(cs)MDLVoxelArray(im)voxelBoundingBoxAtIndex:	swift.method	voxelBoundingBox(atIndex:)	MDLVoxelArray.voxelBoundingBox(atIndex:)	func voxelBoundingBox(atIndex index: MDLVoxelIndex) -> MDLAxisAlignedBoundingBox
+c:objc(cs)MDLVoxelArray(im)voxelExistsAtIndex:allowAnyX:allowAnyY:allowAnyZ:allowAnyShell:	swift.method	voxelExists(atIndex:allowAnyX:allowAnyY:allowAnyZ:allowAnyShell:)	MDLVoxelArray.voxelExists(atIndex:allowAnyX:allowAnyY:allowAnyZ:allowAnyShell:)	func voxelExists(atIndex index: MDLVoxelIndex, allowAnyX: Bool, allowAnyY: Bool, allowAnyZ: Bool, allowAnyShell: Bool) -> Bool
+c:objc(cs)MDLVoxelArray(im)voxelIndices	swift.method	voxelIndices()	MDLVoxelArray.voxelIndices()	func voxelIndices() -> Data?
+c:objc(cs)MDLVoxelArray(im)voxelsWithinExtent:	swift.method	voxels(within:)	MDLVoxelArray.voxels(within:)	func voxels(within extent: MDLVoxelIndexExtent) -> Data?
+c:objc(cs)MDLVoxelArray(py)boundingBox	swift.property	boundingBox	MDLVoxelArray.boundingBox	var boundingBox: MDLAxisAlignedBoundingBox { get }
+c:objc(cs)MDLVoxelArray(py)count	swift.property	count	MDLVoxelArray.count	var count: UInt { get }
+c:objc(cs)MDLVoxelArray(py)isValidSignedShellField	swift.property	isValidSignedShellField	MDLVoxelArray.isValidSignedShellField	var isValidSignedShellField: Bool { get }
+c:objc(cs)MDLVoxelArray(py)shellFieldExteriorThickness	swift.property	shellFieldExteriorThickness	MDLVoxelArray.shellFieldExteriorThickness	var shellFieldExteriorThickness: Float { get set }
+c:objc(cs)MDLVoxelArray(py)shellFieldInteriorThickness	swift.property	shellFieldInteriorThickness	MDLVoxelArray.shellFieldInteriorThickness	var shellFieldInteriorThickness: Float { get set }
+c:objc(cs)MDLVoxelArray(py)voxelIndexExtent	swift.property	voxelIndexExtent	MDLVoxelArray.voxelIndexExtent	var voxelIndexExtent: MDLVoxelIndexExtent { get }
+c:objc(pl)MDLAssetResolver	swift.protocol	MDLAssetResolver	MDLAssetResolver	protocol MDLAssetResolver : NSObjectProtocol
+c:objc(pl)MDLAssetResolver(im)canResolveAssetNamed:	swift.method	canResolveAssetNamed(_:)	MDLAssetResolver.canResolveAssetNamed(_:)	func canResolveAssetNamed(_ name: String) -> Bool
+c:objc(pl)MDLAssetResolver(im)resolveAssetNamed:	swift.method	resolveAssetNamed(_:)	MDLAssetResolver.resolveAssetNamed(_:)	func resolveAssetNamed(_ name: String) -> URL
+c:objc(pl)MDLComponent	swift.protocol	MDLComponent	MDLComponent	protocol MDLComponent : NSObjectProtocol
+c:objc(pl)MDLJointAnimation	swift.protocol	MDLJointAnimation	MDLJointAnimation	protocol MDLJointAnimation
+c:objc(pl)MDLLightProbeIrradianceDataSource	swift.protocol	MDLLightProbeIrradianceDataSource	MDLLightProbeIrradianceDataSource	protocol MDLLightProbeIrradianceDataSource : NSObjectProtocol
+c:objc(pl)MDLLightProbeIrradianceDataSource(im)sphericalHarmonicsCoefficientsAtPosition:	swift.method	sphericalHarmonicsCoefficients(atPosition:)	MDLLightProbeIrradianceDataSource.sphericalHarmonicsCoefficients(atPosition:)	optional func sphericalHarmonicsCoefficients(atPosition position: vector_float3) -> Data
+c:objc(pl)MDLLightProbeIrradianceDataSource(py)boundingBox	swift.property	boundingBox	MDLLightProbeIrradianceDataSource.boundingBox	var boundingBox: MDLAxisAlignedBoundingBox { get set }
+c:objc(pl)MDLLightProbeIrradianceDataSource(py)sphericalHarmonicsLevel	swift.property	sphericalHarmonicsLevel	MDLLightProbeIrradianceDataSource.sphericalHarmonicsLevel	optional var sphericalHarmonicsLevel: UInt { get set }
+c:objc(pl)MDLMeshBuffer	swift.protocol	MDLMeshBuffer	MDLMeshBuffer	protocol MDLMeshBuffer : NSCopying, NSObjectProtocol
+c:objc(pl)MDLMeshBuffer(im)fillData:offset:	swift.method	fill(_:offset:)	MDLMeshBuffer.fill(_:offset:)	func fill(_ data: Data, offset: UInt)
+c:objc(pl)MDLMeshBuffer(im)map	swift.method	map()	MDLMeshBuffer.map()	func map() -> MDLMeshBufferMap
+c:objc(pl)MDLMeshBuffer(py)allocator	swift.property	allocator	MDLMeshBuffer.allocator	var allocator: any MDLMeshBufferAllocator { get }
+c:objc(pl)MDLMeshBuffer(py)length	swift.property	length	MDLMeshBuffer.length	var length: UInt { get }
+c:objc(pl)MDLMeshBuffer(py)type	swift.property	type	MDLMeshBuffer.type	var type: MDLMeshBufferType { get }
+c:objc(pl)MDLMeshBuffer(py)zone	swift.property	zone	MDLMeshBuffer.zone	var zone: any MDLMeshBufferZone { get }
+c:objc(pl)MDLMeshBufferAllocator	swift.protocol	MDLMeshBufferAllocator	MDLMeshBufferAllocator	protocol MDLMeshBufferAllocator : NSObjectProtocol
+c:objc(pl)MDLMeshBufferAllocator(im)newBuffer:type:	swift.method	newBuffer(_:type:)	MDLMeshBufferAllocator.newBuffer(_:type:)	func newBuffer(_ length: UInt, type: MDLMeshBufferType) -> any MDLMeshBuffer
+c:objc(pl)MDLMeshBufferAllocator(im)newBufferFromZone:data:type:	swift.method	newBuffer(from:data:type:)	MDLMeshBufferAllocator.newBuffer(from:data:type:)	func newBuffer(from zone: (any MDLMeshBufferZone)?, data: Data, type: MDLMeshBufferType) -> (any MDLMeshBuffer)?
+c:objc(pl)MDLMeshBufferAllocator(im)newBufferFromZone:length:type:	swift.method	newBuffer(from:length:type:)	MDLMeshBufferAllocator.newBuffer(from:length:type:)	func newBuffer(from zone: (any MDLMeshBufferZone)?, length: UInt, type: MDLMeshBufferType) -> (any MDLMeshBuffer)?
+c:objc(pl)MDLMeshBufferAllocator(im)newBufferWithData:type:	swift.method	newBuffer(with:type:)	MDLMeshBufferAllocator.newBuffer(with:type:)	func newBuffer(with data: Data, type: MDLMeshBufferType) -> any MDLMeshBuffer
+c:objc(pl)MDLMeshBufferAllocator(im)newZone:	swift.method	newZone(_:)	MDLMeshBufferAllocator.newZone(_:)	func newZone(_ capacity: UInt) -> any MDLMeshBufferZone
+c:objc(pl)MDLMeshBufferAllocator(im)newZoneForBuffersWithSize:andType:	swift.method	newZoneForBuffers(withSize:andType:)	MDLMeshBufferAllocator.newZoneForBuffers(withSize:andType:)	func newZoneForBuffers(withSize sizes: [NSNumber], andType types: [NSNumber]) -> any MDLMeshBufferZone
+c:objc(pl)MDLMeshBufferZone	swift.protocol	MDLMeshBufferZone	MDLMeshBufferZone	protocol MDLMeshBufferZone : NSObjectProtocol
+c:objc(pl)MDLMeshBufferZone(py)allocator	swift.property	allocator	MDLMeshBufferZone.allocator	var allocator: any MDLMeshBufferAllocator { get }
+c:objc(pl)MDLMeshBufferZone(py)capacity	swift.property	capacity	MDLMeshBufferZone.capacity	var capacity: UInt { get }
+c:objc(pl)MDLNamed	swift.protocol	MDLNamed	MDLNamed	protocol MDLNamed
+c:objc(pl)MDLNamed(py)name	swift.property	name	MDLNamed.name	var name: String { get set }
+c:objc(pl)MDLObjectContainerComponent	swift.protocol	MDLObjectContainerComponent	MDLObjectContainerComponent	protocol MDLObjectContainerComponent : NSFastEnumeration, MDLComponent
+c:objc(pl)MDLObjectContainerComponent(im)addObject:	swift.method	add(_:)	MDLObjectContainerComponent.add(_:)	func add(_ object: MDLObject)
+c:objc(pl)MDLObjectContainerComponent(im)objectAtIndexedSubscript:	swift.subscript	subscript(_:)	MDLObjectContainerComponent.subscript(_:)	subscript(index: UInt) -> MDLObject { get }
+c:objc(pl)MDLObjectContainerComponent(im)removeObject:	swift.method	remove(_:)	MDLObjectContainerComponent.remove(_:)	func remove(_ object: MDLObject)
+c:objc(pl)MDLObjectContainerComponent(py)count	swift.property	count	MDLObjectContainerComponent.count	var count: UInt { get }
+c:objc(pl)MDLObjectContainerComponent(py)objects	swift.property	objects	MDLObjectContainerComponent.objects	var objects: [MDLObject] { get }
+c:objc(pl)MDLTransformComponent	swift.protocol	MDLTransformComponent	MDLTransformComponent	protocol MDLTransformComponent : MDLComponent
+c:objc(pl)MDLTransformComponent(cm)globalTransformWithObject:atTime:	swift.type.method	globalTransform(with:atTime:)	MDLTransformComponent.globalTransform(with:atTime:)	optional static func globalTransform(with object: MDLObject, atTime time: TimeInterval) -> matrix_float4x4
+c:objc(pl)MDLTransformComponent(im)localTransformAtTime:	swift.method	localTransform(atTime:)	MDLTransformComponent.localTransform(atTime:)	optional func localTransform(atTime time: TimeInterval) -> matrix_float4x4
+c:objc(pl)MDLTransformComponent(im)setLocalTransform:	swift.method	setLocalTransform(_:)	MDLTransformComponent.setLocalTransform(_:)	optional func setLocalTransform(_ transform: matrix_float4x4)
+c:objc(pl)MDLTransformComponent(im)setLocalTransform:forTime:	swift.method	setLocalTransform(_:forTime:)	MDLTransformComponent.setLocalTransform(_:forTime:)	optional func setLocalTransform(_ transform: matrix_float4x4, forTime time: TimeInterval)
+c:objc(pl)MDLTransformComponent(py)keyTimes	swift.property	keyTimes	MDLTransformComponent.keyTimes	var keyTimes: [NSNumber] { get }
+c:objc(pl)MDLTransformComponent(py)matrix	swift.property	matrix	MDLTransformComponent.matrix	var matrix: matrix_float4x4 { get set }
+c:objc(pl)MDLTransformComponent(py)maximumTime	swift.property	maximumTime	MDLTransformComponent.maximumTime	var maximumTime: TimeInterval { get }
+c:objc(pl)MDLTransformComponent(py)minimumTime	swift.property	minimumTime	MDLTransformComponent.minimumTime	var minimumTime: TimeInterval { get }
+c:objc(pl)MDLTransformComponent(py)resetsTransform	swift.property	resetsTransform	MDLTransformComponent.resetsTransform	var resetsTransform: Bool { get set }
+c:objc(pl)MDLTransformOp	swift.protocol	MDLTransformOp	MDLTransformOp	protocol MDLTransformOp
+c:objc(pl)MDLTransformOp(im)IsInverseOp	swift.method	isInverseOp()	MDLTransformOp.isInverseOp()	func isInverseOp() -> Bool
+c:objc(pl)MDLTransformOp(im)double4x4AtTime:	swift.method	double4x4(atTime:)	MDLTransformOp.double4x4(atTime:)	func double4x4(atTime time: TimeInterval) -> matrix_double4x4
+c:objc(pl)MDLTransformOp(im)float4x4AtTime:	swift.method	float4x4(atTime:)	MDLTransformOp.float4x4(atTime:)	func float4x4(atTime time: TimeInterval) -> matrix_float4x4
+c:objc(pl)MDLTransformOp(py)name	swift.property	name	MDLTransformOp.name	var name: String { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLAnimatedValueInterpolation	swift.func.op	!=(_:_:)	MDLAnimatedValueInterpolation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLCameraProjection	swift.func.op	!=(_:_:)	MDLCameraProjection.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLDataPrecision	swift.func.op	!=(_:_:)	MDLDataPrecision.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLGeometryType	swift.func.op	!=(_:_:)	MDLGeometryType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLIndexBitDepth	swift.func.op	!=(_:_:)	MDLIndexBitDepth.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLLightType	swift.func.op	!=(_:_:)	MDLLightType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLMaterialFace	swift.func.op	!=(_:_:)	MDLMaterialFace.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLMaterialMipMapFilterMode	swift.func.op	!=(_:_:)	MDLMaterialMipMapFilterMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLMaterialPropertyType	swift.func.op	!=(_:_:)	MDLMaterialPropertyType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLMaterialSemantic	swift.func.op	!=(_:_:)	MDLMaterialSemantic.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLMaterialTextureFilterMode	swift.func.op	!=(_:_:)	MDLMaterialTextureFilterMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLMaterialTextureWrapMode	swift.func.op	!=(_:_:)	MDLMaterialTextureWrapMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLMeshBufferType	swift.func.op	!=(_:_:)	MDLMeshBufferType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLProbePlacement	swift.func.op	!=(_:_:)	MDLProbePlacement.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLTextureChannelEncoding	swift.func.op	!=(_:_:)	MDLTextureChannelEncoding.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLTransformOpRotationOrder	swift.func.op	!=(_:_:)	MDLTransformOpRotationOrder.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MDLVertexFormat	swift.func.op	!=(_:_:)	MDLVertexFormat.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLAnimatedValueInterpolation	swift.property	hashValue	MDLAnimatedValueInterpolation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLCameraProjection	swift.property	hashValue	MDLCameraProjection.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLDataPrecision	swift.property	hashValue	MDLDataPrecision.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLGeometryType	swift.property	hashValue	MDLGeometryType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLIndexBitDepth	swift.property	hashValue	MDLIndexBitDepth.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLLightType	swift.property	hashValue	MDLLightType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLMaterialFace	swift.property	hashValue	MDLMaterialFace.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLMaterialMipMapFilterMode	swift.property	hashValue	MDLMaterialMipMapFilterMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLMaterialPropertyType	swift.property	hashValue	MDLMaterialPropertyType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLMaterialSemantic	swift.property	hashValue	MDLMaterialSemantic.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLMaterialTextureFilterMode	swift.property	hashValue	MDLMaterialTextureFilterMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLMaterialTextureWrapMode	swift.property	hashValue	MDLMaterialTextureWrapMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLMeshBufferType	swift.property	hashValue	MDLMeshBufferType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLProbePlacement	swift.property	hashValue	MDLProbePlacement.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLTextureChannelEncoding	swift.property	hashValue	MDLTextureChannelEncoding.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLTransformOpRotationOrder	swift.property	hashValue	MDLTransformOpRotationOrder.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MDLVertexFormat	swift.property	hashValue	MDLVertexFormat.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLAnimatedValueInterpolation	swift.method	hash(into:)	MDLAnimatedValueInterpolation.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLCameraProjection	swift.method	hash(into:)	MDLCameraProjection.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLDataPrecision	swift.method	hash(into:)	MDLDataPrecision.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLGeometryType	swift.method	hash(into:)	MDLGeometryType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLIndexBitDepth	swift.method	hash(into:)	MDLIndexBitDepth.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLLightType	swift.method	hash(into:)	MDLLightType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLMaterialFace	swift.method	hash(into:)	MDLMaterialFace.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLMaterialMipMapFilterMode	swift.method	hash(into:)	MDLMaterialMipMapFilterMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLMaterialPropertyType	swift.method	hash(into:)	MDLMaterialPropertyType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLMaterialSemantic	swift.method	hash(into:)	MDLMaterialSemantic.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLMaterialTextureFilterMode	swift.method	hash(into:)	MDLMaterialTextureFilterMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLMaterialTextureWrapMode	swift.method	hash(into:)	MDLMaterialTextureWrapMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLMeshBufferType	swift.method	hash(into:)	MDLMeshBufferType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLProbePlacement	swift.method	hash(into:)	MDLProbePlacement.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLTextureChannelEncoding	swift.method	hash(into:)	MDLTextureChannelEncoding.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLTransformOpRotationOrder	swift.method	hash(into:)	MDLTransformOpRotationOrder.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MDLVertexFormat	swift.method	hash(into:)	MDLVertexFormat.hash(into:)	func hash(into hasher: inout Hasher)
+s:So12MDLLightTypeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MDLLightType.init(rawValue:)	init?(rawValue: UInt)
+s:So15MDLGeometryTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MDLGeometryType.init(rawValue:)	init?(rawValue: Int)
+s:So15MDLMaterialFaceV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MDLMaterialFace.init(rawValue:)	init?(rawValue: UInt)
+s:So15MDLVertexFormatV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MDLVertexFormat.init(rawValue:)	init?(rawValue: UInt)
+s:So16MDLAnimatedValueC7ModelIOE5timesSaySdGvp	swift.property	times	MDLAnimatedValue.times	@nonobjc var times: [TimeInterval] { get }
+s:So16MDLDataPrecisionV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MDLDataPrecision.init(rawValue:)	init?(rawValue: UInt)
+s:So16MDLIndexBitDepthV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MDLIndexBitDepth.init(rawValue:)	init?(rawValue: UInt)
+s:So17MDLAnimatedScalarC7ModelIOE10floatArraySaySfGvp	swift.property	floatArray	MDLAnimatedScalar.floatArray	@nonobjc var floatArray: [Float] { get }
+s:So17MDLAnimatedScalarC7ModelIOE11doubleArraySaySdGvp	swift.property	doubleArray	MDLAnimatedScalar.doubleArray	@nonobjc var doubleArray: [Double] { get }
+s:So17MDLAnimatedScalarC7ModelIOE5reset10floatArray7atTimesySaySfG_SaySdGtF	swift.method	reset(floatArray:atTimes:)	MDLAnimatedScalar.reset(floatArray:atTimes:)	@nonobjc func reset(floatArray array: [Float], atTimes times: [TimeInterval])
+s:So17MDLAnimatedScalarC7ModelIOE5reset11doubleArray7atTimesySaySdG_AGtF	swift.method	reset(doubleArray:atTimes:)	MDLAnimatedScalar.reset(doubleArray:atTimes:)	@nonobjc func reset(doubleArray array: [Double], atTimes times: [TimeInterval])
+s:So17MDLMatrix4x4ArrayC7ModelIOE08float4x4B0SaySo05simd_E0aGvp	swift.property	float4x4Array	MDLMatrix4x4Array.float4x4Array	@nonobjc var float4x4Array: [float4x4] { get set }
+s:So17MDLMatrix4x4ArrayC7ModelIOE09double4x4B0SaySo05simd_E0aGvp	swift.property	double4x4Array	MDLMatrix4x4Array.double4x4Array	@nonobjc var double4x4Array: [double4x4] { get set }
+s:So17MDLMeshBufferTypeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MDLMeshBufferType.init(rawValue:)	init?(rawValue: UInt)
+s:So17MDLProbePlacementV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MDLProbePlacement.init(rawValue:)	init?(rawValue: Int)
+s:So18MDLAnimatedVector2C7ModelIOE11float2ArraySays5SIMD2VySfGGvp	swift.property	float2Array	MDLAnimatedVector2.float2Array	@nonobjc var float2Array: [SIMD2<Float>] { get }
+s:So18MDLAnimatedVector2C7ModelIOE12double2ArraySays5SIMD2VySdGGvp	swift.property	double2Array	MDLAnimatedVector2.double2Array	@nonobjc var double2Array: [SIMD2<Double>] { get }
+s:So18MDLAnimatedVector2C7ModelIOE5reset11float2Array7atTimesySays5SIMD2VySfGG_SaySdGtF	swift.method	reset(float2Array:atTimes:)	MDLAnimatedVector2.reset(float2Array:atTimes:)	@nonobjc func reset(float2Array array: [SIMD2<Float>], atTimes times: [TimeInterval])
+s:So18MDLAnimatedVector2C7ModelIOE5reset12double2Array7atTimesySays5SIMD2VySdGG_SaySdGtF	swift.method	reset(double2Array:atTimes:)	MDLAnimatedVector2.reset(double2Array:atTimes:)	@nonobjc func reset(double2Array array: [SIMD2<Double>], atTimes times: [TimeInterval])
+s:So18MDLAnimatedVector3C7ModelIOE11float3ArraySays5SIMD3VySfGGvp	swift.property	float3Array	MDLAnimatedVector3.float3Array	@nonobjc var float3Array: [SIMD3<Float>] { get }
+s:So18MDLAnimatedVector3C7ModelIOE12double3ArraySays5SIMD3VySdGGvp	swift.property	double3Array	MDLAnimatedVector3.double3Array	@nonobjc var double3Array: [SIMD3<Double>] { get }
+s:So18MDLAnimatedVector3C7ModelIOE5reset11float3Array7atTimesySays5SIMD3VySfGG_SaySdGtF	swift.method	reset(float3Array:atTimes:)	MDLAnimatedVector3.reset(float3Array:atTimes:)	@nonobjc func reset(float3Array array: [SIMD3<Float>], atTimes times: [TimeInterval])
+s:So18MDLAnimatedVector3C7ModelIOE5reset12double3Array7atTimesySays5SIMD3VySdGG_SaySdGtF	swift.method	reset(double3Array:atTimes:)	MDLAnimatedVector3.reset(double3Array:atTimes:)	@nonobjc func reset(double3Array array: [SIMD3<Double>], atTimes times: [TimeInterval])
+s:So18MDLAnimatedVector4C7ModelIOE11float4ArraySays5SIMD4VySfGGvp	swift.property	float4Array	MDLAnimatedVector4.float4Array	@nonobjc var float4Array: [SIMD4<Float>] { get }
+s:So18MDLAnimatedVector4C7ModelIOE12double4ArraySays5SIMD4VySdGGvp	swift.property	double4Array	MDLAnimatedVector4.double4Array	@nonobjc var double4Array: [SIMD4<Double>] { get }
+s:So18MDLAnimatedVector4C7ModelIOE5reset11float4Array7atTimesySays5SIMD4VySfGG_SaySdGtF	swift.method	reset(float4Array:atTimes:)	MDLAnimatedVector4.reset(float4Array:atTimes:)	@nonobjc func reset(float4Array array: [SIMD4<Float>], atTimes times: [TimeInterval])
+s:So18MDLAnimatedVector4C7ModelIOE5reset12double4Array7atTimesySays5SIMD4VySdGG_SaySdGtF	swift.method	reset(double4Array:atTimes:)	MDLAnimatedVector4.reset(double4Array:atTimes:)	@nonobjc func reset(double4Array array: [SIMD4<Double>], atTimes times: [TimeInterval])
+s:So19MDLCameraProjectionV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MDLCameraProjection.init(rawValue:)	init?(rawValue: UInt)
+s:So19MDLMaterialSemanticV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MDLMaterialSemantic.init(rawValue:)	init?(rawValue: UInt)
+s:So19MDLVoxelIndexExtenta07minimumC007maximumC0ABs5SIMD4Vys5Int32VG_AItcfc	swift.init	init(minimumExtent:maximumExtent:)	MDLVoxelIndexExtent.init(minimumExtent:maximumExtent:)	init(minimumExtent: MDLVoxelIndex, maximumExtent: MDLVoxelIndex)
+s:So19MDLVoxelIndexExtentaABycfc	swift.init	init()	MDLVoxelIndexExtent.init()	init()
+s:So20MDLAnimatedMatrix4x4C7ModelIOE13float4x4ArraySaySo05simd_E0aGvp	swift.property	float4x4Array	MDLAnimatedMatrix4x4.float4x4Array	@nonobjc var float4x4Array: [float4x4] { get }
+s:So20MDLAnimatedMatrix4x4C7ModelIOE14double4x4ArraySaySo05simd_E0aGvp	swift.property	double4x4Array	MDLAnimatedMatrix4x4.double4x4Array	@nonobjc var double4x4Array: [double4x4] { get }
+s:So20MDLAnimatedMatrix4x4C7ModelIOE5reset12double4Array7atTimesySaySo14simd_double4x4aG_SaySdGtF	swift.method	reset(double4Array:atTimes:)	MDLAnimatedMatrix4x4.reset(double4Array:atTimes:)	@nonobjc func reset(double4Array array: [double4x4], atTimes times: [TimeInterval])
+s:So20MDLAnimatedMatrix4x4C7ModelIOE5reset13float4x4Array7atTimesySaySo05simd_F0aG_SaySdGtF	swift.method	reset(float4x4Array:atTimes:)	MDLAnimatedMatrix4x4.reset(float4x4Array:atTimes:)	@nonobjc func reset(float4x4Array array: [float4x4], atTimes times: [TimeInterval])
+s:So21MDLAnimatedQuaternionC7ModelIOE05floatB5ArraySaySo10simd_quatfaGvp	swift.property	floatQuaternionArray	MDLAnimatedQuaternion.floatQuaternionArray	@nonobjc var floatQuaternionArray: [simd_quatf] { get }
+s:So21MDLAnimatedQuaternionC7ModelIOE06doubleB5ArraySaySo10simd_quatdaGvp	swift.property	doubleQuaternionArray	MDLAnimatedQuaternion.doubleQuaternionArray	@nonobjc var doubleQuaternionArray: [simd_quatd] { get }
+s:So21MDLAnimatedQuaternionC7ModelIOE5reset05floatB5Array7atTimesySaySo10simd_quatfaG_SaySdGtF	swift.method	reset(floatQuaternionArray:atTimes:)	MDLAnimatedQuaternion.reset(floatQuaternionArray:atTimes:)	@nonobjc func reset(floatQuaternionArray array: [simd_quatf], atTimes times: [TimeInterval])
+s:So21MDLAnimatedQuaternionC7ModelIOE5reset06doubleB5Array7atTimesySaySo10simd_quatdaG_SaySdGtF	swift.method	reset(doubleQuaternionArray:atTimes:)	MDLAnimatedQuaternion.reset(doubleQuaternionArray:atTimes:)	@nonobjc func reset(doubleQuaternionArray array: [simd_quatd], atTimes times: [TimeInterval])
+s:So22MDLAnimatedScalarArrayC7ModelIOE05floatC06atTimeSaySfGSd_tF	swift.method	floatArray(atTime:)	MDLAnimatedScalarArray.floatArray(atTime:)	@nonobjc func floatArray(atTime time: TimeInterval) -> [Float]
+s:So22MDLAnimatedScalarArrayC7ModelIOE05floatC0SaySfGvp	swift.property	floatArray	MDLAnimatedScalarArray.floatArray	@nonobjc var floatArray: [Float] { get }
+s:So22MDLAnimatedScalarArrayC7ModelIOE06doubleC06atTimeSaySdGSd_tF	swift.method	doubleArray(atTime:)	MDLAnimatedScalarArray.doubleArray(atTime:)	@nonobjc func doubleArray(atTime time: TimeInterval) -> [Double]
+s:So22MDLAnimatedScalarArrayC7ModelIOE06doubleC0SaySdGvp	swift.property	doubleArray	MDLAnimatedScalarArray.doubleArray	@nonobjc var doubleArray: [Double] { get }
+s:So22MDLAnimatedScalarArrayC7ModelIOE3set05floatC06atTimeySaySfG_SdtF	swift.method	set(floatArray:atTime:)	MDLAnimatedScalarArray.set(floatArray:atTime:)	@nonobjc func set(floatArray array: [Float], atTime time: TimeInterval)
+s:So22MDLAnimatedScalarArrayC7ModelIOE3set06doubleC06atTimeySaySdG_SdtF	swift.method	set(doubleArray:atTime:)	MDLAnimatedScalarArray.set(doubleArray:atTime:)	@nonobjc func set(doubleArray array: [Double], atTime time: TimeInterval)
+s:So22MDLAnimatedScalarArrayC7ModelIOE5reset05floatC07atTimesySaySfG_SaySdGtF	swift.method	reset(floatArray:atTimes:)	MDLAnimatedScalarArray.reset(floatArray:atTimes:)	@nonobjc func reset(floatArray array: [Float], atTimes times: [TimeInterval])
+s:So22MDLAnimatedScalarArrayC7ModelIOE5reset06doubleC07atTimesySaySdG_AGtF	swift.method	reset(doubleArray:atTimes:)	MDLAnimatedScalarArray.reset(doubleArray:atTimes:)	@nonobjc func reset(doubleArray array: [Double], atTimes times: [TimeInterval])
+s:So23MDLAnimatedVector3ArrayC7ModelIOE06float3C06atTimeSays5SIMD3VySfGGSd_tF	swift.method	float3Array(atTime:)	MDLAnimatedVector3Array.float3Array(atTime:)	@nonobjc func float3Array(atTime time: TimeInterval) -> [SIMD3<Float>]
+s:So23MDLAnimatedVector3ArrayC7ModelIOE06float3C0Says5SIMD3VySfGGvp	swift.property	float3Array	MDLAnimatedVector3Array.float3Array	@nonobjc var float3Array: [SIMD3<Float>] { get }
+s:So23MDLAnimatedVector3ArrayC7ModelIOE07double3C06atTimeSays5SIMD3VySdGGSd_tF	swift.method	double3Array(atTime:)	MDLAnimatedVector3Array.double3Array(atTime:)	@nonobjc func double3Array(atTime time: TimeInterval) -> [SIMD3<Double>]
+s:So23MDLAnimatedVector3ArrayC7ModelIOE07double3C0Says5SIMD3VySdGGvp	swift.property	double3Array	MDLAnimatedVector3Array.double3Array	@nonobjc var double3Array: [SIMD3<Double>] { get }
+s:So23MDLAnimatedVector3ArrayC7ModelIOE3set06float3C06atTimeySays5SIMD3VySfGG_SdtF	swift.method	set(float3Array:atTime:)	MDLAnimatedVector3Array.set(float3Array:atTime:)	@nonobjc func set(float3Array array: [SIMD3<Float>], atTime time: TimeInterval)
+s:So23MDLAnimatedVector3ArrayC7ModelIOE3set07double3C06atTimeySays5SIMD3VySdGG_SdtF	swift.method	set(double3Array:atTime:)	MDLAnimatedVector3Array.set(double3Array:atTime:)	@nonobjc func set(double3Array array: [SIMD3<Double>], atTime time: TimeInterval)
+s:So23MDLAnimatedVector3ArrayC7ModelIOE5reset06float3C07atTimesySays5SIMD3VySfGG_SaySdGtF	swift.method	reset(float3Array:atTimes:)	MDLAnimatedVector3Array.reset(float3Array:atTimes:)	@nonobjc func reset(float3Array array: [SIMD3<Float>], atTimes times: [TimeInterval])
+s:So23MDLAnimatedVector3ArrayC7ModelIOE5reset07double3C07atTimesySays5SIMD3VySdGG_SaySdGtF	swift.method	reset(double3Array:atTimes:)	MDLAnimatedVector3Array.reset(double3Array:atTimes:)	@nonobjc func reset(double3Array array: [SIMD3<Double>], atTimes times: [TimeInterval])
+s:So23MDLMaterialPropertyTypeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MDLMaterialPropertyType.init(rawValue:)	init?(rawValue: UInt)
+s:So25MDLAxisAlignedBoundingBoxa9maxBounds03minF0ABs5SIMD3VySfG_AGtcfc	swift.init	init(maxBounds:minBounds:)	MDLAxisAlignedBoundingBox.init(maxBounds:minBounds:)	init(maxBounds: vector_float3, minBounds: vector_float3)
+s:So25MDLAxisAlignedBoundingBoxaABycfc	swift.init	init()	MDLAxisAlignedBoundingBox.init()	init()
+s:So25MDLTextureChannelEncodingV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MDLTextureChannelEncoding.init(rawValue:)	init?(rawValue: Int)
+s:So26MDLAnimatedQuaternionArrayC7ModelIOE05floatbC06atTimeSaySo10simd_quatfaGSd_tF	swift.method	floatQuaternionArray(atTime:)	MDLAnimatedQuaternionArray.floatQuaternionArray(atTime:)	@nonobjc func floatQuaternionArray(atTime time: TimeInterval) -> [simd_quatf]
+s:So26MDLAnimatedQuaternionArrayC7ModelIOE05floatbC0SaySo10simd_quatfaGvp	swift.property	floatQuaternionArray	MDLAnimatedQuaternionArray.floatQuaternionArray	@nonobjc var floatQuaternionArray: [simd_quatf] { get }
+s:So26MDLAnimatedQuaternionArrayC7ModelIOE06doublebC06atTimeSaySo10simd_quatdaGSd_tF	swift.method	doubleQuaternionArray(atTime:)	MDLAnimatedQuaternionArray.doubleQuaternionArray(atTime:)	@nonobjc func doubleQuaternionArray(atTime time: TimeInterval) -> [simd_quatd]
+s:So26MDLAnimatedQuaternionArrayC7ModelIOE06doublebC0SaySo10simd_quatdaGvp	swift.property	doubleQuaternionArray	MDLAnimatedQuaternionArray.doubleQuaternionArray	@nonobjc var doubleQuaternionArray: [simd_quatd] { get }
+s:So26MDLAnimatedQuaternionArrayC7ModelIOE3set05floatbC06atTimeySaySo10simd_quatfaG_SdtF	swift.method	set(floatQuaternionArray:atTime:)	MDLAnimatedQuaternionArray.set(floatQuaternionArray:atTime:)	@nonobjc func set(floatQuaternionArray array: [simd_quatf], atTime time: TimeInterval)
+s:So26MDLAnimatedQuaternionArrayC7ModelIOE3set06doublebC06atTimeySaySo10simd_quatdaG_SdtF	swift.method	set(doubleQuaternionArray:atTime:)	MDLAnimatedQuaternionArray.set(doubleQuaternionArray:atTime:)	@nonobjc func set(doubleQuaternionArray array: [simd_quatd], atTime time: TimeInterval)
+s:So26MDLAnimatedQuaternionArrayC7ModelIOE5reset05floatbC07atTimesySaySo10simd_quatfaG_SaySdGtF	swift.method	reset(floatQuaternionArray:atTimes:)	MDLAnimatedQuaternionArray.reset(floatQuaternionArray:atTimes:)	@nonobjc func reset(floatQuaternionArray array: [simd_quatf], atTimes times: [TimeInterval])
+s:So26MDLAnimatedQuaternionArrayC7ModelIOE5reset06doublebC07atTimesySaySo10simd_quatdaG_SaySdGtF	swift.method	reset(doubleQuaternionArray:atTimes:)	MDLAnimatedQuaternionArray.reset(doubleQuaternionArray:atTimes:)	@nonobjc func reset(doubleQuaternionArray array: [simd_quatd], atTimes times: [TimeInterval])
+s:So26MDLMaterialTextureWrapModeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MDLMaterialTextureWrapMode.init(rawValue:)	init?(rawValue: UInt)
+s:So27MDLMaterialMipMapFilterModeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MDLMaterialMipMapFilterMode.init(rawValue:)	init?(rawValue: UInt)
+s:So27MDLTransformOpRotationOrderV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MDLTransformOpRotationOrder.init(rawValue:)	init?(rawValue: UInt)
+s:So28MDLMaterialTextureFilterModeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MDLMaterialTextureFilterMode.init(rawValue:)	init?(rawValue: UInt)
+s:So29MDLAnimatedValueInterpolationV03rawB0ABSgSu_tcfc	swift.init	init(rawValue:)	MDLAnimatedValueInterpolation.init(rawValue:)	init?(rawValue: UInt)

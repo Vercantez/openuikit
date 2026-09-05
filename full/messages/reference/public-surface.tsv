@@ -1,0 +1,181 @@
+precise	kind	title	path	declaration
+c:@E@MSMessageErrorCode	swift.enum	MSMessageErrorCode	MSMessageErrorCode	enum MSMessageErrorCode
+c:@E@MSMessageErrorCode@MSMessageErrorCodeAPIUnavailableInPresentationContext	swift.enum.case	MSMessageErrorCode.apiUnavailableInPresentationContext	MSMessageErrorCode.apiUnavailableInPresentationContext	case apiUnavailableInPresentationContext
+c:@E@MSMessageErrorCode@MSMessageErrorCodeFileNotFound	swift.enum.case	MSMessageErrorCode.fileNotFound	MSMessageErrorCode.fileNotFound	case fileNotFound
+c:@E@MSMessageErrorCode@MSMessageErrorCodeFileUnreadable	swift.enum.case	MSMessageErrorCode.fileUnreadable	MSMessageErrorCode.fileUnreadable	case fileUnreadable
+c:@E@MSMessageErrorCode@MSMessageErrorCodeImproperFileType	swift.enum.case	MSMessageErrorCode.improperFileType	MSMessageErrorCode.improperFileType	case improperFileType
+c:@E@MSMessageErrorCode@MSMessageErrorCodeImproperFileURL	swift.enum.case	MSMessageErrorCode.improperFileURL	MSMessageErrorCode.improperFileURL	case improperFileURL
+c:@E@MSMessageErrorCode@MSMessageErrorCodeSendWhileNotVisible	swift.enum.case	MSMessageErrorCode.sendWhileNotVisible	MSMessageErrorCode.sendWhileNotVisible	case sendWhileNotVisible
+c:@E@MSMessageErrorCode@MSMessageErrorCodeSendWithoutRecentInteraction	swift.enum.case	MSMessageErrorCode.sendWithoutRecentInteraction	MSMessageErrorCode.sendWithoutRecentInteraction	case sendWithoutRecentInteraction
+c:@E@MSMessageErrorCode@MSMessageErrorCodeStickerFileImproperFileAttributes	swift.enum.case	MSMessageErrorCode.stickerFileImproperFileAttributes	MSMessageErrorCode.stickerFileImproperFileAttributes	case stickerFileImproperFileAttributes
+c:@E@MSMessageErrorCode@MSMessageErrorCodeStickerFileImproperFileFormat	swift.enum.case	MSMessageErrorCode.stickerFileImproperFileFormat	MSMessageErrorCode.stickerFileImproperFileFormat	case stickerFileImproperFileFormat
+c:@E@MSMessageErrorCode@MSMessageErrorCodeStickerFileImproperFileSize	swift.enum.case	MSMessageErrorCode.stickerFileImproperFileSize	MSMessageErrorCode.stickerFileImproperFileSize	case stickerFileImproperFileSize
+c:@E@MSMessageErrorCode@MSMessageErrorCodeURLExceedsMaxSize	swift.enum.case	MSMessageErrorCode.urlExceedsMaxSize	MSMessageErrorCode.urlExceedsMaxSize	case urlExceedsMaxSize
+c:@E@MSMessageErrorCode@MSMessageErrorCodeUnknown	swift.enum.case	MSMessageErrorCode.unknown	MSMessageErrorCode.unknown	case unknown
+c:@E@MSMessagesAppPresentationContext	swift.enum	MSMessagesAppPresentationContext	MSMessagesAppPresentationContext	enum MSMessagesAppPresentationContext
+c:@E@MSMessagesAppPresentationContext@MSMessagesAppPresentationContextMedia	swift.enum.case	MSMessagesAppPresentationContext.media	MSMessagesAppPresentationContext.media	case media
+c:@E@MSMessagesAppPresentationContext@MSMessagesAppPresentationContextMessages	swift.enum.case	MSMessagesAppPresentationContext.messages	MSMessagesAppPresentationContext.messages	case messages
+c:@E@MSMessagesAppPresentationStyle	swift.enum	MSMessagesAppPresentationStyle	MSMessagesAppPresentationStyle	enum MSMessagesAppPresentationStyle
+c:@E@MSMessagesAppPresentationStyle@MSMessagesAppPresentationStyleCompact	swift.enum.case	MSMessagesAppPresentationStyle.compact	MSMessagesAppPresentationStyle.compact	case compact
+c:@E@MSMessagesAppPresentationStyle@MSMessagesAppPresentationStyleExpanded	swift.enum.case	MSMessagesAppPresentationStyle.expanded	MSMessagesAppPresentationStyle.expanded	case expanded
+c:@E@MSMessagesAppPresentationStyle@MSMessagesAppPresentationStyleTranscript	swift.enum.case	MSMessagesAppPresentationStyle.transcript	MSMessagesAppPresentationStyle.transcript	case transcript
+c:@E@MSStickerSize	swift.enum	MSStickerSize	MSStickerSize	enum MSStickerSize
+c:@E@MSStickerSize@MSStickerSizeLarge	swift.enum.case	MSStickerSize.large	MSStickerSize.large	case large
+c:@E@MSStickerSize@MSStickerSizeRegular	swift.enum.case	MSStickerSize.regular	MSStickerSize.regular	case regular
+c:@E@MSStickerSize@MSStickerSizeSmall	swift.enum.case	MSStickerSize.small	MSStickerSize.small	case small
+c:@M@Messages@objc(cs)MSCriticalSMSMessenger	swift.class	MSCriticalSMSMessenger	MSCriticalSMSMessenger	@objc class MSCriticalSMSMessenger
+c:@M@Messages@objc(cs)MSCriticalSMSMessenger(im)init	swift.init	init()	MSCriticalSMSMessenger.init()	override dynamic init()
+c:@MSMessagesErrorDomain	swift.var	MSMessagesErrorDomain	MSMessagesErrorDomain	let MSMessagesErrorDomain: String
+c:@MSStickersErrorDomain	swift.var	MSStickersErrorDomain	MSStickersErrorDomain	let MSStickersErrorDomain: String
+c:objc(cs)MSConversation	swift.class	MSConversation	MSConversation	class MSConversation
+c:objc(cs)MSConversation(im)insertAttachment:withAlternateFilename:completionHandler:	swift.method	insertAttachment(_:withAlternateFilename:)	MSConversation.insertAttachment(_:withAlternateFilename:)	func insertAttachment(_ URL: URL, withAlternateFilename filename: String?) async throws
+c:objc(cs)MSConversation(im)insertMessage:completionHandler:	swift.method	insert(_:)	MSConversation.insert(_:)	func insert(_ message: MSMessage) async throws
+c:objc(cs)MSConversation(im)insertSticker:completionHandler:	swift.method	insert(_:)	MSConversation.insert(_:)	func insert(_ sticker: MSSticker) async throws
+c:objc(cs)MSConversation(im)insertText:completionHandler:	swift.method	insertText(_:)	MSConversation.insertText(_:)	func insertText(_ text: String) async throws
+c:objc(cs)MSConversation(im)sendAttachment:withAlternateFilename:completionHandler:	swift.method	sendAttachment(_:withAlternateFilename:)	MSConversation.sendAttachment(_:withAlternateFilename:)	func sendAttachment(_ URL: URL, withAlternateFilename filename: String?) async throws
+c:objc(cs)MSConversation(im)sendMessage:completionHandler:	swift.method	send(_:)	MSConversation.send(_:)	func send(_ message: MSMessage) async throws
+c:objc(cs)MSConversation(im)sendSticker:completionHandler:	swift.method	send(_:)	MSConversation.send(_:)	func send(_ sticker: MSSticker) async throws
+c:objc(cs)MSConversation(im)sendText:completionHandler:	swift.method	sendText(_:)	MSConversation.sendText(_:)	func sendText(_ text: String) async throws
+c:objc(cs)MSConversation(py)localParticipantIdentifier	swift.property	localParticipantIdentifier	MSConversation.localParticipantIdentifier	var localParticipantIdentifier: UUID { get }
+c:objc(cs)MSConversation(py)remoteParticipantIdentifiers	swift.property	remoteParticipantIdentifiers	MSConversation.remoteParticipantIdentifiers	var remoteParticipantIdentifiers: [UUID] { get }
+c:objc(cs)MSConversation(py)selectedMessage	swift.property	selectedMessage	MSConversation.selectedMessage	var selectedMessage: MSMessage? { get }
+c:objc(cs)MSMessage	swift.class	MSMessage	MSMessage	class MSMessage
+c:objc(cs)MSMessage(im)init	swift.init	init()	MSMessage.init()	init()
+c:objc(cs)MSMessage(im)initWithSession:	swift.init	init(session:)	MSMessage.init(session:)	init(session: MSSession)
+c:objc(cs)MSMessage(py)URL	swift.property	url	MSMessage.url	var url: URL? { get set }
+c:objc(cs)MSMessage(py)accessibilityLabel	swift.property	accessibilityLabel	MSMessage.accessibilityLabel	var accessibilityLabel: String? { get set }
+c:objc(cs)MSMessage(py)error	swift.property	error	MSMessage.error	var error: (any Error)? { get set }
+c:objc(cs)MSMessage(py)layout	swift.property	layout	MSMessage.layout	@NSCopying var layout: MSMessageLayout? { get set }
+c:objc(cs)MSMessage(py)pending	swift.property	isPending	MSMessage.isPending	var isPending: Bool { get }
+c:objc(cs)MSMessage(py)senderParticipantIdentifier	swift.property	senderParticipantIdentifier	MSMessage.senderParticipantIdentifier	var senderParticipantIdentifier: UUID { get }
+c:objc(cs)MSMessage(py)session	swift.property	session	MSMessage.session	var session: MSSession? { get }
+c:objc(cs)MSMessage(py)shouldExpire	swift.property	shouldExpire	MSMessage.shouldExpire	var shouldExpire: Bool { get set }
+c:objc(cs)MSMessage(py)summaryText	swift.property	summaryText	MSMessage.summaryText	var summaryText: String? { get set }
+c:objc(cs)MSMessageLayout	swift.class	MSMessageLayout	MSMessageLayout	class MSMessageLayout
+c:objc(cs)MSMessageLiveLayout	swift.class	MSMessageLiveLayout	MSMessageLiveLayout	class MSMessageLiveLayout
+c:objc(cs)MSMessageLiveLayout(im)initWithAlternateLayout:	swift.init	init(alternateLayout:)	MSMessageLiveLayout.init(alternateLayout:)	init(alternateLayout: MSMessageTemplateLayout)
+c:objc(cs)MSMessageLiveLayout(py)alternateLayout	swift.property	alternateLayout	MSMessageLiveLayout.alternateLayout	var alternateLayout: MSMessageTemplateLayout { get }
+c:objc(cs)MSMessageTemplateLayout	swift.class	MSMessageTemplateLayout	MSMessageTemplateLayout	class MSMessageTemplateLayout
+c:objc(cs)MSMessageTemplateLayout(py)caption	swift.property	caption	MSMessageTemplateLayout.caption	var caption: String? { get set }
+c:objc(cs)MSMessageTemplateLayout(py)image	swift.property	image	MSMessageTemplateLayout.image	var image: UIImage? { get set }
+c:objc(cs)MSMessageTemplateLayout(py)imageSubtitle	swift.property	imageSubtitle	MSMessageTemplateLayout.imageSubtitle	var imageSubtitle: String? { get set }
+c:objc(cs)MSMessageTemplateLayout(py)imageTitle	swift.property	imageTitle	MSMessageTemplateLayout.imageTitle	var imageTitle: String? { get set }
+c:objc(cs)MSMessageTemplateLayout(py)mediaFileURL	swift.property	mediaFileURL	MSMessageTemplateLayout.mediaFileURL	var mediaFileURL: URL? { get set }
+c:objc(cs)MSMessageTemplateLayout(py)subcaption	swift.property	subcaption	MSMessageTemplateLayout.subcaption	var subcaption: String? { get set }
+c:objc(cs)MSMessageTemplateLayout(py)trailingCaption	swift.property	trailingCaption	MSMessageTemplateLayout.trailingCaption	var trailingCaption: String? { get set }
+c:objc(cs)MSMessageTemplateLayout(py)trailingSubcaption	swift.property	trailingSubcaption	MSMessageTemplateLayout.trailingSubcaption	var trailingSubcaption: String? { get set }
+c:objc(cs)MSMessagesAppViewController	swift.class	MSMessagesAppViewController	MSMessagesAppViewController	@MainActor class MSMessagesAppViewController
+c:objc(cs)MSMessagesAppViewController(im)didBecomeActiveWithConversation:	swift.method	didBecomeActive(with:)	MSMessagesAppViewController.didBecomeActive(with:)	@MainActor func didBecomeActive(with conversation: MSConversation)
+c:objc(cs)MSMessagesAppViewController(im)didCancelSendingMessage:conversation:	swift.method	didCancelSending(_:conversation:)	MSMessagesAppViewController.didCancelSending(_:conversation:)	@MainActor func didCancelSending(_ message: MSMessage, conversation: MSConversation)
+c:objc(cs)MSMessagesAppViewController(im)didReceiveMessage:conversation:	swift.method	didReceive(_:conversation:)	MSMessagesAppViewController.didReceive(_:conversation:)	@MainActor func didReceive(_ message: MSMessage, conversation: MSConversation)
+c:objc(cs)MSMessagesAppViewController(im)didResignActiveWithConversation:	swift.method	didResignActive(with:)	MSMessagesAppViewController.didResignActive(with:)	@MainActor func didResignActive(with conversation: MSConversation)
+c:objc(cs)MSMessagesAppViewController(im)didSelectMessage:conversation:	swift.method	didSelect(_:conversation:)	MSMessagesAppViewController.didSelect(_:conversation:)	@MainActor func didSelect(_ message: MSMessage, conversation: MSConversation)
+c:objc(cs)MSMessagesAppViewController(im)didStartSendingMessage:conversation:	swift.method	didStartSending(_:conversation:)	MSMessagesAppViewController.didStartSending(_:conversation:)	@MainActor func didStartSending(_ message: MSMessage, conversation: MSConversation)
+c:objc(cs)MSMessagesAppViewController(im)didTransitionToPresentationStyle:	swift.method	didTransition(to:)	MSMessagesAppViewController.didTransition(to:)	@MainActor func didTransition(to presentationStyle: MSMessagesAppPresentationStyle)
+c:objc(cs)MSMessagesAppViewController(im)dismiss	swift.method	dismiss()	MSMessagesAppViewController.dismiss()	@MainActor func dismiss()
+c:objc(cs)MSMessagesAppViewController(im)requestPresentationStyle:	swift.method	requestPresentationStyle(_:)	MSMessagesAppViewController.requestPresentationStyle(_:)	@MainActor func requestPresentationStyle(_ presentationStyle: MSMessagesAppPresentationStyle)
+c:objc(cs)MSMessagesAppViewController(im)willBecomeActiveWithConversation:	swift.method	willBecomeActive(with:)	MSMessagesAppViewController.willBecomeActive(with:)	@MainActor func willBecomeActive(with conversation: MSConversation)
+c:objc(cs)MSMessagesAppViewController(im)willResignActiveWithConversation:	swift.method	willResignActive(with:)	MSMessagesAppViewController.willResignActive(with:)	@MainActor func willResignActive(with conversation: MSConversation)
+c:objc(cs)MSMessagesAppViewController(im)willSelectMessage:conversation:	swift.method	willSelect(_:conversation:)	MSMessagesAppViewController.willSelect(_:conversation:)	@MainActor func willSelect(_ message: MSMessage, conversation: MSConversation)
+c:objc(cs)MSMessagesAppViewController(im)willTransitionToPresentationStyle:	swift.method	willTransition(to:)	MSMessagesAppViewController.willTransition(to:)	@MainActor func willTransition(to presentationStyle: MSMessagesAppPresentationStyle)
+c:objc(cs)MSMessagesAppViewController(py)activeConversation	swift.property	activeConversation	MSMessagesAppViewController.activeConversation	@MainActor var activeConversation: MSConversation? { get }
+c:objc(cs)MSMessagesAppViewController(py)presentationContext	swift.property	presentationContext	MSMessagesAppViewController.presentationContext	@MainActor var presentationContext: MSMessagesAppPresentationContext { get }
+c:objc(cs)MSMessagesAppViewController(py)presentationStyle	swift.property	presentationStyle	MSMessagesAppViewController.presentationStyle	@MainActor var presentationStyle: MSMessagesAppPresentationStyle { get }
+c:objc(cs)MSSession	swift.class	MSSession	MSSession	class MSSession
+c:objc(cs)MSSticker	swift.class	MSSticker	MSSticker	class MSSticker
+c:objc(cs)MSSticker(im)initWithContentsOfFileURL:localizedDescription:error:	swift.init	init(contentsOfFileURL:localizedDescription:)	MSSticker.init(contentsOfFileURL:localizedDescription:)	init(contentsOfFileURL fileURL: URL, localizedDescription: String) throws
+c:objc(cs)MSSticker(py)imageFileURL	swift.property	imageFileURL	MSSticker.imageFileURL	var imageFileURL: URL { get }
+c:objc(cs)MSSticker(py)localizedDescription	swift.property	localizedDescription	MSSticker.localizedDescription	var localizedDescription: String { get }
+c:objc(cs)MSStickerBrowserView	swift.class	MSStickerBrowserView	MSStickerBrowserView	@MainActor class MSStickerBrowserView
+c:objc(cs)MSStickerBrowserView(im)initWithFrame:	swift.init	init(frame:)	MSStickerBrowserView.init(frame:)	@MainActor init(frame: CGRect)
+c:objc(cs)MSStickerBrowserView(im)initWithFrame:stickerSize:	swift.init	init(frame:stickerSize:)	MSStickerBrowserView.init(frame:stickerSize:)	@MainActor init(frame: CGRect, stickerSize: MSStickerSize)
+c:objc(cs)MSStickerBrowserView(im)reloadData	swift.method	reloadData()	MSStickerBrowserView.reloadData()	@MainActor func reloadData()
+c:objc(cs)MSStickerBrowserView(im)setContentOffset:animated:	swift.method	setContentOffset(_:animated:)	MSStickerBrowserView.setContentOffset(_:animated:)	@MainActor func setContentOffset(_ contentOffset: CGPoint, animated: Bool)
+c:objc(cs)MSStickerBrowserView(py)contentInset	swift.property	contentInset	MSStickerBrowserView.contentInset	@MainActor var contentInset: UIEdgeInsets { get set }
+c:objc(cs)MSStickerBrowserView(py)contentOffset	swift.property	contentOffset	MSStickerBrowserView.contentOffset	@MainActor var contentOffset: CGPoint { get set }
+c:objc(cs)MSStickerBrowserView(py)dataSource	swift.property	dataSource	MSStickerBrowserView.dataSource	@MainActor weak var dataSource: (any MSStickerBrowserViewDataSource)? { get set }
+c:objc(cs)MSStickerBrowserView(py)stickerSize	swift.property	stickerSize	MSStickerBrowserView.stickerSize	@MainActor var stickerSize: MSStickerSize { get }
+c:objc(cs)MSStickerBrowserViewController	swift.class	MSStickerBrowserViewController	MSStickerBrowserViewController	@MainActor class MSStickerBrowserViewController
+c:objc(cs)MSStickerBrowserViewController(im)initWithStickerSize:	swift.init	init(stickerSize:)	MSStickerBrowserViewController.init(stickerSize:)	@MainActor init(stickerSize: MSStickerSize)
+c:objc(cs)MSStickerBrowserViewController(py)stickerBrowserView	swift.property	stickerBrowserView	MSStickerBrowserViewController.stickerBrowserView	@MainActor var stickerBrowserView: MSStickerBrowserView { get }
+c:objc(cs)MSStickerBrowserViewController(py)stickerSize	swift.property	stickerSize	MSStickerBrowserViewController.stickerSize	@MainActor var stickerSize: MSStickerSize { get }
+c:objc(cs)MSStickerView	swift.class	MSStickerView	MSStickerView	@MainActor class MSStickerView
+c:objc(cs)MSStickerView(im)initWithFrame:sticker:	swift.init	init(frame:sticker:)	MSStickerView.init(frame:sticker:)	@MainActor init(frame: CGRect, sticker: MSSticker?)
+c:objc(cs)MSStickerView(im)isAnimating	swift.method	isAnimating()	MSStickerView.isAnimating()	@MainActor func isAnimating() -> Bool
+c:objc(cs)MSStickerView(im)startAnimating	swift.method	startAnimating()	MSStickerView.startAnimating()	@MainActor func startAnimating()
+c:objc(cs)MSStickerView(im)stopAnimating	swift.method	stopAnimating()	MSStickerView.stopAnimating()	@MainActor func stopAnimating()
+c:objc(cs)MSStickerView(py)animationDuration	swift.property	animationDuration	MSStickerView.animationDuration	@MainActor var animationDuration: TimeInterval { get }
+c:objc(cs)MSStickerView(py)sticker	swift.property	sticker	MSStickerView.sticker	@MainActor var sticker: MSSticker? { get set }
+c:objc(pl)MSMessagesAppTranscriptPresentation	swift.protocol	MSMessagesAppTranscriptPresentation	MSMessagesAppTranscriptPresentation	protocol MSMessagesAppTranscriptPresentation
+c:objc(pl)MSMessagesAppTranscriptPresentation(im)contentSizeThatFits:	swift.method	contentSizeThatFits(_:)	MSMessagesAppTranscriptPresentation.contentSizeThatFits(_:)	func contentSizeThatFits(_ size: CGSize) -> CGSize
+c:objc(pl)MSMessagesAppTranscriptPresentation(im)invalidateMessageTintColor	swift.method	invalidateMessageTintColor()	MSMessagesAppTranscriptPresentation.invalidateMessageTintColor()	func invalidateMessageTintColor()
+c:objc(pl)MSMessagesAppTranscriptPresentation(py)messageCornerRadius	swift.property	messageCornerRadius	MSMessagesAppTranscriptPresentation.messageCornerRadius	var messageCornerRadius: CGFloat { get }
+c:objc(pl)MSMessagesAppTranscriptPresentation(py)messageTintColor	swift.property	messageTintColor	MSMessagesAppTranscriptPresentation.messageTintColor	var messageTintColor: UIColor? { get }
+c:objc(pl)MSStickerBrowserViewDataSource	swift.protocol	MSStickerBrowserViewDataSource	MSStickerBrowserViewDataSource	protocol MSStickerBrowserViewDataSource : NSObjectProtocol
+c:objc(pl)MSStickerBrowserViewDataSource(im)numberOfStickersInStickerBrowserView:	swift.method	numberOfStickers(in:)	MSStickerBrowserViewDataSource.numberOfStickers(in:)	func numberOfStickers(in stickerBrowserView: MSStickerBrowserView) -> Int
+c:objc(pl)MSStickerBrowserViewDataSource(im)stickerBrowserView:stickerAtIndex:	swift.method	stickerBrowserView(_:stickerAt:)	MSStickerBrowserViewDataSource.stickerBrowserView(_:stickerAt:)	func stickerBrowserView(_ stickerBrowserView: MSStickerBrowserView, stickerAt index: Int) -> MSSticker
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MSMessage	swift.init	init(coder:)	MSMessage.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MSSession	swift.init	init(coder:)	MSSession.init(coder:)	init?(coder: NSCoder)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	swift.type.property	errorDomain	MSCriticalMessagingError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	swift.property	errorUserInfo	MSCriticalMessagingError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	swift.property	errorCode	MSCriticalMessagingError.errorCode	var errorCode: Int { get }
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	swift.property	helpAnchor	MSCriticalMessagingError.helpAnchor	var helpAnchor: String? { get }
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	swift.property	failureReason	MSCriticalMessagingError.failureReason	var failureReason: String? { get }
+s:10Foundation14LocalizedErrorPAAE16errorDescriptionSSSgvp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	swift.property	errorDescription	MSCriticalMessagingError.errorDescription	var errorDescription: String? { get }
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	swift.property	recoverySuggestion	MSCriticalMessagingError.recoverySuggestion	var recoverySuggestion: String? { get }
+s:8Messages11MSRecipientV	swift.struct	MSRecipient	MSRecipient	struct MSRecipient
+s:8Messages11MSRecipientV11phoneNumberACSS_tcfc	swift.init	init(phoneNumber:)	MSRecipient.init(phoneNumber:)	init(phoneNumber: String)
+s:8Messages11MSRecipientV11phoneNumberSSvp	swift.property	phoneNumber	MSRecipient.phoneNumber	var phoneNumber: String
+s:8Messages11MSRecipientV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	MSRecipient.==(_:_:)	static func == (a: MSRecipient, b: MSRecipient) -> Bool
+s:8Messages11MSRecipientV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	MSRecipient.hash(into:)	func hash(into hasher: inout Hasher)
+s:8Messages11MSRecipientV9hashValueSivp	swift.property	hashValue	MSRecipient.hashValue	var hashValue: Int { get }
+s:8Messages17MSCriticalMessageV	swift.struct	MSCriticalMessage	MSCriticalMessage	struct MSCriticalMessage
+s:8Messages17MSCriticalMessageV11messageTextACSS_tcfc	swift.init	init(messageText:)	MSCriticalMessage.init(messageText:)	init(messageText: String)
+s:8Messages17MSCriticalMessageV11messageTextSSvp	swift.property	messageText	MSCriticalMessage.messageText	var messageText: String
+s:8Messages22MSCriticalSMSMessengerC20requestAuthorization3forSDyAA11MSRecipientVAA0b9MessagingE6StatusOGSayAGG_tYaKF	swift.method	requestAuthorization(for:)	MSCriticalSMSMessenger.requestAuthorization(for:)	func requestAuthorization(for recipients: [MSRecipient]) async throws -> [MSRecipient : MSCriticalMessagingAuthorizationStatus]
+s:8Messages22MSCriticalSMSMessengerC24checkAuthorizationStatus3forSDyAA11MSRecipientVAA0b9MessagingeF0OGSayAGG_tYaKF	swift.method	checkAuthorizationStatus(for:)	MSCriticalSMSMessenger.checkAuthorizationStatus(for:)	func checkAuthorizationStatus(for recipients: [MSRecipient]) async throws -> [MSRecipient : MSCriticalMessagingAuthorizationStatus]
+s:8Messages22MSCriticalSMSMessengerC34maximumCriticalMessagingRecipientsSivp	swift.property	maximumCriticalMessagingRecipients	MSCriticalSMSMessenger.maximumCriticalMessagingRecipients	var maximumCriticalMessagingRecipients: Int { get }
+s:8Messages22MSCriticalSMSMessengerC4send_2toSbAA0B7MessageV_AA11MSRecipientVtYaKF	swift.method	send(_:to:)	MSCriticalSMSMessenger.send(_:to:)	func send(_ message: MSCriticalMessage, to recipient: MSRecipient) async throws -> Bool
+s:8Messages24MSCriticalMessagingErrorO	swift.enum	MSCriticalMessagingError	MSCriticalMessagingError	enum MSCriticalMessagingError
+s:8Messages24MSCriticalMessagingErrorO10sendFailedyA2CmF	swift.enum.case	MSCriticalMessagingError.sendFailed	MSCriticalMessagingError.sendFailed	case sendFailed
+s:8Messages24MSCriticalMessagingErrorO11errorDomainSSvpZ	swift.type.property	errorDomain	MSCriticalMessagingError.errorDomain	static var errorDomain: String { get }
+s:8Messages24MSCriticalMessagingErrorO12notSupportedyA2CmF	swift.enum.case	MSCriticalMessagingError.notSupported	MSCriticalMessagingError.notSupported	case notSupported
+s:8Messages24MSCriticalMessagingErrorO13notAuthorizedyA2CmF	swift.enum.case	MSCriticalMessagingError.notAuthorized	MSCriticalMessagingError.notAuthorized	case notAuthorized
+s:8Messages24MSCriticalMessagingErrorO16errorDescriptionSSSgvp	swift.property	errorDescription	MSCriticalMessagingError.errorDescription	var errorDescription: String? { get }
+s:8Messages24MSCriticalMessagingErrorO28invalidAuthenticationRequestyA2CmF	swift.enum.case	MSCriticalMessagingError.invalidAuthenticationRequest	MSCriticalMessagingError.invalidAuthenticationRequest	case invalidAuthenticationRequest
+s:8Messages24MSCriticalMessagingErrorO7unknownyA2CmF	swift.enum.case	MSCriticalMessagingError.unknown	MSCriticalMessagingError.unknown	case unknown
+s:8Messages24MSCriticalMessagingErrorO8RawValuea	swift.typealias	MSCriticalMessagingError.RawValue	MSCriticalMessagingError.RawValue	typealias RawValue = Int
+s:8Messages24MSCriticalMessagingErrorO8rawValueACSgSi_tcfc	swift.init	init(rawValue:)	MSCriticalMessagingError.init(rawValue:)	init?(rawValue: Int)
+s:8Messages24MSCriticalMessagingErrorO8rawValueSivp	swift.property	rawValue	MSCriticalMessagingError.rawValue	var rawValue: Int { get }
+s:8Messages24MSCriticalMessagingErrorO9errorCodeSivp	swift.property	errorCode	MSCriticalMessagingError.errorCode	var errorCode: Int { get }
+s:8Messages38MSCriticalMessagingAuthorizationStatusO	swift.enum	MSCriticalMessagingAuthorizationStatus	MSCriticalMessagingAuthorizationStatus	enum MSCriticalMessagingAuthorizationStatus
+s:8Messages38MSCriticalMessagingAuthorizationStatusO6deniedyA2CmF	swift.enum.case	MSCriticalMessagingAuthorizationStatus.denied	MSCriticalMessagingAuthorizationStatus.denied	case denied
+s:8Messages38MSCriticalMessagingAuthorizationStatusO7unknownyA2CmF	swift.enum.case	MSCriticalMessagingAuthorizationStatus.unknown	MSCriticalMessagingAuthorizationStatus.unknown	case unknown
+s:8Messages38MSCriticalMessagingAuthorizationStatusO8RawValuea	swift.typealias	MSCriticalMessagingAuthorizationStatus.RawValue	MSCriticalMessagingAuthorizationStatus.RawValue	typealias RawValue = Int
+s:8Messages38MSCriticalMessagingAuthorizationStatusO8approvedyA2CmF	swift.enum.case	MSCriticalMessagingAuthorizationStatus.approved	MSCriticalMessagingAuthorizationStatus.approved	case approved
+s:8Messages38MSCriticalMessagingAuthorizationStatusO8rawValueACSgSi_tcfc	swift.init	init(rawValue:)	MSCriticalMessagingAuthorizationStatus.init(rawValue:)	init?(rawValue: Int)
+s:8Messages38MSCriticalMessagingAuthorizationStatusO8rawValueSivp	swift.property	rawValue	MSCriticalMessagingAuthorizationStatus.rawValue	var rawValue: Int { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MSMessageErrorCode	swift.func.op	!=(_:_:)	MSMessageErrorCode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MSMessagesAppPresentationContext	swift.func.op	!=(_:_:)	MSMessagesAppPresentationContext.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MSMessagesAppPresentationStyle	swift.func.op	!=(_:_:)	MSMessagesAppPresentationStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MSStickerSize	swift.func.op	!=(_:_:)	MSStickerSize.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8Messages11MSRecipientV	swift.func.op	!=(_:_:)	MSRecipient.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	swift.func.op	!=(_:_:)	MSCriticalMessagingError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8Messages38MSCriticalMessagingAuthorizationStatusO	swift.func.op	!=(_:_:)	MSCriticalMessagingAuthorizationStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MSMessageErrorCode	swift.property	hashValue	MSMessageErrorCode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MSMessagesAppPresentationContext	swift.property	hashValue	MSMessagesAppPresentationContext.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MSMessagesAppPresentationStyle	swift.property	hashValue	MSMessagesAppPresentationStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MSStickerSize	swift.property	hashValue	MSStickerSize.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	swift.property	hashValue	MSCriticalMessagingError.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8Messages38MSCriticalMessagingAuthorizationStatusO	swift.property	hashValue	MSCriticalMessagingAuthorizationStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MSMessageErrorCode	swift.method	hash(into:)	MSMessageErrorCode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MSMessagesAppPresentationContext	swift.method	hash(into:)	MSMessagesAppPresentationContext.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MSMessagesAppPresentationStyle	swift.method	hash(into:)	MSMessagesAppPresentationStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MSStickerSize	swift.method	hash(into:)	MSStickerSize.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	swift.method	hash(into:)	MSCriticalMessagingError.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8Messages38MSCriticalMessagingAuthorizationStatusO	swift.method	hash(into:)	MSCriticalMessagingAuthorizationStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:So13MSStickerSizeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MSStickerSize.init(rawValue:)	init?(rawValue: Int)
+s:So18MSMessageErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MSMessageErrorCode.init(rawValue:)	init?(rawValue: Int)
+s:So30MSMessagesAppPresentationStyleV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MSMessagesAppPresentationStyle.init(rawValue:)	init?(rawValue: UInt)
+s:So32MSMessagesAppPresentationContextV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MSMessagesAppPresentationContext.init(rawValue:)	init?(rawValue: UInt)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	swift.property	localizedDescription	MSCriticalMessagingError.localizedDescription	var localizedDescription: String { get }

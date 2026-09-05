@@ -1,0 +1,226 @@
+precise	kind	title	path	declaration
+c:@ABAddressBookErrorDomain	swift.var	ABAddressBookErrorDomain	ABAddressBookErrorDomain	let ABAddressBookErrorDomain: CFString!
+c:@E@ABAuthorizationStatus	swift.enum	ABAuthorizationStatus	ABAuthorizationStatus	enum ABAuthorizationStatus
+c:@E@ABAuthorizationStatus@kABAuthorizationStatusAuthorized	swift.enum.case	ABAuthorizationStatus.authorized	ABAuthorizationStatus.authorized	case authorized
+c:@E@ABAuthorizationStatus@kABAuthorizationStatusDenied	swift.enum.case	ABAuthorizationStatus.denied	ABAuthorizationStatus.denied	case denied
+c:@E@ABAuthorizationStatus@kABAuthorizationStatusNotDetermined	swift.enum.case	ABAuthorizationStatus.notDetermined	ABAuthorizationStatus.notDetermined	case notDetermined
+c:@E@ABAuthorizationStatus@kABAuthorizationStatusRestricted	swift.enum.case	ABAuthorizationStatus.restricted	ABAuthorizationStatus.restricted	case restricted
+c:@EA@ABPersonImageFormat	swift.struct	ABPersonImageFormat	ABPersonImageFormat	struct ABPersonImageFormat
+c:@EA@ABPersonImageFormat@kABPersonImageFormatOriginalSize	swift.var	kABPersonImageFormatOriginalSize	kABPersonImageFormatOriginalSize	var kABPersonImageFormatOriginalSize: ABPersonImageFormat { get }
+c:@EA@ABPersonImageFormat@kABPersonImageFormatThumbnail	swift.var	kABPersonImageFormatThumbnail	kABPersonImageFormatThumbnail	var kABPersonImageFormatThumbnail: ABPersonImageFormat { get }
+c:@Ea@kABInvalidPropertyType@kABDateTimePropertyType	swift.var	kABDateTimePropertyType	kABDateTimePropertyType	var kABDateTimePropertyType: Int { get }
+c:@Ea@kABInvalidPropertyType@kABDictionaryPropertyType	swift.var	kABDictionaryPropertyType	kABDictionaryPropertyType	var kABDictionaryPropertyType: Int { get }
+c:@Ea@kABInvalidPropertyType@kABIntegerPropertyType	swift.var	kABIntegerPropertyType	kABIntegerPropertyType	var kABIntegerPropertyType: Int { get }
+c:@Ea@kABInvalidPropertyType@kABInvalidPropertyType	swift.var	kABInvalidPropertyType	kABInvalidPropertyType	var kABInvalidPropertyType: Int { get }
+c:@Ea@kABInvalidPropertyType@kABMultiDateTimePropertyType	swift.var	kABMultiDateTimePropertyType	kABMultiDateTimePropertyType	var kABMultiDateTimePropertyType: Int { get }
+c:@Ea@kABInvalidPropertyType@kABMultiDictionaryPropertyType	swift.var	kABMultiDictionaryPropertyType	kABMultiDictionaryPropertyType	var kABMultiDictionaryPropertyType: Int { get }
+c:@Ea@kABInvalidPropertyType@kABMultiIntegerPropertyType	swift.var	kABMultiIntegerPropertyType	kABMultiIntegerPropertyType	var kABMultiIntegerPropertyType: Int { get }
+c:@Ea@kABInvalidPropertyType@kABMultiRealPropertyType	swift.var	kABMultiRealPropertyType	kABMultiRealPropertyType	var kABMultiRealPropertyType: Int { get }
+c:@Ea@kABInvalidPropertyType@kABMultiStringPropertyType	swift.var	kABMultiStringPropertyType	kABMultiStringPropertyType	var kABMultiStringPropertyType: Int { get }
+c:@Ea@kABInvalidPropertyType@kABRealPropertyType	swift.var	kABRealPropertyType	kABRealPropertyType	var kABRealPropertyType: Int { get }
+c:@Ea@kABInvalidPropertyType@kABStringPropertyType	swift.var	kABStringPropertyType	kABStringPropertyType	var kABStringPropertyType: Int { get }
+c:@Ea@kABOperationNotPermittedByStoreError@kABOperationNotPermittedByStoreError	swift.var	kABOperationNotPermittedByStoreError	kABOperationNotPermittedByStoreError	var kABOperationNotPermittedByStoreError: Int { get }
+c:@Ea@kABOperationNotPermittedByStoreError@kABOperationNotPermittedByUserError	swift.var	kABOperationNotPermittedByUserError	kABOperationNotPermittedByUserError	var kABOperationNotPermittedByUserError: Int { get }
+c:@Ea@kABPersonCompositeNameFormatFirstNameFirst@kABPersonCompositeNameFormatFirstNameFirst	swift.var	kABPersonCompositeNameFormatFirstNameFirst	kABPersonCompositeNameFormatFirstNameFirst	var kABPersonCompositeNameFormatFirstNameFirst: Int { get }
+c:@Ea@kABPersonCompositeNameFormatFirstNameFirst@kABPersonCompositeNameFormatLastNameFirst	swift.var	kABPersonCompositeNameFormatLastNameFirst	kABPersonCompositeNameFormatLastNameFirst	var kABPersonCompositeNameFormatLastNameFirst: Int { get }
+c:@Ea@kABPersonSortByFirstName@kABPersonSortByFirstName	swift.var	kABPersonSortByFirstName	kABPersonSortByFirstName	var kABPersonSortByFirstName: Int { get }
+c:@Ea@kABPersonSortByFirstName@kABPersonSortByLastName	swift.var	kABPersonSortByLastName	kABPersonSortByLastName	var kABPersonSortByLastName: Int { get }
+c:@Ea@kABPersonType@kABGroupType	swift.var	kABGroupType	kABGroupType	var kABGroupType: Int { get }
+c:@Ea@kABPersonType@kABPersonType	swift.var	kABPersonType	kABPersonType	var kABPersonType: Int { get }
+c:@Ea@kABPersonType@kABSourceType	swift.var	kABSourceType	kABSourceType	var kABSourceType: Int { get }
+c:@Ea@kABSourceTypeLocal@kABSourceTypeCardDAV	swift.var	kABSourceTypeCardDAV	kABSourceTypeCardDAV	var kABSourceTypeCardDAV: Int { get }
+c:@Ea@kABSourceTypeLocal@kABSourceTypeCardDAVSearch	swift.var	kABSourceTypeCardDAVSearch	kABSourceTypeCardDAVSearch	var kABSourceTypeCardDAVSearch: Int { get }
+c:@Ea@kABSourceTypeLocal@kABSourceTypeExchange	swift.var	kABSourceTypeExchange	kABSourceTypeExchange	var kABSourceTypeExchange: Int { get }
+c:@Ea@kABSourceTypeLocal@kABSourceTypeExchangeGAL	swift.var	kABSourceTypeExchangeGAL	kABSourceTypeExchangeGAL	var kABSourceTypeExchangeGAL: Int { get }
+c:@Ea@kABSourceTypeLocal@kABSourceTypeLDAP	swift.var	kABSourceTypeLDAP	kABSourceTypeLDAP	var kABSourceTypeLDAP: Int { get }
+c:@Ea@kABSourceTypeLocal@kABSourceTypeLocal	swift.var	kABSourceTypeLocal	kABSourceTypeLocal	var kABSourceTypeLocal: Int { get }
+c:@Ea@kABSourceTypeLocal@kABSourceTypeMobileMe	swift.var	kABSourceTypeMobileMe	kABSourceTypeMobileMe	var kABSourceTypeMobileMe: Int { get }
+c:@F@ABAddressBookAddRecord	swift.func	ABAddressBookAddRecord(_:_:_:)	ABAddressBookAddRecord(_:_:_:)	func ABAddressBookAddRecord(_ addressBook: ABAddressBook!, _ record: ABRecord!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>!) -> Bool
+c:@F@ABAddressBookCopyArrayOfAllGroups	swift.func	ABAddressBookCopyArrayOfAllGroups(_:)	ABAddressBookCopyArrayOfAllGroups(_:)	func ABAddressBookCopyArrayOfAllGroups(_ addressBook: ABAddressBook!) -> Unmanaged<CFArray>!
+c:@F@ABAddressBookCopyArrayOfAllGroupsInSource	swift.func	ABAddressBookCopyArrayOfAllGroupsInSource(_:_:)	ABAddressBookCopyArrayOfAllGroupsInSource(_:_:)	func ABAddressBookCopyArrayOfAllGroupsInSource(_ addressBook: ABAddressBook!, _ source: ABRecord!) -> Unmanaged<CFArray>!
+c:@F@ABAddressBookCopyArrayOfAllPeople	swift.func	ABAddressBookCopyArrayOfAllPeople(_:)	ABAddressBookCopyArrayOfAllPeople(_:)	func ABAddressBookCopyArrayOfAllPeople(_ addressBook: ABAddressBook!) -> Unmanaged<CFArray>!
+c:@F@ABAddressBookCopyArrayOfAllPeopleInSource	swift.func	ABAddressBookCopyArrayOfAllPeopleInSource(_:_:)	ABAddressBookCopyArrayOfAllPeopleInSource(_:_:)	func ABAddressBookCopyArrayOfAllPeopleInSource(_ addressBook: ABAddressBook!, _ source: ABRecord!) -> Unmanaged<CFArray>!
+c:@F@ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering	swift.func	ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(_:_:_:)	ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(_:_:_:)	func ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(_ addressBook: ABAddressBook!, _ source: ABRecord!, _ sortOrdering: ABPersonSortOrdering) -> Unmanaged<CFArray>!
+c:@F@ABAddressBookCopyArrayOfAllSources	swift.func	ABAddressBookCopyArrayOfAllSources(_:)	ABAddressBookCopyArrayOfAllSources(_:)	func ABAddressBookCopyArrayOfAllSources(_ addressBook: ABAddressBook!) -> Unmanaged<CFArray>!
+c:@F@ABAddressBookCopyDefaultSource	swift.func	ABAddressBookCopyDefaultSource(_:)	ABAddressBookCopyDefaultSource(_:)	func ABAddressBookCopyDefaultSource(_ addressBook: ABAddressBook!) -> Unmanaged<ABRecord>!
+c:@F@ABAddressBookCopyLocalizedLabel	swift.func	ABAddressBookCopyLocalizedLabel(_:)	ABAddressBookCopyLocalizedLabel(_:)	func ABAddressBookCopyLocalizedLabel(_ label: CFString!) -> Unmanaged<CFString>!
+c:@F@ABAddressBookCopyPeopleWithName	swift.func	ABAddressBookCopyPeopleWithName(_:_:)	ABAddressBookCopyPeopleWithName(_:_:)	func ABAddressBookCopyPeopleWithName(_ addressBook: ABAddressBook!, _ name: CFString!) -> Unmanaged<CFArray>!
+c:@F@ABAddressBookCreate	swift.func	ABAddressBookCreate()	ABAddressBookCreate()	func ABAddressBookCreate() -> Unmanaged<ABAddressBook>!
+c:@F@ABAddressBookCreateWithOptions	swift.func	ABAddressBookCreateWithOptions(_:_:)	ABAddressBookCreateWithOptions(_:_:)	func ABAddressBookCreateWithOptions(_ options: CFDictionary!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>!) -> Unmanaged<ABAddressBook>!
+c:@F@ABAddressBookGetAuthorizationStatus	swift.func	ABAddressBookGetAuthorizationStatus()	ABAddressBookGetAuthorizationStatus()	func ABAddressBookGetAuthorizationStatus() -> ABAuthorizationStatus
+c:@F@ABAddressBookGetGroupCount	swift.func	ABAddressBookGetGroupCount(_:)	ABAddressBookGetGroupCount(_:)	func ABAddressBookGetGroupCount(_ addressBook: ABAddressBook!) -> CFIndex
+c:@F@ABAddressBookGetGroupWithRecordID	swift.func	ABAddressBookGetGroupWithRecordID(_:_:)	ABAddressBookGetGroupWithRecordID(_:_:)	func ABAddressBookGetGroupWithRecordID(_ addressBook: ABAddressBook!, _ recordID: ABRecordID) -> Unmanaged<ABRecord>!
+c:@F@ABAddressBookGetPersonCount	swift.func	ABAddressBookGetPersonCount(_:)	ABAddressBookGetPersonCount(_:)	func ABAddressBookGetPersonCount(_ addressBook: ABAddressBook!) -> CFIndex
+c:@F@ABAddressBookGetPersonWithRecordID	swift.func	ABAddressBookGetPersonWithRecordID(_:_:)	ABAddressBookGetPersonWithRecordID(_:_:)	func ABAddressBookGetPersonWithRecordID(_ addressBook: ABAddressBook!, _ recordID: ABRecordID) -> Unmanaged<ABRecord>!
+c:@F@ABAddressBookGetSourceWithRecordID	swift.func	ABAddressBookGetSourceWithRecordID(_:_:)	ABAddressBookGetSourceWithRecordID(_:_:)	func ABAddressBookGetSourceWithRecordID(_ addressBook: ABAddressBook!, _ sourceID: ABRecordID) -> Unmanaged<ABRecord>!
+c:@F@ABAddressBookHasUnsavedChanges	swift.func	ABAddressBookHasUnsavedChanges(_:)	ABAddressBookHasUnsavedChanges(_:)	func ABAddressBookHasUnsavedChanges(_ addressBook: ABAddressBook!) -> Bool
+c:@F@ABAddressBookRegisterExternalChangeCallback	swift.func	ABAddressBookRegisterExternalChangeCallback(_:_:_:)	ABAddressBookRegisterExternalChangeCallback(_:_:_:)	func ABAddressBookRegisterExternalChangeCallback(_ addressBook: ABAddressBook!, _ callback: ABExternalChangeCallback!, _ context: UnsafeMutableRawPointer!)
+c:@F@ABAddressBookRemoveRecord	swift.func	ABAddressBookRemoveRecord(_:_:_:)	ABAddressBookRemoveRecord(_:_:_:)	func ABAddressBookRemoveRecord(_ addressBook: ABAddressBook!, _ record: ABRecord!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>!) -> Bool
+c:@F@ABAddressBookRequestAccessWithCompletion	swift.func	ABAddressBookRequestAccessWithCompletion(_:_:)	ABAddressBookRequestAccessWithCompletion(_:_:)	func ABAddressBookRequestAccessWithCompletion(_ addressBook: ABAddressBook!, _ completion: ABAddressBookRequestAccessCompletionHandler!)
+c:@F@ABAddressBookRevert	swift.func	ABAddressBookRevert(_:)	ABAddressBookRevert(_:)	func ABAddressBookRevert(_ addressBook: ABAddressBook!)
+c:@F@ABAddressBookSave	swift.func	ABAddressBookSave(_:_:)	ABAddressBookSave(_:_:)	func ABAddressBookSave(_ addressBook: ABAddressBook!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>!) -> Bool
+c:@F@ABAddressBookUnregisterExternalChangeCallback	swift.func	ABAddressBookUnregisterExternalChangeCallback(_:_:_:)	ABAddressBookUnregisterExternalChangeCallback(_:_:_:)	func ABAddressBookUnregisterExternalChangeCallback(_ addressBook: ABAddressBook!, _ callback: ABExternalChangeCallback!, _ context: UnsafeMutableRawPointer!)
+c:@F@ABGroupAddMember	swift.func	ABGroupAddMember(_:_:_:)	ABGroupAddMember(_:_:_:)	func ABGroupAddMember(_ group: ABRecord!, _ person: ABRecord!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>!) -> Bool
+c:@F@ABGroupCopyArrayOfAllMembers	swift.func	ABGroupCopyArrayOfAllMembers(_:)	ABGroupCopyArrayOfAllMembers(_:)	func ABGroupCopyArrayOfAllMembers(_ group: ABRecord!) -> Unmanaged<CFArray>!
+c:@F@ABGroupCopyArrayOfAllMembersWithSortOrdering	swift.func	ABGroupCopyArrayOfAllMembersWithSortOrdering(_:_:)	ABGroupCopyArrayOfAllMembersWithSortOrdering(_:_:)	func ABGroupCopyArrayOfAllMembersWithSortOrdering(_ group: ABRecord!, _ sortOrdering: ABPersonSortOrdering) -> Unmanaged<CFArray>!
+c:@F@ABGroupCopySource	swift.func	ABGroupCopySource(_:)	ABGroupCopySource(_:)	func ABGroupCopySource(_ group: ABRecord!) -> Unmanaged<ABRecord>!
+c:@F@ABGroupCreate	swift.func	ABGroupCreate()	ABGroupCreate()	func ABGroupCreate() -> Unmanaged<ABRecord>!
+c:@F@ABGroupCreateInSource	swift.func	ABGroupCreateInSource(_:)	ABGroupCreateInSource(_:)	func ABGroupCreateInSource(_ source: ABRecord!) -> Unmanaged<ABRecord>!
+c:@F@ABGroupRemoveMember	swift.func	ABGroupRemoveMember(_:_:_:)	ABGroupRemoveMember(_:_:_:)	func ABGroupRemoveMember(_ group: ABRecord!, _ member: ABRecord!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>!) -> Bool
+c:@F@ABMultiValueAddValueAndLabel	swift.func	ABMultiValueAddValueAndLabel(_:_:_:_:)	ABMultiValueAddValueAndLabel(_:_:_:_:)	func ABMultiValueAddValueAndLabel(_ multiValue: ABMutableMultiValue!, _ value: CFTypeRef!, _ label: CFString!, _ outIdentifier: UnsafeMutablePointer<ABMultiValueIdentifier>!) -> Bool
+c:@F@ABMultiValueCopyArrayOfAllValues	swift.func	ABMultiValueCopyArrayOfAllValues(_:)	ABMultiValueCopyArrayOfAllValues(_:)	func ABMultiValueCopyArrayOfAllValues(_ multiValue: ABMultiValue!) -> Unmanaged<CFArray>!
+c:@F@ABMultiValueCopyLabelAtIndex	swift.func	ABMultiValueCopyLabelAtIndex(_:_:)	ABMultiValueCopyLabelAtIndex(_:_:)	func ABMultiValueCopyLabelAtIndex(_ multiValue: ABMultiValue!, _ index: CFIndex) -> Unmanaged<CFString>!
+c:@F@ABMultiValueCopyValueAtIndex	swift.func	ABMultiValueCopyValueAtIndex(_:_:)	ABMultiValueCopyValueAtIndex(_:_:)	func ABMultiValueCopyValueAtIndex(_ multiValue: ABMultiValue!, _ index: CFIndex) -> Unmanaged<CFTypeRef>!
+c:@F@ABMultiValueCreateMutable	swift.func	ABMultiValueCreateMutable(_:)	ABMultiValueCreateMutable(_:)	func ABMultiValueCreateMutable(_ type: ABPropertyType) -> Unmanaged<ABMutableMultiValue>!
+c:@F@ABMultiValueCreateMutableCopy	swift.func	ABMultiValueCreateMutableCopy(_:)	ABMultiValueCreateMutableCopy(_:)	func ABMultiValueCreateMutableCopy(_ multiValue: ABMultiValue!) -> Unmanaged<ABMutableMultiValue>!
+c:@F@ABMultiValueGetCount	swift.func	ABMultiValueGetCount(_:)	ABMultiValueGetCount(_:)	func ABMultiValueGetCount(_ multiValue: ABMultiValue!) -> CFIndex
+c:@F@ABMultiValueGetFirstIndexOfValue	swift.func	ABMultiValueGetFirstIndexOfValue(_:_:)	ABMultiValueGetFirstIndexOfValue(_:_:)	func ABMultiValueGetFirstIndexOfValue(_ multiValue: ABMultiValue!, _ value: CFTypeRef!) -> CFIndex
+c:@F@ABMultiValueGetIdentifierAtIndex	swift.func	ABMultiValueGetIdentifierAtIndex(_:_:)	ABMultiValueGetIdentifierAtIndex(_:_:)	func ABMultiValueGetIdentifierAtIndex(_ multiValue: ABMultiValue!, _ index: CFIndex) -> ABMultiValueIdentifier
+c:@F@ABMultiValueGetIndexForIdentifier	swift.func	ABMultiValueGetIndexForIdentifier(_:_:)	ABMultiValueGetIndexForIdentifier(_:_:)	func ABMultiValueGetIndexForIdentifier(_ multiValue: ABMultiValue!, _ identifier: ABMultiValueIdentifier) -> CFIndex
+c:@F@ABMultiValueGetPropertyType	swift.func	ABMultiValueGetPropertyType(_:)	ABMultiValueGetPropertyType(_:)	func ABMultiValueGetPropertyType(_ multiValue: ABMultiValue!) -> ABPropertyType
+c:@F@ABMultiValueInsertValueAndLabelAtIndex	swift.func	ABMultiValueInsertValueAndLabelAtIndex(_:_:_:_:_:)	ABMultiValueInsertValueAndLabelAtIndex(_:_:_:_:_:)	func ABMultiValueInsertValueAndLabelAtIndex(_ multiValue: ABMutableMultiValue!, _ value: CFTypeRef!, _ label: CFString!, _ index: CFIndex, _ outIdentifier: UnsafeMutablePointer<ABMultiValueIdentifier>!) -> Bool
+c:@F@ABMultiValueRemoveValueAndLabelAtIndex	swift.func	ABMultiValueRemoveValueAndLabelAtIndex(_:_:)	ABMultiValueRemoveValueAndLabelAtIndex(_:_:)	func ABMultiValueRemoveValueAndLabelAtIndex(_ multiValue: ABMutableMultiValue!, _ index: CFIndex) -> Bool
+c:@F@ABMultiValueReplaceLabelAtIndex	swift.func	ABMultiValueReplaceLabelAtIndex(_:_:_:)	ABMultiValueReplaceLabelAtIndex(_:_:_:)	func ABMultiValueReplaceLabelAtIndex(_ multiValue: ABMutableMultiValue!, _ label: CFString!, _ index: CFIndex) -> Bool
+c:@F@ABMultiValueReplaceValueAtIndex	swift.func	ABMultiValueReplaceValueAtIndex(_:_:_:)	ABMultiValueReplaceValueAtIndex(_:_:_:)	func ABMultiValueReplaceValueAtIndex(_ multiValue: ABMutableMultiValue!, _ value: CFTypeRef!, _ index: CFIndex) -> Bool
+c:@F@ABPersonComparePeopleByName	swift.func	ABPersonComparePeopleByName(_:_:_:)	ABPersonComparePeopleByName(_:_:_:)	func ABPersonComparePeopleByName(_ person1: ABRecord!, _ person2: ABRecord!, _ ordering: ABPersonSortOrdering) -> CFComparisonResult
+c:@F@ABPersonCopyArrayOfAllLinkedPeople	swift.func	ABPersonCopyArrayOfAllLinkedPeople(_:)	ABPersonCopyArrayOfAllLinkedPeople(_:)	func ABPersonCopyArrayOfAllLinkedPeople(_ person: ABRecord!) -> Unmanaged<CFArray>!
+c:@F@ABPersonCopyCompositeNameDelimiterForRecord	swift.func	ABPersonCopyCompositeNameDelimiterForRecord(_:)	ABPersonCopyCompositeNameDelimiterForRecord(_:)	func ABPersonCopyCompositeNameDelimiterForRecord(_ record: ABRecord!) -> Unmanaged<CFString>!
+c:@F@ABPersonCopyImageData	swift.func	ABPersonCopyImageData(_:)	ABPersonCopyImageData(_:)	func ABPersonCopyImageData(_ person: ABRecord!) -> Unmanaged<CFData>!
+c:@F@ABPersonCopyImageDataWithFormat	swift.func	ABPersonCopyImageDataWithFormat(_:_:)	ABPersonCopyImageDataWithFormat(_:_:)	func ABPersonCopyImageDataWithFormat(_ person: ABRecord!, _ format: ABPersonImageFormat) -> Unmanaged<CFData>!
+c:@F@ABPersonCopyLocalizedPropertyName	swift.func	ABPersonCopyLocalizedPropertyName(_:)	ABPersonCopyLocalizedPropertyName(_:)	func ABPersonCopyLocalizedPropertyName(_ property: ABPropertyID) -> Unmanaged<CFString>!
+c:@F@ABPersonCopySource	swift.func	ABPersonCopySource(_:)	ABPersonCopySource(_:)	func ABPersonCopySource(_ person: ABRecord!) -> Unmanaged<ABRecord>!
+c:@F@ABPersonCreate	swift.func	ABPersonCreate()	ABPersonCreate()	func ABPersonCreate() -> Unmanaged<ABRecord>!
+c:@F@ABPersonCreateInSource	swift.func	ABPersonCreateInSource(_:)	ABPersonCreateInSource(_:)	func ABPersonCreateInSource(_ source: ABRecord!) -> Unmanaged<ABRecord>!
+c:@F@ABPersonCreatePeopleInSourceWithVCardRepresentation	swift.func	ABPersonCreatePeopleInSourceWithVCardRepresentation(_:_:)	ABPersonCreatePeopleInSourceWithVCardRepresentation(_:_:)	func ABPersonCreatePeopleInSourceWithVCardRepresentation(_ source: ABRecord!, _ vCardData: CFData!) -> Unmanaged<CFArray>!
+c:@F@ABPersonCreateVCardRepresentationWithPeople	swift.func	ABPersonCreateVCardRepresentationWithPeople(_:)	ABPersonCreateVCardRepresentationWithPeople(_:)	func ABPersonCreateVCardRepresentationWithPeople(_ people: CFArray!) -> Unmanaged<CFData>!
+c:@F@ABPersonGetCompositeNameFormat	swift.func	ABPersonGetCompositeNameFormat()	ABPersonGetCompositeNameFormat()	func ABPersonGetCompositeNameFormat() -> ABPersonCompositeNameFormat
+c:@F@ABPersonGetCompositeNameFormatForRecord	swift.func	ABPersonGetCompositeNameFormatForRecord(_:)	ABPersonGetCompositeNameFormatForRecord(_:)	func ABPersonGetCompositeNameFormatForRecord(_ record: ABRecord!) -> ABPersonCompositeNameFormat
+c:@F@ABPersonGetSortOrdering	swift.func	ABPersonGetSortOrdering()	ABPersonGetSortOrdering()	func ABPersonGetSortOrdering() -> ABPersonSortOrdering
+c:@F@ABPersonGetTypeOfProperty	swift.func	ABPersonGetTypeOfProperty(_:)	ABPersonGetTypeOfProperty(_:)	func ABPersonGetTypeOfProperty(_ property: ABPropertyID) -> ABPropertyType
+c:@F@ABPersonHasImageData	swift.func	ABPersonHasImageData(_:)	ABPersonHasImageData(_:)	func ABPersonHasImageData(_ person: ABRecord!) -> Bool
+c:@F@ABPersonRemoveImageData	swift.func	ABPersonRemoveImageData(_:_:)	ABPersonRemoveImageData(_:_:)	func ABPersonRemoveImageData(_ person: ABRecord!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>!) -> Bool
+c:@F@ABPersonSetImageData	swift.func	ABPersonSetImageData(_:_:_:)	ABPersonSetImageData(_:_:_:)	func ABPersonSetImageData(_ person: ABRecord!, _ imageData: CFData!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>!) -> Bool
+c:@F@ABRecordCopyCompositeName	swift.func	ABRecordCopyCompositeName(_:)	ABRecordCopyCompositeName(_:)	func ABRecordCopyCompositeName(_ record: ABRecord!) -> Unmanaged<CFString>!
+c:@F@ABRecordCopyValue	swift.func	ABRecordCopyValue(_:_:)	ABRecordCopyValue(_:_:)	func ABRecordCopyValue(_ record: ABRecord!, _ property: ABPropertyID) -> Unmanaged<CFTypeRef>!
+c:@F@ABRecordGetRecordID	swift.func	ABRecordGetRecordID(_:)	ABRecordGetRecordID(_:)	func ABRecordGetRecordID(_ record: ABRecord!) -> ABRecordID
+c:@F@ABRecordGetRecordType	swift.func	ABRecordGetRecordType(_:)	ABRecordGetRecordType(_:)	func ABRecordGetRecordType(_ record: ABRecord!) -> ABRecordType
+c:@F@ABRecordRemoveValue	swift.func	ABRecordRemoveValue(_:_:_:)	ABRecordRemoveValue(_:_:_:)	func ABRecordRemoveValue(_ record: ABRecord!, _ property: ABPropertyID, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>!) -> Bool
+c:@F@ABRecordSetValue	swift.func	ABRecordSetValue(_:_:_:_:)	ABRecordSetValue(_:_:_:_:)	func ABRecordSetValue(_ record: ABRecord!, _ property: ABPropertyID, _ value: CFTypeRef!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>!) -> Bool
+c:@T@ABAddressBookRef	swift.typealias	ABAddressBook	ABAddressBook	typealias ABAddressBook = CFTypeRef
+c:@T@ABAddressBookRequestAccessCompletionHandler	swift.typealias	ABAddressBookRequestAccessCompletionHandler	ABAddressBookRequestAccessCompletionHandler	typealias ABAddressBookRequestAccessCompletionHandler = (Bool, CFError?) -> Void
+c:@T@ABExternalChangeCallback	swift.typealias	ABExternalChangeCallback	ABExternalChangeCallback	typealias ABExternalChangeCallback = (ABAddressBook?, CFDictionary?, UnsafeMutableRawPointer?) -> Void
+c:@T@ABMultiValueIdentifier	swift.typealias	ABMultiValueIdentifier	ABMultiValueIdentifier	typealias ABMultiValueIdentifier = Int32
+c:@T@ABMultiValueRef	swift.typealias	ABMultiValue	ABMultiValue	typealias ABMultiValue = CFTypeRef
+c:@T@ABMutableMultiValueRef	swift.typealias	ABMutableMultiValue	ABMutableMultiValue	typealias ABMutableMultiValue = CFTypeRef
+c:@T@ABPersonCompositeNameFormat	swift.typealias	ABPersonCompositeNameFormat	ABPersonCompositeNameFormat	typealias ABPersonCompositeNameFormat = UInt32
+c:@T@ABPersonSortOrdering	swift.typealias	ABPersonSortOrdering	ABPersonSortOrdering	typealias ABPersonSortOrdering = UInt32
+c:@T@ABPropertyID	swift.typealias	ABPropertyID	ABPropertyID	typealias ABPropertyID = Int32
+c:@T@ABPropertyType	swift.typealias	ABPropertyType	ABPropertyType	typealias ABPropertyType = UInt32
+c:@T@ABRecordID	swift.typealias	ABRecordID	ABRecordID	typealias ABRecordID = Int32
+c:@T@ABRecordRef	swift.typealias	ABRecord	ABRecord	typealias ABRecord = CFTypeRef
+c:@T@ABRecordType	swift.typealias	ABRecordType	ABRecordType	typealias ABRecordType = UInt32
+c:@T@ABSourceType	swift.typealias	ABSourceType	ABSourceType	typealias ABSourceType = Int32
+c:@kABGroupNameProperty	swift.var	kABGroupNameProperty	kABGroupNameProperty	let kABGroupNameProperty: Int32
+c:@kABHomeLabel	swift.var	kABHomeLabel	kABHomeLabel	let kABHomeLabel: CFString!
+c:@kABOtherLabel	swift.var	kABOtherLabel	kABOtherLabel	let kABOtherLabel: CFString!
+c:@kABPersonAddressCityKey	swift.var	kABPersonAddressCityKey	kABPersonAddressCityKey	let kABPersonAddressCityKey: CFString!
+c:@kABPersonAddressCountryCodeKey	swift.var	kABPersonAddressCountryCodeKey	kABPersonAddressCountryCodeKey	let kABPersonAddressCountryCodeKey: CFString!
+c:@kABPersonAddressCountryKey	swift.var	kABPersonAddressCountryKey	kABPersonAddressCountryKey	let kABPersonAddressCountryKey: CFString!
+c:@kABPersonAddressProperty	swift.var	kABPersonAddressProperty	kABPersonAddressProperty	let kABPersonAddressProperty: ABPropertyID
+c:@kABPersonAddressStateKey	swift.var	kABPersonAddressStateKey	kABPersonAddressStateKey	let kABPersonAddressStateKey: CFString!
+c:@kABPersonAddressStreetKey	swift.var	kABPersonAddressStreetKey	kABPersonAddressStreetKey	let kABPersonAddressStreetKey: CFString!
+c:@kABPersonAddressZIPKey	swift.var	kABPersonAddressZIPKey	kABPersonAddressZIPKey	let kABPersonAddressZIPKey: CFString!
+c:@kABPersonAlternateBirthdayCalendarIdentifierKey	swift.var	kABPersonAlternateBirthdayCalendarIdentifierKey	kABPersonAlternateBirthdayCalendarIdentifierKey	let kABPersonAlternateBirthdayCalendarIdentifierKey: CFString!
+c:@kABPersonAlternateBirthdayDayKey	swift.var	kABPersonAlternateBirthdayDayKey	kABPersonAlternateBirthdayDayKey	let kABPersonAlternateBirthdayDayKey: CFString!
+c:@kABPersonAlternateBirthdayEraKey	swift.var	kABPersonAlternateBirthdayEraKey	kABPersonAlternateBirthdayEraKey	let kABPersonAlternateBirthdayEraKey: CFString!
+c:@kABPersonAlternateBirthdayIsLeapMonthKey	swift.var	kABPersonAlternateBirthdayIsLeapMonthKey	kABPersonAlternateBirthdayIsLeapMonthKey	let kABPersonAlternateBirthdayIsLeapMonthKey: CFString!
+c:@kABPersonAlternateBirthdayMonthKey	swift.var	kABPersonAlternateBirthdayMonthKey	kABPersonAlternateBirthdayMonthKey	let kABPersonAlternateBirthdayMonthKey: CFString!
+c:@kABPersonAlternateBirthdayProperty	swift.var	kABPersonAlternateBirthdayProperty	kABPersonAlternateBirthdayProperty	let kABPersonAlternateBirthdayProperty: ABPropertyID
+c:@kABPersonAlternateBirthdayYearKey	swift.var	kABPersonAlternateBirthdayYearKey	kABPersonAlternateBirthdayYearKey	let kABPersonAlternateBirthdayYearKey: CFString!
+c:@kABPersonAnniversaryLabel	swift.var	kABPersonAnniversaryLabel	kABPersonAnniversaryLabel	let kABPersonAnniversaryLabel: CFString!
+c:@kABPersonAssistantLabel	swift.var	kABPersonAssistantLabel	kABPersonAssistantLabel	let kABPersonAssistantLabel: CFString!
+c:@kABPersonBirthdayProperty	swift.var	kABPersonBirthdayProperty	kABPersonBirthdayProperty	let kABPersonBirthdayProperty: ABPropertyID
+c:@kABPersonBrotherLabel	swift.var	kABPersonBrotherLabel	kABPersonBrotherLabel	let kABPersonBrotherLabel: CFString!
+c:@kABPersonChildLabel	swift.var	kABPersonChildLabel	kABPersonChildLabel	let kABPersonChildLabel: CFString!
+c:@kABPersonCreationDateProperty	swift.var	kABPersonCreationDateProperty	kABPersonCreationDateProperty	let kABPersonCreationDateProperty: ABPropertyID
+c:@kABPersonDateProperty	swift.var	kABPersonDateProperty	kABPersonDateProperty	let kABPersonDateProperty: ABPropertyID
+c:@kABPersonDepartmentProperty	swift.var	kABPersonDepartmentProperty	kABPersonDepartmentProperty	let kABPersonDepartmentProperty: ABPropertyID
+c:@kABPersonEmailProperty	swift.var	kABPersonEmailProperty	kABPersonEmailProperty	let kABPersonEmailProperty: ABPropertyID
+c:@kABPersonFatherLabel	swift.var	kABPersonFatherLabel	kABPersonFatherLabel	let kABPersonFatherLabel: CFString!
+c:@kABPersonFirstNamePhoneticProperty	swift.var	kABPersonFirstNamePhoneticProperty	kABPersonFirstNamePhoneticProperty	let kABPersonFirstNamePhoneticProperty: ABPropertyID
+c:@kABPersonFirstNameProperty	swift.var	kABPersonFirstNameProperty	kABPersonFirstNameProperty	let kABPersonFirstNameProperty: ABPropertyID
+c:@kABPersonFriendLabel	swift.var	kABPersonFriendLabel	kABPersonFriendLabel	let kABPersonFriendLabel: CFString!
+c:@kABPersonHomePageLabel	swift.var	kABPersonHomePageLabel	kABPersonHomePageLabel	let kABPersonHomePageLabel: CFString!
+c:@kABPersonInstantMessageProperty	swift.var	kABPersonInstantMessageProperty	kABPersonInstantMessageProperty	let kABPersonInstantMessageProperty: ABPropertyID
+c:@kABPersonInstantMessageServiceAIM	swift.var	kABPersonInstantMessageServiceAIM	kABPersonInstantMessageServiceAIM	let kABPersonInstantMessageServiceAIM: CFString!
+c:@kABPersonInstantMessageServiceFacebook	swift.var	kABPersonInstantMessageServiceFacebook	kABPersonInstantMessageServiceFacebook	let kABPersonInstantMessageServiceFacebook: CFString!
+c:@kABPersonInstantMessageServiceGaduGadu	swift.var	kABPersonInstantMessageServiceGaduGadu	kABPersonInstantMessageServiceGaduGadu	let kABPersonInstantMessageServiceGaduGadu: CFString!
+c:@kABPersonInstantMessageServiceGoogleTalk	swift.var	kABPersonInstantMessageServiceGoogleTalk	kABPersonInstantMessageServiceGoogleTalk	let kABPersonInstantMessageServiceGoogleTalk: CFString!
+c:@kABPersonInstantMessageServiceICQ	swift.var	kABPersonInstantMessageServiceICQ	kABPersonInstantMessageServiceICQ	let kABPersonInstantMessageServiceICQ: CFString!
+c:@kABPersonInstantMessageServiceJabber	swift.var	kABPersonInstantMessageServiceJabber	kABPersonInstantMessageServiceJabber	let kABPersonInstantMessageServiceJabber: CFString!
+c:@kABPersonInstantMessageServiceKey	swift.var	kABPersonInstantMessageServiceKey	kABPersonInstantMessageServiceKey	let kABPersonInstantMessageServiceKey: CFString!
+c:@kABPersonInstantMessageServiceMSN	swift.var	kABPersonInstantMessageServiceMSN	kABPersonInstantMessageServiceMSN	let kABPersonInstantMessageServiceMSN: CFString!
+c:@kABPersonInstantMessageServiceQQ	swift.var	kABPersonInstantMessageServiceQQ	kABPersonInstantMessageServiceQQ	let kABPersonInstantMessageServiceQQ: CFString!
+c:@kABPersonInstantMessageServiceSkype	swift.var	kABPersonInstantMessageServiceSkype	kABPersonInstantMessageServiceSkype	let kABPersonInstantMessageServiceSkype: CFString!
+c:@kABPersonInstantMessageServiceYahoo	swift.var	kABPersonInstantMessageServiceYahoo	kABPersonInstantMessageServiceYahoo	let kABPersonInstantMessageServiceYahoo: CFString!
+c:@kABPersonInstantMessageUsernameKey	swift.var	kABPersonInstantMessageUsernameKey	kABPersonInstantMessageUsernameKey	let kABPersonInstantMessageUsernameKey: CFString!
+c:@kABPersonJobTitleProperty	swift.var	kABPersonJobTitleProperty	kABPersonJobTitleProperty	let kABPersonJobTitleProperty: ABPropertyID
+c:@kABPersonKindOrganization	swift.var	kABPersonKindOrganization	kABPersonKindOrganization	let kABPersonKindOrganization: CFNumber!
+c:@kABPersonKindPerson	swift.var	kABPersonKindPerson	kABPersonKindPerson	let kABPersonKindPerson: CFNumber!
+c:@kABPersonKindProperty	swift.var	kABPersonKindProperty	kABPersonKindProperty	let kABPersonKindProperty: ABPropertyID
+c:@kABPersonLastNamePhoneticProperty	swift.var	kABPersonLastNamePhoneticProperty	kABPersonLastNamePhoneticProperty	let kABPersonLastNamePhoneticProperty: ABPropertyID
+c:@kABPersonLastNameProperty	swift.var	kABPersonLastNameProperty	kABPersonLastNameProperty	let kABPersonLastNameProperty: ABPropertyID
+c:@kABPersonManagerLabel	swift.var	kABPersonManagerLabel	kABPersonManagerLabel	let kABPersonManagerLabel: CFString!
+c:@kABPersonMiddleNamePhoneticProperty	swift.var	kABPersonMiddleNamePhoneticProperty	kABPersonMiddleNamePhoneticProperty	let kABPersonMiddleNamePhoneticProperty: ABPropertyID
+c:@kABPersonMiddleNameProperty	swift.var	kABPersonMiddleNameProperty	kABPersonMiddleNameProperty	let kABPersonMiddleNameProperty: ABPropertyID
+c:@kABPersonModificationDateProperty	swift.var	kABPersonModificationDateProperty	kABPersonModificationDateProperty	let kABPersonModificationDateProperty: ABPropertyID
+c:@kABPersonMotherLabel	swift.var	kABPersonMotherLabel	kABPersonMotherLabel	let kABPersonMotherLabel: CFString!
+c:@kABPersonNicknameProperty	swift.var	kABPersonNicknameProperty	kABPersonNicknameProperty	let kABPersonNicknameProperty: ABPropertyID
+c:@kABPersonNoteProperty	swift.var	kABPersonNoteProperty	kABPersonNoteProperty	let kABPersonNoteProperty: ABPropertyID
+c:@kABPersonOrganizationProperty	swift.var	kABPersonOrganizationProperty	kABPersonOrganizationProperty	let kABPersonOrganizationProperty: ABPropertyID
+c:@kABPersonParentLabel	swift.var	kABPersonParentLabel	kABPersonParentLabel	let kABPersonParentLabel: CFString!
+c:@kABPersonPartnerLabel	swift.var	kABPersonPartnerLabel	kABPersonPartnerLabel	let kABPersonPartnerLabel: CFString!
+c:@kABPersonPhoneHomeFAXLabel	swift.var	kABPersonPhoneHomeFAXLabel	kABPersonPhoneHomeFAXLabel	let kABPersonPhoneHomeFAXLabel: CFString!
+c:@kABPersonPhoneIPhoneLabel	swift.var	kABPersonPhoneIPhoneLabel	kABPersonPhoneIPhoneLabel	let kABPersonPhoneIPhoneLabel: CFString!
+c:@kABPersonPhoneMainLabel	swift.var	kABPersonPhoneMainLabel	kABPersonPhoneMainLabel	let kABPersonPhoneMainLabel: CFString!
+c:@kABPersonPhoneMobileLabel	swift.var	kABPersonPhoneMobileLabel	kABPersonPhoneMobileLabel	let kABPersonPhoneMobileLabel: CFString!
+c:@kABPersonPhoneOtherFAXLabel	swift.var	kABPersonPhoneOtherFAXLabel	kABPersonPhoneOtherFAXLabel	let kABPersonPhoneOtherFAXLabel: CFString!
+c:@kABPersonPhonePagerLabel	swift.var	kABPersonPhonePagerLabel	kABPersonPhonePagerLabel	let kABPersonPhonePagerLabel: CFString!
+c:@kABPersonPhoneProperty	swift.var	kABPersonPhoneProperty	kABPersonPhoneProperty	let kABPersonPhoneProperty: ABPropertyID
+c:@kABPersonPhoneWorkFAXLabel	swift.var	kABPersonPhoneWorkFAXLabel	kABPersonPhoneWorkFAXLabel	let kABPersonPhoneWorkFAXLabel: CFString!
+c:@kABPersonPrefixProperty	swift.var	kABPersonPrefixProperty	kABPersonPrefixProperty	let kABPersonPrefixProperty: ABPropertyID
+c:@kABPersonRelatedNamesProperty	swift.var	kABPersonRelatedNamesProperty	kABPersonRelatedNamesProperty	let kABPersonRelatedNamesProperty: ABPropertyID
+c:@kABPersonSisterLabel	swift.var	kABPersonSisterLabel	kABPersonSisterLabel	let kABPersonSisterLabel: CFString!
+c:@kABPersonSocialProfileProperty	swift.var	kABPersonSocialProfileProperty	kABPersonSocialProfileProperty	let kABPersonSocialProfileProperty: ABPropertyID
+c:@kABPersonSocialProfileServiceFacebook	swift.var	kABPersonSocialProfileServiceFacebook	kABPersonSocialProfileServiceFacebook	let kABPersonSocialProfileServiceFacebook: CFString!
+c:@kABPersonSocialProfileServiceFlickr	swift.var	kABPersonSocialProfileServiceFlickr	kABPersonSocialProfileServiceFlickr	let kABPersonSocialProfileServiceFlickr: CFString!
+c:@kABPersonSocialProfileServiceGameCenter	swift.var	kABPersonSocialProfileServiceGameCenter	kABPersonSocialProfileServiceGameCenter	let kABPersonSocialProfileServiceGameCenter: CFString!
+c:@kABPersonSocialProfileServiceKey	swift.var	kABPersonSocialProfileServiceKey	kABPersonSocialProfileServiceKey	let kABPersonSocialProfileServiceKey: CFString!
+c:@kABPersonSocialProfileServiceLinkedIn	swift.var	kABPersonSocialProfileServiceLinkedIn	kABPersonSocialProfileServiceLinkedIn	let kABPersonSocialProfileServiceLinkedIn: CFString!
+c:@kABPersonSocialProfileServiceMyspace	swift.var	kABPersonSocialProfileServiceMyspace	kABPersonSocialProfileServiceMyspace	let kABPersonSocialProfileServiceMyspace: CFString!
+c:@kABPersonSocialProfileServiceSinaWeibo	swift.var	kABPersonSocialProfileServiceSinaWeibo	kABPersonSocialProfileServiceSinaWeibo	let kABPersonSocialProfileServiceSinaWeibo: CFString!
+c:@kABPersonSocialProfileServiceTwitter	swift.var	kABPersonSocialProfileServiceTwitter	kABPersonSocialProfileServiceTwitter	let kABPersonSocialProfileServiceTwitter: CFString!
+c:@kABPersonSocialProfileURLKey	swift.var	kABPersonSocialProfileURLKey	kABPersonSocialProfileURLKey	let kABPersonSocialProfileURLKey: CFString!
+c:@kABPersonSocialProfileUserIdentifierKey	swift.var	kABPersonSocialProfileUserIdentifierKey	kABPersonSocialProfileUserIdentifierKey	let kABPersonSocialProfileUserIdentifierKey: CFString!
+c:@kABPersonSocialProfileUsernameKey	swift.var	kABPersonSocialProfileUsernameKey	kABPersonSocialProfileUsernameKey	let kABPersonSocialProfileUsernameKey: CFString!
+c:@kABPersonSpouseLabel	swift.var	kABPersonSpouseLabel	kABPersonSpouseLabel	let kABPersonSpouseLabel: CFString!
+c:@kABPersonSuffixProperty	swift.var	kABPersonSuffixProperty	kABPersonSuffixProperty	let kABPersonSuffixProperty: ABPropertyID
+c:@kABPersonURLProperty	swift.var	kABPersonURLProperty	kABPersonURLProperty	let kABPersonURLProperty: ABPropertyID
+c:@kABSourceNameProperty	swift.var	kABSourceNameProperty	kABSourceNameProperty	let kABSourceNameProperty: ABPropertyID
+c:@kABSourceTypeProperty	swift.var	kABSourceTypeProperty	kABSourceTypeProperty	let kABSourceTypeProperty: ABPropertyID
+c:@kABWorkLabel	swift.var	kABWorkLabel	kABWorkLabel	let kABWorkLabel: CFString!
+c:@macro@kABMultiValueInvalidIdentifier	swift.var	kABMultiValueInvalidIdentifier	kABMultiValueInvalidIdentifier	var kABMultiValueInvalidIdentifier: Int32 { get }
+c:@macro@kABMultiValueMask	swift.var	kABMultiValueMask	kABMultiValueMask	var kABMultiValueMask: Int32 { get }
+c:@macro@kABPropertyInvalidID	swift.var	kABPropertyInvalidID	kABPropertyInvalidID	var kABPropertyInvalidID: Int32 { get }
+c:@macro@kABRecordInvalidID	swift.var	kABRecordInvalidID	kABRecordInvalidID	var kABRecordInvalidID: Int32 { get }
+c:@macro@kABSourceTypeSearchableMask	swift.var	kABSourceTypeSearchableMask	kABSourceTypeSearchableMask	var kABSourceTypeSearchableMask: Int32 { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ABAuthorizationStatus	swift.func.op	!=(_:_:)	ABAuthorizationStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@ABPersonImageFormat	swift.func.op	!=(_:_:)	ABPersonImageFormat.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ABAuthorizationStatus	swift.property	hashValue	ABAuthorizationStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@ABPersonImageFormat	swift.property	hashValue	ABPersonImageFormat.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ABAuthorizationStatus	swift.method	hash(into:)	ABAuthorizationStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@ABPersonImageFormat	swift.method	hash(into:)	ABPersonImageFormat.hash(into:)	func hash(into hasher: inout Hasher)
+s:So19ABPersonImageFormata8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	ABPersonImageFormat.init(rawValue:)	init(rawValue: UInt32)
+s:So19ABPersonImageFormata8rawValues6UInt32Vvp	swift.property	rawValue	ABPersonImageFormat.rawValue	var rawValue: UInt32
+s:So19ABPersonImageFormatayABs6UInt32Vcfc	swift.init	init(_:)	ABPersonImageFormat.init(_:)	init(_ rawValue: UInt32)
+s:So21ABAuthorizationStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ABAuthorizationStatus.init(rawValue:)	init?(rawValue: CFIndex)

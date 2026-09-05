@@ -1,0 +1,202 @@
+precise	kind	title	path	declaration
+c:@CLSContextTopicArtsAndMusic	swift.type.property	artsAndMusic	CLSContextTopic.artsAndMusic	static let artsAndMusic: CLSContextTopic
+c:@CLSContextTopicComputerScienceAndEngineering	swift.type.property	computerScienceAndEngineering	CLSContextTopic.computerScienceAndEngineering	static let computerScienceAndEngineering: CLSContextTopic
+c:@CLSContextTopicHealthAndFitness	swift.type.property	healthAndFitness	CLSContextTopic.healthAndFitness	static let healthAndFitness: CLSContextTopic
+c:@CLSContextTopicLiteracyAndWriting	swift.type.property	literacyAndWriting	CLSContextTopic.literacyAndWriting	static let literacyAndWriting: CLSContextTopic
+c:@CLSContextTopicMath	swift.type.property	math	CLSContextTopic.math	static let math: CLSContextTopic
+c:@CLSContextTopicScience	swift.type.property	science	CLSContextTopic.science	static let science: CLSContextTopic
+c:@CLSContextTopicSocialScience	swift.type.property	socialScience	CLSContextTopic.socialScience	static let socialScience: CLSContextTopic
+c:@CLSContextTopicWorldLanguage	swift.type.property	worldLanguage	CLSContextTopic.worldLanguage	static let worldLanguage: CLSContextTopic
+c:@CLSErrorCodeDomain	swift.var	CLSErrorCodeDomain	CLSErrorCodeDomain	let CLSErrorCodeDomain: String
+c:@CLSErrorObjectKey	swift.type.property	objectKey	CLSErrorUserInfoKey.objectKey	static let objectKey: CLSErrorUserInfoKey
+c:@CLSErrorSuccessfulObjectsKey	swift.type.property	successfulObjectsKey	CLSErrorUserInfoKey.successfulObjectsKey	static let successfulObjectsKey: CLSErrorUserInfoKey
+c:@CLSErrorUnderlyingErrorsKey	swift.type.property	underlyingErrorsKey	CLSErrorUserInfoKey.underlyingErrorsKey	static let underlyingErrorsKey: CLSErrorUserInfoKey
+c:@CLSPredicateKeyPathDateCreated	swift.type.property	dateCreated	CLSPredicateKeyPath.dateCreated	static let dateCreated: CLSPredicateKeyPath
+c:@CLSPredicateKeyPathIdentifier	swift.type.property	identifier	CLSPredicateKeyPath.identifier	static let identifier: CLSPredicateKeyPath
+c:@CLSPredicateKeyPathParent	swift.type.property	parent	CLSPredicateKeyPath.parent	static let parent: CLSPredicateKeyPath
+c:@CLSPredicateKeyPathTitle	swift.type.property	title	CLSPredicateKeyPath.title	static let title: CLSPredicateKeyPath
+c:@CLSPredicateKeyPathTopic	swift.type.property	topic	CLSPredicateKeyPath.topic	static let topic: CLSPredicateKeyPath
+c:@CLSPredicateKeyPathUniversalLinkURL	swift.type.property	universalLinkURL	CLSPredicateKeyPath.universalLinkURL	static let universalLinkURL: CLSPredicateKeyPath
+c:@E@CLSBinaryValueType	swift.enum	CLSBinaryValueType	CLSBinaryValueType	enum CLSBinaryValueType
+c:@E@CLSBinaryValueType@CLSBinaryValueTypeCorrectIncorrect	swift.enum.case	CLSBinaryValueType.correctIncorrect	CLSBinaryValueType.correctIncorrect	case correctIncorrect
+c:@E@CLSBinaryValueType@CLSBinaryValueTypePassFail	swift.enum.case	CLSBinaryValueType.passFail	CLSBinaryValueType.passFail	case passFail
+c:@E@CLSBinaryValueType@CLSBinaryValueTypeTrueFalse	swift.enum.case	CLSBinaryValueType.trueFalse	CLSBinaryValueType.trueFalse	case trueFalse
+c:@E@CLSBinaryValueType@CLSBinaryValueTypeYesNo	swift.enum.case	CLSBinaryValueType.yesNo	CLSBinaryValueType.yesNo	case yesNo
+c:@E@CLSContextType	swift.enum	CLSContextType	CLSContextType	enum CLSContextType
+c:@E@CLSContextType@CLSContextTypeApp	swift.enum.case	CLSContextType.app	CLSContextType.app	case app
+c:@E@CLSContextType@CLSContextTypeAudio	swift.enum.case	CLSContextType.audio	CLSContextType.audio	case audio
+c:@E@CLSContextType@CLSContextTypeBook	swift.enum.case	CLSContextType.book	CLSContextType.book	case book
+c:@E@CLSContextType@CLSContextTypeChallenge	swift.enum.case	CLSContextType.challenge	CLSContextType.challenge	case challenge
+c:@E@CLSContextType@CLSContextTypeChapter	swift.enum.case	CLSContextType.chapter	CLSContextType.chapter	case chapter
+c:@E@CLSContextType@CLSContextTypeCourse	swift.enum.case	CLSContextType.course	CLSContextType.course	case course
+c:@E@CLSContextType@CLSContextTypeCustom	swift.enum.case	CLSContextType.custom	CLSContextType.custom	case custom
+c:@E@CLSContextType@CLSContextTypeDocument	swift.enum.case	CLSContextType.document	CLSContextType.document	case document
+c:@E@CLSContextType@CLSContextTypeExercise	swift.enum.case	CLSContextType.exercise	CLSContextType.exercise	case exercise
+c:@E@CLSContextType@CLSContextTypeGame	swift.enum.case	CLSContextType.game	CLSContextType.game	case game
+c:@E@CLSContextType@CLSContextTypeLesson	swift.enum.case	CLSContextType.lesson	CLSContextType.lesson	case lesson
+c:@E@CLSContextType@CLSContextTypeLevel	swift.enum.case	CLSContextType.level	CLSContextType.level	case level
+c:@E@CLSContextType@CLSContextTypeNone	swift.enum.case	CLSContextType.none	CLSContextType.none	case none
+c:@E@CLSContextType@CLSContextTypePage	swift.enum.case	CLSContextType.page	CLSContextType.page	case page
+c:@E@CLSContextType@CLSContextTypeQuiz	swift.enum.case	CLSContextType.quiz	CLSContextType.quiz	case quiz
+c:@E@CLSContextType@CLSContextTypeSection	swift.enum.case	CLSContextType.section	CLSContextType.section	case section
+c:@E@CLSContextType@CLSContextTypeTask	swift.enum.case	CLSContextType.task	CLSContextType.task	case task
+c:@E@CLSContextType@CLSContextTypeVideo	swift.enum.case	CLSContextType.video	CLSContextType.video	case video
+c:@E@CLSErrorCode	swift.enum	CLSError.Code	CLSError.Code	enum Code
+c:@E@CLSErrorCode@CLSErrorCodeAuthorizationDenied	swift.enum.case	CLSError.Code.authorizationDenied	CLSError.Code.authorizationDenied	case authorizationDenied
+c:@E@CLSErrorCode@CLSErrorCodeClassKitUnavailable	swift.enum.case	CLSError.Code.classKitUnavailable	CLSError.Code.classKitUnavailable	case classKitUnavailable
+c:@E@CLSErrorCode@CLSErrorCodeDatabaseInaccessible	swift.enum.case	CLSError.Code.databaseInaccessible	CLSError.Code.databaseInaccessible	case databaseInaccessible
+c:@E@CLSErrorCode@CLSErrorCodeInvalidAccountCredentials	swift.enum.case	CLSError.Code.invalidAccountCredentials	CLSError.Code.invalidAccountCredentials	case invalidAccountCredentials
+c:@E@CLSErrorCode@CLSErrorCodeInvalidArgument	swift.enum.case	CLSError.Code.invalidArgument	CLSError.Code.invalidArgument	case invalidArgument
+c:@E@CLSErrorCode@CLSErrorCodeInvalidCreate	swift.enum.case	CLSError.Code.invalidCreate	CLSError.Code.invalidCreate	case invalidCreate
+c:@E@CLSErrorCode@CLSErrorCodeInvalidModification	swift.enum.case	CLSError.Code.invalidModification	CLSError.Code.invalidModification	case invalidModification
+c:@E@CLSErrorCode@CLSErrorCodeInvalidUpdate	swift.enum.case	CLSError.Code.invalidUpdate	CLSError.Code.invalidUpdate	case invalidUpdate
+c:@E@CLSErrorCode@CLSErrorCodeLimits	swift.enum.case	CLSError.Code.limits	CLSError.Code.limits	case limits
+c:@E@CLSErrorCode@CLSErrorCodeNone	swift.enum.case	CLSError.Code.none	CLSError.Code.none	case none
+c:@E@CLSErrorCode@CLSErrorCodePartialFailure	swift.enum.case	CLSError.Code.partialFailure	CLSError.Code.partialFailure	case partialFailure
+c:@E@CLSProgressReportingCapabilityKind	swift.enum	CLSProgressReportingCapability.Kind	CLSProgressReportingCapability.Kind	enum Kind
+c:@E@CLSProgressReportingCapabilityKind@CLSProgressReportingCapabilityKindBinary	swift.enum.case	CLSProgressReportingCapability.Kind.binary	CLSProgressReportingCapability.Kind.binary	case binary
+c:@E@CLSProgressReportingCapabilityKind@CLSProgressReportingCapabilityKindDuration	swift.enum.case	CLSProgressReportingCapability.Kind.duration	CLSProgressReportingCapability.Kind.duration	case duration
+c:@E@CLSProgressReportingCapabilityKind@CLSProgressReportingCapabilityKindPercent	swift.enum.case	CLSProgressReportingCapability.Kind.percent	CLSProgressReportingCapability.Kind.percent	case percent
+c:@E@CLSProgressReportingCapabilityKind@CLSProgressReportingCapabilityKindQuantity	swift.enum.case	CLSProgressReportingCapability.Kind.quantity	CLSProgressReportingCapability.Kind.quantity	case quantity
+c:@E@CLSProgressReportingCapabilityKind@CLSProgressReportingCapabilityKindScore	swift.enum.case	CLSProgressReportingCapability.Kind.score	CLSProgressReportingCapability.Kind.score	case score
+c:@T@CLSContextTopic	swift.struct	CLSContextTopic	CLSContextTopic	struct CLSContextTopic
+c:@T@CLSErrorUserInfoKey	swift.struct	CLSErrorUserInfoKey	CLSErrorUserInfoKey	struct CLSErrorUserInfoKey
+c:@T@CLSPredicateKeyPath	swift.struct	CLSPredicateKeyPath	CLSPredicateKeyPath	struct CLSPredicateKeyPath
+c:objc(cs)CLSActivity	swift.class	CLSActivity	CLSActivity	class CLSActivity
+c:objc(cs)CLSActivity(im)addAdditionalActivityItem:	swift.method	addAdditionalActivityItem(_:)	CLSActivity.addAdditionalActivityItem(_:)	func addAdditionalActivityItem(_ activityItem: CLSActivityItem)
+c:objc(cs)CLSActivity(im)addProgressRangeFromStart:toEnd:	swift.method	addProgressRange(fromStart:toEnd:)	CLSActivity.addProgressRange(fromStart:toEnd:)	func addProgressRange(fromStart start: Double, toEnd end: Double)
+c:objc(cs)CLSActivity(im)removeAllActivityItems	swift.method	removeAllActivityItems()	CLSActivity.removeAllActivityItems()	func removeAllActivityItems()
+c:objc(cs)CLSActivity(im)start	swift.method	start()	CLSActivity.start()	func start()
+c:objc(cs)CLSActivity(im)stop	swift.method	stop()	CLSActivity.stop()	func stop()
+c:objc(cs)CLSActivity(py)additionalActivityItems	swift.property	additionalActivityItems	CLSActivity.additionalActivityItems	var additionalActivityItems: [CLSActivityItem] { get }
+c:objc(cs)CLSActivity(py)duration	swift.property	duration	CLSActivity.duration	var duration: TimeInterval { get }
+c:objc(cs)CLSActivity(py)primaryActivityItem	swift.property	primaryActivityItem	CLSActivity.primaryActivityItem	var primaryActivityItem: CLSActivityItem? { get set }
+c:objc(cs)CLSActivity(py)progress	swift.property	progress	CLSActivity.progress	var progress: Double { get set }
+c:objc(cs)CLSActivity(py)started	swift.property	isStarted	CLSActivity.isStarted	var isStarted: Bool { get }
+c:objc(cs)CLSActivityItem	swift.class	CLSActivityItem	CLSActivityItem	class CLSActivityItem
+c:objc(cs)CLSActivityItem(py)identifier	swift.property	identifier	CLSActivityItem.identifier	var identifier: String { get }
+c:objc(cs)CLSActivityItem(py)title	swift.property	title	CLSActivityItem.title	var title: String { get set }
+c:objc(cs)CLSBinaryItem	swift.class	CLSBinaryItem	CLSBinaryItem	class CLSBinaryItem
+c:objc(cs)CLSBinaryItem(im)initWithIdentifier:title:type:	swift.init	init(identifier:title:type:)	CLSBinaryItem.init(identifier:title:type:)	init(identifier: String, title: String, type valueType: CLSBinaryValueType)
+c:objc(cs)CLSBinaryItem(py)value	swift.property	value	CLSBinaryItem.value	var value: Bool { get set }
+c:objc(cs)CLSBinaryItem(py)valueType	swift.property	valueType	CLSBinaryItem.valueType	var valueType: CLSBinaryValueType { get }
+c:objc(cs)CLSContext	swift.class	CLSContext	CLSContext	class CLSContext
+c:objc(cs)CLSContext(im)addChildContext:	swift.method	addChildContext(_:)	CLSContext.addChildContext(_:)	func addChildContext(_ child: CLSContext)
+c:objc(cs)CLSContext(im)addNavigationChildContext:	swift.method	addNavigationChildContext(_:)	CLSContext.addNavigationChildContext(_:)	func addNavigationChildContext(_ child: CLSContext)
+c:objc(cs)CLSContext(im)addProgressReportingCapabilities:	swift.method	addProgressReportingCapabilities(_:)	CLSContext.addProgressReportingCapabilities(_:)	func addProgressReportingCapabilities(_ capabilities: Set<CLSProgressReportingCapability>)
+c:objc(cs)CLSContext(im)becomeActive	swift.method	becomeActive()	CLSContext.becomeActive()	func becomeActive()
+c:objc(cs)CLSContext(im)createNewActivity	swift.method	createNewActivity()	CLSContext.createNewActivity()	func createNewActivity() -> CLSActivity
+c:objc(cs)CLSContext(im)descendantMatchingIdentifierPath:completion:	swift.method	descendant(matchingIdentifierPath:)	CLSContext.descendant(matchingIdentifierPath:)	func descendant(matchingIdentifierPath identifierPath: [String]) async throws -> CLSContext
+c:objc(cs)CLSContext(im)initWithType:identifier:title:	swift.init	init(type:identifier:title:)	CLSContext.init(type:identifier:title:)	init(type: CLSContextType, identifier: String, title: String)
+c:objc(cs)CLSContext(im)removeFromParent	swift.method	removeFromParent()	CLSContext.removeFromParent()	func removeFromParent()
+c:objc(cs)CLSContext(im)removeNavigationChildContext:	swift.method	removeNavigationChildContext(_:)	CLSContext.removeNavigationChildContext(_:)	func removeNavigationChildContext(_ child: CLSContext)
+c:objc(cs)CLSContext(im)resetProgressReportingCapabilities	swift.method	resetProgressReportingCapabilities()	CLSContext.resetProgressReportingCapabilities()	func resetProgressReportingCapabilities()
+c:objc(cs)CLSContext(im)resignActive	swift.method	resignActive()	CLSContext.resignActive()	func resignActive()
+c:objc(cs)CLSContext(im)setType:	swift.method	setType(_:)	CLSContext.setType(_:)	func setType(_ type: CLSContextType)
+c:objc(cs)CLSContext(py)active	swift.property	isActive	CLSContext.isActive	var isActive: Bool { get }
+c:objc(cs)CLSContext(py)assignable	swift.property	isAssignable	CLSContext.isAssignable	var isAssignable: Bool { get set }
+c:objc(cs)CLSContext(py)currentActivity	swift.property	currentActivity	CLSContext.currentActivity	var currentActivity: CLSActivity? { get }
+c:objc(cs)CLSContext(py)customTypeName	swift.property	customTypeName	CLSContext.customTypeName	var customTypeName: String? { get set }
+c:objc(cs)CLSContext(py)displayOrder	swift.property	displayOrder	CLSContext.displayOrder	var displayOrder: Int { get set }
+c:objc(cs)CLSContext(py)identifier	swift.property	identifier	CLSContext.identifier	var identifier: String { get }
+c:objc(cs)CLSContext(py)identifierPath	swift.property	identifierPath	CLSContext.identifierPath	var identifierPath: [String] { get }
+c:objc(cs)CLSContext(py)navigationChildContexts	swift.property	navigationChildContexts	CLSContext.navigationChildContexts	var navigationChildContexts: [CLSContext] { get }
+c:objc(cs)CLSContext(py)parent	swift.property	parent	CLSContext.parent	weak var parent: CLSContext? { get }
+c:objc(cs)CLSContext(py)progressReportingCapabilities	swift.property	progressReportingCapabilities	CLSContext.progressReportingCapabilities	var progressReportingCapabilities: Set<CLSProgressReportingCapability> { get }
+c:objc(cs)CLSContext(py)suggestedAge	swift.property	suggestedAge	CLSContext.suggestedAge	var suggestedAge: NSRange { get set }
+c:objc(cs)CLSContext(py)suggestedCompletionTime	swift.property	suggestedCompletionTime	CLSContext.suggestedCompletionTime	var suggestedCompletionTime: NSRange { get set }
+c:objc(cs)CLSContext(py)summary	swift.property	summary	CLSContext.summary	var summary: String? { get set }
+c:objc(cs)CLSContext(py)thumbnail	swift.property	thumbnail	CLSContext.thumbnail	var thumbnail: CGImage? { get set }
+c:objc(cs)CLSContext(py)title	swift.property	title	CLSContext.title	var title: String { get set }
+c:objc(cs)CLSContext(py)topic	swift.property	topic	CLSContext.topic	var topic: CLSContextTopic? { get set }
+c:objc(cs)CLSContext(py)type	swift.property	type	CLSContext.type	var type: CLSContextType { get }
+c:objc(cs)CLSContext(py)universalLinkURL	swift.property	universalLinkURL	CLSContext.universalLinkURL	var universalLinkURL: URL? { get set }
+c:objc(cs)CLSDataStore	swift.class	CLSDataStore	CLSDataStore	class CLSDataStore
+c:objc(cs)CLSDataStore(cpy)shared	swift.type.property	shared	CLSDataStore.shared	class var shared: CLSDataStore { get }
+c:objc(cs)CLSDataStore(im)completeAllAssignedActivitiesMatching:	swift.method	completeAllAssignedActivities(matching:)	CLSDataStore.completeAllAssignedActivities(matching:)	func completeAllAssignedActivities(matching contextPath: [String])
+c:objc(cs)CLSDataStore(im)contextsMatchingIdentifierPath:completion:	swift.method	contexts(matchingIdentifierPath:)	CLSDataStore.contexts(matchingIdentifierPath:)	func contexts(matchingIdentifierPath identifierPath: [String]) async throws -> [CLSContext]
+c:objc(cs)CLSDataStore(im)contextsMatchingPredicate:completion:	swift.method	contexts(matching:)	CLSDataStore.contexts(matching:)	func contexts(matching predicate: NSPredicate) async throws -> [CLSContext]
+c:objc(cs)CLSDataStore(im)fetchActivityForURL:completion:	swift.method	fetchActivity(for:)	CLSDataStore.fetchActivity(for:)	func fetchActivity(for url: URL) async throws -> CLSActivity
+c:objc(cs)CLSDataStore(im)removeContext:	swift.method	remove(_:)	CLSDataStore.remove(_:)	func remove(_ context: CLSContext)
+c:objc(cs)CLSDataStore(im)saveWithCompletion:	swift.method	save(completion:)	CLSDataStore.save(completion:)	func save(completion: (((any Error)?) -> Void)? = nil)
+c:objc(cs)CLSDataStore(py)activeContext	swift.property	activeContext	CLSDataStore.activeContext	var activeContext: CLSContext? { get }
+c:objc(cs)CLSDataStore(py)delegate	swift.property	delegate	CLSDataStore.delegate	weak var delegate: (any CLSDataStoreDelegate)? { get set }
+c:objc(cs)CLSDataStore(py)mainAppContext	swift.property	mainAppContext	CLSDataStore.mainAppContext	var mainAppContext: CLSContext { get }
+c:objc(cs)CLSDataStore(py)runningActivity	swift.property	runningActivity	CLSDataStore.runningActivity	var runningActivity: CLSActivity? { get }
+c:objc(cs)CLSObject	swift.class	CLSObject	CLSObject	class CLSObject
+c:objc(cs)CLSObject(py)dateCreated	swift.property	dateCreated	CLSObject.dateCreated	var dateCreated: Date { get }
+c:objc(cs)CLSObject(py)dateLastModified	swift.property	dateLastModified	CLSObject.dateLastModified	var dateLastModified: Date { get }
+c:objc(cs)CLSProgressReportingCapability	swift.class	CLSProgressReportingCapability	CLSProgressReportingCapability	class CLSProgressReportingCapability
+c:objc(cs)CLSProgressReportingCapability(im)initWithKind:details:	swift.init	init(kind:details:)	CLSProgressReportingCapability.init(kind:details:)	init(kind: CLSProgressReportingCapability.Kind, details: String?)
+c:objc(cs)CLSProgressReportingCapability(py)details	swift.property	details	CLSProgressReportingCapability.details	var details: String? { get }
+c:objc(cs)CLSProgressReportingCapability(py)kind	swift.property	kind	CLSProgressReportingCapability.kind	var kind: CLSProgressReportingCapability.Kind { get }
+c:objc(cs)CLSQuantityItem	swift.class	CLSQuantityItem	CLSQuantityItem	class CLSQuantityItem
+c:objc(cs)CLSQuantityItem(im)initWithIdentifier:title:	swift.init	init(identifier:title:)	CLSQuantityItem.init(identifier:title:)	init(identifier: String, title: String)
+c:objc(cs)CLSQuantityItem(py)quantity	swift.property	quantity	CLSQuantityItem.quantity	var quantity: Double { get set }
+c:objc(cs)CLSScoreItem	swift.class	CLSScoreItem	CLSScoreItem	class CLSScoreItem
+c:objc(cs)CLSScoreItem(im)initWithIdentifier:title:score:maxScore:	swift.init	init(identifier:title:score:maxScore:)	CLSScoreItem.init(identifier:title:score:maxScore:)	init(identifier: String, title: String, score: Double, maxScore: Double)
+c:objc(cs)CLSScoreItem(py)maxScore	swift.property	maxScore	CLSScoreItem.maxScore	var maxScore: Double { get set }
+c:objc(cs)CLSScoreItem(py)score	swift.property	score	CLSScoreItem.score	var score: Double { get set }
+c:objc(cs)NSUserActivity(py)contextIdentifierPath	swift.property	contextIdentifierPath	NSUserActivity.contextIdentifierPath	var contextIdentifierPath: [String]? { get }
+c:objc(cs)NSUserActivity(py)isClassKitDeepLink	swift.property	isClassKitDeepLink	NSUserActivity.isClassKitDeepLink	var isClassKitDeepLink: Bool { get }
+c:objc(pl)CLSContextProvider	swift.protocol	CLSContextProvider	CLSContextProvider	protocol CLSContextProvider
+c:objc(pl)CLSContextProvider(im)updateDescendantsOfContext:completion:	swift.method	updateDescendants(of:)	CLSContextProvider.updateDescendants(of:)	func updateDescendants(of context: CLSContext) async throws
+c:objc(pl)CLSDataStoreDelegate	swift.protocol	CLSDataStoreDelegate	CLSDataStoreDelegate	protocol CLSDataStoreDelegate : NSObjectProtocol
+c:objc(pl)CLSDataStoreDelegate(im)createContextForIdentifier:parentContext:parentIdentifierPath:	swift.method	createContext(forIdentifier:parentContext:parentIdentifierPath:)	CLSDataStoreDelegate.createContext(forIdentifier:parentContext:parentIdentifierPath:)	func createContext(forIdentifier identifier: String, parentContext: CLSContext, parentIdentifierPath: [String]) -> CLSContext?
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CLSObject	swift.init	init(coder:)	CLSObject.init(coder:)	init?(coder: NSCoder)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CLSErrorCode	swift.type.property	errorDomain	CLSError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CLSErrorCode	swift.property	errorUserInfo	CLSError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CLSErrorCode	swift.property	errorCode	CLSError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CLSErrorCode	swift.func.op	~=(_:_:)	CLSError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CLSErrorCode	swift.property	errorUserInfo	CLSError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CLSErrorCode	swift.func.op	==(_:_:)	CLSError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CLSErrorCode	swift.property	code	CLSError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLSErrorCode	swift.method	hash(into:)	CLSError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CLSErrorCode	swift.property	userInfo	CLSError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CLSErrorCode	swift.property	errorCode	CLSError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CLSErrorCode	swift.property	hashValue	CLSError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CLSErrorCode	swift.init	init(_:userInfo:)	CLSError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC12CLSErrorCodeLeV	swift.struct	CLSError	CLSError	struct CLSError
+s:SC12CLSErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	CLSError.errorDomain	static var errorDomain: String { get }
+s:SC12CLSErrorCodeLeV13invalidCreateSoAAVvpZ	swift.type.property	invalidCreate	CLSError.invalidCreate	static var invalidCreate: CLSError.Code { get }
+s:SC12CLSErrorCodeLeV13invalidUpdateSoAAVvpZ	swift.type.property	invalidUpdate	CLSError.invalidUpdate	static var invalidUpdate: CLSError.Code { get }
+s:SC12CLSErrorCodeLeV14partialFailureSoAAVvpZ	swift.type.property	partialFailure	CLSError.partialFailure	static var partialFailure: CLSError.Code { get }
+s:SC12CLSErrorCodeLeV15invalidArgumentSoAAVvpZ	swift.type.property	invalidArgument	CLSError.invalidArgument	static var invalidArgument: CLSError.Code { get }
+s:SC12CLSErrorCodeLeV19authorizationDeniedSoAAVvpZ	swift.type.property	authorizationDenied	CLSError.authorizationDenied	static var authorizationDenied: CLSError.Code { get }
+s:SC12CLSErrorCodeLeV19classKitUnavailableSoAAVvpZ	swift.type.property	classKitUnavailable	CLSError.classKitUnavailable	static var classKitUnavailable: CLSError.Code { get }
+s:SC12CLSErrorCodeLeV19invalidModificationSoAAVvpZ	swift.type.property	invalidModification	CLSError.invalidModification	static var invalidModification: CLSError.Code { get }
+s:SC12CLSErrorCodeLeV20databaseInaccessibleSoAAVvpZ	swift.type.property	databaseInaccessible	CLSError.databaseInaccessible	static var databaseInaccessible: CLSError.Code { get }
+s:SC12CLSErrorCodeLeV25invalidAccountCredentialsSoAAVvpZ	swift.type.property	invalidAccountCredentials	CLSError.invalidAccountCredentials	static var invalidAccountCredentials: CLSError.Code { get }
+s:SC12CLSErrorCodeLeV4noneSoAAVvpZ	swift.type.property	none	CLSError.none	static var none: CLSError.Code { get }
+s:SC12CLSErrorCodeLeV6limitsSoAAVvpZ	swift.type.property	limits	CLSError.limits	static var limits: CLSError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLSBinaryValueType	swift.func.op	!=(_:_:)	CLSBinaryValueType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLSContextType	swift.func.op	!=(_:_:)	CLSContextType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLSErrorCode	swift.func.op	!=(_:_:)	CLSError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLSProgressReportingCapabilityKind	swift.func.op	!=(_:_:)	CLSProgressReportingCapability.Kind.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CLSContextTopic	swift.func.op	!=(_:_:)	CLSContextTopic.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CLSErrorUserInfoKey	swift.func.op	!=(_:_:)	CLSErrorUserInfoKey.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CLSPredicateKeyPath	swift.func.op	!=(_:_:)	CLSPredicateKeyPath.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLSBinaryValueType	swift.property	hashValue	CLSBinaryValueType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLSContextType	swift.property	hashValue	CLSContextType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLSErrorCode	swift.property	hashValue	CLSError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLSProgressReportingCapabilityKind	swift.property	hashValue	CLSProgressReportingCapability.Kind.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLSBinaryValueType	swift.method	hash(into:)	CLSBinaryValueType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLSContextType	swift.method	hash(into:)	CLSContextType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLSErrorCode	swift.method	hash(into:)	CLSError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLSProgressReportingCapabilityKind	swift.method	hash(into:)	CLSProgressReportingCapability.Kind.hash(into:)	func hash(into hasher: inout Hasher)
+s:So12CLSErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CLSError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So14CLSContextTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CLSContextType.init(rawValue:)	init?(rawValue: Int)
+s:So15CLSContextTopica8rawValueABSS_tcfc	swift.init	init(rawValue:)	CLSContextTopic.init(rawValue:)	init(rawValue: String)
+s:So18CLSBinaryValueTypeV03rawB0ABSgSi_tcfc	swift.init	init(rawValue:)	CLSBinaryValueType.init(rawValue:)	init?(rawValue: Int)
+s:So19CLSErrorUserInfoKeya8rawValueABSS_tcfc	swift.init	init(rawValue:)	CLSErrorUserInfoKey.init(rawValue:)	init(rawValue: String)
+s:So19CLSErrorUserInfoKeyayABSScfc	swift.init	init(_:)	CLSErrorUserInfoKey.init(_:)	init(_ rawValue: String)
+s:So19CLSPredicateKeyPatha8rawValueABSS_tcfc	swift.init	init(rawValue:)	CLSPredicateKeyPath.init(rawValue:)	init(rawValue: String)
+s:So19CLSPredicateKeyPathayABSScfc	swift.init	init(_:)	CLSPredicateKeyPath.init(_:)	init(_ rawValue: String)
+s:So34CLSProgressReportingCapabilityKindV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CLSProgressReportingCapability.Kind.init(rawValue:)	init?(rawValue: Int)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CLSContextTopic	swift.property	hashValue	CLSContextTopic.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CLSErrorUserInfoKey	swift.property	hashValue	CLSErrorUserInfoKey.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CLSPredicateKeyPath	swift.property	hashValue	CLSPredicateKeyPath.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CLSContextTopic	swift.method	hash(into:)	CLSContextTopic.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CLSErrorUserInfoKey	swift.method	hash(into:)	CLSErrorUserInfoKey.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CLSPredicateKeyPath	swift.method	hash(into:)	CLSPredicateKeyPath.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CLSErrorCode	swift.property	localizedDescription	CLSError.localizedDescription	var localizedDescription: String { get }

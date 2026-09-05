@@ -1,0 +1,597 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MediaAccessibility",
+        "name": "CoreFoundation",
+        "printedName": "CoreFoundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MediaAccessibility",
+        "name": "MediaAccessibility.MADefinitions",
+        "printedName": "MediaAccessibility.MADefinitions"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MediaAccessibility",
+        "name": "MediaAccessibility.MACaptionAppearance",
+        "printedName": "MediaAccessibility.MACaptionAppearance"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MediaAccessibility",
+        "name": "MediaAccessibility.MAAudibleMedia",
+        "printedName": "MediaAccessibility.MAAudibleMedia"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MediaAccessibility",
+        "name": "MediaAccessibility.MAImageCaptioning",
+        "printedName": "MediaAccessibility.MAImageCaptioning"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MediaAccessibility",
+        "name": "MediaAccessibility.MAVideoAccommodations",
+        "printedName": "MediaAccessibility.MAVideoAccommodations"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MediaAccessibility",
+        "name": "MediaAccessibility.MAFlashingLightsProcessing",
+        "printedName": "MediaAccessibility.MAFlashingLightsProcessing"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MediaAccessibility",
+        "name": "MediaAccessibility.MAMusicHaptics",
+        "printedName": "MediaAccessibility.MAMusicHaptics"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MediaAccessibility",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MediaAccessibility",
+        "name": "MediaAccessibility",
+        "printedName": "MediaAccessibility"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MediaAccessibility",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MediaAccessibility",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MediaAccessibility",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Name",
+                        "printedName": "Foundation.NSNotification.Name",
+                        "usr": "c:@T@NSNotificationName"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Name",
+                    "printedName": "Foundation.Notification.Name"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo14MAMusicHapticsV18MediaAccessibilityE34enabledStatusDidChangeNotificationSo18NSNotificationNameavgZ",
+                "moduleName": "MediaAccessibility",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:So14MAMusicHapticsV18MediaAccessibilityE34enabledStatusDidChangeNotificationSo18NSNotificationNameavgZ"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Name",
+                    "printedName": "Foundation.NSNotification.Name",
+                    "usr": "c:@T@NSNotificationName"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "Name",
+                "printedName": "Foundation.Notification.Name"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo14MAMusicHapticsV18MediaAccessibilityE34enabledStatusDidChangeNotificationSo18NSNotificationNameavpZ",
+            "moduleName": "MediaAccessibility",
+            "name": "enabledStatusDidChangeNotification",
+            "printedName": "enabledStatusDidChangeNotification",
+            "static": true,
+            "usr": "s:So14MAMusicHapticsV18MediaAccessibilityE34enabledStatusDidChangeNotificationSo18NSNotificationNameavpZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declKind": "Struct",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "moduleName": "MediaAccessibility",
+        "name": "MAMusicHaptics",
+        "printedName": "MAMusicHaptics",
+        "usr": "c:@S@MAMusicHaptics"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV16surfaceProcessedSbvg",
+                    "moduleName": "MediaAccessibility",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV16surfaceProcessedSbvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$sSo25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV16surfaceProcessedSbvp",
+                "moduleName": "MediaAccessibility",
+                "name": "surfaceProcessed",
+                "printedName": "surfaceProcessed",
+                "usr": "s:So25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV16surfaceProcessedSbvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV15mitigationLevelSfvg",
+                    "moduleName": "MediaAccessibility",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV15mitigationLevelSfvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Float",
+                    "printedName": "Swift.Float",
+                    "usr": "s:Sf"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$sSo25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV15mitigationLevelSfvp",
+                "moduleName": "MediaAccessibility",
+                "name": "mitigationLevel",
+                "printedName": "mitigationLevel",
+                "usr": "s:So25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV15mitigationLevelSfvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV14intensityLevelSfvg",
+                    "moduleName": "MediaAccessibility",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV14intensityLevelSfvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Float",
+                    "printedName": "Swift.Float",
+                    "usr": "s:Sf"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$sSo25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV14intensityLevelSfvp",
+                "moduleName": "MediaAccessibility",
+                "name": "intensityLevel",
+                "printedName": "intensityLevel",
+                "usr": "s:So25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV14intensityLevelSfvp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV",
+            "moduleName": "MediaAccessibility",
+            "name": "Result",
+            "printedName": "Result",
+            "usr": "s:So25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Result",
+                "printedName": "MediaAccessibility.MAFlashingLightsProcessor.Result",
+                "usr": "s:So25MAFlashingLightsProcessorC18MediaAccessibilityE6ResultV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "IOSurfaceRef",
+                "printedName": "CoreGraphics.IOSurfaceRef",
+                "usr": "c:@T@IOSurfaceRef"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "IOSurfaceRef",
+                "paramValueOwnership": "InOut",
+                "printedName": "CoreGraphics.IOSurfaceRef",
+                "usr": "c:@T@IOSurfaceRef"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "CFTimeInterval",
+                    "printedName": "CoreFoundation.CFTimeInterval"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CFAbsoluteTime",
+                "printedName": "CoreFoundation.CFAbsoluteTime"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OptionKey",
+                        "printedName": "MediaAccessibility.MAFlashingLightsProcessor.OptionKey",
+                        "usr": "c:@T@MAFlashingLightsProcessorOptionKey"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProtocolComposition",
+                        "printedName": "Any"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[MediaAccessibility.MAFlashingLightsProcessor.OptionKey : Any]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "[MediaAccessibility.MAFlashingLightsProcessor.OptionKey : Any]?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo25MAFlashingLightsProcessorC18MediaAccessibilityE14processSurface_03outG09timestamp7optionsAbCE6ResultVSo12IOSurfaceRefa_AKzSdSDySo0abC9OptionKeyaypGSgtF",
+            "moduleName": "MediaAccessibility",
+            "name": "processSurface",
+            "printedName": "processSurface(_:outSurface:timestamp:options:)",
+            "usr": "s:So25MAFlashingLightsProcessorC18MediaAccessibilityE14processSurface_03outG09timestamp7optionsAbCE6ResultVSo12IOSurfaceRefa_AKzSdSDySo0abC9OptionKeyaypGSgtF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "17.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "MediaAccessibility",
+        "name": "MAFlashingLightsProcessor",
+        "objc_name": "MAFlashingLightsProcessor",
+        "printedName": "MAFlashingLightsProcessor",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)MAFlashingLightsProcessor"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "MediaAccessibility",
+    "printedName": "MediaAccessibility"
+  }
+}

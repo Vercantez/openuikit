@@ -1,0 +1,142 @@
+precise	kind	title	path	declaration
+c:@E@SWAttributionViewBackgroundStyle	swift.enum	SWAttributionView.BackgroundStyle	SWAttributionView.BackgroundStyle	enum BackgroundStyle
+c:@E@SWAttributionViewBackgroundStyle@SWAttributionViewBackgroundStyleColor	swift.enum.case	SWAttributionView.BackgroundStyle.color	SWAttributionView.BackgroundStyle.color	case color
+c:@E@SWAttributionViewBackgroundStyle@SWAttributionViewBackgroundStyleDefault	swift.enum.case	SWAttributionView.BackgroundStyle.default	SWAttributionView.BackgroundStyle.default	case `default`
+c:@E@SWAttributionViewBackgroundStyle@SWAttributionViewBackgroundStyleMaterial	swift.enum.case	SWAttributionView.BackgroundStyle.material	SWAttributionView.BackgroundStyle.material	case material
+c:@E@SWAttributionViewDisplayContext	swift.enum	SWAttributionView.DisplayContext	SWAttributionView.DisplayContext	enum DisplayContext
+c:@E@SWAttributionViewDisplayContext@SWAttributionViewDisplayContextDetail	swift.enum.case	SWAttributionView.DisplayContext.detail	SWAttributionView.DisplayContext.detail	case detail
+c:@E@SWAttributionViewDisplayContext@SWAttributionViewDisplayContextSummary	swift.enum.case	SWAttributionView.DisplayContext.summary	SWAttributionView.DisplayContext.summary	case summary
+c:@E@SWAttributionViewHorizontalAlignment	swift.enum	SWAttributionView.HorizontalAlignment	SWAttributionView.HorizontalAlignment	enum HorizontalAlignment
+c:@E@SWAttributionViewHorizontalAlignment@SWAttributionViewHorizontalAlignmentCenter	swift.enum.case	SWAttributionView.HorizontalAlignment.center	SWAttributionView.HorizontalAlignment.center	case center
+c:@E@SWAttributionViewHorizontalAlignment@SWAttributionViewHorizontalAlignmentDefault	swift.enum.case	SWAttributionView.HorizontalAlignment.default	SWAttributionView.HorizontalAlignment.default	case `default`
+c:@E@SWAttributionViewHorizontalAlignment@SWAttributionViewHorizontalAlignmentLeading	swift.enum.case	SWAttributionView.HorizontalAlignment.leading	SWAttributionView.HorizontalAlignment.leading	case leading
+c:@E@SWAttributionViewHorizontalAlignment@SWAttributionViewHorizontalAlignmentTrailing	swift.enum.case	SWAttributionView.HorizontalAlignment.trailing	SWAttributionView.HorizontalAlignment.trailing	case trailing
+c:@E@SWHighlightCenterErrorCode	swift.enum	SWHighlightCenterErrorCode	SWHighlightCenterErrorCode	enum SWHighlightCenterErrorCode
+c:@E@SWHighlightCenterErrorCode@SWHighlightCenterErrorCodeAccessDenied	swift.enum.case	SWHighlightCenterErrorCode.accessDenied	SWHighlightCenterErrorCode.accessDenied	case accessDenied
+c:@E@SWHighlightCenterErrorCode@SWHighlightCenterErrorCodeInternalError	swift.enum.case	SWHighlightCenterErrorCode.internalError	SWHighlightCenterErrorCode.internalError	case internalError
+c:@E@SWHighlightCenterErrorCode@SWHighlightCenterErrorCodeInvalidURL	swift.enum.case	SWHighlightCenterErrorCode.invalidURL	SWHighlightCenterErrorCode.invalidURL	case invalidURL
+c:@E@SWHighlightCenterErrorCode@SWHighlightCenterErrorCodeNoError	swift.enum.case	SWHighlightCenterErrorCode.noError	SWHighlightCenterErrorCode.noError	case noError
+c:@E@SWHighlightChangeEventTrigger	swift.enum	SWHighlightChangeEventTrigger	SWHighlightChangeEventTrigger	enum SWHighlightChangeEventTrigger
+c:@E@SWHighlightChangeEventTrigger@SWHighlightChangeEventTriggerComment	swift.enum.case	SWHighlightChangeEventTrigger.comment	SWHighlightChangeEventTrigger.comment	case comment
+c:@E@SWHighlightChangeEventTrigger@SWHighlightChangeEventTriggerEdit	swift.enum.case	SWHighlightChangeEventTrigger.edit	SWHighlightChangeEventTrigger.edit	case edit
+c:@E@SWHighlightMembershipEventTrigger	swift.enum	SWHighlightMembershipEventTrigger	SWHighlightMembershipEventTrigger	enum SWHighlightMembershipEventTrigger
+c:@E@SWHighlightMembershipEventTrigger@SWHighlightMembershipEventTriggerAddedCollaborator	swift.enum.case	SWHighlightMembershipEventTrigger.addedCollaborator	SWHighlightMembershipEventTrigger.addedCollaborator	case addedCollaborator
+c:@E@SWHighlightMembershipEventTrigger@SWHighlightMembershipEventTriggerRemovedCollaborator	swift.enum.case	SWHighlightMembershipEventTrigger.removedCollaborator	SWHighlightMembershipEventTrigger.removedCollaborator	case removedCollaborator
+c:@E@SWHighlightPersistenceEventTrigger	swift.enum	SWHighlightPersistenceEventTrigger	SWHighlightPersistenceEventTrigger	enum SWHighlightPersistenceEventTrigger
+c:@E@SWHighlightPersistenceEventTrigger@SWHighlightPersistenceEventTriggerCreated	swift.enum.case	SWHighlightPersistenceEventTrigger.created	SWHighlightPersistenceEventTrigger.created	case created
+c:@E@SWHighlightPersistenceEventTrigger@SWHighlightPersistenceEventTriggerDeleted	swift.enum.case	SWHighlightPersistenceEventTrigger.deleted	SWHighlightPersistenceEventTrigger.deleted	case deleted
+c:@E@SWHighlightPersistenceEventTrigger@SWHighlightPersistenceEventTriggerMoved	swift.enum.case	SWHighlightPersistenceEventTrigger.moved	SWHighlightPersistenceEventTrigger.moved	case moved
+c:@E@SWHighlightPersistenceEventTrigger@SWHighlightPersistenceEventTriggerRenamed	swift.enum.case	SWHighlightPersistenceEventTrigger.renamed	SWHighlightPersistenceEventTrigger.renamed	case renamed
+c:@SWCollaborationMetadataTypeIdentifier	swift.var	SWCollaborationMetadataTypeIdentifier	SWCollaborationMetadataTypeIdentifier	let SWCollaborationMetadataTypeIdentifier: String
+c:objc(cs)SWAttributionView	swift.class	SWAttributionView	SWAttributionView	@MainActor class SWAttributionView
+c:objc(cs)SWAttributionView(py)backgroundStyle	swift.property	backgroundStyle	SWAttributionView.backgroundStyle	@MainActor var backgroundStyle: SWAttributionView.BackgroundStyle { get set }
+c:objc(cs)SWAttributionView(py)displayContext	swift.property	displayContext	SWAttributionView.displayContext	@MainActor var displayContext: SWAttributionView.DisplayContext { get set }
+c:objc(cs)SWAttributionView(py)highlight	swift.property	highlight	SWAttributionView.highlight	@MainActor var highlight: SWHighlight? { get set }
+c:objc(cs)SWAttributionView(py)highlightMenu	swift.property	highlightMenu	SWAttributionView.highlightMenu	@MainActor var highlightMenu: UIMenu { get }
+c:objc(cs)SWAttributionView(py)horizontalAlignment	swift.property	horizontalAlignment	SWAttributionView.horizontalAlignment	@MainActor var horizontalAlignment: SWAttributionView.HorizontalAlignment { get set }
+c:objc(cs)SWAttributionView(py)menuTitleForHideAction	swift.property	menuTitleForHideAction	SWAttributionView.menuTitleForHideAction	@MainActor var menuTitleForHideAction: String? { get set }
+c:objc(cs)SWAttributionView(py)preferredMaxLayoutWidth	swift.property	preferredMaxLayoutWidth	SWAttributionView.preferredMaxLayoutWidth	@MainActor var preferredMaxLayoutWidth: CGFloat { get set }
+c:objc(cs)SWAttributionView(py)supplementalMenu	swift.property	supplementalMenu	SWAttributionView.supplementalMenu	@MainActor var supplementalMenu: UIMenu? { get set }
+c:objc(cs)SWCollaborationHighlight	swift.class	SWCollaborationHighlight	SWCollaborationHighlight	class SWCollaborationHighlight
+c:objc(cs)SWCollaborationHighlight(py)collaborationIdentifier	swift.property	collaborationIdentifier	SWCollaborationHighlight.collaborationIdentifier	var collaborationIdentifier: String { get }
+c:objc(cs)SWCollaborationHighlight(py)contentType	swift.property	contentType	SWCollaborationHighlight.contentType	var contentType: UTType { get }
+c:objc(cs)SWCollaborationHighlight(py)creationDate	swift.property	creationDate	SWCollaborationHighlight.creationDate	var creationDate: Date { get }
+c:objc(cs)SWCollaborationHighlight(py)title	swift.property	title	SWCollaborationHighlight.title	var title: String? { get }
+c:objc(cs)SWCollaborationView	swift.class	SWCollaborationView	SWCollaborationView	@MainActor class SWCollaborationView
+c:objc(cs)SWCollaborationView(im)dismissPopover:	swift.method	dismissPopover(_:)	SWCollaborationView.dismissPopover(_:)	@MainActor func dismissPopover(_ completion: (() -> Void)? = nil)
+c:objc(cs)SWCollaborationView(im)initWithItemProvider:	swift.init	init(itemProvider:)	SWCollaborationView.init(itemProvider:)	@MainActor init(itemProvider: NSItemProvider)
+c:objc(cs)SWCollaborationView(im)setContentView:	swift.method	setContent(_:)	SWCollaborationView.setContent(_:)	@MainActor func setContent(_ detailViewListContentView: UIView)
+c:objc(cs)SWCollaborationView(im)setShowManageButton:	swift.method	setShowManageButton(_:)	SWCollaborationView.setShowManageButton(_:)	@MainActor func setShowManageButton(_ showManageButton: Bool)
+c:objc(cs)SWCollaborationView(py)activeParticipantCount	swift.property	activeParticipantCount	SWCollaborationView.activeParticipantCount	@MainActor var activeParticipantCount: Int { get set }
+c:objc(cs)SWCollaborationView(py)cloudSharingControllerDelegate	swift.property	cloudSharingControllerDelegate	SWCollaborationView.cloudSharingControllerDelegate	@MainActor weak var cloudSharingControllerDelegate: (any UICloudSharingControllerDelegate)? { get set }
+c:objc(cs)SWCollaborationView(py)cloudSharingDelegate	swift.property	cloudSharingDelegate	SWCollaborationView.cloudSharingDelegate	@MainActor weak var cloudSharingDelegate: (any UICloudSharingControllerDelegate)? { get set }
+c:objc(cs)SWCollaborationView(py)delegate	swift.property	delegate	SWCollaborationView.delegate	@MainActor weak var delegate: (any SWCollaborationViewDelegate)? { get set }
+c:objc(cs)SWCollaborationView(py)headerImage	swift.property	headerImage	SWCollaborationView.headerImage	@MainActor var headerImage: UIImage { get set }
+c:objc(cs)SWCollaborationView(py)headerSubtitle	swift.property	headerSubtitle	SWCollaborationView.headerSubtitle	@MainActor var headerSubtitle: String { get set }
+c:objc(cs)SWCollaborationView(py)headerTitle	swift.property	headerTitle	SWCollaborationView.headerTitle	@MainActor var headerTitle: String { get set }
+c:objc(cs)SWCollaborationView(py)manageButtonTitle	swift.property	manageButtonTitle	SWCollaborationView.manageButtonTitle	@MainActor var manageButtonTitle: String { get set }
+c:objc(cs)SWHighlight	swift.class	SWHighlight	SWHighlight	class SWHighlight
+c:objc(cs)SWHighlight(py)URL	swift.property	url	SWHighlight.url	var url: URL { get }
+c:objc(cs)SWHighlight(py)identifier	swift.property	identifier	SWHighlight.identifier	@NSCopying var identifier: any NSCopying & NSSecureCoding { get }
+c:objc(cs)SWHighlightCenter	swift.class	SWHighlightCenter	SWHighlightCenter	class SWHighlightCenter
+c:objc(cs)SWHighlightCenter(cpy)highlightCollectionTitle	swift.type.property	highlightCollectionTitle	SWHighlightCenter.highlightCollectionTitle	class var highlightCollectionTitle: String { get }
+c:objc(cs)SWHighlightCenter(cpy)systemCollaborationSupportAvailable	swift.type.property	isSystemCollaborationSupportAvailable	SWHighlightCenter.isSystemCollaborationSupportAvailable	class var isSystemCollaborationSupportAvailable: Bool { get }
+c:objc(cs)SWHighlightCenter(im)clearNoticesForHighlight:	swift.method	clearNotices(for:)	SWHighlightCenter.clearNotices(for:)	func clearNotices(for highlight: SWCollaborationHighlight)
+c:objc(cs)SWHighlightCenter(im)collaborationHighlightForIdentifier:error:	swift.method	collaborationHighlight(forIdentifier:)	SWHighlightCenter.collaborationHighlight(forIdentifier:)	func collaborationHighlight(forIdentifier collaborationIdentifier: SWCollaborationIdentifier) throws -> SWCollaborationHighlight
+c:objc(cs)SWHighlightCenter(im)getCollaborationHighlightForURL:completionHandler:	swift.method	collaborationHighlight(for:)	SWHighlightCenter.collaborationHighlight(for:)	func collaborationHighlight(for URL: URL) async throws -> SWCollaborationHighlight
+c:objc(cs)SWHighlightCenter(im)getHighlightForURL:completionHandler:	swift.method	getHighlightFor(_:completionHandler:)	SWHighlightCenter.getHighlightFor(_:completionHandler:)	func getHighlightFor(_ URL: URL, completionHandler: @escaping (SWHighlight?, (any Error)?) -> Void)
+c:objc(cs)SWHighlightCenter(im)getSignedIdentityProofForCollaborationHighlight:usingData:completionHandler:	swift.method	getSignedIdentityProof(for:using:completionHandler:)	SWHighlightCenter.getSignedIdentityProof(for:using:completionHandler:)	func getSignedIdentityProof(for collaborationHighlight: SWCollaborationHighlight, using data: Data, completionHandler: @escaping (SWPerson.SignedIdentityProof?, (any Error)?) -> Void)
+c:objc(cs)SWHighlightCenter(im)postNoticeForHighlightEvent:	swift.method	postNotice(for:)	SWHighlightCenter.postNotice(for:)	func postNotice(for event: any SWHighlightEvent)
+c:objc(cs)SWHighlightCenter(py)delegate	swift.property	delegate	SWHighlightCenter.delegate	weak var delegate: (any SWHighlightCenterDelegate)? { get set }
+c:objc(cs)SWHighlightCenter(py)highlights	swift.property	highlights	SWHighlightCenter.highlights	var highlights: [SWHighlight] { get }
+c:objc(cs)SWHighlightChangeEvent	swift.class	SWHighlightChangeEvent	SWHighlightChangeEvent	class SWHighlightChangeEvent
+c:objc(cs)SWHighlightChangeEvent(im)initWithHighlight:trigger:	swift.init	init(highlight:trigger:)	SWHighlightChangeEvent.init(highlight:trigger:)	init(highlight: SWHighlight, trigger: SWHighlightChangeEventTrigger)
+c:objc(cs)SWHighlightChangeEvent(py)changeEventTrigger	swift.property	changeEventTrigger	SWHighlightChangeEvent.changeEventTrigger	var changeEventTrigger: SWHighlightChangeEventTrigger { get }
+c:objc(cs)SWHighlightChangeEvent(py)highlightURL	swift.property	highlightURL	SWHighlightChangeEvent.highlightURL	var highlightURL: URL { get }
+c:objc(cs)SWHighlightMembershipEvent	swift.class	SWHighlightMembershipEvent	SWHighlightMembershipEvent	class SWHighlightMembershipEvent
+c:objc(cs)SWHighlightMembershipEvent(im)initWithHighlight:trigger:	swift.init	init(highlight:trigger:)	SWHighlightMembershipEvent.init(highlight:trigger:)	init(highlight: SWHighlight, trigger: SWHighlightMembershipEventTrigger)
+c:objc(cs)SWHighlightMembershipEvent(py)membershipEventTrigger	swift.property	membershipEventTrigger	SWHighlightMembershipEvent.membershipEventTrigger	var membershipEventTrigger: SWHighlightMembershipEventTrigger { get }
+c:objc(cs)SWHighlightMentionEvent	swift.class	SWHighlightMentionEvent	SWHighlightMentionEvent	class SWHighlightMentionEvent
+c:objc(cs)SWHighlightMentionEvent(im)initWithHighlight:mentionedPersonCloudKitShareHandle:	swift.init	init(highlight:mentionedPersonCloudKitShareHandle:)	SWHighlightMentionEvent.init(highlight:mentionedPersonCloudKitShareHandle:)	init(highlight: SWHighlight, mentionedPersonCloudKitShareHandle handle: String)
+c:objc(cs)SWHighlightMentionEvent(im)initWithHighlight:mentionedPersonIdentity:	swift.init	init(highlight:mentionedPersonIdentity:)	SWHighlightMentionEvent.init(highlight:mentionedPersonIdentity:)	init(highlight: SWHighlight, mentionedPersonIdentity identity: SWPerson.Identity)
+c:objc(cs)SWHighlightMentionEvent(py)mentionedPersonHandle	swift.property	mentionedPersonHandle	SWHighlightMentionEvent.mentionedPersonHandle	var mentionedPersonHandle: String { get }
+c:objc(cs)SWHighlightPersistenceEvent	swift.class	SWHighlightPersistenceEvent	SWHighlightPersistenceEvent	class SWHighlightPersistenceEvent
+c:objc(cs)SWHighlightPersistenceEvent(im)initWithHighlight:trigger:	swift.init	init(highlight:trigger:)	SWHighlightPersistenceEvent.init(highlight:trigger:)	init(highlight: SWHighlight, trigger: SWHighlightPersistenceEventTrigger)
+c:objc(cs)SWHighlightPersistenceEvent(py)persistenceEventTrigger	swift.property	persistenceEventTrigger	SWHighlightPersistenceEvent.persistenceEventTrigger	var persistenceEventTrigger: SWHighlightPersistenceEventTrigger { get }
+c:objc(cs)SWRemoveParticipantAlertController	swift.class	SWRemoveParticipantAlertController	SWRemoveParticipantAlertController	@MainActor class SWRemoveParticipantAlertController
+c:objc(cs)SWRemoveParticipantAlertController(cm)alertControllerWithParticipant:highlight:	swift.init	init(participant:highlight:)	SWRemoveParticipantAlertController.init(participant:highlight:)	@MainActor convenience init(participant: SWPerson, highlight: SWCollaborationHighlight)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWHighlight	swift.init	init(coder:)	SWHighlight.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWHighlightChangeEvent	swift.init	init(coder:)	SWHighlightChangeEvent.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWHighlightMembershipEvent	swift.init	init(coder:)	SWHighlightMembershipEvent.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWHighlightMentionEvent	swift.init	init(coder:)	SWHighlightMentionEvent.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWHighlightPersistenceEvent	swift.init	init(coder:)	SWHighlightPersistenceEvent.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)SWCollaborationViewDelegate	swift.protocol	SWCollaborationViewDelegate	SWCollaborationViewDelegate	protocol SWCollaborationViewDelegate : NSObjectProtocol
+c:objc(pl)SWCollaborationViewDelegate(im)collaborationViewDidDismissPopover:	swift.method	collaborationViewDidDismissPopover(_:)	SWCollaborationViewDelegate.collaborationViewDidDismissPopover(_:)	optional func collaborationViewDidDismissPopover(_ collaborationView: SWCollaborationView)
+c:objc(pl)SWCollaborationViewDelegate(im)collaborationViewShouldPresentPopover:	swift.method	collaborationViewShouldPresentPopover(_:)	SWCollaborationViewDelegate.collaborationViewShouldPresentPopover(_:)	optional func collaborationViewShouldPresentPopover(_ collaborationView: SWCollaborationView) -> Bool
+c:objc(pl)SWCollaborationViewDelegate(im)collaborationViewWillPresentPopover:	swift.method	collaborationViewWillPresentPopover(_:)	SWCollaborationViewDelegate.collaborationViewWillPresentPopover(_:)	optional func collaborationViewWillPresentPopover(_ collaborationView: SWCollaborationView)
+c:objc(pl)SWHighlightCenterDelegate	swift.protocol	SWHighlightCenterDelegate	SWHighlightCenterDelegate	protocol SWHighlightCenterDelegate : NSObjectProtocol
+c:objc(pl)SWHighlightCenterDelegate(im)highlightCenterHighlightsDidChange:	swift.method	highlightCenterHighlightsDidChange(_:)	SWHighlightCenterDelegate.highlightCenterHighlightsDidChange(_:)	func highlightCenterHighlightsDidChange(_ highlightCenter: SWHighlightCenter)
+c:objc(pl)SWHighlightEvent	swift.protocol	SWHighlightEvent	SWHighlightEvent	protocol SWHighlightEvent : NSCopying, NSSecureCoding, NSObjectProtocol
+c:objc(pl)SWHighlightEvent(py)highlightURL	swift.property	highlightURL	SWHighlightEvent.highlightURL	var highlightURL: URL { get }
+s:16CoreTransferable0B0PAAE16withExportedFile11contentType11fileHandlerqd__07UniformG11Identifiers6UTTypeVSg_qd__10Foundation3URLVYaKXEtYaKlF::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	swift.method	withExportedFile(contentType:fileHandler:)	SWCollaborationMetadata.withExportedFile(contentType:fileHandler:)	func withExportedFile<Result>(contentType: UTType?, fileHandler: (URL) async throws -> Result) async throws -> Result
+s:16CoreTransferable0B0PAAE17suggestedFilenameSSSgvp::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	swift.property	suggestedFilename	SWCollaborationMetadata.suggestedFilename	var suggestedFilename: String? { get }
+s:16CoreTransferable0B0PAAE20exportedContentTypes10visibilitySay22UniformTypeIdentifiers6UTTypeVGAA32TransferRepresentationVisibilityV_tFZ::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	swift.type.method	exportedContentTypes(visibility:)	SWCollaborationMetadata.exportedContentTypes(visibility:)	static func exportedContentTypes(visibility: TransferRepresentationVisibility = .all) -> [UTType]
+s:16CoreTransferable0B0PAAE20exportedContentTypesySay22UniformTypeIdentifiers6UTTypeVGAA32TransferRepresentationVisibilityVF::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	swift.method	exportedContentTypes(_:)	SWCollaborationMetadata.exportedContentTypes(_:)	func exportedContentTypes(_ visibility: TransferRepresentationVisibility = .all) -> [UTType]
+s:16CoreTransferable0B0PAAE20importedContentTypesSay22UniformTypeIdentifiers6UTTypeVGyF::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	swift.method	importedContentTypes()	SWCollaborationMetadata.importedContentTypes()	func importedContentTypes() -> [UTType]
+s:16CoreTransferable0B0PAAE6export2to11contentType10Foundation3URLVAI_07UniformF11Identifiers6UTTypeVSgtYaKF::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	swift.method	export(to:contentType:)	SWCollaborationMetadata.export(to:contentType:)	func export(to destinationDirectory: URL, contentType: UTType?) async throws -> URL
+s:16CoreTransferable0B0PAAE8exported2as10Foundation4DataV22UniformTypeIdentifiers6UTTypeVSg_tYaKF::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	swift.method	exported(as:)	SWCollaborationMetadata.exported(as:)	func exported(as contentType: UTType?) async throws -> Data
+s:16CoreTransferable0B0PAAE9importing11contentTypex10Foundation3URLV_07UniformE11Identifiers6UTTypeVSgtYaKcfc::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	swift.init	init(importing:contentType:)	SWCollaborationMetadata.init(importing:contentType:)	init(importing file: URL, contentType: UTType?) async throws
+s:16CoreTransferable0B0PAAE9importing11contentTypex10Foundation4DataV_07UniformE11Identifiers6UTTypeVSgtYaKcfc::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	swift.init	init(importing:contentType:)	SWCollaborationMetadata.init(importing:contentType:)	init(importing data: Data, contentType: UTType?) async throws
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWAttributionViewBackgroundStyle	swift.func.op	!=(_:_:)	SWAttributionView.BackgroundStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWAttributionViewDisplayContext	swift.func.op	!=(_:_:)	SWAttributionView.DisplayContext.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWAttributionViewHorizontalAlignment	swift.func.op	!=(_:_:)	SWAttributionView.HorizontalAlignment.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWHighlightCenterErrorCode	swift.func.op	!=(_:_:)	SWHighlightCenterErrorCode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWHighlightChangeEventTrigger	swift.func.op	!=(_:_:)	SWHighlightChangeEventTrigger.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWHighlightMembershipEventTrigger	swift.func.op	!=(_:_:)	SWHighlightMembershipEventTrigger.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWHighlightPersistenceEventTrigger	swift.func.op	!=(_:_:)	SWHighlightPersistenceEventTrigger.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWAttributionViewBackgroundStyle	swift.property	hashValue	SWAttributionView.BackgroundStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWAttributionViewDisplayContext	swift.property	hashValue	SWAttributionView.DisplayContext.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWAttributionViewHorizontalAlignment	swift.property	hashValue	SWAttributionView.HorizontalAlignment.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWHighlightCenterErrorCode	swift.property	hashValue	SWHighlightCenterErrorCode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWHighlightChangeEventTrigger	swift.property	hashValue	SWHighlightChangeEventTrigger.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWHighlightMembershipEventTrigger	swift.property	hashValue	SWHighlightMembershipEventTrigger.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWHighlightPersistenceEventTrigger	swift.property	hashValue	SWHighlightPersistenceEventTrigger.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWAttributionViewBackgroundStyle	swift.method	hash(into:)	SWAttributionView.BackgroundStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWAttributionViewDisplayContext	swift.method	hash(into:)	SWAttributionView.DisplayContext.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWAttributionViewHorizontalAlignment	swift.method	hash(into:)	SWAttributionView.HorizontalAlignment.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWHighlightCenterErrorCode	swift.method	hash(into:)	SWHighlightCenterErrorCode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWHighlightChangeEventTrigger	swift.method	hash(into:)	SWHighlightChangeEventTrigger.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWHighlightMembershipEventTrigger	swift.method	hash(into:)	SWHighlightMembershipEventTrigger.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWHighlightPersistenceEventTrigger	swift.method	hash(into:)	SWHighlightPersistenceEventTrigger.hash(into:)	func hash(into hasher: inout Hasher)
+s:So17SWHighlightCenterC13SharedWithYouE22collaborationHighlight13forIdentifierSo015SWCollaborationG0CSS_tKF	swift.method	collaborationHighlight(forIdentifier:)	SWHighlightCenter.collaborationHighlight(forIdentifier:)	func collaborationHighlight(forIdentifier: String) throws -> SWCollaborationHighlight
+s:So19SWCollaborationViewC13SharedWithYouE09setDetailB11ListContentyyx7SwiftUI0B0RzlF	swift.method	setDetailViewListContent(_:)	SWCollaborationView.setDetailViewListContent(_:)	@MainActor @preconcurrency func setDetailViewListContent<ListContent>(_ detailViewListContent: ListContent) where ListContent : View
+s:So19SWCollaborationViewC13SharedWithYouE09setDetailB11ListContentyyxyXE7SwiftUI0B0RzlF	swift.method	setDetailViewListContent(_:)	SWCollaborationView.setDetailViewListContent(_:)	@MainActor @preconcurrency func setDetailViewListContent<ListContent>(@ViewBuilder _ detailViewListContent: () -> ListContent) where ListContent : View
+s:So23SWCollaborationMetadataC13SharedWithYouE14Representationa	swift.typealias	SWCollaborationMetadata.Representation	SWCollaborationMetadata.Representation	typealias Representation = some TransferRepresentation
+s:So23SWCollaborationMetadataC13SharedWithYouE22transferRepresentationQrvpZ	swift.type.property	transferRepresentation	SWCollaborationMetadata.transferRepresentation	static var transferRepresentation: some TransferRepresentation { get }
+s:So26SWHighlightCenterErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SWHighlightCenterErrorCode.init(rawValue:)	init?(rawValue: Int)
+s:So29SWHighlightChangeEventTriggerV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SWHighlightChangeEventTrigger.init(rawValue:)	init?(rawValue: Int)
+s:So31SWAttributionViewDisplayContextV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SWAttributionView.DisplayContext.init(rawValue:)	init?(rawValue: Int)
+s:So32SWAttributionViewBackgroundStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SWAttributionView.BackgroundStyle.init(rawValue:)	init?(rawValue: Int)
+s:So33SWHighlightMembershipEventTriggerV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SWHighlightMembershipEventTrigger.init(rawValue:)	init?(rawValue: Int)
+s:So34SWHighlightPersistenceEventTriggerV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SWHighlightPersistenceEventTrigger.init(rawValue:)	init?(rawValue: Int)
+s:So36SWAttributionViewHorizontalAlignmentV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SWAttributionView.HorizontalAlignment.init(rawValue:)	init?(rawValue: Int)

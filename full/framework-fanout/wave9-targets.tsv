@@ -1,0 +1,17 @@
+module	slug	lane	priority	risks	dependencies
+Accessibility	accessibility	leaf-full	100	ui,accessibility,fail-closed	Foundation
+AddressBook	addressbook	legacy-adapter	100	legacy,c-abi,privacy,contacts	CoreFoundation
+ClassKit	classkit	medium-full	100	education,persistence,fail-closed	Foundation
+CoreMIDI	coremidi	medium-full	100	c-abi,realtime,callbacks,fail-closed	CoreFoundation
+DataDetection	datadetection	leaf-full	100	text,fail-closed	Foundation
+DeviceActivity	deviceactivity	leaf-full	100	privacy,os-service,fail-closed	Foundation
+ExternalAccessory	externalaccessory	medium-full	100	hardware,streams,fail-closed	Foundation
+FamilyControls	familycontrols	leaf-full	100	privacy,authorization,fail-closed	Foundation
+ManagedSettings	managedsettings	medium-full	100	privacy,os-service,persistence	Foundation
+MediaAccessibility	mediaaccessibility	leaf-full	100	c-abi,captions,fail-closed	CoreFoundation,CoreGraphics
+Messages	messages	medium-full	100	ui,extension,fail-closed	Foundation,UIKit
+ModelIO	modelio	large-partitioned	100	graphics,file-formats,c-abi,fail-closed	Foundation
+PushToTalk	pushtotalk	leaf-full	100	audio,os-service,fail-closed	Foundation
+SharedWithYou	sharedwithyou	medium-full	100	ui,os-service,fail-closed	Foundation,UIKit
+WorkoutKit	workoutkit	medium-full	100	health,codable,fail-closed	Foundation,HealthKit
+SafetyKit	safetykit	leaf-full	100	sensors,os-service,fail-closed	Foundation

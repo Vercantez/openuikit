@@ -1,0 +1,155 @@
+precise	kind	title	path	declaration
+c:@E@PTChannelError	swift.enum	PTChannelError.Code	PTChannelError.Code	enum Code
+c:@E@PTChannelError@PTChannelErrorAppNotForeground	swift.enum.case	PTChannelError.Code.appNotForeground	PTChannelError.Code.appNotForeground	case appNotForeground
+c:@E@PTChannelError@PTChannelErrorCallActive	swift.enum.case	PTChannelError.Code.callActive	PTChannelError.Code.callActive	case callActive
+c:@E@PTChannelError@PTChannelErrorChannelLimitReached	swift.enum.case	PTChannelError.Code.channelLimitReached	PTChannelError.Code.channelLimitReached	case channelLimitReached
+c:@E@PTChannelError@PTChannelErrorChannelNotFound	swift.enum.case	PTChannelError.Code.channelNotFound	PTChannelError.Code.channelNotFound	case channelNotFound
+c:@E@PTChannelError@PTChannelErrorDeviceManagementRestriction	swift.enum.case	PTChannelError.Code.deviceManagementRestriction	PTChannelError.Code.deviceManagementRestriction	case deviceManagementRestriction
+c:@E@PTChannelError@PTChannelErrorScreenTimeRestriction	swift.enum.case	PTChannelError.Code.screenTimeRestriction	PTChannelError.Code.screenTimeRestriction	case screenTimeRestriction
+c:@E@PTChannelError@PTChannelErrorTransmissionInProgress	swift.enum.case	PTChannelError.Code.transmissionInProgress	PTChannelError.Code.transmissionInProgress	case transmissionInProgress
+c:@E@PTChannelError@PTChannelErrorTransmissionNotAllowed	swift.enum.case	PTChannelError.Code.transmissionNotAllowed	PTChannelError.Code.transmissionNotAllowed	case transmissionNotAllowed
+c:@E@PTChannelError@PTChannelErrorTransmissionNotFound	swift.enum.case	PTChannelError.Code.transmissionNotFound	PTChannelError.Code.transmissionNotFound	case transmissionNotFound
+c:@E@PTChannelError@PTChannelErrorUnknown	swift.enum.case	PTChannelError.Code.unknown	PTChannelError.Code.unknown	case unknown
+c:@E@PTChannelJoinReason	swift.enum	PTChannelJoinReason	PTChannelJoinReason	enum PTChannelJoinReason
+c:@E@PTChannelJoinReason@PTChannelJoinReasonChannelRestoration	swift.enum.case	PTChannelJoinReason.channelRestoration	PTChannelJoinReason.channelRestoration	case channelRestoration
+c:@E@PTChannelJoinReason@PTChannelJoinReasonDeveloperRequest	swift.enum.case	PTChannelJoinReason.developerRequest	PTChannelJoinReason.developerRequest	case developerRequest
+c:@E@PTChannelLeaveReason	swift.enum	PTChannelLeaveReason	PTChannelLeaveReason	enum PTChannelLeaveReason
+c:@E@PTChannelLeaveReason@PTChannelLeaveReasonDeveloperRequest	swift.enum.case	PTChannelLeaveReason.developerRequest	PTChannelLeaveReason.developerRequest	case developerRequest
+c:@E@PTChannelLeaveReason@PTChannelLeaveReasonSystemPolicy	swift.enum.case	PTChannelLeaveReason.systemPolicy	PTChannelLeaveReason.systemPolicy	case systemPolicy
+c:@E@PTChannelLeaveReason@PTChannelLeaveReasonUnknown	swift.enum.case	PTChannelLeaveReason.unknown	PTChannelLeaveReason.unknown	case unknown
+c:@E@PTChannelLeaveReason@PTChannelLeaveReasonUserRequest	swift.enum.case	PTChannelLeaveReason.userRequest	PTChannelLeaveReason.userRequest	case userRequest
+c:@E@PTChannelTransmitRequestSource	swift.enum	PTChannelTransmitRequestSource	PTChannelTransmitRequestSource	enum PTChannelTransmitRequestSource
+c:@E@PTChannelTransmitRequestSource@PTChannelTransmitRequestSourceDeveloperRequest	swift.enum.case	PTChannelTransmitRequestSource.developerRequest	PTChannelTransmitRequestSource.developerRequest	case developerRequest
+c:@E@PTChannelTransmitRequestSource@PTChannelTransmitRequestSourceHandsfreeButton	swift.enum.case	PTChannelTransmitRequestSource.handsfreeButton	PTChannelTransmitRequestSource.handsfreeButton	case handsfreeButton
+c:@E@PTChannelTransmitRequestSource@PTChannelTransmitRequestSourceUnknown	swift.enum.case	PTChannelTransmitRequestSource.unknown	PTChannelTransmitRequestSource.unknown	case unknown
+c:@E@PTChannelTransmitRequestSource@PTChannelTransmitRequestSourceUserRequest	swift.enum.case	PTChannelTransmitRequestSource.userRequest	PTChannelTransmitRequestSource.userRequest	case userRequest
+c:@E@PTInstantiationError	swift.enum	PTInstantiationError.Code	PTInstantiationError.Code	enum Code
+c:@E@PTInstantiationError@PTInstantiationErrorInstantiationAlreadyInProgress	swift.enum.case	PTInstantiationError.Code.instantiationAlreadyInProgress	PTInstantiationError.Code.instantiationAlreadyInProgress	case instantiationAlreadyInProgress
+c:@E@PTInstantiationError@PTInstantiationErrorInvalidPlatform	swift.enum.case	PTInstantiationError.Code.invalidPlatform	PTInstantiationError.Code.invalidPlatform	case invalidPlatform
+c:@E@PTInstantiationError@PTInstantiationErrorMissingBackgroundMode	swift.enum.case	PTInstantiationError.Code.missingBackgroundMode	PTInstantiationError.Code.missingBackgroundMode	case missingBackgroundMode
+c:@E@PTInstantiationError@PTInstantiationErrorMissingEntitlement	swift.enum.case	PTInstantiationError.Code.missingEntitlement	PTInstantiationError.Code.missingEntitlement	case missingEntitlement
+c:@E@PTInstantiationError@PTInstantiationErrorMissingPushServerEnvironment	swift.enum.case	PTInstantiationError.Code.missingPushServerEnvironment	PTInstantiationError.Code.missingPushServerEnvironment	case missingPushServerEnvironment
+c:@E@PTInstantiationError@PTInstantiationErrorUnknown	swift.enum.case	PTInstantiationError.Code.unknown	PTInstantiationError.Code.unknown	case unknown
+c:@E@PTServiceStatus	swift.enum	PTServiceStatus	PTServiceStatus	enum PTServiceStatus
+c:@E@PTServiceStatus@PTServiceStatusConnecting	swift.enum.case	PTServiceStatus.connecting	PTServiceStatus.connecting	case connecting
+c:@E@PTServiceStatus@PTServiceStatusReady	swift.enum.case	PTServiceStatus.ready	PTServiceStatus.ready	case ready
+c:@E@PTServiceStatus@PTServiceStatusUnavailable	swift.enum.case	PTServiceStatus.unavailable	PTServiceStatus.unavailable	case unavailable
+c:@E@PTTransmissionMode	swift.enum	PTTransmissionMode	PTTransmissionMode	enum PTTransmissionMode
+c:@E@PTTransmissionMode@PTTransmissionModeFullDuplex	swift.enum.case	PTTransmissionMode.fullDuplex	PTTransmissionMode.fullDuplex	case fullDuplex
+c:@E@PTTransmissionMode@PTTransmissionModeHalfDuplex	swift.enum.case	PTTransmissionMode.halfDuplex	PTTransmissionMode.halfDuplex	case halfDuplex
+c:@E@PTTransmissionMode@PTTransmissionModeListenOnly	swift.enum.case	PTTransmissionMode.listenOnly	PTTransmissionMode.listenOnly	case listenOnly
+c:@PTChannelErrorDomain	swift.var	PTChannelErrorDomain	PTChannelErrorDomain	let PTChannelErrorDomain: String
+c:@PTInstantiationErrorDomain	swift.var	PTInstantiationErrorDomain	PTInstantiationErrorDomain	let PTInstantiationErrorDomain: String
+c:objc(cs)PTChannelDescriptor	swift.class	PTChannelDescriptor	PTChannelDescriptor	class PTChannelDescriptor
+c:objc(cs)PTChannelDescriptor(im)initWithName:image:	swift.init	init(name:image:)	PTChannelDescriptor.init(name:image:)	init(name: String, image: UIImage?)
+c:objc(cs)PTChannelDescriptor(py)image	swift.property	image	PTChannelDescriptor.image	@NSCopying var image: UIImage? { get }
+c:objc(cs)PTChannelDescriptor(py)name	swift.property	name	PTChannelDescriptor.name	var name: String { get }
+c:objc(cs)PTChannelManager	swift.class	PTChannelManager	PTChannelManager	class PTChannelManager
+c:objc(cs)PTChannelManager(cm)channelManagerWithDelegate:restorationDelegate:completionHandler:	swift.type.method	channelManager(delegate:restorationDelegate:)	PTChannelManager.channelManager(delegate:restorationDelegate:)	class func channelManager(delegate: any PTChannelManagerDelegate, restorationDelegate: any PTChannelRestorationDelegate) async throws -> PTChannelManager
+c:objc(cs)PTChannelManager(im)leaveChannelWithUUID:	swift.method	leaveChannel(channelUUID:)	PTChannelManager.leaveChannel(channelUUID:)	func leaveChannel(channelUUID: UUID)
+c:objc(cs)PTChannelManager(im)requestBeginTransmittingWithChannelUUID:	swift.method	requestBeginTransmitting(channelUUID:)	PTChannelManager.requestBeginTransmitting(channelUUID:)	func requestBeginTransmitting(channelUUID: UUID)
+c:objc(cs)PTChannelManager(im)requestJoinChannelWithUUID:descriptor:	swift.method	requestJoinChannel(channelUUID:descriptor:)	PTChannelManager.requestJoinChannel(channelUUID:descriptor:)	func requestJoinChannel(channelUUID: UUID, descriptor: PTChannelDescriptor)
+c:objc(cs)PTChannelManager(im)setAccessoryButtonEventsEnabled:forChannelUUID:completionHandler:	swift.method	setAccessoryButtonEventsEnabled(_:channelUUID:)	PTChannelManager.setAccessoryButtonEventsEnabled(_:channelUUID:)	func setAccessoryButtonEventsEnabled(_ enabled: Bool, channelUUID: UUID) async throws
+c:objc(cs)PTChannelManager(im)setActiveRemoteParticipant:forChannelUUID:completionHandler:	swift.method	setActiveRemoteParticipant(_:channelUUID:)	PTChannelManager.setActiveRemoteParticipant(_:channelUUID:)	func setActiveRemoteParticipant(_ participant: PTParticipant?, channelUUID: UUID) async throws
+c:objc(cs)PTChannelManager(im)setChannelDescriptor:forChannelUUID:completionHandler:	swift.method	setChannelDescriptor(_:channelUUID:)	PTChannelManager.setChannelDescriptor(_:channelUUID:)	func setChannelDescriptor(_ channelDescriptor: PTChannelDescriptor, channelUUID: UUID) async throws
+c:objc(cs)PTChannelManager(im)setServiceStatus:forChannelUUID:completionHandler:	swift.method	setServiceStatus(_:channelUUID:)	PTChannelManager.setServiceStatus(_:channelUUID:)	func setServiceStatus(_ status: PTServiceStatus, channelUUID: UUID) async throws
+c:objc(cs)PTChannelManager(im)setTransmissionMode:forChannelUUID:completionHandler:	swift.method	setTransmissionMode(_:channelUUID:)	PTChannelManager.setTransmissionMode(_:channelUUID:)	func setTransmissionMode(_ transmissionMode: PTTransmissionMode, channelUUID: UUID) async throws
+c:objc(cs)PTChannelManager(im)stopTransmittingWithChannelUUID:	swift.method	stopTransmitting(channelUUID:)	PTChannelManager.stopTransmitting(channelUUID:)	func stopTransmitting(channelUUID: UUID)
+c:objc(cs)PTChannelManager(py)activeChannelUUID	swift.property	activeChannelUUID	PTChannelManager.activeChannelUUID	var activeChannelUUID: UUID? { get }
+c:objc(cs)PTParticipant	swift.class	PTParticipant	PTParticipant	class PTParticipant
+c:objc(cs)PTParticipant(im)initWithName:image:	swift.init	init(name:image:)	PTParticipant.init(name:image:)	init(name: String, image: UIImage?)
+c:objc(cs)PTParticipant(py)image	swift.property	image	PTParticipant.image	@NSCopying var image: UIImage? { get }
+c:objc(cs)PTParticipant(py)name	swift.property	name	PTParticipant.name	var name: String { get }
+c:objc(cs)PTPushResult	swift.class	PTPushResult	PTPushResult	class PTPushResult
+c:objc(cs)PTPushResult(cm)pushResultForActiveRemoteParticipant:	swift.type.method	activeRemoteParticipant(_:)	PTPushResult.activeRemoteParticipant(_:)	class func activeRemoteParticipant(_ participant: PTParticipant) -> PTPushResult
+c:objc(cs)PTPushResult(cpy)leaveChannelPushResult	swift.type.property	leaveChannel	PTPushResult.leaveChannel	class var leaveChannel: PTPushResult { get }
+c:objc(pl)PTChannelManagerDelegate	swift.protocol	PTChannelManagerDelegate	PTChannelManagerDelegate	protocol PTChannelManagerDelegate : NSObjectProtocol
+c:objc(pl)PTChannelManagerDelegate(im)channelManager:channelUUID:didBeginTransmittingFromSource:	swift.method	channelManager(_:channelUUID:didBeginTransmittingFrom:)	PTChannelManagerDelegate.channelManager(_:channelUUID:didBeginTransmittingFrom:)	func channelManager(_ channelManager: PTChannelManager, channelUUID: UUID, didBeginTransmittingFrom source: PTChannelTransmitRequestSource)
+c:objc(pl)PTChannelManagerDelegate(im)channelManager:channelUUID:didEndTransmittingFromSource:	swift.method	channelManager(_:channelUUID:didEndTransmittingFrom:)	PTChannelManagerDelegate.channelManager(_:channelUUID:didEndTransmittingFrom:)	func channelManager(_ channelManager: PTChannelManager, channelUUID: UUID, didEndTransmittingFrom source: PTChannelTransmitRequestSource)
+c:objc(pl)PTChannelManagerDelegate(im)channelManager:didActivateAudioSession:	swift.method	channelManager(_:didActivate:)	PTChannelManagerDelegate.channelManager(_:didActivate:)	func channelManager(_ channelManager: PTChannelManager, didActivate audioSession: AVAudioSession)
+c:objc(pl)PTChannelManagerDelegate(im)channelManager:didDeactivateAudioSession:	swift.method	channelManager(_:didDeactivate:)	PTChannelManagerDelegate.channelManager(_:didDeactivate:)	func channelManager(_ channelManager: PTChannelManager, didDeactivate audioSession: AVAudioSession)
+c:objc(pl)PTChannelManagerDelegate(im)channelManager:didJoinChannelWithUUID:reason:	swift.method	channelManager(_:didJoinChannel:reason:)	PTChannelManagerDelegate.channelManager(_:didJoinChannel:reason:)	func channelManager(_ channelManager: PTChannelManager, didJoinChannel channelUUID: UUID, reason: PTChannelJoinReason)
+c:objc(pl)PTChannelManagerDelegate(im)channelManager:didLeaveChannelWithUUID:reason:	swift.method	channelManager(_:didLeaveChannel:reason:)	PTChannelManagerDelegate.channelManager(_:didLeaveChannel:reason:)	func channelManager(_ channelManager: PTChannelManager, didLeaveChannel channelUUID: UUID, reason: PTChannelLeaveReason)
+c:objc(pl)PTChannelManagerDelegate(im)channelManager:failedToBeginTransmittingInChannelWithUUID:error:	swift.method	channelManager(_:failedToBeginTransmittingInChannel:error:)	PTChannelManagerDelegate.channelManager(_:failedToBeginTransmittingInChannel:error:)	optional func channelManager(_ channelManager: PTChannelManager, failedToBeginTransmittingInChannel channelUUID: UUID, error: any Error)
+c:objc(pl)PTChannelManagerDelegate(im)channelManager:failedToJoinChannelWithUUID:error:	swift.method	channelManager(_:failedToJoinChannel:error:)	PTChannelManagerDelegate.channelManager(_:failedToJoinChannel:error:)	optional func channelManager(_ channelManager: PTChannelManager, failedToJoinChannel channelUUID: UUID, error: any Error)
+c:objc(pl)PTChannelManagerDelegate(im)channelManager:failedToLeaveChannelWithUUID:error:	swift.method	channelManager(_:failedToLeaveChannel:error:)	PTChannelManagerDelegate.channelManager(_:failedToLeaveChannel:error:)	optional func channelManager(_ channelManager: PTChannelManager, failedToLeaveChannel channelUUID: UUID, error: any Error)
+c:objc(pl)PTChannelManagerDelegate(im)channelManager:failedToStopTransmittingInChannelWithUUID:error:	swift.method	channelManager(_:failedToStopTransmittingInChannel:error:)	PTChannelManagerDelegate.channelManager(_:failedToStopTransmittingInChannel:error:)	optional func channelManager(_ channelManager: PTChannelManager, failedToStopTransmittingInChannel channelUUID: UUID, error: any Error)
+c:objc(pl)PTChannelManagerDelegate(im)channelManager:receivedEphemeralPushToken:	swift.method	channelManager(_:receivedEphemeralPushToken:)	PTChannelManagerDelegate.channelManager(_:receivedEphemeralPushToken:)	func channelManager(_ channelManager: PTChannelManager, receivedEphemeralPushToken pushToken: Data)
+c:objc(pl)PTChannelManagerDelegate(im)incomingPushResultForChannelManager:channelUUID:pushPayload:	swift.method	incomingPushResult(channelManager:channelUUID:pushPayload:)	PTChannelManagerDelegate.incomingPushResult(channelManager:channelUUID:pushPayload:)	func incomingPushResult(channelManager: PTChannelManager, channelUUID: UUID, pushPayload: [String : Any]) -> PTPushResult
+c:objc(pl)PTChannelManagerDelegate(im)incomingServiceUpdatePushForChannelManager:channelUUID:pushPayload:isHighPriority:remainingHighPriorityBudget:withCompletionHandler:	swift.method	incomingServiceUpdatePush(channelManager:channelUUID:pushPayload:isHighPriority:remainingHighPriorityBudget:)	PTChannelManagerDelegate.incomingServiceUpdatePush(channelManager:channelUUID:pushPayload:isHighPriority:remainingHighPriorityBudget:)	optional func incomingServiceUpdatePush(channelManager: PTChannelManager, channelUUID: UUID, pushPayload: [String : Any], isHighPriority: Bool, remainingHighPriorityBudget: Int) async
+c:objc(pl)PTChannelRestorationDelegate	swift.protocol	PTChannelRestorationDelegate	PTChannelRestorationDelegate	protocol PTChannelRestorationDelegate : NSObjectProtocol
+c:objc(pl)PTChannelRestorationDelegate(im)channelDescriptorForRestoredChannelUUID:	swift.method	channelDescriptor(restoredChannelUUID:)	PTChannelRestorationDelegate.channelDescriptor(restoredChannelUUID:)	func channelDescriptor(restoredChannelUUID channelUUID: UUID) -> PTChannelDescriptor
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@PTChannelError	swift.type.property	errorDomain	PTChannelError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@PTInstantiationError	swift.type.property	errorDomain	PTInstantiationError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PTChannelError	swift.property	errorUserInfo	PTChannelError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PTInstantiationError	swift.property	errorUserInfo	PTInstantiationError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PTChannelError	swift.property	errorCode	PTChannelError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PTInstantiationError	swift.property	errorCode	PTInstantiationError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@PTChannelError	swift.func.op	~=(_:_:)	PTChannelError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@PTInstantiationError	swift.func.op	~=(_:_:)	PTInstantiationError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PTChannelError	swift.property	errorUserInfo	PTChannelError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PTInstantiationError	swift.property	errorUserInfo	PTInstantiationError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@PTChannelError	swift.func.op	==(_:_:)	PTChannelError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@PTInstantiationError	swift.func.op	==(_:_:)	PTInstantiationError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@PTChannelError	swift.property	code	PTChannelError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@PTInstantiationError	swift.property	code	PTInstantiationError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PTChannelError	swift.method	hash(into:)	PTChannelError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PTInstantiationError	swift.method	hash(into:)	PTInstantiationError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@PTChannelError	swift.property	userInfo	PTChannelError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@PTInstantiationError	swift.property	userInfo	PTInstantiationError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PTChannelError	swift.property	errorCode	PTChannelError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PTInstantiationError	swift.property	errorCode	PTInstantiationError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@PTChannelError	swift.property	hashValue	PTChannelError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@PTInstantiationError	swift.property	hashValue	PTInstantiationError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@PTChannelError	swift.init	init(_:userInfo:)	PTChannelError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@PTInstantiationError	swift.init	init(_:userInfo:)	PTInstantiationError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC14PTChannelErrorLeV	swift.struct	PTChannelError	PTChannelError	struct PTChannelError
+s:SC14PTChannelErrorLeV10callActiveSoAAVvpZ	swift.type.property	callActive	PTChannelError.callActive	static var callActive: PTChannelError.Code { get }
+s:SC14PTChannelErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	PTChannelError.errorDomain	static var errorDomain: String { get }
+s:SC14PTChannelErrorLeV15channelNotFoundSoAAVvpZ	swift.type.property	channelNotFound	PTChannelError.channelNotFound	static var channelNotFound: PTChannelError.Code { get }
+s:SC14PTChannelErrorLeV16appNotForegroundSoAAVvpZ	swift.type.property	appNotForeground	PTChannelError.appNotForeground	static var appNotForeground: PTChannelError.Code { get }
+s:SC14PTChannelErrorLeV19channelLimitReachedSoAAVvpZ	swift.type.property	channelLimitReached	PTChannelError.channelLimitReached	static var channelLimitReached: PTChannelError.Code { get }
+s:SC14PTChannelErrorLeV20transmissionNotFoundSoAAVvpZ	swift.type.property	transmissionNotFound	PTChannelError.transmissionNotFound	static var transmissionNotFound: PTChannelError.Code { get }
+s:SC14PTChannelErrorLeV21screenTimeRestrictionSoAAVvpZ	swift.type.property	screenTimeRestriction	PTChannelError.screenTimeRestriction	static var screenTimeRestriction: PTChannelError.Code { get }
+s:SC14PTChannelErrorLeV22transmissionInProgressSoAAVvpZ	swift.type.property	transmissionInProgress	PTChannelError.transmissionInProgress	static var transmissionInProgress: PTChannelError.Code { get }
+s:SC14PTChannelErrorLeV22transmissionNotAllowedSoAAVvpZ	swift.type.property	transmissionNotAllowed	PTChannelError.transmissionNotAllowed	static var transmissionNotAllowed: PTChannelError.Code { get }
+s:SC14PTChannelErrorLeV27deviceManagementRestrictionSoAAVvpZ	swift.type.property	deviceManagementRestriction	PTChannelError.deviceManagementRestriction	static var deviceManagementRestriction: PTChannelError.Code { get }
+s:SC14PTChannelErrorLeV7unknownSoAAVvpZ	swift.type.property	unknown	PTChannelError.unknown	static var unknown: PTChannelError.Code { get }
+s:SC20PTInstantiationErrorLeV	swift.struct	PTInstantiationError	PTInstantiationError	struct PTInstantiationError
+s:SC20PTInstantiationErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	PTInstantiationError.errorDomain	static var errorDomain: String { get }
+s:SC20PTInstantiationErrorLeV15invalidPlatformSoAAVvpZ	swift.type.property	invalidPlatform	PTInstantiationError.invalidPlatform	static var invalidPlatform: PTInstantiationError.Code { get }
+s:SC20PTInstantiationErrorLeV18missingEntitlementSoAAVvpZ	swift.type.property	missingEntitlement	PTInstantiationError.missingEntitlement	static var missingEntitlement: PTInstantiationError.Code { get }
+s:SC20PTInstantiationErrorLeV21missingBackgroundModeSoAAVvpZ	swift.type.property	missingBackgroundMode	PTInstantiationError.missingBackgroundMode	static var missingBackgroundMode: PTInstantiationError.Code { get }
+s:SC20PTInstantiationErrorLeV28missingPushServerEnvironmentSoAAVvpZ	swift.type.property	missingPushServerEnvironment	PTInstantiationError.missingPushServerEnvironment	static var missingPushServerEnvironment: PTInstantiationError.Code { get }
+s:SC20PTInstantiationErrorLeV30instantiationAlreadyInProgressSoAAVvpZ	swift.type.property	instantiationAlreadyInProgress	PTInstantiationError.instantiationAlreadyInProgress	static var instantiationAlreadyInProgress: PTInstantiationError.Code { get }
+s:SC20PTInstantiationErrorLeV7unknownSoAAVvpZ	swift.type.property	unknown	PTInstantiationError.unknown	static var unknown: PTInstantiationError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PTChannelError	swift.func.op	!=(_:_:)	PTChannelError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PTChannelJoinReason	swift.func.op	!=(_:_:)	PTChannelJoinReason.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PTChannelLeaveReason	swift.func.op	!=(_:_:)	PTChannelLeaveReason.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PTChannelTransmitRequestSource	swift.func.op	!=(_:_:)	PTChannelTransmitRequestSource.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PTInstantiationError	swift.func.op	!=(_:_:)	PTInstantiationError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PTServiceStatus	swift.func.op	!=(_:_:)	PTServiceStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PTTransmissionMode	swift.func.op	!=(_:_:)	PTTransmissionMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PTChannelError	swift.property	hashValue	PTChannelError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PTChannelJoinReason	swift.property	hashValue	PTChannelJoinReason.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PTChannelLeaveReason	swift.property	hashValue	PTChannelLeaveReason.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PTChannelTransmitRequestSource	swift.property	hashValue	PTChannelTransmitRequestSource.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PTInstantiationError	swift.property	hashValue	PTInstantiationError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PTServiceStatus	swift.property	hashValue	PTServiceStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PTTransmissionMode	swift.property	hashValue	PTTransmissionMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PTChannelError	swift.method	hash(into:)	PTChannelError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PTChannelJoinReason	swift.method	hash(into:)	PTChannelJoinReason.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PTChannelLeaveReason	swift.method	hash(into:)	PTChannelLeaveReason.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PTChannelTransmitRequestSource	swift.method	hash(into:)	PTChannelTransmitRequestSource.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PTInstantiationError	swift.method	hash(into:)	PTInstantiationError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PTServiceStatus	swift.method	hash(into:)	PTServiceStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PTTransmissionMode	swift.method	hash(into:)	PTTransmissionMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:So14PTChannelErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PTChannelError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So15PTServiceStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PTServiceStatus.init(rawValue:)	init?(rawValue: Int)
+s:So18PTTransmissionModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PTTransmissionMode.init(rawValue:)	init?(rawValue: Int)
+s:So19PTChannelJoinReasonV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PTChannelJoinReason.init(rawValue:)	init?(rawValue: Int)
+s:So20PTChannelLeaveReasonV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PTChannelLeaveReason.init(rawValue:)	init?(rawValue: Int)
+s:So20PTInstantiationErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PTInstantiationError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So30PTChannelTransmitRequestSourceV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PTChannelTransmitRequestSource.init(rawValue:)	init?(rawValue: Int)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@PTChannelError	swift.property	localizedDescription	PTChannelError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@PTInstantiationError	swift.property	localizedDescription	PTInstantiationError.localizedDescription	var localizedDescription: String { get }
