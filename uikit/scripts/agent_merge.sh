@@ -48,7 +48,13 @@ rm -f uikit/Package.resolved   # an untracked one in the operator's tree blocks 
 # port's own Foundation (no DateFormatter / NumberFormatter / NSAttributedString
 # ...); the Docker check below uses corelibs and cannot see that. Refuse the
 # common traps in changed sources; the arm64/x86 authorities are the real check.
-if git diff main..."$BR" -- 'uikit/Sources/*.swift' | grep -E '^\+' | grep -qE 'DateFormatter|NumberFormatter|DateComponentsFormatter|ISO8601DateFormatter|NSRegularExpression|JSONSerialization'; then
+# Only what the guest compiles: OpenUIKit, CQuartz, and the TOP-LEVEL harness
+# files (Sources/RealAppProbe/*.swift, Vendored/*.swift); app subdirectories
+# (Focus/, Hackers/, *Modules/, Vendored/<App>/) are SwiftPM-only. Comment
+# lines do not count (a stub once said "not DateFormatter" and was refused).
+if git diff main..."$BR" -- 'uikit/Sources/OpenUIKit/*.swift' 'uikit/Sources/CQuartz/*' \
+     $(git diff --name-only main..."$BR" | grep -E '^uikit/Sources/RealAppProbe/[^/]+\.swift$|^uikit/Sources/RealAppProbe/Vendored/[^/]+\.swift$') \
+   | grep -E '^\+' | grep -vE '^\+\s*//' | grep -qE 'DateFormatter|NumberFormatter|DateComponentsFormatter|ISO8601DateFormatter|NSRegularExpression|JSONSerialization'; then
   echo "REFUSED: the branch adds a Foundation API the guest route does not have (DateFormatter & co.) — use Calendar/DateComponents or the port's own formatting"; exit 3
 fi
 

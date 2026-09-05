@@ -44,7 +44,9 @@ import Foundation
 
 @preconcurrency @MainActor
 public class UITabBarItem {
-    public var title: String?
+    public var title: String? {
+        didSet { _bar?.setNeedsLayout() }
+    }
     public var image: UIImage?
     public var tag: Int
     /// Badge text drawn on the item's icon. `nil` / `""` hides it.
@@ -103,11 +105,11 @@ final class _UITabBarItemView: UIControl {
     /// flattened to `color` (template rendering).
     ///
     /// iOS 26 tab buttons dump `preferredSymbolConfiguration =
-    /// pointSize=18, weight=Medium, scale=Large` (Tabs probe, SE 2x).
-    /// Selected items use the `.fill` sibling when that name exists
-    /// (`clock.fill`; `calendar.fill` is nil on iOS 26.1 so calendar
-    /// stays calendar — but at 18/medium/large the glyph already has a
-    /// filled header). Catalyst keeps the raw item image.
+    /// pointSize=18, weight=Medium, scale=Large` (symbolinkprobe, SE 2x).
+    /// Selected items keep the same symbol name — MEASURED t2000 golden
+    /// clock crop vs harvested masks, SE 2x / iOS 26.1: outline `clock`
+    /// coverage corr 0.999997, `clock.fill` 0.34. `calendar.fill` is nil
+    /// on iOS 26.1. Catalyst keeps the raw item image.
     func apply(color: UIColor, selected: Bool) {
         titleLabel.textColor = color
         iconView.image = UITabBar.resolvedItemImage(item, selected: selected)
@@ -116,6 +118,13 @@ final class _UITabBarItemView: UIControl {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        // Title can change after the item view is built. MEASURED
+        // /tmp/tabs-t2000-probe + Tabs t2000, iPhone SE 2x / iOS 26.1:
+        // `nav.tabBarItem = "Search"` at setViewControllers, then
+        // `child.title = "Library"` in viewDidLoad; golden first-tab
+        // label is "Library" `[84, 623, 36, 12]`, not "Search"
+        // `[84.5, 623, 35, 12]`. Re-read every pass.
+        titleLabel.text = item.title
         let size = iconView.image?.size ?? .zero
         iconView.frame = CGRect(x: (bounds.width - size.width) / 2,
                                 y: UITabBar.iconCenterY - size.height / 2,
@@ -390,9 +399,10 @@ public final class UITabBar: UIView {
         }
     }
 
-    /// iOS tab-bar symbol at the measured preferred configuration, with the
-    /// selected filled sibling when that name exists. Catalyst returns
-    /// the item image unchanged.
+    /// iOS tab-bar symbol at the measured preferred configuration.
+    /// Selected and unselected use the same name (the fill sibling is
+    /// NOT swapped — t2000 golden vs symbolinkprobe outline `clock`
+    /// corr 0.999997). Catalyst returns the item image unchanged.
     static func resolvedItemImage(_ item: UITabBarItem, selected: Bool) -> UIImage? {
         guard isIOS,
               let image = item.image,
@@ -400,23 +410,18 @@ public final class UITabBar: UIView {
               let name = image._systemSymbolName else {
             return item.image
         }
-        let display: String
-        if selected {
-            display = filledSymbolName(name)
-        } else {
-            display = name
-        }
-        // MEASURED Tabs probe, iPhone SE 2x / iOS 26.1:
+        _ = selected
+        // MEASURED Tabs probe + symbolinkprobe, iPhone SE 2x / iOS 26.1:
         // preferredSymbolConfiguration "pointSize=18, weight=Medium, scale=Large".
         let configuration = UIImage.SymbolConfiguration(
             pointSize: 18, weight: .medium, scale: .large)
-        return UIImage(systemName: display, withConfiguration: configuration)
-            ?? UIImage(systemName: name, withConfiguration: configuration)
+        return UIImage(systemName: name, withConfiguration: configuration)
             ?? image
     }
 
-    /// `clock` → `clock.fill` when the filled name is in the portable
-    /// set; `calendar.fill` is not (nil on iOS 26.1), so calendar stays.
+    /// `clock.fill` exists in the portable set; `calendar.fill` is nil
+    /// on iOS 26.1 (symbolinkprobe). The tab bar does not call this for
+    /// the selected item (see resolvedItemImage).
     static func filledSymbolName(_ name: String) -> String {
         if name.hasSuffix(".fill") { return name }
         let filled = name + ".fill"

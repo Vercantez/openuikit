@@ -199,10 +199,20 @@ open class UIViewController: UIResponder, UIContentContainer {
     // MARK: Title
 
     /// Shown by UINavigationController in the navigation bar (and as the
-    /// next VC's back-button label).
+    /// next VC's back-button label). Also writes `tabBarItem.title`.
+    /// MEASURED /tmp/tabs-t2000-probe, iPhone SE 2x / iOS 26.1: a plain
+    /// VC with `tabBarItem.title = "Search"` then `title = "Library"`
+    /// reports `tabBarItem.title == "Library"`; `navigationItem.title`
+    /// alone does not. Creating the item if it was nil matches the probe
+    /// (`child.tabBarItem` is nil before the set, non-nil after).
     public var title: String? {
         didSet {
             _navigationItem?.title = title
+            if let item = tabBarItem {
+                item.title = title
+            } else {
+                tabBarItem = UITabBarItem(title: title, image: nil, tag: 0)
+            }
             navigationController?._titleDidChange(self)
         }
     }

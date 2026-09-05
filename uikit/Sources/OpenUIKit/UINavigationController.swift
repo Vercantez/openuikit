@@ -473,6 +473,20 @@ open class UINavigationController: UIViewController {
     }
 
     func _titleDidChange(_ vc: UIViewController) {
+        // MEASURED /tmp/tabs-t2000-probe, iPhone SE 2x / iOS 26.1: after
+        // `nav.tabBarItem = UITabBarItem(title: "Search", …)` then
+        // `child.title = "Library"`, `nav.tabBarItem.title` is "Library"
+        // even though the two items are different objects (`identity:
+        // different`). `navigationItem.title = "Library"` does not copy.
+        // Tabs t200/t2000 dump the first tab label as "Library" `[84, 623,
+        // 36, 12]`, not the "Search" assigned in TabsApp.
+        if viewControllers.contains(where: { $0 === vc }) {
+            if tabBarItem == nil {
+                tabBarItem = UITabBarItem(title: vc.title, image: nil, tag: 0)
+            } else {
+                tabBarItem?.title = vc.title
+            }
+        }
         guard isViewLoaded, activeTransition == nil else { return }
         if vc === topViewController {
             updateBarState()
