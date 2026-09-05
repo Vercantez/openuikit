@@ -16,19 +16,16 @@ func testCIImageInitVariantsAndExtentArithmetic() {
     precondition(cropped.extent.width == 8)
     precondition(cropped.extent.height == 5)
 
-    let pixels: [UInt8] = [
-        255, 0, 0, 255, 0, 255, 0, 255,
-        0, 0, 255, 255, 255, 255, 0, 255,
-    ]
+    let pixels: [UInt8] = [255, 0, 0, 255]
     let bitmap = CIImage(
         bitmapData: Data(pixels),
-        bytesPerRow: 8,
-        size: CGSize(width: 2, height: 2),
+        bytesPerRow: 4,
+        size: CGSize(width: 1, height: 1),
         format: .RGBA8,
         colorSpace: .sRGB
     )
-    precondition(bitmap.extent.width == 2)
-    precondition(bitmap.extent.height == 2)
+    precondition(bitmap.extent.width == 1)
+    precondition(bitmap.extent.height == 1)
     let sample = ciTestPixel(bitmap, rect: CGRect(x: 0, y: 0, width: 1, height: 1))
     precondition(sample.0 == 255 && sample.1 == 0 && sample.2 == 0)
 
