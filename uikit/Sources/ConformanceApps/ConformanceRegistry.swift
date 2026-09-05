@@ -109,11 +109,13 @@ public enum ConformanceClock {
 
     /// Frame-file suffix. Light stays `t200` so existing goldens keep their
     /// names. Optional axes append in this order: `.dark`, then `.rtl`, then
-    /// `.ax1` / `.xxxl` (`t200.dark.rtl.ax1`). Default LTR / `.large` is
-    /// unsuffixed so existing goldens do not move.
+    /// `.ax1` / `.xxxl`, then `.landscape` (`t200.dark.rtl.ax1.landscape`).
+    /// Default LTR / `.large` / portrait is unsuffixed so existing goldens
+    /// do not move.
     public static func captureSuffix(for t: Double, style: String = "light",
                                      direction: String = "ltr",
-                                     contentSize: String = "large") -> String {
+                                     contentSize: String = "large",
+                                     orientation: String = "portrait") -> String {
         var ms = "\(Int((t * 1000).rounded()))"
         while ms.count < 3 { ms = "0" + ms }
         var suffix = "t" + ms
@@ -121,6 +123,7 @@ public enum ConformanceClock {
         if direction == "rtl" { suffix += ".rtl" }
         if contentSize == "ax1" { suffix += ".ax1" }
         if contentSize == "xxxl" { suffix += ".xxxl" }
+        if orientation == "landscape" { suffix += ".landscape" }
         return suffix
     }
 
@@ -164,5 +167,16 @@ public enum ConformanceClock {
         if token == "ax1" { return .accessibilityLarge }
         if token == "xxxl" { return .extraExtraExtraLarge }
         return .large
+    }
+
+    /// Interface orientation a replay should use. `CONFPROBE_ORIENTATION` /
+    /// `OPENUIKIT_APP_ORIENTATION` (set by `conformance_flow.sh --landscape`)
+    /// wins so a portrait `script.json` can still drive a landscape
+    /// timeline; otherwise the script's `orientation` field; otherwise
+    /// portrait. Equality only — no `String.contains`.
+    public static func resolvedOrientation(script: String, environment: String?) -> String {
+        if let environment, environment == "landscape" { return "landscape" }
+        if script == "landscape" { return "landscape" }
+        return "portrait"
     }
 }

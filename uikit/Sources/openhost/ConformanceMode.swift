@@ -39,9 +39,10 @@ struct ConformanceStep {
     let action: String
 }
 
-/// Parse `{"events": [{"t": , "action": }...], "captures": [t...], "style"?, "direction"?}`.
+/// Parse `{"events": [{"t": , "action": }...], "captures": [t...], "style"?, "direction"?, "orientation"?}`.
 func parseConformanceScript(_ script: JSONValue)
-    -> (steps: [ConformanceStep], captures: [Double], style: String, direction: String) {
+    -> (steps: [ConformanceStep], captures: [Double], style: String, direction: String,
+        orientation: String) {
     let steps: [ConformanceStep] = (script["events"]?.arrayValue ?? []).map { e in
         guard let j = e.objectValue, let t = j["t"]?.doubleValue,
               let action = j["action"]?.stringValue else {
@@ -53,7 +54,8 @@ func parseConformanceScript(_ script: JSONValue)
     guard !captures.isEmpty else { fatalError("script needs non-empty \"captures\"") }
     let scriptStyle = script["style"]?.stringValue ?? "light"
     let scriptDirection = script["direction"]?.stringValue ?? "ltr"
-    return (steps, captures, scriptStyle, scriptDirection)
+    let scriptOrientation = script["orientation"]?.stringValue ?? "portrait"
+    return (steps, captures, scriptStyle, scriptDirection, scriptOrientation)
 }
 
 // MARK: - Layout dump
@@ -168,7 +170,7 @@ func rectJSON(_ r: CGRect) -> JSONValue {
 func runConformanceScripted(_ scene: HostScene, app: String,
                             steps: [ConformanceStep], captures: [Double],
                             style: String, direction: String, contentSize: String,
-                            outdir: String) throws -> [String] {
+                            orientation: String, outdir: String) throws -> [String] {
     guard let perform = ConformanceApps.registry[app]?.perform else {
         fatalError("no conformance action table for app \"\(app)\"")
     }
@@ -197,6 +199,7 @@ func runConformanceScripted(_ scene: HostScene, app: String,
                                                   frame: frame, style: style,
                                                   direction: direction,
                                                   contentSize: contentSize,
+                                                  orientation: orientation,
                                                   outdir: outdir))
             nextCapture += 1
         }
@@ -215,13 +218,14 @@ func runConformanceScripted(_ scene: HostScene, app: String,
 @MainActor
 func captureConformance(_ scene: HostScene, app: String, t: Double,
                         frame: Int, style: String, direction: String,
-                        contentSize: String,
+                        contentSize: String, orientation: String,
                         outdir: String) throws -> String {
     scene.window.layoutIfNeeded()
     let bmp = UIRenderer.render(scene.window, scale: scene.scale)
     let suffix = ConformanceClock.captureSuffix(for: t, style: style,
                                                direction: direction,
-                                               contentSize: contentSize)
+                                               contentSize: contentSize,
+                                               orientation: orientation)
     let png = "\(app).\(suffix).png"
     try writeBinaryFile(bmp.pngData(), path: "\(outdir)/\(png)")
 
@@ -233,6 +237,7 @@ func captureConformance(_ scene: HostScene, app: String, t: Double,
         "style": .string(style),
         "direction": .string(direction),
         "contentSize": .string(contentSize),
+        "orientation": .string(orientation),
         "clock": .object([
             "frame": .number(Double(frame)),
             "hz": .number(Double(ConformanceClock.hz)),
