@@ -2,12 +2,16 @@
 // Portable FoundationModels
 //
 // Apple Intelligence model assets and their private inference runtime are not
-// present on Linux.  This framework therefore implements the public data and
-// compiler model faithfully (Generable, GeneratedContent, guides, schemas,
-// prompts, options, responses, and asynchronous streams) while making the
-// service boundary explicit: SystemLanguageModel is unavailable and every
-// inference request fails with GenerationError.assetsUnavailable.  Callers can
-// use their ordinary Apple fallback paths without receiving fabricated text.
+// present on Linux.  This framework implements the public data and compiler
+// model faithfully (Generable, GeneratedContent, guides, schemas, prompts,
+// options, responses, and asynchronous streams).
+//
+// Default SystemLanguageModel availability is `.unavailable(.deviceNotEligible)`
+// and LanguageModelSession inference throws `GenerationError.assetsUnavailable`.
+// Tests may install the documented Linux stand-in via
+// `SystemLanguageModel.installLinuxStandInForTesting()`; the stand-in is a
+// deterministic echo, not Apple Intelligence, and is removed with
+// `removeLinuxStandInForTesting()`.
 //===----------------------------------------------------------------------===//
 
 @_exported import Foundation
@@ -128,10 +132,13 @@ public struct GeneratedContent: Sendable, Equatable, Generable,
 
     public var id: GenerationID?
     public let kind: Kind
+    /// Intermediate stream snapshots set this to `false`; a finished value is `true`.
+    public let isComplete: Bool
 
-    public init(kind: Kind, id: GenerationID? = nil) {
+    public init(kind: Kind, id: GenerationID? = nil, isComplete: Bool = true) {
         self.kind = kind
         self.id = id
+        self.isComplete = isComplete
     }
 
     public init(json: String) throws {
@@ -245,7 +252,6 @@ public struct GeneratedContent: Sendable, Equatable, Generable,
         return try Value(content)
     }
 
-    public var isComplete: Bool { true }
     public var jsonString: String { encodeJSON() }
     public var debugDescription: String { jsonString }
 
@@ -1068,6 +1074,59 @@ public struct PromptBuilder {
 
 // MARK: - Model service boundary
 
+/// Documented Linux stand-in for Apple's on-device Foundation Models runtime.
+///
+/// This is not Apple Intelligence. It never loads weights, never contacts a
+/// model service, and is off by default. Host tests call
+/// `SystemLanguageModel.installLinuxStandInForTesting()` to opt in.
+///
+/// Prompt contract (exact prefixes, otherwise a deterministic echo):
+/// - Echo: `"STANDIN:" + prompt` (then truncated to `maximumResponseTokens`
+///   characters when that option is set).
+/// - Tool call: prompt has prefix `OPENUIKIT_FM_TOOL <toolName> <arguments>`.
+/// - Guardrail: prefix `OPENUIKIT_FM_GUARDRAIL`.
+/// - Refusal: prefix `OPENUIKIT_FM_REFUSAL`.
+/// - Unsupported regex guide: prefix `OPENUIKIT_FM_REGEX_GUIDE`.
+/// - Unsupported locale: prefix `OPENUIKIT_FM_LOCALE`.
+/// - Context window: prompt plus existing transcript descriptions exceeding
+///   8192 characters throws `exceededContextWindowSize`.
+/// - `temperature` must be in `0...2` when provided; `maximumResponseTokens`
+///   must be `>= 1` when provided.
+public enum LinuxLanguageModelStandIn: Sendable {
+    public static let contextWindowCharacters = 8192
+    public static let toolPrefix = "OPENUIKIT_FM_TOOL "
+    public static let guardrailPrefix = "OPENUIKIT_FM_GUARDRAIL"
+    public static let refusalPrefix = "OPENUIKIT_FM_REFUSAL"
+    public static let regexGuidePrefix = "OPENUIKIT_FM_REGEX_GUIDE"
+    public static let localePrefix = "OPENUIKIT_FM_LOCALE"
+    public static let echoPrefix = "STANDIN:"
+
+    private static let lock = NSLock()
+    private static var installedFlag = false
+
+    public static func install() {
+        lock.lock()
+        installedFlag = true
+        lock.unlock()
+    }
+
+    public static func remove() {
+        lock.lock()
+        installedFlag = false
+        lock.unlock()
+    }
+
+    public static var isInstalled: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return installedFlag
+    }
+
+    public static func echo(_ prompt: String) -> String {
+        echoPrefix + prompt
+    }
+}
+
 public struct GenerationOptions: Sendable, Equatable {
     public struct SamplingMode: Sendable, Equatable {
         fileprivate enum Storage: Sendable, Equatable {
@@ -1208,6 +1267,16 @@ public final class SystemLanguageModel: @unchecked Sendable {
 
     public static let `default` = SystemLanguageModel()
 
+    /// Installs the documented Linux echo stand-in. Not an Apple SDK API.
+    public static func installLinuxStandInForTesting() {
+        LinuxLanguageModelStandIn.install()
+    }
+
+    /// Removes the Linux echo stand-in. Not an Apple SDK API.
+    public static func removeLinuxStandInForTesting() {
+        LinuxLanguageModelStandIn.remove()
+    }
+
     public let useCase: UseCase
     public let guardrails: Guardrails
     public let adapter: Adapter?
@@ -1230,12 +1299,26 @@ public final class SystemLanguageModel: @unchecked Sendable {
         self.adapter = adapter
     }
 
-    public var availability: Availability { .unavailable(.deviceNotEligible) }
-    public var isAvailable: Bool { false }
-    public var supportedLanguages: Set<Locale.Language> { [] }
-    public func supportsLocale(_ locale: Locale = .current) -> Bool {
-        _ = locale
+    public var availability: Availability {
+        LinuxLanguageModelStandIn.isInstalled
+            ? .available
+            : .unavailable(.deviceNotEligible)
+    }
+
+    public var isAvailable: Bool {
+        if case .available = availability { return true }
         return false
+    }
+
+    public var supportedLanguages: Set<Locale.Language> {
+        guard isAvailable else { return [] }
+        return [Locale(identifier: "en").language]
+    }
+
+    public func supportsLocale(_ locale: Locale = .current) -> Bool {
+        guard isAvailable else { return false }
+        let code = locale.language.languageCode?.identifier ?? locale.identifier
+        return code == "en" || locale.identifier.lowercased().hasPrefix("en")
     }
 }
 
@@ -1374,9 +1457,88 @@ public final class LanguageModelSession: @unchecked Sendable {
             }
         }
 
+        fileprivate final class Box: @unchecked Sendable {
+            private let lock = NSLock()
+            private var producer: (() async throws -> Response<Content>)?
+            private var snapshots: [Snapshot] = []
+            private var response: Response<Content>?
+            private var failure: Error?
+            private var snapshotIndex = 0
+            private var started = false
+
+            init(producer: (() async throws -> Response<Content>)?, failure: Error?) {
+                self.producer = producer
+                self.failure = failure
+            }
+
+            private func withLock<T>(_ body: () throws -> T) rethrows -> T {
+                lock.lock()
+                defer { lock.unlock() }
+                return try body()
+            }
+
+            func ensureStarted() async throws {
+                let startedAlready: Bool
+                let presetFailure: Error?
+                let work: (() async throws -> Response<Content>)?
+                (startedAlready, presetFailure, work) = withLock {
+                    if started {
+                        return (true, failure, nil)
+                    }
+                    started = true
+                    let work = producer
+                    producer = nil
+                    return (false, failure, work)
+                }
+                if startedAlready {
+                    while true {
+                        let pair: (Response<Content>?, Error?) = withLock { (response, failure) }
+                        if let error = pair.1 { throw error }
+                        if pair.0 != nil { return }
+                        await Task.yield()
+                    }
+                }
+                if let presetFailure {
+                    throw presetFailure
+                }
+                guard let work else { return }
+                do {
+                    let generated = try await work()
+                    let snaps = LanguageModelSession.snapshots(from: generated)
+                    withLock {
+                        self.response = generated
+                        self.snapshots = snaps
+                    }
+                } catch {
+                    withLock { failure = error }
+                    throw error
+                }
+            }
+
+            func nextSnapshot() async throws -> Snapshot? {
+                try await ensureStarted()
+                return try withLock {
+                    if let failure { throw failure }
+                    guard snapshotIndex < snapshots.count else { return nil }
+                    let value = snapshots[snapshotIndex]
+                    snapshotIndex += 1
+                    return value
+                }
+            }
+
+            func collect() async throws -> Response<Content> {
+                try await ensureStarted()
+                return try withLock {
+                    if let failure { throw failure }
+                    if let response { return response }
+                    throw LanguageModelSession.unavailableError
+                }
+            }
+        }
+
         public struct AsyncIterator: AsyncIteratorProtocol {
             public typealias Element = Snapshot
-            fileprivate var exhausted = false
+            fileprivate var box: Box
 
             public mutating func next() async throws -> Snapshot? {
                 try await next(isolation: #isolation)
@@ -1386,17 +1548,26 @@ public final class LanguageModelSession: @unchecked Sendable {
                 isolation actor: isolated (any Actor)? = #isolation
             ) async throws -> Snapshot? {
                 _ = actor
-                guard !exhausted else { return nil }
-                exhausted = true
-                throw LanguageModelSession.unavailableError
+                return try await box.nextSnapshot()
             }
         }
 
-        public init() {}
-        public func makeAsyncIterator() -> AsyncIterator { AsyncIterator() }
+        fileprivate let box: Box
+
+        public init() {
+            box = Box(producer: nil, failure: LanguageModelSession.unavailableError)
+        }
+
+        fileprivate init(producer: @escaping () async throws -> Response<Content>) {
+            box = Box(producer: producer, failure: nil)
+        }
+
+        public func makeAsyncIterator() -> AsyncIterator {
+            AsyncIterator(box: box)
+        }
 
         public func collect() async throws -> Response<Content> {
-            throw LanguageModelSession.unavailableError
+            try await box.collect()
         }
     }
 
@@ -1407,11 +1578,48 @@ public final class LanguageModelSession: @unchecked Sendable {
         ))
     }
 
+    fileprivate static func snapshots<Content>(
+        from response: Response<Content>
+    ) -> [ResponseStream<Content>.Snapshot] where Content: Generable {
+        if let text = response.content as? String, text.count > 1 {
+            let split = max(1, text.count / 2)
+            let prefix = String(text.prefix(split))
+            if let partial = prefix as? Content.PartiallyGenerated {
+                let incomplete = GeneratedContent(
+                    kind: .string(prefix),
+                    isComplete: false
+                )
+                if let complete = response.content as? Content.PartiallyGenerated {
+                    return [
+                        .init(content: partial, rawContent: incomplete),
+                        .init(content: complete, rawContent: response.rawContent),
+                    ]
+                }
+            }
+        }
+        if let partial = response.content as? Content.PartiallyGenerated {
+            return [.init(content: partial, rawContent: response.rawContent)]
+        }
+        return []
+    }
+
     public let model: SystemLanguageModel
     public let instructions: Instructions?
     public let tools: [any Tool]
     public private(set) var transcript: Transcript
-    public var isResponding: Bool { false }
+    private let stateLock = NSLock()
+    private var respondingFlag = false
+    private var promptPrefix: Prompt?
+
+    private func withState<T>(_ body: () throws -> T) rethrows -> T {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        return try body()
+    }
+
+    public var isResponding: Bool {
+        withState { respondingFlag }
+    }
 
     public init(
         model: SystemLanguageModel = .default,
@@ -1458,7 +1666,7 @@ public final class LanguageModelSession: @unchecked Sendable {
     }
 
     public func prewarm(promptPrefix: Prompt? = nil) {
-        _ = promptPrefix
+        withState { self.promptPrefix = promptPrefix }
     }
 
     @discardableResult
@@ -1498,9 +1706,7 @@ public final class LanguageModelSession: @unchecked Sendable {
         to prompt: String,
         options: GenerationOptions = .init()
     ) async throws -> Response<String> {
-        _ = prompt
-        _ = options
-        throw Self.unavailableError
+        try await generateString(prompt: prompt, options: options)
     }
 
     @discardableResult
@@ -1526,11 +1732,12 @@ public final class LanguageModelSession: @unchecked Sendable {
         includeSchemaInPrompt: Bool = true,
         options: GenerationOptions = .init()
     ) async throws -> Response<Content> where Content: Generable {
-        _ = prompt
-        _ = type
-        _ = includeSchemaInPrompt
-        _ = options
-        throw Self.unavailableError
+        try await generateTyped(
+            prompt: prompt,
+            type: type,
+            includeSchemaInPrompt: includeSchemaInPrompt,
+            options: options
+        )
     }
 
     @discardableResult
@@ -1570,11 +1777,12 @@ public final class LanguageModelSession: @unchecked Sendable {
         includeSchemaInPrompt: Bool = true,
         options: GenerationOptions = .init()
     ) async throws -> Response<GeneratedContent> {
-        _ = prompt
-        _ = schema
-        _ = includeSchemaInPrompt
-        _ = options
-        throw Self.unavailableError
+        try await generateSchema(
+            prompt: prompt,
+            schema: schema,
+            includeSchemaInPrompt: includeSchemaInPrompt,
+            options: options
+        )
     }
 
     @discardableResult
@@ -1611,9 +1819,9 @@ public final class LanguageModelSession: @unchecked Sendable {
         to prompt: String,
         options: GenerationOptions = .init()
     ) -> ResponseStream<String> {
-        _ = prompt
-        _ = options
-        return ResponseStream()
+        ResponseStream { [self] in
+            try await self.generateString(prompt: prompt, options: options)
+        }
     }
 
     public func streamResponse(
@@ -1636,11 +1844,14 @@ public final class LanguageModelSession: @unchecked Sendable {
         includeSchemaInPrompt: Bool = true,
         options: GenerationOptions = .init()
     ) -> ResponseStream<Content> where Content: Generable {
-        _ = prompt
-        _ = type
-        _ = includeSchemaInPrompt
-        _ = options
-        return ResponseStream()
+        ResponseStream { [self] in
+            try await self.generateTyped(
+                prompt: prompt,
+                type: type,
+                includeSchemaInPrompt: includeSchemaInPrompt,
+                options: options
+            )
+        }
     }
 
     public func streamResponse<Content>(
@@ -1677,11 +1888,14 @@ public final class LanguageModelSession: @unchecked Sendable {
         includeSchemaInPrompt: Bool = true,
         options: GenerationOptions = .init()
     ) -> ResponseStream<GeneratedContent> {
-        _ = prompt
-        _ = schema
-        _ = includeSchemaInPrompt
-        _ = options
-        return ResponseStream()
+        ResponseStream { [self] in
+            try await self.generateSchema(
+                prompt: prompt,
+                schema: schema,
+                includeSchemaInPrompt: includeSchemaInPrompt,
+                options: options
+            )
+        }
     }
 
     public func streamResponse(
@@ -1710,6 +1924,318 @@ public final class LanguageModelSession: @unchecked Sendable {
             includeSchemaInPrompt: includeSchemaInPrompt,
             options: options
         )
+    }
+
+    private func generateString(
+        prompt: String,
+        options: GenerationOptions
+    ) async throws -> Response<String> {
+        let raw = try await runStandIn(prompt: prompt, options: options, schema: nil)
+        let content = raw.asString
+        let entries = currentTranscriptEntries()
+        return Response(
+            content: content,
+            rawContent: GeneratedContent(kind: .string(content)),
+            transcriptEntries: entries
+        )
+    }
+
+    private func generateTyped<Content>(
+        prompt: String,
+        type: Content.Type,
+        includeSchemaInPrompt: Bool,
+        options: GenerationOptions
+    ) async throws -> Response<Content> where Content: Generable {
+        _ = type
+        _ = includeSchemaInPrompt
+        let raw = try await runStandIn(
+            prompt: prompt,
+            options: options,
+            schema: Content.generationSchema
+        )
+        let decoded: Content
+        do {
+            decoded = try decodeGenerable(Content.self, prompt: prompt, echo: raw.asString)
+        } catch {
+            throw GenerationError.decodingFailure(
+                .init(debugDescription: "stand-in could not decode \(Content.self)")
+            )
+        }
+        let entries = currentTranscriptEntries()
+        return Response(
+            content: decoded,
+            rawContent: decoded.generatedContent,
+            transcriptEntries: entries
+        )
+    }
+
+    private func generateSchema(
+        prompt: String,
+        schema: GenerationSchema,
+        includeSchemaInPrompt: Bool,
+        options: GenerationOptions
+    ) async throws -> Response<GeneratedContent> {
+        _ = includeSchemaInPrompt
+        let raw = try await runStandIn(prompt: prompt, options: options, schema: schema)
+        let content: GeneratedContent
+        if let parsed = try? GeneratedContent(json: prompt),
+           case .structure = parsed.kind {
+            content = parsed
+        } else if let parsed = try? GeneratedContent(json: raw.asString) {
+            content = parsed
+        } else {
+            content = GeneratedContent(kind: .string(raw.asString))
+        }
+        let entries = currentTranscriptEntries()
+        return Response(
+            content: content,
+            rawContent: content,
+            transcriptEntries: entries
+        )
+    }
+
+    private struct StandInRaw {
+        var asString: String
+    }
+
+    private func runStandIn(
+        prompt: String,
+        options: GenerationOptions,
+        schema: GenerationSchema?
+    ) async throws -> StandInRaw {
+        _ = schema
+        try beginResponding()
+        defer { endResponding() }
+
+        guard LinuxLanguageModelStandIn.isInstalled else {
+            throw Self.unavailableError
+        }
+
+        try validateOptions(options)
+
+        let prefix = withState { () -> String? in
+            let value = promptPrefix?.content
+            promptPrefix = nil
+            return value
+        }
+        var effectivePrompt = prompt
+        if let prefix, !prefix.isEmpty {
+            effectivePrompt = prefix + prompt
+        }
+
+        seedInstructionsIfNeeded()
+        try enforceContextWindow(prompt: effectivePrompt)
+        try enforceSentinels(effectivePrompt)
+
+        appendTranscript(
+            .prompt(
+                Transcript.Prompt(
+                    segments: [.text(.init(content: effectivePrompt))],
+                    options: options
+                )
+            )
+        )
+
+        if effectivePrompt.hasPrefix(LinuxLanguageModelStandIn.toolPrefix) {
+            try await invokeDocumentedTool(prompt: effectivePrompt)
+        }
+
+        var echo = LinuxLanguageModelStandIn.echo(effectivePrompt)
+        if let limit = options.maximumResponseTokens {
+            echo = String(echo.prefix(limit))
+        }
+
+        appendTranscript(
+            .response(
+                Transcript.Response(
+                    assetIDs: [],
+                    segments: [.text(.init(content: echo))]
+                )
+            )
+        )
+        return StandInRaw(asString: echo)
+    }
+
+    private func beginResponding() throws {
+        try withState {
+            if respondingFlag {
+                throw GenerationError.concurrentRequests(
+                    .init(debugDescription: "LanguageModelSession already has an in-flight request.")
+                )
+            }
+            respondingFlag = true
+        }
+    }
+
+    private func endResponding() {
+        withState { respondingFlag = false }
+    }
+
+    private func validateOptions(_ options: GenerationOptions) throws {
+        if let temperature = options.temperature, !(0...2).contains(temperature) {
+            throw GenerationError.unsupportedGuide(
+                .init(debugDescription: "temperature must be in 0...2")
+            )
+        }
+        if let maximum = options.maximumResponseTokens, maximum < 1 {
+            throw GenerationError.unsupportedGuide(
+                .init(debugDescription: "maximumResponseTokens must be >= 1")
+            )
+        }
+    }
+
+    private func seedInstructionsIfNeeded() {
+        let existing: [Transcript.Entry]
+        let instructionsText: String?
+        let toolDefs: [Transcript.ToolDefinition]
+        (existing, instructionsText, toolDefs) = withState {
+            (
+                transcript.entries,
+                instructions?.content,
+                tools.map { Transcript.ToolDefinition(tool: $0) }
+            )
+        }
+        let hasInstructions = existing.contains { entry in
+            if case .instructions = entry { return true }
+            return false
+        }
+        if !hasInstructions, let instructionsText, !instructionsText.isEmpty {
+            appendTranscript(
+                .instructions(
+                    Transcript.Instructions(
+                        segments: [.text(.init(content: instructionsText))],
+                        toolDefinitions: toolDefs
+                    )
+                )
+            )
+        }
+    }
+
+    private func enforceContextWindow(prompt: String) throws {
+        let used = withState {
+            transcript.entries.reduce(0) { $0 + $1.description.count } + prompt.count
+        }
+        if used > LinuxLanguageModelStandIn.contextWindowCharacters {
+            throw GenerationError.exceededContextWindowSize(
+                .init(debugDescription: "stand-in context window is 8192 characters")
+            )
+        }
+    }
+
+    private func enforceSentinels(_ prompt: String) throws {
+        if prompt.hasPrefix(LinuxLanguageModelStandIn.guardrailPrefix) {
+            throw GenerationError.guardrailViolation(
+                .init(debugDescription: "stand-in guardrail sentinel")
+            )
+        }
+        if prompt.hasPrefix(LinuxLanguageModelStandIn.refusalPrefix) {
+            throw GenerationError.refusal(
+                .init(transcriptEntries: currentTranscriptEntriesArray()),
+                .init(debugDescription: "stand-in refusal sentinel")
+            )
+        }
+        if prompt.hasPrefix(LinuxLanguageModelStandIn.regexGuidePrefix) {
+            throw GenerationError.unsupportedGuide(
+                .init(debugDescription: "Regex generation guides are fail-closed on Linux")
+            )
+        }
+        if prompt.hasPrefix(LinuxLanguageModelStandIn.localePrefix) {
+            throw GenerationError.unsupportedLanguageOrLocale(
+                .init(debugDescription: "stand-in locale sentinel")
+            )
+        }
+    }
+
+    private func invokeDocumentedTool(prompt: String) async throws {
+        let rest = String(prompt.dropFirst(LinuxLanguageModelStandIn.toolPrefix.count))
+        let parts = rest.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: false)
+        let toolName = parts.first.map(String.init) ?? ""
+        let argumentText = parts.count > 1 ? String(parts[1]) : ""
+        let tools = withState { self.tools }
+        guard let tool = tools.first(where: { $0.name == toolName }) else {
+            throw GenerationError.decodingFailure(
+                .init(debugDescription: "no session tool named \(toolName)")
+            )
+        }
+        let argumentContent: GeneratedContent
+        if let parsed = try? GeneratedContent(json: argumentText) {
+            argumentContent = parsed
+        } else {
+            argumentContent = GeneratedContent(kind: .string(argumentText))
+        }
+        let call = Transcript.ToolCall(
+            id: UUID().uuidString,
+            toolName: toolName,
+            arguments: argumentContent
+        )
+        appendTranscript(.toolCalls(Transcript.ToolCalls([call])))
+        let outputText: String
+        do {
+            outputText = try await invokeOpenedTool(tool, argumentsText: argumentText)
+        } catch let error as ToolCallError {
+            throw error
+        } catch {
+            throw ToolCallError(tool: tool, underlyingError: error)
+        }
+        appendTranscript(
+            .toolOutput(
+                Transcript.ToolOutput(
+                    id: UUID().uuidString,
+                    toolName: toolName,
+                    segments: [.text(.init(content: outputText))]
+                )
+            )
+        )
+    }
+
+    private func invokeOpenedTool(_ tool: any Tool, argumentsText: String) async throws -> String {
+        try await invokeConcreteTool(tool, argumentsText: argumentsText)
+    }
+
+    private func invokeConcreteTool<T: Tool>(
+        _ tool: T,
+        argumentsText: String
+    ) async throws -> String {
+        let content: GeneratedContent
+        if let parsed = try? GeneratedContent(json: argumentsText) {
+            content = parsed
+        } else {
+            content = GeneratedContent(kind: .string(argumentsText))
+        }
+        let arguments = try T.Arguments(content)
+        let output = try await tool.call(arguments: arguments)
+        return output.promptRepresentation.content
+    }
+
+    private func decodeGenerable<Content: Generable>(
+        _ type: Content.Type,
+        prompt: String,
+        echo: String
+    ) throws -> Content {
+        if type == String.self, let value = echo as? Content {
+            return value
+        }
+        if type == GeneratedContent.self,
+           let value = (try? GeneratedContent(json: prompt)) as? Content {
+            return value
+        }
+        if let parsed = try? GeneratedContent(json: prompt),
+           let value = try? Content(parsed) {
+            return value
+        }
+        return try Content(GeneratedContent(kind: .string(echo)))
+    }
+
+    private func appendTranscript(_ entry: Transcript.Entry) {
+        withState { transcript.entries.append(entry) }
+    }
+
+    private func currentTranscriptEntries() -> ArraySlice<Transcript.Entry> {
+        withState { transcript.entries[...] }
+    }
+
+    private func currentTranscriptEntriesArray() -> [Transcript.Entry] {
+        withState { transcript.entries }
     }
 }
 
@@ -2012,20 +2538,127 @@ private struct CodableEntry: Codable {
     var kind: String
     var id: String
     var text: String
+    var toolName: String?
+    var argumentsJSON: String?
+    var assetIDs: [String]
+    var calls: [CodableToolCall]
+    var toolDefinitions: [CodableToolDefinition]
+    var temperature: Double?
+    var maximumResponseTokens: Int?
+
+    struct CodableToolCall: Codable {
+        var id: String
+        var toolName: String
+        var argumentsJSON: String
+    }
+
+    struct CodableToolDefinition: Codable {
+        var name: String
+        var description: String
+        var schemaTypeName: String
+    }
 
     init(entry: Transcript.Entry) {
-        kind = String(describing: entry)
         id = entry.id
         text = entry.description
+        toolName = nil
+        argumentsJSON = nil
+        assetIDs = []
+        calls = []
+        toolDefinitions = []
+        temperature = nil
+        maximumResponseTokens = nil
+        switch entry {
+        case .instructions(let value):
+            kind = "instructions"
+            text = value.segments.map(\.description).joined(separator: "\n")
+            toolDefinitions = value.toolDefinitions.map {
+                CodableToolDefinition(
+                    name: $0.name,
+                    description: $0.description,
+                    schemaTypeName: $0.parameters.typeName
+                )
+            }
+        case .prompt(let value):
+            kind = "prompt"
+            text = value.segments.map(\.description).joined(separator: "\n")
+            temperature = value.options.temperature
+            maximumResponseTokens = value.options.maximumResponseTokens
+        case .response(let value):
+            kind = "response"
+            text = value.segments.map(\.description).joined(separator: "\n")
+            assetIDs = value.assetIDs
+        case .toolCalls(let value):
+            kind = "toolCalls"
+            calls = value.calls.map {
+                CodableToolCall(
+                    id: $0.id,
+                    toolName: $0.toolName,
+                    argumentsJSON: $0.arguments.jsonString
+                )
+            }
+        case .toolOutput(let value):
+            kind = "toolOutput"
+            toolName = value.toolName
+            text = value.segments.map(\.description).joined(separator: "\n")
+        }
     }
 
     var entry: Transcript.Entry {
-        .prompt(
-            Transcript.Prompt(
-                id: id,
-                segments: [.text(.init(id: id, content: text))]
+        let textSegment = Transcript.Segment.text(.init(id: id, content: text))
+        switch kind {
+        case "instructions":
+            return .instructions(
+                Transcript.Instructions(
+                    id: id,
+                    segments: [textSegment],
+                    toolDefinitions: toolDefinitions.map {
+                        Transcript.ToolDefinition(
+                            name: $0.name,
+                            description: $0.description,
+                            parameters: GenerationSchema(
+                                type: String.self,
+                                description: $0.schemaTypeName,
+                                properties: []
+                            )
+                        )
+                    }
+                )
             )
-        )
+        case "response":
+            return .response(
+                Transcript.Response(id: id, assetIDs: assetIDs, segments: [textSegment])
+            )
+        case "toolCalls":
+            let restored = calls.map { call in
+                Transcript.ToolCall(
+                    id: call.id,
+                    toolName: call.toolName,
+                    arguments: (try? GeneratedContent(json: call.argumentsJSON))
+                        ?? GeneratedContent(kind: .string(call.argumentsJSON))
+                )
+            }
+            return .toolCalls(Transcript.ToolCalls(id: id, restored))
+        case "toolOutput":
+            return .toolOutput(
+                Transcript.ToolOutput(
+                    id: id,
+                    toolName: toolName ?? "",
+                    segments: [textSegment]
+                )
+            )
+        default:
+            return .prompt(
+                Transcript.Prompt(
+                    id: id,
+                    segments: [textSegment],
+                    options: GenerationOptions(
+                        temperature: temperature,
+                        maximumResponseTokens: maximumResponseTokens
+                    )
+                )
+            )
+        }
     }
 }
 

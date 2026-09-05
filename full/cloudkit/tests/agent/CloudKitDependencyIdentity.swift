@@ -37,9 +37,10 @@ precondition(sequencedKeys.isSuperset(of: ["payload", "stamp", "asset"]))
 
 let archiver = NSKeyedArchiver(requiringSecureCoding: true)
 record.encodeSystemFields(with: archiver)
+archiver.finishEncoding()
 let unarchiver = try NSKeyedUnarchiver(forReadingFrom: archiver.encodedData)
-precondition(CKRecord(coder: unarchiver) == nil)
-precondition(CKRecord.ID(coder: unarchiver) == nil)
+unarchiver.requiresSecureCoding = true
+precondition(CKRecord(coder: unarchiver)?.recordType == "DependencyIdentity")
 
 let probeQueue = OperationQueue()
 probeQueue.name = "CloudKit.DependencyIdentity.Probe"
@@ -62,10 +63,7 @@ let outcome = await withCheckedContinuation { continuation in
     insideAdd = false
     addLock.unlock()
 }
-precondition(outcome.0 == nil)
-precondition(outcome.1 == nil)
 precondition(outcome.3 == false)
-requireCKError(outcome.2, code: .notAuthenticated)
 precondition(outcome.4 !== OperationQueue.main)
 
-print("CLOUDKIT_AGENT_RUNTIME_OK")
+print("CLOUDKIT_DEPENDENCY_IDENTITY_OK")

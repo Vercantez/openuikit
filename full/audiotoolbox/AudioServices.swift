@@ -15,17 +15,16 @@ private struct ATSoundCompletion {
 
 private let soundLock = NSLock()
 private var completions: [SystemSoundID: ATSoundCompletion] = [:]
-private var completionFireCount: [SystemSoundID: UInt64] = [:]
-private var reentrancyGuard = false
+private var nextSoundID: SystemSoundID = 0x1000
 
 @_cdecl("AudioServicesPlaySystemSound")
 public func AudioServicesPlaySystemSound(_ inSystemSoundID: SystemSoundID) {
-    _ = inSystemSoundID
+    atDeliverSystemSoundCompletion(inSystemSoundID)
 }
 
 @_cdecl("AudioServicesPlayAlertSound")
 public func AudioServicesPlayAlertSound(_ inSystemSoundID: SystemSoundID) {
-    _ = inSystemSoundID
+    atDeliverSystemSoundCompletion(inSystemSoundID)
 }
 
 public func AudioServicesPlaySystemSoundWithCompletion(
@@ -33,7 +32,7 @@ public func AudioServicesPlaySystemSoundWithCompletion(
     _ inCompletionBlock: (() -> Void)?
 ) {
     AudioServicesPlaySystemSound(inSystemSoundID)
-    _ = inCompletionBlock
+    inCompletionBlock?()
 }
 
 public func AudioServicesPlayAlertSoundWithCompletion(
@@ -41,7 +40,15 @@ public func AudioServicesPlayAlertSoundWithCompletion(
     _ inCompletionBlock: (() -> Void)?
 ) {
     AudioServicesPlayAlertSound(inSystemSoundID)
-    _ = inCompletionBlock
+    inCompletionBlock?()
+}
+
+private func atDeliverSystemSoundCompletion(_ id: SystemSoundID) {
+    var completion: ATSoundCompletion?
+    atWithLock(soundLock) {
+        completion = completions[id]
+    }
+    completion?.proc(id, completion?.clientData)
 }
 
 #if canImport(CoreFoundation)
@@ -62,7 +69,19 @@ public func AudioServicesCreateSystemSoundID(
     if openStatus == kAudioFileFileNotFoundError {
         return kAudioServicesSystemSoundUnspecifiedError
     }
-    return kAudioServicesUnsupportedPropertyError
+    if openStatus != 0 {
+        return kAudioServicesSystemSoundUnspecifiedError
+    }
+    if let dummy {
+        _ = AudioFileClose(dummy)
+    }
+    let assigned: SystemSoundID = atWithLock(soundLock) {
+        let value = nextSoundID
+        nextSoundID += 1
+        return value
+    }
+    outSystemSoundID?.pointee = assigned
+    return kAudioServicesNoError
 }
 #endif
 
@@ -86,9 +105,6 @@ public func AudioServicesAddSystemSoundCompletion(
     _ = inRunLoopMode
     guard let inCompletionRoutine else { return atParamError }
     return atWithLock(soundLock) {
-        if reentrancyGuard {
-            return kAudioServicesSystemSoundUnspecifiedError
-        }
         completions[inSystemSoundID] = ATSoundCompletion(
             proc: inCompletionRoutine,
             clientData: inClientData

@@ -9,8 +9,13 @@ open class EKRecurrenceDayOfWeek: NSObject, NSCopying, NSSecureCoding {
 
     public init(dayOfTheWeek: EKWeekday, weekNumber: Int) {
         self.dayOfTheWeek = dayOfTheWeek
-        self.weekNumber = weekNumber
+        // RFC 5545 BYDAY ordinals are -53...53 (0 = every matching weekday).
+        self.weekNumber = Self.clampedWeekNumber(weekNumber)
         super.init()
+    }
+
+    static func clampedWeekNumber(_ value: Int) -> Int {
+        min(53, max(-53, value))
     }
 
     public convenience init(_ dayOfTheWeek: EKWeekday) {
@@ -61,7 +66,7 @@ open class EKRecurrenceEnd: NSObject, NSCopying, NSSecureCoding {
     }
 
     public convenience init(occurrenceCount: Int) {
-        self.init(storedEndDate: nil, storedOccurrenceCount: occurrenceCount)
+        self.init(storedEndDate: nil, storedOccurrenceCount: max(0, occurrenceCount))
     }
 
     public required init?(coder: NSCoder) {
@@ -204,5 +209,53 @@ open class EKRecurrenceRule: EKObject, NSCopying {
         )
         copy._firstDayOfTheWeek = _firstDayOfTheWeek
         return copy
+    }
+
+    func applyFirstDayOfTheWeek(_ value: Int) {
+        _firstDayOfTheWeek = value
+    }
+
+    func persistRecord() -> EKRecurrenceRecord {
+        EKRecurrenceRecord(
+            frequency: frequency.rawValue,
+            interval: interval,
+            daysOfTheWeek: (daysOfTheWeek ?? []).map { [$0.dayOfTheWeek.rawValue, $0.weekNumber] },
+            daysOfTheMonth: (daysOfTheMonth ?? []).map(\.intValue),
+            monthsOfTheYear: (monthsOfTheYear ?? []).map(\.intValue),
+            weeksOfTheYear: (weeksOfTheYear ?? []).map(\.intValue),
+            daysOfTheYear: (daysOfTheYear ?? []).map(\.intValue),
+            setPositions: (setPositions ?? []).map(\.intValue),
+            endDate: recurrenceEnd?.endDate?.timeIntervalSince1970,
+            occurrenceCount: recurrenceEnd?.occurrenceCount ?? 0,
+            firstDayOfTheWeek: firstDayOfTheWeek
+        )
+    }
+
+    static func fromRecord(_ record: EKRecurrenceRecord) -> EKRecurrenceRule {
+        let days: [EKRecurrenceDayOfWeek]? = record.daysOfTheWeek.isEmpty ? nil : record.daysOfTheWeek.compactMap { pair in
+            guard pair.count >= 2, let weekday = EKWeekday(rawValue: pair[0]) else { return nil }
+            return EKRecurrenceDayOfWeek(dayOfTheWeek: weekday, weekNumber: pair[1])
+        }
+        let end: EKRecurrenceEnd?
+        if let endDate = record.endDate {
+            end = EKRecurrenceEnd(end: Date(timeIntervalSince1970: endDate))
+        } else if record.occurrenceCount > 0 {
+            end = EKRecurrenceEnd(occurrenceCount: record.occurrenceCount)
+        } else {
+            end = nil
+        }
+        let rule = EKRecurrenceRule(
+            recurrenceWith: EKRecurrenceFrequency(rawValue: record.frequency) ?? .daily,
+            interval: record.interval,
+            daysOfTheWeek: days,
+            daysOfTheMonth: record.daysOfTheMonth.isEmpty ? nil : record.daysOfTheMonth.map { NSNumber(value: $0) },
+            monthsOfTheYear: record.monthsOfTheYear.isEmpty ? nil : record.monthsOfTheYear.map { NSNumber(value: $0) },
+            weeksOfTheYear: record.weeksOfTheYear.isEmpty ? nil : record.weeksOfTheYear.map { NSNumber(value: $0) },
+            daysOfTheYear: record.daysOfTheYear.isEmpty ? nil : record.daysOfTheYear.map { NSNumber(value: $0) },
+            setPositions: record.setPositions.isEmpty ? nil : record.setPositions.map { NSNumber(value: $0) },
+            end: end
+        )
+        rule.applyFirstDayOfTheWeek(record.firstDayOfTheWeek)
+        return rule
     }
 }

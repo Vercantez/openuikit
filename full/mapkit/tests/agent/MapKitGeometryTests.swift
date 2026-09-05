@@ -71,9 +71,18 @@ func testMapRectAlgebra() {
 
 func testMapStringConversions() {
     let point = MKMapPoint(x: 1, y: 2)
-    precondition(MKStringFromMapPoint(point) == "{1.0, 2.0}" || MKStringFromMapPoint(point).contains("1"))
-    precondition(MKStringFromMapSize(MKMapSize(width: 3, height: 4)).contains("3"))
-    precondition(MKStringFromMapRect(MKMapRect(x: 1, y: 2, width: 3, height: 4)).contains("1"))
+    precondition(MKStringFromMapPoint(point) == "{1.0, 2.0}" || mk_testContains(MKStringFromMapPoint(point), "1"))
+    precondition(mk_testContains(MKStringFromMapSize(MKMapSize(width: 3, height: 4)), "3"))
+    precondition(mk_testContains(MKStringFromMapRect(MKMapRect(x: 1, y: 2, width: 3, height: 4)), "1"))
+}
+
+func mk_testContains(_ haystack: String, _ needle: String) -> Bool {
+    var index = haystack.startIndex
+    while index < haystack.endIndex {
+        if haystack[index...].hasPrefix(needle) { return true }
+        index = haystack.index(after: index)
+    }
+    return false
 }
 
 func testMetersPerMapPoint() {
@@ -104,8 +113,10 @@ func testCoordinateSpanAndTilePath() {
 }
 
 func testRoadWidth() {
-    let width = MKRoadWidthAtZoomScale(1)
-    precondition(width == 2)
-    precondition(MKRoadWidthAtZoomScale(0) == 0)
+    // Darwin macOS 26.1: MKRoadWidthAtZoomScale(1) == 21, (0.5) == 32, (0) == inf.
+    precondition(MKRoadWidthAtZoomScale(1) == 21)
+    precondition(MKRoadWidthAtZoomScale(2) == 10.5)
+    precondition(MKRoadWidthAtZoomScale(0.5) == 32)
+    precondition(MKRoadWidthAtZoomScale(0).isInfinite)
     let _: MKZoomScale = 1
 }

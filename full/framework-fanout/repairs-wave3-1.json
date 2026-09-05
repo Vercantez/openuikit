@@ -1,0 +1,79 @@
+{
+  "schema": "openuikit.cursor-framework-repair-manifest.v1",
+  "campaign": {
+    "id": "ios26.1-fwdepth-r3-repair-1",
+    "maxActive": 16,
+    "maxRuns": 8
+  },
+  "model": {
+    "id": "grok-4.6",
+    "effort": "high",
+    "fast": false
+  },
+  "repairs": [
+    {
+      "module": "CarPlay",
+      "slug": "carplay",
+      "agentId": "bc-11212748-23b8-581d-a533-8fc8fd2de32c",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/88",
+      "expectedPriorHead": "448e66face0b12b76ec8291b8a51285a2406c70d",
+      "prompt": "Continue repairing CarPlay in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at 448e66face0b:\nFW_MERGE REFUSED: 988 implemented rows have evidence not of the form test:full/<slug>/tests/agent/<File>.swift#testName (e.g. tests/agent/CarPlayRuntime.swift)\n\nFix the coverage ledger, not just the code: every `implemented` row in full/carplay/coverage.tsv must cite evidence of the exact form `test:full/carplay/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/carplay/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/carplay/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    },
+    {
+      "module": "CFNetwork",
+      "slug": "cfnetwork",
+      "agentId": "bc-15d4f6c1-ddb9-5207-8633-0c61f248b3a8",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/84",
+      "expectedPriorHead": "f7fb4b02fe1378579b4198d0d020c5a479997acc",
+      "prompt": "Continue repairing CFNetwork in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at f7fb4b02fe13:\nFW_MERGE REFUSED: 472 implemented rows have evidence not of the form test:full/<slug>/tests/agent/<File>.swift#testName (e.g. tests/agent/CFNetworkRuntime.swift)\n\nFix the coverage ledger, not just the code: every `implemented` row in full/cfnetwork/coverage.tsv must cite evidence of the exact form `test:full/cfnetwork/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/cfnetwork/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/cfnetwork/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    },
+    {
+      "module": "Contacts",
+      "slug": "contacts",
+      "agentId": "bc-d96fdcb1-2395-50dd-8f40-ebf35d897593",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/86",
+      "expectedPriorHead": "fd739cddb32fce19d79f70f814d79067bb5736c5",
+      "prompt": "Continue repairing Contacts in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at fd739cddb32f:\nFW_MERGE REFUSED: 712 implemented rows have evidence not of the form test:full/<slug>/tests/agent/<File>.swift#testName (e.g. full/contacts/CNContact.swift;full/contacts/tests/agent/ContactsRuntime.swift)\n\nFix the coverage ledger, not just the code: every `implemented` row in full/contacts/coverage.tsv must cite evidence of the exact form `test:full/contacts/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/contacts/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/contacts/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    },
+    {
+      "module": "ContactsUI",
+      "slug": "contactsui",
+      "agentId": "bc-8d2149f8-76fa-58bb-bef4-4b150927ee12",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/87",
+      "expectedPriorHead": "1a44131136e4f3c45836661f4e99e5d0f0f1c736",
+      "prompt": "Continue repairing ContactsUI in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at 1a44131136e4:\nFW_MERGE REFUSED: 592 implemented rows have evidence not of the form test:full/<slug>/tests/agent/<File>.swift#testName (e.g. ContactsUILookalikes.swift;ContactsUIOverlays.swift;ContactsUIRuntime.swift)\n\nFix the coverage ledger, not just the code: every `implemented` row in full/contactsui/coverage.tsv must cite evidence of the exact form `test:full/contactsui/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/contactsui/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/contactsui/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    },
+    {
+      "module": "CoreBluetooth",
+      "slug": "corebluetooth",
+      "agentId": "bc-1f592f1b-8e73-5f4e-b996-e65953f46ea3",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/83",
+      "expectedPriorHead": "841090f48976a8bf2b7ba2020e1043f4744a10ab",
+      "prompt": "Continue repairing CoreBluetooth in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at 841090f48976:\nFW_MERGE REFUSED: 460 implemented rows have evidence not of the form test:full/<slug>/tests/agent/<File>.swift#testName (e.g. tests/agent/CoreBluetoothRuntime.swift)\n\nFix the coverage ledger, not just the code: every `implemented` row in full/corebluetooth/coverage.tsv must cite evidence of the exact form `test:full/corebluetooth/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/corebluetooth/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/corebluetooth/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    },
+    {
+      "module": "ActivityKit",
+      "slug": "activitykit",
+      "agentId": "bc-bdc72171-5985-5d2c-b81d-52b84135f4c7",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/92",
+      "expectedPriorHead": "fe1738b572ddc8677dbb2c0d9ae9d14e26a9787e",
+      "prompt": "Continue repairing ActivityKit in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at fe1738b572dd:\nFW_MERGE REFUSED: 298 implemented rows have evidence not of the form test:full/<slug>/tests/agent/<File>.swift#testName (e.g. tests/agent/ActivityKitRuntime.swift)\n\nFix the coverage ledger, not just the code: every `implemented` row in full/activitykit/coverage.tsv must cite evidence of the exact form `test:full/activitykit/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/activitykit/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/activitykit/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    },
+    {
+      "module": "ARKit",
+      "slug": "arkit",
+      "agentId": "bc-ecbbace9-f5cf-53e5-9120-95df18f727ba",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/91",
+      "expectedPriorHead": "814bb21e0d947a1f5b01ba972e09b6f5d32b0fda",
+      "prompt": "Continue repairing ARKit in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at 814bb21e0d94:\nFW_MERGE REFUSED: 874 implemented rows have evidence not of the form test:full/<slug>/tests/agent/<File>.swift#testName (e.g. tests/agent/ARKitRuntime.swift)\n\nFix the coverage ledger, not just the code: every `implemented` row in full/arkit/coverage.tsv must cite evidence of the exact form `test:full/arkit/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/arkit/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/arkit/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    },
+    {
+      "module": "AVFAudio",
+      "slug": "avfaudio",
+      "agentId": "bc-2fa99e17-1788-547d-b568-d2e2662515cd",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/93",
+      "expectedPriorHead": "c620a7c9d21ab34deaf88a85ea3478c561b80eed",
+      "prompt": "Continue repairing AVFAudio in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at c620a7c9d21a:\nFW_MERGE REFUSED: 1558 implemented rows have evidence not of the form test:full/<slug>/tests/agent/<File>.swift#testName (e.g. tests/agent/AVFAudioRuntime.swift)\n\nFix the coverage ledger, not just the code: every `implemented` row in full/avfaudio/coverage.tsv must cite evidence of the exact form `test:full/avfaudio/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/avfaudio/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/avfaudio/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    }
+  ]
+}

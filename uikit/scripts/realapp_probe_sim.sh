@@ -100,6 +100,10 @@ for f in Sources/RealAppProbe/Vendored/Focus/*.swift; do
         -e 's/^    func aboutClicked() {$/    @objc private func aboutClicked() {/' \
         -e 's/^    func toggleSwitched(_ sender: UISwitch) {$/    @objc private func toggleSwitched(_ sender: UISwitch) {/' \
         "$f" > "$TMPSRC/Vendored/Focus/$(basename "$f")"
+  elif [[ $(basename "$f") == HomeViewController.swift ]]; then
+    sed -e 's/selector: Selector.named("rotated")/selector: #selector(rotated)/' \
+        -e 's/^    func rotated() {$/    @objc private func rotated() {/' \
+        "$f" > "$TMPSRC/Vendored/Focus/$(basename "$f")"
   else
     cp "$f" "$TMPSRC/Vendored/Focus/$(basename "$f")"
   fi

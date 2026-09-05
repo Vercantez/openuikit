@@ -1,0 +1,47 @@
+{
+  "campaign": {
+    "activeBuildId": "bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87",
+    "environmentMarker": "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+    "id": "ios26.1-fwdepth-r4",
+    "manifestSha256": "f0da7fc247a67f976dcfb2134b3c5716786ca623081d77966f5f9dc760b44d02",
+    "startingSha": "5cc42895aa4277d0ed2103050b64be03fe813c3e"
+  },
+  "createAttemptTimestamps": [
+    "2026-09-05T20:23:01Z"
+  ],
+  "createdAt": "2026-09-05T20:17:58Z",
+  "frameworks": {
+    "coreimage": {
+      "agentId": "bc-ca683c2d-007f-5785-9f1b-0eb55c54a85c",
+      "agentName": "Port CoreImage to Linux",
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-ca683c2d-007f-5785-9f1b-0eb55c54a85c",
+      "branches": [
+        {
+          "branch": "cursor/port-coreimage-to-linux-ea3f",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "lane": "medium-full",
+      "launchAttemptedAt": "2026-09-05T20:23:01Z",
+      "launchStatus": "CREATED",
+      "module": "CoreImage",
+      "priority": 100,
+      "runCreatedAt": "2026-09-05T20:23:03.684Z",
+      "runId": "run-9f9f61aa-0e7e-4277-b6b8-498565e8d981",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-05T20:23:04.417Z"
+    }
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repository": {
+    "startingRef": "experiment/cursor-framework-fanout-wave3-seed-20260912",
+    "url": "https://github.com/Vercantez/openuikit-linux-platform"
+  },
+  "schema": "openuikit.cursor-framework-campaign-state.v1",
+  "updatedAt": "2026-09-05T20:23:05Z"
+}

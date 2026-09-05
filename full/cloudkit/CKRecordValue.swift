@@ -96,4 +96,44 @@ final class CKRecordValueStore: NSObject, CKRecordKeyValueSetting, @unchecked Se
             return (key, value)
         }
     }
+
+    func copyStore() -> CKRecordValueStore {
+        let copy = CKRecordValueStore()
+        copy.values = values
+        copy.changed = changed
+        return copy
+    }
+
+    func replaceAll(from other: CKRecordValueStore, keys: [String]?) {
+        values.removeAll()
+        changed.removeAll()
+        for key in other.allKeys() {
+            if let keys {
+                var allowed = false
+                for candidate in keys where candidate == key {
+                    allowed = true
+                    break
+                }
+                if !allowed { continue }
+            }
+            if let object = other.object(forKey: key) {
+                values[key] = object
+            }
+        }
+    }
+
+    func mergeChanged(from other: CKRecordValueStore) {
+        for key in other.changedKeys() {
+            setObject(other.object(forKey: key), forKey: key)
+        }
+    }
+
+    func archiveValues() -> [String: any CKRecordValueProtocol] {
+        values
+    }
+
+    func restoreValues(_ restored: [String: any CKRecordValueProtocol]) {
+        values = restored
+        changed.removeAll()
+    }
 }

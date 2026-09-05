@@ -58,8 +58,9 @@ fi
 if [ -n "${INNER_IN_PLACE:-}" ]; then
   cd "$SRC"
 else
-  mkdir -p /work && cp -r "$SRC"/. /work/
-  cd /work && rm -rf .build
+  mkdir -p /work
+  tar -C "$SRC" --exclude=.build --exclude=Package.resolved -cf - . | tar -C /work -xf -
+  cd /work
 fi
 swift --version
 
@@ -69,26 +70,21 @@ swift build -c release --product openhost
 echo "    built clean -- the vendored app source compiles off Darwin"
 
 echo "==> unit tests (Linux 6.2.4 XCTest bundle)"
-# `swift test` blocks in poll() with no TTY (docs/PORTABILITY.md). One
-# process with every class also hangs (linux-env: 3/3 unfiltered launches,
-# and a 14-suite comma-list hung at GlyphInkTableTests after 40 s). Two
-# smaller groups finish: the selector set from linux_selector_verify, plus
-# the ink / CA / registry / stub set this branch needs. The trial's miss
-# was compile; `swift build --build-tests` is the gate.
+# `swift test` still blocks in poll() with no TTY (docs/PORTABILITY.md) —
+# that is the SPM harness, not the bundle. The bundle itself used to hang
+# inside awaitUsingExpectation → CFRunLoop ppoll (swift-corelibs-xctest#504;
+# 3/5 ink-list launches at timeout 20 s on uikit-linux 6.2.4). CLinuxXCTestSupport
+# wakes the main CFRunLoop from a non-main dispatch timer and drains
+# DispatchQueue.main before the loop sleeps, so one attempt is enough.
 swift build --build-tests
 BUNDLE="$(swift build --build-tests --show-bin-path | tail -1)/OpenUIKitPackageTests.xctest"
 run_suites() {
   local name=$1 suites=$2
-  local ok=0 attempt
   : > "$OUT/tests-$name.log"
-  for attempt in 1 2 3 4; do
-    if SWIFT_BACKTRACE=enable=no timeout 60 "$BUNDLE" "$suites" >"$OUT/tests-$name.log" 2>&1; then
-      ok=1; break
-    fi
-    echo "    (attempt $attempt $name hung -- known Linux XCTest flake, retrying)"
-  done
+  if ! SWIFT_BACKTRACE=enable=no timeout 60 "$BUNDLE" "$suites" >"$OUT/tests-$name.log" 2>&1; then
+    echo "    $name tests did not complete"; tail -20 "$OUT/tests-$name.log"; exit 1
+  fi
   tail -3 "$OUT/tests-$name.log"
-  [ "$ok" = 1 ] || { echo "    $name tests did not complete"; exit 1; }
   if grep -qE "Executed [0-9]+ tests, with [1-9][0-9]* failures" "$OUT/tests-$name.log"; then
     echo "    $name tests had failures"; exit 1
   fi
@@ -101,7 +97,7 @@ run_suites ink \
 echo "    unit tests passed"
 
 echo "==> no-font iOS cut (2x harvested masks; Linux trial had blank labels)"
-# glyph_ink_ios.json 7533 keys (2026-09-05, +13pt regular ASCII). "Hello" at 17 pt regular F0.0 is
+# glyph_ink_ios.json 8786 keys (2026-09-05, +12pt regular ASCII). "Hello" at 17 pt regular F0.0 is
 # a HIT for H/e/l/o (383 opaque pixels measured). "Q" (U+0051) has metrics
 # but is not in that table — U+2603 sizeToFits to width 0 and never draws.
 # No OPENUIKIT_FONT_DIR on this path.
