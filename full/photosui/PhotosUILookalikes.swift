@@ -46,11 +46,45 @@ public final class PHPhotoLibrary: NSObject, @unchecked Sendable {
 
 public final class PHLivePhoto: NSObject, @unchecked Sendable {}
 
-public final class PHAdjustmentData: NSObject, @unchecked Sendable {}
+public final class PHAdjustmentData: NSObject, @unchecked Sendable {
+    public var formatIdentifier: String = ""
+    public var formatVersion: String = ""
+    public var data = Data()
 
-public final class PHContentEditingInput: NSObject, @unchecked Sendable {}
+    public override init() {
+        super.init()
+    }
 
-public final class PHContentEditingOutput: NSObject, @unchecked Sendable {}
+    public convenience init(formatIdentifier: String, formatVersion: String, data: Data) {
+        self.init()
+        self.formatIdentifier = formatIdentifier
+        self.formatVersion = formatVersion
+        self.data = data
+    }
+}
+
+public final class PHContentEditingInput: NSObject, @unchecked Sendable {
+    public var adjustmentData: PHAdjustmentData?
+    public var fullSizeImageURL: URL?
+
+    public override init() {
+        super.init()
+    }
+}
+
+public final class PHContentEditingOutput: NSObject, @unchecked Sendable {
+    public var adjustmentData: PHAdjustmentData?
+    public var renderedContentURL: URL?
+
+    public override init() {
+        super.init()
+    }
+
+    public convenience init(contentEditingInput: PHContentEditingInput) {
+        self.init()
+        adjustmentData = contentEditingInput.adjustmentData
+    }
+}
 
 public struct PHAsset: Sendable {
     public enum PlaybackStyle: Int, Hashable, Sendable {
