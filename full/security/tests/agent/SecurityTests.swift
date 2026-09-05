@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(Glibc)
+import Glibc
+#endif
 import Security
 
 private func require(_ condition: @autoclosure () -> Bool, _ message: String) {
@@ -79,9 +82,9 @@ func testKnownItemKeyStringIdentities() {
     precondition(kSecAttrAccessible == "pdmn")
     precondition(kSecAttrAccessibleAfterFirstUnlock == "ck")
     precondition(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly == "cku")
-    precondition(kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly == "akpu-passcode")
+    precondition(kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly == "akpu")
     precondition(kSecAttrAccessibleWhenUnlocked == "ak")
-    precondition(kSecAttrAccessibleWhenUnlockedThisDeviceOnly == "akpu")
+    precondition(kSecAttrAccessibleWhenUnlockedThisDeviceOnly == "aku")
     precondition(kSecAttrAccount == "acct")
     precondition(kSecAttrComment == "icmt")
     precondition(kSecAttrCreationDate == "cdat")
@@ -94,7 +97,7 @@ func testKnownItemKeyStringIdentities() {
     precondition(kSecAttrModificationDate == "mdat")
     precondition(kSecAttrService == "svce")
     precondition(kSecAttrSynchronizable == "sync")
-    precondition(kSecAttrSynchronizableAny == "sync-any")
+    precondition(kSecAttrSynchronizableAny == "syna")
     precondition(kSecAttrType == "type")
     precondition(kSecClass == "class")
     precondition(kSecClassCertificate == "cert")
@@ -180,7 +183,7 @@ func testCFLikeTypeIdentities() {
     require(SecCertificateGetTypeID() == SecCertificateGetTypeID(), "cert type")
     require(SecPolicyGetTypeID() != SecTrustGetTypeID(), "distinct types")
     require(SecKeyGetTypeID() != 0, "key type")
-    let cert = SecCertificateCreateWithData(nil, Data([0x30, 0x00]))
+    let cert = SecCertificateCreateWithData(nil, Data(leafRSACertDER))
     require(cert != nil, "create cert")
     let policy = SecPolicyCreateBasicX509()
     require(SecPolicyGetTypeID() != 0, "policy type")
@@ -207,17 +210,19 @@ func testPolicyAndTrustFailClosed() {
     require(status == errSecSuccess, "trust object is constructible")
     require(trust != nil, "trust out-param")
     var result = SecTrustResultType.proceed
-    require(SecTrustEvaluate(trust!, &result) == errSecUnimplemented, "evaluate")
+    require(SecTrustEvaluate(trust!, &result) == errSecSuccess, "evaluate")
     require(result == .invalid, "invalid result")
     var error: CFError?
     require(SecTrustEvaluateWithError(trust!, &error) == false, "evaluate with error")
 }
 
 func testCertificateCreateWithData() {
-    let cert = SecCertificateCreateWithData(nil, Data([0x30, 0x82]))
+    require(SecCertificateCreateWithData(nil, Data([0x30, 0x82])) == nil, "invalid DER")
+    let cert = SecCertificateCreateWithData(nil, Data(leafRSACertDER))
     require(cert != nil, "created")
-    require(SecCertificateCopyData(cert!) == Data([0x30, 0x82]), "copy data")
-    require(SecCertificateCopyKey(cert!) == nil, "no key")
+    require(SecCertificateCopyData(cert!) == Data(leafRSACertDER), "copy data")
+    require(SecCertificateCopyKey(cert!) != nil, "spki key")
+    require(SecCertificateCopySubjectSummary(cert!) as String? == "leaf.example.test", "cn")
 }
 
 func testAccessControlFailClosed() {

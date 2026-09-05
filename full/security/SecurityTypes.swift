@@ -140,10 +140,24 @@ public typealias sec_protocol_key_update_complete_t = () -> Void
 public typealias sec_protocol_key_update_t = (sec_protocol_metadata_t, @escaping sec_protocol_key_update_complete_t) -> Void
 public typealias sec_protocol_verify_complete_t = (Bool) -> Void
 public typealias sec_protocol_verify_t = (sec_protocol_metadata_t, sec_trust_t, @escaping sec_protocol_verify_complete_t) -> Void
+public typealias sec_protocol_pre_shared_key_selection_complete_t = (dispatch_data_t?) -> Void
+public typealias sec_protocol_pre_shared_key_selection_t = (
+    sec_protocol_metadata_t, dispatch_data_t?, @escaping sec_protocol_pre_shared_key_selection_complete_t
+) -> Void
 
 public final class SecAccessControl: Hashable, @unchecked Sendable {
-    let _id = ObjectIdentifier(NSObject())
-    init() {}
+    let protection: String
+    let flags: SecAccessControlCreateFlags
+    init(protection: String, flags: SecAccessControlCreateFlags) {
+        self.protection = protection
+        self.flags = flags
+    }
+    var requiresBiometry: Bool {
+        flags.contains(.biometryAny)
+            || flags.contains(.biometryCurrentSet)
+            || flags.contains(.touchIDAny)
+            || flags.contains(.touchIDCurrentSet)
+    }
     public static func == (left: SecAccessControl, right: SecAccessControl) -> Bool { left === right }
     public static func != (left: SecAccessControl, right: SecAccessControl) -> Bool { left !== right }
     public func hash(into hasher: inout Hasher) { hasher.combine(ObjectIdentifier(self)) }
@@ -152,7 +166,11 @@ public final class SecAccessControl: Hashable, @unchecked Sendable {
 
 public final class SecCertificate: Hashable, @unchecked Sendable {
     let data: Data
-    init(data: Data) { self.data = data }
+    let parsed: _SecParsedCert?
+    init(data: Data, parsed: _SecParsedCert?) {
+        self.data = data
+        self.parsed = parsed
+    }
     public static func == (left: SecCertificate, right: SecCertificate) -> Bool { left === right }
     public static func != (left: SecCertificate, right: SecCertificate) -> Bool { left !== right }
     public func hash(into hasher: inout Hasher) { hasher.combine(ObjectIdentifier(self)) }
@@ -173,11 +191,11 @@ public final class SecIdentity: Hashable, @unchecked Sendable {
 }
 
 public final class SecKey: Hashable, @unchecked Sendable {
-    let attributes: [String: Any]
-    let material: Data
-    init(attributes: [String: Any], material: Data) {
+    var attributes: [String: Any]
+    var stored: _SecStoredKey
+    init(attributes: [String: Any], stored: _SecStoredKey) {
         self.attributes = attributes
-        self.material = material
+        self.stored = stored
     }
     public static func == (left: SecKey, right: SecKey) -> Bool { left === right }
     public static func != (left: SecKey, right: SecKey) -> Bool { left !== right }
@@ -187,10 +205,14 @@ public final class SecKey: Hashable, @unchecked Sendable {
 
 public final class SecPolicy: Hashable, @unchecked Sendable {
     let identifier: String
-    let properties: [String: Any]
+    var properties: [String: Any]
+    var hostname: String?
+    var server = true
+    var revocationFlags: CFOptionFlags = 0
     init(identifier: String, properties: [String: Any] = [:]) {
         self.identifier = identifier
         self.properties = properties
+        if let name = properties[kSecPolicyName] as? String { hostname = name }
     }
     public static func == (left: SecPolicy, right: SecPolicy) -> Bool { left === right }
     public static func != (left: SecPolicy, right: SecPolicy) -> Bool { left !== right }
@@ -209,6 +231,9 @@ public final class SecTrust: Hashable, @unchecked Sendable {
     var ocsp: CFTypeRef?
     var scts: CFArray?
     var lastResult: SecTrustResultType = .invalid
+    var lastError: NSError?
+    var evaluated = false
+    var builtChain: [SecCertificate] = []
     init(certificates: [SecCertificate], policies: [SecPolicy]) {
         self.certificates = certificates
         self.policies = policies
@@ -268,7 +293,6 @@ func _secTypeIdentity() -> CFTypeID { _typeSecIdentity }
 func _secTypeKey() -> CFTypeID { _typeSecKey }
 func _secTypePolicy() -> CFTypeID { _typeSecPolicy }
 func _secTypeTrust() -> CFTypeID { _typeSecTrust }
-import Foundation
 
 extension SecKeyAlgorithm {
     public static let ecdhKeyExchangeCofactor = SecKeyAlgorithm(rawValue: "ecdhKeyExchangeCofactor")
@@ -359,8 +383,6 @@ extension SecKeyAlgorithm {
     public static let rsaSignatureMessagePSSSHA512 = SecKeyAlgorithm(rawValue: "rsaSignatureMessagePSSSHA512")
     public static let rsaSignatureRaw = SecKeyAlgorithm(rawValue: "rsaSignatureRaw")
 }
-
-import Foundation
 
 public enum tls_ciphersuite_t: UInt16, Sendable {
     case AES_128_GCM_SHA256 = 4865

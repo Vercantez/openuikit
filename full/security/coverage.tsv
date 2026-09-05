@@ -731,148 +731,148 @@ c:@Ea@kSecRevocationOCSPMethod@kSecRevocationPreferCRL	implemented	test:full/sec
 c:@Ea@kSecRevocationOCSPMethod@kSecRevocationRequirePositiveResponse	implemented	test:full/security/tests/agent/SecurityTests.swift#testRevocationFlags	-
 c:@Ea@kSecRevocationOCSPMethod@kSecRevocationUseAnyAvailableMethod	implemented	test:full/security/tests/agent/SecurityTests.swift#testRevocationFlags	-
 c:@F@SecAccessControlCreateWithFlags	implemented	test:full/security/tests/agent/SecurityTests.swift#testAccessControlFailClosed	-
-c:@F@SecAccessControlGetTypeID	declared	source:full/security/SecurityCryptography.swift#SecAccessControlGetTypeID	-
-c:@F@SecAddSharedWebCredential	declared	source:full/security/SecurityCryptography.swift#SecAddSharedWebCredential	-
-c:@F@SecCertificateCopyCommonName	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyCommonName	-
-c:@F@SecCertificateCopyData	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyData	-
-c:@F@SecCertificateCopyEmailAddresses	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyEmailAddresses	-
-c:@F@SecCertificateCopyKey	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyKey	-
-c:@F@SecCertificateCopyNormalizedIssuerSequence	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyNormalizedIssuerSequence	-
-c:@F@SecCertificateCopyNormalizedSubjectSequence	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyNormalizedSubjectSequence	-
-c:@F@SecCertificateCopyNotValidAfterDate	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyNotValidAfterDate	-
-c:@F@SecCertificateCopyNotValidBeforeDate	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyNotValidBeforeDate	-
-c:@F@SecCertificateCopyPublicKey	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopyPublicKey	-
-c:@F@SecCertificateCopySerialNumber	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopySerialNumber	-
-c:@F@SecCertificateCopySerialNumberData	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopySerialNumberData	-
-c:@F@SecCertificateCopySubjectSummary	declared	source:full/security/SecurityCryptography.swift#SecCertificateCopySubjectSummary	-
+c:@F@SecAccessControlGetTypeID	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecAddSharedWebCredential	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@SecCertificateCopyCommonName	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecCertificateCopyData	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecCertificateCopyEmailAddresses	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecCertificateCopyKey	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecCertificateCopyNormalizedIssuerSequence	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecCertificateCopyNormalizedSubjectSequence	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecCertificateCopyNotValidAfterDate	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecCertificateCopyNotValidBeforeDate	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecCertificateCopyPublicKey	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecCertificateCopySerialNumber	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecCertificateCopySerialNumberData	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecCertificateCopySubjectSummary	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
 c:@F@SecCertificateCreateWithData	implemented	test:full/security/tests/agent/SecurityTests.swift#testCertificateCreateWithData	-
-c:@F@SecCertificateGetTypeID	declared	source:full/security/SecurityCryptography.swift#SecCertificateGetTypeID	-
+c:@F@SecCertificateGetTypeID	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
 c:@F@SecCopyErrorMessageString	implemented	test:full/security/tests/agent/SecurityTests.swift#testErrorMessageString	-
-c:@F@SecCreateSharedWebCredentialPassword	declared	source:full/security/SecurityCryptography.swift#SecCreateSharedWebCredentialPassword	-
-c:@F@SecIdentityCopyCertificate	declared	source:full/security/SecurityCryptography.swift#SecIdentityCopyCertificate	-
-c:@F@SecIdentityCopyPrivateKey	declared	source:full/security/SecurityCryptography.swift#SecIdentityCopyPrivateKey	-
-c:@F@SecIdentityCreate	declared	source:full/security/SecurityCryptography.swift#SecIdentityCreate	-
-c:@F@SecIdentityGetTypeID	declared	source:full/security/SecurityCryptography.swift#SecIdentityGetTypeID	-
+c:@F@SecCreateSharedWebCredentialPassword	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@SecIdentityCopyCertificate	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecIdentityCopyPrivateKey	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecIdentityCreate	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
+c:@F@SecIdentityGetTypeID	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecCertificateParseAndIdentity	-
 c:@F@SecItemAdd	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeychainAddCopyUpdateDelete	-
 c:@F@SecItemCopyMatching	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeychainAddCopyUpdateDelete	-
 c:@F@SecItemDelete	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeychainAddCopyUpdateDelete	-
 c:@F@SecItemUpdate	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeychainAddCopyUpdateDelete	-
-c:@F@SecKeyCopyAttributes	declared	source:full/security/SecurityCryptography.swift#SecKeyCopyAttributes	-
-c:@F@SecKeyCopyExternalRepresentation	declared	source:full/security/SecurityCryptography.swift#SecKeyCopyExternalRepresentation	-
-c:@F@SecKeyCopyKeyExchangeResult	declared	source:full/security/SecurityCryptography.swift#SecKeyCopyKeyExchangeResult	-
-c:@F@SecKeyCopyPublicKey	declared	source:full/security/SecurityCryptography.swift#SecKeyCopyPublicKey	-
-c:@F@SecKeyCreateDecryptedData	declared	source:full/security/SecurityCryptography.swift#SecKeyCreateDecryptedData	-
-c:@F@SecKeyCreateEncryptedData	declared	source:full/security/SecurityCryptography.swift#SecKeyCreateEncryptedData	-
-c:@F@SecKeyCreateRandomKey	declared	source:full/security/SecurityCryptography.swift#SecKeyCreateRandomKey	-
-c:@F@SecKeyCreateSignature	declared	source:full/security/SecurityCryptography.swift#SecKeyCreateSignature	-
-c:@F@SecKeyCreateWithData	declared	source:full/security/SecurityCryptography.swift#SecKeyCreateWithData	-
-c:@F@SecKeyDecrypt	declared	source:full/security/SecurityCryptography.swift#SecKeyDecrypt	-
-c:@F@SecKeyEncrypt	declared	source:full/security/SecurityCryptography.swift#SecKeyEncrypt	-
-c:@F@SecKeyGeneratePair	declared	source:full/security/SecurityCryptography.swift#SecKeyGeneratePair	-
-c:@F@SecKeyGetBlockSize	declared	source:full/security/SecurityCryptography.swift#SecKeyGetBlockSize	-
-c:@F@SecKeyGetTypeID	declared	source:full/security/SecurityCryptography.swift#SecKeyGetTypeID	-
-c:@F@SecKeyIsAlgorithmSupported	declared	source:full/security/SecurityCryptography.swift#SecKeyIsAlgorithmSupported	-
-c:@F@SecKeyRawSign	declared	source:full/security/SecurityCryptography.swift#SecKeyRawSign	-
-c:@F@SecKeyRawVerify	declared	source:full/security/SecurityCryptography.swift#SecKeyRawVerify	-
-c:@F@SecKeyVerifySignature	declared	source:full/security/SecurityCryptography.swift#SecKeyVerifySignature	-
-c:@F@SecPKCS12Import	declared	source:full/security/SecurityCryptography.swift#SecPKCS12Import	-
-c:@F@SecPolicyCopyProperties	declared	source:full/security/SecurityCryptography.swift#SecPolicyCopyProperties	-
+c:@F@SecKeyCopyAttributes	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRSAImportSignEncrypt	-
+c:@F@SecKeyCopyExternalRepresentation	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRSAImportSignEncrypt	-
+c:@F@SecKeyCopyKeyExchangeResult	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyECGenerateSignExchange	-
+c:@F@SecKeyCopyPublicKey	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRSAImportSignEncrypt	-
+c:@F@SecKeyCreateDecryptedData	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRSAImportSignEncrypt	-
+c:@F@SecKeyCreateEncryptedData	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRSAImportSignEncrypt	-
+c:@F@SecKeyCreateRandomKey	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyECGenerateSignExchange	-
+c:@F@SecKeyCreateSignature	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRSAImportSignEncrypt	-
+c:@F@SecKeyCreateWithData	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRSAImportSignEncrypt	-
+c:@F@SecKeyDecrypt	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRSAImportSignEncrypt	-
+c:@F@SecKeyEncrypt	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRSAImportSignEncrypt	-
+c:@F@SecKeyGeneratePair	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyECGenerateSignExchange	-
+c:@F@SecKeyGetBlockSize	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRSAImportSignEncrypt	-
+c:@F@SecKeyGetTypeID	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRSAImportSignEncrypt	-
+c:@F@SecKeyIsAlgorithmSupported	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRSAImportSignEncrypt	-
+c:@F@SecKeyRawSign	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRawSignVerify	-
+c:@F@SecKeyRawVerify	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRawSignVerify	-
+c:@F@SecKeyVerifySignature	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecKeyRSAImportSignEncrypt	-
+c:@F@SecPKCS12Import	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecPolicyCopyProperties	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
 c:@F@SecPolicyCreateBasicX509	implemented	test:full/security/tests/agent/SecurityTests.swift#testPolicyAndTrustFailClosed	-
-c:@F@SecPolicyCreateRevocation	declared	source:full/security/SecurityCryptography.swift#SecPolicyCreateRevocation	-
+c:@F@SecPolicyCreateRevocation	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
 c:@F@SecPolicyCreateSSL	implemented	test:full/security/tests/agent/SecurityTests.swift#testPolicyAndTrustFailClosed	-
-c:@F@SecPolicyCreateWithProperties	declared	source:full/security/SecurityCryptography.swift#SecPolicyCreateWithProperties	-
-c:@F@SecPolicyGetTypeID	declared	source:full/security/SecurityCryptography.swift#SecPolicyGetTypeID	-
+c:@F@SecPolicyCreateWithProperties	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecPolicyGetTypeID	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
 c:@F@SecRandomCopyBytes	implemented	test:full/security/tests/agent/SecurityTests.swift#testRandomCopyBytes	-
-c:@F@SecRequestSharedWebCredential	declared	source:full/security/SecurityCryptography.swift#SecRequestSharedWebCredential	-
-c:@F@SecTrustCopyCertificateChain	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyCertificateChain	-
-c:@F@SecTrustCopyCustomAnchorCertificates	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyCustomAnchorCertificates	-
-c:@F@SecTrustCopyExceptions	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyExceptions	-
-c:@F@SecTrustCopyKey	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyKey	-
-c:@F@SecTrustCopyPolicies	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyPolicies	-
-c:@F@SecTrustCopyProperties	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyProperties	-
-c:@F@SecTrustCopyPublicKey	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyPublicKey	-
-c:@F@SecTrustCopyResult	declared	source:full/security/SecurityCryptography.swift#SecTrustCopyResult	-
+c:@F@SecRequestSharedWebCredential	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@SecTrustCopyCertificateChain	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustCopyCustomAnchorCertificates	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustCopyExceptions	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustCopyKey	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustCopyPolicies	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustCopyProperties	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustCopyPublicKey	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustCopyResult	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
 c:@F@SecTrustCreateWithCertificates	implemented	test:full/security/tests/agent/SecurityTests.swift#testPolicyAndTrustFailClosed	-
 c:@F@SecTrustEvaluate	implemented	test:full/security/tests/agent/SecurityTests.swift#testPolicyAndTrustFailClosed	-
-c:@F@SecTrustEvaluateAsync	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@SecTrustEvaluateAsyncWithError	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
+c:@F@SecTrustEvaluateAsync	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustEvaluateAsyncWithError	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
 c:@F@SecTrustEvaluateWithError	implemented	test:full/security/tests/agent/SecurityTests.swift#testPolicyAndTrustFailClosed	-
-c:@F@SecTrustGetCertificateAtIndex	declared	source:full/security/SecurityCryptography.swift#SecTrustGetCertificateAtIndex	-
-c:@F@SecTrustGetCertificateCount	declared	source:full/security/SecurityCryptography.swift#SecTrustGetCertificateCount	-
-c:@F@SecTrustGetNetworkFetchAllowed	declared	source:full/security/SecurityCryptography.swift#SecTrustGetNetworkFetchAllowed	-
-c:@F@SecTrustGetTrustResult	declared	source:full/security/SecurityCryptography.swift#SecTrustGetTrustResult	-
-c:@F@SecTrustGetTypeID	declared	source:full/security/SecurityCryptography.swift#SecTrustGetTypeID	-
-c:@F@SecTrustGetVerifyTime	declared	source:full/security/SecurityCryptography.swift#SecTrustGetVerifyTime	-
-c:@F@SecTrustSetAnchorCertificates	declared	source:full/security/SecurityCryptography.swift#SecTrustSetAnchorCertificates	-
-c:@F@SecTrustSetAnchorCertificatesOnly	declared	source:full/security/SecurityCryptography.swift#SecTrustSetAnchorCertificatesOnly	-
-c:@F@SecTrustSetExceptions	declared	source:full/security/SecurityCryptography.swift#SecTrustSetExceptions	-
-c:@F@SecTrustSetNetworkFetchAllowed	declared	source:full/security/SecurityCryptography.swift#SecTrustSetNetworkFetchAllowed	-
-c:@F@SecTrustSetOCSPResponse	declared	source:full/security/SecurityCryptography.swift#SecTrustSetOCSPResponse	-
-c:@F@SecTrustSetPolicies	declared	source:full/security/SecurityCryptography.swift#SecTrustSetPolicies	-
-c:@F@SecTrustSetSignedCertificateTimestamps	declared	source:full/security/SecurityCryptography.swift#SecTrustSetSignedCertificateTimestamps	-
-c:@F@SecTrustSetVerifyDate	declared	source:full/security/SecurityCryptography.swift#SecTrustSetVerifyDate	-
-c:@F@sec_certificate_copy_ref	declared	source:full/security/SecurityCryptography.swift#sec_certificate_copy_ref	-
-c:@F@sec_certificate_create	declared	source:full/security/SecurityCryptography.swift#sec_certificate_create	-
-c:@F@sec_identity_access_certificates	declared	source:full/security/SecurityCryptography.swift#sec_identity_access_certificates	-
-c:@F@sec_identity_copy_certificates_ref	deferred		Unmanaged<CFArray> requires a class-backed CFArray; the isolated host CFArray lookalike is Array and cannot satisfy Unmanaged.
-c:@F@sec_identity_copy_ref	declared	source:full/security/SecurityCryptography.swift#sec_identity_copy_ref	-
-c:@F@sec_identity_create	declared	source:full/security/SecurityCryptography.swift#sec_identity_create	-
-c:@F@sec_identity_create_with_certificates	declared	source:full/security/SecurityCryptography.swift#sec_identity_create_with_certificates	-
-c:@F@sec_protocol_metadata_access_distinguished_names	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@sec_protocol_metadata_access_ocsp_response	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@sec_protocol_metadata_access_peer_certificate_chain	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_access_peer_certificate_chain	-
-c:@F@sec_protocol_metadata_access_pre_shared_keys	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@sec_protocol_metadata_access_supported_signature_algorithms	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_access_supported_signature_algorithms	-
-c:@F@sec_protocol_metadata_challenge_parameters_are_equal	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_challenge_parameters_are_equal	-
-c:@F@sec_protocol_metadata_copy_negotiated_protocol	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_copy_negotiated_protocol	-
-c:@F@sec_protocol_metadata_copy_peer_public_key	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@sec_protocol_metadata_copy_server_name	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_copy_server_name	-
-c:@F@sec_protocol_metadata_create_secret	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@sec_protocol_metadata_create_secret_with_context	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@sec_protocol_metadata_get_early_data_accepted	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_early_data_accepted	-
-c:@F@sec_protocol_metadata_get_negotiated_ciphersuite	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_negotiated_ciphersuite	-
-c:@F@sec_protocol_metadata_get_negotiated_protocol	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_negotiated_protocol	-
-c:@F@sec_protocol_metadata_get_negotiated_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_negotiated_protocol_version	-
-c:@F@sec_protocol_metadata_get_negotiated_tls_ciphersuite	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_negotiated_tls_ciphersuite	-
-c:@F@sec_protocol_metadata_get_negotiated_tls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_negotiated_tls_protocol_version	-
-c:@F@sec_protocol_metadata_get_server_name	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_get_server_name	-
-c:@F@sec_protocol_metadata_peers_are_equal	declared	source:full/security/SecurityCryptography.swift#sec_protocol_metadata_peers_are_equal	-
-c:@F@sec_protocol_options_add_pre_shared_key	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@sec_protocol_options_add_tls_application_protocol	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_add_tls_application_protocol	-
-c:@F@sec_protocol_options_add_tls_ciphersuite	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_add_tls_ciphersuite	-
-c:@F@sec_protocol_options_add_tls_ciphersuite_group	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_add_tls_ciphersuite_group	-
-c:@F@sec_protocol_options_append_tls_ciphersuite	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_append_tls_ciphersuite	-
-c:@F@sec_protocol_options_append_tls_ciphersuite_group	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_append_tls_ciphersuite_group	-
-c:@F@sec_protocol_options_are_equal	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_are_equal	-
-c:@F@sec_protocol_options_get_default_max_dtls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_get_default_max_dtls_protocol_version	-
-c:@F@sec_protocol_options_get_default_max_tls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_get_default_max_tls_protocol_version	-
-c:@F@sec_protocol_options_get_default_min_dtls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_get_default_min_dtls_protocol_version	-
-c:@F@sec_protocol_options_get_default_min_tls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_get_default_min_tls_protocol_version	-
-c:@F@sec_protocol_options_set_challenge_block	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@sec_protocol_options_set_key_update_block	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@sec_protocol_options_set_local_identity	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_local_identity	-
-c:@F@sec_protocol_options_set_max_tls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_max_tls_protocol_version	-
-c:@F@sec_protocol_options_set_min_tls_protocol_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_min_tls_protocol_version	-
-c:@F@sec_protocol_options_set_peer_authentication_required	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_peer_authentication_required	-
-c:@F@sec_protocol_options_set_pre_shared_key_selection_block	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@sec_protocol_options_set_tls_diffie_hellman_parameters	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@sec_protocol_options_set_tls_false_start_enabled	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_false_start_enabled	-
-c:@F@sec_protocol_options_set_tls_is_fallback_attempt	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_is_fallback_attempt	-
-c:@F@sec_protocol_options_set_tls_max_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_max_version	-
-c:@F@sec_protocol_options_set_tls_min_version	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_min_version	-
-c:@F@sec_protocol_options_set_tls_ocsp_enabled	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_ocsp_enabled	-
-c:@F@sec_protocol_options_set_tls_pre_shared_key_identity_hint	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@sec_protocol_options_set_tls_renegotiation_enabled	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_renegotiation_enabled	-
-c:@F@sec_protocol_options_set_tls_resumption_enabled	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_resumption_enabled	-
-c:@F@sec_protocol_options_set_tls_sct_enabled	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_sct_enabled	-
-c:@F@sec_protocol_options_set_tls_server_name	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_server_name	-
-c:@F@sec_protocol_options_set_tls_tickets_enabled	declared	source:full/security/SecurityCryptography.swift#sec_protocol_options_set_tls_tickets_enabled	-
-c:@F@sec_protocol_options_set_verify_block	deferred		Signature requires dispatch_queue_t or dispatch_data_t from Dispatch, which is not a declared isolated-host dependency.
-c:@F@sec_release	declared	source:full/security/SecurityCryptography.swift#sec_release	-
-c:@F@sec_retain	declared	source:full/security/SecurityCryptography.swift#sec_retain	-
-c:@F@sec_trust_copy_ref	declared	source:full/security/SecurityCryptography.swift#sec_trust_copy_ref	-
-c:@F@sec_trust_create	declared	source:full/security/SecurityCryptography.swift#sec_trust_create	-
-c:@T@SSLCipherSuite	declared	source:full/security/SecurityTypes.swift#SSLCipherSuite	-
+c:@F@SecTrustGetCertificateAtIndex	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustGetCertificateCount	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustGetNetworkFetchAllowed	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustGetTrustResult	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustGetTypeID	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustGetVerifyTime	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustSetAnchorCertificates	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustSetAnchorCertificatesOnly	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustSetExceptions	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustSetNetworkFetchAllowed	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustSetOCSPResponse	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustSetPolicies	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustSetSignedCertificateTimestamps	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@SecTrustSetVerifyDate	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecPKCS12AndTrustEvaluate	-
+c:@F@sec_certificate_copy_ref	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_certificate_create	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_identity_access_certificates	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_identity_copy_certificates_ref	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_identity_copy_ref	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_identity_create	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_identity_create_with_certificates	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_access_distinguished_names	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_access_ocsp_response	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_access_peer_certificate_chain	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_access_pre_shared_keys	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_access_supported_signature_algorithms	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_challenge_parameters_are_equal	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_copy_negotiated_protocol	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_copy_peer_public_key	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_copy_server_name	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_create_secret	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_create_secret_with_context	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_get_early_data_accepted	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_get_negotiated_ciphersuite	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_get_negotiated_protocol	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_get_negotiated_protocol_version	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_get_negotiated_tls_ciphersuite	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_get_negotiated_tls_protocol_version	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_get_server_name	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_metadata_peers_are_equal	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_add_pre_shared_key	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_add_tls_application_protocol	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_add_tls_ciphersuite	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_add_tls_ciphersuite_group	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_append_tls_ciphersuite	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_append_tls_ciphersuite_group	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_are_equal	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_get_default_max_dtls_protocol_version	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_get_default_max_tls_protocol_version	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_get_default_min_dtls_protocol_version	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_get_default_min_tls_protocol_version	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_challenge_block	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_key_update_block	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_local_identity	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_max_tls_protocol_version	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_min_tls_protocol_version	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_peer_authentication_required	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_pre_shared_key_selection_block	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_tls_diffie_hellman_parameters	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_tls_false_start_enabled	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_tls_is_fallback_attempt	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_tls_max_version	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_tls_min_version	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_tls_ocsp_enabled	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_tls_pre_shared_key_identity_hint	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_tls_renegotiation_enabled	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_tls_resumption_enabled	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_tls_sct_enabled	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_tls_server_name	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_tls_tickets_enabled	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_protocol_options_set_verify_block	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_release	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_retain	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_trust_copy_ref	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@F@sec_trust_create	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testSecProtocolAndObjectWrappers	-
+c:@T@SSLCipherSuite	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
 c:@T@SecAccessControlRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
 c:@T@SecCertificateRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
 c:@T@SecIdentityRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
@@ -880,127 +880,127 @@ c:@T@SecKeyAlgorithm	implemented	test:full/security/tests/agent/SecurityTests.sw
 c:@T@SecKeyKeyExchangeParameter	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
 c:@T@SecKeyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
 c:@T@SecPolicyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
-c:@T@SecRandomRef	declared	source:full/security/Security.swift#SecRandomRef	-
-c:@T@SecTrustCallback	declared	source:full/security/SecurityTypes.swift#SecTrustCallback	-
+c:@T@SecRandomRef	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@SecTrustCallback	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
 c:@T@SecTrustRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
-c:@T@SecTrustWithErrorCallback	declared	source:full/security/SecurityTypes.swift#SecTrustWithErrorCallback	-
-c:@T@sec_certificate_t	declared	source:full/security/SecurityTypes.swift#sec_certificate_t	-
-c:@T@sec_identity_t	declared	source:full/security/SecurityTypes.swift#sec_identity_t	-
-c:@T@sec_object_t	declared	source:full/security/SecurityTypes.swift#sec_object_t	-
-c:@T@sec_protocol_challenge_complete_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_challenge_complete_t	-
-c:@T@sec_protocol_challenge_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_challenge_t	-
-c:@T@sec_protocol_key_update_complete_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_key_update_complete_t	-
-c:@T@sec_protocol_key_update_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_key_update_t	-
-c:@T@sec_protocol_metadata_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_metadata_t	-
-c:@T@sec_protocol_options_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_options_t	-
-c:@T@sec_protocol_pre_shared_key_selection_complete_t	deferred		Typealias mentions dispatch_data_t; isolated host sources import Foundation only.
-c:@T@sec_protocol_pre_shared_key_selection_t	deferred		Typealias mentions dispatch_data_t; isolated host sources import Foundation only.
-c:@T@sec_protocol_verify_complete_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_verify_complete_t	-
-c:@T@sec_protocol_verify_t	declared	source:full/security/SecurityTypes.swift#sec_protocol_verify_t	-
-c:@T@sec_trust_t	declared	source:full/security/SecurityTypes.swift#sec_trust_t	-
+c:@T@SecTrustWithErrorCallback	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_certificate_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_identity_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_object_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_protocol_challenge_complete_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_protocol_challenge_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_protocol_key_update_complete_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_protocol_key_update_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_protocol_metadata_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_protocol_options_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_protocol_pre_shared_key_selection_complete_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_protocol_pre_shared_key_selection_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_protocol_verify_complete_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_protocol_verify_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
+c:@T@sec_trust_t	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testTypealiasAndCallbackIdentities	-
 c:@kSecAttrAccessControl	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecAttrAccessGroup	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecAttrAccessGroupToken	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAccessGroupToken	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAccessGroupToken	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecAttrAccessible	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecAttrAccessibleAfterFirstUnlock	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecAttrAccessibleAlways	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAccessibleAlways	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrAccessibleAlwaysThisDeviceOnly	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAccessibleAlwaysThisDeviceOnly	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrAccessibleAlways	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrAccessibleAlwaysThisDeviceOnly	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecAttrAccessibleWhenUnlocked	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecAttrAccessibleWhenUnlockedThisDeviceOnly	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecAttrAccount	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecAttrApplicationLabel	declared	source:full/security/SecurityItemKeys.swift#kSecAttrApplicationLabel	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrApplicationTag	declared	source:full/security/SecurityItemKeys.swift#kSecAttrApplicationTag	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrAuthenticationType	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationType	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrAuthenticationTypeDPA	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeDPA	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrAuthenticationTypeDefault	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeDefault	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrAuthenticationTypeHTMLForm	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeHTMLForm	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrAuthenticationTypeHTTPBasic	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeHTTPBasic	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrAuthenticationTypeHTTPDigest	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeHTTPDigest	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrAuthenticationTypeMSN	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeMSN	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrAuthenticationTypeNTLM	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeNTLM	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrAuthenticationTypeRPA	declared	source:full/security/SecurityItemKeys.swift#kSecAttrAuthenticationTypeRPA	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrCanDecrypt	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanDecrypt	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrCanDerive	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanDerive	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrCanEncrypt	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanEncrypt	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrCanSign	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanSign	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrCanUnwrap	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanUnwrap	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrCanVerify	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanVerify	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrCanWrap	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCanWrap	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrCertificateEncoding	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCertificateEncoding	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrCertificateType	declared	source:full/security/SecurityItemKeys.swift#kSecAttrCertificateType	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrApplicationLabel	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrApplicationTag	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrAuthenticationType	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrAuthenticationTypeDPA	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrAuthenticationTypeDefault	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrAuthenticationTypeHTMLForm	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrAuthenticationTypeHTTPBasic	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrAuthenticationTypeHTTPDigest	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrAuthenticationTypeMSN	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrAuthenticationTypeNTLM	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrAuthenticationTypeRPA	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrCanDecrypt	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrCanDerive	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrCanEncrypt	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrCanSign	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrCanUnwrap	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrCanVerify	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrCanWrap	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrCertificateEncoding	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrCertificateType	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecAttrComment	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecAttrCreationDate	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecAttrCreator	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecAttrDescription	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecAttrEffectiveKeySize	declared	source:full/security/SecurityItemKeys.swift#kSecAttrEffectiveKeySize	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrEffectiveKeySize	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecAttrGeneric	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecAttrIsExtractable	declared	source:full/security/SecurityItemKeys.swift#kSecAttrIsExtractable	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrIsExtractable	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecAttrIsInvisible	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecAttrIsNegative	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecAttrIsPermanent	declared	source:full/security/SecurityItemKeys.swift#kSecAttrIsPermanent	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrIsSensitive	declared	source:full/security/SecurityItemKeys.swift#kSecAttrIsSensitive	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrIssuer	declared	source:full/security/SecurityItemKeys.swift#kSecAttrIssuer	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrKeyClass	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyClass	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrKeyClassPrivate	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyClassPrivate	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrKeyClassPublic	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyClassPublic	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrKeyClassSymmetric	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyClassSymmetric	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrKeySizeInBits	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeySizeInBits	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrKeyType	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyType	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrKeyTypeEC	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyTypeEC	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrKeyTypeECSECPrimeRandom	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyTypeECSECPrimeRandom	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrKeyTypeRSA	declared	source:full/security/SecurityItemKeys.swift#kSecAttrKeyTypeRSA	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrIsPermanent	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrIsSensitive	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrIssuer	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrKeyClass	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrKeyClassPrivate	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrKeyClassPublic	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrKeyClassSymmetric	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrKeySizeInBits	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrKeyType	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrKeyTypeEC	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrKeyTypeECSECPrimeRandom	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrKeyTypeRSA	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecAttrLabel	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecAttrModificationDate	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecAttrPath	declared	source:full/security/SecurityItemKeys.swift#kSecAttrPath	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrPersistantReference	declared	source:full/security/SecurityItemKeys.swift#kSecAttrPersistantReference	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrPersistentReference	declared	source:full/security/SecurityItemKeys.swift#kSecAttrPersistentReference	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrPort	declared	source:full/security/SecurityItemKeys.swift#kSecAttrPort	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocol	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocol	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolAFP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolAFP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolAppleTalk	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolAppleTalk	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolDAAP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolDAAP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolEPPC	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolEPPC	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolFTP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolFTP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolFTPAccount	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolFTPAccount	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolFTPProxy	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolFTPProxy	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolFTPS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolFTPS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolHTTP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolHTTP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolHTTPProxy	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolHTTPProxy	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolHTTPS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolHTTPS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolHTTPSProxy	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolHTTPSProxy	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolIMAP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolIMAP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolIMAPS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolIMAPS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolIPP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolIPP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolIRC	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolIRC	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolIRCS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolIRCS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolLDAP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolLDAP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolLDAPS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolLDAPS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolNNTP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolNNTP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolNNTPS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolNNTPS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolPOP3	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolPOP3	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolPOP3S	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolPOP3S	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolRTSP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolRTSP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolRTSPProxy	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolRTSPProxy	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolSMB	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolSMB	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolSMTP	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolSMTP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolSOCKS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolSOCKS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolSSH	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolSSH	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolTelnet	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolTelnet	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrProtocolTelnetS	declared	source:full/security/SecurityItemKeys.swift#kSecAttrProtocolTelnetS	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrPublicKeyHash	declared	source:full/security/SecurityItemKeys.swift#kSecAttrPublicKeyHash	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrSecurityDomain	declared	source:full/security/SecurityItemKeys.swift#kSecAttrSecurityDomain	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrSerialNumber	declared	source:full/security/SecurityItemKeys.swift#kSecAttrSerialNumber	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrServer	declared	source:full/security/SecurityItemKeys.swift#kSecAttrServer	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrPath	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrPersistantReference	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrPersistentReference	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrPort	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocol	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolAFP	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolAppleTalk	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolDAAP	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolEPPC	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolFTP	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolFTPAccount	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolFTPProxy	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolFTPS	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolHTTP	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolHTTPProxy	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolHTTPS	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolHTTPSProxy	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolIMAP	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolIMAPS	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolIPP	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolIRC	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolIRCS	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolLDAP	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolLDAPS	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolNNTP	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolNNTPS	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolPOP3	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolPOP3S	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolRTSP	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolRTSPProxy	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolSMB	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolSMTP	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolSOCKS	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolSSH	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolTelnet	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrProtocolTelnetS	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrPublicKeyHash	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrSecurityDomain	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrSerialNumber	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrServer	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecAttrService	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecAttrSubject	declared	source:full/security/SecurityItemKeys.swift#kSecAttrSubject	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrSubjectKeyID	declared	source:full/security/SecurityItemKeys.swift#kSecAttrSubjectKeyID	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrSyncViewHint	declared	source:full/security/SecurityItemKeys.swift#kSecAttrSyncViewHint	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrSubject	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrSubjectKeyID	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrSyncViewHint	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecAttrSynchronizable	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecAttrSynchronizableAny	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecAttrTokenID	declared	source:full/security/SecurityItemKeys.swift#kSecAttrTokenID	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecAttrTokenIDSecureEnclave	declared	source:full/security/SecurityItemKeys.swift#kSecAttrTokenIDSecureEnclave	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecAttrTokenID	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecAttrTokenIDSecureEnclave	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecAttrType	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecClass	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecClassCertificate	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
@@ -1008,13 +1008,13 @@ c:@kSecClassGenericPassword	implemented	test:full/security/tests/agent/SecurityT
 c:@kSecClassIdentity	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecClassInternetPassword	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecClassKey	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecImportExportPassphrase	declared	source:full/security/SecurityItemKeys.swift#kSecImportExportPassphrase	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecImportItemCertChain	declared	source:full/security/SecurityItemKeys.swift#kSecImportItemCertChain	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecImportItemIdentity	declared	source:full/security/SecurityItemKeys.swift#kSecImportItemIdentity	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecImportItemKeyID	declared	source:full/security/SecurityItemKeys.swift#kSecImportItemKeyID	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecImportItemLabel	declared	source:full/security/SecurityItemKeys.swift#kSecImportItemLabel	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecImportItemTrust	declared	source:full/security/SecurityItemKeys.swift#kSecImportItemTrust	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecImportToMemoryOnly	declared	source:full/security/SecurityItemKeys.swift#kSecImportToMemoryOnly	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecImportExportPassphrase	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecImportItemCertChain	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecImportItemIdentity	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecImportItemKeyID	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecImportItemLabel	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecImportItemTrust	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecImportToMemoryOnly	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecKeyAlgorithmECDHKeyExchangeCofactor	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
 c:@kSecKeyAlgorithmECDHKeyExchangeCofactorX963SHA1	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
 c:@kSecKeyAlgorithmECDHKeyExchangeCofactorX963SHA224	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
@@ -1104,74 +1104,74 @@ c:@kSecKeyAlgorithmRSASignatureMessagePSSSHA512	implemented	test:full/security/t
 c:@kSecKeyAlgorithmRSASignatureRaw	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
 c:@kSecKeyKeyExchangeParameterRequestedSize	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
 c:@kSecKeyKeyExchangeParameterSharedInfo	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
-c:@kSecMatchCaseInsensitive	declared	source:full/security/SecurityItemKeys.swift#kSecMatchCaseInsensitive	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecMatchEmailAddressIfPresent	declared	source:full/security/SecurityItemKeys.swift#kSecMatchEmailAddressIfPresent	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecMatchHostOrSubdomainOfHost	declared	source:full/security/SecurityItemKeys.swift#kSecMatchHostOrSubdomainOfHost	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecMatchIssuers	declared	source:full/security/SecurityItemKeys.swift#kSecMatchIssuers	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecMatchItemList	declared	source:full/security/SecurityItemKeys.swift#kSecMatchItemList	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecMatchCaseInsensitive	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecMatchEmailAddressIfPresent	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecMatchHostOrSubdomainOfHost	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecMatchIssuers	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecMatchItemList	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecMatchLimit	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecMatchLimitAll	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecMatchLimitOne	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecMatchPolicy	declared	source:full/security/SecurityItemKeys.swift#kSecMatchPolicy	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecMatchSearchList	declared	source:full/security/SecurityItemKeys.swift#kSecMatchSearchList	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecMatchSubjectContains	declared	source:full/security/SecurityItemKeys.swift#kSecMatchSubjectContains	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecMatchTrustedOnly	declared	source:full/security/SecurityItemKeys.swift#kSecMatchTrustedOnly	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecMatchValidOnDate	declared	source:full/security/SecurityItemKeys.swift#kSecMatchValidOnDate	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleCodeSigning	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleCodeSigning	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleEAP	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleEAP	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleEAPClient	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleEAPClient	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleEAPServer	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleEAPServer	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleIDValidation	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleIDValidation	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleIPSecClient	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleIPSecClient	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleIPSecServer	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleIPSecServer	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleIPsec	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleIPsec	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyApplePassbookSigning	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyApplePassbookSigning	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyApplePayIssuerEncryption	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyApplePayIssuerEncryption	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleRevocation	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleRevocation	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleSMIME	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleSMIME	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleSSL	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleSSL	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleSSLClient	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleSSLClient	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleSSLServer	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleSSLServer	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleTimeStamping	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleTimeStamping	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyAppleX509Basic	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyAppleX509Basic	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyClient	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyClient	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyMacAppStoreReceipt	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyMacAppStoreReceipt	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyName	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyName	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyOid	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyOid	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyRevocationFlags	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyRevocationFlags	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPolicyTeamIdentifier	declared	source:full/security/SecurityItemKeys.swift#kSecPolicyTeamIdentifier	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPrivateKeyAttrs	declared	source:full/security/SecurityItemKeys.swift#kSecPrivateKeyAttrs	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPropertyTypeError	declared	source:full/security/SecurityItemKeys.swift#kSecPropertyTypeError	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPropertyTypeTitle	declared	source:full/security/SecurityItemKeys.swift#kSecPropertyTypeTitle	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecPublicKeyAttrs	declared	source:full/security/SecurityItemKeys.swift#kSecPublicKeyAttrs	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecMatchPolicy	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecMatchSearchList	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecMatchSubjectContains	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecMatchTrustedOnly	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecMatchValidOnDate	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleCodeSigning	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleEAP	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleEAPClient	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleEAPServer	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleIDValidation	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleIPSecClient	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleIPSecServer	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleIPsec	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyApplePassbookSigning	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyApplePayIssuerEncryption	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleRevocation	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleSMIME	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleSSL	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleSSLClient	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleSSLServer	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleTimeStamping	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyAppleX509Basic	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyClient	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyMacAppStoreReceipt	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyName	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyOid	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyRevocationFlags	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPolicyTeamIdentifier	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPrivateKeyAttrs	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPropertyTypeError	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPropertyTypeTitle	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecPublicKeyAttrs	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecRandomDefault	implemented	test:full/security/tests/agent/SecurityTests.swift#testRandomCopyBytes	-
 c:@kSecReturnAttributes	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecReturnData	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecReturnPersistentRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecReturnRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
 c:@kSecSharedPassword	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecTrustCertificateTransparency	declared	source:full/security/SecurityItemKeys.swift#kSecTrustCertificateTransparency	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecTrustCertificateTransparencyWhiteList	declared	source:full/security/SecurityItemKeys.swift#kSecTrustCertificateTransparencyWhiteList	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecTrustEvaluationDate	declared	source:full/security/SecurityItemKeys.swift#kSecTrustEvaluationDate	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecTrustExtendedValidation	declared	source:full/security/SecurityItemKeys.swift#kSecTrustExtendedValidation	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecTrustOrganizationName	declared	source:full/security/SecurityItemKeys.swift#kSecTrustOrganizationName	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecTrustQCStatements	declared	source:full/security/SecurityItemKeys.swift#kSecTrustQCStatements	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecTrustQWACValidation	declared	source:full/security/SecurityItemKeys.swift#kSecTrustQWACValidation	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecTrustResultValue	declared	source:full/security/SecurityItemKeys.swift#kSecTrustResultValue	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecTrustRevocationChecked	declared	source:full/security/SecurityItemKeys.swift#kSecTrustRevocationChecked	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecTrustRevocationValidUntilDate	declared	source:full/security/SecurityItemKeys.swift#kSecTrustRevocationValidUntilDate	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecUseAuthenticationContext	declared	source:full/security/SecurityItemKeys.swift#kSecUseAuthenticationContext	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecUseAuthenticationUI	declared	source:full/security/SecurityItemKeys.swift#kSecUseAuthenticationUI	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecUseAuthenticationUIAllow	declared	source:full/security/SecurityItemKeys.swift#kSecUseAuthenticationUIAllow	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecUseAuthenticationUIFail	declared	source:full/security/SecurityItemKeys.swift#kSecUseAuthenticationUIFail	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecUseAuthenticationUISkip	declared	source:full/security/SecurityItemKeys.swift#kSecUseAuthenticationUISkip	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecTrustCertificateTransparency	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecTrustCertificateTransparencyWhiteList	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecTrustEvaluationDate	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecTrustExtendedValidation	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecTrustOrganizationName	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecTrustQCStatements	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecTrustQWACValidation	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecTrustResultValue	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecTrustRevocationChecked	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecTrustRevocationValidUntilDate	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecUseAuthenticationContext	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecUseAuthenticationUI	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecUseAuthenticationUIAllow	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecUseAuthenticationUIFail	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecUseAuthenticationUISkip	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecUseDataProtectionKeychain	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecUseItemList	declared	source:full/security/SecurityItemKeys.swift#kSecUseItemList	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecUseNoAuthenticationUI	declared	source:full/security/SecurityItemKeys.swift#kSecUseNoAuthenticationUI	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecUseOperationPrompt	declared	source:full/security/SecurityItemKeys.swift#kSecUseOperationPrompt	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecUseItemList	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecUseNoAuthenticationUI	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecUseOperationPrompt	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@kSecValueData	implemented	test:full/security/tests/agent/SecurityTests.swift#testKnownItemKeyStringIdentities	-
-c:@kSecValuePersistentRef	declared	source:full/security/SecurityItemKeys.swift#kSecValuePersistentRef	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
-c:@kSecValueRef	declared	source:full/security/SecurityItemKeys.swift#kSecValueRef	Process-local CFString identity using the C constant name; Apple binary payload is unobserved.
+c:@kSecValuePersistentRef	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
+c:@kSecValueRef	implemented	test:full/security/tests/agent/SecurityCryptoTests.swift#testDocumentedItemKeyStringIdentities	-
 c:@macro@SECURITY_TYPE_UNIFICATION	implemented	test:full/security/tests/agent/SecurityTests.swift#testIPhoneOSMacroIdentities	-
 c:@macro@SEC_OS_IPHONE	implemented	test:full/security/tests/agent/SecurityTests.swift#testIPhoneOSMacroIdentities	-
 c:@macro@SEC_OS_OSX	implemented	test:full/security/tests/agent/SecurityTests.swift#testIPhoneOSMacroIdentities	-
