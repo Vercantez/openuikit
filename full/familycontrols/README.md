@@ -36,7 +36,16 @@ absent on this VM. The sealed gate compiles with a clean product tree
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
 `a15391648a4fd5a92038c7465b26208c67eb87ed` matched.
 
-`bash full/familycontrols/tests/acceptance/test_host.sh` is the sealed gate.
+`bash full/familycontrols/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=FamilyControls lane=leaf-full symbols=2407
+FRAMEWORK_FANOUT_REFERENCE_OK
+FAMILYCONTROLS_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=FamilyControls dylib=libFamilyControls.dylib
+```
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. `swiftc` is Swift 6.2.4 / linux and the gate compiled with a clean product tree.
 
 ### What is real
 
