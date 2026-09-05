@@ -403,6 +403,10 @@ open class UISearchBar: UIView {
     private var cancelButton: UIButton?
     /// Set by UINavigationBar when this bar is the active inline-nav search.
     var _navInlineActive = false
+    /// Set by UINavigationBar on pad: the field fills the 240/280 × 44
+    /// trailing chrome (Tabs-ipad t200 / t4000: UISearchBarTextField
+    /// frame equals the search bar).
+    var _padTrailingChrome = false
 
     public var text: String? {
         get { searchTextField.text }
@@ -512,6 +516,11 @@ open class UISearchBar: UIView {
             return
         }
         searchTextField.isHidden = false
+        if _padTrailingChrome {
+            cancelButton?.isHidden = true
+            searchTextField.frame = bounds
+            return
+        }
         if _navInlineActive {
             layoutNavInline()
             return

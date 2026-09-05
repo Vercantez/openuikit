@@ -1,0 +1,130 @@
+{
+  "name" : "attrtext_dark",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        320,
+        130
+      ],
+      "bg" : [
+        0,
+        0,
+        0,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        130
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        16,
+        16,
+        99,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        16,
+        99,
+        20.5
+      ],
+      "intrinsic" : [
+        99,
+        20.5
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        99,
+        20.5
+      ],
+      "text" : "Tokyo model"
+    },
+    {
+      "absFrame" : [
+        16,
+        52,
+        87.5,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        52,
+        87.5,
+        20.5
+      ],
+      "intrinsic" : [
+        87.5,
+        20.5
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        87.5,
+        20.5
+      ],
+      "text" : "market rate"
+    },
+    {
+      "absFrame" : [
+        16,
+        88,
+        59,
+        21.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        88,
+        59,
+        21.5
+      ],
+      "intrinsic" : [
+        59,
+        21.5
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        59,
+        21.5
+      ],
+      "text" : "credit1"
+    }
+  ]
+}

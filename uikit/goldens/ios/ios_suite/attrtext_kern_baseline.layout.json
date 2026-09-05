@@ -1,0 +1,143 @@
+{
+  "name" : "attrtext_kern_baseline",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        16,
+        14,
+        74,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        14,
+        74,
+        20.5
+      ],
+      "intrinsic" : [
+        74,
+        20.5
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        74,
+        20.5
+      ],
+      "text" : "spacing"
+    },
+    {
+      "absFrame" : [
+        16,
+        46,
+        32.5,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        46,
+        32.5,
+        20.5
+      ],
+      "intrinsic" : [
+        32.5,
+        20.5
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        32.5,
+        20.5
+      ],
+      "text" : "tight"
+    },
+    {
+      "absFrame" : [
+        16,
+        78,
+        40,
+        22.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        78,
+        40,
+        22.5
+      ],
+      "intrinsic" : [
+        40,
+        22.5
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        40,
+        22.5
+      ],
+      "text" : "note1"
+    },
+    {
+      "absFrame" : [
+        16,
+        118,
+        33,
+        23.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        16,
+        118,
+        33,
+        23.5
+      ],
+      "intrinsic" : [
+        33,
+        23.5
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        33,
+        23.5
+      ],
+      "text" : "H2O"
+    }
+  ]
+}

@@ -140,6 +140,23 @@ final class ConformanceRegistryTests: XCTestCase {
         XCTAssertEqual(ConformanceClock.resolvedStyle(script: "dark", environment: "light"), "dark")
     }
 
+    /// RTL captures append `.rtl` so LTR goldens keep `t200` and the
+    /// scoreboard can hold both timelines (`NavFlow:t200` vs
+    /// `NavFlow:t200.rtl`). Env wins over the script field so
+    /// `conformance_flow.sh --rtl` can drive an LTR script.json.
+    func testRTLCaptureSuffixAndDirectionResolution() {
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, direction: "ltr"), "t200")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, direction: "rtl"), "t200.rtl")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.08, direction: "rtl"), "t080.rtl")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 1.0, direction: "rtl"), "t1000.rtl")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, style: "dark",
+                                                     direction: "rtl"), "t200.dark.rtl")
+        XCTAssertEqual(ConformanceClock.resolvedDirection(script: "ltr", environment: nil), "ltr")
+        XCTAssertEqual(ConformanceClock.resolvedDirection(script: "rtl", environment: nil), "rtl")
+        XCTAssertEqual(ConformanceClock.resolvedDirection(script: "ltr", environment: "rtl"), "rtl")
+        XCTAssertEqual(ConformanceClock.resolvedDirection(script: "rtl", environment: "ltr"), "rtl")
+    }
+
     @MainActor
     func testRegistryHasEveryScannedApp() throws {
         let root = try Self.repoRoot()

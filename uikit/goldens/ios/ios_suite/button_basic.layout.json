@@ -1,0 +1,239 @@
+{
+  "name" : "button_basic",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        83,
+        30
+      ],
+      "class" : "UIButton",
+      "frame" : [
+        20,
+        20,
+        83,
+        30
+      ],
+      "intrinsic" : [
+        83,
+        30
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        83,
+        30
+      ]
+    },
+    {
+      "absFrame" : [
+        20,
+        26,
+        83,
+        18
+      ],
+      "class" : "UIButtonLabel",
+      "font" : [
+        ".SFUI-Regular",
+        15
+      ],
+      "frame" : [
+        0,
+        6,
+        83,
+        18
+      ],
+      "intrinsic" : [
+        82.5,
+        18
+      ],
+      "path" : "0.0",
+      "sizeThatFits200" : [
+        82.5,
+        18
+      ],
+      "text" : "Plain Button"
+    },
+    {
+      "absFrame" : [
+        20,
+        70,
+        94,
+        33
+      ],
+      "class" : "UIButton",
+      "frame" : [
+        20,
+        70,
+        94,
+        33
+      ],
+      "intrinsic" : [
+        94,
+        33
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        94,
+        33
+      ]
+    },
+    {
+      "absFrame" : [
+        20,
+        76,
+        94,
+        21
+      ],
+      "class" : "UIButtonLabel",
+      "font" : [
+        ".SFUI-Semibold",
+        17
+      ],
+      "frame" : [
+        0,
+        6,
+        94,
+        21
+      ],
+      "intrinsic" : [
+        93.5,
+        20.5
+      ],
+      "path" : "1.0",
+      "sizeThatFits200" : [
+        93.5,
+        20.5
+      ],
+      "text" : "Bold Button"
+    },
+    {
+      "absFrame" : [
+        20,
+        120,
+        200,
+        44
+      ],
+      "class" : "UIButton",
+      "frame" : [
+        20,
+        120,
+        200,
+        44
+      ],
+      "intrinsic" : [
+        134,
+        30
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        134,
+        30
+      ]
+    },
+    {
+      "absFrame" : [
+        53,
+        133,
+        134,
+        18
+      ],
+      "class" : "UIButtonLabel",
+      "font" : [
+        ".SFUI-Regular",
+        15
+      ],
+      "frame" : [
+        33,
+        13,
+        134,
+        18
+      ],
+      "intrinsic" : [
+        133.5,
+        18
+      ],
+      "path" : "2.0",
+      "sizeThatFits200" : [
+        133.5,
+        18
+      ],
+      "text" : "Fixed Frame Button"
+    },
+    {
+      "absFrame" : [
+        20,
+        170,
+        60,
+        30
+      ],
+      "class" : "UIButton",
+      "frame" : [
+        20,
+        170,
+        60,
+        30
+      ],
+      "intrinsic" : [
+        60,
+        30
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        60,
+        30
+      ]
+    },
+    {
+      "absFrame" : [
+        20,
+        176,
+        60,
+        18
+      ],
+      "class" : "UIButtonLabel",
+      "font" : [
+        ".SFUI-Regular",
+        15
+      ],
+      "frame" : [
+        0,
+        6,
+        60,
+        18
+      ],
+      "intrinsic" : [
+        60,
+        18
+      ],
+      "path" : "3.0",
+      "sizeThatFits200" : [
+        60,
+        18
+      ],
+      "text" : "Disabled"
+    }
+  ]
+}

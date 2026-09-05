@@ -16,6 +16,7 @@ extension ConformanceApps {
         "Forms",
         "Modal",
         "NavFlow",
+        "Notes",
         "Pager",
         "TableEditor",
         "Tabs",
@@ -30,6 +31,7 @@ extension ConformanceApps {
         _ = _registerForms
         _ = _registerModal
         _ = _registerNavFlow
+        _ = _registerNotes
         _ = _registerPager
         _ = _registerTableEditor
         _ = _registerTabs

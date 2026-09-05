@@ -1,0 +1,1041 @@
+{
+  "name" : "control_pagecontrol",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        320,
+        100
+      ],
+      "bg" : [
+        0,
+        0,
+        0,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        100
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        0,
+        100,
+        320,
+        100
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        100,
+        320,
+        100
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        20,
+        10,
+        280,
+        30
+      ],
+      "class" : "UIPageControl",
+      "frame" : [
+        20,
+        10,
+        280,
+        30
+      ],
+      "path" : "2"
+    },
+    {
+      "absFrame" : [
+        114,
+        12,
+        92,
+        26
+      ],
+      "class" : "_UIPageControlContentView",
+      "frame" : [
+        94,
+        2,
+        92,
+        26
+      ],
+      "path" : "2.0"
+    },
+    {
+      "absFrame" : [
+        114,
+        12,
+        92,
+        26
+      ],
+      "alpha" : 0,
+      "class" : "UIVisualEffectView",
+      "frame" : [
+        0,
+        0,
+        92,
+        26
+      ],
+      "path" : "2.0.0"
+    },
+    {
+      "absFrame" : [
+        114,
+        12,
+        92,
+        26
+      ],
+      "class" : "_UIVisualEffectBackdropView",
+      "cornerRadius" : 13,
+      "frame" : [
+        0,
+        0,
+        92,
+        26
+      ],
+      "path" : "2.0.0.0"
+    },
+    {
+      "absFrame" : [
+        128,
+        12,
+        64,
+        26
+      ],
+      "class" : "_UIPageControlIndicatorContentView",
+      "frame" : [
+        14,
+        0,
+        64,
+        26
+      ],
+      "path" : "2.0.1"
+    },
+    {
+      "absFrame" : [
+        128,
+        20,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        0,
+        8,
+        10,
+        10
+      ],
+      "path" : "2.0.1.0"
+    },
+    {
+      "absFrame" : [
+        128,
+        20,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "2.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        146,
+        20,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        18,
+        8,
+        10,
+        10
+      ],
+      "path" : "2.0.1.1"
+    },
+    {
+      "absFrame" : [
+        146,
+        20,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "2.0.1.1.0"
+    },
+    {
+      "absFrame" : [
+        164,
+        20,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        36,
+        8,
+        10,
+        10
+      ],
+      "path" : "2.0.1.2"
+    },
+    {
+      "absFrame" : [
+        164,
+        20,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "2.0.1.2.0"
+    },
+    {
+      "absFrame" : [
+        182,
+        20,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        54,
+        8,
+        10,
+        10
+      ],
+      "path" : "2.0.1.3"
+    },
+    {
+      "absFrame" : [
+        182,
+        20,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "2.0.1.3.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        55,
+        280,
+        30
+      ],
+      "class" : "UIPageControl",
+      "frame" : [
+        20,
+        55,
+        280,
+        30
+      ],
+      "path" : "3"
+    },
+    {
+      "absFrame" : [
+        87,
+        57,
+        146,
+        26
+      ],
+      "class" : "_UIPageControlContentView",
+      "frame" : [
+        67,
+        2,
+        146,
+        26
+      ],
+      "path" : "3.0"
+    },
+    {
+      "absFrame" : [
+        87,
+        57,
+        146,
+        26
+      ],
+      "alpha" : 0,
+      "class" : "UIVisualEffectView",
+      "frame" : [
+        0,
+        0,
+        146,
+        26
+      ],
+      "path" : "3.0.0"
+    },
+    {
+      "absFrame" : [
+        87,
+        57,
+        146,
+        26
+      ],
+      "class" : "_UIVisualEffectBackdropView",
+      "cornerRadius" : 13,
+      "frame" : [
+        0,
+        0,
+        146,
+        26
+      ],
+      "path" : "3.0.0.0"
+    },
+    {
+      "absFrame" : [
+        101,
+        57,
+        118,
+        26
+      ],
+      "class" : "_UIPageControlIndicatorContentView",
+      "frame" : [
+        14,
+        0,
+        118,
+        26
+      ],
+      "path" : "3.0.1"
+    },
+    {
+      "absFrame" : [
+        101,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        0,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.0"
+    },
+    {
+      "absFrame" : [
+        101,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "3.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        119,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        18,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.1"
+    },
+    {
+      "absFrame" : [
+        119,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "3.0.1.1.0"
+    },
+    {
+      "absFrame" : [
+        137,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        36,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.2"
+    },
+    {
+      "absFrame" : [
+        137,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "3.0.1.2.0"
+    },
+    {
+      "absFrame" : [
+        155,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        54,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.3"
+    },
+    {
+      "absFrame" : [
+        155,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "3.0.1.3.0"
+    },
+    {
+      "absFrame" : [
+        173,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        72,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.4"
+    },
+    {
+      "absFrame" : [
+        173,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "3.0.1.4.0"
+    },
+    {
+      "absFrame" : [
+        191,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        90,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.5"
+    },
+    {
+      "absFrame" : [
+        191,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "3.0.1.5.0"
+    },
+    {
+      "absFrame" : [
+        209,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        108,
+        8,
+        10,
+        10
+      ],
+      "path" : "3.0.1.6"
+    },
+    {
+      "absFrame" : [
+        209,
+        65,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "3.0.1.6.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        110,
+        280,
+        30
+      ],
+      "class" : "UIPageControl",
+      "frame" : [
+        20,
+        110,
+        280,
+        30
+      ],
+      "path" : "4"
+    },
+    {
+      "absFrame" : [
+        114,
+        112,
+        92,
+        26
+      ],
+      "class" : "_UIPageControlContentView",
+      "frame" : [
+        94,
+        2,
+        92,
+        26
+      ],
+      "path" : "4.0"
+    },
+    {
+      "absFrame" : [
+        114,
+        112,
+        92,
+        26
+      ],
+      "alpha" : 0,
+      "class" : "UIVisualEffectView",
+      "frame" : [
+        0,
+        0,
+        92,
+        26
+      ],
+      "path" : "4.0.0"
+    },
+    {
+      "absFrame" : [
+        114,
+        112,
+        92,
+        26
+      ],
+      "class" : "_UIVisualEffectBackdropView",
+      "cornerRadius" : 13,
+      "frame" : [
+        0,
+        0,
+        92,
+        26
+      ],
+      "path" : "4.0.0.0"
+    },
+    {
+      "absFrame" : [
+        128,
+        112,
+        64,
+        26
+      ],
+      "class" : "_UIPageControlIndicatorContentView",
+      "frame" : [
+        14,
+        0,
+        64,
+        26
+      ],
+      "path" : "4.0.1"
+    },
+    {
+      "absFrame" : [
+        128,
+        120,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        0,
+        8,
+        10,
+        10
+      ],
+      "path" : "4.0.1.0"
+    },
+    {
+      "absFrame" : [
+        128,
+        120,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "4.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        146,
+        120,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        18,
+        8,
+        10,
+        10
+      ],
+      "path" : "4.0.1.1"
+    },
+    {
+      "absFrame" : [
+        146,
+        120,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "4.0.1.1.0"
+    },
+    {
+      "absFrame" : [
+        164,
+        120,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        36,
+        8,
+        10,
+        10
+      ],
+      "path" : "4.0.1.2"
+    },
+    {
+      "absFrame" : [
+        164,
+        120,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "4.0.1.2.0"
+    },
+    {
+      "absFrame" : [
+        182,
+        120,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        54,
+        8,
+        10,
+        10
+      ],
+      "path" : "4.0.1.3"
+    },
+    {
+      "absFrame" : [
+        182,
+        120,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "4.0.1.3.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        155,
+        200,
+        40
+      ],
+      "class" : "UIPageControl",
+      "frame" : [
+        20,
+        155,
+        200,
+        40
+      ],
+      "path" : "5"
+    },
+    {
+      "absFrame" : [
+        83,
+        162,
+        74,
+        26
+      ],
+      "class" : "_UIPageControlContentView",
+      "frame" : [
+        63,
+        7,
+        74,
+        26
+      ],
+      "path" : "5.0"
+    },
+    {
+      "absFrame" : [
+        83,
+        162,
+        74,
+        26
+      ],
+      "alpha" : 0,
+      "class" : "UIVisualEffectView",
+      "frame" : [
+        0,
+        0,
+        74,
+        26
+      ],
+      "path" : "5.0.0"
+    },
+    {
+      "absFrame" : [
+        83,
+        162,
+        74,
+        26
+      ],
+      "class" : "_UIVisualEffectBackdropView",
+      "cornerRadius" : 13,
+      "frame" : [
+        0,
+        0,
+        74,
+        26
+      ],
+      "path" : "5.0.0.0"
+    },
+    {
+      "absFrame" : [
+        97,
+        162,
+        46,
+        26
+      ],
+      "class" : "_UIPageControlIndicatorContentView",
+      "frame" : [
+        14,
+        0,
+        46,
+        26
+      ],
+      "path" : "5.0.1"
+    },
+    {
+      "absFrame" : [
+        97,
+        170,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        0,
+        8,
+        10,
+        10
+      ],
+      "path" : "5.0.1.0"
+    },
+    {
+      "absFrame" : [
+        97,
+        170,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "5.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        115,
+        170,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        18,
+        8,
+        10,
+        10
+      ],
+      "path" : "5.0.1.1"
+    },
+    {
+      "absFrame" : [
+        115,
+        170,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "5.0.1.1.0"
+    },
+    {
+      "absFrame" : [
+        133,
+        170,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorView",
+      "frame" : [
+        36,
+        8,
+        10,
+        10
+      ],
+      "path" : "5.0.1.2"
+    },
+    {
+      "absFrame" : [
+        133,
+        170,
+        10,
+        10
+      ],
+      "class" : "_UIPageIndicatorImageView",
+      "frame" : [
+        0,
+        0,
+        10,
+        10
+      ],
+      "intrinsic" : [
+        10,
+        15.5
+      ],
+      "path" : "5.0.1.2.0"
+    }
+  ]
+}
