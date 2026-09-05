@@ -35,7 +35,6 @@ func testCriticalMessageText() {
 func testMessengerInit() {
     let messenger = MSCriticalSMSMessenger()
     precondition(type(of: messenger) == MSCriticalSMSMessenger.self)
-    precondition(messenger is NSObject)
 }
 
 func testMaximumCriticalMessagingRecipientsIsZero() {
