@@ -29,9 +29,12 @@ success.
   exposes `className` and swift-corelibs-Foundation does not.
 
 `jsonRepresentation()` / `dictionaryRepresentation()` are Linux-local property
-dumps. They are **declared**, not Apple's JSON schema. `init(coder:)` returns
-`nil` and `encode(with:)` is a no-op; that is **declared**, not an archive
-round trip.
+dumps. They are **implemented** as that dump (keys, Measurement `{value,unit}`
+encoding, empty `MXCallStackTree` `{}`) and are **not** Apple's JSON schema.
+`init(coder:)` returns `nil` and `encode(with:)` is a no-op; that fail-closed
+path is **implemented**, not an Apple archive round trip. Protocol-default
+`MXMetricManagerSubscriber.didReceive` methods are empty and the manager never
+invokes them.
 
 ## Fail-closed boundaries
 
@@ -57,3 +60,29 @@ that links `libMetricKit.dylib` and uses guest Foundation `NSObject`,
 collections through MetricKit APIs.
 
 Remaining Apple-runtime questions are in `oracle-questions.tsv`.
+
+## Depth pass 2026-09
+
+Coverage before this pass: **226 implemented / 31 declared / 0 deferred /
+3 unavailable / 0 not-applicable**.
+
+Coverage after this pass: **257 implemented / 0 declared / 0 deferred /
+3 unavailable / 0 not-applicable**.
+
+Raised to `implemented` with focused tests: Linux JSON/dictionary property
+dumps, fail-closed `init(coder:)=nil`, and empty subscriber `didReceive`
+defaults. Left `unavailable`: `makeLogHandle(category:)`, `mxSignpost`, and
+`mxSignpostAnimationIntervalBegin` (OSLog / OSSignpost / Apple telemetry).
+
+Top-5 evidence distribution among implemented rows:
+
+| test | rows | share |
+| --- | ---: | ---: |
+| `testAppExitMetricGetters` | 21 | 8.2% |
+| `testMetricPayloadGetters` | 21 | 8.2% |
+| `testMXErrorCodeRawValues` | 18 | 7.0% |
+| `testMXErrorDomainAndBridging` | 15 | 5.8% |
+| `testHistogramAndAverageGetters` | 11 | 4.3% |
+
+No non-enum test exceeds 40% of implemented rows. Enum/error-code members
+share the table-driven `testMXErrorCodeRawValues`.

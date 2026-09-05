@@ -2,55 +2,217 @@
 import Foundation
 import Dispatch
 
-private func require(_ condition: Bool, _ message: String) {
-    if !condition {
-        fatalError(message)
-    }
+/// Sealed-gate runtime probe. The isolated host gate compiles this file alone,
+/// so it concatenates the focused `*Tests.swift` suite and invokes every
+/// top-level `test*` function before printing the success marker.
+// --- MXCodingTests.swift ---
+func testSupportInitWithCoder() {
+    let coder = MXDummyCoder()
+    mxRequire(MXAverage<UnitDuration>(coder: coder) == nil, "testSupportInitWithCoder: MXAverage")
+    mxRequire(MXHistogram<UnitDuration>(coder: coder) == nil, "testSupportInitWithCoder: MXHistogram")
+    mxRequire(
+        MXHistogramBucket<UnitDuration>(coder: coder) == nil,
+        "testSupportInitWithCoder: MXHistogramBucket"
+    )
+    let average = MXAverage(
+        averageMeasurement: Measurement(value: 1, unit: UnitDuration.seconds)
+    )
+    average.encode(with: coder)
+    MXHistogram<UnitDuration>().encode(with: coder)
 }
 
-private final class ProbeSubscriber: NSObject, MXMetricManagerSubscriber {
-    var metricDeliveries = 0
-    var diagnosticDeliveries = 0
-
-    func didReceive(_ payloads: [MXMetricPayload]) {
-        metricDeliveries += payloads.count
-    }
-
-    func didReceive(_ payloads: [MXDiagnosticPayload]) {
-        diagnosticDeliveries += payloads.count
-    }
+func testMetricInitWithCoder() {
+    let coder = MXDummyCoder()
+    mxRequire(MXMetric(coder: coder) == nil, "testMetricInitWithCoder: MXMetric")
+    mxRequire(MXBackgroundExitData(coder: coder) == nil, "testMetricInitWithCoder: MXBackgroundExitData")
+    mxRequire(MXForegroundExitData(coder: coder) == nil, "testMetricInitWithCoder: MXForegroundExitData")
+    mxRequire(MXSignpostIntervalData(coder: coder) == nil, "testMetricInitWithCoder: MXSignpostIntervalData")
+    MXMetric().encode(with: coder)
+    MXBackgroundExitData().encode(with: coder)
+    MXForegroundExitData().encode(with: coder)
+    MXSignpostIntervalData().encode(with: coder)
 }
 
-private final class DeinitBox: @unchecked Sendable {
-    private let lock = NSLock()
-    private var _deinited = false
-
-    var deinited: Bool {
-        lock.lock()
-        defer { lock.unlock() }
-        return _deinited
-    }
-
-    func mark() {
-        lock.lock()
-        _deinited = true
-        lock.unlock()
-    }
+func testDiagnosticInitWithCoder() {
+    let coder = MXDummyCoder()
+    mxRequire(MXCallStackTree(coder: coder) == nil, "testDiagnosticInitWithCoder: MXCallStackTree")
+    mxRequire(
+        MXCrashDiagnosticObjectiveCExceptionReason(coder: coder) == nil,
+        "testDiagnosticInitWithCoder: exception reason"
+    )
+    mxRequire(MXDiagnostic(coder: coder) == nil, "testDiagnosticInitWithCoder: MXDiagnostic")
+    mxRequire(MXMetaData(coder: coder) == nil, "testDiagnosticInitWithCoder: MXMetaData")
+    mxRequire(MXSignpostRecord(coder: coder) == nil, "testDiagnosticInitWithCoder: MXSignpostRecord")
+    MXCallStackTree().encode(with: coder)
+    MXCrashDiagnosticObjectiveCExceptionReason().encode(with: coder)
+    MXDiagnostic().encode(with: coder)
+    MXMetaData().encode(with: coder)
+    MXSignpostRecord().encode(with: coder)
 }
 
-private final class LifetimeSubscriber: NSObject, MXMetricManagerSubscriber {
-    let box: DeinitBox
-
-    init(box: DeinitBox) {
-        self.box = box
-        super.init()
-    }
-
-    deinit {
-        box.mark()
-    }
+func testPayloadInitWithCoder() {
+    let coder = MXDummyCoder()
+    mxRequire(MXMetricPayload(coder: coder) == nil, "testPayloadInitWithCoder: MXMetricPayload")
+    mxRequire(MXDiagnosticPayload(coder: coder) == nil, "testPayloadInitWithCoder: MXDiagnosticPayload")
+    MXMetricPayload().encode(with: coder)
+    MXDiagnosticPayload().encode(with: coder)
 }
 
+// --- MXDiagnosticGetterTests.swift ---
+func testMetaDataGetters() {
+    let meta = MXMetaData(
+        regionFormat: "US",
+        osVersion: "Linux",
+        deviceType: "test",
+        applicationBuildVersion: "1",
+        platformArchitecture: "x86_64",
+        lowPowerModeEnabled: true,
+        isTestFlightApp: false,
+        pid: 42,
+        bundleIdentifier: "example.app"
+    )
+    mxRequire(meta.regionFormat == "US", "testMetaDataGetters: region")
+    mxRequire(meta.osVersion == "Linux", "testMetaDataGetters: os")
+    mxRequire(meta.deviceType == "test", "testMetaDataGetters: device")
+    mxRequire(meta.applicationBuildVersion == "1", "testMetaDataGetters: build")
+    mxRequire(meta.platformArchitecture == "x86_64", "testMetaDataGetters: arch")
+    mxRequire(meta.lowPowerModeEnabled, "testMetaDataGetters: low power")
+    mxRequire(!meta.isTestFlightApp, "testMetaDataGetters: testflight")
+    mxRequire(meta.pid == 42, "testMetaDataGetters: pid")
+    mxRequire(meta.bundleIdentifier == "example.app", "testMetaDataGetters: bundle")
+}
+
+func testSignpostRecordGetters() {
+    let record = MXSignpostRecord(
+        subsystem: "app",
+        category: "ui",
+        name: "frame",
+        beginTimeStamp: Date(timeIntervalSince1970: 10),
+        endTimeStamp: Date(timeIntervalSince1970: 11),
+        duration: Measurement(value: 1, unit: .seconds),
+        isInterval: true
+    )
+    mxRequire(record.subsystem == "app", "testSignpostRecordGetters: subsystem")
+    mxRequire(record.category == "ui", "testSignpostRecordGetters: category")
+    mxRequire(record.name == "frame", "testSignpostRecordGetters: name")
+    mxRequire(record.beginTimeStamp.timeIntervalSince1970 == 10, "testSignpostRecordGetters: begin")
+    mxRequire(record.endTimeStamp?.timeIntervalSince1970 == 11, "testSignpostRecordGetters: end")
+    mxRequire(record.duration?.value == 1, "testSignpostRecordGetters: duration")
+    mxRequire(record.isInterval, "testSignpostRecordGetters: interval")
+}
+
+func testExceptionReasonGetters() {
+    let reason = MXCrashDiagnosticObjectiveCExceptionReason(
+        composedMessage: "boom",
+        formatString: "%@",
+        arguments: ["x"],
+        exceptionType: "NSException",
+        className: "Thing",
+        exceptionName: "Test"
+    )
+    mxRequire(reason.composedMessage == "boom", "testExceptionReasonGetters: composed")
+    mxRequire(reason.formatString == "%@", "testExceptionReasonGetters: format")
+    mxRequire(reason.arguments == ["x"], "testExceptionReasonGetters: args")
+    mxRequire(reason.exceptionType == "NSException", "testExceptionReasonGetters: exc type")
+    mxRequire(reason.exceptionName == "Test", "testExceptionReasonGetters: name")
+}
+
+func testMXCrashDiagnosticObjectiveCExceptionReasonClassName() {
+    let reason = MXCrashDiagnosticObjectiveCExceptionReason(
+        composedMessage: "boom",
+        formatString: "%@",
+        arguments: ["x"],
+        exceptionType: "NSException",
+        className: "Thing",
+        exceptionName: "Test"
+    )
+    let observed: String = reason.className
+    mxRequire(
+        observed == "Thing",
+        "testMXCrashDiagnosticObjectiveCExceptionReasonClassName: stored className"
+    )
+#if canImport(ObjectiveC)
+    let asObject: NSObject = reason
+    mxRequire(
+        asObject.className == "Thing",
+        "testMXCrashDiagnosticObjectiveCExceptionReasonClassName: NSObject override"
+    )
+#endif
+}
+
+func testDiagnosticGetters() {
+    let meta = MXMetaData(pid: 42, bundleIdentifier: "example.app")
+    let tree = MXCallStackTree()
+    let record = MXSignpostRecord(name: "frame")
+    let diagnostic = MXDiagnostic(applicationVersion: "1.0", metaData: meta, signpostData: [record])
+    mxRequire(diagnostic.applicationVersion == "1.0", "testDiagnosticGetters: version")
+    mxRequire(diagnostic.metaData.pid == 42, "testDiagnosticGetters: meta")
+    mxRequire(diagnostic.signpostData?.count == 1, "testDiagnosticGetters: signposts")
+    _ = tree
+}
+
+func testAppLaunchDiagnosticGetters() {
+    let tree = MXCallStackTree()
+    let launch = MXAppLaunchDiagnostic(
+        callStackTree: tree,
+        launchDuration: Measurement(value: 2, unit: .seconds)
+    )
+    mxRequire(launch.launchDuration.value == 2, "testAppLaunchDiagnosticGetters: duration")
+    mxRequire(launch.callStackTree === tree, "testAppLaunchDiagnosticGetters: tree")
+}
+
+func testCPUExceptionDiagnosticGetters() {
+    let tree = MXCallStackTree()
+    let cpuExc = MXCPUExceptionDiagnostic(
+        totalCPUTime: Measurement(value: 3, unit: .seconds),
+        totalSampledTime: Measurement(value: 4, unit: .seconds)
+    )
+    mxRequire(cpuExc.totalCPUTime.value == 3, "testCPUExceptionDiagnosticGetters: cpu time")
+    mxRequire(cpuExc.totalSampledTime.value == 4, "testCPUExceptionDiagnosticGetters: sampled")
+    mxRequire(cpuExc.callStackTree !== tree, "testCPUExceptionDiagnosticGetters: distinct tree")
+}
+
+func testCrashDiagnosticGetters() {
+    let tree = MXCallStackTree()
+    let reason = MXCrashDiagnosticObjectiveCExceptionReason(exceptionName: "Test")
+    let crash = MXCrashDiagnostic(
+        callStackTree: tree,
+        terminationReason: "signal",
+        virtualMemoryRegionInfo: "stack",
+        exceptionType: NSNumber(value: 1),
+        exceptionCode: NSNumber(value: 2),
+        signal: NSNumber(value: 11),
+        exceptionReason: reason
+    )
+    mxRequire(crash.callStackTree === tree, "testCrashDiagnosticGetters: tree")
+    mxRequire(crash.terminationReason == "signal", "testCrashDiagnosticGetters: term")
+    mxRequire(crash.virtualMemoryRegionInfo == "stack", "testCrashDiagnosticGetters: vm")
+    mxRequire(crash.exceptionType == NSNumber(value: 1), "testCrashDiagnosticGetters: type")
+    mxRequire(crash.exceptionCode == NSNumber(value: 2), "testCrashDiagnosticGetters: code")
+    mxRequire(crash.signal == NSNumber(value: 11), "testCrashDiagnosticGetters: signal")
+    mxRequire(crash.exceptionReason?.exceptionName == "Test", "testCrashDiagnosticGetters: reason")
+}
+
+func testDiskWriteExceptionDiagnosticGetters() {
+    let tree = MXCallStackTree()
+    let disk = MXDiskWriteExceptionDiagnostic(totalWritesCaused: Measurement(value: 9, unit: .bytes))
+    mxRequire(disk.totalWritesCaused.value == 9, "testDiskWriteExceptionDiagnosticGetters: writes")
+    mxRequire(disk.callStackTree !== tree, "testDiskWriteExceptionDiagnosticGetters: distinct tree")
+}
+
+func testHangDiagnosticGetters() {
+    let tree = MXCallStackTree()
+    let hang = MXHangDiagnostic(hangDuration: Measurement(value: 5, unit: .seconds))
+    mxRequire(hang.hangDuration.value == 5, "testHangDiagnosticGetters: hang")
+    mxRequire(hang.callStackTree !== tree, "testHangDiagnosticGetters: distinct tree")
+}
+
+func testCallStackTreeType() {
+    let tree = MXCallStackTree()
+    mxRequire(tree.isKind(of: NSObject.self), "testCallStackTreeType: NSObject")
+}
+
+// --- MXErrorTests.swift ---
 private struct MXErrorCodeMapping {
     let code: MXError.Code
     let rawValue: Int
@@ -99,64 +261,296 @@ private let mxErrorCodeMappings: [MXErrorCodeMapping] = [
     ),
 ]
 
-private func testMXErrorCodeRawValues() {
-    require(mxErrorCodeMappings.count == 6, "testMXErrorCodeRawValues: every mapping")
+func testMXErrorCodeRawValues() {
+    mxRequire(mxErrorCodeMappings.count == 6, "testMXErrorCodeRawValues: every mapping")
     var seenRaw = Set<Int>()
     for mapping in mxErrorCodeMappings {
-        require(
+        mxRequire(
             mapping.code.rawValue == mapping.rawValue,
             "testMXErrorCodeRawValues: \(mapping.name) rawValue"
         )
-        require(
+        mxRequire(
             MXError.Code(rawValue: mapping.rawValue) == mapping.code,
             "testMXErrorCodeRawValues: \(mapping.name) init(rawValue:)"
         )
-        require(
+        mxRequire(
             mapping.staticAlias == mapping.code,
             "testMXErrorCodeRawValues: \(mapping.name) static alias"
         )
-        require(
+        mxRequire(
             MXError(mapping.code).errorCode == mapping.rawValue,
             "testMXErrorCodeRawValues: \(mapping.name) errorCode"
         )
-        require(
+        mxRequire(
             seenRaw.insert(mapping.rawValue).inserted,
             "testMXErrorCodeRawValues: \(mapping.name) unique raw"
         )
+        mxRequire(
+            MXError.Code.launchTaskInternalFailure ~= MXError(mapping.code)
+                || mapping.code != .launchTaskInternalFailure,
+            "testMXErrorCodeRawValues: \(mapping.name) pattern"
+        )
+        var hasher = Hasher()
+        mapping.code.hash(into: &hasher)
+        mxRequire(
+            mapping.code.hashValue == mapping.code.hashValue,
+            "testMXErrorCodeRawValues: \(mapping.name) hashValue"
+        )
     }
-    require(MXError.Code(rawValue: 99) == nil, "testMXErrorCodeRawValues: invalid rawValue")
+    mxRequire(MXError.Code(rawValue: 99) == nil, "testMXErrorCodeRawValues: invalid rawValue")
+    mxRequire(
+        MXError.Code.launchTaskInternalFailure ~= MXError(.launchTaskInternalFailure),
+        "testMXErrorCodeRawValues: ~= match"
+    )
+    mxRequire(
+        !(MXError.Code.launchTaskUnknown ~= MXError(.launchTaskInternalFailure)),
+        "testMXErrorCodeRawValues: ~= mismatch"
+    )
 }
 
-private func testMXErrorDomainAndBridging() {
-    require(MXErrorDomain == "MXErrorDomain", "testMXErrorDomainAndBridging: MXErrorDomain")
-    require(MXError.errorDomain == MXErrorDomain, "testMXErrorDomainAndBridging: errorDomain")
+func testMXErrorDomainAndBridging() {
+    mxRequire(MXErrorDomain == "MXErrorDomain", "testMXErrorDomainAndBridging: MXErrorDomain")
+    mxRequire(MXError.errorDomain == MXErrorDomain, "testMXErrorDomainAndBridging: errorDomain")
     let error = MXError(.launchTaskInternalFailure, userInfo: ["reason": "linux"])
-    require(error.code == .launchTaskInternalFailure, "testMXErrorDomainAndBridging: code")
-    require(error.errorCode == 5, "testMXErrorDomainAndBridging: errorCode 5")
-    require((error.userInfo["reason"] as? String) == "linux", "testMXErrorDomainAndBridging: userInfo")
-    require((error.errorUserInfo["reason"] as? String) == "linux", "testMXErrorDomainAndBridging: errorUserInfo")
-    require(!error.localizedDescription.isEmpty, "testMXErrorDomainAndBridging: localizedDescription")
-    require(error == MXError(.launchTaskInternalFailure, userInfo: ["reason": "linux"]), "testMXErrorDomainAndBridging: ==")
-    require(error != MXError(.launchTaskUnknown), "testMXErrorDomainAndBridging: !=")
-    require(error.hashValue == MXError(.launchTaskInternalFailure).hashValue, "testMXErrorDomainAndBridging: hashValue")
+    mxRequire(error.code == .launchTaskInternalFailure, "testMXErrorDomainAndBridging: code")
+    mxRequire(error.errorCode == 5, "testMXErrorDomainAndBridging: errorCode 5")
+    mxRequire((error.userInfo["reason"] as? String) == "linux", "testMXErrorDomainAndBridging: userInfo")
+    mxRequire((error.errorUserInfo["reason"] as? String) == "linux", "testMXErrorDomainAndBridging: errorUserInfo")
+    mxRequire(!error.localizedDescription.isEmpty, "testMXErrorDomainAndBridging: localizedDescription")
+    mxRequire(
+        error == MXError(.launchTaskInternalFailure, userInfo: ["reason": "linux"]),
+        "testMXErrorDomainAndBridging: =="
+    )
+    mxRequire(error != MXError(.launchTaskUnknown), "testMXErrorDomainAndBridging: !=")
+    mxRequire(
+        error.hashValue == MXError(.launchTaskInternalFailure).hashValue,
+        "testMXErrorDomainAndBridging: hashValue"
+    )
     var hasher = Hasher()
     error.hash(into: &hasher)
-    MXError.Code.launchTaskMaxCount.hash(into: &hasher)
-    _ = MXError.Code.launchTaskMaxCount.hashValue
-    require(MXError.Code.launchTaskInternalFailure ~= error, "testMXErrorDomainAndBridging: ~=")
     let cocoa = error as NSError
-    require(cocoa.domain == MXErrorDomain, "testMXErrorDomainAndBridging: NSError.domain")
-    require(cocoa.code == 5, "testMXErrorDomainAndBridging: NSError.code")
+    mxRequire(cocoa.domain == MXErrorDomain, "testMXErrorDomainAndBridging: NSError.domain")
+    mxRequire(cocoa.code == 5, "testMXErrorDomainAndBridging: NSError.code")
 }
 
-private func testMXLaunchTaskID() {
+// --- MXHistogramTests.swift ---
+func testUnitSymbols() {
+    mxRequire(MXUnitAveragePixelLuminance.apl.symbol == "apl", "testUnitSymbols: apl")
+    mxRequire(MXUnitSignalBars.bars.symbol == "bars", "testUnitSymbols: bars")
+    mxRequire(
+        MXUnitAveragePixelLuminance.apl === MXUnitAveragePixelLuminance.baseUnit(),
+        "testUnitSymbols: apl baseUnit"
+    )
+    mxRequire(MXUnitSignalBars.bars === MXUnitSignalBars.baseUnit(), "testUnitSymbols: bars baseUnit")
+}
+
+func testHistogramAndAverageGetters() {
+    let average = MXAverage(
+        averageMeasurement: Measurement(value: 12.5, unit: MXUnitAveragePixelLuminance.apl),
+        sampleCount: 4,
+        standardDeviation: 1.25
+    )
+    mxRequire(average.averageMeasurement.value == 12.5, "testHistogramAndAverageGetters: averageMeasurement")
+    mxRequire(average.sampleCount == 4, "testHistogramAndAverageGetters: sampleCount")
+    mxRequire(average.standardDeviation == 1.25, "testHistogramAndAverageGetters: standardDeviation")
+
+    let start = Measurement(value: 0, unit: UnitDuration.seconds)
+    let end = Measurement(value: 1, unit: UnitDuration.seconds)
+    let bucket = MXHistogramBucket(bucketStart: start, bucketEnd: end, bucketCount: 7)
+    mxRequire(bucket.bucketStart.value == 0, "testHistogramAndAverageGetters: bucketStart")
+    mxRequire(bucket.bucketEnd.value == 1, "testHistogramAndAverageGetters: bucketEnd")
+    mxRequire(bucket.bucketCount == 7, "testHistogramAndAverageGetters: bucketCount")
+
+    let histogram = MXHistogram(buckets: [bucket])
+    mxRequire(histogram.totalBucketCount == 1, "testHistogramAndAverageGetters: totalBucketCount")
+    var collected = 0
+    let enumerator = histogram.bucketEnumerator
+    while let object = enumerator.nextObject() {
+        let item = object as? MXHistogramBucket<UnitDuration>
+        mxRequire(item?.bucketCount == 7, "testHistogramAndAverageGetters: enumerated bucket")
+        collected += 1
+    }
+    mxRequire(collected == 1, "testHistogramAndAverageGetters: bucketEnumerator")
+}
+
+// --- MXJSONTests.swift ---
+func testMetricJSONRepresentation() {
+    let empty = MXMetric()
+    mxRequire(empty.dictionaryRepresentation().isEmpty, "testMetricJSONRepresentation: empty dict")
+    let emptyJSON = mxJSONObject(empty.jsonRepresentation(), "testMetricJSONRepresentation: empty json")
+    mxRequire(emptyJSON.isEmpty, "testMetricJSONRepresentation: empty json object")
+
+    let cpu = MXCPUMetric(
+        cumulativeCPUTime: Measurement(value: 5, unit: .seconds),
+        cumulativeCPUInstructions: Measurement(value: 6, unit: Unit(symbol: "instr"))
+    )
+    let dict = cpu.dictionaryRepresentation()
+    let cpuTime = mxMeasurementDict(dict["cumulativeCPUTime"])
+    mxRequire(mxJSONNumber(cpuTime?["value"], equals: 5), "testMetricJSONRepresentation: cpu time")
+    mxRequire((cpuTime?["unit"] as? String) == "s", "testMetricJSONRepresentation: cpu unit")
+    let parsed = mxJSONObject(cpu.jsonRepresentation(), "testMetricJSONRepresentation: cpu json")
+    let parsedTime = mxMeasurementDict(parsed["cumulativeCPUTime"])
+    mxRequire(mxJSONNumber(parsedTime?["value"], equals: 5), "testMetricJSONRepresentation: json cpu time")
+}
+
+func testMetricPayloadJSONRepresentation() {
+    let begin = Date(timeIntervalSince1970: 10)
+    let end = Date(timeIntervalSince1970: 20)
+    let payload = MXMetricPayload(
+        latestApplicationVersion: "9",
+        includesMultipleApplicationVersions: true,
+        timeStampBegin: begin,
+        timeStampEnd: end,
+        cpuMetrics: MXCPUMetric(cumulativeCPUTime: Measurement(value: 1, unit: .seconds)),
+        metaData: MXMetaData(bundleIdentifier: "payload.app")
+    )
+    let dict = payload.dictionaryRepresentation()
+    mxRequire((dict["latestApplicationVersion"] as? String) == "9", "testMetricPayloadJSONRepresentation: version")
+    mxRequire(
+        mxJSONBool(dict["includesMultipleApplicationVersions"], equals: true),
+        "testMetricPayloadJSONRepresentation: multi"
+    )
+    mxRequire(mxJSONNumber(dict["timeStampBegin"], equals: 10), "testMetricPayloadJSONRepresentation: begin")
+    mxRequire(mxJSONNumber(dict["timeStampEnd"], equals: 20), "testMetricPayloadJSONRepresentation: end")
+    let cpu = dict["cpuMetrics"] as? [AnyHashable: Any]
+    mxRequire(cpu != nil, "testMetricPayloadJSONRepresentation: cpu nested")
+    let meta = dict["metaData"] as? [AnyHashable: Any]
+    mxRequire((meta?["bundleIdentifier"] as? String) == "payload.app", "testMetricPayloadJSONRepresentation: meta")
+
+    let parsed = mxJSONObject(payload.jsonRepresentation(), "testMetricPayloadJSONRepresentation: json")
+    mxRequire((parsed["latestApplicationVersion"] as? String) == "9", "testMetricPayloadJSONRepresentation: json version")
+    mxRequire(mxJSONNumber(parsed["timeStampBegin"], equals: 10), "testMetricPayloadJSONRepresentation: json begin")
+}
+
+func testDiagnosticPayloadJSONRepresentation() {
+    let payload = MXDiagnosticPayload(
+        hangDiagnostics: [MXHangDiagnostic(hangDuration: Measurement(value: 5, unit: .seconds))],
+        timeStampBegin: Date(timeIntervalSince1970: 3),
+        timeStampEnd: Date(timeIntervalSince1970: 4)
+    )
+    let dict = payload.dictionaryRepresentation()
+    mxRequire(mxJSONNumber(dict["timeStampBegin"], equals: 3), "testDiagnosticPayloadJSONRepresentation: begin")
+    mxRequire(mxJSONNumber(dict["timeStampEnd"], equals: 4), "testDiagnosticPayloadJSONRepresentation: end")
+    let hangs = dict["hangDiagnostics"] as? [[AnyHashable: Any]]
+    mxRequire(hangs?.count == 1, "testDiagnosticPayloadJSONRepresentation: hang count")
+    let hangDuration = mxMeasurementDict(hangs?.first?["hangDuration"])
+    mxRequire(mxJSONNumber(hangDuration?["value"], equals: 5), "testDiagnosticPayloadJSONRepresentation: hang value")
+
+    let parsed = mxJSONObject(payload.jsonRepresentation(), "testDiagnosticPayloadJSONRepresentation: json")
+    mxRequire(mxJSONNumber(parsed["timeStampEnd"], equals: 4), "testDiagnosticPayloadJSONRepresentation: json end")
+}
+
+func testDiagnosticJSONRepresentation() {
+    let meta = MXMetaData(bundleIdentifier: "diag.app", pid: 7)
+    let record = MXSignpostRecord(name: "frame", isInterval: false)
+    let diagnostic = MXDiagnostic(
+        applicationVersion: "1.0",
+        metaData: meta,
+        signpostData: [record]
+    )
+    let dict = diagnostic.dictionaryRepresentation()
+    mxRequire((dict["applicationVersion"] as? String) == "1.0", "testDiagnosticJSONRepresentation: version")
+    let nestedMeta = dict["metaData"] as? [AnyHashable: Any]
+    mxRequire((nestedMeta?["bundleIdentifier"] as? String) == "diag.app", "testDiagnosticJSONRepresentation: meta")
+    let signposts = dict["signpostData"] as? [[AnyHashable: Any]]
+    mxRequire((signposts?.first?["name"] as? String) == "frame", "testDiagnosticJSONRepresentation: signpost")
+
+    let parsed = mxJSONObject(diagnostic.jsonRepresentation(), "testDiagnosticJSONRepresentation: json")
+    mxRequire((parsed["applicationVersion"] as? String) == "1.0", "testDiagnosticJSONRepresentation: json version")
+}
+
+func testMetaDataJSONRepresentation() {
+    let meta = MXMetaData(
+        regionFormat: "US",
+        osVersion: "Linux",
+        deviceType: "test",
+        applicationBuildVersion: "1",
+        platformArchitecture: "x86_64",
+        lowPowerModeEnabled: true,
+        isTestFlightApp: false,
+        pid: 42,
+        bundleIdentifier: "example.app"
+    )
+    let dict = meta.dictionaryRepresentation()
+    mxRequire((dict["regionFormat"] as? String) == "US", "testMetaDataJSONRepresentation: region")
+    mxRequire((dict["osVersion"] as? String) == "Linux", "testMetaDataJSONRepresentation: os")
+    mxRequire((dict["deviceType"] as? String) == "test", "testMetaDataJSONRepresentation: device")
+    mxRequire((dict["applicationBuildVersion"] as? String) == "1", "testMetaDataJSONRepresentation: build")
+    mxRequire((dict["platformArchitecture"] as? String) == "x86_64", "testMetaDataJSONRepresentation: arch")
+    mxRequire(mxJSONBool(dict["lowPowerModeEnabled"], equals: true), "testMetaDataJSONRepresentation: low power")
+    mxRequire(mxJSONBool(dict["isTestFlightApp"], equals: false), "testMetaDataJSONRepresentation: testflight")
+    mxRequire(mxJSONInt(dict["pid"], equals: 42), "testMetaDataJSONRepresentation: pid")
+    mxRequire((dict["bundleIdentifier"] as? String) == "example.app", "testMetaDataJSONRepresentation: bundle")
+
+    let parsed = mxJSONObject(meta.jsonRepresentation(), "testMetaDataJSONRepresentation: json")
+    mxRequire(mxJSONInt(parsed["pid"], equals: 42), "testMetaDataJSONRepresentation: json pid")
+    mxRequire((parsed["bundleIdentifier"] as? String) == "example.app", "testMetaDataJSONRepresentation: json bundle")
+}
+
+func testCallStackTreeJSONRepresentation() {
+    let tree = MXCallStackTree()
+    let data = tree.jsonRepresentation()
+    mxRequire(data == Data("{}".utf8), "testCallStackTreeJSONRepresentation: empty object bytes")
+    let parsed = mxJSONObject(data, "testCallStackTreeJSONRepresentation: json")
+    mxRequire(parsed.isEmpty, "testCallStackTreeJSONRepresentation: empty keys")
+}
+
+func testSignpostRecordJSONRepresentation() {
+    let record = MXSignpostRecord(
+        subsystem: "app",
+        category: "ui",
+        name: "frame",
+        beginTimeStamp: Date(timeIntervalSince1970: 10),
+        endTimeStamp: Date(timeIntervalSince1970: 11),
+        duration: Measurement(value: 1, unit: .seconds),
+        isInterval: true
+    )
+    let dict = record.dictionaryRepresentation()
+    mxRequire((dict["subsystem"] as? String) == "app", "testSignpostRecordJSONRepresentation: subsystem")
+    mxRequire((dict["category"] as? String) == "ui", "testSignpostRecordJSONRepresentation: category")
+    mxRequire((dict["name"] as? String) == "frame", "testSignpostRecordJSONRepresentation: name")
+    mxRequire(mxJSONNumber(dict["beginTimeStamp"], equals: 10), "testSignpostRecordJSONRepresentation: begin")
+    mxRequire(mxJSONNumber(dict["endTimeStamp"], equals: 11), "testSignpostRecordJSONRepresentation: end")
+    mxRequire(mxJSONBool(dict["isInterval"], equals: true), "testSignpostRecordJSONRepresentation: interval")
+    let duration = mxMeasurementDict(dict["duration"])
+    mxRequire(mxJSONNumber(duration?["value"], equals: 1), "testSignpostRecordJSONRepresentation: duration")
+
+    let parsed = mxJSONObject(record.jsonRepresentation(), "testSignpostRecordJSONRepresentation: json")
+    mxRequire((parsed["name"] as? String) == "frame", "testSignpostRecordJSONRepresentation: json name")
+}
+
+func testExceptionReasonJSONRepresentation() {
+    let reason = MXCrashDiagnosticObjectiveCExceptionReason(
+        composedMessage: "boom",
+        formatString: "%@",
+        arguments: ["x"],
+        exceptionType: "NSException",
+        className: "Thing",
+        exceptionName: "Test"
+    )
+    let dict = reason.dictionaryRepresentation()
+    mxRequire((dict["composedMessage"] as? String) == "boom", "testExceptionReasonJSONRepresentation: composed")
+    mxRequire((dict["formatString"] as? String) == "%@", "testExceptionReasonJSONRepresentation: format")
+    mxRequire((dict["arguments"] as? [String]) == ["x"], "testExceptionReasonJSONRepresentation: args")
+    mxRequire((dict["exceptionType"] as? String) == "NSException", "testExceptionReasonJSONRepresentation: type")
+    mxRequire((dict["className"] as? String) == "Thing", "testExceptionReasonJSONRepresentation: class")
+    mxRequire((dict["exceptionName"] as? String) == "Test", "testExceptionReasonJSONRepresentation: name")
+
+    let parsed = mxJSONObject(reason.jsonRepresentation(), "testExceptionReasonJSONRepresentation: json")
+    mxRequire((parsed["composedMessage"] as? String) == "boom", "testExceptionReasonJSONRepresentation: json composed")
+    let parsedArgs = parsed["arguments"] as? [String]
+    mxRequire(parsedArgs == ["x"], "testExceptionReasonJSONRepresentation: json args")
+}
+
+// --- MXLaunchTaskTests.swift ---
+func testMXLaunchTaskID() {
     let task = MXLaunchTaskID("extended-launch")
-    require(task.rawValue == "extended-launch", "testMXLaunchTaskID: rawValue")
-    require(MXLaunchTaskID(rawValue: "extended-launch") == task, "testMXLaunchTaskID: init(rawValue:)")
-    require(MXLaunchTaskID("other") != task, "testMXLaunchTaskID: !=")
+    mxRequire(task.rawValue == "extended-launch", "testMXLaunchTaskID: rawValue")
+    mxRequire(MXLaunchTaskID(rawValue: "extended-launch") == task, "testMXLaunchTaskID: init(rawValue:)")
+    mxRequire(MXLaunchTaskID("other") != task, "testMXLaunchTaskID: !=")
     var hasher = Hasher()
     task.hash(into: &hasher)
-    require(task.hashValue == MXLaunchTaskID("extended-launch").hashValue, "testMXLaunchTaskID: hashValue")
+    mxRequire(task.hashValue == MXLaunchTaskID("extended-launch").hashValue, "testMXLaunchTaskID: hashValue")
 }
 
 private func requireLaunchFailClosed(_ body: () throws -> Void, _ message: String) {
@@ -164,166 +558,47 @@ private func requireLaunchFailClosed(_ body: () throws -> Void, _ message: Strin
         try body()
         fatalError("\(message): expected throw")
     } catch let error as MXError {
-        require(error.code == .launchTaskInternalFailure, "\(message): MXError.Code")
-        require(error.errorCode == 5, "\(message): raw 5")
+        mxRequire(error.code == .launchTaskInternalFailure, "\(message): MXError.Code")
+        mxRequire(error.errorCode == 5, "\(message): raw 5")
         let cocoa = error as NSError
-        require(cocoa.domain == MXErrorDomain, "\(message): domain")
-        require(cocoa.code == 5, "\(message): NSError code 5")
+        mxRequire(cocoa.domain == MXErrorDomain, "\(message): domain")
+        mxRequire(cocoa.code == 5, "\(message): NSError code 5")
     } catch {
         fatalError("\(message): expected MXError")
     }
 }
 
-private func testLaunchMeasurementFailClosed() {
-    // Linux has no MetricKit service. Fail closed with the corrected identity
-    // (MXErrorDomain code 5). On the pinned simulator, extend of an empty task
-    // ID returned success, while an immediate finish of that ID and of a
-    // never-started ID threw domain MXErrorDomain code 5. That finite
-    // observation is not a universal daemon contract; Linux does not fabricate
-    // extend success.
+func testExtendLaunchMeasurementFailClosed() {
     requireLaunchFailClosed({
         try MXMetricManager.extendLaunchMeasurement(forTaskID: MXLaunchTaskID(""))
-    }, "testLaunchMeasurementFailClosed: extend empty")
+    }, "testExtendLaunchMeasurementFailClosed: empty")
     requireLaunchFailClosed({
         try MXMetricManager.extendLaunchMeasurement(forTaskID: MXLaunchTaskID("task"))
-    }, "testLaunchMeasurementFailClosed: extend nonempty")
+    }, "testExtendLaunchMeasurementFailClosed: nonempty")
+}
+
+func testFinishExtendedLaunchMeasurementFailClosed() {
     requireLaunchFailClosed({
         try MXMetricManager.finishExtendedLaunchMeasurement(forTaskID: MXLaunchTaskID(""))
-    }, "testLaunchMeasurementFailClosed: immediate finish empty")
+    }, "testFinishExtendedLaunchMeasurementFailClosed: empty")
     requireLaunchFailClosed({
         try MXMetricManager.finishExtendedLaunchMeasurement(
             forTaskID: MXLaunchTaskID("never-started")
         )
-    }, "testLaunchMeasurementFailClosed: immediate finish never-started")
+    }, "testFinishExtendedLaunchMeasurementFailClosed: never-started")
 }
 
-private func testSharedManagerAndEmptyPayloads() {
-    require(MXMetricManager.shared === MXMetricManager.shared, "testSharedManagerAndEmptyPayloads: shared")
-    require(MXMetricManager.shared.pastPayloads.isEmpty, "testSharedManagerAndEmptyPayloads: pastPayloads")
-    require(
-        MXMetricManager.shared.pastDiagnosticPayloads.isEmpty,
-        "testSharedManagerAndEmptyPayloads: pastDiagnosticPayloads"
-    )
-}
-
-private func testSubscriberRetentionIdempotentRelease() {
-    MXMetricManager.shared._portableRemoveAllSubscribers()
-    let box = DeinitBox()
-    weak var weakSubscriber: LifetimeSubscriber?
-    do {
-        let subscriber = LifetimeSubscriber(box: box)
-        weakSubscriber = subscriber
-        MXMetricManager.shared.add(subscriber)
-        MXMetricManager.shared.add(subscriber)
-    }
-    require(MXMetricManager.shared._portableSubscriberCount == 1, "testSubscriberRetentionIdempotentRelease: idempotent add")
-    require(weakSubscriber != nil, "testSubscriberRetentionIdempotentRelease: strong retention")
-    require(!box.deinited, "testSubscriberRetentionIdempotentRelease: not deinited while retained")
-    require(MXMetricManager.shared._portableContains(weakSubscriber!), "testSubscriberRetentionIdempotentRelease: contains")
-    let probe = ProbeSubscriber()
-    MXMetricManager.shared.add(probe)
-    require(probe.metricDeliveries == 0, "testSubscriberRetentionIdempotentRelease: no metric telemetry")
-    require(probe.diagnosticDeliveries == 0, "testSubscriberRetentionIdempotentRelease: no diagnostic telemetry")
-    require(MXMetricManager.shared._portableSubscriberCount == 2, "testSubscriberRetentionIdempotentRelease: two subscribers")
-    MXMetricManager.shared.remove(probe)
-    MXMetricManager.shared.remove(weakSubscriber!)
-    require(MXMetricManager.shared._portableSubscriberCount == 0, "testSubscriberRetentionIdempotentRelease: count after remove")
-    require(weakSubscriber == nil, "testSubscriberRetentionIdempotentRelease: released after remove")
-    require(box.deinited, "testSubscriberRetentionIdempotentRelease: deinit after remove")
-}
-
-private final class SubscriberList: @unchecked Sendable {
-    private let lock = NSLock()
-    private var items: [ProbeSubscriber] = []
-
-    func append(_ subscriber: ProbeSubscriber) {
-        lock.lock()
-        items.append(subscriber)
-        lock.unlock()
-    }
-
-    func snapshot() -> [ProbeSubscriber] {
-        lock.lock()
-        let copy = items
-        lock.unlock()
-        return copy
-    }
-}
-
-private func testSubscriberConcurrentAddRemove() {
-    MXMetricManager.shared._portableRemoveAllSubscribers()
-    let group = DispatchGroup()
-    let queue = DispatchQueue(label: "metrickit.subscribers", attributes: .concurrent)
-    let live = SubscriberList()
-    for _ in 0..<64 {
-        queue.async(group: group) {
-            let subscriber = ProbeSubscriber()
-            MXMetricManager.shared.add(subscriber)
-            MXMetricManager.shared.add(subscriber)
-            live.append(subscriber)
-        }
-    }
-    group.wait()
-    let items = live.snapshot()
-    require(items.count == 64, "testSubscriberConcurrentAddRemove: live count")
-    require(MXMetricManager.shared._portableSubscriberCount == 64, "testSubscriberConcurrentAddRemove: unique adds")
-    for subscriber in items {
-        queue.async(group: group) {
-            MXMetricManager.shared.remove(subscriber)
-            MXMetricManager.shared.remove(subscriber)
-        }
-    }
-    group.wait()
-    require(MXMetricManager.shared._portableSubscriberCount == 0, "testSubscriberConcurrentAddRemove: released")
-}
-
-private func testUnitSymbols() {
-    require(MXUnitAveragePixelLuminance.apl.symbol == "apl", "testUnitSymbols: apl")
-    require(MXUnitSignalBars.bars.symbol == "bars", "testUnitSymbols: bars")
-    require(
-        MXUnitAveragePixelLuminance.apl === MXUnitAveragePixelLuminance.baseUnit(),
-        "testUnitSymbols: apl baseUnit"
-    )
-    require(MXUnitSignalBars.bars === MXUnitSignalBars.baseUnit(), "testUnitSymbols: bars baseUnit")
-}
-
-private func testHistogramAndAverageGetters() {
-    let average = MXAverage(
-        averageMeasurement: Measurement(value: 12.5, unit: MXUnitAveragePixelLuminance.apl),
-        sampleCount: 4,
-        standardDeviation: 1.25
-    )
-    require(average.averageMeasurement.value == 12.5, "testHistogramAndAverageGetters: averageMeasurement")
-    require(average.sampleCount == 4, "testHistogramAndAverageGetters: sampleCount")
-    require(average.standardDeviation == 1.25, "testHistogramAndAverageGetters: standardDeviation")
-
-    let start = Measurement(value: 0, unit: UnitDuration.seconds)
-    let end = Measurement(value: 1, unit: UnitDuration.seconds)
-    let bucket = MXHistogramBucket(bucketStart: start, bucketEnd: end, bucketCount: 7)
-    require(bucket.bucketStart.value == 0, "testHistogramAndAverageGetters: bucketStart")
-    require(bucket.bucketEnd.value == 1, "testHistogramAndAverageGetters: bucketEnd")
-    require(bucket.bucketCount == 7, "testHistogramAndAverageGetters: bucketCount")
-
-    let histogram = MXHistogram(buckets: [bucket])
-    require(histogram.totalBucketCount == 1, "testHistogramAndAverageGetters: totalBucketCount")
-    var collected = 0
-    let enumerator = histogram.bucketEnumerator
-    while let object = enumerator.nextObject() {
-        let item = object as? MXHistogramBucket<UnitDuration>
-        require(item?.bucketCount == 7, "testHistogramAndAverageGetters: enumerated bucket")
-        collected += 1
-    }
-    require(collected == 1, "testHistogramAndAverageGetters: bucketEnumerator")
-}
-
-private func testMetricGetters() {
+// --- MXMetricGetterTests.swift ---
+func testAnimationMetricGetters() {
     let animation = MXAnimationMetric(
         hitchTimeRatio: Measurement(value: 0.1, unit: Unit(symbol: "")),
         scrollHitchTimeRatio: Measurement(value: 0.2, unit: Unit(symbol: ""))
     )
-    require(animation.hitchTimeRatio.value == 0.1, "testMetricGetters: hitchTimeRatio")
-    require(animation.scrollHitchTimeRatio.value == 0.2, "testMetricGetters: scrollHitchTimeRatio")
+    mxRequire(animation.hitchTimeRatio.value == 0.1, "testAnimationMetricGetters: hitchTimeRatio")
+    mxRequire(animation.scrollHitchTimeRatio.value == 0.2, "testAnimationMetricGetters: scrollHitchTimeRatio")
+}
 
+func testAppExitMetricGetters() {
     let background = MXBackgroundExitData(
         cumulativeNormalAppExitCount: 1,
         cumulativeMemoryResourceLimitExitCount: 2,
@@ -336,16 +611,19 @@ private func testMetricGetters() {
         cumulativeSuspendedWithLockedFileExitCount: 9,
         cumulativeBackgroundTaskAssertionTimeoutExitCount: 10
     )
-    require(background.cumulativeNormalAppExitCount == 1, "testMetricGetters: bg normal")
-    require(background.cumulativeMemoryResourceLimitExitCount == 2, "testMetricGetters: bg mem")
-    require(background.cumulativeCPUResourceLimitExitCount == 3, "testMetricGetters: bg cpu")
-    require(background.cumulativeMemoryPressureExitCount == 4, "testMetricGetters: bg pressure")
-    require(background.cumulativeBadAccessExitCount == 5, "testMetricGetters: bg bad access")
-    require(background.cumulativeAbnormalExitCount == 6, "testMetricGetters: bg abnormal")
-    require(background.cumulativeIllegalInstructionExitCount == 7, "testMetricGetters: bg illegal")
-    require(background.cumulativeAppWatchdogExitCount == 8, "testMetricGetters: bg watchdog")
-    require(background.cumulativeSuspendedWithLockedFileExitCount == 9, "testMetricGetters: bg locked")
-    require(background.cumulativeBackgroundTaskAssertionTimeoutExitCount == 10, "testMetricGetters: bg assertion")
+    mxRequire(background.cumulativeNormalAppExitCount == 1, "testAppExitMetricGetters: bg normal")
+    mxRequire(background.cumulativeMemoryResourceLimitExitCount == 2, "testAppExitMetricGetters: bg mem")
+    mxRequire(background.cumulativeCPUResourceLimitExitCount == 3, "testAppExitMetricGetters: bg cpu")
+    mxRequire(background.cumulativeMemoryPressureExitCount == 4, "testAppExitMetricGetters: bg pressure")
+    mxRequire(background.cumulativeBadAccessExitCount == 5, "testAppExitMetricGetters: bg bad access")
+    mxRequire(background.cumulativeAbnormalExitCount == 6, "testAppExitMetricGetters: bg abnormal")
+    mxRequire(background.cumulativeIllegalInstructionExitCount == 7, "testAppExitMetricGetters: bg illegal")
+    mxRequire(background.cumulativeAppWatchdogExitCount == 8, "testAppExitMetricGetters: bg watchdog")
+    mxRequire(background.cumulativeSuspendedWithLockedFileExitCount == 9, "testAppExitMetricGetters: bg locked")
+    mxRequire(
+        background.cumulativeBackgroundTaskAssertionTimeoutExitCount == 10,
+        "testAppExitMetricGetters: bg assertion"
+    )
 
     let foreground = MXForegroundExitData(
         cumulativeNormalAppExitCount: 11,
@@ -355,53 +633,78 @@ private func testMetricGetters() {
         cumulativeIllegalInstructionExitCount: 15,
         cumulativeAppWatchdogExitCount: 16
     )
-    require(foreground.cumulativeNormalAppExitCount == 11, "testMetricGetters: fg normal")
-    require(foreground.cumulativeMemoryResourceLimitExitCount == 12, "testMetricGetters: fg mem")
-    require(foreground.cumulativeBadAccessExitCount == 13, "testMetricGetters: fg bad access")
-    require(foreground.cumulativeAbnormalExitCount == 14, "testMetricGetters: fg abnormal")
-    require(foreground.cumulativeIllegalInstructionExitCount == 15, "testMetricGetters: fg illegal")
-    require(foreground.cumulativeAppWatchdogExitCount == 16, "testMetricGetters: fg watchdog")
+    mxRequire(foreground.cumulativeNormalAppExitCount == 11, "testAppExitMetricGetters: fg normal")
+    mxRequire(foreground.cumulativeMemoryResourceLimitExitCount == 12, "testAppExitMetricGetters: fg mem")
+    mxRequire(foreground.cumulativeBadAccessExitCount == 13, "testAppExitMetricGetters: fg bad access")
+    mxRequire(foreground.cumulativeAbnormalExitCount == 14, "testAppExitMetricGetters: fg abnormal")
+    mxRequire(foreground.cumulativeIllegalInstructionExitCount == 15, "testAppExitMetricGetters: fg illegal")
+    mxRequire(foreground.cumulativeAppWatchdogExitCount == 16, "testAppExitMetricGetters: fg watchdog")
 
     let exits = MXAppExitMetric(foregroundExitData: foreground, backgroundExitData: background)
-    require(exits.foregroundExitData.cumulativeNormalAppExitCount == 11, "testMetricGetters: exit fg")
-    require(exits.backgroundExitData.cumulativeNormalAppExitCount == 1, "testMetricGetters: exit bg")
+    mxRequire(exits.foregroundExitData.cumulativeNormalAppExitCount == 11, "testAppExitMetricGetters: exit fg")
+    mxRequire(exits.backgroundExitData.cumulativeNormalAppExitCount == 1, "testAppExitMetricGetters: exit bg")
+}
 
+func testAppLaunchMetricGetters() {
     let launch = MXAppLaunchMetric()
-    require(launch.histogrammedTimeToFirstDraw.totalBucketCount == 0, "testMetricGetters: ttfd")
-    require(launch.histogrammedApplicationResumeTime.totalBucketCount == 0, "testMetricGetters: resume")
-    require(launch.histogrammedOptimizedTimeToFirstDraw.totalBucketCount == 0, "testMetricGetters: optimized")
-    require(launch.histogrammedExtendedLaunch.totalBucketCount == 0, "testMetricGetters: extended")
+    mxRequire(launch.histogrammedTimeToFirstDraw.totalBucketCount == 0, "testAppLaunchMetricGetters: ttfd")
+    mxRequire(launch.histogrammedApplicationResumeTime.totalBucketCount == 0, "testAppLaunchMetricGetters: resume")
+    mxRequire(
+        launch.histogrammedOptimizedTimeToFirstDraw.totalBucketCount == 0,
+        "testAppLaunchMetricGetters: optimized"
+    )
+    mxRequire(launch.histogrammedExtendedLaunch.totalBucketCount == 0, "testAppLaunchMetricGetters: extended")
+}
 
+func testAppResponsivenessMetricGetters() {
     let responsiveness = MXAppResponsivenessMetric()
-    require(responsiveness.histogrammedApplicationHangTime.totalBucketCount == 0, "testMetricGetters: hang hist")
+    mxRequire(
+        responsiveness.histogrammedApplicationHangTime.totalBucketCount == 0,
+        "testAppResponsivenessMetricGetters: hang hist"
+    )
+}
 
+func testAppRunTimeMetricGetters() {
     let runtime = MXAppRunTimeMetric(
         cumulativeForegroundTime: Measurement(value: 1, unit: .seconds),
         cumulativeBackgroundTime: Measurement(value: 2, unit: .seconds),
         cumulativeBackgroundAudioTime: Measurement(value: 3, unit: .seconds),
         cumulativeBackgroundLocationTime: Measurement(value: 4, unit: .seconds)
     )
-    require(runtime.cumulativeForegroundTime.value == 1, "testMetricGetters: fg time")
-    require(runtime.cumulativeBackgroundTime.value == 2, "testMetricGetters: bg time")
-    require(runtime.cumulativeBackgroundAudioTime.value == 3, "testMetricGetters: bg audio")
-    require(runtime.cumulativeBackgroundLocationTime.value == 4, "testMetricGetters: bg location")
+    mxRequire(runtime.cumulativeForegroundTime.value == 1, "testAppRunTimeMetricGetters: fg time")
+    mxRequire(runtime.cumulativeBackgroundTime.value == 2, "testAppRunTimeMetricGetters: bg time")
+    mxRequire(runtime.cumulativeBackgroundAudioTime.value == 3, "testAppRunTimeMetricGetters: bg audio")
+    mxRequire(runtime.cumulativeBackgroundLocationTime.value == 4, "testAppRunTimeMetricGetters: bg location")
+}
 
+func testCPUMetricGetters() {
     let cpu = MXCPUMetric(
         cumulativeCPUTime: Measurement(value: 5, unit: .seconds),
         cumulativeCPUInstructions: Measurement(value: 6, unit: Unit(symbol: ""))
     )
-    require(cpu.cumulativeCPUTime.value == 5, "testMetricGetters: cpu time")
-    require(cpu.cumulativeCPUInstructions.value == 6, "testMetricGetters: cpu instr")
+    mxRequire(cpu.cumulativeCPUTime.value == 5, "testCPUMetricGetters: cpu time")
+    mxRequire(cpu.cumulativeCPUInstructions.value == 6, "testCPUMetricGetters: cpu instr")
+}
 
+func testGPUMetricGetters() {
     let gpu = MXGPUMetric(cumulativeGPUTime: Measurement(value: 7, unit: .seconds))
-    require(gpu.cumulativeGPUTime.value == 7, "testMetricGetters: gpu")
+    mxRequire(gpu.cumulativeGPUTime.value == 7, "testGPUMetricGetters: gpu")
+}
 
+func testCellularConditionMetricGetters() {
     let cellular = MXCellularConditionMetric()
-    require(cellular.histogrammedCellularConditionTime.totalBucketCount == 0, "testMetricGetters: cellular")
+    mxRequire(
+        cellular.histogrammedCellularConditionTime.totalBucketCount == 0,
+        "testCellularConditionMetricGetters: cellular"
+    )
+}
 
+func testDiskIOMetricGetters() {
     let disk = MXDiskIOMetric(cumulativeLogicalWrites: Measurement(value: 8, unit: .bytes))
-    require(disk.cumulativeLogicalWrites.value == 8, "testMetricGetters: disk writes")
+    mxRequire(disk.cumulativeLogicalWrites.value == 8, "testDiskIOMetricGetters: disk writes")
+}
 
+func testDiskSpaceUsageMetricGetters() {
     let space = MXDiskSpaceUsageMetric(
         totalBinaryFileCount: 1,
         totalBinaryFileSize: Measurement(value: 2, unit: .bytes),
@@ -412,22 +715,26 @@ private func testMetricGetters() {
         totalDiskSpaceUsedSize: Measurement(value: 7, unit: .bytes),
         totalDiskSpaceCapacity: Measurement(value: 8, unit: .bytes)
     )
-    require(space.totalBinaryFileCount == 1, "testMetricGetters: bin count")
-    require(space.totalBinaryFileSize.value == 2, "testMetricGetters: bin size")
-    require(space.totalDataFileCount == 3, "testMetricGetters: data count")
-    require(space.totalDataFileSize.value == 4, "testMetricGetters: data size")
-    require(space.totalCacheFolderSize.value == 5, "testMetricGetters: cache")
-    require(space.totalCloneSize.value == 6, "testMetricGetters: clone")
-    require(space.totalDiskSpaceUsedSize.value == 7, "testMetricGetters: used")
-    require(space.totalDiskSpaceCapacity.value == 8, "testMetricGetters: capacity")
+    mxRequire(space.totalBinaryFileCount == 1, "testDiskSpaceUsageMetricGetters: bin count")
+    mxRequire(space.totalBinaryFileSize.value == 2, "testDiskSpaceUsageMetricGetters: bin size")
+    mxRequire(space.totalDataFileCount == 3, "testDiskSpaceUsageMetricGetters: data count")
+    mxRequire(space.totalDataFileSize.value == 4, "testDiskSpaceUsageMetricGetters: data size")
+    mxRequire(space.totalCacheFolderSize.value == 5, "testDiskSpaceUsageMetricGetters: cache")
+    mxRequire(space.totalCloneSize.value == 6, "testDiskSpaceUsageMetricGetters: clone")
+    mxRequire(space.totalDiskSpaceUsedSize.value == 7, "testDiskSpaceUsageMetricGetters: used")
+    mxRequire(space.totalDiskSpaceCapacity.value == 8, "testDiskSpaceUsageMetricGetters: capacity")
+}
 
+func testDisplayMetricGetters() {
     let displayAverage = MXAverage(
         averageMeasurement: Measurement(value: 9, unit: MXUnitAveragePixelLuminance.apl)
     )
     let display = MXDisplayMetric(averagePixelLuminance: displayAverage)
-    require(display.averagePixelLuminance?.averageMeasurement.value == 9, "testMetricGetters: display")
-    require(MXDisplayMetric().averagePixelLuminance == nil, "testMetricGetters: display nil")
+    mxRequire(display.averagePixelLuminance?.averageMeasurement.value == 9, "testDisplayMetricGetters: display")
+    mxRequire(MXDisplayMetric().averagePixelLuminance == nil, "testDisplayMetricGetters: display nil")
+}
 
+func testLocationActivityMetricGetters() {
     let location = MXLocationActivityMetric(
         cumulativeBestAccuracyForNavigationTime: Measurement(value: 1, unit: .seconds),
         cumulativeBestAccuracyTime: Measurement(value: 2, unit: .seconds),
@@ -436,28 +743,34 @@ private func testMetricGetters() {
         cumulativeKilometerAccuracyTime: Measurement(value: 5, unit: .seconds),
         cumulativeThreeKilometersAccuracyTime: Measurement(value: 6, unit: .seconds)
     )
-    require(location.cumulativeBestAccuracyForNavigationTime.value == 1, "testMetricGetters: nav")
-    require(location.cumulativeBestAccuracyTime.value == 2, "testMetricGetters: best")
-    require(location.cumulativeNearestTenMetersAccuracyTime.value == 3, "testMetricGetters: 10m")
-    require(location.cumulativeHundredMetersAccuracyTime.value == 4, "testMetricGetters: 100m")
-    require(location.cumulativeKilometerAccuracyTime.value == 5, "testMetricGetters: 1km")
-    require(location.cumulativeThreeKilometersAccuracyTime.value == 6, "testMetricGetters: 3km")
+    mxRequire(location.cumulativeBestAccuracyForNavigationTime.value == 1, "testLocationActivityMetricGetters: nav")
+    mxRequire(location.cumulativeBestAccuracyTime.value == 2, "testLocationActivityMetricGetters: best")
+    mxRequire(location.cumulativeNearestTenMetersAccuracyTime.value == 3, "testLocationActivityMetricGetters: 10m")
+    mxRequire(location.cumulativeHundredMetersAccuracyTime.value == 4, "testLocationActivityMetricGetters: 100m")
+    mxRequire(location.cumulativeKilometerAccuracyTime.value == 5, "testLocationActivityMetricGetters: 1km")
+    mxRequire(location.cumulativeThreeKilometersAccuracyTime.value == 6, "testLocationActivityMetricGetters: 3km")
+}
 
+func testMemoryMetricGetters() {
     let memory = MXMemoryMetric(peakMemoryUsage: Measurement(value: 10, unit: .bytes))
-    require(memory.peakMemoryUsage.value == 10, "testMetricGetters: peak")
-    require(memory.averageSuspendedMemory.sampleCount == 0, "testMetricGetters: suspended")
+    mxRequire(memory.peakMemoryUsage.value == 10, "testMemoryMetricGetters: peak")
+    mxRequire(memory.averageSuspendedMemory.sampleCount == 0, "testMemoryMetricGetters: suspended")
+}
 
+func testNetworkTransferMetricGetters() {
     let network = MXNetworkTransferMetric(
         cumulativeWifiUpload: Measurement(value: 1, unit: .bytes),
         cumulativeWifiDownload: Measurement(value: 2, unit: .bytes),
         cumulativeCellularUpload: Measurement(value: 3, unit: .bytes),
         cumulativeCellularDownload: Measurement(value: 4, unit: .bytes)
     )
-    require(network.cumulativeWifiUpload.value == 1, "testMetricGetters: wifi up")
-    require(network.cumulativeWifiDownload.value == 2, "testMetricGetters: wifi down")
-    require(network.cumulativeCellularUpload.value == 3, "testMetricGetters: cell up")
-    require(network.cumulativeCellularDownload.value == 4, "testMetricGetters: cell down")
+    mxRequire(network.cumulativeWifiUpload.value == 1, "testNetworkTransferMetricGetters: wifi up")
+    mxRequire(network.cumulativeWifiDownload.value == 2, "testNetworkTransferMetricGetters: wifi down")
+    mxRequire(network.cumulativeCellularUpload.value == 3, "testNetworkTransferMetricGetters: cell up")
+    mxRequire(network.cumulativeCellularDownload.value == 4, "testNetworkTransferMetricGetters: cell down")
+}
 
+func testSignpostMetricGetters() {
     let interval = MXSignpostIntervalData(
         histogrammedSignpostDuration: MXHistogram(),
         cumulativeCPUTime: Measurement(value: 1, unit: .seconds),
@@ -465,11 +778,14 @@ private func testMetricGetters() {
         cumulativeLogicalWrites: Measurement(value: 3, unit: .bytes),
         cumulativeHitchTimeRatio: Measurement(value: 4, unit: Unit(symbol: ""))
     )
-    require(interval.histogrammedSignpostDuration.totalBucketCount == 0, "testMetricGetters: signpost hist")
-    require(interval.cumulativeCPUTime?.value == 1, "testMetricGetters: signpost cpu")
-    require(interval.averageMemory?.averageMeasurement.value == 2, "testMetricGetters: signpost mem")
-    require(interval.cumulativeLogicalWrites?.value == 3, "testMetricGetters: signpost writes")
-    require(interval.cumulativeHitchTimeRatio?.value == 4, "testMetricGetters: signpost hitch")
+    mxRequire(
+        interval.histogrammedSignpostDuration.totalBucketCount == 0,
+        "testSignpostMetricGetters: signpost hist"
+    )
+    mxRequire(interval.cumulativeCPUTime?.value == 1, "testSignpostMetricGetters: signpost cpu")
+    mxRequire(interval.averageMemory?.averageMeasurement.value == 2, "testSignpostMetricGetters: signpost mem")
+    mxRequire(interval.cumulativeLogicalWrites?.value == 3, "testSignpostMetricGetters: signpost writes")
+    mxRequire(interval.cumulativeHitchTimeRatio?.value == 4, "testSignpostMetricGetters: signpost hitch")
 
     let signpost = MXSignpostMetric(
         signpostName: "draw",
@@ -477,111 +793,143 @@ private func testMetricGetters() {
         signpostIntervalData: interval,
         totalCount: 3
     )
-    require(signpost.signpostName == "draw", "testMetricGetters: signpost name")
-    require(signpost.signpostCategory == "ui", "testMetricGetters: signpost category")
-    require(signpost.signpostIntervalData === interval, "testMetricGetters: signpost interval")
-    require(signpost.totalCount == 3, "testMetricGetters: signpost count")
+    mxRequire(signpost.signpostName == "draw", "testSignpostMetricGetters: signpost name")
+    mxRequire(signpost.signpostCategory == "ui", "testSignpostMetricGetters: signpost category")
+    mxRequire(signpost.signpostIntervalData === interval, "testSignpostMetricGetters: signpost interval")
+    mxRequire(signpost.totalCount == 3, "testSignpostMetricGetters: signpost count")
 }
 
-private func testDiagnosticGetters() {
-    let meta = MXMetaData(
-        regionFormat: "US",
-        osVersion: "Linux",
-        deviceType: "test",
-        applicationBuildVersion: "1",
-        platformArchitecture: "x86_64",
-        lowPowerModeEnabled: true,
-        isTestFlightApp: false,
-        pid: 42,
-        bundleIdentifier: "example.app"
+// --- MXMetricManagerTests.swift ---
+func testSharedManagerAndEmptyPayloads() {
+    mxRequire(MXMetricManager.shared === MXMetricManager.shared, "testSharedManagerAndEmptyPayloads: shared")
+    mxRequire(MXMetricManager.shared.pastPayloads.isEmpty, "testSharedManagerAndEmptyPayloads: pastPayloads")
+    mxRequire(
+        MXMetricManager.shared.pastDiagnosticPayloads.isEmpty,
+        "testSharedManagerAndEmptyPayloads: pastDiagnosticPayloads"
     )
-    require(meta.regionFormat == "US", "testDiagnosticGetters: region")
-    require(meta.osVersion == "Linux", "testDiagnosticGetters: os")
-    require(meta.deviceType == "test", "testDiagnosticGetters: device")
-    require(meta.applicationBuildVersion == "1", "testDiagnosticGetters: build")
-    require(meta.platformArchitecture == "x86_64", "testDiagnosticGetters: arch")
-    require(meta.lowPowerModeEnabled, "testDiagnosticGetters: low power")
-    require(!meta.isTestFlightApp, "testDiagnosticGetters: testflight")
-    require(meta.pid == 42, "testDiagnosticGetters: pid")
-    require(meta.bundleIdentifier == "example.app", "testDiagnosticGetters: bundle")
-
-    let tree = MXCallStackTree()
-    let record = MXSignpostRecord(
-        subsystem: "app",
-        category: "ui",
-        name: "frame",
-        beginTimeStamp: Date(timeIntervalSince1970: 10),
-        endTimeStamp: Date(timeIntervalSince1970: 11),
-        duration: Measurement(value: 1, unit: .seconds),
-        isInterval: true
-    )
-    require(record.subsystem == "app", "testDiagnosticGetters: record subsystem")
-    require(record.category == "ui", "testDiagnosticGetters: record category")
-    require(record.name == "frame", "testDiagnosticGetters: record name")
-    require(record.beginTimeStamp.timeIntervalSince1970 == 10, "testDiagnosticGetters: record begin")
-    require(record.endTimeStamp?.timeIntervalSince1970 == 11, "testDiagnosticGetters: record end")
-    require(record.duration?.value == 1, "testDiagnosticGetters: record duration")
-    require(record.isInterval, "testDiagnosticGetters: record interval")
-
-    let reason = MXCrashDiagnosticObjectiveCExceptionReason(
-        composedMessage: "boom",
-        formatString: "%@",
-        arguments: ["x"],
-        exceptionType: "NSException",
-        className: "Thing",
-        exceptionName: "Test"
-    )
-    require(reason.composedMessage == "boom", "testDiagnosticGetters: composed")
-    require(reason.formatString == "%@", "testDiagnosticGetters: format")
-    require(reason.arguments == ["x"], "testDiagnosticGetters: args")
-    require(reason.exceptionType == "NSException", "testDiagnosticGetters: exc type")
-    require(reason.className == "Thing", "testDiagnosticGetters: class")
-    require(reason.exceptionName == "Test", "testDiagnosticGetters: name")
-
-    let diagnostic = MXDiagnostic(applicationVersion: "1.0", metaData: meta, signpostData: [record])
-    require(diagnostic.applicationVersion == "1.0", "testDiagnosticGetters: version")
-    require(diagnostic.metaData.pid == 42, "testDiagnosticGetters: meta")
-    require(diagnostic.signpostData?.count == 1, "testDiagnosticGetters: signposts")
-
-    let launch = MXAppLaunchDiagnostic(callStackTree: tree, launchDuration: Measurement(value: 2, unit: .seconds))
-    require(launch.launchDuration.value == 2, "testDiagnosticGetters: launch duration")
-    require(launch.callStackTree === tree, "testDiagnosticGetters: launch tree")
-
-    let cpuExc = MXCPUExceptionDiagnostic(
-        totalCPUTime: Measurement(value: 3, unit: .seconds),
-        totalSampledTime: Measurement(value: 4, unit: .seconds)
-    )
-    require(cpuExc.totalCPUTime.value == 3, "testDiagnosticGetters: cpu time")
-    require(cpuExc.totalSampledTime.value == 4, "testDiagnosticGetters: sampled")
-    require(cpuExc.callStackTree !== tree, "testDiagnosticGetters: cpu tree")
-
-    let crash = MXCrashDiagnostic(
-        callStackTree: tree,
-        terminationReason: "signal",
-        virtualMemoryRegionInfo: "stack",
-        exceptionType: NSNumber(value: 1),
-        exceptionCode: NSNumber(value: 2),
-        signal: NSNumber(value: 11),
-        exceptionReason: reason
-    )
-    require(crash.callStackTree === tree, "testDiagnosticGetters: crash tree")
-    require(crash.terminationReason == "signal", "testDiagnosticGetters: term")
-    require(crash.virtualMemoryRegionInfo == "stack", "testDiagnosticGetters: vm")
-    require(crash.exceptionType == NSNumber(value: 1), "testDiagnosticGetters: crash type")
-    require(crash.exceptionCode == NSNumber(value: 2), "testDiagnosticGetters: crash code")
-    require(crash.signal == NSNumber(value: 11), "testDiagnosticGetters: crash signal")
-    require(crash.exceptionReason?.exceptionName == "Test", "testDiagnosticGetters: crash reason")
-
-    let disk = MXDiskWriteExceptionDiagnostic(totalWritesCaused: Measurement(value: 9, unit: .bytes))
-    require(disk.totalWritesCaused.value == 9, "testDiagnosticGetters: writes")
-    require(disk.callStackTree !== tree, "testDiagnosticGetters: disk tree")
-
-    let hang = MXHangDiagnostic(hangDuration: Measurement(value: 5, unit: .seconds))
-    require(hang.hangDuration.value == 5, "testDiagnosticGetters: hang")
-    require(hang.callStackTree !== tree, "testDiagnosticGetters: hang tree")
 }
 
-private func testPayloadGetters() {
+private final class MXDeinitBox: @unchecked Sendable {
+    private let lock = NSLock()
+    private var _deinited = false
+
+    var deinited: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return _deinited
+    }
+
+    func mark() {
+        lock.lock()
+        _deinited = true
+        lock.unlock()
+    }
+}
+
+private final class MXLifetimeSubscriber: NSObject, MXMetricManagerSubscriber {
+    let box: MXDeinitBox
+
+    init(box: MXDeinitBox) {
+        self.box = box
+        super.init()
+    }
+
+    deinit {
+        box.mark()
+    }
+}
+
+func testSubscriberAddRemoveRetention() {
+    MXMetricManager.shared._portableRemoveAllSubscribers()
+    let box = MXDeinitBox()
+    weak var weakSubscriber: MXLifetimeSubscriber?
+    do {
+        let subscriber = MXLifetimeSubscriber(box: box)
+        weakSubscriber = subscriber
+        MXMetricManager.shared.add(subscriber)
+        MXMetricManager.shared.add(subscriber)
+    }
+    mxRequire(
+        MXMetricManager.shared._portableSubscriberCount == 1,
+        "testSubscriberAddRemoveRetention: idempotent add"
+    )
+    mxRequire(weakSubscriber != nil, "testSubscriberAddRemoveRetention: strong retention")
+    mxRequire(!box.deinited, "testSubscriberAddRemoveRetention: not deinited while retained")
+    mxRequire(
+        MXMetricManager.shared._portableContains(weakSubscriber!),
+        "testSubscriberAddRemoveRetention: contains"
+    )
+    let probe = MXCountingSubscriber()
+    MXMetricManager.shared.add(probe)
+    mxRequire(probe.metricDeliveries == 0, "testSubscriberAddRemoveRetention: no metric telemetry")
+    mxRequire(probe.diagnosticDeliveries == 0, "testSubscriberAddRemoveRetention: no diagnostic telemetry")
+    mxRequire(
+        MXMetricManager.shared._portableSubscriberCount == 2,
+        "testSubscriberAddRemoveRetention: two subscribers"
+    )
+    MXMetricManager.shared.remove(probe)
+    MXMetricManager.shared.remove(weakSubscriber!)
+    mxRequire(
+        MXMetricManager.shared._portableSubscriberCount == 0,
+        "testSubscriberAddRemoveRetention: count after remove"
+    )
+    mxRequire(weakSubscriber == nil, "testSubscriberAddRemoveRetention: released after remove")
+    mxRequire(box.deinited, "testSubscriberAddRemoveRetention: deinit after remove")
+}
+
+private final class MXSubscriberList: @unchecked Sendable {
+    private let lock = NSLock()
+    private var items: [MXCountingSubscriber] = []
+
+    func append(_ subscriber: MXCountingSubscriber) {
+        lock.lock()
+        items.append(subscriber)
+        lock.unlock()
+    }
+
+    func snapshot() -> [MXCountingSubscriber] {
+        lock.lock()
+        let copy = items
+        lock.unlock()
+        return copy
+    }
+}
+
+func testSubscriberConcurrentAddRemove() {
+    MXMetricManager.shared._portableRemoveAllSubscribers()
+    let group = DispatchGroup()
+    let queue = DispatchQueue(label: "metrickit.subscribers", attributes: .concurrent)
+    let live = MXSubscriberList()
+    for _ in 0..<64 {
+        queue.async(group: group) {
+            let subscriber = MXCountingSubscriber()
+            MXMetricManager.shared.add(subscriber)
+            MXMetricManager.shared.add(subscriber)
+            live.append(subscriber)
+        }
+    }
+    group.wait()
+    let items = live.snapshot()
+    mxRequire(items.count == 64, "testSubscriberConcurrentAddRemove: live count")
+    mxRequire(
+        MXMetricManager.shared._portableSubscriberCount == 64,
+        "testSubscriberConcurrentAddRemove: unique adds"
+    )
+    for subscriber in items {
+        queue.async(group: group) {
+            MXMetricManager.shared.remove(subscriber)
+            MXMetricManager.shared.remove(subscriber)
+        }
+    }
+    group.wait()
+    mxRequire(
+        MXMetricManager.shared._portableSubscriberCount == 0,
+        "testSubscriberConcurrentAddRemove: released"
+    )
+}
+
+// --- MXPayloadTests.swift ---
+func testMetricPayloadGetters() {
     let begin = Date(timeIntervalSince1970: 1)
     let end = Date(timeIntervalSince1970: 2)
     let payload = MXMetricPayload(
@@ -606,27 +954,29 @@ private func testPayloadGetters() {
         signpostMetrics: [MXSignpostMetric(signpostName: "n")],
         metaData: MXMetaData(bundleIdentifier: "payload.app")
     )
-    require(payload.latestApplicationVersion == "9", "testPayloadGetters: version")
-    require(payload.includesMultipleApplicationVersions, "testPayloadGetters: multi")
-    require(payload.timeStampBegin == begin, "testPayloadGetters: begin")
-    require(payload.timeStampEnd == end, "testPayloadGetters: end")
-    require(payload.cpuMetrics != nil, "testPayloadGetters: cpu")
-    require(payload.gpuMetrics != nil, "testPayloadGetters: gpu")
-    require(payload.cellularConditionMetrics != nil, "testPayloadGetters: cellular")
-    require(payload.applicationTimeMetrics != nil, "testPayloadGetters: time")
-    require(payload.locationActivityMetrics != nil, "testPayloadGetters: location")
-    require(payload.networkTransferMetrics != nil, "testPayloadGetters: network")
-    require(payload.applicationLaunchMetrics != nil, "testPayloadGetters: launch")
-    require(payload.applicationResponsivenessMetrics != nil, "testPayloadGetters: resp")
-    require(payload.diskIOMetrics != nil, "testPayloadGetters: diskio")
-    require(payload.memoryMetrics != nil, "testPayloadGetters: memory")
-    require(payload.displayMetrics != nil, "testPayloadGetters: display")
-    require(payload.animationMetrics != nil, "testPayloadGetters: animation")
-    require(payload.applicationExitMetrics != nil, "testPayloadGetters: exits")
-    require(payload.diskSpaceUsageMetrics != nil, "testPayloadGetters: space")
-    require(payload.signpostMetrics?.count == 1, "testPayloadGetters: signposts")
-    require(payload.metaData?.bundleIdentifier == "payload.app", "testPayloadGetters: meta")
+    mxRequire(payload.latestApplicationVersion == "9", "testMetricPayloadGetters: version")
+    mxRequire(payload.includesMultipleApplicationVersions, "testMetricPayloadGetters: multi")
+    mxRequire(payload.timeStampBegin == begin, "testMetricPayloadGetters: begin")
+    mxRequire(payload.timeStampEnd == end, "testMetricPayloadGetters: end")
+    mxRequire(payload.cpuMetrics != nil, "testMetricPayloadGetters: cpu")
+    mxRequire(payload.gpuMetrics != nil, "testMetricPayloadGetters: gpu")
+    mxRequire(payload.cellularConditionMetrics != nil, "testMetricPayloadGetters: cellular")
+    mxRequire(payload.applicationTimeMetrics != nil, "testMetricPayloadGetters: time")
+    mxRequire(payload.locationActivityMetrics != nil, "testMetricPayloadGetters: location")
+    mxRequire(payload.networkTransferMetrics != nil, "testMetricPayloadGetters: network")
+    mxRequire(payload.applicationLaunchMetrics != nil, "testMetricPayloadGetters: launch")
+    mxRequire(payload.applicationResponsivenessMetrics != nil, "testMetricPayloadGetters: resp")
+    mxRequire(payload.diskIOMetrics != nil, "testMetricPayloadGetters: diskio")
+    mxRequire(payload.memoryMetrics != nil, "testMetricPayloadGetters: memory")
+    mxRequire(payload.displayMetrics != nil, "testMetricPayloadGetters: display")
+    mxRequire(payload.animationMetrics != nil, "testMetricPayloadGetters: animation")
+    mxRequire(payload.applicationExitMetrics != nil, "testMetricPayloadGetters: exits")
+    mxRequire(payload.diskSpaceUsageMetrics != nil, "testMetricPayloadGetters: space")
+    mxRequire(payload.signpostMetrics?.count == 1, "testMetricPayloadGetters: signposts")
+    mxRequire(payload.metaData?.bundleIdentifier == "payload.app", "testMetricPayloadGetters: meta")
+}
 
+func testDiagnosticPayloadGetters() {
     let diagBegin = Date(timeIntervalSince1970: 3)
     let diagEnd = Date(timeIntervalSince1970: 4)
     let diagnostics = MXDiagnosticPayload(
@@ -638,53 +988,172 @@ private func testPayloadGetters() {
         timeStampBegin: diagBegin,
         timeStampEnd: diagEnd
     )
-    require(diagnostics.cpuExceptionDiagnostics?.count == 1, "testPayloadGetters: diag cpu")
-    require(diagnostics.diskWriteExceptionDiagnostics?.count == 1, "testPayloadGetters: diag disk")
-    require(diagnostics.hangDiagnostics?.count == 1, "testPayloadGetters: diag hang")
-    require(diagnostics.appLaunchDiagnostics?.count == 1, "testPayloadGetters: diag launch")
-    require(diagnostics.crashDiagnostics?.count == 1, "testPayloadGetters: diag crash")
-    require(diagnostics.timeStampBegin == diagBegin, "testPayloadGetters: diag begin")
-    require(diagnostics.timeStampEnd == diagEnd, "testPayloadGetters: diag end")
+    mxRequire(diagnostics.cpuExceptionDiagnostics?.count == 1, "testDiagnosticPayloadGetters: diag cpu")
+    mxRequire(diagnostics.diskWriteExceptionDiagnostics?.count == 1, "testDiagnosticPayloadGetters: diag disk")
+    mxRequire(diagnostics.hangDiagnostics?.count == 1, "testDiagnosticPayloadGetters: diag hang")
+    mxRequire(diagnostics.appLaunchDiagnostics?.count == 1, "testDiagnosticPayloadGetters: diag launch")
+    mxRequire(diagnostics.crashDiagnostics?.count == 1, "testDiagnosticPayloadGetters: diag crash")
+    mxRequire(diagnostics.timeStampBegin == diagBegin, "testDiagnosticPayloadGetters: diag begin")
+    mxRequire(diagnostics.timeStampEnd == diagEnd, "testDiagnosticPayloadGetters: diag end")
 }
 
-private func testMXCrashDiagnosticObjectiveCExceptionReasonClassName() {
-    let reason = MXCrashDiagnosticObjectiveCExceptionReason(
-        composedMessage: "boom",
-        formatString: "%@",
-        arguments: ["x"],
-        exceptionType: "NSException",
-        className: "Thing",
-        exceptionName: "Test"
-    )
-    let observed: String = reason.className
-    require(
-        observed == "Thing",
-        "testMXCrashDiagnosticObjectiveCExceptionReasonClassName: stored className"
-    )
-    // Apple Foundation exposes NSObject.className, so the MetricKit property
-    // is an override there. Reading through NSObject is a compile-time catch
-    // for a missing override when Objective-C Foundation is imported. This
-    // Linux host does not execute Apple Foundation.
-#if canImport(ObjectiveC)
-    let asObject: NSObject = reason
-    require(
-        asObject.className == "Thing",
-        "testMXCrashDiagnosticObjectiveCExceptionReasonClassName: NSObject override"
-    )
-#endif
+// --- MXSubscriberTests.swift ---
+func testSubscriberDidReceiveMetricPayloads() {
+    MXMetricManager.shared._portableRemoveAllSubscribers()
+    let defaults = MXDefaultingSubscriber()
+    defaults.didReceive([MXMetricPayload]())
+    defaults.didReceive([MXMetricPayload(latestApplicationVersion: "1")])
+
+    let counting = MXCountingSubscriber()
+    MXMetricManager.shared.add(counting)
+    mxRequire(counting.metricDeliveries == 0, "testSubscriberDidReceiveMetricPayloads: manager silent")
+    counting.didReceive([MXMetricPayload(), MXMetricPayload()])
+    mxRequire(counting.metricDeliveries == 2, "testSubscriberDidReceiveMetricPayloads: direct call")
+    mxRequire(counting.diagnosticDeliveries == 0, "testSubscriberDidReceiveMetricPayloads: no diagnostic mix")
+    MXMetricManager.shared.remove(counting)
 }
 
+func testSubscriberDidReceiveDiagnosticPayloads() {
+    MXMetricManager.shared._portableRemoveAllSubscribers()
+    let defaults = MXDefaultingSubscriber()
+    defaults.didReceive([MXDiagnosticPayload]())
+    defaults.didReceive([MXDiagnosticPayload()])
+
+    let counting = MXCountingSubscriber()
+    MXMetricManager.shared.add(counting)
+    mxRequire(
+        counting.diagnosticDeliveries == 0,
+        "testSubscriberDidReceiveDiagnosticPayloads: manager silent"
+    )
+    counting.didReceive([MXDiagnosticPayload()])
+    mxRequire(counting.diagnosticDeliveries == 1, "testSubscriberDidReceiveDiagnosticPayloads: direct call")
+    mxRequire(counting.metricDeliveries == 0, "testSubscriberDidReceiveDiagnosticPayloads: no metric mix")
+    MXMetricManager.shared.remove(counting)
+}
+
+// --- MetricKitSupportTests.swift ---
+func mxRequire(_ condition: Bool, _ message: String) {
+    if !condition {
+        fatalError(message)
+    }
+}
+
+final class MXDummyCoder: NSCoder {}
+
+final class MXDefaultingSubscriber: NSObject, MXMetricManagerSubscriber {}
+
+final class MXCountingSubscriber: NSObject, MXMetricManagerSubscriber {
+    var metricDeliveries = 0
+    var diagnosticDeliveries = 0
+
+    func didReceive(_ payloads: [MXMetricPayload]) {
+        metricDeliveries += payloads.count
+    }
+
+    func didReceive(_ payloads: [MXDiagnosticPayload]) {
+        diagnosticDeliveries += payloads.count
+    }
+}
+
+func mxJSONObject(_ data: Data, _ message: String) -> [String: Any] {
+    do {
+        let object = try JSONSerialization.jsonObject(with: data, options: [])
+        guard let dictionary = object as? [String: Any] else {
+            fatalError("\(message): JSON is not an object")
+        }
+        return dictionary
+    } catch {
+        fatalError("\(message): \(error)")
+    }
+}
+
+func mxJSONNumber(_ value: Any?, equals expected: Double) -> Bool {
+    if let number = value as? NSNumber {
+        return number.doubleValue == expected
+    }
+    if let number = value as? Double {
+        return number == expected
+    }
+    if let number = value as? Int {
+        return Double(number) == expected
+    }
+    return false
+}
+
+func mxJSONInt(_ value: Any?, equals expected: Int) -> Bool {
+    if let number = value as? NSNumber {
+        return number.intValue == expected
+    }
+    if let number = value as? Int {
+        return number == expected
+    }
+    return false
+}
+
+func mxJSONBool(_ value: Any?, equals expected: Bool) -> Bool {
+    if let flag = value as? Bool {
+        return flag == expected
+    }
+    if let number = value as? NSNumber {
+        return number.boolValue == expected
+    }
+    return false
+}
+
+func mxMeasurementDict(_ value: Any?) -> [String: Any]? {
+    value as? [String: Any]
+}
+
+testSupportInitWithCoder()
+testMetricInitWithCoder()
+testDiagnosticInitWithCoder()
+testPayloadInitWithCoder()
+testMetaDataGetters()
+testSignpostRecordGetters()
+testExceptionReasonGetters()
+testMXCrashDiagnosticObjectiveCExceptionReasonClassName()
+testDiagnosticGetters()
+testAppLaunchDiagnosticGetters()
+testCPUExceptionDiagnosticGetters()
+testCrashDiagnosticGetters()
+testDiskWriteExceptionDiagnosticGetters()
+testHangDiagnosticGetters()
+testCallStackTreeType()
 testMXErrorCodeRawValues()
 testMXErrorDomainAndBridging()
-testMXLaunchTaskID()
-testLaunchMeasurementFailClosed()
-testSharedManagerAndEmptyPayloads()
-testSubscriberRetentionIdempotentRelease()
-testSubscriberConcurrentAddRemove()
 testUnitSymbols()
 testHistogramAndAverageGetters()
-testMetricGetters()
-testDiagnosticGetters()
-testMXCrashDiagnosticObjectiveCExceptionReasonClassName()
-testPayloadGetters()
+testMetricJSONRepresentation()
+testMetricPayloadJSONRepresentation()
+testDiagnosticPayloadJSONRepresentation()
+testDiagnosticJSONRepresentation()
+testMetaDataJSONRepresentation()
+testCallStackTreeJSONRepresentation()
+testSignpostRecordJSONRepresentation()
+testExceptionReasonJSONRepresentation()
+testMXLaunchTaskID()
+testExtendLaunchMeasurementFailClosed()
+testFinishExtendedLaunchMeasurementFailClosed()
+testAnimationMetricGetters()
+testAppExitMetricGetters()
+testAppLaunchMetricGetters()
+testAppResponsivenessMetricGetters()
+testAppRunTimeMetricGetters()
+testCPUMetricGetters()
+testGPUMetricGetters()
+testCellularConditionMetricGetters()
+testDiskIOMetricGetters()
+testDiskSpaceUsageMetricGetters()
+testDisplayMetricGetters()
+testLocationActivityMetricGetters()
+testMemoryMetricGetters()
+testNetworkTransferMetricGetters()
+testSignpostMetricGetters()
+testSharedManagerAndEmptyPayloads()
+testSubscriberAddRemoveRetention()
+testSubscriberConcurrentAddRemove()
+testMetricPayloadGetters()
+testDiagnosticPayloadGetters()
+testSubscriberDidReceiveMetricPayloads()
+testSubscriberDidReceiveDiagnosticPayloads()
 print("METRICKIT_AGENT_RUNTIME_OK")
