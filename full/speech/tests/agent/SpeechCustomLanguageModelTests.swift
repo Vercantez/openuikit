@@ -125,7 +125,7 @@ func testPhraseCountGeneratorSequence() {
     let generator = SFCustomLanguageModelData.TemplatePhraseCountGenerator()
     generator.define(className: "App", values: ["Mail"])
     generator.insert(template: "open {App}", count: 2)
-    speechWaitAsync {
+    speechRunAsync {
         do {
             let containsWhere = try await generator.contains { $0.phrase == "open {App}" }
             precondition(containsWhere)
@@ -191,9 +191,7 @@ func testPhraseCountGeneratorSequence() {
             precondition(emptyFlat.isEmpty)
             var streamFlat: [SFCustomLanguageModelData.PhraseCount] = []
             for try await item in generator.flatMap({ _ in
-                AsyncStream<SFCustomLanguageModelData.PhraseCount> { continuation in
-                    continuation.finish()
-                }
+                SpeechNeverResults<SFCustomLanguageModelData.PhraseCount>()
             }) {
                 streamFlat.append(item)
             }
@@ -242,7 +240,7 @@ func testTemplatePhraseCountGenerator() {
         templateClasses: ["App": ["Mail"]]
     )
     _ = type(of: iterator)
-    speechWaitAsync {
+    speechRunAsync {
         let next = try? await iterator.next()
         precondition(next?.phrase == "x")
         let asyncIterator = generator.makeAsyncIterator()
@@ -256,7 +254,7 @@ func testCustomLanguageModelExport() {
         identifier: "probe",
         version: "1"
     )
-    speechWaitAsync {
+    speechRunAsync {
         do {
             try await data.export(to: URL(fileURLWithPath: "/tmp/out.bin"))
             fatalError("export should fail closed")

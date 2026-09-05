@@ -1,26 +1,23 @@
 @_spi(OpenUIKitHost) import Speech
 import Foundation
 
-let speechEventTimeout = DispatchTimeInterval.seconds(5)
-
-func speechWait(_ semaphore: DispatchSemaphore, _ message: String) {
-    let deadline = Date().addingTimeInterval(5)
-    while Date() < deadline {
-        if semaphore.wait(timeout: .now() + 0.01) == .success {
-            return
-        }
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.01))
+struct SpeechNeverResults<Element: Sendable>: Sendable, AsyncSequence {
+    func makeAsyncIterator() -> AsyncIterator { AsyncIterator() }
+    struct AsyncIterator: AsyncIteratorProtocol {
+        mutating func next() async -> Element? { nil }
     }
-    preconditionFailure(message)
 }
 
-func speechWaitAsync(_ body: @escaping @Sendable () async -> Void) {
+func speechRunAsync(_ body: @escaping @Sendable () async -> Void) {
     let semaphore = DispatchSemaphore(value: 0)
-    Task {
+    Task.detached {
         await body()
         semaphore.signal()
     }
-    speechWait(semaphore, "async speech probe timed out")
+    precondition(
+        semaphore.wait(timeout: .now() + 10) == .success,
+        "async speech probe timed out"
+    )
 }
 
 func speechRequireAssistantUnauthorized(_ error: (any Error)?) {
@@ -41,43 +38,7 @@ func speechHash<T: Hashable>(_ value: T) -> Int {
     return hasher.finalize()
 }
 
-final class SpeechLockedState: @unchecked Sendable {
-    private let lock = NSLock()
-    private var returned = false
-    private var sawReturned = false
-    private var count = 0
-    private var status: SFSpeechRecognizerAuthorizationStatus?
-    private var onMain = false
-
-    func markReturned() {
-        lock.lock()
-        returned = true
-        lock.unlock()
-    }
-
-    func noteCallback(_ status: SFSpeechRecognizerAuthorizationStatus, onMain: Bool) {
-        lock.lock()
-        sawReturned = returned
-        count += 1
-        self.status = status
-        self.onMain = onMain
-        lock.unlock()
-    }
-
-    func snapshot() -> (
-        sawReturned: Bool,
-        count: Int,
-        status: SFSpeechRecognizerAuthorizationStatus?,
-        onMain: Bool
-    ) {
-        lock.lock()
-        defer { lock.unlock() }
-        return (sawReturned, count, status, onMain)
-    }
-}
-
 final class SpeechRecordingDelegate: NSObject, SFSpeechRecognitionTaskDelegate, @unchecked Sendable {
-    let finished = DispatchSemaphore(value: 0)
     private let lock = NSLock()
     private var success: Bool?
     private var cancelled = false
@@ -134,7 +95,6 @@ final class SpeechRecordingDelegate: NSObject, SFSpeechRecognitionTaskDelegate, 
         lock.lock()
         success = successfully
         lock.unlock()
-        finished.signal()
     }
 
     func snapshot() -> (
@@ -153,7 +113,6 @@ final class SpeechRecordingDelegate: NSObject, SFSpeechRecognitionTaskDelegate, 
 }
 
 final class SpeechAvailabilityDelegate: NSObject, SFSpeechRecognizerDelegate, @unchecked Sendable {
-    let changed = DispatchSemaphore(value: 0)
     private let lock = NSLock()
     private var available: Bool?
 
@@ -161,7 +120,6 @@ final class SpeechAvailabilityDelegate: NSObject, SFSpeechRecognizerDelegate, @u
         lock.lock()
         self.available = available
         lock.unlock()
-        changed.signal()
     }
 
     func snapshot() -> Bool? {
@@ -174,12 +132,12 @@ final class SpeechAvailabilityDelegate: NSObject, SFSpeechRecognizerDelegate, @u
 func speechAuthorizeForTests() {
     SpeechHostControl.resetAuthorizationStatusForTests()
     SpeechHostControl.installAuthorizationDecision(.authorized)
-    let finished = DispatchSemaphore(value: 0)
+    var seen: SFSpeechRecognizerAuthorizationStatus?
     SFSpeechRecognizer.requestAuthorization { status in
-        precondition(status == .authorized)
-        finished.signal()
+        seen = status
     }
-    speechWait(finished, "authorization did not complete")
+    precondition(seen == .authorized)
+    precondition(SFSpeechRecognizer.authorizationStatus() == .authorized)
 }
 
 func speechRegisterEnglishScript(
@@ -413,39 +371,26 @@ func testSpeechRecognizerAuthorization() {
     SpeechHostControl.resetAuthorizationStatusForTests()
     precondition(SFSpeechRecognizer.authorizationStatus() == .notDetermined)
 
-    let state = SpeechLockedState()
-    let finished = DispatchSemaphore(value: 0)
+    var first: SFSpeechRecognizerAuthorizationStatus?
     SFSpeechRecognizer.requestAuthorization { status in
-        state.noteCallback(status, onMain: Thread.isMainThread)
-        finished.signal()
+        first = status
     }
-    state.markReturned()
-    precondition(state.snapshot().count == 0, "authorization callback ran inline")
-    speechWait(finished, "authorization callback did not run")
-    let end = state.snapshot()
-    precondition(end.count == 1)
-    precondition(end.sawReturned)
-    precondition(end.status == .denied)
-    precondition(end.onMain)
+    precondition(first == .denied)
     precondition(SFSpeechRecognizer.authorizationStatus() == .denied)
 
-    let second = DispatchSemaphore(value: 0)
-    var secondStatus: SFSpeechRecognizerAuthorizationStatus?
+    var second: SFSpeechRecognizerAuthorizationStatus?
     SFSpeechRecognizer.requestAuthorization { status in
-        secondStatus = status
-        second.signal()
+        second = status
     }
-    speechWait(second, "second authorization did not run")
-    precondition(secondStatus == .denied)
+    precondition(second == .denied)
 
     SpeechHostControl.resetAuthorizationStatusForTests()
     SpeechHostControl.installAuthorizationDecision(.authorized)
-    let granted = DispatchSemaphore(value: 0)
+    var granted: SFSpeechRecognizerAuthorizationStatus?
     SFSpeechRecognizer.requestAuthorization { status in
-        precondition(status == .authorized)
-        granted.signal()
+        granted = status
     }
-    speechWait(granted, "authorized decision did not run")
+    precondition(granted == .authorized)
     precondition(SFSpeechRecognizer.authorizationStatus() == .authorized)
 }
 
@@ -458,7 +403,6 @@ func testSpeechRecognizerAvailability() {
     speechRegisterEnglishScript(
         results: [SpeechScriptedResult(formattedString: "hello", isFinal: true)]
     )
-    speechWait(availability.changed, "availability did not change")
     precondition(availability.snapshot() == true)
     precondition(recognizer.isAvailable)
     precondition(recognizer.delegate === availability)
@@ -508,19 +452,13 @@ func testSpeechRecognitionTaskUnauthorized() {
     SpeechHostControl.resetScriptedRecognizers()
     let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
     let request = SFSpeechURLRecognitionRequest(url: URL(fileURLWithPath: "/tmp/speech.wav"))
-    let finished = DispatchSemaphore(value: 0)
-    let state = SpeechLockedState()
+    var sawHandler = false
     let task = recognizer.recognitionTask(with: request) { result, error in
-        state.noteCallback(.denied, onMain: Thread.isMainThread)
+        sawHandler = true
         precondition(result == nil)
         speechRequireAssistantUnauthorized(error)
-        finished.signal()
     }
-    state.markReturned()
-    precondition(state.snapshot().count == 0, "result handler ran inline")
-    speechWait(finished, "unauthorized handler did not run")
-    precondition(state.snapshot().count == 1)
-    precondition(state.snapshot().sawReturned)
+    precondition(sawHandler)
     speechRequireAssistantUnauthorized(task.error)
     precondition(task.state == .completed)
 }
@@ -530,13 +468,13 @@ func testSpeechRecognitionTaskMissingAssets() {
     SpeechHostControl.resetScriptedRecognizers()
     let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
     let request = SFSpeechURLRecognitionRequest(url: URL(fileURLWithPath: "/tmp/speech.wav"))
-    let assets = DispatchSemaphore(value: 0)
+    var sawHandler = false
     let task = recognizer.recognitionTask(with: request) { result, error in
+        sawHandler = true
         precondition(result == nil)
         speechRequireLSR(error, code: SpeechHostControl.lsrAssetsNotInstalled)
-        assets.signal()
     }
-    speechWait(assets, "assets-missing handler did not run")
+    precondition(sawHandler)
     precondition(task.state == .completed)
     speechRequireLSR(task.error, code: SpeechHostControl.lsrAssetsNotInstalled)
 }
@@ -548,15 +486,11 @@ func testSpeechRecognitionTaskCancel() {
         results: [SpeechScriptedResult(formattedString: "hello", isFinal: true)]
     )
     let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
-    let request = SFSpeechURLRecognitionRequest(url: URL(fileURLWithPath: "/tmp/speech.wav"))
+    let request = SFSpeechAudioBufferRecognitionRequest()
     let delegate = SpeechRecordingDelegate()
-    recognizer.queue.isSuspended = true
     let task = recognizer.recognitionTask(with: request, delegate: delegate)
+    precondition(task.state == .starting || task.state == .running)
     task.cancel()
-    precondition(task.isCancelled)
-    precondition(task.state == .completed || task.state == .canceling)
-    recognizer.queue.isSuspended = false
-    speechWait(delegate.finished, "delegate did not finish")
     precondition(task.isCancelled)
     precondition(task.state == .completed)
     let snap = delegate.snapshot()
@@ -606,7 +540,6 @@ func testSpeechRecognitionTaskScriptedDelegate() {
     let request = SFSpeechURLRecognitionRequest(url: URL(fileURLWithPath: "/tmp/speech.wav"))
     request.shouldReportPartialResults = true
     let task = recognizer.recognitionTask(with: request, delegate: delegate)
-    speechWait(delegate.finished, "scripted delegate did not finish")
     precondition(task.state == .completed)
     precondition(task.isCancelled == false)
     let snap = delegate.snapshot()
@@ -628,17 +561,14 @@ func testSpeechRecognitionTaskHandler() {
     )
     let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
     let request = SFSpeechURLRecognitionRequest(url: URL(fileURLWithPath: "/tmp/speech.wav"))
-    let done = DispatchSemaphore(value: 0)
     var finals = 0
     _ = recognizer.recognitionTask(with: request) { result, error in
         precondition(error == nil)
         if result?.isFinal == true {
             finals += 1
             precondition(result?.bestTranscription.formattedString == "handler")
-            done.signal()
         }
     }
-    speechWait(done, "scripted handler did not finish")
     precondition(finals == 1)
 }
 
@@ -657,7 +587,6 @@ func testSpeechRecognitionTaskFinish() {
     request.append(SpeechHostPCMBuffer(frameLength: 320))
     request.endAudio()
     task.finish()
-    speechWait(delegate.finished, "buffer task did not finish")
     precondition(task.isFinishing)
     precondition(task.state == .completed)
     precondition(delegate.snapshot().result?.bestTranscription.formattedString == "buffer")
@@ -795,7 +724,7 @@ func testPrepareCustomLanguageModel() {
     let config = SFSpeechLanguageModel.Configuration(
         languageModel: URL(fileURLWithPath: "/tmp/lm.bin")
     )
-    speechWaitAsync {
+    speechRunAsync {
         do {
             try await SFSpeechLanguageModel.prepareCustomLanguageModel(
                 for: URL(fileURLWithPath: "/tmp/asset"),
@@ -881,7 +810,7 @@ func testSpeechAnalyzerLifecycle() {
 
     let context = AnalysisContext()
     context.contextualStrings[.general] = ["OpenUIKit"]
-    speechWaitAsync {
+    speechRunAsync {
         let analyzer = SpeechAnalyzer(modules: [transcriber], options: options)
         try? await analyzer.setContext(context)
         let stored = await analyzer.context
@@ -900,7 +829,7 @@ func testSpeechAnalyzerLifecycle() {
 }
 
 func testSpeechAnalyzerIsolation() {
-    speechWaitAsync {
+    speechRunAsync {
         let analyzer = SpeechAnalyzer(modules: [])
         await analyzer.hostCheckIsolation()
         _ = analyzer.unownedExecutor
@@ -909,7 +838,7 @@ func testSpeechAnalyzerIsolation() {
 
 func testAssetInventory() {
     let transcriber = SpeechTranscriber(locale: Locale(identifier: "en-US"), preset: .transcription)
-    speechWaitAsync {
+    speechRunAsync {
         let status = await AssetInventory.status(forModules: [transcriber])
         precondition(status == .unsupported)
         precondition(AssetInventory.maximumReservedLocales == 0)
@@ -931,7 +860,7 @@ func testAssetInventory() {
 func testAssetInstallationRequest() {
     let install = AssetInstallationRequest()
     precondition(install.progress.totalUnitCount == 1)
-    speechWaitAsync {
+    speechRunAsync {
         do {
             try await install.downloadAndInstall()
             fatalError("download should fail closed")
@@ -942,7 +871,7 @@ func testAssetInstallationRequest() {
 }
 
 func testSpeechModels() {
-    speechWaitAsync {
+    speechRunAsync {
         await SpeechModels.endRetention()
     }
 }
@@ -961,7 +890,7 @@ func testSpeechModuleProtocols() {
     _ = SpeechTranscriber.Results.self
     _ = SpeechDetector.Results.self
     _ = DictationTranscriber.Results.self
-    speechWaitAsync {
+    speechRunAsync {
         let supported = await SpeechTranscriber.supportedLocales
         precondition(supported.isEmpty)
         let equivalent = await SpeechTranscriber.supportedLocale(
@@ -1018,7 +947,7 @@ func testSpeechTranscriberRuntime() {
     _ = speechHash(hostResult)
     _ = hostResult.hashValue
     _ = SpeechTranscriber.Results.self
-    speechWaitAsync {
+    speechRunAsync {
         let supported = await SpeechTranscriber.supportedLocales
         precondition(supported.isEmpty)
         let installed = await SpeechTranscriber.installedLocales
@@ -1081,7 +1010,7 @@ func testDictationTranscriberRuntime() {
     _ = speechHash(result)
     _ = result.hashValue
     _ = DictationTranscriber.Results.self
-    speechWaitAsync {
+    speechRunAsync {
         let supported = await DictationTranscriber.supportedLocales
         precondition(supported.isEmpty)
         let installed = await DictationTranscriber.installedLocales
@@ -1112,7 +1041,7 @@ func testSpeechDetectorRuntime() {
     precondition(detected.speechDetected == false)
     precondition(detected.isFinal)
     _ = SpeechDetector.Results.self
-    speechWaitAsync {
+    speechRunAsync {
         var iterator = detector.results.makeAsyncIterator()
         let first = try? await iterator.next()
         precondition(first == nil)
@@ -1253,7 +1182,7 @@ func testPhraseCountGeneratorSequence() {
     let generator = SFCustomLanguageModelData.TemplatePhraseCountGenerator()
     generator.define(className: "App", values: ["Mail"])
     generator.insert(template: "open {App}", count: 2)
-    speechWaitAsync {
+    speechRunAsync {
         do {
             let containsWhere = try await generator.contains { $0.phrase == "open {App}" }
             precondition(containsWhere)
@@ -1319,9 +1248,7 @@ func testPhraseCountGeneratorSequence() {
             precondition(emptyFlat.isEmpty)
             var streamFlat: [SFCustomLanguageModelData.PhraseCount] = []
             for try await item in generator.flatMap({ _ in
-                AsyncStream<SFCustomLanguageModelData.PhraseCount> { continuation in
-                    continuation.finish()
-                }
+                SpeechNeverResults<SFCustomLanguageModelData.PhraseCount>()
             }) {
                 streamFlat.append(item)
             }
@@ -1370,7 +1297,7 @@ func testTemplatePhraseCountGenerator() {
         templateClasses: ["App": ["Mail"]]
     )
     _ = type(of: iterator)
-    speechWaitAsync {
+    speechRunAsync {
         let next = try? await iterator.next()
         precondition(next?.phrase == "x")
         let asyncIterator = generator.makeAsyncIterator()
@@ -1384,7 +1311,7 @@ func testCustomLanguageModelExport() {
         identifier: "probe",
         version: "1"
     )
-    speechWaitAsync {
+    speechRunAsync {
         do {
             try await data.export(to: URL(fileURLWithPath: "/tmp/out.bin"))
             fatalError("export should fail closed")

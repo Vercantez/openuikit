@@ -25,7 +25,7 @@ func testPrepareCustomLanguageModel() {
     let config = SFSpeechLanguageModel.Configuration(
         languageModel: URL(fileURLWithPath: "/tmp/lm.bin")
     )
-    speechWaitAsync {
+    speechRunAsync {
         do {
             try await SFSpeechLanguageModel.prepareCustomLanguageModel(
                 for: URL(fileURLWithPath: "/tmp/asset"),

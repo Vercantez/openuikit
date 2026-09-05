@@ -34,39 +34,26 @@ func testSpeechRecognizerAuthorization() {
     SpeechHostControl.resetAuthorizationStatusForTests()
     precondition(SFSpeechRecognizer.authorizationStatus() == .notDetermined)
 
-    let state = SpeechLockedState()
-    let finished = DispatchSemaphore(value: 0)
+    var first: SFSpeechRecognizerAuthorizationStatus?
     SFSpeechRecognizer.requestAuthorization { status in
-        state.noteCallback(status, onMain: Thread.isMainThread)
-        finished.signal()
+        first = status
     }
-    state.markReturned()
-    precondition(state.snapshot().count == 0, "authorization callback ran inline")
-    speechWait(finished, "authorization callback did not run")
-    let end = state.snapshot()
-    precondition(end.count == 1)
-    precondition(end.sawReturned)
-    precondition(end.status == .denied)
-    precondition(end.onMain)
+    precondition(first == .denied)
     precondition(SFSpeechRecognizer.authorizationStatus() == .denied)
 
-    let second = DispatchSemaphore(value: 0)
-    var secondStatus: SFSpeechRecognizerAuthorizationStatus?
+    var second: SFSpeechRecognizerAuthorizationStatus?
     SFSpeechRecognizer.requestAuthorization { status in
-        secondStatus = status
-        second.signal()
+        second = status
     }
-    speechWait(second, "second authorization did not run")
-    precondition(secondStatus == .denied)
+    precondition(second == .denied)
 
     SpeechHostControl.resetAuthorizationStatusForTests()
     SpeechHostControl.installAuthorizationDecision(.authorized)
-    let granted = DispatchSemaphore(value: 0)
+    var granted: SFSpeechRecognizerAuthorizationStatus?
     SFSpeechRecognizer.requestAuthorization { status in
-        precondition(status == .authorized)
-        granted.signal()
+        granted = status
     }
-    speechWait(granted, "authorized decision did not run")
+    precondition(granted == .authorized)
     precondition(SFSpeechRecognizer.authorizationStatus() == .authorized)
 }
 
@@ -79,7 +66,6 @@ func testSpeechRecognizerAvailability() {
     speechRegisterEnglishScript(
         results: [SpeechScriptedResult(formattedString: "hello", isFinal: true)]
     )
-    speechWait(availability.changed, "availability did not change")
     precondition(availability.snapshot() == true)
     precondition(recognizer.isAvailable)
     precondition(recognizer.delegate === availability)

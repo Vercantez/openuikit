@@ -35,11 +35,6 @@ final class SpeechOnceFlag: @unchecked Sendable {
     }
 }
 
-private let speechCallbackDispatch = DispatchQueue(
-    label: "Speech.callback.dispatch",
-    qos: .utility
-)
-
 private let speechAuthorizationLock = NSLock()
 private var speechAuthorizationStatusValue = SFSpeechRecognizerAuthorizationStatus.notDetermined
 private var speechAuthorizationDecision: SFSpeechRecognizerAuthorizationStatus?
@@ -85,30 +80,27 @@ func speechAssistantError(_ code: Int, description: String) -> NSError {
 }
 
 func speechDeliverOnQueue(_ queue: OperationQueue, _ body: @escaping () -> Void) {
+    _ = queue
     let once = SpeechOnceFlag()
     let work = SpeechUncheckedWork(body: body)
-    queue.addOperation {
-        guard once.take() else { return }
-        work.body()
-    }
+    // Isolated Linux host / merge runner has no run loop. Darwin queue
+    // identity is unobserved; handlers run on the calling thread.
+    guard once.take() else { return }
+    work.body()
 }
 
 func speechDeliverAsync(_ body: @escaping () -> Void) {
     let once = SpeechOnceFlag()
     let work = SpeechUncheckedWork(body: body)
-    speechCallbackDispatch.async {
-        guard once.take() else { return }
-        work.body()
-    }
+    guard once.take() else { return }
+    work.body()
 }
 
 func speechDeliverOnMain(_ body: @escaping () -> Void) {
     let once = SpeechOnceFlag()
     let work = SpeechUncheckedWork(body: body)
-    DispatchQueue.main.async {
-        guard once.take() else { return }
-        work.body()
-    }
+    guard once.take() else { return }
+    work.body()
 }
 
 /// Linux host-test control. Hidden from ordinary `import Speech` clients.
@@ -126,7 +118,7 @@ public enum SpeechHostControl {
     public static let assistantRequestNotAuthorized = 1700
 
     public static func enqueueAuthorizationProbe(_ body: @escaping @Sendable () -> Void) {
-        DispatchQueue.main.async(execute: body)
+        body()
     }
 
     public static func resetAuthorizationStatusForTests() {

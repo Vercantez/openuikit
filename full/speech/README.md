@@ -6,17 +6,17 @@ of Apple behavioral parity.
 
 ## Depth pass 2026-09
 
-SDK depth for `Speech` (602 IDs). The refused merge at `a1542254` claimed
-**564 implemented / 5 declared / 33 unavailable / 0 deferred**, but every
-`implemented` row cited `tests/agent/SpeechRuntime.swift` (a file path, not
-`test:full/speech/tests/agent/<File>Tests.swift#testName`).
+SDK depth for `Speech` (602 IDs).
+
+Refused `c80188dc` claimed **563 implemented / 6 declared / 33 unavailable / 0 deferred**,
+but the merge runner hung: cited tests waited on `DispatchQueue.main` /
+`RunLoop` (the sealed guest-runtime has no run loop).
 
 This repair: **563 implemented / 6 declared / 33 unavailable / 0 deferred**.
-`AttributeDynamicLookup.subscript(dynamicMember:)` moved to `declared` because
-Linux `AttributedString` has no `AttributeScopes.speech` member, so that
-subscript is not callable. There is still **no speech engine**. Recognition
-succeeds only when a documented `@_spi(OpenUIKitHost)` hook registers a scripted
-recognizer.
+Handlers now run on the calling thread; async probes use `Task.detached` plus a
+timed semaphore (no `RunLoop`). `AttributeDynamicLookup.subscript(dynamicMember:)`
+stays `declared`. There is still **no speech engine**. Recognition succeeds only
+when a documented `@_spi(OpenUIKitHost)` hook registers a scripted recognizer.
 
 Top-5 `implemented` evidence (563 rows; no non-enum test exceeds 40% of the
 397 remaining non-enum/constant rows):
@@ -43,9 +43,10 @@ Top-5 `implemented` evidence (563 rows; no non-enum test exceeds 40% of the
   installs a script for that locale
   ([isAvailable](https://developer.apple.com/documentation/speech/sfspeechrecognizer/isavailable)).
 - **Authorization.** `authorizationStatus()` starts `.notDetermined`.
-  `requestAuthorization` remembers the first decision and delivers the handler on
-  the **main queue**. Without a host decision the first call fail-closes to
-  `.denied` (no TCC prompt).
+  `requestAuthorization` remembers the first decision and invokes the handler
+  on the **calling thread** (this isolated host has no run loop). Without a host
+  decision the first call fail-closes to `.denied` (no TCC prompt). Darwin
+  main-queue identity is an oracle item.
   [requestAuthorization(_:)](https://developer.apple.com/documentation/speech/sfspeechrecognizer/requestauthorization(_:))
   / [Asking Permission](https://developer.apple.com/documentation/speech/asking-permission-to-use-speech-recognition).
 - **Task state machine**

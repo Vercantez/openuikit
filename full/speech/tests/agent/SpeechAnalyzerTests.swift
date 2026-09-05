@@ -42,7 +42,7 @@ func testSpeechAnalyzerLifecycle() {
 
     let context = AnalysisContext()
     context.contextualStrings[.general] = ["OpenUIKit"]
-    speechWaitAsync {
+    speechRunAsync {
         let analyzer = SpeechAnalyzer(modules: [transcriber], options: options)
         try? await analyzer.setContext(context)
         let stored = await analyzer.context
@@ -61,7 +61,7 @@ func testSpeechAnalyzerLifecycle() {
 }
 
 func testSpeechAnalyzerIsolation() {
-    speechWaitAsync {
+    speechRunAsync {
         let analyzer = SpeechAnalyzer(modules: [])
         await analyzer.hostCheckIsolation()
         _ = analyzer.unownedExecutor
@@ -70,7 +70,7 @@ func testSpeechAnalyzerIsolation() {
 
 func testAssetInventory() {
     let transcriber = SpeechTranscriber(locale: Locale(identifier: "en-US"), preset: .transcription)
-    speechWaitAsync {
+    speechRunAsync {
         let status = await AssetInventory.status(forModules: [transcriber])
         precondition(status == .unsupported)
         precondition(AssetInventory.maximumReservedLocales == 0)
@@ -92,7 +92,7 @@ func testAssetInventory() {
 func testAssetInstallationRequest() {
     let install = AssetInstallationRequest()
     precondition(install.progress.totalUnitCount == 1)
-    speechWaitAsync {
+    speechRunAsync {
         do {
             try await install.downloadAndInstall()
             fatalError("download should fail closed")
@@ -103,7 +103,7 @@ func testAssetInstallationRequest() {
 }
 
 func testSpeechModels() {
-    speechWaitAsync {
+    speechRunAsync {
         await SpeechModels.endRetention()
     }
 }
@@ -122,7 +122,7 @@ func testSpeechModuleProtocols() {
     _ = SpeechTranscriber.Results.self
     _ = SpeechDetector.Results.self
     _ = DictationTranscriber.Results.self
-    speechWaitAsync {
+    speechRunAsync {
         let supported = await SpeechTranscriber.supportedLocales
         precondition(supported.isEmpty)
         let equivalent = await SpeechTranscriber.supportedLocale(

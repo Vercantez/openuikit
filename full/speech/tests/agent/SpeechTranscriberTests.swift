@@ -40,7 +40,7 @@ func testSpeechTranscriberRuntime() {
     _ = speechHash(hostResult)
     _ = hostResult.hashValue
     _ = SpeechTranscriber.Results.self
-    speechWaitAsync {
+    speechRunAsync {
         let supported = await SpeechTranscriber.supportedLocales
         precondition(supported.isEmpty)
         let installed = await SpeechTranscriber.installedLocales
@@ -103,7 +103,7 @@ func testDictationTranscriberRuntime() {
     _ = speechHash(result)
     _ = result.hashValue
     _ = DictationTranscriber.Results.self
-    speechWaitAsync {
+    speechRunAsync {
         let supported = await DictationTranscriber.supportedLocales
         precondition(supported.isEmpty)
         let installed = await DictationTranscriber.installedLocales
@@ -134,7 +134,7 @@ func testSpeechDetectorRuntime() {
     precondition(detected.speechDetected == false)
     precondition(detected.isFinal)
     _ = SpeechDetector.Results.self
-    speechWaitAsync {
+    speechRunAsync {
         var iterator = detector.results.makeAsyncIterator()
         let first = try? await iterator.next()
         precondition(first == nil)

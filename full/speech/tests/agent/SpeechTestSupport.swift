@@ -1,26 +1,23 @@
 @_spi(OpenUIKitHost) import Speech
 import Foundation
 
-let speechEventTimeout = DispatchTimeInterval.seconds(5)
-
-func speechWait(_ semaphore: DispatchSemaphore, _ message: String) {
-    let deadline = Date().addingTimeInterval(5)
-    while Date() < deadline {
-        if semaphore.wait(timeout: .now() + 0.01) == .success {
-            return
-        }
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.01))
+struct SpeechNeverResults<Element: Sendable>: Sendable, AsyncSequence {
+    func makeAsyncIterator() -> AsyncIterator { AsyncIterator() }
+    struct AsyncIterator: AsyncIteratorProtocol {
+        mutating func next() async -> Element? { nil }
     }
-    preconditionFailure(message)
 }
 
-func speechWaitAsync(_ body: @escaping @Sendable () async -> Void) {
+func speechRunAsync(_ body: @escaping @Sendable () async -> Void) {
     let semaphore = DispatchSemaphore(value: 0)
-    Task {
+    Task.detached {
         await body()
         semaphore.signal()
     }
-    speechWait(semaphore, "async speech probe timed out")
+    precondition(
+        semaphore.wait(timeout: .now() + 10) == .success,
+        "async speech probe timed out"
+    )
 }
 
 func speechRequireAssistantUnauthorized(_ error: (any Error)?) {
@@ -41,43 +38,7 @@ func speechHash<T: Hashable>(_ value: T) -> Int {
     return hasher.finalize()
 }
 
-final class SpeechLockedState: @unchecked Sendable {
-    private let lock = NSLock()
-    private var returned = false
-    private var sawReturned = false
-    private var count = 0
-    private var status: SFSpeechRecognizerAuthorizationStatus?
-    private var onMain = false
-
-    func markReturned() {
-        lock.lock()
-        returned = true
-        lock.unlock()
-    }
-
-    func noteCallback(_ status: SFSpeechRecognizerAuthorizationStatus, onMain: Bool) {
-        lock.lock()
-        sawReturned = returned
-        count += 1
-        self.status = status
-        self.onMain = onMain
-        lock.unlock()
-    }
-
-    func snapshot() -> (
-        sawReturned: Bool,
-        count: Int,
-        status: SFSpeechRecognizerAuthorizationStatus?,
-        onMain: Bool
-    ) {
-        lock.lock()
-        defer { lock.unlock() }
-        return (sawReturned, count, status, onMain)
-    }
-}
-
 final class SpeechRecordingDelegate: NSObject, SFSpeechRecognitionTaskDelegate, @unchecked Sendable {
-    let finished = DispatchSemaphore(value: 0)
     private let lock = NSLock()
     private var success: Bool?
     private var cancelled = false
@@ -134,7 +95,6 @@ final class SpeechRecordingDelegate: NSObject, SFSpeechRecognitionTaskDelegate, 
         lock.lock()
         success = successfully
         lock.unlock()
-        finished.signal()
     }
 
     func snapshot() -> (
@@ -153,7 +113,6 @@ final class SpeechRecordingDelegate: NSObject, SFSpeechRecognitionTaskDelegate, 
 }
 
 final class SpeechAvailabilityDelegate: NSObject, SFSpeechRecognizerDelegate, @unchecked Sendable {
-    let changed = DispatchSemaphore(value: 0)
     private let lock = NSLock()
     private var available: Bool?
 
@@ -161,7 +120,6 @@ final class SpeechAvailabilityDelegate: NSObject, SFSpeechRecognizerDelegate, @u
         lock.lock()
         self.available = available
         lock.unlock()
-        changed.signal()
     }
 
     func snapshot() -> Bool? {
@@ -174,12 +132,12 @@ final class SpeechAvailabilityDelegate: NSObject, SFSpeechRecognizerDelegate, @u
 func speechAuthorizeForTests() {
     SpeechHostControl.resetAuthorizationStatusForTests()
     SpeechHostControl.installAuthorizationDecision(.authorized)
-    let finished = DispatchSemaphore(value: 0)
+    var seen: SFSpeechRecognizerAuthorizationStatus?
     SFSpeechRecognizer.requestAuthorization { status in
-        precondition(status == .authorized)
-        finished.signal()
+        seen = status
     }
-    speechWait(finished, "authorization did not complete")
+    precondition(seen == .authorized)
+    precondition(SFSpeechRecognizer.authorizationStatus() == .authorized)
 }
 
 func speechRegisterEnglishScript(

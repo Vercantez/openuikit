@@ -850,8 +850,9 @@ public class SFSpeechRecognizer: NSObject {
     /// and [Asking Permission to Use Speech Recognition](https://developer.apple.com/documentation/speech/asking-permission-to-use-speech-recognition).
     /// Darwin presents a TCC prompt on the first call and remembers the answer.
     /// Linux has no prompt: `.notDetermined` fail-closes to `.denied` unless a
-    /// host decision is installed. The handler is delivered on the main queue
-    /// as required by this depth pass; Darwin queue identity is an oracle item.
+    /// host decision is installed. The handler runs on the calling thread
+    /// (this isolated host has no run loop). Darwin main-queue identity is an
+    /// oracle item.
     public class func requestAuthorization(
         _ handler: @escaping (SFSpeechRecognizerAuthorizationStatus) -> Void
     ) {

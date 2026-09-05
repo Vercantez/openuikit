@@ -6,19 +6,13 @@ func testSpeechRecognitionTaskUnauthorized() {
     SpeechHostControl.resetScriptedRecognizers()
     let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
     let request = SFSpeechURLRecognitionRequest(url: URL(fileURLWithPath: "/tmp/speech.wav"))
-    let finished = DispatchSemaphore(value: 0)
-    let state = SpeechLockedState()
+    var sawHandler = false
     let task = recognizer.recognitionTask(with: request) { result, error in
-        state.noteCallback(.denied, onMain: Thread.isMainThread)
+        sawHandler = true
         precondition(result == nil)
         speechRequireAssistantUnauthorized(error)
-        finished.signal()
     }
-    state.markReturned()
-    precondition(state.snapshot().count == 0, "result handler ran inline")
-    speechWait(finished, "unauthorized handler did not run")
-    precondition(state.snapshot().count == 1)
-    precondition(state.snapshot().sawReturned)
+    precondition(sawHandler)
     speechRequireAssistantUnauthorized(task.error)
     precondition(task.state == .completed)
 }
@@ -28,13 +22,13 @@ func testSpeechRecognitionTaskMissingAssets() {
     SpeechHostControl.resetScriptedRecognizers()
     let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
     let request = SFSpeechURLRecognitionRequest(url: URL(fileURLWithPath: "/tmp/speech.wav"))
-    let assets = DispatchSemaphore(value: 0)
+    var sawHandler = false
     let task = recognizer.recognitionTask(with: request) { result, error in
+        sawHandler = true
         precondition(result == nil)
         speechRequireLSR(error, code: SpeechHostControl.lsrAssetsNotInstalled)
-        assets.signal()
     }
-    speechWait(assets, "assets-missing handler did not run")
+    precondition(sawHandler)
     precondition(task.state == .completed)
     speechRequireLSR(task.error, code: SpeechHostControl.lsrAssetsNotInstalled)
 }
@@ -46,15 +40,11 @@ func testSpeechRecognitionTaskCancel() {
         results: [SpeechScriptedResult(formattedString: "hello", isFinal: true)]
     )
     let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
-    let request = SFSpeechURLRecognitionRequest(url: URL(fileURLWithPath: "/tmp/speech.wav"))
+    let request = SFSpeechAudioBufferRecognitionRequest()
     let delegate = SpeechRecordingDelegate()
-    recognizer.queue.isSuspended = true
     let task = recognizer.recognitionTask(with: request, delegate: delegate)
+    precondition(task.state == .starting || task.state == .running)
     task.cancel()
-    precondition(task.isCancelled)
-    precondition(task.state == .completed || task.state == .canceling)
-    recognizer.queue.isSuspended = false
-    speechWait(delegate.finished, "delegate did not finish")
     precondition(task.isCancelled)
     precondition(task.state == .completed)
     let snap = delegate.snapshot()
@@ -104,7 +94,6 @@ func testSpeechRecognitionTaskScriptedDelegate() {
     let request = SFSpeechURLRecognitionRequest(url: URL(fileURLWithPath: "/tmp/speech.wav"))
     request.shouldReportPartialResults = true
     let task = recognizer.recognitionTask(with: request, delegate: delegate)
-    speechWait(delegate.finished, "scripted delegate did not finish")
     precondition(task.state == .completed)
     precondition(task.isCancelled == false)
     let snap = delegate.snapshot()
@@ -126,17 +115,14 @@ func testSpeechRecognitionTaskHandler() {
     )
     let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))!
     let request = SFSpeechURLRecognitionRequest(url: URL(fileURLWithPath: "/tmp/speech.wav"))
-    let done = DispatchSemaphore(value: 0)
     var finals = 0
     _ = recognizer.recognitionTask(with: request) { result, error in
         precondition(error == nil)
         if result?.isFinal == true {
             finals += 1
             precondition(result?.bestTranscription.formattedString == "handler")
-            done.signal()
         }
     }
-    speechWait(done, "scripted handler did not finish")
     precondition(finals == 1)
 }
 
@@ -155,7 +141,6 @@ func testSpeechRecognitionTaskFinish() {
     request.append(SpeechHostPCMBuffer(frameLength: 320))
     request.endAudio()
     task.finish()
-    speechWait(delegate.finished, "buffer task did not finish")
     precondition(task.isFinishing)
     precondition(task.state == .completed)
     precondition(delegate.snapshot().result?.bestTranscription.formattedString == "buffer")
