@@ -61,9 +61,13 @@ public class CNLabeledValue<ValueType: NSCopying & NSSecureCoding>: NSObject, NS
 
 open class CNPhoneNumber: NSObject, NSCopying, NSSecureCoding {
     public let stringValue: String
+    /// ISO country code used when the number does not include a country prefix.
+    /// Linux default is `CNContactsUserDefaults.shared().countryCode`.
+    public let initialCountryCode: String
 
     public required override init() {
         self.stringValue = ""
+        self.initialCountryCode = CNContactsUserDefaults.shared().countryCode
         super.init()
     }
 
@@ -73,11 +77,18 @@ open class CNPhoneNumber: NSObject, NSCopying, NSSecureCoding {
 
     public init(stringValue string: String) {
         self.stringValue = string
+        self.initialCountryCode = CNContactsUserDefaults.shared().countryCode
+        super.init()
+    }
+
+    public init(stringValue string: String, countryCode: String) {
+        self.stringValue = string
+        self.initialCountryCode = countryCode
         super.init()
     }
 
     public func copy(with zone: NSZone? = nil) -> Any {
-        CNPhoneNumber(stringValue: stringValue)
+        CNPhoneNumber(stringValue: stringValue, countryCode: initialCountryCode)
     }
 
     public static var supportsSecureCoding: Bool { true }
@@ -86,11 +97,15 @@ open class CNPhoneNumber: NSObject, NSCopying, NSSecureCoding {
         guard let string = coder.decodeObject(of: NSString.self, forKey: "stringValue") as String?
         else { return nil }
         self.stringValue = string
+        self.initialCountryCode =
+            coder.decodeObject(of: NSString.self, forKey: "initialCountryCode") as String?
+            ?? CNContactsUserDefaults.shared().countryCode
         super.init()
     }
 
     public func encode(with coder: NSCoder) {
         coder.encode(stringValue as NSString, forKey: "stringValue")
+        coder.encode(initialCountryCode as NSString, forKey: "initialCountryCode")
     }
 
     func digits() -> String {
