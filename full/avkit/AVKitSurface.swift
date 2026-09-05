@@ -719,18 +719,11 @@ open class AVPlayerViewController: UIViewController {
         // Model: a presentable size plus readyToPlay. This is not a decoded
         // frame. Apple's isReadyForDisplay is first-frame readiness
         // (https://developer.apple.com/documentation/avkit/avplayerviewcontroller/isreadyfordisplay).
+        // Isolated-host Foundation has no ObjC willChangeValue/didChangeValue.
         let ready = itemReady && size != .zero
         let bounds = CGRect(origin: .zero, size: size)
-        if ready != isReadyForDisplay {
-            willChangeValue(forKey: "readyForDisplay")
-            isReadyForDisplay = ready
-            didChangeValue(forKey: "readyForDisplay")
-        }
-        if bounds != videoBounds {
-            willChangeValue(forKey: "videoBounds")
-            videoBounds = bounds
-            didChangeValue(forKey: "videoBounds")
-        }
+        isReadyForDisplay = ready
+        videoBounds = bounds
     }
 
     public func selectSpeed(_ speed: AVPlaybackSpeed) {

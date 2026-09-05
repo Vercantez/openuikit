@@ -1,25 +1,6 @@
 import Foundation
 import AVKit
 
-private final class DisplayKVOProbe: NSObject {
-    var readyForDisplayChanges = 0
-    var videoBoundsChanges = 0
-
-    override func observeValue(
-        forKeyPath keyPath: String?,
-        of object: Any?,
-        change: [NSKeyValueChangeKey: Any]?,
-        context: UnsafeMutableRawPointer?
-    ) {
-        _ = (object, change, context)
-        if keyPath == "readyForDisplay" {
-            readyForDisplayChanges += 1
-        } else if keyPath == "videoBounds" {
-            videoBoundsChanges += 1
-        }
-    }
-}
-
 func testPlayerViewControllerDisplayStateFollowsPlayerItem() {
     avkitOnMain {
         let controller = AVPlayerViewController()
@@ -54,25 +35,16 @@ func testPlayerViewControllerDisplayStateFollowsPlayerItem() {
     }
 }
 
-func testPlayerViewControllerDisplayStateKVOKeys() {
+func testPlayerViewControllerDisplayStateRefreshIsSynchronous() {
     avkitOnMain {
         let controller = AVPlayerViewController()
-        let probe = DisplayKVOProbe()
-        controller.addObserver(probe, forKeyPath: "readyForDisplay", options: [.new], context: nil)
-        controller.addObserver(probe, forKeyPath: "videoBounds", options: [.new], context: nil)
         let item = AVPlayerItem(url: URL(fileURLWithPath: "/tmp/openavkit-kvo.m4v"))
         controller.player = AVPlayer(playerItem: item)
         item.openUIKitHostSetPresentationSize(CGSize(width: 1280, height: 720))
         controller.openUIKitHostRefreshDisplayState()
         precondition(controller.isReadyForDisplay == true)
         precondition(controller.videoBounds.width == 1280)
-        // Isolated-host stored properties are not @objc dynamic. Manual
-        // willChangeValue/didChangeValue is emitted, but Foundation KVO
-        // delivery is not claimed here.
-        _ = probe.readyForDisplayChanges
-        _ = probe.videoBoundsChanges
-        controller.removeObserver(probe, forKeyPath: "readyForDisplay")
-        controller.removeObserver(probe, forKeyPath: "videoBounds")
+        precondition(controller.videoBounds.height == 720)
     }
 }
 

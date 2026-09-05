@@ -115,8 +115,8 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
   non-zero; `videoBounds` is origin-zero with that size. Default URL items
   match the AVFoundation lane (`readyToPlay`, `presentationSize == .zero`).
   Mutating size requires `openUIKitHostRefreshDisplayState`. This is a model,
-  not a decoded frame. The controller emits KVO for `readyForDisplay` and
-  `videoBounds`.
+  not a decoded frame. Isolated-host Foundation has no ObjC KVO
+  (`willChangeValue` is out of scope); the properties update synchronously.
 - Full-screen and PiP PVC delegate order is delivered by host test hooks
   `openUIKitHostDeliverFullScreenDelegatePair` (willBegin then willEnd) and
   `openUIKitHostDeliverPictureInPictureDelegateSequence` (willStart → didStart
