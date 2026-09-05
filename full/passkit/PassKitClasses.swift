@@ -674,20 +674,46 @@ open class PKShareablePassMetadata: NSObject, @unchecked Sendable {
     }
     public override init() { super.init() }
     public init(provisioningCredentialIdentifier credentialIdentifier: String, cardConfigurationIdentifier: String, sharingInstanceIdentifier: String, passThumbnailImage: CGImage, ownerDisplayName: String, localizedDescription: String) {
-        _ = (credentialIdentifier)
         super.init()
+        self.credentialIdentifier = credentialIdentifier
+        self.cardConfigurationIdentifier = cardConfigurationIdentifier
+        self.sharingInstanceIdentifier = sharingInstanceIdentifier
+        self.passThumbnailImage = passThumbnailImage
+        self.ownerDisplayName = ownerDisplayName
+        self.localizedDescription = localizedDescription
     }
     public init(provisioningCredentialIdentifier credentialIdentifier: String, sharingInstanceIdentifier: String, cardConfigurationIdentifier templateIdentifier: String, preview: PKShareablePassMetadata.Preview) {
-        _ = (credentialIdentifier, templateIdentifier)
         super.init()
+        self.credentialIdentifier = credentialIdentifier
+        self.sharingInstanceIdentifier = sharingInstanceIdentifier
+        self.cardConfigurationIdentifier = templateIdentifier
+        self.preview = preview
+        self.localizedDescription = preview.localizedDescription
+        self.passThumbnailImage = preview.passThumbnail
+        self.ownerDisplayName = preview.ownerDisplayName ?? ""
     }
     public init(provisioningCredentialIdentifier credentialIdentifier: String, sharingInstanceIdentifier: String, cardTemplateIdentifier templateIdentifier: String, preview: PKShareablePassMetadata.Preview) {
-        _ = (credentialIdentifier, templateIdentifier)
         super.init()
+        self.credentialIdentifier = credentialIdentifier
+        self.sharingInstanceIdentifier = sharingInstanceIdentifier
+        self.cardTemplateIdentifier = templateIdentifier
+        self.templateIdentifier = templateIdentifier
+        self.preview = preview
+        self.localizedDescription = preview.localizedDescription
+        self.passThumbnailImage = preview.passThumbnail
+        self.ownerDisplayName = preview.ownerDisplayName ?? ""
     }
     public init(provisioningCredentialIdentifier credentialIdentifier: String, sharingInstanceIdentifier: String, passThumbnailImage: CGImage, ownerDisplayName: String, localizedDescription: String, accountHash: String, templateIdentifier: String, relyingPartyIdentifier: String, requiresUnifiedAccessCapableDevice: Bool) {
-        _ = (credentialIdentifier)
         super.init()
+        self.credentialIdentifier = credentialIdentifier
+        self.sharingInstanceIdentifier = sharingInstanceIdentifier
+        self.passThumbnailImage = passThumbnailImage
+        self.ownerDisplayName = ownerDisplayName
+        self.localizedDescription = localizedDescription
+        self.accountHash = accountHash
+        self.templateIdentifier = templateIdentifier
+        self.relyingPartyIdentifier = relyingPartyIdentifier
+        self.requiresUnifiedAccessCapableDevice = requiresUnifiedAccessCapableDevice
     }
     public var accountHash: String = ""
     public var cardConfigurationIdentifier: String = ""
