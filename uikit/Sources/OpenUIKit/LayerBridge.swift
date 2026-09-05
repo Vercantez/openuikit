@@ -1002,6 +1002,13 @@ public enum LayerBridge {
             else { return 1 }
             defer { QZMediaTimingFunctionRelease(fn) }
             return CGFloat(QZMediaTimingFunctionSolve(fn, QZFloat(local / a.duration)))
+        case .cosineEaseInOut:
+            // MEASURED pager-clock probe, iPhone SE 2x / iOS 26.1: 10 live
+            // traces of UIPageViewController.setViewControllers(animated:),
+            // _UIQueuingScrollView pOffset n=1..17 vs (1-cos(πt))/2 over
+            // 0.3 s, max |Δ| 0.25 pt. Cubic ease-in-out is 11 pt off at n=6.
+            let t = local / a.duration
+            return CGFloat((1 - _cos(Double.pi * t)) / 2)
         case .spring(let damping, let velocity):
             let z = Swift.min(Swift.max(Double(damping), 1e-6), 1)
             let wn = UIViewSpring.naturalFrequency(dampingRatio: damping,

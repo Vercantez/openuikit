@@ -70,6 +70,11 @@ struct UIViewAnimation {
         case curve(c1x: CGFloat, c1y: CGFloat, c2x: CGFloat, c2y: CGFloat)
         /// UIView spring (damping ratio + normalized initial velocity).
         case spring(dampingRatio: CGFloat, initialVelocity: CGFloat)
+        /// Cosine ease-in-out `(1 − cos(πt))/2`. MEASURED pager-clock
+        /// probe, iPhone SE 2x / iOS 26.1: `_UIQueuingScrollView` page-next
+        /// n=1..17 vs this closed form, max |Δ| 0.25 pt (n=6: 469 vs 468.75,
+        /// n=12: 656.5 vs 656.25). Not CA's cubic-bezier(0.42,0,0.58,1).
+        case cosineEaseInOut
     }
 
     let property: Property
@@ -298,6 +303,24 @@ extension UIView {
                                completion: ((Bool) -> Void)? = nil) {
         animate(withDuration: duration, delay: 0, options: [],
                 animations: animations, completion: completion)
+    }
+
+    /// Timing for programmatic `UIScrollView.setContentOffset(animated:)`
+    /// and `UIPageViewController.setViewControllers(animated:)` on the iOS
+    /// cut. Catalyst keeps cubic ease-in-out so its 0.25 / 0.32 durations
+    /// stay on the existing completion ticks.
+    static func scrollCurveTiming() -> UIViewAnimation.Timing {
+        OpenUIKitRuntime.systemFontCut == .iOS
+            ? .cosineEaseInOut
+            : .curve(c1x: 0.42, c1y: 0, c2x: 0.58, c2y: 1)
+    }
+
+    static func animateScrollCurve(withDuration duration: Double,
+                                   animations: () -> Void,
+                                   completion: ((Bool) -> Void)? = nil) {
+        runAnimationBlock(UIViewAnimationContext.Params(
+            duration: duration, delay: 0, timing: scrollCurveTiming()),
+            animations: animations, completion: completion)
     }
 
     public static func animate(withDuration duration: Double,
@@ -673,4 +696,31 @@ func _atan2(_ y: CGFloat, _ x: CGFloat) -> CGFloat {
     if y > 0 { return .pi / 2 }
     if y < 0 { return -.pi / 2 }
     return 0
+}
+
+/// cos via range reduction to [0, π/2] + Taylor series. Used by
+/// `UIViewAnimation.Timing.cosineEaseInOut` so the iOS scroll curve does
+/// not take a Darwin/Glibc `cos` (the guest load list has no libm re-export
+/// through the port's Foundation).
+func _cos(_ x: Double) -> Double {
+    let pi = Double.pi
+    let twoPi = 2 * pi
+    var a = x - (x / twoPi).rounded(.down) * twoPi
+    if a < 0 { a += twoPi }
+    var sign = 1.0
+    if a > pi { a = twoPi - a }
+    if a > pi / 2 {
+        a = pi - a
+        sign = -1
+    }
+    let a2 = a * a
+    var term = 1.0
+    var sum = 1.0
+    var k = 1
+    while k <= 10 {
+        term *= -a2 / Double((2 * k - 1) * (2 * k))
+        sum += term
+        k += 1
+    }
+    return sign * sum
 }

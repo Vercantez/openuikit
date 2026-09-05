@@ -520,9 +520,8 @@ final class UIScrollViewInteractionTests: XCTestCase {
         XCTAssertEqual(Double(sv.contentOffset.y), Double(caughtAt), accuracy: 1e-9)
     }
 
-    /// MEASURED Pager fling, iPhone SE 2x / iOS 26.1, named 60 Hz frames:
-    /// `setContentOffset(400, animated: true)` from 0: n=0:0 n=8:165.5
-    /// n=16:388 n=30:400. Ease-in-out over 0.3 s, no extra delay.
+    /// MEASURED pager-clock probe + Pager fling, iPhone SE 2x / iOS 26.1:
+    /// cosine ease-in-out over 0.3 s: n=0:0 n=8:165.5 n=16:388 n=30:400.
     func testIOSAnimatedContentOffsetSamplesMatchPagerFlingProbe() {
         let saved = OpenUIKitRuntime.systemFontCut
         OpenUIKitRuntime.systemFontCut = .iOS
@@ -537,8 +536,8 @@ final class UIScrollViewInteractionTests: XCTestCase {
             LayerBridge.presentationState(of: sv, at: t).bounds.origin.x
         }
         XCTAssertEqual(x(at: 0), 0, accuracy: 0.5)
-        XCTAssertEqual(x(at: 8.0 / 60.0), 165.5, accuracy: 15)
-        XCTAssertEqual(x(at: 16.0 / 60.0), 388, accuracy: 15)
+        XCTAssertEqual(x(at: 8.0 / 60.0), 165.5, accuracy: 0.5)
+        XCTAssertEqual(x(at: 16.0 / 60.0), 388, accuracy: 0.5)
         XCTAssertEqual(x(at: 19.0 / 60.0), 400, accuracy: 1)
         XCTAssertEqual(sv.contentOffset.x, 400, accuracy: 1e-6)
     }
