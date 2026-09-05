@@ -2771,7 +2771,7 @@ class ShellContractTests(unittest.TestCase):
 
     def test_builder_pins_the_canonical_105_source_openuikit_tree(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
-        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=34"), 1)
+        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=37"), 1)
         self.assertIn(
             "-lOpenCoreGraphics -lCombine -lOpenCombine -lDispatch",
             source,
@@ -4541,7 +4541,7 @@ class ShellContractTests(unittest.TestCase):
 
         for token in (
             '"com.apple.ap.adservices.attributionError"',
-            "platformNotSupported = Code(rawValue: 3)",
+            "case platformNotSupported = 3",
             "throw AAAttributionError(.platformNotSupported)",
         ):
             self.assertIn(token, adservices)
@@ -4671,7 +4671,10 @@ class ShellContractTests(unittest.TestCase):
         for token in ("_md5", "_sha1", "_sha256", "_sha512"):
             self.assertIn(token, crypto)
         self.assertIn("SystemRandomNumberGenerator", crypto)
-        self.assertIn("return signature.count == 64 && false", crypto)
+        # Signing is fail-closed by ABSENCE since 6e400ce5 (no public-key surface is
+        # declared); the old `signature.count == 64 && false` stub is gone.
+        self.assertIn("fail closed", crypto)
+        self.assertNotIn("P256.Signing", crypto)
         self.assertIn("import CryptoKit", probe)
         self.assertIn("SHA256.hash", probe)
         self.assertIn("-lCryptoKit", source)

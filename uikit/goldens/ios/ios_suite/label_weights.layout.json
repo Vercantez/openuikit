@@ -1,0 +1,288 @@
+{
+  "name" : "label_weights",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        20,
+        12,
+        136.5,
+        23
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Ultralight",
+        19
+      ],
+      "frame" : [
+        20,
+        12,
+        136.5,
+        23
+      ],
+      "intrinsic" : [
+        136.5,
+        23
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        136.5,
+        23
+      ],
+      "text" : "Weight ultraLight"
+    },
+    {
+      "absFrame" : [
+        20,
+        42,
+        92.5,
+        23
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Thin",
+        19
+      ],
+      "frame" : [
+        20,
+        42,
+        92.5,
+        23
+      ],
+      "intrinsic" : [
+        92.5,
+        23
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        92.5,
+        23
+      ],
+      "text" : "Weight thin"
+    },
+    {
+      "absFrame" : [
+        20,
+        72,
+        99,
+        23
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Light",
+        19
+      ],
+      "frame" : [
+        20,
+        72,
+        99,
+        23
+      ],
+      "intrinsic" : [
+        99,
+        23
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        99,
+        23
+      ],
+      "text" : "Weight light"
+    },
+    {
+      "absFrame" : [
+        20,
+        102,
+        123.5,
+        23
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        19
+      ],
+      "frame" : [
+        20,
+        102,
+        123.5,
+        23
+      ],
+      "intrinsic" : [
+        123.5,
+        23
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        123.5,
+        23
+      ],
+      "text" : "Weight regular"
+    },
+    {
+      "absFrame" : [
+        20,
+        132,
+        136,
+        23
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Medium",
+        19
+      ],
+      "frame" : [
+        20,
+        132,
+        136,
+        23
+      ],
+      "intrinsic" : [
+        136,
+        23
+      ],
+      "path" : "4",
+      "sizeThatFits200" : [
+        136,
+        23
+      ],
+      "text" : "Weight medium"
+    },
+    {
+      "absFrame" : [
+        20,
+        162,
+        148,
+        23
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Semibold",
+        19
+      ],
+      "frame" : [
+        20,
+        162,
+        148,
+        23
+      ],
+      "intrinsic" : [
+        148,
+        23
+      ],
+      "path" : "5",
+      "sizeThatFits200" : [
+        148,
+        23
+      ],
+      "text" : "Weight semibold"
+    },
+    {
+      "absFrame" : [
+        20,
+        192,
+        108.5,
+        23
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Bold",
+        19
+      ],
+      "frame" : [
+        20,
+        192,
+        108.5,
+        23
+      ],
+      "intrinsic" : [
+        108.5,
+        23
+      ],
+      "path" : "6",
+      "sizeThatFits200" : [
+        108.5,
+        23
+      ],
+      "text" : "Weight bold"
+    },
+    {
+      "absFrame" : [
+        20,
+        222,
+        127,
+        23
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Heavy",
+        19
+      ],
+      "frame" : [
+        20,
+        222,
+        127,
+        23
+      ],
+      "intrinsic" : [
+        127,
+        23
+      ],
+      "path" : "7",
+      "sizeThatFits200" : [
+        127,
+        23
+      ],
+      "text" : "Weight heavy"
+    },
+    {
+      "absFrame" : [
+        20,
+        252,
+        125.5,
+        23
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Black",
+        19
+      ],
+      "frame" : [
+        20,
+        252,
+        125.5,
+        23
+      ],
+      "intrinsic" : [
+        125.5,
+        23
+      ],
+      "path" : "8",
+      "sizeThatFits200" : [
+        125.5,
+        23
+      ],
+      "text" : "Weight black"
+    }
+  ]
+}

@@ -1,0 +1,259 @@
+{
+  "name" : "label_sizes",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        20,
+        12,
+        67.5,
+        12
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        10
+      ],
+      "frame" : [
+        20,
+        12,
+        67.5,
+        12
+      ],
+      "intrinsic" : [
+        67.5,
+        12
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        67.5,
+        12
+      ],
+      "text" : "Size 10 points"
+    },
+    {
+      "absFrame" : [
+        20,
+        34,
+        78.5,
+        14.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        12
+      ],
+      "frame" : [
+        20,
+        34,
+        78.5,
+        14.5
+      ],
+      "intrinsic" : [
+        78.5,
+        14.5
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        78.5,
+        14.5
+      ],
+      "text" : "Size 12 points"
+    },
+    {
+      "absFrame" : [
+        20,
+        58,
+        90,
+        17
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        14
+      ],
+      "frame" : [
+        20,
+        58,
+        90,
+        17
+      ],
+      "intrinsic" : [
+        90,
+        17
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        90,
+        17
+      ],
+      "text" : "Size 14 points"
+    },
+    {
+      "absFrame" : [
+        20,
+        84,
+        104.5,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        20,
+        84,
+        104.5,
+        20.5
+      ],
+      "intrinsic" : [
+        104.5,
+        20.5
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        104.5,
+        20.5
+      ],
+      "text" : "Size 17 points"
+    },
+    {
+      "absFrame" : [
+        20,
+        113,
+        124,
+        24
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        20
+      ],
+      "frame" : [
+        20,
+        113,
+        124,
+        24
+      ],
+      "intrinsic" : [
+        124,
+        24
+      ],
+      "path" : "4",
+      "sizeThatFits200" : [
+        124,
+        24
+      ],
+      "text" : "Size 20 points"
+    },
+    {
+      "absFrame" : [
+        20,
+        145,
+        146,
+        29
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        24
+      ],
+      "frame" : [
+        20,
+        145,
+        146,
+        29
+      ],
+      "intrinsic" : [
+        146,
+        29
+      ],
+      "path" : "5",
+      "sizeThatFits200" : [
+        146,
+        29
+      ],
+      "text" : "Size 24 points"
+    },
+    {
+      "absFrame" : [
+        20,
+        181,
+        171,
+        33.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        28
+      ],
+      "frame" : [
+        20,
+        181,
+        171,
+        33.5
+      ],
+      "intrinsic" : [
+        171,
+        33.5
+      ],
+      "path" : "6",
+      "sizeThatFits200" : [
+        171,
+        33.5
+      ],
+      "text" : "Size 28 points"
+    },
+    {
+      "absFrame" : [
+        20,
+        221,
+        208,
+        41
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        34
+      ],
+      "frame" : [
+        20,
+        221,
+        208,
+        41
+      ],
+      "intrinsic" : [
+        208,
+        41
+      ],
+      "path" : "7",
+      "sizeThatFits200" : [
+        208,
+        41
+      ],
+      "text" : "Size 34 points"
+    }
+  ]
+}

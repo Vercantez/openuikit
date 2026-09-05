@@ -1,0 +1,161 @@
+{
+  "name" : "gradient_in_stack",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        300,
+        220
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        300,
+        220
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        10,
+        10,
+        280,
+        90
+      ],
+      "class" : "UIStackView",
+      "frame" : [
+        10,
+        10,
+        280,
+        90
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        10,
+        10,
+        86.5,
+        90
+      ],
+      "class" : "UIGradientView",
+      "frame" : [
+        0,
+        0,
+        86.5,
+        90
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        106.5,
+        10,
+        87,
+        90
+      ],
+      "class" : "UIGradientView",
+      "frame" : [
+        96.5,
+        0,
+        87,
+        90
+      ],
+      "path" : "1.1"
+    },
+    {
+      "absFrame" : [
+        203.5,
+        10,
+        86.5,
+        90
+      ],
+      "class" : "UIGradientView",
+      "frame" : [
+        193.5,
+        0,
+        86.5,
+        90
+      ],
+      "path" : "1.2"
+    },
+    {
+      "absFrame" : [
+        10,
+        110,
+        280,
+        100
+      ],
+      "class" : "UIStackView",
+      "frame" : [
+        10,
+        110,
+        280,
+        100
+      ],
+      "path" : "2"
+    },
+    {
+      "absFrame" : [
+        10,
+        110,
+        280,
+        46
+      ],
+      "class" : "UIGradientView",
+      "frame" : [
+        0,
+        0,
+        280,
+        46
+      ],
+      "path" : "2.0"
+    },
+    {
+      "absFrame" : [
+        10,
+        164,
+        280,
+        46
+      ],
+      "class" : "UIGradientView",
+      "frame" : [
+        0,
+        54,
+        280,
+        46
+      ],
+      "path" : "2.1"
+    }
+  ]
+}

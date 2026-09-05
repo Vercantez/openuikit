@@ -85,6 +85,25 @@ if [[ -z "${SKIP_CAPTURE:-}" ]]; then
   else
     zsh scripts/conformance_probe_sim.sh "$APPNAME" "$OUT/golden" | tail -1
   fi
+else
+  pngs=("$OUT"/golden/*.png(N))
+  if (( ${#pngs} == 0 )); then
+    setname=hc-conformance-$APPNAME
+    [[ $IPAD -eq 1 ]] && setname=$setname-ipad
+    [[ $STYLE == dark ]] && setname=$setname-dark
+    if [[ -d goldens/ios/$setname ]]; then
+      echo "==> no goldens at $OUT/golden; restoring committed goldens/ios/$setname"
+      zsh scripts/goldens_restore.sh "$setname"
+      dest=/tmp/$setname/golden
+      if [[ "$OUT/golden" != "$dest" ]]; then
+        mkdir -p "$OUT/golden"
+        cp -R "$dest"/. "$OUT/golden"/
+      fi
+    else
+      echo "conformance_flow.sh: no goldens at $OUT/golden (run scripts/goldens_restore.sh or recapture)" >&2
+      exit 2
+    fi
+  fi
 fi
 
 echo "==> OpenUIKit replay, iOS cut ($OUT/ours) style=$STYLE direction=$DIRECTION contentSize=$CONTENT_SIZE"

@@ -1489,7 +1489,13 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         let scale = max(UITraitCollection.current.displayScale, 1)
         content.layoutIfNeeded()
         let snapshot = UIRenderer.render(content, scale: scale)
-        let bg = (backgroundColorForPocket ?? .white).cgColor
+        // MEASURED Feed t2800.dark, SE 2x / iOS 26.1: the iOS nav container
+        // is `backgroundColor = nil`, so the ancestor walk misses and the
+        // previous `.white` fallback washed the collapsed large-title strip
+        // to (209–230) against a golden near-black (0, 0, 0) pocket.
+        // `.systemBackground` is white in light (navbar_inline / Feed t2800
+        // unchanged) and black in dark.
+        let bg = (backgroundColorForPocket ?? .systemBackground).cgColor
         let bitmap = UINavigationBar.pocketBitmap(from: snapshot, scale: scale,
                                                  background: bg)
         pocketView.image = UIImage(bitmap: bitmap, scale: scale)
@@ -1516,7 +1522,8 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     /// The color the pocket washes toward: the nearest opaque ancestor
     /// background (the navigation container view), resolved for the
-    /// current style.
+    /// current style. On the iOS cut the container is nil, so the
+    /// caller falls back to `.systemBackground` (Feed t2800.dark).
     var backgroundColorForPocket: UIColor? {
         var v: UIView? = superview
         while let cur = v {

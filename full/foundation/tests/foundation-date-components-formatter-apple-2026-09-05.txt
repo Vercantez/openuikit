@@ -1,0 +1,46 @@
+zero.default	1
+zero.dropLeading	2
+zero.dropMiddle	4
+zero.dropTrailing	8
+zero.dropAll	14
+zero.pad	65536
+unit.hour	32
+unit.minute	64
+unit.second	128
+unit.day	16
+dcf.positional.hms	1:02:03
+dcf.positional.ti	1:02:03
+dcf.abbreviated.hms	1h 2m 3s
+dcf.abbreviated.ti	1h 2m 3s
+dcf.short.hms	1 hr, 2 min, 3 sec
+dcf.short.ti	1 hr, 2 min, 3 sec
+dcf.full.hms	1 hour, 2 minutes, 3 seconds
+dcf.full.ti	1 hour, 2 minutes, 3 seconds
+dcf.brief.hms	1hr 2min 3sec
+dcf.brief.ti	1hr 2min 3sec
+dcf.zero.empty.pos	0:05:00
+dcf.zero.empty.abbr	0h 5m 0s
+dcf.zero.default.pos	5:00
+dcf.zero.default.abbr	5m
+dcf.zero.dropLeading.pos	5:00
+dcf.zero.dropLeading.abbr	5m 0s
+dcf.zero.dropMiddle.pos	5:00
+dcf.zero.dropMiddle.abbr	5m 0s
+dcf.zero.dropTrailing.pos	0:05
+dcf.zero.dropTrailing.abbr	0h 5m
+dcf.zero.dropAll.pos	5
+dcf.zero.dropAll.abbr	5m
+dcf.zero.pad.pos	00:05:00
+dcf.zero.pad.abbr	0h 5m 0s
+dcf.dropall	2 days, 3 minutes
+dcf.pad	2 days, 0 hours, 3 minutes
+dcf.dropleading	2 days, 0 hours, 3 minutes
+dcf.full.en_US	1 hour, 2 minutes, 3 seconds
+dcf.abbr.en_US	1h 2m 3s
+dcf.full.de_DE	1 Stunde, 2 Minuten und 3 Sekunden
+dcf.abbr.de_DE	1h 2min 3s
+dcf.full.fr_FR	1 heure, 2 minutes et 3 secondes
+dcf.abbr.fr_FR	1h 2min 3s
+dcf.full.ja_JP	1時間 2分 3秒
+dcf.abbr.ja_JP	1時間2分3秒
+dcf.range	1:02:03

@@ -381,13 +381,22 @@ final class _UIBarButtonItemView: UIControl {
         // Glass samples the backdrop. `.done` is a tint fill (measured
         // prominent style); grouped items yield to `_UIBarSharedPlatterView`.
         platter._usesIOSGlass = !_platterHiddenByGroup && item.style != .done && showsPlatter
+        // Toolbar platters (no refractive band) use the dark bar mix;
+        // nav-bar platters keep the measured dark flats. MEASURED
+        // /tmp/glass-dark-out glass_toolbar_dark_black: 19 over black,
+        // same mix as the tab bar (Tabs t1000.dark Left interior 19 vs
+        // the previous shared platterFill 25).
+        platter._usesIOSDarkBarGlass = platter._usesIOSGlass && !appliesRefraction
         platter.layer.shadowOpacity = _platterHiddenByGroup ? 0 : _UIBarMetrics.shadowOpacity
         platter.isHidden = !showsPlatter
     }
 
     /// Only navigation-bar platters show the refractive band (measured —
-    /// see `_UIBarMetrics.platterRefractionHeight`).
-    var appliesRefraction = true
+    /// see `_UIBarMetrics.platterRefractionHeight`). Toolbar platters
+    /// also use this to select the dark bar glass mix.
+    var appliesRefraction = true {
+        didSet { if appliesRefraction != oldValue { applyColors() } }
+    }
 
     /// An item that shows only an image / symbol (no title, no custom
     /// view): iOS 26 merges runs of these into one platter.

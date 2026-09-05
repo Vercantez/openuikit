@@ -2,9 +2,13 @@
 // _StringProcessing engine. The implementation preserves Foundation's UTF-16
 // NSRange boundary while keeping the regex engine in the shipped Swift runtime.
 
+#if FOUNDATION_GUEST_SERVICES_HOST
+import Foundation
+#else
 import FoundationEssentials
 import ObjectiveC
 import _StringProcessing
+#endif
 
 open class NSTextCheckingResult: NSObject, @unchecked Sendable {
     public struct CheckingType: OptionSet, Sendable {

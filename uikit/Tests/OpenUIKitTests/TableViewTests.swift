@@ -1283,35 +1283,24 @@ final class TableViewIOSEditChromeTests: XCTestCase {
         XCTAssertEqual(fill.blue, 60.0 / 255.0, accuracy: 1e-9)
     }
 
-    /// MEASURED TableEditor t2350.ax1, iPhone SE 2x / iOS 26.1.
-    func testEditModeChromeGrowsAtAccessibilityLarge() {
-        let savedTraits = UITraitCollection.current
-        UITraitCollection.current = UITraitCollection(
-            userInterfaceStyle: .light, displayScale: 2,
-            preferredContentSizeCategory: .large)
-        defer { UITraitCollection.current = savedTraits }
-
-        let source = SubtitleListSource()
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
-        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
-        let table = UITableView(frame: window.bounds, style: .plain)
-        table.dataSource = source
-        table.delegate = source
-        window.addSubview(table)
-        window.layoutIfNeeded()
-        table.setEditing(true, animated: false)
-        window.layoutIfNeeded()
-
-        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
-        XCTAssertEqual(cell.bounds.height, 117, accuracy: 0.01)
-        XCTAssertEqual(cell.contentView.frame.origin.x, 55, accuracy: 0.001)
-        XCTAssertEqual(cell.textLabel.frame.origin.x, 16, accuracy: 0.001)
-        let edit = cell._editControl
-        XCTAssertEqual(edit?.frame, CGRect(x: 16, y: 33, width: 39, height: 38))
-        let reorder = cell._reorderControl!
-        XCTAssertEqual(reorder.frame.origin.x, 318, accuracy: 0.001)
-        XCTAssertEqual(reorder.frame.width, 41, accuracy: 0.001)
-        XCTAssertEqual(reorder.frame.height, 117, accuracy: 0.001)
+    /// MEASURED TableEditor t900.dark / t3800.dark, SE 2x: reorder bars
+    /// are `.tertiaryLabel` source-over (70,70,73) on black, (111,111,115)
+    /// on selected systemGray4. Light over white stays (197,197,199).
+    func testReorderInkIsTertiaryLabelOnIOS() {
+        let dark = UITraitCollection(userInterfaceStyle: .dark, displayScale: 2)
+        let light = UITraitCollection(userInterfaceStyle: .light, displayScale: 2)
+        let d = UITableViewCellReorderControl.ink.resolvedCGColor(with: dark)
+        XCTAssertEqual(d.red, 0.921569, accuracy: 0.001)
+        XCTAssertEqual(d.green, 0.921569, accuracy: 0.001)
+        XCTAssertEqual(d.blue, 0.960784, accuracy: 0.001)
+        XCTAssertEqual(d.alpha, 0.298039, accuracy: 0.001)
+        let l = UITableViewCellReorderControl.ink.resolvedCGColor(with: light)
+        XCTAssertEqual(l.red, 0.235294, accuracy: 0.001)
+        XCTAssertEqual(l.alpha, 0.298039, accuracy: 0.001)
+        OpenUIKitRuntime.systemFontCut = .macOS
+        let c = UITableViewCellReorderControl.ink.resolvedCGColor(with: light)
+        XCTAssertEqual((c.red * 255).rounded(), 197)
+        XCTAssertEqual(c.alpha, 1, accuracy: 1e-9)
     }
 }
 
@@ -1499,5 +1488,36 @@ final class TableViewIOSRowAnimationTests: XCTestCase {
         XCTAssertEqual(cell._accessoryGlyphView.frame.origin.x, 16, accuracy: 0.51)
         XCTAssertGreaterThan(cell.textLabel.frame.origin.x, cell.detailTextLabel!.frame.origin.x)
         XCTAssertGreaterThan(cell.textLabel.frame.origin.x, 200)
+    }
+
+    /// MEASURED TableEditor t2350.ax1, iPhone SE 2x / iOS 26.1.
+    func testEditModeChromeGrowsAtAccessibilityLarge() {
+        let savedTraits = UITraitCollection.current
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .large)
+        defer { UITraitCollection.current = savedTraits }
+
+        let source = SubtitleListSource()
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
+        let table = UITableView(frame: window.bounds, style: .plain)
+        table.dataSource = source
+        table.delegate = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+        table.setEditing(true, animated: false)
+        window.layoutIfNeeded()
+
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertEqual(cell.bounds.height, 117, accuracy: 0.01)
+        XCTAssertEqual(cell.contentView.frame.origin.x, 55, accuracy: 0.001)
+        XCTAssertEqual(cell.textLabel.frame.origin.x, 16, accuracy: 0.001)
+        let edit = cell._editControl
+        XCTAssertEqual(edit?.frame, CGRect(x: 16, y: 33, width: 39, height: 38))
+        let reorder = cell._reorderControl!
+        XCTAssertEqual(reorder.frame.origin.x, 318, accuracy: 0.001)
+        XCTAssertEqual(reorder.frame.width, 41, accuracy: 0.001)
+        XCTAssertEqual(reorder.frame.height, 117, accuracy: 0.001)
     }
 }
