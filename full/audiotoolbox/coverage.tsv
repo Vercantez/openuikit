@@ -1444,7 +1444,7 @@ c:@F@AudioConverterFillComplexBuffer	deferred		Depends on canonical CoreAudioTyp
 c:@F@AudioConverterFillComplexBufferRealtimeSafe	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@F@AudioConverterFillComplexBufferWithPacketDependencies	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@F@AudioConverterGetProperty	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioConverterPCMRoundTrip	Linux runtime asserted in depth/core tests
-c:@F@AudioConverterGetPropertyInfo	declared	source:full/audiotoolbox/AudioConverter.swift#AudioConverterGetPropertyInfo	Source signature present; behavior not independently asserted
+c:@F@AudioConverterGetPropertyInfo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioConverterPCMRoundTrip	Linux runtime asserted in depth/core tests
 c:@F@AudioConverterNew	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioConverterPCMRoundTrip	Linux runtime asserted in depth/core tests
 c:@F@AudioConverterNewSpecific	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@F@AudioConverterNewWithOptions	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioConverterPCMRoundTrip	Linux runtime asserted in depth/core tests
