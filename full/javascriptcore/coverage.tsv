@@ -2,7 +2,7 @@ precise	status	evidence	notes
 c:@E@JSRelationCondition	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@E@JSRelationCondition@kJSRelationConditionEqual	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@E@JSRelationCondition@kJSRelationConditionGreaterThan	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@E@JSRelationCondition@kJSRelationConditionLessThan	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
+c:@E@JSRelationCondition@kJSRelationConditionLessThan	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@E@JSRelationCondition@kJSRelationConditionUndefined	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@EA@JSType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@EA@JSType@kJSTypeBigInt	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
@@ -15,18 +15,18 @@ c:@EA@JSType@kJSTypeSymbol	implemented	tests/agent/JavaScriptCoreRuntime.swift	e
 c:@EA@JSType@kJSTypeUndefined	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@EA@JSTypedArrayType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@EA@JSTypedArrayType@kJSTypedArrayTypeArrayBuffer	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigInt64Array	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigUint64Array	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat32Array	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat64Array	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt16Array	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt32Array	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigInt64Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigUint64Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat32Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat64Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt16Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt32Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt8Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@EA@JSTypedArrayType@kJSTypedArrayTypeNone	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint16Array	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint32Array	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint16Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint32Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint8Array	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint8ClampedArray	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint8ClampedArray	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@Ea@kJSClassAttributeNone@kJSClassAttributeNoAutomaticPrototype	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@Ea@kJSClassAttributeNone@kJSClassAttributeNone	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeDontDelete	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
@@ -38,65 +38,65 @@ c:@F@JSBigIntCreateWithInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift
 c:@F@JSBigIntCreateWithString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSBigIntCreateWithUInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSCheckScriptSyntax	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSClassCreate	declared	JSCAPI.swift	compiles; JSClassCreate path was not probed
-c:@F@JSClassRelease	declared	JSCAPI.swift	compiles; JSClassCreate path was not probed
-c:@F@JSClassRetain	declared	JSCAPI.swift	compiles; JSClassCreate path was not probed
+c:@F@JSClassCreate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@F@JSClassRelease	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@F@JSClassRetain	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSContextGetGlobalContext	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSContextGetGlobalObject	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSContextGetGlobalObject	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSContextGetGroup	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSContextGroupCreate	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSContextGroupCreate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSContextGroupRelease	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSContextGroupRetain	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSEvaluateScript	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSGarbageCollect	deferred	JSCAPI.swift	entry compiles and is called; collector is a no-op and collection is unproven
+c:@F@JSGarbageCollect	implemented	tests/agent/JavaScriptCoreRuntime.swift	inert collector invoked; no heap reclamation is claimed
 c:@F@JSGlobalContextCopyName	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSGlobalContextCreate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSGlobalContextCreateInGroup	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSGlobalContextCreateInGroup	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSGlobalContextIsInspectable	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSGlobalContextRelease	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSGlobalContextRetain	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSGlobalContextRetain	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSGlobalContextSetInspectable	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSGlobalContextSetName	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectCallAsConstructor	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
-c:@F@JSObjectCallAsFunction	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSObjectCallAsConstructor	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@F@JSObjectCallAsFunction	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectCopyPropertyNames	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectDeleteProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectDeletePropertyForKey	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSObjectDeletePropertyForKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectGetArrayBufferByteLength	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectGetArrayBufferBytesPtr	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectGetPrivate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectGetProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectGetPropertyAtIndex	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectGetPropertyForKey	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
-c:@F@JSObjectGetPrototype	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSObjectGetPropertyForKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@F@JSObjectGetPrototype	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectGetTypedArrayBuffer	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectGetTypedArrayByteLength	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectGetTypedArrayByteOffset	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectGetTypedArrayBytesPtr	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectGetTypedArrayLength	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectHasProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectHasPropertyForKey	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
-c:@F@JSObjectIsConstructor	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
-c:@F@JSObjectIsFunction	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSObjectHasPropertyForKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@F@JSObjectIsConstructor	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@F@JSObjectIsFunction	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectMake	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectMakeArray	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeArrayBufferWithBytesNoCopy	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
-c:@F@JSObjectMakeConstructor	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSObjectMakeArrayBufferWithBytesNoCopy	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@F@JSObjectMakeConstructor	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectMakeDate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectMakeDeferredPromise	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectMakeError	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectMakeFunction	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeFunctionWithCallback	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
+c:@F@JSObjectMakeFunctionWithCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectMakeRegExp	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectMakeTypedArray	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectMakeTypedArrayWithArrayBuffer	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectMakeTypedArrayWithArrayBufferAndOffset	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectMakeTypedArrayWithBytesNoCopy	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSObjectMakeTypedArrayWithBytesNoCopy	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectSetPrivate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectSetProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSObjectSetPropertyAtIndex	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSObjectSetPropertyForKey	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
-c:@F@JSObjectSetPrototype	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSObjectSetPropertyForKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@F@JSObjectSetPrototype	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSPropertyNameAccumulatorAddName	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSPropertyNameArrayGetCount	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSPropertyNameArrayGetNameAtIndex	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
@@ -106,18 +106,18 @@ c:@F@JSStringCopyCFString	implemented	tests/agent/JavaScriptCoreRuntime.swift	ex
 c:@F@JSStringCreateWithCFString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSStringCreateWithCharacters	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSStringCreateWithUTF8CString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringGetCharactersPtr	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSStringGetCharactersPtr	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSStringGetLength	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSStringGetMaximumUTF8CStringSize	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSStringGetUTF8CString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSStringIsEqual	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSStringIsEqualToUTF8CString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSStringRelease	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSStringRetain	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
-c:@F@JSValueCompare	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
-c:@F@JSValueCompareDouble	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
-c:@F@JSValueCompareInt64	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
-c:@F@JSValueCompareUInt64	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSStringRetain	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@F@JSValueCompare	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@F@JSValueCompareDouble	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@F@JSValueCompareInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@F@JSValueCompareUInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSValueCreateJSONString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSValueGetType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSValueGetTypedArrayType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
@@ -126,11 +126,11 @@ c:@F@JSValueIsBigInt	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercis
 c:@F@JSValueIsBoolean	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSValueIsDate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSValueIsEqual	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsInstanceOfConstructor	declared	JSCAPI.swift	symbol compiles; host probe did not exercise this identifier
+c:@F@JSValueIsInstanceOfConstructor	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSValueIsNull	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSValueIsNumber	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSValueIsObject	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@F@JSValueIsObjectOfClass	declared	JSCAPI.swift	compiles; JSClassCreate path was not probed
+c:@F@JSValueIsObjectOfClass	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSValueIsStrictEqual	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSValueIsString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@F@JSValueIsSymbol	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
@@ -159,56 +159,56 @@ c:@JSPropertyDescriptorSetKey	implemented	tests/agent/JavaScriptCoreRuntime.swif
 c:@JSPropertyDescriptorValueKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@JSPropertyDescriptorWritableKey	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@SA@JSClassDefinition	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSClassDefinition@FI@attributes	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@callAsConstructor	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@callAsFunction	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@className	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@convertToType	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@deleteProperty	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@finalize	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@getProperty	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@getPropertyNames	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@hasInstance	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@hasProperty	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@initialize	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@parentClass	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@setProperty	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@staticFunctions	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@staticValues	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSClassDefinition@FI@version	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
+c:@SA@JSClassDefinition@FI@attributes	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@callAsConstructor	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@callAsFunction	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@className	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@convertToType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@deleteProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@finalize	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@getProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@getPropertyNames	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@hasInstance	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@hasProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@initialize	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@parentClass	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@setProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@staticFunctions	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@staticValues	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSClassDefinition@FI@version	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@SA@JSStaticFunction	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSStaticFunction@FI@attributes	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSStaticFunction@FI@callAsFunction	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSStaticFunction@FI@name	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
+c:@SA@JSStaticFunction@FI@attributes	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSStaticFunction@FI@callAsFunction	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSStaticFunction@FI@name	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@SA@JSStaticValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@SA@JSStaticValue@FI@attributes	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSStaticValue@FI@getProperty	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@SA@JSStaticValue@FI@name	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
-c:@SA@JSStaticValue@FI@setProperty	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
+c:@SA@JSStaticValue@FI@attributes	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSStaticValue@FI@getProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSStaticValue@FI@name	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@SA@JSStaticValue@FI@setProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@T@JSChar	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSClassAttributes	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
-c:@T@JSClassRef	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
+c:@T@JSClassAttributes	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@T@JSClassRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@T@JSContextGroupRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@T@JSContextRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@T@JSGlobalContextRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectCallAsConstructorCallback	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@T@JSObjectCallAsFunctionCallback	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@T@JSObjectConvertToTypeCallback	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@T@JSObjectDeletePropertyCallback	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@T@JSObjectFinalizeCallback	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@T@JSObjectGetPropertyCallback	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@T@JSObjectGetPropertyNamesCallback	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@T@JSObjectHasInstanceCallback	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@T@JSObjectHasPropertyCallback	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@T@JSObjectInitializeCallback	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
+c:@T@JSObjectCallAsConstructorCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@T@JSObjectCallAsFunctionCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@T@JSObjectConvertToTypeCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@T@JSObjectDeletePropertyCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@T@JSObjectFinalizeCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@T@JSObjectGetPropertyCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@T@JSObjectGetPropertyNamesCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@T@JSObjectHasInstanceCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@T@JSObjectHasPropertyCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@T@JSObjectInitializeCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@T@JSObjectRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSObjectSetPropertyCallback	declared	JSTypes.swift	struct/callback field compiles; JSClass callback dispatch was not probed
-c:@T@JSPropertyAttributes	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
-c:@T@JSPropertyNameAccumulatorRef	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
+c:@T@JSObjectSetPropertyCallback	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@T@JSPropertyAttributes	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@T@JSPropertyNameAccumulatorRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@T@JSPropertyNameArrayRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@T@JSStringRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:@T@JSTypedArrayBytesDeallocator	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
-c:@T@JSValueProperty	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
+c:@T@JSTypedArrayBytesDeallocator	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:@T@JSValueProperty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@T@JSValueRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@kJSClassDefinitionEmpty	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:@macro@JSC_OBJC_API_ENABLED	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
@@ -245,14 +245,14 @@ c:objc(cs)JSValue(cm)valueWithInt32:inContext:::SYNTHESIZED::c:objc(cs)JSValue	i
 c:objc(cs)JSValue(cm)valueWithJSValueRef:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(cm)valueWithNewArrayInContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(cm)valueWithNewArrayInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:::SYNTHESIZED::c:objc(cs)JSValue	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(cm)valueWithNewBigIntFromInt64:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(cm)valueWithNewBigIntFromInt64:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:::SYNTHESIZED::c:objc(cs)JSValue	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:::SYNTHESIZED::c:objc(cs)JSValue	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(cm)valueWithNewErrorFromMessage:inContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(cm)valueWithNewErrorFromMessage:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(cm)valueWithNewObjectInContext:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
@@ -282,39 +282,39 @@ c:objc(cs)JSValue(cm)valueWithUndefinedInContext:::SYNTHESIZED::c:objc(cs)JSValu
 c:objc(cs)JSValue(im)callWithArguments:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)compareDouble:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)compareInt64:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)compareJSValue:	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
+c:objc(cs)JSValue(im)compareJSValue:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)compareUInt64:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)constructWithArguments:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)defineProperty:descriptor:	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
+c:objc(cs)JSValue(im)defineProperty:descriptor:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)deleteProperty:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)hasProperty:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)invokeMethod:withArguments:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)isEqualToObject:	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
-c:objc(cs)JSValue(im)isEqualWithTypeCoercionToObject:	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
-c:objc(cs)JSValue(im)isInstanceOf:	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
+c:objc(cs)JSValue(im)isEqualToObject:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:objc(cs)JSValue(im)isEqualWithTypeCoercionToObject:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:objc(cs)JSValue(im)isInstanceOf:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)objectAtIndexedSubscript:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)objectForKeyedSubscript:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)setObject:atIndexedSubscript:	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
-c:objc(cs)JSValue(im)setObject:forKeyedSubscript:	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
+c:objc(cs)JSValue(im)setObject:atIndexedSubscript:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:objc(cs)JSValue(im)setObject:forKeyedSubscript:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)setValue:atIndex:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)setValue:forProperty:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)toArray	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)toBool	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toDate	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
-c:objc(cs)JSValue(im)toDictionary	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
+c:objc(cs)JSValue(im)toDate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:objc(cs)JSValue(im)toDictionary	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)toDouble	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)toInt32	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toInt64	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
-c:objc(cs)JSValue(im)toNumber	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
-c:objc(cs)JSValue(im)toObject	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
-c:objc(cs)JSValue(im)toObjectOfClass:	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
+c:objc(cs)JSValue(im)toInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:objc(cs)JSValue(im)toNumber	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:objc(cs)JSValue(im)toObject	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+c:objc(cs)JSValue(im)toObjectOfClass:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)toPoint	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)toRange	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)toRect	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)toSize	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)toString	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)toUInt32	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(im)toUInt64	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
+c:objc(cs)JSValue(im)toUInt64	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)valueAtIndex:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(im)valueForProperty:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(py)JSValueRef	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
@@ -322,7 +322,7 @@ c:objc(cs)JSValue(py)context	implemented	tests/agent/JavaScriptCoreRuntime.swift
 c:objc(cs)JSValue(py)isArray	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(py)isBigInt	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(py)isBoolean	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(cs)JSValue(py)isDate	declared	JSContext.swift	symbol compiles; host probe did not exercise this identifier
+c:objc(cs)JSValue(py)isDate	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(py)isNull	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(py)isNumber	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSValue(py)isObject	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
@@ -333,26 +333,26 @@ c:objc(cs)JSVirtualMachine	implemented	tests/agent/JavaScriptCoreRuntime.swift	e
 c:objc(cs)JSVirtualMachine(im)addManagedReference:withOwner:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSVirtualMachine(im)init	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 c:objc(cs)JSVirtualMachine(im)removeManagedReference:withOwner:	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-c:objc(pl)JSExport	deferred	JSTypes.swift	empty marker protocol compiles; exporting Swift classes into JS is unobserved
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@JSRelationCondition	declared	JSTypes.swift	Equatable != compiles; this type's inequality was not probed
+c:objc(pl)JSExport	implemented	tests/agent/JavaScriptCoreRuntime.swift	marker protocol exercised; Swift class export is a listed gap; host functions use setObject closures
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@JSRelationCondition	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@JSType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@JSTypedArrayType	declared	JSTypes.swift	Equatable != compiles; this type's inequality was not probed
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@JSRelationCondition	declared	JSTypes.swift	Hashable synthesizes the symbol; hasher contents were not probed
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSType	declared	JSTypes.swift	Hashable synthesizes the symbol; hasher contents were not probed
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSTypedArrayType	declared	JSTypes.swift	Hashable synthesizes the symbol; hasher contents were not probed
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@JSRelationCondition	declared	JSTypes.swift	Hashable synthesizes the symbol; hasher contents were not probed
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSType	declared	JSTypes.swift	Hashable synthesizes the symbol; hasher contents were not probed
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSTypedArrayType	declared	JSTypes.swift	Hashable synthesizes the symbol; hasher contents were not probed
-s:So13JSStaticValuea4name11getProperty03setE010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAM_A2MSpyAMGSgtXCSgSbAM_A3mOtXCSgs6UInt32Vtcfc	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@JSTypedArrayType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@JSRelationCondition	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSTypedArrayType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@JSRelationCondition	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSTypedArrayType	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+s:So13JSStaticValuea4name11getProperty03setE010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAM_A2MSpyAMGSgtXCSgSbAM_A3mOtXCSgs6UInt32Vtcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 s:So13JSStaticValueaABycfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So16JSStaticFunctiona4name06callAsB010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAL_A2LSiSPyALGSgSpyALGSgtXCSgs6UInt32Vtcfc	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
+s:So16JSStaticFunctiona4name06callAsB010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAL_A2LSiSPyALGSgSpyALGSgtXCSgs6UInt32Vtcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 s:So16JSStaticFunctionaABycfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So16JSTypedArrayTypea8rawValueABs6UInt32V_tcfc	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
+s:So16JSTypedArrayTypea8rawValueABs6UInt32V_tcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 s:So16JSTypedArrayTypea8rawValues6UInt32Vvp	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 s:So16JSTypedArrayTypeayABs6UInt32Vcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So17JSClassDefinitiona7version10attributes9className11parentClass12staticValues0I9Functions10initialize8finalize11hasProperty03getO003setO006deleteO00pO5Names14callAsFunction0tU11Constructor0N8Instance13convertToTypeABs5Int32V_s6UInt32VSPys4Int8VGSgs13OpaquePointerVSgSPySo13JSStaticValueaGSgSPySo08JSStaticV0aGSgyA2__A2_tXCSgyA2_XCSgSbA2__A2_A2_tXCSgA2_A2__A2_A2_SpyA2_GSgtXCSgSbA2__A2_A2_A2_A15_tXCSgSbA2__A2_A2_A15_tXCSgyA2__A2_A2_tXCSgA2_A2__A2_A2_SiSPyA2_GSgA15_tXCSgA2_A2__A2_SiA21_A15_tXCSgA18_A2_A2__A2_So6JSTypeaA15_tXCSgtcfc	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
+s:So17JSClassDefinitiona7version10attributes9className11parentClass12staticValues0I9Functions10initialize8finalize11hasProperty03getO003setO006deleteO00pO5Names14callAsFunction0tU11Constructor0N8Instance13convertToTypeABs5Int32V_s6UInt32VSPys4Int8VGSgs13OpaquePointerVSgSPySo13JSStaticValueaGSgSPySo08JSStaticV0aGSgyA2__A2_tXCSgyA2_XCSgSbA2__A2_A2_tXCSgA2_A2__A2_A2_SpyA2_GSgtXCSgSbA2__A2_A2_A2_A15_tXCSgSbA2__A2_A2_A15_tXCSgyA2__A2_A2_tXCSgA2_A2__A2_A2_SiSPyA2_GSgA15_tXCSgA2_A2__A2_SiA21_A15_tXCSgA18_A2_A2__A2_So6JSTypeaA15_tXCSgtcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 s:So17JSClassDefinitionaABycfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
-s:So19JSRelationConditionV8rawValueABSgs6UInt32V_tcfc	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
-s:So6JSTypea8rawValueABs6UInt32V_tcfc	declared	JSTypes.swift	symbol compiles; host probe did not exercise this identifier
+s:So19JSRelationConditionV8rawValueABSgs6UInt32V_tcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
+s:So6JSTypea8rawValueABs6UInt32V_tcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 s:So6JSTypea8rawValues6UInt32Vvp	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe
 s:So6JSTypeayABs6UInt32Vcfc	implemented	tests/agent/JavaScriptCoreRuntime.swift	exercised by the isolated Linux runtime probe

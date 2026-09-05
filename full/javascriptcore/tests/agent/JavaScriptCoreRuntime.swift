@@ -139,12 +139,12 @@ func assertEvaluateAndValues() throws {
     try expect(JSValue(newArrayIn: context).isArray, "new array")
     try expect(JSValue(object: "hi", in: context).isString, "object string")
     try expect(JSValue(newErrorFromMessage: "boom", in: context).isObject, "error")
-    try expect(JSValue(newRegularExpressionFromPattern: "a+", flags: "g", in: context).toString().contains("a+"), "regexp")
+    try expect(jscIndexOfProbe(JSValue(newRegularExpressionFromPattern: "a+", flags: "g", in: context).toString(), "a+") != nil, "regexp")
     try expect(JSValue(newSymbolFromDescription: "s", in: context).isSymbol, "symbol")
     try expect(JSValue(newBigIntFrom: Int64(99), in: context)?.isBigInt == true, "bigint")
     try expect(JSValue(point: CGPoint(x: 1, y: 2), inContext: context).toPoint().x == 1, "point")
     try expect(JSValue(size: CGSize(width: 3, height: 4), inContext: context).toSize().width == 3, "size")
-    try expect(JSValue(rect: CGRect(x: 0, y: 0, width: 5, height: 6), inContext: context).toRect().width == 5, "rect")
+    try expect(JSValue(rect: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 5, height: 6)), inContext: context).toRect().size.width == 5, "rect")
     try expect(JSValue(range: NSRange(location: 1, length: 2), inContext: context).toRange().location == 1, "range")
 
     let json = context.evaluateScript("JSON.stringify({k:1})")!
@@ -284,6 +284,354 @@ func assertObjCMachine() throws {
     try expect(JSValue(newPromiseRejectedWithReason: "x", in: context).isObject, "rejected")
 }
 
+func assertInterpreterSubset() throws {
+    let context = JSContext()
+    try expectEqual(context.evaluateScript("typeof 1").toString(), "number", "typeof number")
+    try expectEqual(context.evaluateScript("1 + '2'").toString(), "12", "ToPrimitive string concat ECMA-262 13.8")
+    try expectEqual(context.evaluateScript("'2' * '3'").toInt32(), 6, "ToNumber multiply ECMA-262 7.1.3")
+    try expect(context.evaluateScript("null == undefined").toBool(), "abstract eq null/undefined ECMA-262 7.2.14")
+    try expect(context.evaluateScript("'12' == 12").toBool(), "abstract eq string/number")
+    try expect(!context.evaluateScript("'12' === 12").toBool(), "strict eq")
+    try expectEqual(context.evaluateScript("false || 'x'").toString(), "x", "logical or")
+    try expectEqual(context.evaluateScript("1 && 2").toInt32(), 2, "logical and")
+    try expectEqual(context.evaluateScript("if (1) { 8 } else { 9 }").toInt32(), 8, "if")
+    try expectEqual(context.evaluateScript("var s=0; for (var i=0; i<3; i=i+1) { s=s+i } s").toInt32(), 3, "for")
+    try expectEqual(context.evaluateScript("var n=0; var i=3; while (i) { n=n+i; i=i-1 } n").toInt32(), 6, "while")
+    try expectEqual(context.evaluateScript("var x=1; x+=2; x").toInt32(), 3, "+=")
+    try expectEqual(context.evaluateScript("var y=1; ++y").toInt32(), 2, "prefix ++")
+    try expectEqual(context.evaluateScript("Math.floor(1.9)").toInt32(), 1, "Math.floor")
+    try expectEqual(context.evaluateScript("Math.max(1,4,2)").toInt32(), 4, "Math.max")
+    try expectEqual(context.evaluateScript("Math.pow(2,3)").toInt32(), 8, "Math.pow")
+    try expectEqual(context.evaluateScript("'hello'.charAt(1)").toString(), "e", "String.charAt")
+    try expectEqual(context.evaluateScript("'hello'.length").toInt32(), 5, "String.length utf16")
+    try expectEqual(context.evaluateScript("'ab'.concat('c')").toString(), "abc", "String.concat")
+    try expectEqual(context.evaluateScript("'HELLO'.toLowerCase()").toString(), "hello", "toLowerCase")
+    try expectEqual(context.evaluateScript("[1,2].push(3)").toInt32(), 3, "Array.push length")
+    try expectEqual(context.evaluateScript("var a=[1,2]; a.push(3); a.join('-')").toString(), "1-2-3", "Array.join")
+    try expectEqual(context.evaluateScript("[10,20,30].slice(1,2)[0]").toInt32(), 20, "Array.slice")
+    try expectEqual(context.evaluateScript("[1,2].concat([3]).length").toInt32(), 3, "Array.concat")
+    try expect(context.evaluateScript("({a:1}) instanceof Object").toBool(), "instanceof")
+    _ = context.evaluateScript("1+1", withSourceURL: URL(string: "https://example.test/app.js"))
+    try expectEqual(context.evaluateScript("40+2")!.description, "42", "JSValue.description")
+
+    func expectGap(_ script: String, contains fragment: String, _ message: String) throws {
+        context.exception = nil
+        _ = context.evaluateScript(script)
+        let text = context.exception?.toString() ?? ""
+        try expect(context.exception != nil, "\(message) should throw")
+        try expect(jscIndexOfProbe(text, fragment) != nil, "\(message): \(text)")
+        try expect(context.exception.forProperty("line").isNumber, "\(message) line")
+        try expect(context.exception.forProperty("column").isNumber, "\(message) column")
+        try expectEqual(context.exception.forProperty("name").toString(), "SyntaxError", "\(message) SyntaxError")
+    }
+    try expectGap("class Foo {}", contains: "class", "class gap")
+    try expectGap("async function f(){}", contains: "async", "async gap")
+    try expectGap("/a+/", contains: "regular expression", "regex gap")
+    try expectGap("x => x", contains: "arrow", "arrow gap")
+    try expectGap("`hi`", contains: "template", "template gap")
+
+    _ = context.evaluateScript("\nclass Foo {}")
+    try expectEqual(context.exception.forProperty("line").toInt32(), 2, "syntax line is 2")
+}
+
+func jscIndexOfProbe(_ haystack: String, _ needle: String) -> Int? {
+    let hay = Array(haystack)
+    let need = Array(needle)
+    if need.isEmpty { return 0 }
+    if need.count > hay.count { return nil }
+    for index in 0...(hay.count - need.count) {
+        var matched = true
+        for offset in 0..<need.count {
+            if hay[index + offset] != need[offset] {
+                matched = false
+                break
+            }
+        }
+        if matched { return index }
+    }
+    return nil
+}
+
+func assertRemainingValueAPI() throws {
+    let context = JSContext()
+    try expect(JSValue(newBigIntFrom: 8.0, in: context)?.isBigInt == true, "bigint double")
+    try expect(JSValue(newBigIntFromDouble: 8.0, inContext: context)?.isBigInt == true, "bigint double inContext")
+    try expect(JSValue(newBigIntFrom: "77", in: context)?.isBigInt == true, "bigint string")
+    try expect(JSValue(newBigIntFromString: "77", inContext: context)?.isBigInt == true, "bigint string inContext")
+    try expect(JSValue(newBigIntFrom: UInt64(5), in: context)?.isBigInt == true, "bigint uint64")
+    try expect(JSValue(newBigIntFromUInt64: 5, inContext: context)?.isBigInt == true, "bigint uint64 inContext")
+
+    let left = JSValue(double: 3, in: context)!
+    let right = JSValue(double: 9, in: context)!
+    try expect(left.compare(right) == .lessThan, "compare JSValue lessThan")
+    try expect(!left.isEqual(to: right), "isEqual to")
+    try expect(JSValue(object: "12", in: context).isEqualWithTypeCoercion(to: 12), "coercion equal")
+    let ctor = context.evaluateScript("function Box(v){ this.v = v } Box")!
+    let instance = ctor.construct(withArguments: [1])!
+    try expect(instance.isInstance(of: ctor), "isInstanceOf")
+    try expect(instance.isDate == false, "not date")
+    let dateValue = JSValue(object: Date(timeIntervalSince1970: 1), in: context)!
+    try expect(dateValue.isDate, "isDate")
+    try expect(dateValue.toDate() != nil, "toDate")
+    try expectEqual(dateValue.toInt64(), 1000, "date ToNumber ms")
+    try expectEqual(dateValue.toUInt64(), 1000, "toUInt64")
+    try expectEqual(JSValue(int32: 4, in: context).toNumber().intValue, 4, "toNumber NSNumber")
+    try expect(JSValue(undefinedIn: context).toObject() == nil, "undefined toObject nil")
+    try expect(JSValue(object: "hi", in: context).toObjectOf(NSString.self) != nil, "toObjectOf NSString")
+    let dictValue = context.evaluateScript("({k:1, z:2})")!
+    try expectEqual(dictValue.toDictionary()?.count, 2, "toDictionary")
+    dictValue.defineProperty("hidden", descriptor: [
+        JSPropertyDescriptorValueKey: 9,
+        JSPropertyDescriptorEnumerableKey: false,
+        JSPropertyDescriptorWritableKey: true,
+        JSPropertyDescriptorConfigurableKey: true
+    ] as [AnyHashable: Any])
+    try expectEqual(dictValue.forProperty("hidden").toInt32(), 9, "defineProperty")
+    dictValue.setObject(8, forKeyedSubscript: "k")
+    try expectEqual(dictValue.objectForKeyedSubscript("k").toInt32(), 8, "keyed set")
+    let array = context.evaluateScript("[1,2]")!
+    array.setObject(5, atIndexedSubscript: 0)
+    try expectEqual(array.objectAtIndexedSubscript(0).toInt32(), 5, "indexed set")
+
+    let add: ([Any]) -> Any = { args in
+        let values = args.compactMap { ($0 as? JSValue)?.toDouble() }
+        return values.reduce(0, +)
+    }
+    context.setObject(add, forKeyedSubscript: "hostAdd" as NSString)
+    try expectEqual(context.evaluateScript("hostAdd(2, 3)").toInt32(), 5, "closure [Any]->Any")
+    let ping: () -> Any = { "pong" }
+    context.setObject(ping, forKeyedSubscript: "hostPing" as NSString)
+    try expectEqual(context.evaluateScript("hostPing()").toString(), "pong", "closure ()->Any")
+}
+
+func assertClassAndRemainingCAPI() throws {
+    try expect(JSRelationCondition.lessThan != JSRelationCondition.equal, "rel !=")
+    try expect(kJSTypedArrayTypeFloat32Array != kJSTypedArrayTypeNone, "typed !=")
+    try expect(JSType(rawValue: 3) == kJSTypeNumber, "JSType rawValue init")
+    try expect(JSTypedArrayType(rawValue: 8) == kJSTypedArrayTypeFloat32Array, "typed rawValue init")
+    try expect(JSRelationCondition(rawValue: 3) == .lessThan, "rel rawValue init")
+    var hasher = Hasher()
+    kJSTypeNumber.hash(into: &hasher)
+    kJSTypedArrayTypeInt8Array.hash(into: &hasher)
+    JSRelationCondition.equal.hash(into: &hasher)
+    _ = kJSTypeNumber.hashValue
+    _ = kJSTypedArrayTypeInt8Array.hashValue
+    _ = JSRelationCondition.equal.hashValue
+    let classAttrs: JSClassAttributes = JSClassAttributes(kJSClassAttributeNone)
+    let propAttrs: JSPropertyAttributes = JSPropertyAttributes(kJSPropertyAttributeReadOnly)
+    try expect(classAttrs == 0, "JSClassAttributes")
+    try expect(propAttrs != 0, "JSPropertyAttributes")
+    let _: JSValueProperty? = nil
+
+    let ctx = JSGlobalContextCreate(nil)!
+    defer { JSGlobalContextRelease(ctx) }
+    let group = JSContextGroupCreate()!
+    _ = JSContextGroupRetain(group)
+    let grouped = JSGlobalContextCreateInGroup(group, nil)!
+    _ = JSGlobalContextRetain(grouped)
+    try expect(JSContextGetGlobalObject(grouped) != nil, "global object")
+    JSGlobalContextRelease(grouped)
+    JSContextGroupRelease(group)
+    JSContextGroupRelease(group)
+
+    let hello = JSStringCreateWithUTF8CString("hello")!
+    _ = JSStringRetain(hello)
+    try expect(JSStringGetCharactersPtr(hello) != nil, "chars ptr")
+    JSStringRelease(hello)
+    JSStringRelease(hello)
+
+    var exception: JSValueRef?
+    let object = JSObjectMake(ctx, nil, nil)!
+    JSObjectSetProperty(ctx, object, JSStringCreateWithUTF8CString("k"), JSValueMakeNumber(ctx, 3), 0, &exception)
+    let key = JSValueMakeString(ctx, JSStringCreateWithUTF8CString("k"))
+    try expect(JSObjectHasPropertyForKey(ctx, object, key, &exception), "has for key")
+    try expectEqual(JSValueToNumber(ctx, JSObjectGetPropertyForKey(ctx, object, key, &exception), nil), 3, "get for key")
+    JSObjectSetPropertyForKey(ctx, object, JSValueMakeString(ctx, JSStringCreateWithUTF8CString("n")), JSValueMakeNumber(ctx, 4), 0, &exception)
+    try expect(JSObjectDeletePropertyForKey(ctx, object, JSValueMakeString(ctx, JSStringCreateWithUTF8CString("n")), &exception), "delete for key")
+    let proto = JSObjectMake(ctx, nil, nil)!
+    JSObjectSetPrototype(ctx, object, proto)
+    try expect(JSObjectGetPrototype(ctx, object) != nil, "prototype")
+
+    let ctor = JSEvaluateScript(ctx, JSStringCreateWithUTF8CString("function Box(v){ this.v = v } Box"), nil, nil, 1, &exception)!
+    try expect(JSObjectIsFunction(ctx, ctor), "is function")
+    try expect(JSObjectIsConstructor(ctx, ctor), "is constructor")
+    let ctorArgs: [JSValueRef?] = [JSValueMakeNumber(ctx, 9)]
+    let constructed = ctorArgs.withUnsafeBufferPointer {
+        JSObjectCallAsConstructor(ctx, ctor, 1, $0.baseAddress, &exception)
+    }!
+    try expect(JSValueIsInstanceOfConstructor(ctx, constructed, ctor, &exception), "instance of")
+    let fn = JSEvaluateScript(ctx, JSStringCreateWithUTF8CString("function id(x){ return x } id"), nil, nil, 1, &exception)!
+    let fnArgs: [JSValueRef?] = [JSValueMakeNumber(ctx, 6)]
+    let called = fnArgs.withUnsafeBufferPointer {
+        JSObjectCallAsFunction(ctx, fn, nil, 1, $0.baseAddress, &exception)
+    }!
+    try expectEqual(JSValueToNumber(ctx, called, nil), 6, "call as function")
+    try expect(JSValueCompare(ctx, JSValueMakeNumber(ctx, 1), JSValueMakeNumber(ctx, 2), nil) == .lessThan, "JSValueCompare")
+    try expect(JSValueCompareDouble(ctx, JSValueMakeNumber(ctx, 3), 3, nil) == .equal, "compare double c")
+    try expect(JSValueCompareInt64(ctx, JSValueMakeNumber(ctx, 3), 4, nil) == .lessThan, "compare int64 c")
+    try expect(JSValueCompareUInt64(ctx, JSValueMakeNumber(ctx, 5), 4, nil) == .greaterThan, "compare uint64 c")
+
+    let types: [JSTypedArrayType] = [
+        kJSTypedArrayTypeInt16Array, kJSTypedArrayTypeInt32Array,
+        kJSTypedArrayTypeUint16Array, kJSTypedArrayTypeUint32Array,
+        kJSTypedArrayTypeUint8ClampedArray, kJSTypedArrayTypeFloat32Array,
+        kJSTypedArrayTypeFloat64Array, kJSTypedArrayTypeBigInt64Array,
+        kJSTypedArrayTypeBigUint64Array
+    ]
+    for type in types {
+        let view = JSObjectMakeTypedArray(ctx, type, 2, &exception)!
+        try expect(JSValueGetTypedArrayType(ctx, view, &exception) == type, "typed \(type.rawValue)")
+    }
+
+    let dealloc: JSTypedArrayBytesDeallocator = { _, _ in }
+    let raw = UnsafeMutableRawPointer.allocate(byteCount: 8, alignment: 8)
+    raw.initializeMemory(as: UInt8.self, repeating: 0, count: 8)
+    let noCopy = JSObjectMakeArrayBufferWithBytesNoCopy(ctx, raw, 8, dealloc, nil, &exception)!
+    try expectEqual(JSObjectGetArrayBufferByteLength(ctx, noCopy, &exception), 8, "nocopy buffer")
+    let typedNoCopy = JSObjectMakeTypedArrayWithBytesNoCopy(ctx, kJSTypedArrayTypeUint8Array, raw, 8, dealloc, nil, &exception)!
+    try expectEqual(JSObjectGetTypedArrayLength(ctx, typedNoCopy, &exception), 8, "typed nocopy")
+
+    let made = JSObjectMakeFunction(ctx, JSStringCreateWithUTF8CString("id"), 1, nil, JSStringCreateWithUTF8CString("return 7"), nil, 1, &exception)
+    try expect(made != nil, "make function")
+    try expectEqual(JSValueToNumber(ctx, JSObjectCallAsFunction(ctx, made, nil, 0, nil, &exception), nil), 7, "made function body")
+
+    try assertJSClassDispatch(ctx)
+}
+
+private var jsClassInitCount: Int32 = 0
+private var jsClassFinalizeCount: Int32 = 0
+private var jsClassConverted = false
+
+func assertJSClassDispatch(_ ctx: JSGlobalContextRef) throws {
+    let answerChars = Array("answer".utf8CString)
+    let pingChars = Array("ping".utf8CString)
+    let classNameChars = Array("Probe".utf8CString)
+    try answerChars.withUnsafeBufferPointer { answerBuf in
+        try pingChars.withUnsafeBufferPointer { pingBuf in
+            try classNameChars.withUnsafeBufferPointer { classBuf in
+                let staticValues = [
+                    JSStaticValue(
+                        name: answerBuf.baseAddress,
+                        getProperty: { ctx, _, _, _ in JSValueMakeNumber(ctx, 11) },
+                        setProperty: { _, _, _, _, _ in true },
+                        attributes: 0
+                    ),
+                    JSStaticValue()
+                ]
+                let staticFunctions = [
+                    JSStaticFunction(
+                        name: pingBuf.baseAddress,
+                        callAsFunction: { ctx, _, _, _, _, _ in JSValueMakeString(ctx, JSStringCreateWithUTF8CString("pong")) },
+                        attributes: 0
+                    ),
+                    JSStaticFunction()
+                ]
+                var definition = JSClassDefinition(
+                    version: 0,
+                    attributes: JSClassAttributes(kJSClassAttributeNone),
+                    className: classBuf.baseAddress,
+                    parentClass: nil,
+                    staticValues: nil,
+                    staticFunctions: nil,
+                    initialize: { _, _ in jsClassInitCount += 1 },
+                    finalize: { _ in jsClassFinalizeCount += 1 },
+                    hasProperty: { _, _, _ in true },
+                    getProperty: { ctx, _, name, _ in
+                        if JSStringIsEqualToUTF8CString(name, "dynamic") {
+                            return JSValueMakeNumber(ctx, 13)
+                        }
+                        return nil
+                    },
+                    setProperty: { ctx, object, name, value, _ in
+                        if JSStringIsEqualToUTF8CString(name, "dynamic") {
+                            JSObjectSetProperty(ctx, object, JSStringCreateWithUTF8CString("_dyn"), value, 0, nil)
+                            return true
+                        }
+                        return false
+                    },
+                    deleteProperty: { _, _, _, _ in true },
+                    getPropertyNames: { _, _, accumulator in
+                        JSPropertyNameAccumulatorAddName(accumulator, JSStringCreateWithUTF8CString("dynamic"))
+                    },
+                    callAsFunction: { ctx, _, _, _, _, _ in JSValueMakeNumber(ctx, 15) },
+                    callAsConstructor: { ctx, _, _, _, _ in JSObjectMake(ctx, nil, nil) },
+                    hasInstance: { _, _, _, _ in true },
+                    convertToType: { ctx, _, type, _ in
+                        jsClassConverted = true
+                        if type == kJSTypeNumber { return JSValueMakeNumber(ctx, 1) }
+                        return JSValueMakeString(ctx, JSStringCreateWithUTF8CString("probe"))
+                    }
+                )
+                try staticValues.withUnsafeBufferPointer { valuesBuf in
+                    try staticFunctions.withUnsafeBufferPointer { fnBuf in
+                        definition.staticValues = valuesBuf.baseAddress
+                        definition.staticFunctions = fnBuf.baseAddress
+                        try expectEqual(definition.version, 0, "definition version")
+                        try expectEqual(definition.attributes, 0, "definition attributes")
+                        try expect(definition.className != nil, "className")
+                        try expect(definition.parentClass == nil, "parentClass")
+                        try expect(definition.staticValues != nil, "staticValues")
+                        try expect(definition.staticFunctions != nil, "staticFunctions")
+                        try expect(definition.initialize != nil, "initialize")
+                        try expect(definition.finalize != nil, "finalize")
+                        try expect(definition.hasProperty != nil, "hasProperty")
+                        try expect(definition.getProperty != nil, "getProperty")
+                        try expect(definition.setProperty != nil, "setProperty")
+                        try expect(definition.deleteProperty != nil, "deleteProperty")
+                        try expect(definition.getPropertyNames != nil, "getPropertyNames")
+                        try expect(definition.callAsFunction != nil, "callAsFunction field")
+                        try expect(definition.callAsConstructor != nil, "callAsConstructor field")
+                        try expect(definition.hasInstance != nil, "hasInstance")
+                        try expect(definition.convertToType != nil, "convertToType")
+                        try expect(staticValues[0].name != nil, "static value name")
+                        try expect(staticValues[0].getProperty != nil, "static get")
+                        try expect(staticValues[0].setProperty != nil, "static set")
+                        try expect(staticValues[0].attributes == 0, "static attrs")
+                        try expect(staticFunctions[0].name != nil, "static fn name")
+                        try expect(staticFunctions[0].callAsFunction != nil, "static fn call")
+                        try expect(staticFunctions[0].attributes == 0, "static fn attrs")
+
+                        let jsClass: JSClassRef = JSClassCreate(&definition)!
+                        _ = JSClassRetain(jsClass)
+                        let object = JSObjectMake(ctx, jsClass, nil)!
+                        try expect(jsClassInitCount > 0, "initialize ran")
+                        try expect(JSValueIsObjectOfClass(ctx, object, jsClass), "is object of class")
+                        try expectEqual(JSValueToNumber(ctx, JSObjectGetProperty(ctx, object, JSStringCreateWithUTF8CString("dynamic"), nil), nil), 13, "class getProperty")
+                        try expectEqual(JSValueToNumber(ctx, JSObjectGetProperty(ctx, object, JSStringCreateWithUTF8CString("answer"), nil), nil), 11, "static value")
+                        try expect(JSObjectHasProperty(ctx, object, JSStringCreateWithUTF8CString("dynamic")), "hasProperty callback")
+                        JSObjectSetProperty(ctx, object, JSStringCreateWithUTF8CString("dynamic"), JSValueMakeNumber(ctx, 1), 0, nil)
+                        try expect(JSObjectDeleteProperty(ctx, object, JSStringCreateWithUTF8CString("gone"), nil), "deleteProperty callback")
+                        let names = JSObjectCopyPropertyNames(ctx, object)!
+                        try expect(JSPropertyNameArrayGetCount(names) >= 1, "getPropertyNames")
+                        JSPropertyNameArrayRelease(names)
+                        let ping = JSObjectGetProperty(ctx, object, JSStringCreateWithUTF8CString("ping"), nil)
+                        try expect(JSObjectIsFunction(ctx, ping), "static function")
+                        var exception: JSValueRef?
+                        let pingResult = JSObjectCallAsFunction(ctx, ping, object, 0, nil, &exception)!
+                        try expect(JSStringIsEqualToUTF8CString(JSValueToStringCopy(ctx, pingResult, nil), "pong"), "static fn result")
+
+                        let callbackFn = JSObjectMakeFunctionWithCallback(ctx, JSStringCreateWithUTF8CString("cb"), { ctx, _, _, _, _, _ in
+                            JSValueMakeNumber(ctx, 21)
+                        })!
+                        try expectEqual(JSValueToNumber(ctx, JSObjectCallAsFunction(ctx, callbackFn, nil, 0, nil, &exception), nil), 21, "function with callback")
+                        let jsCtor = JSObjectMakeConstructor(ctx, jsClass, { ctx, _, _, _, _ in
+                            JSObjectMake(ctx, nil, nil)
+                        })!
+                        let built = JSObjectCallAsConstructor(ctx, jsCtor, 0, nil, &exception)!
+                        try expect(JSValueIsObject(ctx, built), "make constructor")
+                        try expect(JSValueIsInstanceOfConstructor(ctx, object, jsCtor, &exception), "hasInstance")
+                        _ = JSValueToNumber(ctx, object, &exception)
+                        try expect(jsClassConverted, "convertToType")
+
+                        JSClassRelease(jsClass)
+                        JSClassRelease(jsClass)
+                    }
+                }
+            }
+        }
+    }
+}
+
 do {
     try assertTypesAndConstants()
     try assertCStringAndContext()
@@ -291,6 +639,9 @@ do {
     try assertCAPIValues()
     try assertObjectsAndTypedArrays()
     try assertObjCMachine()
+    try assertInterpreterSubset()
+    try assertRemainingValueAPI()
+    try assertClassAndRemainingCAPI()
     print("JAVASCRIPTCORE_AGENT_RUNTIME_OK")
 } catch {
     fputs("JavaScriptCore runtime failed: \(error)\n", stderr)
