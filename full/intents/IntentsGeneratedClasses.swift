@@ -145,7 +145,7 @@ open class INAirline: NSObject, @unchecked Sendable {
         self.iataCode = iataCode
         self.icaoCode = icaoCode
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -162,7 +162,7 @@ open class INAirport: NSObject, @unchecked Sendable {
         self.iataCode = iataCode
         self.icaoCode = icaoCode
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -179,7 +179,7 @@ open class INAirportGate: NSObject, @unchecked Sendable {
         self.terminal = terminal
         self.gate = gate
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -244,7 +244,7 @@ open class INBalanceAmount: NSObject, @unchecked Sendable {
         self.amount = amount
         self.currencyCode = currencyCode
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -279,7 +279,7 @@ open class INBillDetails: NSObject, @unchecked Sendable {
         self.dueDate = dueDate
         self.paymentDate = paymentDate
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -295,7 +295,7 @@ open class INBillPayee: NSObject, @unchecked Sendable {
         self.nickname = nickname
         self.organizationName = organizationName
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -340,7 +340,7 @@ open class INBoatTrip: NSObject, @unchecked Sendable {
     open var provider: String? = nil
     open var tripDuration: INDateComponentsRange?
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -412,7 +412,7 @@ open class INBusTrip: NSObject, @unchecked Sendable {
     open var provider: String? = nil
     open var tripDuration: INDateComponentsRange?
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -443,7 +443,7 @@ open class INCallGroup: NSObject, @unchecked Sendable {
         self.groupName = groupName
         self.groupId = groupId
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -480,7 +480,7 @@ open class INCallRecord: NSObject, @unchecked Sendable {
         self.unseen = unseen
         self.numberOfCalls = numberOfCalls
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         guard let identifier = coder.decodeObject(of: NSString.self, forKey: "identifier") as String? else {
             return nil
         }
@@ -507,7 +507,7 @@ open class INCallRecordFilter: NSObject, @unchecked Sendable {
         self.callTypes = callTypes
         self.callCapability = callCapability
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -603,7 +603,7 @@ open class INCar: NSObject, @unchecked Sendable {
         }
         open var bluetoothIdentifier: String? = nil
         open var iAP2Identifier: String? = nil
-        public convenience init?(coder: NSCoder) {
+        public required convenience init?(coder: NSCoder) {
             self.init()
             inLinuxApplyCoder(self, coder)
         }
@@ -620,7 +620,7 @@ open class INCar: NSObject, @unchecked Sendable {
     open var supportedChargingConnectors: [INCar.ChargingConnectorType] = []
     open var year: String? = nil
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -723,7 +723,7 @@ open class INCurrencyAmount: NSObject, @unchecked Sendable {
         self.amount = amount
         self.currencyCode = currencyCode
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -787,7 +787,7 @@ open class INDateComponentsRange: NSObject, @unchecked Sendable {
         self.endDateComponents = endDateComponents
         self.recurrenceRule = recurrenceRule
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -845,7 +845,7 @@ open class INDefaultCardTemplate: NSObject, @unchecked Sendable {
         self.init()
         self.title = title
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -957,7 +957,7 @@ open class INFile: NSObject, @unchecked Sendable {
         self.filename = filename ?? ""
         self.typeIdentifier = typeIdentifier
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -989,7 +989,7 @@ open class INFlight: NSObject, @unchecked Sendable {
         self.departureAirportGate = departureAirportGate
         self.arrivalAirportGate = arrivalAirportGate
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -1277,7 +1277,7 @@ open class INImageNoteContent: NSObject, @unchecked Sendable {
 
 open class INIntentDonationMetadata: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -1367,7 +1367,7 @@ open class INMediaDestinationReference: NSObject, @unchecked Sendable {
     open var mediaDestinationType: INMediaDestinationType?
     open var playlistName: String? = nil
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -1545,7 +1545,7 @@ open class INMessage: NSObject, @unchecked Sendable {
         self.recipients = recipients
         self.messageType = messageType
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -1582,7 +1582,7 @@ open class INMessageLinkMetadata: NSObject, @unchecked Sendable {
         self.openGraphType = openGraphType
         self.linkURL = linkURL
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -1599,7 +1599,7 @@ open class INMessageReaction: NSObject, @unchecked Sendable {
         self.reactionDescription = reactionDescription
         self.emoji = emoji
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -1622,7 +1622,7 @@ open class INNote: NSObject, @unchecked Sendable {
         self.modifiedDateComponents = modifiedDateComponents
         self.identifier = identifier
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -1630,7 +1630,7 @@ open class INNote: NSObject, @unchecked Sendable {
 
 open class INNoteContent: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -1718,7 +1718,7 @@ open class INParameter: NSObject, @unchecked Sendable {
     open func isEqual(to parameter: INParameter) -> Bool {
         parameterClass == parameter.parameterClass && parameterKeyPath == parameter.parameterKeyPath
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         let path = coder.decodeObject(of: NSString.self, forKey: "parameterKeyPath") as String? ?? ""
         self.init(for: INIntent.self, keyPath: path)
     }
@@ -1812,7 +1812,7 @@ open class INPaymentAccount: NSObject, @unchecked Sendable {
         self.balance = balance
         self.secondaryBalance = secondaryBalance
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -1836,7 +1836,7 @@ open class INPaymentAmount: NSObject, @unchecked Sendable {
         self.amountType = amountType
         self.amount = amount
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -1865,7 +1865,7 @@ open class INPaymentMethod: NSObject, @unchecked Sendable {
         self.identificationHint = identificationHint
         self.icon = icon
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -1908,7 +1908,7 @@ open class INPaymentRecord: NSObject, @unchecked Sendable {
         self.status = status
         self.feeAmount = feeAmount
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2055,7 +2055,7 @@ open class INPriceRange: NSObject, @unchecked Sendable {
         self.init()
         self.currencyCode = currencyCode
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2085,7 +2085,7 @@ open class INRecurrenceRule: NSObject, @unchecked Sendable {
         self.frequency = frequency
         self.weeklyRecurrenceDays = weeklyRecurrenceDays
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2109,7 +2109,7 @@ open class INRelativeSettingResolutionResult: INIntentResolutionResult, @uncheck
 
 open class INRelevanceProvider: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2125,7 +2125,7 @@ open class INRelevantShortcut: NSObject, @unchecked Sendable {
         self.shortcut = shortcut
         super.init()
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         guard let shortcut = coder.decodeObject(of: INShortcut.self, forKey: "shortcut") else {
             return nil
         }
@@ -2168,7 +2168,7 @@ open class INRentalCar: NSObject, @unchecked Sendable {
         self.model = model
         self.rentalCarDescription = rentalCarDescription
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2251,7 +2251,7 @@ open class INReservation: NSObject, @unchecked Sendable {
     open var reservationNumber: String? = nil
     open var reservationStatus: INReservationStatus?
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2268,7 +2268,7 @@ open class INReservationAction: NSObject, @unchecked Sendable {
         self.validDuration = validDuration
         self.userActivity = userActivity
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2279,7 +2279,7 @@ open class INRestaurant: NSObject, @unchecked Sendable {
     open var restaurantIdentifier: String = ""
     open var vendorIdentifier: String = ""
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2306,7 +2306,7 @@ open class INRestaurantGuestDisplayPreferences: NSObject, @unchecked Sendable {
     open var phoneNumberEditable: Bool = false
     open var phoneNumberFieldShouldBeDisplayed: Bool = false
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2326,7 +2326,7 @@ open class INRestaurantOffer: NSObject, @unchecked Sendable {
     open var offerIdentifier: String = ""
     open var offerTitleText: String = ""
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2364,7 +2364,7 @@ open class INRestaurantReservationBooking: NSObject, @unchecked Sendable {
         self.partySize = partySize
         self.bookingIdentifier = bookingIdentifier
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2451,7 +2451,7 @@ open class INRideCompletionStatus: NSObject, @unchecked Sendable {
     open var isOutstanding: Bool = false
     open var paymentAmount: INCurrencyAmount? = nil
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2485,7 +2485,7 @@ open class INRideDriver: NSObject, @unchecked Sendable {
 
 open class INRideFareLineItem: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2504,7 +2504,7 @@ open class INRideOption: NSObject, @unchecked Sendable {
     open var specialPricingBadgeImage: INImage? = nil
     open var userActivityForBookingInApplication: NSUserActivity? = nil
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2526,7 +2526,7 @@ open class INRidePartySizeOption: NSObject, @unchecked Sendable {
         self.sizeDescription = sizeDescription
         self.priceRange = priceRange
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2546,7 +2546,7 @@ open class INRideStatus: NSObject, @unchecked Sendable {
     open var userActivityForCancelingInApplication: NSUserActivity? = nil
     open var vehicle: INRideVehicle? = nil
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2558,7 +2558,7 @@ open class INRideVehicle: NSObject, @unchecked Sendable {
     open var model: String? = nil
     open var registrationPlate: String? = nil
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -2838,7 +2838,7 @@ open class INSeat: NSObject, @unchecked Sendable {
         self.seatNumber = seatNumber
         self.seatingType = seatingType
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -3284,7 +3284,7 @@ open class INShortcutReference: NSObject, @unchecked Sendable {
         self.init()
         self.userActivity = userActivity
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -3320,7 +3320,7 @@ open class INSnoozeTasksTaskResolutionResult: INIntentResolutionResult, @uncheck
 open class INSpatialEventTrigger: NSObject, @unchecked Sendable {
     open var event: INSpatialEvent?
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -3521,7 +3521,7 @@ open class INSticker: NSObject, @unchecked Sendable {
         self.type = type
         self.emoji = emoji
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -3561,7 +3561,7 @@ open class INTask: NSObject, @unchecked Sendable {
         self.identifier = identifier
         self.priority = priority
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -3584,7 +3584,7 @@ open class INTaskList: NSObject, @unchecked Sendable {
         self.modifiedDateComponents = modifiedDateComponents
         self.identifier = identifier
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -3640,7 +3640,7 @@ open class INTemporalEventTrigger: NSObject, @unchecked Sendable {
         self.init()
         self.dateComponentsRange = dateComponentsRange
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -3674,7 +3674,7 @@ open class INTermsAndConditions: NSObject, @unchecked Sendable {
         self.privacyPolicyURL = privacyPolicyURL
         self.termsAndConditionsURL = termsAndConditionsURL
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -3694,7 +3694,7 @@ open class INTicketedEvent: NSObject, @unchecked Sendable {
     open var eventDuration: INDateComponentsRange?
     open var name: String = ""
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -3758,7 +3758,7 @@ open class INTrainTrip: NSObject, @unchecked Sendable {
     open var trainNumber: String? = nil
     open var tripDuration: INDateComponentsRange?
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
@@ -3877,7 +3877,7 @@ open class INUpdateMediaAffinityMediaItemResolutionResult: INIntentResolutionRes
 open class INUserContext: NSObject, @unchecked Sendable {
     open func becomeCurrent() { }
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
