@@ -1329,6 +1329,10 @@ public func vImageByteSwap_Planar16U(_ src: UnsafePointer<vImage_Buffer>, _ dest
     _ = flags
     let check = _vImageRequireBuffers(src, dest)
     if check != kvImageNoError { return check }
+    let srcLayout = _vImageValidateLayout(src.pointee, bytesPerPixel: 2)
+    if srcLayout != kvImageNoError { return srcLayout }
+    let destLayout = _vImageValidateLayout(dest.pointee, bytesPerPixel: 2)
+    if destLayout != kvImageNoError { return destLayout }
     let w = Int(src.pointee.width); let h = Int(src.pointee.height)
     let s = src.pointee.data!.assumingMemoryBound(to: UInt16.self)
     let d = dest.pointee.data!.assumingMemoryBound(to: UInt16.self)

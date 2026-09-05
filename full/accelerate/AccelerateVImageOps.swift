@@ -7,6 +7,18 @@ func _vImageRequireBuffers(_ src: UnsafePointer<vImage_Buffer>?, _ dest: UnsafeP
     return kvImageNoError
 }
 
+func _vImageValidateLayout(_ buf: vImage_Buffer, bytesPerPixel: Int) -> vImage_Error {
+    let w = Int(buf.width)
+    let h = Int(buf.height)
+    if w < 0 || h < 0 || bytesPerPixel <= 0 {
+        return kvImageInvalidParameter
+    }
+    if buf.rowBytes < w * bytesPerPixel {
+        return kvImageInvalidRowBytes
+    }
+    return kvImageNoError
+}
+
 func _vImageNearestScale(
     _ src: UnsafePointer<vImage_Buffer>,
     _ dest: UnsafePointer<vImage_Buffer>,
@@ -16,6 +28,10 @@ func _vImageNearestScale(
     _ = flags
     let check = _vImageRequireBuffers(src, dest)
     if check != kvImageNoError { return check }
+    let srcLayout = _vImageValidateLayout(src.pointee, bytesPerPixel: bytesPerPixel)
+    if srcLayout != kvImageNoError { return srcLayout }
+    let destLayout = _vImageValidateLayout(dest.pointee, bytesPerPixel: bytesPerPixel)
+    if destLayout != kvImageNoError { return destLayout }
     let srcW = Int(src.pointee.width)
     let srcH = Int(src.pointee.height)
     let destW = Int(dest.pointee.width)
@@ -47,6 +63,8 @@ func _vImageFill(
 ) -> vImage_Error {
     _ = flags
     guard dest.pointee.data != nil else { return kvImageNullPointerArgument }
+    let layout = _vImageValidateLayout(dest.pointee, bytesPerPixel: bytesPerPixel)
+    if layout != kvImageNoError { return layout }
     let w = Int(dest.pointee.width)
     let h = Int(dest.pointee.height)
     guard w >= 0, h >= 0, bytesPerPixel > 0 else { return kvImageInvalidParameter }
@@ -78,6 +96,10 @@ func _vImageReflectHorizontal(
     _ = flags
     let check = _vImageRequireBuffers(src, dest)
     if check != kvImageNoError { return check }
+    let srcLayout = _vImageValidateLayout(src.pointee, bytesPerPixel: bytesPerPixel)
+    if srcLayout != kvImageNoError { return srcLayout }
+    let destLayout = _vImageValidateLayout(dest.pointee, bytesPerPixel: bytesPerPixel)
+    if destLayout != kvImageNoError { return destLayout }
     let w = Int(src.pointee.width)
     let h = Int(src.pointee.height)
     guard w == Int(dest.pointee.width), h == Int(dest.pointee.height), bytesPerPixel > 0 else {
@@ -104,6 +126,10 @@ func _vImageReflectVertical(
     _ = flags
     let check = _vImageRequireBuffers(src, dest)
     if check != kvImageNoError { return check }
+    let srcLayout = _vImageValidateLayout(src.pointee, bytesPerPixel: bytesPerPixel)
+    if srcLayout != kvImageNoError { return srcLayout }
+    let destLayout = _vImageValidateLayout(dest.pointee, bytesPerPixel: bytesPerPixel)
+    if destLayout != kvImageNoError { return destLayout }
     let w = Int(src.pointee.width)
     let h = Int(src.pointee.height)
     guard w == Int(dest.pointee.width), h == Int(dest.pointee.height), bytesPerPixel > 0 else {
@@ -131,6 +157,10 @@ func _vImageRotate90(
     _ = flags
     let check = _vImageRequireBuffers(src, dest)
     if check != kvImageNoError { return check }
+    let srcLayout = _vImageValidateLayout(src.pointee, bytesPerPixel: bytesPerPixel)
+    if srcLayout != kvImageNoError { return srcLayout }
+    let destLayout = _vImageValidateLayout(dest.pointee, bytesPerPixel: bytesPerPixel)
+    if destLayout != kvImageNoError { return destLayout }
     let w = Int(src.pointee.width)
     let h = Int(src.pointee.height)
     let srcRow = src.pointee.rowBytes
@@ -176,6 +206,8 @@ func _vImageHistogramPlanar8(
 ) -> vImage_Error {
     _ = flags
     guard src.pointee.data != nil else { return kvImageNullPointerArgument }
+    let layout = _vImageValidateLayout(src.pointee, bytesPerPixel: 1)
+    if layout != kvImageNoError { return layout }
     for i in 0..<256 { histogram[i] = 0 }
     let w = Int(src.pointee.width)
     let h = Int(src.pointee.height)
@@ -200,6 +232,12 @@ func _vImageAlphaBlendARGB8888(
     guard srcTop.pointee.data != nil, srcBottom.pointee.data != nil, dest.pointee.data != nil else {
         return kvImageNullPointerArgument
     }
+    let topLayout = _vImageValidateLayout(srcTop.pointee, bytesPerPixel: 4)
+    if topLayout != kvImageNoError { return topLayout }
+    let bottomLayout = _vImageValidateLayout(srcBottom.pointee, bytesPerPixel: 4)
+    if bottomLayout != kvImageNoError { return bottomLayout }
+    let destLayout = _vImageValidateLayout(dest.pointee, bytesPerPixel: 4)
+    if destLayout != kvImageNoError { return destLayout }
     let w = Int(srcTop.pointee.width)
     let h = Int(srcTop.pointee.height)
     for y in 0..<h {
@@ -230,6 +268,10 @@ func _vImagePremultiplyARGB8888(
     _ = flags
     let check = _vImageRequireBuffers(src, dest)
     if check != kvImageNoError { return check }
+    let srcLayout = _vImageValidateLayout(src.pointee, bytesPerPixel: 4)
+    if srcLayout != kvImageNoError { return srcLayout }
+    let destLayout = _vImageValidateLayout(dest.pointee, bytesPerPixel: 4)
+    if destLayout != kvImageNoError { return destLayout }
     let w = Int(src.pointee.width)
     let h = Int(src.pointee.height)
     for y in 0..<h {
@@ -256,6 +298,10 @@ func _vImageUnpremultiplyARGB8888(
     _ = flags
     let check = _vImageRequireBuffers(src, dest)
     if check != kvImageNoError { return check }
+    let srcLayout = _vImageValidateLayout(src.pointee, bytesPerPixel: 4)
+    if srcLayout != kvImageNoError { return srcLayout }
+    let destLayout = _vImageValidateLayout(dest.pointee, bytesPerPixel: 4)
+    if destLayout != kvImageNoError { return destLayout }
     let w = Int(src.pointee.width)
     let h = Int(src.pointee.height)
     for y in 0..<h {
@@ -289,6 +335,12 @@ func _vImageConvertPlanar8toARGB8888(
     _ = flags
     let w = Int(srcA.pointee.width)
     let h = Int(srcA.pointee.height)
+    let destLayout = _vImageValidateLayout(dest.pointee, bytesPerPixel: 4)
+    if destLayout != kvImageNoError { return destLayout }
+    if _vImageValidateLayout(srcA.pointee, bytesPerPixel: 1) != kvImageNoError { return kvImageInvalidRowBytes }
+    if _vImageValidateLayout(srcR.pointee, bytesPerPixel: 1) != kvImageNoError { return kvImageInvalidRowBytes }
+    if _vImageValidateLayout(srcG.pointee, bytesPerPixel: 1) != kvImageNoError { return kvImageInvalidRowBytes }
+    if _vImageValidateLayout(srcB.pointee, bytesPerPixel: 1) != kvImageNoError { return kvImageInvalidRowBytes }
     for y in 0..<h {
         for x in 0..<w {
             let di = y * dest.pointee.rowBytes + x * 4
@@ -313,6 +365,11 @@ func _vImageConvertARGB8888toPlanar8(
     _ = flags
     let w = Int(srcARGB.pointee.width)
     let h = Int(srcARGB.pointee.height)
+    if _vImageValidateLayout(srcARGB.pointee, bytesPerPixel: 4) != kvImageNoError { return kvImageInvalidRowBytes }
+    if _vImageValidateLayout(destA.pointee, bytesPerPixel: 1) != kvImageNoError { return kvImageInvalidRowBytes }
+    if _vImageValidateLayout(destR.pointee, bytesPerPixel: 1) != kvImageNoError { return kvImageInvalidRowBytes }
+    if _vImageValidateLayout(destG.pointee, bytesPerPixel: 1) != kvImageNoError { return kvImageInvalidRowBytes }
+    if _vImageValidateLayout(destB.pointee, bytesPerPixel: 1) != kvImageNoError { return kvImageInvalidRowBytes }
     for y in 0..<h {
         for x in 0..<w {
             let si = y * srcARGB.pointee.rowBytes + x * 4
@@ -334,6 +391,8 @@ func _vImageConvertPlanar8toPlanarF(
     flags: vImage_Flags
 ) -> vImage_Error {
     _ = flags
+    if _vImageValidateLayout(src.pointee, bytesPerPixel: 1) != kvImageNoError { return kvImageInvalidRowBytes }
+    if _vImageValidateLayout(dest.pointee, bytesPerPixel: 4) != kvImageNoError { return kvImageInvalidRowBytes }
     let w = Int(src.pointee.width)
     let h = Int(src.pointee.height)
     let span = maxFloat - minFloat
@@ -355,6 +414,8 @@ func _vImageConvertPlanarFtoPlanar8(
     flags: vImage_Flags
 ) -> vImage_Error {
     _ = flags
+    if _vImageValidateLayout(src.pointee, bytesPerPixel: 4) != kvImageNoError { return kvImageInvalidRowBytes }
+    if _vImageValidateLayout(dest.pointee, bytesPerPixel: 1) != kvImageNoError { return kvImageInvalidRowBytes }
     let w = Int(src.pointee.width)
     let h = Int(src.pointee.height)
     let span = maxFloat - minFloat
@@ -381,6 +442,8 @@ func _vImageBoxConvolvePlanar8(
     let kh = Int(kernelHeight)
     if kw % 2 == 0 || kh % 2 == 0 { return kvImageInvalidKernelSize }
     if flags & vImage_Flags(kvImageEdgeExtend) == 0 { return kvImageInvalidEdgeStyle }
+    if _vImageValidateLayout(src.pointee, bytesPerPixel: 1) != kvImageNoError { return kvImageInvalidRowBytes }
+    if _vImageValidateLayout(dest.pointee, bytesPerPixel: 1) != kvImageNoError { return kvImageInvalidRowBytes }
     let w = Int(src.pointee.width)
     let h = Int(src.pointee.height)
     let rx = kw / 2
