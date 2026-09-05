@@ -1,5 +1,6 @@
 import Foundation
-@_spi(OpenUIKitHost) import PhotosUI
+@_spi(OpenUIKitHost)
+import PhotosUI
 
 /// Future clean EC2 probe. Isolated Linux hosts typecheck Foundation
 /// values through public PhotosUI APIs; this file is not compiled by the

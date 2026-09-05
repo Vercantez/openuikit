@@ -12,10 +12,13 @@ Picker configuration, filters, results, and the picker-delegate hook are
 real; playback, limited-library UI, and iCloud shared-album posting fail
 closed.
 
-Coverage this round: **1026 implemented / 11 declared / 1037 total**
-(was 235 implemented / 802 declared). The PHPickerConfiguration,
-PHPickerFilter, PHPickerViewController, PHPickerResult, and
-PHPickerConfiguration.Update families are all nondeferred.
+Coverage this round: **257 implemented / 780 declared / 1037 total**
+(first pass claimed 1026 implemented / 11 declared). 769 synthesized
+SwiftUI.View members on `PhotosPicker` are `declared` again: a bulk
+identity test is not evidence of that identifier's behaviour. The
+PHPickerConfiguration, PHPickerFilter, PHPickerViewController,
+PHPickerResult, and PHPickerConfiguration.Update families stay
+implemented with focused tests.
 
 ## What is real
 
@@ -87,6 +90,7 @@ PHPickerConfiguration.Update families are all nondeferred.
 - SwiftUI.View members synthesized onto `PhotosPicker` are identity
   no-ops in `PhotosUIViewSurface.swift`. They compile and return `Self`;
   they do not implement Apple layout, accessibility, or navigation.
+  Coverage lists them `declared`, not `implemented`.
 - `PHLivePhoto` Transferable overlay methods stay **declared**: they
   throw `PhotosUIUnavailable.linuxHost` and there is no Apple export
   session to observe.

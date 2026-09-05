@@ -28,6 +28,9 @@ func testPickerMode() {
 }
 
 func testPickerFilterComposition() {
+    // Apple PHPickerFilter combinators:
+    // https://developer.apple.com/documentation/photosui/phpickerfilter-swift.struct
+    // Linux equality is structural (order of any/all arrays is significant).
     let any = PHPickerFilter.any(of: [.images, .videos])
     let again = PHPickerFilter.any(of: [.images, .videos])
     let reversed = PHPickerFilter.any(of: [.videos, .images])
@@ -38,6 +41,8 @@ func testPickerFilterComposition() {
     precondition(any != reversed)
     precondition(all != any)
     precondition(negated != .images)
+    precondition(PHPickerFilter.livePhotos == .livePhotos)
+    precondition(PHPickerFilter.livePhotos != .images)
     precondition(!(any != again))
     var hasher = Hasher()
     any.hash(into: &hasher)
@@ -56,6 +61,8 @@ func testPickerFilterMatches() {
     )
     precondition(!PHPickerFilter.videos._matches([.jpeg]))
     precondition(PHPickerFilter.not(.videos)._matches([.jpeg]))
+    precondition(PHPickerFilter.livePhotos._matches([.jpeg]))
+    precondition(!PHPickerFilter.not(.images)._matches([.jpeg]))
 }
 
 func testPickerFilterCatalog() {
@@ -106,13 +113,32 @@ func testPickerConfigurationDefaults() {
     precondition(copy != configuration)
     precondition(configuration.hashValue == PHPickerConfiguration().hashValue)
 
-    precondition(PHPickerConfiguration.AssetRepresentationMode.automatic != .compatible)
-    precondition(PHPickerConfiguration.Selection.continuousAndOrdered != .default)
+    // Apple documents selectionLimit 0 as unlimited. Linux stores 0; the
+    // picker chrome that would enforce the cap is absent.
+    // https://developer.apple.com/documentation/photosui/phpickerconfiguration/selectionlimit
+    var unlimited = PHPickerConfiguration()
+    unlimited.selectionLimit = 0
+    precondition(unlimited.selectionLimit == 0)
     var hasher = Hasher()
     configuration.hash(into: &hasher)
-    PHPickerConfiguration.AssetRepresentationMode.current.hash(into: &hasher)
-    PHPickerConfiguration.Selection.ordered.hash(into: &hasher)
     _ = hasher.finalize()
+}
+
+func testPickerConfigurationNestedEnums() {
+    typealias Mode = PHPickerConfiguration.AssetRepresentationMode
+    typealias Selection = PHPickerConfiguration.Selection
+    precondition(Mode.automatic != .compatible)
+    precondition(Mode.automatic != .current)
+    precondition(Mode.current != .compatible)
+    precondition(Selection.default != .ordered)
+    precondition(Selection.continuous != .continuousAndOrdered)
+    precondition(Selection.default != .continuous)
+    var hasher = Hasher()
+    Mode.current.hash(into: &hasher)
+    Selection.ordered.hash(into: &hasher)
+    _ = hasher.finalize()
+    precondition(Mode.automatic.hashValue == Mode.automatic.hashValue)
+    precondition(Selection.ordered.hashValue == Selection.ordered.hashValue)
 }
 
 func testPickerConfigurationPhotoLibrary() {

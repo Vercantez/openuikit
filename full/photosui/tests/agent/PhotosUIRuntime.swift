@@ -7,6 +7,8 @@ import PhotosUI
 /// delivery, NSItemProvider loadObject/loadFileRepresentation, typed
 /// transferable load, fail-closed system UI, and OptionSet/enum identities
 /// corroborated by pinned macios bindings and Apple's PhotosUI docs.
+/// Synthesized SwiftUI.View members on PhotosPicker are declared, not
+/// implemented (identity no-ops are not behavioural evidence).
 enum PhotosUIRuntime {
     static let portableSelectionLimitDefault = 1
 }
