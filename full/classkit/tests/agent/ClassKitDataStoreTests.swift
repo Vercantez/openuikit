@@ -59,7 +59,7 @@ func testDataStoreDelegate() {
         let resolved = try store.portableContexts(matchingIdentifierPath: ["from-delegate"])
         classKitExpect(resolved.count == 1, "resolved")
         classKitExpect(resolved[0].identifier == "from-delegate", "id")
-        classKitExpect(delegate.created == ["from-delegate"], "called")
+        classKitExpect(delegate.created == ["made", "from-delegate"], "called")
         classKitExpect(resolved[0].parent === store.mainAppContext, "parented")
     } catch {
         fatalError("ClassKit test failed: delegate path \(error)")
