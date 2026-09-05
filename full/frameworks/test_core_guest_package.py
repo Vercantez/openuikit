@@ -4336,7 +4336,7 @@ class ShellContractTests(unittest.TestCase):
             source,
         )
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 38",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 41",
             source,
         )
         self.assertIn(
