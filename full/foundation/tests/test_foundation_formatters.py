@@ -73,6 +73,16 @@ FAMILIES = (
         ("ZeroFormattingBehavior", "dropAll", "UnitsStyle"),
         ("dcf.full.\\(localeID)", "zero.pad", "allowedUnits"),
     ),
+    (
+        "HTTPCookie",
+        FOUNDATION / "URLSession.swift",
+        TESTS / "FoundationHTTPCookieOracle.swift",
+        TESTS / "foundation-httpcookie-apple-2026-09-05.txt",
+        16,
+        "8d4c1d5f0afae89aeca967d54bea17d3e9d4245b028c5b5bd2b1f1d66ee4ea07",
+        ("HTTPCookiePropertyKey", "requestHeaderFields", "_HTTPDateParser"),
+        ("parse.\\(label)", "ouik-sf-host", "Max-Age"),
+    ),
 )
 
 
