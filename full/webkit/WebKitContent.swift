@@ -92,71 +92,29 @@ open class WKContentRuleList: NSObject {
     }
 }
 
-private struct _WKRuleEnvelope: Decodable {
-    let trigger: _WKJSONValue
-    let action: _WKJSONValue
-}
-
-private struct _WKDynamicKey: CodingKey {
-    let stringValue: String
-    let intValue: Int?
-
-    init?(stringValue: String) {
-        self.stringValue = stringValue
-        self.intValue = nil
-    }
-
-    init?(intValue: Int) {
-        self.stringValue = String(intValue)
-        self.intValue = intValue
-    }
-}
-
-private enum _WKJSONValue: Decodable {
-    case null
-    case bool(Bool)
-    case number(Double)
-    case string(String)
-    case array([_WKJSONValue])
-    case object([String: _WKJSONValue])
-
-    init(from decoder: Decoder) throws {
-        if let keyed = try? decoder.container(keyedBy: _WKDynamicKey.self) {
-            var result: [String: _WKJSONValue] = [:]
-            for key in keyed.allKeys {
-                result[key.stringValue] = try keyed.decode(_WKJSONValue.self, forKey: key)
-            }
-            self = .object(result)
-            return
-        }
-        if var unkeyed = try? decoder.unkeyedContainer() {
-            var result: [_WKJSONValue] = []
-            while !unkeyed.isAtEnd {
-                result.append(try unkeyed.decode(_WKJSONValue.self))
-            }
-            self = .array(result)
-            return
-        }
-        let single = try decoder.singleValueContainer()
-        if single.decodeNil() {
-            self = .null
-        } else if let value = try? single.decode(Bool.self) {
-            self = .bool(value)
-        } else if let value = try? single.decode(Double.self) {
-            self = .number(value)
-        } else {
-            self = .string(try single.decode(String.self))
-        }
-    }
-}
-
 @preconcurrency @MainActor
 open class WKContentRuleListStore: NSObject {
     private static let shared = WKContentRuleListStore()
+    private static var directoryStores: [String: WKContentRuleListStore] = [:]
     private var lists: [String: WKContentRuleList] = [:]
 
     public static func `default`() -> WKContentRuleListStore {
         shared
+    }
+
+    /// Apple's `storeWithURL:` — a store rooted at `url`. Bytes stay in process
+    /// memory; the URL is the identity key only (no Web Content compiler).
+    public static func store(with url: URL) -> WKContentRuleListStore {
+        let key = url.absoluteString
+        if let existing = directoryStores[key] { return existing }
+        let created = WKContentRuleListStore()
+        directoryStores[key] = created
+        return created
+    }
+
+    public convenience init(url: URL) {
+        self.init()
+        _ = url
     }
 
     open func compileContentRuleList(
@@ -164,10 +122,7 @@ open class WKContentRuleListStore: NSObject {
         encodedContentRuleList: String?,
         completionHandler: @escaping (WKContentRuleList?, Error?) -> Void
     ) {
-        guard !identifier.isEmpty, let encodedContentRuleList,
-              let payload = encodedContentRuleList.data(using: .utf8),
-              (try? JSONDecoder().decode([_WKRuleEnvelope].self, from: payload)) != nil
-        else {
+        guard !identifier.isEmpty, let encodedContentRuleList else {
             completionHandler(
                 nil,
                 WKError(
@@ -177,16 +132,54 @@ open class WKContentRuleListStore: NSObject {
             )
             return
         }
+        // Schema from Apple "Creating a content blocker": array of
+        // {trigger.url-filter, action.type}; css-display-none needs selector.
+        if let error = WKPortableValidateContentRuleList(
+            encodedContentRuleList,
+            identifier: identifier
+        ) {
+            completionHandler(nil, error)
+            return
+        }
 
-        // This is a syntax-validated receipt, not an executable matcher.  With
-        // no transport there are no requests on which rules could be falsely
-        // claimed to run; the distinction is documented and runtime-tested.
+        // Syntax-validated receipt, not an executable matcher. With no
+        // transport there are no requests on which rules could run.
         let list = WKContentRuleList(
             identifier: identifier,
             encodedSource: encodedContentRuleList
         )
         lists[identifier] = list
         completionHandler(list, nil)
+    }
+
+    open func compileContentRuleList(
+        forIdentifier identifier: String,
+        encodedContentRuleList: String?
+    ) async throws -> WKContentRuleList? {
+        try await withCheckedThrowingContinuation { continuation in
+            compileContentRuleList(
+                forIdentifier: identifier,
+                encodedContentRuleList: encodedContentRuleList
+            ) { list, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: list)
+                }
+            }
+        }
+    }
+
+    open func contentRuleList(forIdentifier identifier: String) async throws -> WKContentRuleList? {
+        try await withCheckedThrowingContinuation { continuation in
+            lookUpContentRuleList(forIdentifier: identifier) { list, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: list)
+                }
+            }
+        }
     }
 
     open func lookUpContentRuleList(
@@ -218,6 +211,24 @@ open class WKContentRuleListStore: NSObject {
         _ completionHandler: @escaping ([String]?) -> Void
     ) {
         completionHandler(lists.keys.sorted())
+    }
+
+    open func availableIdentifiers() async -> [String]? {
+        await withCheckedContinuation { continuation in
+            getAvailableContentRuleListIdentifiers { continuation.resume(returning: $0) }
+        }
+    }
+
+    open func removeContentRuleList(forIdentifier identifier: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            removeContentRuleList(forIdentifier: identifier) { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
     }
 }
 
