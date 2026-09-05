@@ -68,7 +68,9 @@ public struct WCError: Error, CustomNSError, Hashable, Equatable, @unchecked Sen
 
     public static func == (lhs: WCError, rhs: WCError) -> Bool {
         guard lhs.code == rhs.code else { return false }
-        return NSDictionary(dictionary: lhs.userInfo).isEqual(to: rhs.userInfo)
+        return NSDictionary(dictionary: lhs.userInfo).isEqual(
+            NSDictionary(dictionary: rhs.userInfo)
+        )
     }
 
     public func hash(into hasher: inout Hasher) {
