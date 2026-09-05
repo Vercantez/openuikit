@@ -183,7 +183,7 @@
       "id": "uikit-inrepo",
       "kind": "in-repo-subtree",
       "path": "uikit",
-      "tree": "cb9e6d8ea7b50674612e8f9ccbb962ecf1160e7c",
+      "tree": "721bea8734f4b6b08dd6bc8d37a63763b3a052e5",
       "lock": "scripts/vendor_pins.sh",
       "attestation": "git rev-parse HEAD:uikit",
       "demanded_by": ["focus-widget", "focus-onboarding", "focus-package", "build-full", "core-guest-package"],

@@ -28,11 +28,14 @@
 # SIM_DEVICE_SUFFIX gives a run its own devices.
 #
 # Run: scripts/conformance_probe_sim.sh NavFlow /tmp/conf/golden
+#      scripts/conformance_probe_sim.sh NavFlow /tmp/conf/golden --ipad
 set -e
 setopt null_glob
 cd "$(dirname "$0")/.."
-APPNAME=${1:?usage: conformance_probe_sim.sh <app> <outdir>}
-OUTDIR=${2:?usage: conformance_probe_sim.sh <app> <outdir>}
+APPNAME=${1:?usage: conformance_probe_sim.sh <app> <outdir> [--ipad]}
+OUTDIR=${2:?usage: conformance_probe_sim.sh <app> <outdir> [--ipad]}
+IPAD=0
+if [[ "${3:-}" == "--ipad" || "${CONFPROBE_IPAD:-}" == "1" ]]; then IPAD=1; fi
 SRCDIR="Sources/ConformanceApps/$APPNAME"
 [[ -d "$SRCDIR" ]] || { echo "no such conformance app: $SRCDIR" >&2; exit 2 }
 [[ -f "$SRCDIR/script.json" ]] || { echo "$SRCDIR/script.json missing" >&2; exit 2 }
@@ -55,11 +58,22 @@ swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend MainActor \
   -module-name confprobe \
   Tools/oracle2/confprobe/main.swift $APP_SOURCES \
   -o "$APP/confprobe"
-cp Tools/oracle2/ConfProbe-Info.plist "$APP/Info.plist"
+if [[ $IPAD -eq 1 ]]; then
+  cp Tools/oracle2/ConfProbe-iPad-Info.plist "$APP/Info.plist"
+else
+  cp Tools/oracle2/ConfProbe-Info.plist "$APP/Info.plist"
+fi
 cp "$SRCDIR/script.json" "$APP/script.json"
 
-DEVNAME="OpenUIKit-2x${SIM_DEVICE_SUFFIX:-}"
-DEVTYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
+if [[ $IPAD -eq 1 ]]; then
+  # iPad (A16) 820×1180 @2x portrait. Same device type as
+  # scripts/realapp_probe_sim.sh; SIM_DEVICE_SUFFIX keeps the UDID private.
+  DEVNAME="OpenUIKit-iPad-A16${SIM_DEVICE_SUFFIX:-}"
+  DEVTYPE="com.apple.CoreSimulator.SimDeviceType.iPad-A16"
+else
+  DEVNAME="OpenUIKit-2x${SIM_DEVICE_SUFFIX:-}"
+  DEVTYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation"
+fi
 RUNTIME=$(xcrun simctl list runtimes | grep -o 'com.apple.CoreSimulator.SimRuntime.iOS-26[0-9-]*' | tail -1)
 UDID=$(xcrun simctl list devices | grep "$DEVNAME" | grep -o '[0-9A-F-]\{36\}' | head -1)
 if [[ -z "$UDID" ]]; then
@@ -79,11 +93,16 @@ xcrun simctl install "$UDID" "$APP"
 CONTAINER=$(xcrun simctl get_app_container "$UDID" com.openuikit.confprobe data)
 rm -f "$CONTAINER"/Documents/* 2>/dev/null || true
 # CONFPROBE_TRACE=1 writes Documents/trace.json (per-tick presentation
-# geometry, no extra PNG). simctl forwards SIMCTL_CHILD_* into the app.
+# geometry, no extra PNG). CONFPROBE_STYLE=dark pins the window dark
+# before makeRoot (scripts/conformance_flow.sh --dark). simctl forwards
+# SIMCTL_CHILD_* into the app.
 typeset -a LAUNCH_ENV
 LAUNCH_ENV=(SIMCTL_CHILD_CONFPROBE_APP=$APPNAME)
 if [[ -n "${CONFPROBE_TRACE:-}" ]]; then
   LAUNCH_ENV+=(SIMCTL_CHILD_CONFPROBE_TRACE=1)
+fi
+if [[ -n "${CONFPROBE_STYLE:-}" ]]; then
+  LAUNCH_ENV+=(SIMCTL_CHILD_CONFPROBE_STYLE=$CONFPROBE_STYLE)
 fi
 env $LAUNCH_ENV xcrun simctl launch --console-pty "$UDID" com.openuikit.confprobe || true
 for i in {1..90}; do [[ -f "$CONTAINER/Documents/DONE" ]] && break; sleep 1; done
@@ -92,4 +111,4 @@ for i in {1..90}; do [[ -f "$CONTAINER/Documents/DONE" ]] && break; sleep 1; don
   || { echo "conformance_probe_sim: $(cat "$CONTAINER/Documents/DONE")" >&2; exit 1 }
 rm -f "$OUTDIR"/$APPNAME.* 2>/dev/null || true
 cp "$CONTAINER"/Documents/*.png "$CONTAINER"/Documents/*.json "$OUTDIR"/
-echo "captured $(ls "$OUTDIR"/$APPNAME.*.png | wc -l | tr -d ' ') frame(s) into $OUTDIR"
+echo "captured $(ls "$OUTDIR"/$APPNAME.*.png | wc -l | tr -d ' ') frame(s) into $OUTDIR style=${CONFPROBE_STYLE:-light}"

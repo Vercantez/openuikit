@@ -1,20 +1,20 @@
-# Scoreboard — 4238d07f (2026-09-05T04:29Z)
+# Scoreboard — a72089b2 (2026-09-05T05:05Z)
 
 iOS scene suite: **112/113** · Catalyst gate: **124/124**
 
-conformance captured: Feed @ 2026-09-04T23:27, Forms @ 2026-09-04T23:27, Modal @ 2026-09-04T23:27, NavFlow @ 2026-09-04T23:28, Pager @ 2026-09-04T23:28, TableEditor @ 2026-09-04T23:28, Tabs @ 2026-09-04T23:29
+conformance captured: Feed @ 2026-09-05T00:02, Forms @ 2026-09-05T00:03, Modal @ 2026-09-05T00:03, NavFlow @ 2026-09-05T00:04, Pager @ 2026-09-05T00:04, TableEditor @ 2026-09-05T00:04, Tabs @ 2026-09-05T00:04
 
 | scene | category | score | bar | blob pt² | layout | status |
 |---|---|---|---|---|---|---|
-| Tabs:t2000 | conformance | 84.60 | 97.5 | 246.0 | 8 | fail |
-| Tabs:t6000 | conformance | 88.25 | 97.5 | 79.5 | 31 | fail |
-| Tabs:t7000 | conformance | 92.25 | 97.5 | 59.0 | 35 | fail |
-| Tabs:t4000 | conformance | 92.79 | 97.5 | 79.5 | 33 | fail |
-| Tabs:t5000 | conformance | 93.02 | 97.5 | 79.5 | 34 | fail |
-| Tabs:t200 | conformance | 93.07 | 97.5 | 79.5 | 31 | fail |
-| Tabs:t3000 | conformance | 93.31 | 97.5 | 79.5 | 31 | fail |
+| realapp_hackers_feed_light | realapp | 84.58 | 84.4 | 174.4 | 0 | pass |
+| Tabs:t2000 | conformance | 84.64 | 97.5 | 127.0 | 7 | fail |
+| Tabs:t6000 | conformance | 88.37 | 97.5 | 79.5 | 28 | fail |
+| Tabs:t7000 | conformance | 92.38 | 97.5 | 47.2 | 32 | fail |
+| Tabs:t4000 | conformance | 92.91 | 97.5 | 79.5 | 33 | fail |
+| Tabs:t5000 | conformance | 93.14 | 97.5 | 79.5 | 34 | fail |
+| Tabs:t200 | conformance | 93.19 | 97.5 | 79.5 | 28 | fail |
+| Tabs:t3000 | conformance | 93.43 | 97.5 | 79.5 | 28 | fail |
 | TableEditor:t2350 | conformance | 97.58 | 97.5 | 12.0 | 0 | pass |
-| NavFlow:t3000 | conformance | 97.58 | 97.5 | 97.2 | 2 | pass |
 | Modal:t600 | conformance | 97.64 | 97.5 | 34.8 | 0 | pass |
 | realapp_settings_light_xxxl | realapp | 98.13 | 98.0 | 3.4 | 0 | pass |
 | realapp_settings_light | realapp | 98.53 | 98.4 | 2.0 | 0 | pass |
