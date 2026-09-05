@@ -82,10 +82,16 @@ open class WKNavigationAction: NSObject {
 open class WKNavigationResponse: NSObject {
     public let response: URLResponse
     public let canShowMIMEType: Bool
+    public let isForMainFrame: Bool
 
-    public init(response: URLResponse, canShowMIMEType: Bool) {
+    public init(
+        response: URLResponse,
+        canShowMIMEType: Bool,
+        isForMainFrame: Bool = true
+    ) {
         self.response = response
         self.canShowMIMEType = canShowMIMEType
+        self.isForMainFrame = isForMainFrame
         super.init()
     }
 }
@@ -158,6 +164,12 @@ open class WKBackForwardList: NSObject {
 
     internal func _portableContains(_ item: WKBackForwardListItem) -> Bool {
         items.contains { $0 === item }
+    }
+
+    internal func _portableSelect(_ item: WKBackForwardListItem) {
+        if let found = items.firstIndex(where: { $0 === item }) {
+            index = found
+        }
     }
 
     /// Truncates the forward list and appends a committed item. History never
@@ -266,6 +278,17 @@ public protocol WKNavigationDelegate: AnyObject {
     )
     func webView(
         _ webView: WKWebView,
+        shouldGoTo backForwardListItem: WKBackForwardListItem,
+        willUseInstantBack: Bool,
+        completionHandler: @escaping (Bool) -> Void
+    )
+    func webView(
+        _ webView: WKWebView,
+        shouldGoTo backForwardListItem: WKBackForwardListItem,
+        willUseInstantBack: Bool
+    ) async -> Bool
+    func webView(
+        _ webView: WKWebView,
         authenticationChallenge challenge: URLAuthenticationChallenge,
         shouldAllowDeprecatedTLS decisionHandler: @escaping (Bool) -> Void
     )
@@ -336,6 +359,28 @@ public extension WKNavigationDelegate {
     }
     func webView(
         _ webView: WKWebView,
+        shouldGoTo backForwardListItem: WKBackForwardListItem,
+        willUseInstantBack: Bool,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        _ = (webView, backForwardListItem, willUseInstantBack)
+        completionHandler(true)
+    }
+    func webView(
+        _ webView: WKWebView,
+        shouldGoTo backForwardListItem: WKBackForwardListItem,
+        willUseInstantBack: Bool
+    ) async -> Bool {
+        await withCheckedContinuation { continuation in
+            self.webView(
+                webView,
+                shouldGoTo: backForwardListItem,
+                willUseInstantBack: willUseInstantBack
+            ) { continuation.resume(returning: $0) }
+        }
+    }
+    func webView(
+        _ webView: WKWebView,
         authenticationChallenge challenge: URLAuthenticationChallenge,
         shouldAllowDeprecatedTLS decisionHandler: @escaping (Bool) -> Void
     ) {
@@ -361,6 +406,27 @@ public protocol WKUIDelegate: AnyObject {
         windowFeatures: WKWindowFeatures
     ) -> WKWebView?
     func webViewDidClose(_ webView: WKWebView)
+    func webView(
+        _ webView: WKWebView,
+        commitPreviewingViewController previewingViewController: UIViewController
+    )
+    func webView(
+        _ webView: WKWebView,
+        contextMenuDidEndForElement elementInfo: WKContextMenuElementInfo
+    )
+    func webView(
+        _ webView: WKWebView,
+        contextMenuWillPresentForElement elementInfo: WKContextMenuElementInfo
+    )
+    func webView(
+        _ webView: WKWebView,
+        shouldPreviewElement elementInfo: WKPreviewElementInfo
+    ) -> Bool
+    func webView(
+        _ webView: WKWebView,
+        previewingViewControllerForElement elementInfo: WKPreviewElementInfo,
+        defaultActions previewActions: [any WKPreviewActionItem]
+    ) -> UIViewController?
     func webView(
         _ webView: WKWebView,
         runJavaScriptAlertPanelWithMessage message: String,
@@ -412,6 +478,39 @@ public extension WKUIDelegate {
     }
     func webViewDidClose(_ webView: WKWebView) {
         _ = webView
+    }
+    func webView(
+        _ webView: WKWebView,
+        commitPreviewingViewController previewingViewController: UIViewController
+    ) {
+        _ = (webView, previewingViewController)
+    }
+    func webView(
+        _ webView: WKWebView,
+        contextMenuDidEndForElement elementInfo: WKContextMenuElementInfo
+    ) {
+        _ = (webView, elementInfo)
+    }
+    func webView(
+        _ webView: WKWebView,
+        contextMenuWillPresentForElement elementInfo: WKContextMenuElementInfo
+    ) {
+        _ = (webView, elementInfo)
+    }
+    func webView(
+        _ webView: WKWebView,
+        shouldPreviewElement elementInfo: WKPreviewElementInfo
+    ) -> Bool {
+        _ = (webView, elementInfo)
+        return false
+    }
+    func webView(
+        _ webView: WKWebView,
+        previewingViewControllerForElement elementInfo: WKPreviewElementInfo,
+        defaultActions previewActions: [any WKPreviewActionItem]
+    ) -> UIViewController? {
+        _ = (webView, elementInfo, previewActions)
+        return nil
     }
     func webView(
         _ webView: WKWebView,
@@ -470,4 +569,13 @@ public extension WKUIDelegate {
         _ = (webView, parameters, frame)
         return nil
     }
+}
+
+/// Apple's WKPreviewActionItem. The 3D Touch preview family is otherwise
+/// inert; this protocol exists so previewingViewController(for:defaultActions:)
+/// can type-check without a UIKit-owned UIPreviewActionItem.
+@MainActor
+public protocol WKPreviewActionItem: AnyObject {
+    var identifier: String { get }
+    var title: String { get }
 }
