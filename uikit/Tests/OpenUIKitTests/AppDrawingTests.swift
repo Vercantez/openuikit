@@ -585,6 +585,20 @@ final class AppDrawingTests: XCTestCase {
         XCTAssertEqual(changes, 1)
     }
 
+    /// MEASURED Pager t200.rtl, iPhone SE 2x / iOS 26.1: page 0 paints the
+    /// rightmost dot. Visual index = n − 1 − index. LTR centres stay put.
+    func testPageControlRTLReversesVisualIndex() {
+        let pc = UIPageControl(frame: CGRect(x: 0, y: 0, width: 280, height: 30))
+        pc.numberOfPages = 3
+        pc.currentPage = 0
+        let ltr0 = pc.indicatorCenter(at: 0).x
+        let ltr2 = pc.indicatorCenter(at: 2).x
+        pc.semanticContentAttribute = .forceRightToLeft
+        XCTAssertEqual(pc.indicatorCenter(at: 0).x, ltr2, accuracy: 0.001)
+        XCTAssertEqual(pc.indicatorCenter(at: 2).x, ltr0, accuracy: 0.001)
+        XCTAssertEqual(pc.indicatorCenter(at: 1).x, (ltr0 + ltr2) / 2, accuracy: 0.001)
+    }
+
     func testStoppedIndicatorDrawsNothingWhenItHidesWhenStopped() {
         func renderIndicator(_ configure: (UIActivityIndicatorView) -> Void) -> Bitmap {
             let root = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))

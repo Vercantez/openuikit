@@ -450,10 +450,24 @@ public final class UITabBar: UIView {
             v.frame = CGRect(x: UITabBar.platterSidePadding + CGFloat(i) * pitch,
                              y: 0, width: pitch, height: UITabBar.platterHeight)
         }
+        // MEASURED Tabs t200.rtl, iPhone SE 2x / iOS 26.1: items pack
+        // leading-to-trailing. Library (index 0) title abs.x 256 vs LTR 84;
+        // Scroll abs.x 88 vs LTR 259.5. Mirror LTR packing about the
+        // platter width (same as nav-bar chrome). Badge slot is OPEN
+        // (t200 pixels stay at LTR 196.5; t1000 paints RTL 159).
+        if _layoutIsRTL {
+            let span = width
+            for v in itemViews {
+                var f = v.frame
+                f.origin.x = span - f.maxX
+                v.frame = f
+            }
+        }
         if let sel = selectedItem,
            let idx = itemViews.firstIndex(where: { $0.item === sel }) {
             capsule.isHidden = false
-            let center = UITabBar.platterSidePadding + (CGFloat(idx) + 0.5) * pitch
+            let item = itemViews[idx]
+            let center = item.frame.midX
             let cw = pitch + 2 * UITabBar.capsuleOverhang
             capsule.frame = CGRect(x: center - cw / 2,
                                    y: (UITabBar.platterHeight - UITabBar.capsuleHeight) / 2,
