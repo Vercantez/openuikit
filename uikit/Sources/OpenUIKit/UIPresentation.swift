@@ -603,6 +603,12 @@ final class _UIPageSheetView: UIView {
     /// `UINavigationController`. NavFlow t1200 Filter `abs.y` 54 = 30 + the
     /// heading's 24 pt top constraint (ours was 83 = 59 + 24).
     static let compactMinimumTopInset: CGFloat = 30
+    /// Pad large pageSheet top. MEASURED `/tmp/ipad-open-cap` sheet_{white,
+    /// black,red,grad} + NavFlow-ipad t1200 / Modal-ipad t3200, iPad (A16)
+    /// 820×1180 @2x / iOS 26.1: `UIDropShadowView [0, 42, 820, 1138]`; PNG
+    /// fill top ypt **42** (dimmed white 204 → sheet 255). Window SA.top is
+    /// 32, so this is not `max(30, sa.top)`. Phone stays `max(30, sa.top)`.
+    static let iOSPadTopInset: CGFloat = 42
 
     /// Large-detent top inset for `container`.
     ///
@@ -611,8 +617,10 @@ final class _UIPageSheetView: UIView {
     /// OpenUIKit's `UIWindow` has no device safe area, so a zero-inset
     /// container uses 30 on the SE-sized surface (height 667, NavFlow) and
     /// 59 on every taller one (modal_sheet 852). Guarded by the iOS cut.
+    /// Pad (A16) uses `iOSPadTopInset` 42.
     static func topInset(in container: UIView) -> CGFloat {
         if OpenUIKitRuntime.systemFontCut == .iOS {
+            if UINavigationBar.isPad { return iOSPadTopInset }
             let sa = container.safeAreaInsets.top
             if sa > 0 { return max(compactMinimumTopInset, sa) }
             return container.bounds.height <= 667 ? compactMinimumTopInset : topInset
