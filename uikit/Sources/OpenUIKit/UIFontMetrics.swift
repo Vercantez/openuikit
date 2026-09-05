@@ -65,6 +65,16 @@ public struct UIContentSizeCategory: Hashable, RawRepresentable, Sendable {
     public static let unspecified = UIContentSizeCategory(rawValue: "unspecified")
 
     public var isAccessibilityCategory: Bool { rawValue.hasPrefix("accessibility") }
+
+    /// Nav-bar inline titles and bar-button labels stop scaling at
+    /// `.extraExtraLarge`. MEASURED TableEditor t200.ax1 / Forms t200.ax1,
+    /// iPhone SE 2x / iOS 26.1: window `traitOverrides` `.accessibilityLarge`
+    /// (body 33) but Edit / inline "Reminders" / "Form" stay **21 pt**
+    /// (`headline` / body at extraExtraLarge), while the large title is
+    /// uncapped 48 pt.
+    var iOSBarCapped: UIContentSizeCategory {
+        isAccessibilityCategory ? .extraExtraLarge : self
+    }
 }
 
 extension UIFont {

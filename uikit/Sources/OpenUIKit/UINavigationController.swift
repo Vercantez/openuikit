@@ -410,7 +410,7 @@ open class UINavigationController: UIViewController {
         // (updateContentSafeArea), exactly as it does on the device, so only
         // the rest offset is settled here.
         if navigationBar.prefersLargeTitles {
-            let inset = UINavigationBar.largeTitleExpandedInset
+            let inset = navigationBar.effectiveLargeTitleExpandedInset
             let wasAtRest = scroll.contentOffset.y == -scroll.adjustedContentInset.top
             updateContentSafeArea()
             if wasAtRest, scroll.contentOffset.y != -inset {
@@ -432,18 +432,18 @@ open class UINavigationController: UIViewController {
     func snapLargeTitleIfNeeded(_ scroll: UIScrollView) {
         guard navigationBar.prefersLargeTitles,
               scroll === navigationBar.trackedScrollView else { return }
-        let d = scroll.contentOffset.y + UINavigationBar.largeTitleExpandedInset
-        guard d > 0.5, d < UINavigationBar.largeTitleZoneHeight - 0.5 else { return }
+        let d = scroll.contentOffset.y + navigationBar.effectiveLargeTitleExpandedInset
+        guard d > 0.5, d < navigationBar.effectiveLargeTitleZoneHeight - 0.5 else { return }
         // MEASURED 2026-09-04, navprobe scroll holds, iPhone 16 / iOS 26.1:
         // zero-velocity release at d=36 retargets to the expanded rest;
         // d=37 retargets collapsed. Catalyst keeps the half-zone (26).
         let threshold: CGFloat = UINavigationBar.isIOS
             ? UINavigationBar.iOSSnapCollapseDistance
-            : UINavigationBar.largeTitleZoneHeight / 2
-        let target: CGFloat = d <= threshold ? 0 : UINavigationBar.largeTitleZoneHeight
+            : navigationBar.effectiveLargeTitleZoneHeight / 2
+        let target: CGFloat = d <= threshold ? 0 : navigationBar.effectiveLargeTitleZoneHeight
         scroll.setContentOffset(
             CGPoint(x: scroll.contentOffset.x,
-                    y: target - UINavigationBar.largeTitleExpandedInset),
+                    y: target - navigationBar.effectiveLargeTitleExpandedInset),
             animated: true)
     }
 
