@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(CoreImage)
+import CoreImage
+#endif
 
 public typealias OSType = UInt32
 
@@ -206,6 +209,20 @@ public struct CGImagePropertyOrientation: RawRepresentable, Hashable, Sendable {
 open class CIImage: NSObject, @unchecked Sendable {}
 open class CIContext: NSObject, @unchecked Sendable {}
 open class CIBarcodeDescriptor: NSObject, @unchecked Sendable {}
+#endif
+
+#if !canImport(QuartzCore)
+/// Host-only QuartzCore lookalike so isolated Linux compilation can type-check
+/// `AVPlayerLayer`. This is not a QuartzCore module and is not Apple ABI.
+open class CALayer: NSObject, @unchecked Sendable {
+    public var frame: CGRect = .zero
+    public var bounds: CGRect = .zero
+    public var position: CGPoint = .zero
+    public var opacity: Float = 1
+    public var isHidden: Bool = false
+    public var backgroundColor: CGColor?
+    public override init() { super.init() }
+}
 #endif
 
 #if !canImport(AudioToolbox) && !canImport(CoreAudioTypes)
