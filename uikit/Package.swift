@@ -71,6 +71,40 @@ let swiftUICombineDependencies: [Target.Dependency] = [
     .target(name: "Combine", condition: .when(platforms: [.linux])),
 ]
 
+// Linux 6.2.4 XCTest cannot invoke `@MainActor` SwiftUI test methods
+// (discovery casts them to `() throws -> Void` and traps; linux-trial).
+// Package.swift is evaluated on the build host: the Linux image compiles a
+// stub; Darwin still compiles the full SwiftUITests tree.
+#if os(Linux)
+let swiftUITestTarget: Target = .testTarget(
+    name: "SwiftUITests",
+    dependencies: [
+        "SwiftUI",
+        "OpenUIKit",
+        "Symbols",
+        "DeveloperToolsSupport",
+    ] + swiftUICombineDependencies,
+    sources: ["SwiftUILinuxStub.swift"],
+    swiftSettings: [
+        .unsafeFlags([
+            "-swift-version", "5",
+            "-Xfrontend", "-strict-concurrency=minimal",
+            "-Xfrontend", "-warn-concurrency",
+        ], .when(platforms: [.linux])),
+    ]
+)
+#else
+let swiftUITestTarget: Target = .testTarget(
+    name: "SwiftUITests",
+    dependencies: [
+        "SwiftUI",
+        "OpenUIKit",
+        "Symbols",
+        "DeveloperToolsSupport",
+    ] + swiftUICombineDependencies
+)
+#endif
+
 // Selector target-action (docs/OBJC_RUNTIME.md) deliberately needs NOTHING
 // here -- no swiftSettings, no linkerSettings, no `.when(platforms:)`:
 //
@@ -357,18 +391,34 @@ let package = Package(
         // UIKit is included so source-compatibility tests can use the exact
         // unchanged app import (`import UIKit`) rather than testing only the
         // implementation module's spelling.
-        .testTarget(name: "OpenUIKitTests", dependencies: ["OpenUIKit", "UIKit", "ConformanceApps"]),
+        // Linux 6.2.4 XCTest discovers `(T) -> () throws -> Void`; `@MainActor`
+        // on the class crashes that cast (linux-trial). Test classes drop the
+        // attribute on Linux (see CoreAnimationCompatibilityTests). The
+        // compiler's default isolation is Swift 6, so a nonisolated XCTestCase
+        // cannot call `@preconcurrency @MainActor` UIKit without -swift-version 5.
         .testTarget(
-            name: "SwiftUITests",
-            dependencies: [
-                "SwiftUI",
-                "OpenUIKit",
-                "Symbols",
-                "DeveloperToolsSupport",
-            ] + swiftUICombineDependencies
+            name: "OpenUIKitTests",
+            dependencies: ["OpenUIKit", "UIKit", "ConformanceApps"],
+            swiftSettings: [
+                .unsafeFlags([
+                    "-swift-version", "5",
+                    "-Xfrontend", "-strict-concurrency=minimal",
+                    "-Xfrontend", "-warn-concurrency",
+                ], .when(platforms: [.linux])),
+            ]
         ),
-        .testTarget(name: "OpenUIKitCTests",
-                    dependencies: ["OpenUIKitC", "OpenUIKit", "COpenUIKitABI"]),
+        swiftUITestTarget,
+        .testTarget(
+            name: "OpenUIKitCTests",
+            dependencies: ["OpenUIKitC", "OpenUIKit", "COpenUIKitABI"],
+            swiftSettings: [
+                .unsafeFlags([
+                    "-swift-version", "5",
+                    "-Xfrontend", "-strict-concurrency=minimal",
+                    "-Xfrontend", "-warn-concurrency",
+                ], .when(platforms: [.linux])),
+            ]
+        ),
     ] + platformCombineTargets,
     cxxLanguageStandard: .cxx17
 )

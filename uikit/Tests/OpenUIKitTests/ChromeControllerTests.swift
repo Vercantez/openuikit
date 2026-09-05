@@ -10,13 +10,17 @@ import Foundation
 
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class Log {
     var entries: [String] = []
     func add(_ s: String) { entries.append(s) }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private class LifecycleVC: UIViewController {
     let name: String
     let log: Log
@@ -35,7 +39,9 @@ private class LifecycleVC: UIViewController {
 
 // MARK: - Modal presentation
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ModalPresentationTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -234,7 +240,9 @@ private func _curvePoint(_ e: Path.Element, from p0: CGPoint,
 
 // MARK: - Tab bar controller
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TabBarControllerTests: XCTestCase {
     private func makeTab(_ log: Log, count: Int = 3)
         -> (UITabBarController, [LifecycleVC]) {
@@ -320,7 +328,9 @@ final class TabBarControllerTests: XCTestCase {
 
 // MARK: - Large-title navigation bar
 
+#if !os(Linux)
 @MainActor
+#endif
 final class LargeTitleNavigationTests: XCTestCase {
     private func makeLargeNav(offset: CGFloat? = nil)
         -> (UINavigationController, UIScrollView) {
@@ -449,7 +459,9 @@ final class LargeTitleNavigationTests: XCTestCase {
 /// iPhone 16 / iOS 26.1: the bar's title content translates with its own view
 /// controller instead of cross-fading in place, and the controller that
 /// arrives owns the large title.
+#if !os(Linux)
 @MainActor
+#endif
 final class IOSNavigationBarTransitionTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut = .macOS
 

@@ -7,7 +7,9 @@ private typealias PortableBasicAnimation = OpenUIKit.CABasicAnimation
 private typealias PortableTransaction = OpenUIKit.CATransaction
 private typealias PortableCGColor = OpenUIKit.CGColor
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class ProgressSubclassProbe: UIProgressView {
     let maskProbe = PortableLayer()
     var observerCalls = 0
@@ -28,7 +30,9 @@ private final class ProgressSubclassProbe: UIProgressView {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class PresentedBoundsContentProbe: UIView {
     var sampledBounds: [CGRect] = []
 
@@ -39,7 +43,15 @@ private final class PresentedBoundsContentProbe: UIView {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
+// Linux XCTest 6.2.4 (swift-corelibs-xctest) discovers methods as
+// `(T) -> () throws -> Void`. `@MainActor` on the class changes that type
+// and crashes discovery (Linux trial 2026-09-05). Apple XCTest on Darwin
+// runs isolated methods natively, so isolation stays behind `#if !os(Linux)`.
+// Test targets pass `-swift-version 5` on Linux so `@preconcurrency @MainActor`
+// UIKit calls from the now-nonisolated XCTestCase still type-check.
 final class CoreAnimationCompatibilityTests: XCTestCase {
     private var savedTime: Double = 0
     private var savedDeadline: Double = 0

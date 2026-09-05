@@ -56,7 +56,9 @@ private final class SeedInspectingSymbolConfiguration:
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SystemImageSourceCompatibilityTests: XCTestCase {
     func testReminderSystemImageSpellingsCompileAndConstruct() {
         XCTAssertNotNil(UIImage(systemName: "calendar"))

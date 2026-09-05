@@ -17,7 +17,9 @@ import Foundation
 
 // MARK: - Shared drivers
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class FlowSource: UICollectionViewDataSource,
                                UICollectionViewDelegateFlowLayout {
     var counts: [Int]
@@ -50,7 +52,9 @@ private final class FlowSource: UICollectionViewDataSource,
 /// the tests keep them alive here.
 private var keptSources: [FlowSource] = []
 
+#if !os(Linux)
 @MainActor
+#endif
 private func makeCollection(width: CGFloat, height: CGFloat, counts: [Int],
                             sizeFor: ((IndexPath) -> CGSize)? = nil,
                             configure: (UICollectionViewFlowLayout) -> Void)
@@ -76,7 +80,9 @@ private func makeCollection(width: CGFloat, height: CGFloat, counts: [Int],
 
 // MARK: - 1. Measured flow-layout geometry
 
+#if !os(Linux)
 @MainActor
+#endif
 final class FlowLayoutMeasuredTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -487,7 +493,9 @@ final class FlowLayoutMeasuredTests: XCTestCase {
 // MARK: - 2. Reuse
 
 /// Counts instances so reuse can be proven (mirrors TableViewTests).
+#if !os(Linux)
 @MainActor
+#endif
 private final class CountingItemCell: UICollectionViewCell {
     static var created = 0
     override init(frame: CGRect = .zero) {
@@ -498,7 +506,9 @@ private final class CountingItemCell: UICollectionViewCell {
     required init?(coder: NSCoder) { fatalError() }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class BigGridSource: UICollectionViewDataSource {
     var items = 10_000
     func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
@@ -511,7 +521,9 @@ private final class BigGridSource: UICollectionViewDataSource {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class CollectionViewReuseTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -613,13 +625,17 @@ final class CollectionViewReuseTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class HeaderView: UICollectionReusableView {
     override init(frame: CGRect = .zero) { super.init(frame: frame) }
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError() }
 }
+#if !os(Linux)
 @MainActor
+#endif
 private final class FooterView: UICollectionReusableView {
     override init(frame: CGRect = .zero) { super.init(frame: frame) }
     @available(*, unavailable)
@@ -628,7 +644,9 @@ private final class FooterView: UICollectionReusableView {
 
 // MARK: - 3. Behaviour
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class RecordingDelegate: UICollectionViewDelegate {
     var selected: [IndexPath] = []
     var deselected: [IndexPath] = []
@@ -645,7 +663,9 @@ private final class RecordingDelegate: UICollectionViewDelegate {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class CollectionViewBehaviourTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -781,7 +801,9 @@ final class CollectionViewBehaviourTests: XCTestCase {
 
 // MARK: - Compositional layout (Feed)
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class CompSource: UICollectionViewDataSource {
     var counts: [Int]
     init(_ counts: [Int]) { self.counts = counts }
@@ -803,7 +825,9 @@ private final class CompSource: UICollectionViewDataSource {
 
 private var keptCompSources: [CompSource] = []
 
+#if !os(Linux)
 @MainActor
+#endif
 final class CompositionalLayoutTests: XCTestCase {
 
     /// Feed stories: 72 pt items, 12 pt inter-group, 16 pt leading inset.

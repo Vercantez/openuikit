@@ -12,7 +12,9 @@ import Foundation
 // MARK: - Helpers
 
 /// Counts live/total instances so reuse can be proven.
+#if !os(Linux)
 @MainActor
+#endif
 private final class CountingCell: UITableViewCell {
     static var created = 0
     override init(style: CellStyle = .default, reuseIdentifier: String? = nil) {
@@ -76,7 +78,9 @@ private final class CustomGrandchildHeader: GrandchildBaseHeader {
     required init?(coder: NSCoder) { fatalError() }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class BigTableSource: UITableViewDataSource, UITableViewDelegate {
     var rows = 10_000
     var selected: [IndexPath] = []
@@ -98,7 +102,9 @@ private final class BigTableSource: UITableViewDataSource, UITableViewDelegate {
 }
 
 /// The tableview_plain fixture's data (3 sections, 7 rows).
+#if !os(Linux)
 @MainActor
+#endif
 private final class PlainFixtureSource: UITableViewDataSource, UITableViewDelegate {
     let sections: [(header: String, rows: [String])] = [
         ("Fruits", ["Apple", "Banana", "Cherry"]),
@@ -120,7 +126,9 @@ private final class PlainFixtureSource: UITableViewDataSource, UITableViewDelega
 }
 
 /// The tableview_grouped fixture's shape (heights only matter here).
+#if !os(Linux)
 @MainActor
+#endif
 private final class GroupedFixtureSource: UITableViewDataSource, UITableViewDelegate {
     // (style, header, footer, row styles)
     let sections: [(header: String, footer: String, styles: [UITableViewCell.CellStyle])] = [
@@ -152,7 +160,9 @@ private final class GroupedFixtureSource: UITableViewDataSource, UITableViewDele
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewReuseTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -245,7 +255,9 @@ final class TableViewReuseTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewCompatibilityTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -338,7 +350,9 @@ final class TableViewCompatibilityTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewMetricsTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -441,7 +455,9 @@ final class TableViewMetricsTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewSelectionTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -533,7 +549,9 @@ final class TableViewSelectionTests: XCTestCase {
 
 // MARK: - UITableViewController
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class TestTableController: UITableViewController {
     var didSelect: [IndexPath] = []
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -554,7 +572,9 @@ private final class TestTableController: UITableViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -588,9 +608,13 @@ final class TableViewControllerTests: XCTestCase {
 
 /// Two sections holding reference-typed items, so an item's identity is
 /// stable while it moves between them (the Tasks app's shape).
+#if !os(Linux)
 @MainActor
+#endif
 private final class MovableSource: UITableViewDataSource, UITableViewDelegate {
+    #if !os(Linux)
     @MainActor
+    #endif
     final class Item { let name: String; init(_ n: String) { name = n } }
     var sections: [[Item]] = [
         [Item("a"), Item("b"), Item("c")],
@@ -620,9 +644,13 @@ private final class MovableSource: UITableViewDataSource, UITableViewDelegate {
 /// Explicit row arrays for UIKit-compatible `moveRow(at:to:)` tests. The
 /// reference-typed item lets the assertions distinguish item identity from an
 /// index path whose meaning changes during the move.
+#if !os(Linux)
 @MainActor
+#endif
 private final class RowMoveSource: UITableViewDataSource {
+    #if !os(Linux)
     @MainActor
+    #endif
     final class Item {
         let name: String
         init(_ name: String) { self.name = name }
@@ -660,7 +688,9 @@ private final class RowMoveSource: UITableViewDataSource {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewRowMoveTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -938,7 +968,9 @@ final class TableViewRowMoveTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewAnimatedUpdateTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -1077,7 +1109,9 @@ final class TableViewAnimatedUpdateTests: XCTestCase {
 
 // MARK: - iOS plain subtitle + edit chrome (TableEditor conformance)
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class SubtitleListSource: UITableViewDataSource, UITableViewDelegate {
     var titles = ["Alpha", "Bravo", "Charlie"]
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -1092,7 +1126,9 @@ private final class SubtitleListSource: UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool { true }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class DefaultListSource: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 3 }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -1102,7 +1138,9 @@ private final class DefaultListSource: UITableViewDataSource {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewIOSEditChromeTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut!
     override func setUp() {
@@ -1306,7 +1344,9 @@ final class TableViewIOSEditChromeTests: XCTestCase {
 
 // MARK: - iOS row insert/delete spring (TableEditor t1350 / t2350)
 
+#if !os(Linux)
 @MainActor
+#endif
 final class TableViewIOSRowAnimationTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut!
     override func setUp() {

@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 # ios_suite.sh [<workdir>] — the whole scene suite against REAL iOS.
 #
 # Renders every STATIC scene (no "animations") twice — with real UIKit on the
@@ -14,12 +14,28 @@
 #   scripts/ios_suite.sh /path/to/work   # keeps golden_ios/, out_ios/, compare.txt
 #   SKIP_CAPTURE=1 scripts/ios_suite.sh  # reuse an existing golden_ios/
 #                                        # (or goldens/ios/ios_suite via scripts/goldens_restore.sh)
+#
+# Portable bash (Linux trial 2026-09-05): the capture half still shells out
+# to zsh scripts/render_sim_scenes.sh (Mac simulator). SKIP_CAPTURE=1 is the
+# Linux-side replay: openrender + compare.py, no zsh.
 set -e
-setopt null_glob
 cd "$(dirname "$0")/.."
 WORK=${1:-/tmp/ios_suite}
 mkdir -p "$WORK"
 GOLD="$WORK/golden_ios"; OUT="$WORK/out_ios"
+
+
+read_lines() {
+  # bash 3.2: fill named array from a file, skipping empty lines.
+  local file=$1
+  local -a _out=()
+  if [ -f "$file" ]; then
+    while IFS= read -r line || [ -n "$line" ]; do
+      [ -n "$line" ] && _out+=("$line")
+    done < "$file"
+  fi
+  eval "$2"='("${_out[@]}")'
+}
 
 python3 - "$WORK" <<'EOF'
 import json, glob, sys
@@ -28,8 +44,12 @@ static = [f for f in sorted(glob.glob('fixtures/scenes/*.json')) if not json.loa
 open(work + '/static_scenes.txt', 'w').write('\n'.join(static) + '\n')
 print(f"{len(static)} static scenes of {len(glob.glob('fixtures/scenes/*.json'))}")
 EOF
-scenes=("${(@f)$(cat "$WORK/static_scenes.txt")}")
-names=("${(@)scenes:t:r}")
+read_lines "$WORK/static_scenes.txt" scenes
+names=()
+for s in "${scenes[@]}"; do
+  b=$(basename "$s")
+  names+=("${b%.json}")
+done
 
 # Always materialise the 2x/3x scene split so SKIP_CAPTURE=1 works without
 # leftover $WORK/scenes from a previous capture (the Linux restore path).
@@ -43,7 +63,8 @@ names=("${(@)scenes:t:r}")
 # resamples every edge, so its group is captured AND rendered at scale 3
 # from patched copies of the scene files ($WORK/scenes). The 2x group is
 # copied unchanged; compare.py reads the copies too.
-python3 - "$WORK" <<'PYSPLIT'
+split_scenes() {
+  python3 - "$WORK" <<'PYSPLIT'
 import json, sys, os, shutil
 work = sys.argv[1]
 os.makedirs(work + '/scenes', exist_ok=True)
@@ -74,17 +95,26 @@ open(work + '/scenes_3x_alerts.txt', 'w').write('\n'.join(alerts) + '\n')
 open(work + '/scenes_2x.txt', 'w').write('\n'.join(plain) + '\n')
 print(f"    {len(plain)} scenes on the 2x device; on the iPhone 16 at 3x: {len(bars)} bar scenes, {len(modal)} sheet/window scenes, then {len(alerts)} alert scenes")
 PYSPLIT
+}
 
-if [[ -z "${SKIP_CAPTURE:-}" ]]; then
+split_scenes
+
+if [ -z "${SKIP_CAPTURE:-}" ]; then
   echo "==> real iOS capture ($GOLD)"
   rm -rf "$GOLD"
-  s2=("${(@f)$(cat "$WORK/scenes_2x.txt")}"); s3b=("${(@f)$(cat "$WORK/scenes_3x_bars.txt")}"); s3m=("${(@f)$(cat "$WORK/scenes_3x_modal.txt")}"); s3a=("${(@f)$(cat "$WORK/scenes_3x_alerts.txt")}")
-  if (( ${#s2} > 0 )); then SIM_DEVICE=2x zsh scripts/render_sim_scenes.sh "$GOLD" "${s2[@]}" | tail -1; fi
-  if (( ${#s3b} > 0 )); then zsh scripts/render_sim_scenes.sh "$GOLD" "${s3b[@]}" | tail -1; fi
+  read_lines "$WORK/scenes_2x.txt" s2
+  read_lines "$WORK/scenes_3x_bars.txt" s3b
+  read_lines "$WORK/scenes_3x_modal.txt" s3m
+  read_lines "$WORK/scenes_3x_alerts.txt" s3a
+  if [ ${#s2[@]} -gt 0 ]; then SIM_DEVICE=2x zsh scripts/render_sim_scenes.sh "$GOLD" "${s2[@]}" | tail -1; fi
+  if [ ${#s3b[@]} -gt 0 ]; then zsh scripts/render_sim_scenes.sh "$GOLD" "${s3b[@]}" | tail -1; fi
   # One SimScene process PER sheet/alert scene: a dismissed sheet costs the
   # next sheet its grabber just as a dismissed alert does (modal_sheet_grabber
   # captured after modal_sheet: 96.7, alone: 99.7).
-  for f in "${s3m[@]}" "${s3a[@]}"; do zsh scripts/render_sim_scenes.sh "$GOLD" "$f" | tail -1; done
+  for f in "${s3m[@]}" "${s3a[@]}"; do
+    [ -n "$f" ] || continue
+    zsh scripts/render_sim_scenes.sh "$GOLD" "$f" | tail -1
+  done
   # A P3-tagged capture from an older SimScene build is converted so the diff
   # is sRGB vs sRGB (SimScene itself now writes untagged straight-alpha sRGB).
   python3 - "$GOLD" <<'PYCONV'
@@ -104,12 +134,15 @@ for f in glob.glob(sys.argv[1] + '/*.png'):
 print(f"    converted {n} P3-tagged captures to sRGB")
 PYCONV
 else
-  pngs=("$GOLD"/*.png(N))
-  if (( ${#pngs} == 0 )); then
-    if [[ -d goldens/ios/ios_suite ]]; then
+  pngs=()
+  for f in "$GOLD"/*.png; do
+    [ -f "$f" ] && pngs+=("$f")
+  done
+  if [ ${#pngs[@]} -eq 0 ]; then
+    if [ -d goldens/ios/ios_suite ]; then
       echo "==> no goldens at $GOLD; restoring committed goldens/ios/ios_suite"
       zsh scripts/goldens_restore.sh ios_suite
-      if [[ "$GOLD" != /tmp/ios_suite/golden_ios ]]; then
+      if [ "$GOLD" != /tmp/ios_suite/golden_ios ]; then
         mkdir -p "$GOLD"
         cp -R /tmp/ios_suite/golden_ios/. "$GOLD"/
       fi
@@ -123,7 +156,10 @@ fi
 echo "==> OpenUIKit render with the iOS cut ($OUT)"
 swift build -c release --product openrender >/dev/null
 rm -rf "$OUT"
-suite_scenes=("${(@f)$(ls "$WORK"/scenes/*.json)}")
+suite_scenes=()
+for f in "$WORK"/scenes/*.json; do
+  [ -f "$f" ] && suite_scenes+=("$f")
+done
 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender render "$OUT" "${suite_scenes[@]}" >/dev/null
 echo "==> compare"
 python3 Tools/compare/compare.py --scenes "$WORK/scenes" --golden "$GOLD" --out "$OUT" --golden-straight-alpha "${names[@]}" > "$WORK/compare.txt" 2>&1 || true

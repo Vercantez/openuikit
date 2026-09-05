@@ -5,7 +5,9 @@ private typealias CACornerMask = OpenUIKit.CACornerMask
 private typealias CALayer = OpenUIKit.CALayer
 private typealias CAGradientLayer = OpenUIKit.CAGradientLayer
 
+#if !os(Linux)
 @MainActor
+#endif
 final class MaskedCornersTests: XCTestCase {
     private func alpha(_ bitmap: Bitmap, _ x: Int, _ y: Int) -> Int {
         Int(bitmap.pixels[(y * bitmap.width + x) * 4 + 3])

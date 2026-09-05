@@ -12,6 +12,9 @@
 import Foundation
 import XCTest
 import ConformanceApps
+#if canImport(Glibc)
+import Glibc
+#endif
 
 final class ConformanceRegistryTests: XCTestCase {
 
@@ -58,18 +61,29 @@ final class ConformanceRegistryTests: XCTestCase {
             .appendingPathComponent("Registry-\(UUID().uuidString).swift")
         defer { try? FileManager.default.removeItem(at: tmp) }
 
+        // MEASURED linux-env, uikit-linux, Swift 6.2.4: Foundation Process
+        // hangs in waitUntilExit even with stdin=nullDevice (timeout 60 s).
+        // Glibc.system of the same argv returns 0 in ~0.05 s.
+        #if os(Linux)
+        let rc = Glibc.system("bash '\(script.path)' '\(tmp.path)'")
+        XCTAssertEqual(rc, 0, "gen_conformance_registry.sh via Glibc.system")
+        #else
         let p = Process()
-        p.executableURL = URL(fileURLWithPath: "/bin/zsh")
+        p.executableURL = URL(fileURLWithPath: "/bin/bash")
         p.arguments = [script.path, tmp.path]
         p.currentDirectoryURL = root
         let err = Pipe()
+        let out = Pipe()
         p.standardError = err
-        p.standardOutput = Pipe()
+        p.standardOutput = out
+        p.standardInput = FileHandle.nullDevice
         try p.run()
+        let errData = err.fileHandleForReading.readDataToEndOfFile()
+        _ = out.fileHandleForReading.readDataToEndOfFile()
         p.waitUntilExit()
         XCTAssertEqual(p.terminationStatus, 0,
-                       String(data: err.fileHandleForReading.readDataToEndOfFile(),
-                              encoding: .utf8) ?? "")
+                       String(data: errData, encoding: .utf8) ?? "")
+        #endif
 
         let expected = try String(contentsOf: checkedIn, encoding: .utf8)
         let got = try String(contentsOf: tmp, encoding: .utf8)
@@ -181,11 +195,13 @@ final class ConformanceRegistryTests: XCTestCase {
         XCTAssertEqual(ConformanceClock.contentSizeCategory(for: "large"), .large)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testRegistryHasEveryScannedApp() throws {
         let root = try Self.repoRoot()
         let scanned = try Self.scannedApps(in: root)
-        let table = ConformanceApps.registry
+        let table = MainActor.assumeIsolated { ConformanceApps.registry }
         XCTAssertEqual(Set(table.keys), Set(scanned))
         for name in scanned {
             let entry = try XCTUnwrap(table[name])

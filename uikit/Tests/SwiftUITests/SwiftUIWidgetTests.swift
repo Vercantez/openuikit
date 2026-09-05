@@ -7,8 +7,16 @@
 // a2832521c1daa0c23419c73705ae043ed60c9791.
 
 import XCTest
+#if os(Linux)
+@preconcurrency @testable import SwiftUI
+#else
 @testable import SwiftUI
+#endif
+#if os(Linux)
+@preconcurrency import OpenUIKit
+#else
 import OpenUIKit
+#endif
 
 private extension Gradient {
     static let widgetFixture = Gradient(colors: [.red, .blue])
@@ -62,7 +70,9 @@ private struct WidgetFixture: View {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SwiftUIWidgetTests: XCTestCase {
     private var savedResourceRoot = ""
     private var savedImagePaths: [String] = []

@@ -14,7 +14,9 @@ import struct Foundation.Data   // makes `@objc` legal; see SelectorApp.swift
 
 // MARK: - A target written the way an app writes one
 
+#if !os(Linux)
 @MainActor
+#endif
 final class Recorder: SelectorDispatching {
     var log: [String] = []
     var lastSender: AnyObject?
@@ -50,7 +52,9 @@ final class Recorder: SelectorDispatching {
 
 // MARK: - The name -> method layer
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SelectorNameTests: XCTestCase {
     func testActionNameAndArity() {
         XCTAssertEqual(Selector.named("tapped").actionName, "tapped")
@@ -66,7 +70,9 @@ final class SelectorNameTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ActionTableTests: XCTestCase {
     func testDispatchesByArity() {
         let r = Recorder()
@@ -104,7 +110,9 @@ final class ActionTableTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SelectorDispatchDeliveryTests: XCTestCase {
     override func tearDown() {
         SelectorDispatch.onUnresolved = nil
@@ -200,7 +208,9 @@ final class SelectorDispatchDeliveryTests: XCTestCase {
 
 // MARK: - UIControl
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ControlSelectorTargetTests: XCTestCase {
     override func tearDown() {
         SelectorDispatch.onUnresolved = nil
@@ -330,7 +340,9 @@ final class ControlSelectorTargetTests: XCTestCase {
 
 // MARK: - UIGestureRecognizer
 
+#if !os(Linux)
 @MainActor
+#endif
 final class GestureSelectorTargetTests: XCTestCase {
     func testRecognizedTapDispatchesFrameworkEndEditingActionWithoutRegistry() {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 120))
@@ -399,12 +411,16 @@ final class GestureSelectorTargetTests: XCTestCase {
 
 // MARK: - The demo screen, wired entirely with selectors
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SelectorDemoAppTests: XCTestCase {
     /// The demo app lives in the DemoApp target, which the test target does
     /// not link; this reproduces its wiring against the same machinery so the
     /// scripted `openhost --app selectors` run has a unit-test twin.
+    #if !os(Linux)
     @MainActor
+    #endif
     final class Screen: SelectorDispatching {
         let button = UIButton(type: .system)
         let toggle = UISwitch()
@@ -475,9 +491,13 @@ final class SelectorDemoAppTests: XCTestCase {
 /// `#selector(...)` expressions are the real thing -- the same expressions a
 /// UIKit app writes. Off Darwin neither `@objc` nor `#selector` compiles at
 /// all (docs/OBJC_RUNTIME.md), which is why this block is conditional.
+#if !os(Linux)
 @MainActor
+#endif
 final class GenuineObjCSelectorTests: XCTestCase {
+    #if !os(Linux)
     @MainActor
+    #endif
     final class Target: SelectorDispatching {
         var log: [String] = []
         @objc func buttonTapped() { log.append("buttonTapped") }
@@ -496,7 +516,9 @@ final class GenuineObjCSelectorTests: XCTestCase {
     /// Deliberately has no SelectorDispatching conformance. This is the shape
     /// of an unchanged UIKit controller: UIResponder's NSObject root and its
     /// @objc methods are the complete dispatch table.
+    #if !os(Linux)
     @MainActor
+    #endif
     final class RuntimeTarget: UIViewController {
         var log: [String] = []
         weak var picker: UIDatePicker?
@@ -536,7 +558,9 @@ final class GenuineObjCSelectorTests: XCTestCase {
 
     /// A runtime method wins when a target also supplies the portable table.
     /// The table remains the fallback for selectors absent from ObjC metadata.
+    #if !os(Linux)
     @MainActor
+    #endif
     final class DualPathTarget: UIViewController, SelectorDispatching {
         var log: [String] = []
 

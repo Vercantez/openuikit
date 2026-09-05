@@ -9,7 +9,9 @@ import XCTest
 
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
 
+#if !os(Linux)
 @MainActor
+#endif
 private func makeNav(width: CGFloat = 393, height: CGFloat = 300)
     -> (UINavigationController, UIViewController) {
     let vc = UIViewController()
@@ -20,7 +22,9 @@ private func makeNav(width: CGFloat = 393, height: CGFloat = 300)
     return (nav, vc)
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class BarButtonItemTests: XCTestCase {
 
     // MARK: Sizing (measured: platter = content + 2 x 16, never < 44)
@@ -129,7 +133,9 @@ final class BarButtonItemTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class BarItemLayoutTests: XCTestCase {
 
     private func toolbar(_ items: [UIBarButtonItem], width: CGFloat = 393) -> UIToolbar {
@@ -178,7 +184,9 @@ final class BarItemLayoutTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class NavigationItemTests: XCTestCase {
 
     func testNavigationItemIsLazyAndSeededFromTitle() {
@@ -304,7 +312,9 @@ final class NavigationItemTests: XCTestCase {
 
 // MARK: - Target-action through the M12 selector machinery
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class BarActionTarget: SelectorDispatching {
     var taps = 0
     var lastSender: AnyObject?
@@ -319,7 +329,9 @@ private final class BarActionTarget: SelectorDispatching {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class BarButtonActionTests: XCTestCase {
     func testTapFiresTheItemsSelector() {
         let target = BarActionTarget()
@@ -355,7 +367,9 @@ final class BarButtonActionTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class BarAppearanceTests: XCTestCase {
 
     /// UIAppearance is process-global, so tests of the implicit legacy path
@@ -694,7 +708,9 @@ final class BarAppearanceTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class NavigationToolbarTests: XCTestCase {
     func testToolbarIsHiddenUntilAsked() {
         let (nav, vc) = makeNav()

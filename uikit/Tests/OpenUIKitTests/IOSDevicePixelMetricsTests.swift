@@ -5,7 +5,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class IOSDevicePixelMetricsTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut!
     private var savedBounds: CGRect!
@@ -546,7 +548,9 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class UntitledGroupedSource: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int { 2 }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

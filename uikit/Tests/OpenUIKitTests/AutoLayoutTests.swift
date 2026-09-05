@@ -5,7 +5,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class CassowarySolverTests: XCTestCase {
 
     private func eq(_ e: Cassowary.Expression, _ strength: Double = Cassowary.requiredStrength)
@@ -150,7 +152,9 @@ final class CassowarySolverTests: XCTestCase {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class AutoLayoutEngineTests: XCTestCase {
 
     func testOriginAndSizeRounding() {

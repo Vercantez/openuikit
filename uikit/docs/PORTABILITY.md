@@ -432,9 +432,24 @@ unscoped `import CoreGraphics` breaks 8 files by dragging CoreGraphics'
 
 ## Honest gaps
 
-- **Fonts are the one host dependency.** Glyphs outside the harvested ink
-  table fall back to rasterizing from a font file, and off Darwin there is no
-  system SF. At M10 a Linux run without `OPENUIKIT_FONT_DIR` rendered
+- **Fonts are the one host dependency on the Catalyst cut.** Glyphs outside
+  the harvested ink table fall back to rasterizing from a font file, and off
+  Darwin there is no system SF. The **iOS cut** (Linux trial 2026-09-05) draws
+  from `Resources/glyph_ink_ios.json` (6152 keys, 2x) / `glyph_ink_ios_3x.json`
+  (848 keys, 3x) with no outline font when the (family, size, appearance,
+  phase, scalar) key is present; a miss with no font file aborts with
+  `OPENUIKIT_IOS_INK_MISS:` and that exact key (so a Linux agent knows what to
+  harvest instead of shipping blank labels). **Still requires a font file:**
+  Catalyst goldens; rotated or scaled CTMs; non-integer point sizes; any
+  (family, size, phase, scalar) cell not in those JSON tables — the 3x table
+  is not a full alphabet, so `openrender realapp` at scale 3 still needs
+  `OPENUIKIT_FONT_DIR` for unharvested glyphs. `linux_realapp_verify.sh`
+  proves the no-font 2x path on a harvested "Hello" (17 pt) and the loud miss
+  on U+2603, then uses `/out/fonts` for 3x realapp when the Mac host copied
+  SFNS.
+
+  Historical Catalyst measurement (M10 / M12): a Linux run without
+  `OPENUIKIT_FONT_DIR` rendered
   122/134 frames byte-identically and **still passed 80/80** while dropping
   letters — that is the blind spot the structural gates were built for.
 

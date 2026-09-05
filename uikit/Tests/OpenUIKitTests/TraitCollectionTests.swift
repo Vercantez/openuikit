@@ -1,7 +1,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class SizeClassChangeProbeController: UIViewController {
     private(set) var previousTraits: UITraitCollection?
 
@@ -11,7 +13,9 @@ private final class SizeClassChangeProbeController: UIViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class RegisteredTraitProbeController: UIViewController {
     var log: [String] = []
     var handlerPrevious: UITraitCollection?
@@ -23,7 +27,9 @@ private final class RegisteredTraitProbeController: UIViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class LegacyViewTraitProbe: UIView {
     var log: [String] = []
     var previousTraits: UITraitCollection?
@@ -40,7 +46,9 @@ private enum CustomTraitReusingStyleName: UITraitDefinition {
 
 /// Size-class initializer results and merge precedence were measured against
 /// UIKit 26.1 under Mac Catalyst before implementing this portable subset.
+#if !os(Linux)
 @MainActor
+#endif
 final class TraitCollectionTests: XCTestCase {
     func testUIViewLegacyTraitCallbackFollowsModernRegistration() {
         let savedCurrent = UITraitCollection.current

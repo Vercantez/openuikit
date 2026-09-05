@@ -1,7 +1,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ScenePipelineProbeTests: XCTestCase {
     func testHRender() throws {
         guard GlyphFont(path: "/System/Library/Fonts/SFNS.ttf") != nil else {

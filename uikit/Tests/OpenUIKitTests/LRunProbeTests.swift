@@ -1,7 +1,9 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class LRunProbeTests: XCTestCase {
     func testLRunColumns() throws {
         guard GlyphFont(path: "/System/Library/Fonts/SFNS.ttf") != nil else {

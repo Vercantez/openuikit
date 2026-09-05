@@ -3,8 +3,16 @@
 
 import XCTest
 import Combine
+#if os(Linux)
+@preconcurrency @testable import OpenUIKit
+#else
 @testable import OpenUIKit
+#endif
+#if os(Linux)
+@preconcurrency @testable import SwiftUI
+#else
 @testable import SwiftUI
+#endif
 
 private enum SettingsPublisherFailure: Error {
     case stopped
@@ -169,7 +177,9 @@ private struct SettingsNavigationDestinationFixture: View {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class SwiftUISettingsTests: XCTestCase {
     func testSettingsControlsRoundTripBindingsEffectsAndDisabledState() throws {
         OpenUIKit.Timer._reset()

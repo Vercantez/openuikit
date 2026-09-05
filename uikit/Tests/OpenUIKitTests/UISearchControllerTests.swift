@@ -3,7 +3,9 @@ import Foundation
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UISearchControllerTests: XCTestCase {
     func testSearchControllerSurface() {
         let sc = UISearchController(searchResultsController: nil)

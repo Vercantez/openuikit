@@ -4,12 +4,16 @@
 import XCTest
 @testable import OpenUIKit
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class PageLog {
     var entries: [String] = []
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class PageChild: UIViewController {
     let name: String
     let log: PageLog
@@ -46,7 +50,9 @@ private final class PageChild: UIViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class PageSource: UIPageViewControllerDataSource {
     let pages: [UIViewController]
     var count: Int
@@ -95,7 +101,9 @@ private final class PageSource: UIPageViewControllerDataSource {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class PageDelegate: UIPageViewControllerDelegate {
     var entries: [String] = []
     func pageViewController(_ pageViewController: UIPageViewController,
@@ -110,7 +118,9 @@ private final class PageDelegate: UIPageViewControllerDelegate {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class OverridingPageViewController: UIPageViewController {
     private weak var overriddenDelegate: UIPageViewControllerDelegate?
     private weak var overriddenDataSource: UIPageViewControllerDataSource?
@@ -149,7 +159,9 @@ private final class OverridingPageViewController: UIPageViewController {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class UIPageViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -753,7 +765,10 @@ final class UIPageViewControllerTests: XCTestCase {
     }
 
     func testMinimalDelegateUsesOptionalRequirementDefaults() {
-        @MainActor final class EmptyDelegate: UIPageViewControllerDelegate {}
+        #if !os(Linux)
+        @MainActor
+        #endif
+        final class EmptyDelegate: UIPageViewControllerDelegate {}
         let page = UIPageViewController(transitionStyle: .scroll,
                                         navigationOrientation: .horizontal)
         let delegate = EmptyDelegate()

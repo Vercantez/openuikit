@@ -5,7 +5,9 @@ import XCTest
 #if canImport(ObjectiveC)
 @objc(OpenUIKitTestCopyingUnknownEffect)
 #endif
+#if !os(Linux)
 @MainActor
+#endif
 private final class CopyingUnknownEffect: UIVisualEffect {
     static var copyCallCount = 0
     override class var supportsSecureCoding: Bool { true }
@@ -37,7 +39,9 @@ private final class CopyingUnknownEffect: UIVisualEffect {
 #if canImport(ObjectiveC)
 @objc(OpenUIKitTestCopyingBlurEffect)
 #endif
+#if !os(Linux)
 @MainActor
+#endif
 private final class CopyingBlurEffect: UIBlurEffect {
     static var copyCallCount = 0
     override class var supportsSecureCoding: Bool { true }
@@ -66,7 +70,9 @@ private final class CopyingBlurEffect: UIBlurEffect {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class OverridingVisualEffectView: UIVisualEffectView {
     override var contentView: UIView { super.contentView }
     override var effect: UIVisualEffect? {
@@ -84,7 +90,9 @@ private final class OverridingVisualEffectView: UIVisualEffectView {
 }
 
 final class UIVisualEffectTests: XCTestCase {
+    #if !os(Linux)
     @MainActor
+    #endif
     private func requireEffectFoundationContracts<Effect: UIVisualEffect>(
         _ effect: Effect
     ) where Effect: NSCopying & NSSecureCoding {
@@ -92,14 +100,18 @@ final class UIVisualEffectTests: XCTestCase {
         XCTAssertTrue(object === effect)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     private func requireViewFoundationContract<View: UIVisualEffectView>(
         _ view: View
     ) where View: NSSecureCoding {
         _ = view
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     private func archiveRoundTrip(
         _ effect: UIVisualEffect
     ) throws -> UIVisualEffect {
@@ -109,7 +121,9 @@ final class UIVisualEffectTests: XCTestCase {
             ofClass: UIVisualEffect.self, from: data))
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testRawValuesDefaultsAndRendererDescriptorsMatchIOS26() {
         let blurValues: [(UIBlurEffect.Style, Int)] = [
             (.extraLight, 0), (.light, 1), (.dark, 2),
@@ -163,7 +177,9 @@ final class UIVisualEffectTests: XCTestCase {
                       style: .secondaryLabel))
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testEffectsHaveExactFoundationContractsAndImmutableIdentityCopy() {
         let effects: [UIVisualEffect] = [
             UIVisualEffect(),
@@ -183,7 +199,9 @@ final class UIVisualEffectTests: XCTestCase {
         }
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testSecureArchivesCreateFreshEffectsAndPreserveDescriptors() throws {
         let privateBlur3 = UIBlurEffect(style: try XCTUnwrap(
             UIBlurEffect.Style(rawValue: 3)))
@@ -215,7 +233,9 @@ final class UIVisualEffectTests: XCTestCase {
         }
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testBuiltInEffectNSObjectEqualityAndHashMatchIOS26() throws {
         let inertBlur = UIBlurEffect()
         let lightA = UIBlurEffect(style: .light)
@@ -264,7 +284,9 @@ final class UIVisualEffectTests: XCTestCase {
         }
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testOpenUIKitMatchesCheckedInIOS26SemanticOracle() throws {
         func oracleRect(_ value: CGRect) -> String {
             "(\(value.minX),\(value.minY),\(value.width),\(value.height))"
@@ -508,7 +530,9 @@ final class UIVisualEffectTests: XCTestCase {
         XCTAssertEqual(lines.joined(separator: "\n") + "\n", golden)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testViewInitializersOpenPropertiesAndStableContentIdentity() throws {
         let zero = UIVisualEffectView()
         let frame = CGRect(x: 10, y: 20, width: 120, height: 80)
@@ -541,7 +565,9 @@ final class UIVisualEffectTests: XCTestCase {
         XCTAssertFalse(framed.clipsToBounds)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testEffectViewHierarchyPolicyPointsAppsAtContentView() {
         let view = UIVisualEffectView(
             effect: UIBlurEffect(style: .regular))
@@ -556,7 +582,9 @@ final class UIVisualEffectTests: XCTestCase {
         XCTAssertFalse(view.subviews.contains { $0 === child })
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testEffectInitializerCopiesHostileEffectExactlyOnce() throws {
         CopyingUnknownEffect.copyCallCount = 0
         let source = CopyingUnknownEffect(token: 70)
@@ -585,7 +613,9 @@ final class UIVisualEffectTests: XCTestCase {
         }.count, 1)
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testCoderInitializerCopiesDecodedHostileEffectExactlyOnce() throws {
         let source = CopyingUnknownEffect(token: 75)
         let archiver = NSKeyedArchiver(requiringSecureCoding: true)
@@ -609,12 +639,16 @@ final class UIVisualEffectTests: XCTestCase {
     /// Reading through the base type proves the open getter dynamically
     /// dispatches without exposing the test subclass's implementation detail
     /// in the assertion above.
+    #if !os(Linux)
     @MainActor
+    #endif
     private func superContent(of view: UIVisualEffectView) -> UIView {
         view.contentView
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testDetachedContentGeometryMatchesIOS26AccessOrder() {
         let initialFrame = CGRect(x: 10, y: 20, width: 120, height: 80)
         let shiftedBounds = CGRect(x: 7, y: 9, width: 200, height: 110)
@@ -691,7 +725,9 @@ final class UIVisualEffectTests: XCTestCase {
                        CGRect(x: 7, y: 9, width: 120, height: 80))
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testEffectAssignmentGeometryUsesNSObjectSemanticChange() {
         let initialFrame = CGRect(x: 10, y: 20, width: 120, height: 80)
         let shiftedOrigin = CGPoint(x: 7, y: 9)
@@ -808,7 +844,9 @@ final class UIVisualEffectTests: XCTestCase {
                           initial: UIVisualEffect())
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testHostedContentGeometryUsesBoundsOriginForBothSetupOrders() {
         let window = UIWindow(
             frame: CGRect(x: 0, y: 0, width: 390, height: 844))
@@ -856,7 +894,9 @@ final class UIVisualEffectTests: XCTestCase {
         }
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testEffectMutationCopiesAndOnlyBlurInstallsBackdrop() throws {
         let view = UIVisualEffectView(
             frame: CGRect(x: 0, y: 0, width: 100, height: 60))
@@ -911,7 +951,9 @@ final class UIVisualEffectTests: XCTestCase {
     }
 
 #if canImport(Foundation) && canImport(ObjectiveC)
+    #if !os(Linux)
     @MainActor
+    #endif
     func testDarwinBaseViewArchiveSnapshotPreservesGeometryAndEffect() throws {
         let view = UIVisualEffectView(
             effect: UIBlurEffect(style: .systemThinMaterialDark))
@@ -970,7 +1012,9 @@ final class UIVisualEffectTests: XCTestCase {
     }
 #endif
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testBarAppearanceBackgroundEffectFamilyMatrixMatchesIOS26() {
         let base = UIBarAppearance()
         let navigation = UINavigationBarAppearance()
@@ -1022,7 +1066,9 @@ final class UIVisualEffectTests: XCTestCase {
         }
     }
 
+    #if !os(Linux)
     @MainActor
+    #endif
     func testBarAppearanceBackgroundEffectUsesMeasuredStrongIdentityStorage() {
         let sources: [UIBarAppearance] = [
             UIBarAppearance(),

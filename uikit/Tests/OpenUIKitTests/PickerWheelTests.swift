@@ -18,10 +18,14 @@ import XCTest
 
 /// The tests only need a class to hold the delegate; OpenUIKit has no
 /// NSObject and the protocols are `AnyObject`-bound.
+#if !os(Linux)
 @MainActor
+#endif
 private class NSObjectStandIn {}
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class Source: NSObjectStandIn, UIPickerViewDataSource, UIPickerViewDelegate {
     var components = 1
     var rows = 9
@@ -33,7 +37,9 @@ private final class Source: NSObjectStandIn, UIPickerViewDataSource, UIPickerVie
     func pickerView(_ p: UIPickerView, rowHeightForComponent component: Int) -> CGFloat { rowH }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class PickerWheelTests: XCTestCase {
 
     private func makePicker(height: CGFloat, rowHeight: CGFloat,
@@ -172,7 +178,9 @@ final class PickerWheelTests: XCTestCase {
     }
 
     func testSelectionRoundTripAndDelegateCallback() {
+        #if !os(Linux)
         @MainActor
+        #endif
         final class Recorder: NSObjectStandIn, UIPickerViewDataSource, UIPickerViewDelegate {
             var picked: [(Int, Int)] = []
             func numberOfComponents(in pickerView: UIPickerView) -> Int { 2 }

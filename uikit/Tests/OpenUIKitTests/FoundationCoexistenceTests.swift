@@ -41,7 +41,9 @@ final class FoundationCoexistenceTests: XCTestCase {
     /// `CGRect`, `NSValue` and `NSCoder` are nonisolated values, `UIView` is
     /// main-actor-isolated exactly as in the iOS SDK, so only the test that
     /// touches a view needs the annotation. App source reads the same way.
+    #if !os(Linux)
     @MainActor
+    #endif
     func testAFoundationRectRoundTripsThroughAView() {
         let coder = NSCoder.self          // the corpus's #1 collision (344 files)
         XCTAssertNotNil(coder)

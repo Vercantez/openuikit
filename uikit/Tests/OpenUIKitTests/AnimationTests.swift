@@ -7,7 +7,9 @@ import XCTest
 
 private typealias CGAffineTransform = OpenUIKit.CGAffineTransform
 
+#if !os(Linux)
 @MainActor
+#endif
 final class AnimationTests: XCTestCase {
 
     private var savedBackend: RenderBackend!
