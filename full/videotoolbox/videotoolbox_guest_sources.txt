@@ -1,2 +1,4 @@
 full/videotoolbox/VTKeys.swift
+full/videotoolbox/VTPixelBuffer.swift
+full/videotoolbox/VTSessionCore.swift
 full/videotoolbox/VideoToolbox.swift
