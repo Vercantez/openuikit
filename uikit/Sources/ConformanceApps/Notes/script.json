@@ -1,0 +1,19 @@
+{
+  "comment": "Notes conformance timeline. Rest captures sit at least 0.5 s after the action that precedes them. push / done, then search (focus / type hasPrefix Meet / cancel), settings tab (toggle iCloud, segment 1 = Title), back to notes, delete alert, confirm-delete. Same file drives Tools/oracle2/confprobe (real UIKit) and `openhost --app Notes` (the port). This trial records the port half on Linux only.",
+  "app": "Notes",
+  "events": [
+    { "t": 0.40, "action": "push" },
+    { "t": 1.50, "action": "focus-body" },
+    { "t": 2.40, "action": "done" },
+    { "t": 3.40, "action": "focus-search" },
+    { "t": 4.40, "action": "type-search" },
+    { "t": 5.40, "action": "cancel-search" },
+    { "t": 6.40, "action": "select-tab-settings" },
+    { "t": 7.40, "action": "toggle" },
+    { "t": 8.40, "action": "segment-1" },
+    { "t": 9.40, "action": "select-tab-notes" },
+    { "t": 10.40, "action": "delete" },
+    { "t": 11.40, "action": "confirm-delete" }
+  ],
+  "captures": [0.20, 1.20, 2.10, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00, 10.00, 11.00, 12.00]
+}
