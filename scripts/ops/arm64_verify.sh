@@ -34,8 +34,49 @@ echo "== stage_swiftcore (libswiftcompat + libswiftCore from swiftcore-macho/art
 bash scripts/stage_swiftcore.sh "$TREE/swiftcore-macho/artifacts" > "$W/verify-stage.log" 2>&1; echo "stage_swiftcore rc=$?"; tail -4 "$W/verify-stage.log"
 cd "$TREE"
 echo "== build_full.sh (stage mrroot_full from this machorun; rebuild umbrellas)"
-bash full/scripts/build_full.sh > "$W/build_full.log" 2>&1; echo "build_full rc=$?"; grep -E "^build_full:|error:|FAIL|umbrella|OK$" "$W/build_full.log" | tail -8
+build_full_rc=0
+bash full/scripts/build_full.sh > "$W/build_full.log" 2>&1 || build_full_rc=$?
+echo "build_full rc=$build_full_rc"
+grep -E "^build_full:|error:|FAIL|umbrella|OK$|ObservationMacros" "$W/build_full.log" | tail -12 | sed 's/^/build_full: /'
+echo "build_full: --- log tail ---"
+tail -40 "$W/build_full.log" | sed 's/^/build_full: /'
 cp machorun/sdk/usr/lib/libSystem.tbd scratch/sysroot_fe4/usr/lib/libSystem.tbd
+echo "== guest realapp (expect 12 screens)"
+if [ "$build_full_rc" -ne 0 ]; then
+  echo "guest_realapp skipped (build_full rc=$build_full_rc)"
+  echo "build_full: GUEST_REALAPP_SCREENS=0"
+else
+mkdir -p "$W/guest-realapp"
+# Prefer the rebuilt $OUT/host helper (has create_queue). The staged
+# scratch/mrroot_full/host copy is what build_full copies from BASE and
+# lacks that export (attempt 10, c8faae90, GUEST_REALAPP_SCREENS=3).
+HOST_SO="$TREE/build/full/host"
+if [ ! -f "$HOST_SO/libOpenDispatchHost.so" ]; then
+  HOST_SO="$TREE/scratch/mrroot_full/host"
+fi
+echo "build_full: GUEST_REALAPP_HOST_SO=$HOST_SO"
+# Preload stays inside this subshell so GATE_B's widget guest is not
+# affected (widget guest sets its own LD_PRELOAD).
+(
+  cd "$TREE/build/full"
+  export MACHORUN_ROOT="$TREE/scratch/mrroot_full"
+  if [ -f "$HOST_SO/libOpenDispatchHost.so" ]; then
+    export LD_LIBRARY_PATH="$HOST_SO${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    export LD_PRELOAD="$HOST_SO/libOpenDispatchHost.so:$HOST_SO/libOpenFoundationInternationalizationHost.so:$HOST_SO/libOpenURLTransportHost.so:$HOST_SO/libOpenRelativeTimeHost.so"
+  fi
+  OPENUIKIT_RESOURCE_ROOT="$TREE/uikit/Sources/OpenUIKit/Resources" \
+  OPENUIKIT_FONT_DIR="$TREE/scratch/fonts" \
+  OPENUIKIT_BACKEND=quartz OPENUIKIT_FORCE_IOS=1 \
+  "$TREE/scratch/mrroot_full/machorun" ./render_full realapp "$W/guest-realapp" \
+    "$TREE/uikit/fixtures/realapp/assets"
+) > "$W/guest-realapp.log" 2>&1
+echo "build_full: GUEST_REALAPP_RC=$?"
+grep -E '^rendered realapp_|^\[render_full\] realapp|Fatal error|UINib:' "$W/guest-realapp.log" | tail -30 \
+    | sed 's/^/build_full: realapp: /'
+echo "build_full: GUEST_REALAPP_SCREENS=$(ls "$W/guest-realapp"/*.png 2>/dev/null | wc -l | tr -d ' ')"
+echo "build_full: --- guest realapp log ---"
+tail -30 "$W/guest-realapp.log" | sed 's/^/build_full: realapp: /'
+fi
 P=$(ls -d /tmp/focus-widget-res.* 2>/dev/null | head -1); B="$P/output/bundles/Focus_Widget.bundle"
 [ -d "$B" ] || { echo "GATE_B_FAIL rc=2 (no staged Focus_Widget.bundle under /tmp/focus-widget-res.*)"; exit 2; }
 echo "== GATE B (widget guest) on $H"

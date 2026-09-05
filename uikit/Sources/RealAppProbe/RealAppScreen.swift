@@ -21,6 +21,9 @@ public enum RealAppScreen {
     /// iPad (A16) portrait. MEASURED `UIScreen.main.bounds` on the
     /// `iPad-A16` simulator (2x): 820 × 1180.
     public static let windowSizePad = CGSize(width: 820, height: 1180)
+    /// iPhone SE (3rd gen) landscapeLeft. MEASURED ConfProbe `--landscape`,
+    /// iPhone SE 2x / iOS 26.1: `UIScreen.main.bounds` 667 × 375.
+    public static let windowSizePhoneLandscape = CGSize(width: 667, height: 375)
     /// Default (phone) window; openhost `--app pocketcasts` uses this.
     public static let windowSize = windowSizePhone
     /// MEASURED realappprobe, iPhone 16 / iOS 26.1: window safe area
@@ -30,6 +33,10 @@ public enum RealAppScreen {
     /// iPad (A16) 820×1180 @2x / iOS 26.1: window `safeAreaInsets`
     /// `[32, 0, 25, 0]`.
     public static let padSafeArea = UIEdgeInsets(top: 32, left: 0, bottom: 25, right: 0)
+    /// MEASURED ConfProbe `--landscape`, iPhone SE 2x / iOS 26.1
+    /// (ConfProbe-Landscape-Info.plist hides the status bar): NavFlow
+    /// t200.landscape dump `screen.windowSafeArea` `[0, 0, 0, 0]`.
+    public static let phoneLandscapeSafeArea = UIEdgeInsets.zero
 
     /// Where UIImage(named:) finds the app's icons. `openrender`/`openhost`
     /// point this at fixtures/realapp/assets before building the screen.
@@ -131,6 +138,10 @@ public enum RealAppScreen {
         }
     }
 
+    // Twelve screens on every route. Before this branch the guest builder
+    // only globbed RealAppProbe/*.swift + Vendored/*.swift, so
+    // canImport(Onboarding)/canImport(Domain) were false and the table
+    // stopped at 10 Pocket Casts screens (docs/agent_reports/guest-app-path.md).
     public static let screens: [Screen] = [
         Screen(name: "realapp_history_light", variant: .listeningHistory,
                theme: .light, style: .light, contentSizeCategory: .large,
@@ -170,37 +181,7 @@ public enum RealAppScreen {
         Screen(name: "realapp_storage_light_ipad", variant: .storage,
                theme: .light, style: .light, contentSizeCategory: .large,
                presentsSheet: false, idiom: .pad),
-    ] + focusScreens + hackersScreens
-
-    /// Firefox Focus's screen joins the table only where its stub modules
-    /// (Onboarding, Glean, Licenses, DesignSystem, Intents) exist — the
-    /// SwiftPM routes on macOS and Linux corelibs. The Linux-hosted guest
-    /// builder (full/scripts/build_full.sh) compiles this harness from the
-    /// top-level files against the port's own Foundation and has no
-    /// SwiftUI, Combine or stub modules yet, so there the table stops at the
-    /// Pocket Casts screens and Focus/ is not compiled. Both authorities
-    /// went red on f6912fa1 ("no such module 'Onboarding'") when the screen
-    /// sat in this file. See Focus/FocusScreens.swift.
-    static var focusScreens: [Screen] {
-        #if canImport(Onboarding)
-        return focusScreenTable
-        #else
-        return []
-        #endif
-    }
-
-    /// Hackers' screen joins the table only where its stub modules (Domain,
-    /// Shared, DesignSystem) exist — the SwiftPM routes on macOS and Linux
-    /// corelibs. The Linux-hosted guest builder compiles this harness from
-    /// the top-level files and has no those modules, so there the table
-    /// stops at Pocket Casts + Focus. See Hackers/HackersScreens.swift.
-    static var hackersScreens: [Screen] {
-        #if canImport(Domain)
-        return hackersScreenTable
-        #else
-        return []
-        #endif
-    }
+    ] + focusScreenTable + hackersScreenTable
 
     static func makeListeningHistoryPicker(theme: Theme.ThemeType) -> OptionsPicker {
         Theme.sharedTheme.activeTheme = theme
@@ -281,17 +262,9 @@ public enum RealAppScreen {
         case .settings:         picker = makeSettingsPicker(theme: theme)
         case .storage:          return makeStorageScreen(theme: theme)
         case .focusSettings:
-            #if canImport(Onboarding)
             return makeFocusSettingsScreen()
-            #else
-            fatalError("realapp_focus_settings_light is not in this build (no Focus stub modules)")
-            #endif
         case .hackersFeed:
-            #if canImport(Domain)
             return makeHackersFeedScreen()
-            #else
-            fatalError("realapp_hackers_feed_light is not in this build (no Hackers stub modules)")
-            #endif
         }
         let host = BackdropViewController(theme: theme)
         host.pendingPicker = picker

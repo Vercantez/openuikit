@@ -763,6 +763,41 @@ final class IOSNavigationBarTransitionTests: XCTestCase {
         XCTAssertEqual(large.navigationBar.titleLabel.alpha, 0)
     }
 
+    /// MEASURED NavFlow t200.landscape / t3000.landscape, iPhone SE 2x /
+    /// iOS 26.1: compact height collapses large titles to the 54 pt inline
+    /// bar at y **24** (table SA top 78 = 24+54). `prefersLargeTitles`
+    /// stays true. Portrait y=10 / height 106 is unchanged.
+    func testCompactHeightCollapsesLargeTitlesAndRaisesBarTop() {
+        let savedTraits = UITraitCollection.current
+        let savedBounds = UIScreen.main.bounds
+        let savedScale = UIScreen.main.scale
+        defer {
+            UITraitCollection.current = savedTraits
+            UIScreen.main._hostConfigure(bounds: savedBounds, scale: savedScale)
+        }
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light,
+            displayScale: 2,
+            horizontalSizeClass: .compact,
+            verticalSizeClass: .compact)
+        UIScreen.main._hostConfigure(
+            bounds: CGRect(x: 0, y: 0, width: 667, height: 375), scale: 2)
+        let root = UIViewController()
+        root.title = "Library"
+        let nav = UINavigationController(rootViewController: root)
+        nav.navigationBar.prefersLargeTitles = true
+        nav.view.frame = CGRect(x: 0, y: 0, width: 667, height: 375)
+        nav.view.layoutIfNeeded()
+        XCTAssertTrue(nav.navigationBar.prefersLargeTitles)
+        XCTAssertFalse(nav.navigationBar.displaysLargeTitles)
+        XCTAssertEqual(nav.navigationBar.frame,
+                       CGRect(x: 0, y: 24, width: 667, height: 54))
+        XCTAssertEqual(nav.topViewController!.view.safeAreaInsets.top, 78)
+        XCTAssertNil(nav.navigationBar.largeTitleLabel)
+        XCTAssertEqual(nav.navigationBar.titleLabel.center.y, 22, accuracy: 0.01)
+        XCTAssertEqual(nav.navigationBar.titleLabel.alpha, 1)
+    }
+
     /// Same probe, hide_add59 / iPhone 16 window SA 59: y follows the inset
     /// (not 10 + inset). Overlay = y + height = 113 inline, 165 large.
     func testIOSBarOriginFollowsSafeAreaTopAboveTheFloor() {

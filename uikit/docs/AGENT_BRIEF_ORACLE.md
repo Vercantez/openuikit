@@ -71,13 +71,21 @@ root is outside `uikit/` and the merge path refuses the branch. Do NOT touch `sc
   search that targets the comparison score is not a measurement — a branch
   that lands exactly on a bar that way is rejected. When no rule fits every
   sample, add the scene to `scoreboard/open.txt` with the samples.
-- The port's own Foundation is what real apps run against on Linux (the
-  arm64-apple-macos guest route): it has Calendar, DateComponents, Locale,
-  Data, URL, JSONDecoder — not DateFormatter, NumberFormatter,
-  DateComponentsFormatter, NSRegularExpression, JSONSerialization. A branch
-  that adds those is refused. AppKit-category methods on NSObject
-  (`awakeFromNib`) exist only under `canImport(AppKit)`, not
-  `canImport(ObjectiveC)`.
+- Guest-route Foundation (UPDATED after the guest app path landed): the
+  Linux-hosted arm64-apple-macos guest now compiles the real-app harness
+  against the core guest package's Foundation — DateFormatter,
+  NumberFormatter, ISO8601DateFormatter, DateComponentsFormatter,
+  JSONSerialization, NSRegularExpression, URLSession, ByteCountFormatter
+  all exist there (carried Darwin goldens under full/foundation/tests) —
+  plus SwiftUI and Combine, and app stub modules under
+  `Sources/RealAppProbe/*Modules/`. The old rule "no DateFormatter & co."
+  is gone; what remains true: no `_StringProcessing` algorithms in
+  library sources (the widget gate pins the load list), and every new
+  Foundation family needs a carried golden before it is trusted.
+- Adding a file to `full/foundation/foundation_guest_sources.txt` moves
+  FIVE pins the operator bumps: core package EXPECTED_FOUNDATION_SOURCE_COUNT,
+  the guest test's `sources=N`, the onboarding guest's `-eq N` and `-eq N-1`,
+  and the StringProcessing undefined-count per builder.
 - The guest links only the dylibs the Focus widget gate pins. Any String
   algorithm that lives in `_StringProcessing` — `contains("…")` with a
   String argument, `ranges(of:)`, `firstRange(of:)`, `replacing(_:with:)`,
@@ -101,5 +109,17 @@ root is outside `uikit/` and the merge path refuses the branch. Do NOT touch `sc
   you are.
 - If the build breaks on Linux or the gate drops, fix it or revert before
   pushing. Never push red.
+
+- A scratch app you write for a measurement gets its OWN name under
+  `Sources/ConformanceApps/` (e.g. `Keyboard/`), never the name of an app
+  another branch may add: two agents once both created `Notes/` and the
+  merge had to drop one.
+- Two agents adding AXES to the harness in the same wave collide in the
+  same ten files (ConformanceClock, openhost AppMode/ConformanceMode/main,
+  confprobe, conformance_flow.sh, conformance_probe_sim.sh, hillclimb.sh,
+  agent_merge.sh, scoreboard.py); if your task adds an axis, base your
+  branch on the previous axis branch when the brief names one.
+- Never `pgrep -f` a pattern that appears in your own command line when
+  waiting for a process to finish: the waiter matches itself and never ends.
 
 ## Your task

@@ -53,10 +53,15 @@ the reason). The climb only assigns `fail` rows.
    is honoured the same way. `--ax1` / `--xxxl` pin
    `window.traitOverrides.preferredContentSizeCategory` to
    `.accessibilityLarge` / `.extraExtraExtraLarge` and suffix `.ax1` /
-   `.xxxl`. Combined suffixes: `.dark` then `.rtl` then `.ax1` / `.xxxl`.
-   The round scores `/tmp/hc-conformance-<App>`,
+   `.xxxl`. `--landscape` rotates the SE 2x device to landscapeLeft before
+   the first capture (window 667×375, compact height) and suffixes capture
+   names `.landscape`. openhost renders at that size with compact-height
+   traits. A `"orientation"` field in script.json is honoured the same way.
+   Combined suffixes: `.dark` then `.rtl` then `.ax1` / `.xxxl` then
+   `.landscape`. The round scores `/tmp/hc-conformance-<App>`,
    `/tmp/hc-conformance-<App>-dark`, `/tmp/hc-conformance-<App>-rtl`,
-   `/tmp/hc-conformance-<App>-ax1` and `/tmp/hc-conformance-<App>-xxxl`.
+   `/tmp/hc-conformance-<App>-ax1`, `/tmp/hc-conformance-<App>-xxxl` and
+   `/tmp/hc-conformance-<App>-landscape`.
 
    Adding an app is one directory (`Sources/ConformanceApps/<Name>/` with
    `<Name>App.swift` exposing `windowSize` / `makeRoot()` / `perform(_:)`,
@@ -96,7 +101,8 @@ agent can grade `SKIP_CAPTURE=1` without a simulator. `hillclimb.sh` and
   `Sources/ConformanceApps/` into `/tmp/hc-conformance-<App>` (light),
   `/tmp/hc-conformance-<App>-dark` (window style dark),
   `/tmp/hc-conformance-<App>-rtl` (appearance + window forceRightToLeft),
-  and `/tmp/hc-conformance-<App>-ax1` / `-xxxl` (window content-size override) —
+  `/tmp/hc-conformance-<App>-ax1` / `-xxxl` (window content-size override),
+  and `/tmp/hc-conformance-<App>-landscape` (SE 2x landscapeLeft) —
   its own directories. `/tmp/conformance-<App>` belongs to the agents; rounds 3–6
   once scored reports agents had left there and fanned out on rows the
   merged code had already fixed. The board stamps each app's capture time
@@ -125,6 +131,25 @@ agent can grade `SKIP_CAPTURE=1` without a simulator. `hillclimb.sh` and
   (`PICK_ONLY=1 scripts/hillclimb.sh N`) after such a merge lands, or every
   later branch is graded against stale goldens. When `/tmp` has none, the
   merge check restores `goldens/ios/` and prints that it did.
+- The merge script is bash (`#!/usr/bin/env bash` since the Linux-env
+  merge); run it as `bash uikit/scripts/agent_merge.sh <branch>`. Under
+  zsh its unmatched-glob reaper line aborts the run with no other symptom.
+- Re-resolving a behind branch: pin files (`env/`, `scripts/env/`,
+  `scripts/vendor_pins.sh`) always from main; `uikit/Tests/*.swift` rebuilt
+  from main's file plus the branch's named tests (never keep-both on code
+  with braces); `Registry.swift` regenerated; the fidelity table and
+  `open.txt` keep both sides; the scoreboard from main.
+- A branch that changes what the PROBE captures (the software keyboard,
+  the page-transition frame name) makes rows that were "passing" only
+  because both sides omitted the element drop below the bar honestly:
+  merge it with `RECAPTURE_APPS` for its apps and an `ALLOW_DROP` naming
+  those rows, said in the merge, then refresh the board.
+- Two agents adding axes or plumbing in the same wave collide in the same
+  ten files; add one axis per wave, or base the second on the first's
+  branch. A scratch app for a measurement gets its own name.
+- Waiters: never `pgrep -f` a pattern that appears in the waiter's own
+  command line; match the script invocation anchored at the start
+  (`^(zsh|bash) uikit/scripts/agent_merge.sh`).
 - Housekeeping after each wave: finished agents' simulator devices
   (`xcrun simctl delete`) and worktrees (`git worktree remove --force`);
   58 devices and 50 worktrees once filled the disk.
