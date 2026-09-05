@@ -1,3 +1,4 @@
+import CoreFoundation
 import CoreMedia
 import Foundation
 
@@ -88,6 +89,153 @@ func testMuxedAndMetadataFormatDescriptions() {
 func testAttachmentModeConstants() {
     precondition(kCMAttachmentMode_ShouldNotPropagate == 0)
     precondition(kCMAttachmentMode_ShouldPropagate == 1)
+}
+
+func testCMFormatDescriptionCreateEqualExtensions() {
+    var desc: CMFormatDescription?
+    precondition(
+        CMFormatDescriptionCreate(
+            allocator: nil,
+            mediaType: kCMMediaType_Video,
+            mediaSubType: kCMVideoCodecType_H264,
+            extensions: nil,
+            formatDescriptionOut: &desc
+        ) == 0
+    )
+    let created = desc!
+    precondition(CMFormatDescriptionGetMediaType(created) == kCMMediaType_Video)
+    precondition(CMFormatDescriptionGetMediaSubType(created) == kCMVideoCodecType_H264)
+    var video: CMFormatDescription?
+    precondition(
+        CMVideoFormatDescriptionCreate(
+            allocator: nil,
+            codecType: kCMVideoCodecType_HEVC,
+            width: 1920,
+            height: 1080,
+            extensions: nil,
+            formatDescriptionOut: &video
+        ) == 0
+    )
+    let dims = CMVideoFormatDescriptionGetDimensions(video!)
+    precondition(dims.width == 1920)
+    precondition(dims.height == 1080)
+    precondition(CMFormatDescriptionEqual(created, otherFormatDescription: created))
+    precondition(!CMFormatDescriptionEqual(created, otherFormatDescription: video))
+    var muxed: CMFormatDescription?
+    precondition(
+        CMMuxedFormatDescriptionCreate(
+            allocator: nil,
+            muxType: kCMMuxedStreamType_MPEG2Transport,
+            extensions: nil,
+            formatDescriptionOut: &muxed
+        ) == 0
+    )
+    precondition(muxed!.mediaType == .muxed)
+}
+
+func testCMFormatDescriptionOverlayKeys() {
+    precondition(CMFormatDescription.MediaSubType.mpeg4AAC.rawValue == cmTestFourCC("aac "))
+    precondition(CMFormatDescription.MediaSubType.linearPCM.rawValue == cmTestFourCC("lpcm"))
+    precondition(CMFormatDescription.Extensions.Key.formatName.rawValue == "FormatName")
+    precondition(
+        CFEqual(cmMakeCFStringForTest("FormatName"), kCMFormatDescriptionExtension_FormatName)
+    )
+    let field = CMFormatDescription.Extensions.Value.FieldDetail.temporalTopFirst
+    precondition(CFEqual(field.rawValue, kCMFormatDescriptionFieldDetail_TemporalTopFirst))
+    precondition(
+        CFEqual(
+            CMFormatDescription.Extensions.Value.YCbCrMatrix.itu_R_709_2.rawValue,
+            kCMFormatDescriptionYCbCrMatrix_ITU_R_709_2
+        )
+    )
+    precondition(CMFormatDescription.EqualityMask.all.contains(.streamBasicDescription))
+    precondition(CMFormatDescription.TimeCode.Flag.dropFrame.rawValue == 1)
+    precondition(
+        CMFormatDescription.Extensions.Value.MPEG2VideoProfile.hdv_720p30.rawValue
+            == UInt32(bitPattern: kCMMPEG2VideoProfile_HDV_720p30)
+    )
+    precondition(kCMFormatDescriptionError_InvalidParameter == -12710)
+    precondition(kCMFormatDescriptionError_AllocationFailed == -12711)
+    precondition(kCMFormatDescriptionError_ValueNotAvailable == -12718)
+}
+
+func testCMFormatDescriptionBridgeFailClosed() {
+    var desc: CMFormatDescription?
+    precondition(
+        CMFormatDescriptionCreate(
+            allocator: nil,
+            mediaType: kCMMediaType_Video,
+            mediaSubType: kCMVideoCodecType_H264,
+            extensions: nil,
+            formatDescriptionOut: &desc
+        ) == 0
+    )
+    var copied: CMBlockBuffer?
+    precondition(
+        CMVideoFormatDescriptionCopyAsBigEndianImageDescriptionBlockBuffer(
+            allocator: nil,
+            videoFormatDescription: desc!,
+            stringEncoding: CFStringBuiltInEncodings.UTF8.rawValue,
+            flavor: nil,
+            blockBufferOut: &copied
+        ) == kCMFormatDescriptionBridgeError_UnsupportedSampleDescriptionFlavor
+    )
+    precondition(
+        CMVideoFormatDescriptionGetPresentationDimensions(
+            desc!,
+            usePixelAspectRatio: true,
+            useCleanAperture: true
+        ).width == 0
+    )
+}
+
+func testCMMetadataIdentifierBasics() {
+    var identifier: CFString?
+    let key = cmMakeCFStringForTest("com.apple.quicktime.location.ISO6709")
+    let space = kCMMetadataKeySpace_QuickTimeMetadata
+    precondition(
+        CMMetadataCreateIdentifierForKeyAndKeySpace(
+            allocator: nil,
+            key: key,
+            keySpace: space,
+            identifierOut: &identifier
+        ) == 0
+    )
+    precondition(identifier != nil)
+    var keyOut: CFTypeRef?
+    precondition(
+        CMMetadataCreateKeyFromIdentifier(allocator: nil, identifier: identifier!, keyOut: &keyOut) == 0
+    )
+    var spaceOut: CFString?
+    precondition(
+        CMMetadataCreateKeySpaceFromIdentifier(
+            allocator: nil,
+            identifier: identifier!,
+            keySpaceOut: &spaceOut
+        ) == 0
+    )
+    precondition(kCMMetadataIdentifierError_BadKey == -16302)
+    precondition(kCMMetadataDataTypeRegistryError_AllocationFailed == -16310)
+    var meta: CMMetadataFormatDescription?
+    precondition(
+        CMMetadataFormatDescriptionCreateWithKeys(
+            allocator: nil,
+            metadataType: kCMMetadataFormatType_Boxed,
+            keys: nil,
+            formatDescriptionOut: &meta
+        ) == 0
+    )
+    precondition(meta!.mediaType == .metadata)
+}
+
+private func cmMakeCFStringForTest(_ string: String) -> CFString {
+    string.withCString { pointer in
+        CFStringCreateWithCString(
+            kCFAllocatorDefault,
+            pointer,
+            CFStringBuiltInEncodings.UTF8.rawValue
+        )!
+    }
 }
 
 private func cmTestFourCC(_ literal: String) -> UInt32 {

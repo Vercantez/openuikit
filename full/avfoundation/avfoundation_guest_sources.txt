@@ -1,4 +1,5 @@
 full/avfoundation/AVAssetSurface.swift
+full/avfoundation/AVAudioExtras.swift
 full/avfoundation/AVAudioSurface.swift
 full/avfoundation/AVCaptionSurface.swift
 full/avfoundation/AVCaptureSurface.swift
@@ -14,6 +15,8 @@ full/avfoundation/AVMetadataSurface.swift
 full/avfoundation/AVMetricsSurface.swift
 full/avfoundation/AVMovieSurface.swift
 full/avfoundation/AVOutputSurface.swift
+full/avfoundation/AVPlaybackRuntime.swift
+full/avfoundation/AVPlayerLayerSurface.swift
 full/avfoundation/AVPlayerSurface.swift
 full/avfoundation/AVRestSurface.swift
 full/avfoundation/AVSampleSurface.swift

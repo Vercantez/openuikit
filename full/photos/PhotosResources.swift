@@ -208,13 +208,15 @@ public final class PHAssetResource: NSObject, @unchecked Sendable {
 
     public class func assetResources(for asset: PHAsset) -> [PHAssetResource] {
         guard photosReadAccessGranted() else { return [] }
-        guard asset.portableData != nil || asset.portableImage != nil else { return [] }
+        let data = asset.portableData
+            ?? PhotosLibraryStore.resourceData(forAssetIdentifier: asset.localIdentifier)
+        guard data != nil || asset.portableImage != nil else { return [] }
         return [
             PHAssetResource(
                 type: asset.mediaType == .video ? .video : .photo,
                 assetLocalIdentifier: asset.localIdentifier,
-                originalFilename: "\(asset.localIdentifier).bin",
-                uniformTypeIdentifier: "public.data",
+                originalFilename: asset.originalFilename,
+                uniformTypeIdentifier: asset.uniformTypeIdentifier,
                 pixelWidth: asset.pixelWidth,
                 pixelHeight: asset.pixelHeight
             )
@@ -270,11 +272,17 @@ public final class PHAssetResourceManager: NSObject, @unchecked Sendable {
         dataReceivedHandler handler: @escaping (Data) -> Void,
         completionHandler: @escaping ((any Error)?) -> Void
     ) -> PHAssetResourceDataRequestID {
-        _ = resource
         _ = options
         let requestID = lock.withLock { () -> PHAssetResourceDataRequestID in
             defer { nextRequestID &+= 1 }
             return nextRequestID
+        }
+        if let data = PhotosLibraryStore.resourceData(
+            forAssetIdentifier: resource.assetLocalIdentifier
+        ) {
+            handler(data)
+            completionHandler(nil)
+            return requestID
         }
         handler(Data())
         completionHandler(PHPhotosError(.missingResource))
@@ -286,10 +294,13 @@ public final class PHAssetResourceManager: NSObject, @unchecked Sendable {
         toFile fileURL: URL,
         options: PHAssetResourceRequestOptions?
     ) async throws {
-        _ = resource
-        _ = fileURL
         _ = options
-        throw PHPhotosError(.missingResource)
+        guard let data = PhotosLibraryStore.resourceData(
+            forAssetIdentifier: resource.assetLocalIdentifier
+        ) else {
+            throw PHPhotosError(.missingResource)
+        }
+        try data.write(to: fileURL, options: .atomic)
     }
 }
 
@@ -308,8 +319,6 @@ public final class PHCloudIdentifier: NSObject, @unchecked Sendable {
 }
 
 public final class PHPersistentChangeToken: NSObject, @unchecked Sendable {
-    static let hostToken = PHPersistentChangeToken(tokenValue: 0)
-
     let tokenValue: Int
 
     init(tokenValue: Int) {
@@ -325,6 +334,8 @@ public final class PHPersistentChangeToken: NSObject, @unchecked Sendable {
 
 public final class PHPersistentChange: NSObject, @unchecked Sendable {
     public let changeToken: PHPersistentChangeToken
+    var assetDetails: PHPersistentObjectChangeDetails?
+    var collectionDetails: PHPersistentObjectChangeDetails?
 
     init(changeToken: PHPersistentChangeToken) {
         self.changeToken = changeToken
@@ -332,7 +343,14 @@ public final class PHPersistentChange: NSObject, @unchecked Sendable {
     }
 
     public func changeDetails(for objectType: PHObjectType) throws -> PHPersistentObjectChangeDetails {
-        _ = objectType
+        switch objectType {
+        case .asset:
+            if let assetDetails { return assetDetails }
+        case .assetCollection:
+            if let collectionDetails { return collectionDetails }
+        case .collectionList:
+            break
+        }
         throw PHPhotosError(.persistentChangeDetailsUnavailable)
     }
 }

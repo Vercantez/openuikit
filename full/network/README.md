@@ -7,30 +7,37 @@ integration is a later central-review step.
 
 ## What is real
 
-- IPv4 and IPv6 address parsing is local and deterministic. Constructing an
-  address does not imply that an interface, route, or resolver exists.
-- Well-known `NWEndpoint.Port` values (ssh/http/https/…) match their IANA
-  numbers. Host/port, unix, service, URL, and opaque endpoint cases compile.
+- IPv4 / IPv6 parsing is local. RFC 1122 `127.0.0.0/8` is loopback, RFC 3927
+  `169.254.0.0/16` is link-local, RFC 1112 `224.0.0.0/4` is multicast. IPv6
+  `init?(String)` accepts a `%zone` suffix and `debugDescription` reprints it.
+- `NWEndpoint.Host("127.0.0.1")` / `"::1"` become `.ipv4` / `.ipv6`. Port
+  strings that are IANA names (`http`) map to the same numbers as the statics.
+- `NWPathMonitor` snapshots `getifaddrs`. Status is `.satisfied` when a
+  non-loopback interface has an address, otherwise `.unsatisfied`.
+  `isExpensive` / `isConstrained` are false. `supportsIPv4` / `supportsIPv6`
+  follow the filtered interface list. `gateways` is filled from
+  `/proc/net/route` when that file is readable (empty on Darwin).
+- `NWConnection` / `NWListener` speak POSIX TCP and UDP on loopback. A listener
+  on `.any` assigns an ephemeral port via `getsockname`. Tests exchange bytes
+  between a listener and a client on `127.0.0.1`.
+- `NWParameters.tcp` / `.udp` / `.tls` presets and the builder flags are stored
+  on the object. `allowLocalEndpointReuse` sets `SO_REUSEADDR`.
 - C-imported `nw_*_t` enum structs use raw values corroborated by the pinned
   `dotnet/macios` bindings (for example `nw_connection_state_ready == 3` and
   `nw_error_domain_posix == 1`).
 - `NWTXTRecord` dictionary get/set and Collection iteration are in-process
   only; they do not query mDNS.
-- `NWParameters` builder flags are stored locally on the object.
 
 ## Fail-closed boundaries
 
-Linux has no Network.framework daemon, path evaluator, or Apple TLS/QUIC stack.
-This starting point never fabricates connectivity, discovered peers, or
-application bytes.
+Linux has no Network.framework daemon, Apple TLS/QUIC stack, or mDNS responder.
 
-- `NWPathMonitor.start` delivers exactly one `unsatisfied` snapshot with
-  `unsatisfiedReason == .notAvailable` and an empty interface list.
-- `NWConnection.start` transitions `setup → preparing → failed(.posix(.EOPNOTSUPP))`
-  and reports `viability == false`. `send` / `receive` complete with that error
-  and no payload.
-- `NWListener.start` and `NWBrowser.start` fail the same way and never accept
-  or browse peers.
+- TLS parameters (`NWParameters.tls`, any `NWProtocolTLS.Options` on the stack)
+  fail with `NWError.tls(-9800)` (`errSSLProtocol`). No handshake is attempted.
+- `NWBrowser.start` fails with `NWError.posix(.EOPNOTSUPP)` and never fabricates
+  Bonjour peers.
+- `NWConnectionGroup.start` and `NWMulticastGroup` init fail closed the same
+  way. Service / opaque endpoints wait then fail with `EOPNOTSUPP`.
 - C `nw_*` functions that would otherwise hang a completion handler invoke that
   completion with a fail-closed error object, or return nil/false/zero.
 
@@ -42,6 +49,7 @@ application bytes.
   identity beyond opaque stand-ins need an Apple-oracle probe.
 - Stdlib integer protocol witnesses that the extractor attributed to Network
   are `not-applicable`.
-- Dispatch queue identity, callback timing, and exactly-once delivery on Apple
-  are unobserved; Linux invokes path/connection handlers synchronously from
-  `start` as a port choice, not as an Apple observation.
+- Dispatch queue identity and after-return timing on Apple are unobserved;
+  Linux tags the supplied queue and invokes start-time handlers via `sync`
+  (or inline when already on that queue) so a host test can observe the first
+  snapshot before `start` returns.

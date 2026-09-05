@@ -14,8 +14,24 @@ public struct StringSearchCriteriaFromStringResolverSpecificification: @unchecke
     public init() {}
 }
 
-public struct UniqueAppEntityProvider<Entity>: @unchecked Sendable {
-    public init() {}
+public struct UniqueAppEntityProvider<Entity: UniqueAppEntity>: UniqueAppEntityQuery, Sendable {
+    public typealias Unique = Entity
+    public typealias Result = [Entity]
+    public typealias DefaultValue = Entity
+    public typealias Dependency = AppDependency
+    private let provider: @Sendable () async throws -> Entity
+
+    public init() {
+        self.provider = { throw AppIntentError.Unrecoverable.entityNotFound }
+    }
+
+    public init(_ provider: @escaping @Sendable () async throws -> Entity) {
+        self.provider = provider
+    }
+
+    public func uniqueEntity() async throws -> Entity {
+        try await provider()
+    }
 }
 
 public struct NegativeAppShortcutPhrase: @unchecked Sendable {
@@ -59,10 +75,14 @@ public struct AppShortcutParameterPresentationSummaryString<Intent, Value, Param
     }
 }
 
-public struct IntentItem<Value>: @unchecked Sendable {
-    public init() {}
+public struct IntentItem<Value: _IntentValue>: @unchecked Sendable {
+    public var value: Value
+    public init(_ value: Value) { self.value = value }
     public enum Builder: Hashable, Sendable {
         case _appIntentsPlaceholder
+        public static func buildBlock(_ items: IntentItem<Value>...) -> [IntentItem<Value>] {
+            items
+        }
     }
 }
 
@@ -70,43 +90,110 @@ public struct IntResolver: @unchecked Sendable {
     public init() {}
 }
 
-public struct IntentPerson: @unchecked Sendable {
-    public init() {}
+public struct IntentPerson: @unchecked Sendable, Hashable, _IntentValue {
+    public var identifier: Identifier
+    public var name: Name
+    public var handle: Handle?
+    public var aliases: [Handle]
+    public var isMe: Bool
+    public var image: DisplayRepresentation.Image?
+
+    public static var typeDisplayRepresentation: TypeDisplayRepresentation { "Person" }
+
+    public var displayRepresentation: DisplayRepresentation {
+        switch name {
+        case .displayName(let display):
+            return DisplayRepresentation(title: display)
+        case .components, .unknown:
+            return DisplayRepresentation(title: "Person")
+        }
+    }
+
+    public init(
+        identifier: Identifier,
+        name: Name,
+        handle: Handle?,
+        aliases: [Handle] = [],
+        isMe: Bool = false,
+        image: DisplayRepresentation.Image? = nil
+    ) {
+        self.identifier = identifier
+        self.name = name
+        self.handle = handle
+        self.aliases = aliases
+        self.isMe = isMe
+        self.image = image
+    }
+
+    public init(handle: Handle) {
+        self.init(
+            identifier: .unknown,
+            name: .unknown,
+            handle: handle
+        )
+    }
+
     public enum Identifier: Hashable, Sendable {
-        case `applicationDefined(_:)`
-        case `contact(_:)`
+        case applicationDefined(String)
+        case contact(String)
         case unknown
     }
-    public enum ParameterMode: Hashable, Sendable {
+
+    public enum ParameterMode: String, Hashable, Sendable {
         case emailOrPhone
         case email
         case phone
         case contact
     }
+
     public enum Name: Hashable, Sendable {
-        case `displayName(_:)`
-        case `components(_:)`
+        case displayName(String)
+        case components(PersonNameComponents)
         case unknown
     }
-    public struct Handle: @unchecked Sendable {
-        public init() {}
+
+    public struct Handle: @unchecked Sendable, Hashable {
+        public var label: Label
+        public var value: Value
+
+        public init(_ value: Value, label: Label = .other) {
+            self.value = value
+            self.label = label
+        }
+
+        public init(phoneNumber phoneNumberString: String, label: Label = .other) {
+            self.init(.phoneNumber(phoneNumberString), label: label)
+        }
+
+        public init(emailAddress emailAddressString: String, label: Label = .other) {
+            self.init(.emailAddress(emailAddressString), label: label)
+        }
+
+        public init(applicationDefined stringValue: String, label labelString: String? = nil) {
+            self.init(
+                .applicationDefined(stringValue),
+                label: labelString.map { .custom($0) } ?? .other
+            )
+        }
+
         public enum Label: Hashable, Sendable {
             case home
             case main
             case work
             case other
             case pager
-            case `custom(_:)`
+            case custom(String)
             case iPhone
             case mobile
             case school
             case homeFax
             case workFax
         }
+
         public enum Value: Hashable, Sendable {
-            case `phoneNumber(_:)`
-            case `emailAddress(_:)`
-            case `applicationDefined(_:)`
+            case phoneNumber(String)
+            case emailAddress(String)
+            case applicationDefined(String)
         }
     }
 }
@@ -127,18 +214,78 @@ public struct EntityQuerySort<Entity>: @unchecked Sendable {
     }
 }
 
-public struct EntityIdentifier: @unchecked Sendable {
-    public init() {}
+public struct EntityIdentifier: Hashable, Sendable, CustomStringConvertible, _IntentValue {
+    public let entityTypeName: String
+    public let identifier: String
+
+    public var description: String { entityTypeName + "/" + identifier }
+
+    public init<Entity: AppEntity>(for entity: Entity) {
+        self.entityTypeName = String(describing: Entity.self)
+        self.identifier = String(describing: entity.id)
+    }
+
+    public init<Entity: AppEntity>(for entityType: Entity.Type, identifier: Entity.ID) {
+        self.entityTypeName = String(describing: entityType)
+        self.identifier = String(describing: identifier)
+    }
+
+    /// Apple's activity-identifier encoding is unobserved. Linux accepts a
+    /// non-empty string and stores it as the identifier with type `activity`.
+    public init?(activityIdentifier: String) {
+        guard !activityIdentifier.isEmpty else { return nil }
+        self.entityTypeName = "activity"
+        self.identifier = activityIdentifier
+    }
 }
 
 public struct IntentPrediction<Intent, T>: @unchecked Sendable {
     public init() {}
 }
 
-public struct IntentItemSection<Result>: @unchecked Sendable {
-    public init() {}
+public struct IntentItemSection<Result: _IntentValue>: @unchecked Sendable {
+    public var title: LocalizedStringResource?
+    public var items: [IntentItem<Result>]
+    public var description: DisplayRepresentation?
+
+    public init(items: [IntentItem<Result>]) {
+        self.title = nil
+        self.items = items
+        self.description = nil
+    }
+
+    public init(title: LocalizedStringResource, items: [IntentItem<Result>]) {
+        self.title = title
+        self.items = items
+        self.description = nil
+    }
+
+    public init(_ title: LocalizedStringResource, items: [IntentItem<Result>]) {
+        self.init(title: title, items: items)
+    }
+
+    public init(_ title: LocalizedStringResource, items: [Result]) {
+        self.init(title: title, items: items.map { IntentItem($0) })
+    }
+
+    public init(
+        _ title: LocalizedStringResource? = nil,
+        itemsBuilder: () -> [IntentItem<Result>]
+    ) {
+        self.title = title
+        self.items = itemsBuilder()
+        self.description = nil
+    }
+
     public enum Builder: Hashable, Sendable {
         case _appIntentsPlaceholder
+        public static func buildBlock() -> [IntentItemSection<Result>] { [] }
+        public static func buildBlock(_ sections: IntentItemSection<Result>...) -> [IntentItemSection<Result>] {
+            sections
+        }
+        public static func buildBlock(_ items: IntentItem<Result>...) -> [IntentItemSection<Result>] {
+            [IntentItemSection(items: items)]
+        }
     }
 }
 
@@ -165,8 +312,56 @@ public struct IntentCurrencyAmount: @unchecked Sendable {
     public init() {}
 }
 
-public struct IntentItemCollection<Result>: @unchecked Sendable {
-    public init() {}
+public struct IntentItemCollection<Result: _IntentValue>: @unchecked Sendable {
+    public var promptLabel: LocalizedStringResource?
+    public var usesIndexedCollation: Bool
+    public var sections: [IntentItemSection<Result>]
+
+    public var items: [Result.ValueType] {
+        var collected: [Result.ValueType] = []
+        for section in sections {
+            for item in section.items {
+                if let value = item.value as? Result.ValueType {
+                    collected.append(value)
+                }
+            }
+        }
+        return collected
+    }
+
+    public static var empty: IntentItemCollection<Result> {
+        IntentItemCollection(promptLabel: nil, usesIndexedCollation: false, sections: [])
+    }
+
+    public init(
+        promptLabel: LocalizedStringResource? = nil,
+        usesIndexedCollation: Bool = false,
+        sections: [IntentItemSection<Result>]
+    ) {
+        self.promptLabel = promptLabel
+        self.usesIndexedCollation = usesIndexedCollation
+        self.sections = sections
+    }
+
+    public init(
+        promptLabel: LocalizedStringResource? = nil,
+        usesIndexedCollation: Bool = false,
+        items: [Result]
+    ) {
+        self.promptLabel = promptLabel
+        self.usesIndexedCollation = usesIndexedCollation
+        self.sections = [IntentItemSection(items: items.map { IntentItem($0) })]
+    }
+
+    public init(
+        promptLabel: LocalizedStringResource? = nil,
+        usesIndexedCollation: Bool = false,
+        sectionsBuilder: () -> [IntentItemSection<Result>]
+    ) {
+        self.promptLabel = promptLabel
+        self.usesIndexedCollation = usesIndexedCollation
+        self.sections = sectionsBuilder()
+    }
 }
 
 public struct StringSearchCriteria: @unchecked Sendable {
@@ -218,8 +413,54 @@ public struct BoolFromStringResolver: @unchecked Sendable {
     public init() {}
 }
 
-public struct IntentParameterContext<Value>: @unchecked Sendable {
-    public init() {}
+public struct IntentParameterContext<Value: _IntentValue>: @unchecked Sendable {
+    public var title: LocalizedStringResource
+    public var isOptional: Bool
+
+    public init(title: LocalizedStringResource = LocalizedStringResource(""), isOptional: Bool = true) {
+        self.title = title
+        self.isOptional = isOptional
+    }
+
+    public func needsValueError(_ dialog: IntentDialog? = nil) -> AppIntentError {
+        _ = dialog
+        return .Unrecoverable.entityNotFound
+    }
+
+    public func needsDisambiguationError(
+        among itemsToDisambiguate: [Value.ValueType],
+        dialog: IntentDialog? = nil
+    ) -> AppIntentError {
+        _ = itemsToDisambiguate
+        _ = dialog
+        return .Unrecoverable.entityNotFound
+    }
+
+    /// Linux has no parameter prompt UI.
+    public func requestValue(_ dialog: IntentDialog? = nil) async throws -> Value.ValueType {
+        _ = dialog
+        throw AppIntentError.Unrecoverable.unsupportedOnDevice
+    }
+
+    public func requestConfirmation(
+        for itemToConfirm: Value.ValueType,
+        dialog: IntentDialog? = nil
+    ) async throws -> Bool {
+        _ = itemToConfirm
+        _ = dialog
+        throw AppIntentError.Unrecoverable.unsupportedOnDevice
+    }
+
+    public func requestDisambiguation(
+        among itemsToDisambiguate: [Value.ValueType],
+        dialog: IntentDialog? = nil
+    ) async throws -> Value.ValueType {
+        _ = itemsToDisambiguate
+        _ = dialog
+        throw AppIntentError.Unrecoverable.unsupportedOnDevice
+    }
+
+    public var dateKind: IntentParameter<Value>.DateKind? { nil }
 }
 
 public struct ParameterSummaryString<Intent>: @unchecked Sendable {

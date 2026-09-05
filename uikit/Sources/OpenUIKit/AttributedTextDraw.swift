@@ -122,7 +122,7 @@ extension AttributedTextLayout {
             var k = i
             while k < j {
                 let ch = t.scalars[k]
-                if ch != " " && ch != "\n" && color.alpha > 0 {
+                if ch != " " && ch.value != 0x00A0 && ch != "\n" && color.alpha > 0 {
                     UILabel.drawGlyph(ch, penX: x, baselineY: baselineY, in: canvas,
                                       font: st.font, dark: dark, color: color,
                                       glyphFont: glyphFont, inkEligible: inkEligible,

@@ -4,11 +4,19 @@ extension AVAsset {
   public func loadChapterMetadataGroups(withTitleLocale locale: Locale, containingItemsWithCommonKeys commonKeys: [AVMetadataKey] = []) async throws -> [AVTimedMetadataGroup] { return [] }
   public func unusedTrackID() -> CMPersistentTrackID { 0 }
   public func findUnusedTrackID() async throws -> CMPersistentTrackID { return 0 }
-  public var duration: CMTime { .zero }
+  public var duration: CMTime {
+    // Fail-closed: no decoder, so duration is .invalid until a host injects
+    // seconds. Measured testAVAssetLoadFailClosed on Linux: load(.duration)
+    // returns invalid; isPlayable is false; tracks/metadata are empty.
+    if let injected = loadState.injectedDuration {
+      return AVTimeMath.time(seconds: injected)
+    }
+    return .invalid
+  }
   public var preferredRate: Float { 0 }
   public var preferredVolume: Float { 0 }
   public var preferredTransform: CGAffineTransform { .identity }
-  public var minimumTimeOffsetFromLive: CMTime { .zero }
+  public var minimumTimeOffsetFromLive: CMTime { .invalid }
   public var providesPreciseDurationAndTiming: Bool { false }
   public func cancelLoading() {}
   public var referenceRestrictions: AVAssetReferenceRestrictions { AVAssetReferenceRestrictions(rawValue: 0) }
@@ -39,7 +47,7 @@ extension AVAsset {
   public var hasProtectedContent: Bool { false }
   public var canContainFragments: Bool { false }
   public var containsFragments: Bool { false }
-  public var overallDurationHint: CMTime { .zero }
+  public var overallDurationHint: CMTime { .invalid }
   public var isPlayable: Bool { false }
   public var isExportable: Bool { false }
   public var isReadable: Bool { false }

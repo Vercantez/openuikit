@@ -1,6 +1,6 @@
 import Dispatch
 import Foundation
-import AuthenticationServices
+@_spi(OpenUIKitHost) import AuthenticationServices
 
 private final class ControllerProbe: NSObject, ASAuthorizationControllerDelegate, @unchecked Sendable {
     let semaphore = DispatchSemaphore(value: 0)
@@ -96,6 +96,24 @@ func testAppleIDProviderCredentialState() {
     precondition(ASAuthorizationAppleIDProvider.CredentialState.authorized.rawValue == 1)
     precondition(ASAuthorizationAppleIDProvider.CredentialState.notFound.rawValue == 2)
     precondition(ASAuthorizationAppleIDProvider.CredentialState.transferred.rawValue == 3)
+
+    let completionBox = ASLocked<ASAuthorizationAppleIDProvider.CredentialState?>(nil)
+    let completionError = ASLocked<(any Error)?>(nil)
+    let completionSem = DispatchSemaphore(value: 0)
+    provider.getCredentialState(forUserID: "missing") { state, error in
+        completionBox.store(state)
+        completionError.store(error)
+        completionSem.signal()
+    }
+    asWait(completionSem, "getCredentialState completion missing")
+    precondition(completionBox.load() == .notFound)
+    precondition(completionError.load() == nil)
+    precondition(ASAuthorizationAppleIDProvider.CredentialState(rawValue: 2) == .notFound)
+    precondition(ASAuthorizationAppleIDProvider.CredentialState(rawValue: 99) == nil)
+    var hasher = Hasher()
+    ASAuthorizationAppleIDProvider.CredentialState.notFound.hash(into: &hasher)
+    _ = hasher.finalize()
+    _ = ASAuthorizationAppleIDProvider.CredentialState.notFound.hashValue
 }
 
 func testAuthorizationControllerFailClosed() {
@@ -114,7 +132,7 @@ func testAuthorizationControllerFailClosed() {
     asWait(probe.semaphore, "authorization controller did not complete")
     precondition(probe.afterReturn.load())
     let typed = probe.errorBox.load() as? ASAuthorizationError
-    precondition(typed?.code == .notInteractive)
+    precondition(typed?.code == .notHandled)
     controller.cancel()
     controller.performAutoFillAssistedRequests()
 }
@@ -216,4 +234,289 @@ func testAuthorizationResultAndAppleIDCredential() {
     precondition(apple.user.isEmpty)
     precondition(apple.realUserStatus == .unsupported)
     precondition(apple.userAgeRange == .unknown)
+}
+
+func testAuthorizationControllerEmptyRequestsUnknown() {
+    let controller = ASAuthorizationController(authorizationRequests: [])
+    let probe = ControllerProbe()
+    controller.delegate = probe
+    let authAnchor = AuthorizationAnchorProvider()
+    controller.presentationContextProvider = authAnchor
+    _ = controller.presentationContextProvider
+    controller.performRequests()
+    probe.returned.store(true)
+    asWait(probe.semaphore, "empty controller did not complete")
+    let typed = probe.errorBox.load() as? ASAuthorizationError
+    precondition(typed?.code == .unknown)
+}
+
+func testAuthorizationControllerTestHookDeliversCredential() {
+    let provider = ASAuthorizationAppleIDProvider()
+    let request = provider.createRequest()
+    request.requestedScopes = [.email, .fullName]
+    request.requestedOperation = .operationLogin
+    request.nonce = "n"
+    request.state = "s"
+    request.user = "lane"
+    let controller = ASAuthorizationController(authorizationRequests: [request])
+    let credential = ASAuthorizationAppleIDCredential(
+        user: "lane",
+        email: "lane@example.invalid",
+        identityToken: Data("token".utf8),
+        authorizationCode: Data("code".utf8),
+        state: "s",
+        authorizedScopes: [.email, .fullName],
+        realUserStatus: .likelyReal,
+        userAgeRange: .notChild
+    )
+    let authorization = ASAuthorization(provider: provider, credential: credential)
+    controller._testAuthorization = authorization
+
+    final class SuccessProbe: NSObject, ASAuthorizationControllerDelegate, @unchecked Sendable {
+        let semaphore = DispatchSemaphore(value: 0)
+        let box = ASLocked<ASAuthorization?>(nil)
+        func authorizationController(
+            controller: ASAuthorizationController,
+            didCompleteWithAuthorization authorization: ASAuthorization
+        ) {
+            box.store(authorization)
+            semaphore.signal()
+        }
+        func authorizationController(
+            controller: ASAuthorizationController,
+            didCompleteWithError error: Error
+        ) {
+            preconditionFailure("hook should succeed \(error)")
+        }
+    }
+    let probe = SuccessProbe()
+    controller.delegate = probe
+    controller.performRequests()
+    asWait(probe.semaphore, "hook authorization missing")
+    let delivered = probe.box.load()
+    let apple = delivered?.credential as? ASAuthorizationAppleIDCredential
+    precondition(apple?.user == "lane")
+    precondition(apple?.email == "lane@example.invalid")
+    precondition(apple?.identityToken == Data("token".utf8))
+    precondition(apple?.authorizationCode == Data("code".utf8))
+    precondition(apple?.authorizedScopes == [.email, .fullName])
+    let copy = apple?.copy() as? ASAuthorizationAppleIDCredential
+    precondition(copy?.user == "lane")
+    let archiver = NSKeyedArchiver(requiringSecureCoding: true)
+    apple?.encode(with: archiver)
+    precondition(ASAuthorizationAppleIDCredential(coder: archiver) == nil)
+}
+
+func testPlatformPublicKeyProviderValueStores() {
+    let provider = ASAuthorizationPlatformPublicKeyCredentialProvider(
+        relyingPartyIdentifier: "example.invalid"
+    )
+    precondition(provider.relyingPartyIdentifier == "example.invalid")
+    let challenge = Data("challenge".utf8)
+    let userID = Data("user".utf8)
+    let registration = provider.createCredentialRegistrationRequest(
+        challenge: challenge,
+        name: "lane",
+        userID: userID
+    )
+    precondition(registration.challenge == challenge)
+    precondition(registration.name == "lane")
+    precondition(registration.userID == userID)
+    precondition(registration.relyingPartyIdentifier == "example.invalid")
+    registration.displayName = "Lane"
+    registration.attestationPreference = .direct
+    registration.userVerificationPreference = .required
+    precondition(registration.displayName == "Lane")
+    precondition(registration.attestationPreference == .direct)
+    let styled = provider.createCredentialRegistrationRequest(
+        challenge: challenge,
+        name: "lane",
+        userID: userID,
+        requestStyle: .conditional
+    )
+    precondition(styled.requestStyle == .conditional)
+    precondition(ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest.RequestStyle.standard.rawValue == 0)
+    precondition(ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest.RequestStyle.conditional.rawValue == 1)
+
+    let assertion = provider.createCredentialAssertionRequest(challenge: challenge)
+    assertion.challenge = Data("other".utf8)
+    assertion.relyingPartyIdentifier = "example.invalid"
+    assertion.userVerificationPreference = .discouraged
+    let descriptor = ASAuthorizationPlatformPublicKeyCredentialDescriptor(credentialID: Data("cred".utf8))
+    assertion.platformAllowedCredentials = [descriptor]
+    precondition(assertion.allowedCredentials.count == 1)
+    precondition(assertion.platformAllowedCredentials.first?.credentialID == Data("cred".utf8))
+    let client = ASPublicKeyCredentialClientData(challenge: challenge, origin: "https://example.invalid")
+    _ = provider.createCredentialAssertionRequest(clientData: client)
+    _ = provider.createCredentialRegistrationRequest(clientData: client, name: "lane", userID: userID)
+    _ = provider.createCredentialRegistrationRequest(
+        clientData: client,
+        name: "lane",
+        userID: userID,
+        requestStyle: .standard
+    )
+
+    let controller = ASAuthorizationController(authorizationRequests: [registration])
+    let probe = ControllerProbe()
+    controller.delegate = probe
+    controller.performRequests()
+    probe.returned.store(true)
+    asWait(probe.semaphore, "passkey controller did not fail closed")
+    let typed = probe.errorBox.load() as? ASAuthorizationError
+    precondition(typed?.code == .notHandled)
+}
+
+func testSecurityKeyPublicKeyProvider() {
+    let provider = ASAuthorizationSecurityKeyPublicKeyCredentialProvider(
+        relyingPartyIdentifier: "example.invalid"
+    )
+    let registration = provider.createCredentialRegistrationRequest(
+        challenge: Data("c".utf8),
+        displayName: "Lane",
+        name: "lane",
+        userID: Data("u".utf8)
+    )
+    precondition(registration.displayName == "Lane")
+    registration.credentialParameters = [
+        ASAuthorizationPublicKeyCredentialParameters(algorithm: .ES256)
+    ]
+    registration.residentKeyPreference = .required
+    let descriptor = ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor(
+        credentialID: Data("cred".utf8),
+        transports: [.usb, .nfc, .bluetooth]
+    )
+    precondition(descriptor.transports.contains(.usb))
+    registration.excludedCredentials = [descriptor]
+    let assertion = provider.createCredentialAssertionRequest(challenge: Data("c".utf8))
+    assertion.appID = "appid"
+    assertion.securityKeyAllowedCredentials = [descriptor]
+    precondition(assertion.securityKeyAllowedCredentials.count == 1)
+}
+
+func testAppleIDButtonConstruction() {
+    let button = ASAuthorizationAppleIDButton(
+        authorizationButtonType: .signIn,
+        authorizationButtonStyle: .black
+    )
+    button.cornerRadius = 12
+    precondition(button.cornerRadius == 12)
+    let convenience = ASAuthorizationAppleIDButton(type: .continue, style: .whiteOutline)
+    convenience.cornerRadius = 0
+    precondition(convenience.cornerRadius == 0)
+    precondition(ASAuthorizationAppleIDButton.Style(rawValue: 2) == .black)
+    precondition(ASAuthorizationAppleIDButton.ButtonType(rawValue: 0) == .signIn)
+    var hasher = Hasher()
+    ASAuthorizationAppleIDButton.Style.white.hash(into: &hasher)
+    _ = hasher.finalize()
+    _ = ASAuthorizationAppleIDButton.Style.white.hashValue
+    _ = ASAuthorizationAppleIDButton.ButtonType.signUp.hashValue
+}
+
+func testOpenIDRequestAndAuthorizationNewtypes() {
+    let implicit = ASAuthorization.OpenIDOperation(rawValue: "ASAuthorizationOperationImplicit")
+    let labeled = ASAuthorization.OpenIDOperation("ASAuthorizationOperationLogin")
+    precondition(implicit == .operationImplicit)
+    precondition(labeled == .operationLogin)
+    var hasher = Hasher()
+    implicit.hash(into: &hasher)
+    _ = hasher.finalize()
+    _ = implicit.hashValue
+    let email = ASAuthorization.Scope(rawValue: "ASAuthorizationScopeEmail")
+    let fullName = ASAuthorization.Scope("ASAuthorizationScopeFullName")
+    precondition(email == .email)
+    precondition(fullName == .fullName)
+    _ = email.hashValue
+    var scopeHasher = Hasher()
+    fullName.hash(into: &scopeHasher)
+    _ = scopeHasher.finalize()
+    let passwordRequest = ASAuthorizationPasswordRequest(
+        provider: ASAuthorizationPasswordProvider()
+    )
+    _ = passwordRequest.provider
+    let archiver = NSKeyedArchiver(requiringSecureCoding: true)
+    precondition(ASAuthorizationRequest(coder: archiver) == nil)
+}
+
+func testAuthorizationErrorUserInfoAndHash() {
+    let typed = ASAuthorizationError(.unknown, userInfo: ["k": "v"])
+    precondition(typed.userInfo["k"] as? String == "v")
+    precondition(typed.errorUserInfo["k"] as? String == "v")
+    precondition(typed.errorCode == 1000)
+    precondition(!typed.localizedDescription.isEmpty)
+    precondition(ASAuthorizationError.Code(rawValue: 1003) == .notHandled)
+    var hasher = Hasher()
+    typed.hash(into: &hasher)
+    _ = hasher.finalize()
+    _ = typed.hashValue
+    _ = ASAuthorizationError.Code.unknown.hashValue
+    var codeHasher = Hasher()
+    ASAuthorizationError.Code.failed.hash(into: &codeHasher)
+    _ = codeHasher.finalize()
+}
+
+func testSSOCredentialValueSemantics() {
+    let credential = ASAuthorizationSingleSignOnCredential(
+        state: "st",
+        accessToken: Data("a".utf8),
+        identityToken: Data("i".utf8),
+        authorizedScopes: [.email]
+    )
+    precondition(credential.state == "st")
+    precondition(credential.accessToken == Data("a".utf8))
+    precondition(credential.identityToken == Data("i".utf8))
+    let copy = credential.copy() as? ASAuthorizationSingleSignOnCredential
+    precondition(copy?.state == "st")
+    let archiver = NSKeyedArchiver(requiringSecureCoding: true)
+    credential.encode(with: archiver)
+    precondition(ASAuthorizationSingleSignOnCredential(coder: archiver) == nil)
+}
+
+func testPublicKeyCredentialParametersAndPRF() {
+    let parameters = ASAuthorizationPublicKeyCredentialParameters(algorithm: .ES256)
+    precondition(parameters.algorithm == .ES256)
+    let copy = parameters.copy() as? ASAuthorizationPublicKeyCredentialParameters
+    precondition(copy?.algorithm.rawValue == -7)
+    let values = ASAuthorizationPublicKeyCredentialPRFAssertionInput.InputValues(
+        saltInput1: Data("s1".utf8),
+        saltInput2: Data("s2".utf8)
+    )
+    let input = ASAuthorizationPublicKeyCredentialPRFAssertionInput.inputValues(
+        values,
+        perCredentialInputValues: [Data("c".utf8): values]
+    )
+    precondition(input.inputValues?.saltInput1 == Data("s1".utf8))
+    let per = ASAuthorizationPublicKeyCredentialPRFAssertionInput.perCredentialInputValues(
+        [Data("c".utf8): .saltInput1(Data("x".utf8))]
+    )
+    precondition(per.inputValues == nil)
+    let reg = ASAuthorizationPublicKeyCredentialPRFRegistrationInput.inputValues(values)
+    precondition(reg.shouldCheckForSupport == false)
+    precondition(ASAuthorizationPublicKeyCredentialPRFRegistrationInput.checkForSupport.shouldCheckForSupport)
+    precondition(ASAuthorizationPublicKeyCredentialPRFRegistrationOutput.unsupported.isSupported == false)
+    precondition(ASAuthorizationPublicKeyCredentialPRFRegistrationOutput.supported.isSupported)
+    let blobIn = ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput.supportRequired
+    precondition(blobIn.supportRequirement == .required)
+    _ = ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput.supportPreferred
+    _ = ASAuthorizationPublicKeyCredentialLargeBlobRegistrationOutput.supported
+    _ = ASAuthorizationPublicKeyCredentialLargeBlobRegistrationOutput.unsupported
+    _ = ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput.read
+    _ = ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput.write(Data("b".utf8))
+    _ = ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput.read(data: Data("r".utf8))
+    _ = ASAuthorizationPublicKeyCredentialLargeBlobAssertionOutput.write(success: true)
+    let client = ASPublicKeyCredentialClientData(
+        challenge: Data("c".utf8),
+        origin: "https://example.invalid",
+        topOrigin: "https://top.invalid",
+        crossOrigin: .crossOrigin
+    )
+    precondition(client.origin == "https://example.invalid")
+    precondition(ASPublicKeyCredentialClientData.CrossOriginValue.sameOriginWithAncestors != .crossOrigin)
+    precondition(ASPublicKeyCredentialClientDataCrossOriginValue.notSet.rawValue == 0)
+    precondition(ASAuthorizationPublicKeyCredentialAttestationKind(rawValue: "x").rawValue == "x")
+    precondition(ASAuthorizationPublicKeyCredentialResidentKeyPreference("y").rawValue == "y")
+    precondition(ASAuthorizationPublicKeyCredentialUserVerificationPreference(rawValue: "z").rawValue == "z")
+    _ = ASCOSEAlgorithmIdentifier(rawValue: -7)
+    _ = ASCOSEEllipticCurveIdentifier(1)
+    _ = ASAuthorizationProviderAuthorizationOperation.configurationRemoved
+    _ = ASAuthorizationProviderAuthorizationOperation.directRequest
 }

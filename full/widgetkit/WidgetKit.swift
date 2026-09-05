@@ -106,6 +106,71 @@ public enum WidgetFamily: Int, CaseIterable, Sendable,
     public var debugDescription: String { description }
 }
 
+/// Home Screen / Today View families on iPhoneOS 26.1.
+/// `accessoryCorner` is in the TBD export (watchOS) but not in the iPhoneOS
+/// public graph, so it is omitted from the default supported-family list.
+/// Cited: Apple WidgetFamily + HIG Widgets; iPhoneOS 26.1 public-surface.tsv.
+public extension WidgetFamily {
+    static let portableHomeScreenFamilies: [WidgetFamily] = [
+        .systemSmall, .systemMedium, .systemLarge, .systemExtraLarge,
+        .accessoryCircular, .accessoryRectangular, .accessoryInline,
+    ]
+}
+
+/// Named device classes for the Home Screen canvas sizes Apple publishes
+/// for widgets. Accessory (Lock Screen) point sizes are not in that table;
+/// hosts must pass `TimelineProviderContext.displaySize` for those families.
+/// Cited: Apple Human Interface Guidelines, Widgets
+/// (developer.apple.com/design/human-interface-guidelines/widgets)
+/// and WidgetFamily documentation. Values are logical points.
+@_spi(OpenUIKitHost)
+public enum WidgetCanvasDevice: String, Sendable {
+    /// iPhone SE (3rd gen) class, 375-pt-wide logical canvas.
+    case iPhoneSE375
+    /// iPhone 14 Pro / 15 Pro / 16 class, 393-pt-wide logical canvas.
+    case iPhone393
+    /// iPhone 14 Pro Max / Plus class, 430-pt-wide logical canvas.
+    case iPhone430
+}
+
+@_spi(OpenUIKitHost)
+public extension WidgetFamily {
+    /// Home Screen canvas for `device`, from Apple's HIG Widgets size table.
+    /// Returns `nil` for accessory families (no HIG point table in the seed).
+    ///
+    /// HIG rows used here (points):
+    /// - SE 375: small 155×155, medium 329×155, large 329×345
+    /// - 393-pt iPhone: small 158×158, medium 338×158, large 338×354
+    /// - 430-pt iPhone: small 170×170, medium 364×170, large 364×382
+    /// Extra-large (iPad) and accessory families are not in that phone table;
+    /// this method returns nil and the host must pass `displaySize`.
+    func portableCanvasSize(for device: WidgetCanvasDevice) -> CGSize? {
+        switch self {
+        case .systemSmall:
+            switch device {
+            case .iPhoneSE375: return CGSize(width: 155, height: 155)
+            case .iPhone393: return CGSize(width: 158, height: 158)
+            case .iPhone430: return CGSize(width: 170, height: 170)
+            }
+        case .systemMedium:
+            switch device {
+            case .iPhoneSE375: return CGSize(width: 329, height: 155)
+            case .iPhone393: return CGSize(width: 338, height: 158)
+            case .iPhone430: return CGSize(width: 364, height: 170)
+            }
+        case .systemLarge:
+            switch device {
+            case .iPhoneSE375: return CGSize(width: 329, height: 345)
+            case .iPhone393: return CGSize(width: 338, height: 354)
+            case .iPhone430: return CGSize(width: 364, height: 382)
+            }
+        case .systemExtraLarge, .accessoryCircular, .accessoryRectangular,
+             .accessoryInline, .accessoryCorner:
+            return nil
+        }
+    }
+}
+
 public struct TimelineProviderContext: Sendable {
     @dynamicMemberLookup
     public struct EnvironmentVariants: Sendable {
@@ -288,6 +353,44 @@ public actor WidgetTimelineRuntime {
         await provider.snapshot(for: configuration, in: context)
     }
 
+    public func evaluate<Provider: TimelineProvider & Sendable>(
+        _ provider: Provider,
+        context: TimelineProviderContext
+    ) async throws -> WidgetTimelineEvaluation<Provider.Entry> {
+        let timeline: Timeline<Provider.Entry> = await withCheckedContinuation { continuation in
+            provider.getTimeline(in: context) { value in
+                continuation.resume(returning: value)
+            }
+        }
+        evaluationCount &+= 1
+        return try validate(timeline)
+    }
+
+    public func snapshot<Provider: TimelineProvider & Sendable>(
+        _ provider: Provider,
+        context: TimelineProviderContext
+    ) async -> Provider.Entry {
+        await withCheckedContinuation { continuation in
+            provider.getSnapshot(in: context) { entry in
+                continuation.resume(returning: entry)
+            }
+        }
+    }
+
+    public func evaluate<Provider: IntentTimelineProvider & Sendable>(
+        _ provider: Provider,
+        configuration: Provider.Intent,
+        context: TimelineProviderContext
+    ) async throws -> WidgetTimelineEvaluation<Provider.Entry> {
+        let timeline: Timeline<Provider.Entry> = await withCheckedContinuation { continuation in
+            provider.getTimeline(for: configuration, in: context) { value in
+                continuation.resume(returning: value)
+            }
+        }
+        evaluationCount &+= 1
+        return try validate(timeline)
+    }
+
     private func validate<Entry: TimelineEntry>(
         _ timeline: Timeline<Entry>
     ) throws -> WidgetTimelineEvaluation<Entry> {
@@ -387,6 +490,23 @@ private final class _WidgetCenterStorage: @unchecked Sendable {
     var configurations: [WidgetInfo] = []
     var requests: [WidgetReloadRequest] = []
     var nextSequence: UInt64 = 1
+    var recommendationInvalidations: UInt64 = 0
+
+    func reset() {
+        configurations = []
+        requests = []
+        nextSequence = 1
+        recommendationInvalidations = 0
+    }
+}
+
+/// Process-local registry. Linux has no `chronod`; every `WidgetCenter`
+/// instance, including `WidgetCenter.shared`, reads and writes this storage
+/// so a host (Focus widget guest included) can install configurations and
+/// drain reload work without claiming daemon acceptance.
+/// Cited: Apple WidgetKit `WidgetCenter` / `WidgetCenter.shared` documentation.
+private enum _WidgetCenterProcessLocal {
+    static let storage = _WidgetCenterStorage()
 }
 
 /// Linux has no `chronod`; reloads are retained as process-local host work.
@@ -404,10 +524,16 @@ public final class WidgetCenter: @unchecked Sendable {
     private let storage: _WidgetCenterStorage
 
     public init() {
-        storage = _WidgetCenterStorage()
+        storage = _WidgetCenterProcessLocal.storage
     }
 
-    public func invalidateConfigurationRecommendations() {}
+    /// Records a host-visible invalidation. Does not talk to `chronod`.
+    /// Cited: Apple `WidgetCenter.invalidateConfigurationRecommendations()`.
+    public func invalidateConfigurationRecommendations() {
+        storage.lock.lock()
+        storage.recommendationInvalidations &+= 1
+        storage.lock.unlock()
+    }
 
     public func invalidateRelevance(ofKind kind: String) {
         _ = kind
@@ -451,6 +577,24 @@ public final class WidgetCenter: @unchecked Sendable {
         return requests
     }
 
+    @_spi(OpenUIKitHost)
+    public func drainConfigurationRecommendationInvalidations() -> UInt64 {
+        storage.lock.lock()
+        let count = storage.recommendationInvalidations
+        storage.recommendationInvalidations = 0
+        storage.lock.unlock()
+        return count
+    }
+
+    /// Clears process-local configurations, reload requests, and invalidations.
+    /// Host tests call this between cases; it is not an Apple API.
+    @_spi(OpenUIKitHost)
+    public func resetProcessLocalState() {
+        storage.lock.lock()
+        storage.reset()
+        storage.lock.unlock()
+    }
+
     private func currentConfigurationsSnapshot() -> [WidgetInfo] {
         storage.lock.lock()
         let result = storage.configurations
@@ -485,7 +629,7 @@ public struct WidgetConfigurationDescriptor: Equatable, Sendable {
         kind: String,
         displayName: String? = nil,
         description: String? = nil,
-        supportedFamilies: [WidgetFamily] = WidgetFamily.allCases,
+        supportedFamilies: [WidgetFamily] = WidgetFamily.portableHomeScreenFamilies,
         contentMarginsDisabled: Bool = false,
         containerBackgroundRemovable: Bool = true
     ) {
@@ -559,6 +703,10 @@ public protocol WidgetBundle {
 }
 
 public extension WidgetBundle {
+    static func main() {}
+}
+
+public extension Widget {
     static func main() {}
 }
 
@@ -780,6 +928,10 @@ public extension WidgetConfiguration {
         configurationDisplayName(resource.key)
     }
 
+    func configurationDisplayName(_ text: Text) -> some WidgetConfiguration {
+        configurationDisplayName(String(describing: text))
+    }
+
     func configurationDisplayName<S: StringProtocol>(_ value: S) -> some WidgetConfiguration {
         configurationDisplayName(String(value))
     }
@@ -920,6 +1072,10 @@ public extension SwiftUI.WidgetConfiguration {
         configurationDisplayName(String(describing: resource))
     }
 
+    func configurationDisplayName(_ text: Text) -> some SwiftUI.WidgetConfiguration {
+        configurationDisplayName(String(describing: text))
+    }
+
     func configurationDisplayName<S: StringProtocol>(_ value: S) -> some SwiftUI.WidgetConfiguration {
         configurationDisplayName(String(value))
     }
@@ -998,6 +1154,10 @@ public extension SwiftUI.WidgetConfiguration {
 }
 
 public extension SwiftUI.WidgetBundle {
+    static func main() {}
+}
+
+public extension SwiftUI.Widget {
     static func main() {}
 }
 #endif
@@ -1094,11 +1254,14 @@ public extension EnvironmentValues {
         set { self[_WidgetMarginsEnvironmentKey.self] = newValue }
     }
 
-    var showsWidgetContainerBackground: Bool { true }
+    var showsWidgetContainerBackground: Bool {
+        get { self[_ShowsWidgetContainerBackgroundKey.self] }
+        set { self[_ShowsWidgetContainerBackgroundKey.self] = newValue }
+    }
 
     var showsWidgetLabel: Bool {
-        get { false }
-        set { _ = newValue }
+        get { self[_ShowsWidgetLabelKey.self] }
+        set { self[_ShowsWidgetLabelKey.self] = newValue }
     }
 
     var levelOfDetail: LevelOfDetail {
@@ -1111,17 +1274,36 @@ public extension EnvironmentValues {
         set { self[_ActivityFamilyEnvironmentKey.self] = newValue }
     }
 
-    var isActivityFullscreen: Bool { false }
+    var isActivityFullscreen: Bool {
+        get { self[_IsActivityFullscreenKey.self] }
+        set { self[_IsActivityFullscreenKey.self] = newValue }
+    }
 
     var isActivityUpdateReduced: Bool {
-        get { false }
-        set { _ = newValue }
+        get { self[_IsActivityUpdateReducedKey.self] }
+        set { self[_IsActivityUpdateReducedKey.self] = newValue }
     }
 
     var supportedActivityFamilies: Set<ActivityFamily> {
         get { self[_SupportedActivityFamiliesEnvironmentKey.self] }
         set { self[_SupportedActivityFamiliesEnvironmentKey.self] = newValue }
     }
+}
+
+private enum _ShowsWidgetContainerBackgroundKey: EnvironmentKey {
+    static let defaultValue = true
+}
+
+private enum _ShowsWidgetLabelKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+private enum _IsActivityFullscreenKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+private enum _IsActivityUpdateReducedKey: EnvironmentKey {
+    static let defaultValue = false
 }
 
 private enum _LevelOfDetailEnvironmentKey: EnvironmentKey {
@@ -1164,6 +1346,11 @@ public extension View {
 
     func widgetLabel(_ titleKey: LocalizedStringKey) -> some View {
         _ = titleKey
+        return self
+    }
+
+    func widgetLabel(_ title: LocalizedStringResource) -> some View {
+        _ = title
         return self
     }
 

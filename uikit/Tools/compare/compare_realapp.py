@@ -106,6 +106,8 @@ VARIANTS = {
     # gate. Anchor ours at the list scroll view so a missing PNG still
     # prints the layout note.
     "realapp_hackers_feed_light": "UIScrollView",
+    # Ledger first screen: inset-grouped UITableView under a nav bar.
+    "realapp_ledger_light": "UITableView",
 }
 
 

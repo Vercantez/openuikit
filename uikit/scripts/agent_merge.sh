@@ -268,7 +268,11 @@ cd "$ROOT"
 [[ -n "${CHECK_ONLY:-}" ]] && { echo "checks passed (CHECK_ONLY)"; exit 0; }
 
 echo "==> merging into main"
-git checkout -q main && git merge --no-ff -q -m "Merge $BR (agent fan-out; checked by scripts/agent_merge.sh)" "$BR"
+# SDK-depth framework merges (scratchpad fw_merge.sh) land on main concurrently
+# under their own lock and never touch uikit/; sync main first so the push is a
+# fast-forward, and if main still moved before the push, merge it once more.
+git checkout -q main && git fetch -q origin && git merge -q --ff-only origin/main \
+  && git merge --no-ff -q -m "Merge $BR (agent fan-out; checked by scripts/agent_merge.sh)" "$BR"
 OLD=$(grep -o 'EXPECTED_INREPO_UIKIT_TREE=[0-9a-f]*' scripts/vendor_pins.sh | cut -d= -f2); NEW=$(git rev-parse HEAD:uikit)
 sed -i "s/$OLD/$NEW/" scripts/vendor_pins.sh env/contract.json scripts/env/test_contract.py
 python3 scripts/env/test_contract.py 2>&1 | tail -1
@@ -278,5 +282,8 @@ git add scripts/vendor_pins.sh env/contract.json scripts/env/test_contract.py
 git commit -q -m "Advance the uikit vendor pin and env contract after merging $BR
 
 EXPECTED_INREPO_UIKIT_TREE $OLD -> $NEW."
-git push -q origin main && git log --oneline -3 | cat
+if ! git push -q origin main 2>/dev/null; then
+  git fetch -q origin && git merge -q --no-edit origin/main && python3 scripts/env/test_contract.py >/dev/null 2>&1 && git push -q origin main || { echo "PUSH FAILED after re-merge"; exit 7; }
+fi
+git log --oneline -3 | cat
 echo "merged and pushed; run the Linux authorities for $(git rev-parse --short HEAD)"

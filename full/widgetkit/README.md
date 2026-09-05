@@ -8,15 +8,28 @@ not an application-side source overlay.
 The portable runtime implements the parts that can be truthful without an
 Apple widget daemon:
 
-- legacy SiriKit and AppIntent timeline-provider protocols;
-- validated, executable AppIntent timeline and snapshot evaluation;
-- timeline ordering, duplicate-date, and reload-date fail-closed checks;
-- process-local `WidgetCenter` configuration state and ordered reload requests;
-- static and AppIntent configuration metadata, families, descriptions, and
-  content-margin/background policy;
-- one- through five-widget bundle construction, covering IceCubes' exact bundle;
+- legacy SiriKit and AppIntent timeline-provider protocols (placeholder,
+  getSnapshot/getTimeline, and the async AppIntent variants);
+- a host-facing `WidgetTimelineEngine` registry that runs providers and
+  picks "the entry at time T" (last `date <= T`) against the port's clock;
+- validated timeline ordering, duplicate-date, and reload-policy checks
+  (`.atEnd` / `.after(date)` / `.never`);
+- process-local `WidgetCenter.shared` registry (install configurations, ordered
+  reload requests, observable `invalidateConfigurationRecommendations`);
+- static, Intent, and AppIntent configuration metadata as an `Equatable` value
+  store (families, descriptions, content-margin/background policy);
+- WidgetFamily Home Screen canvas sizes from Apple's HIG Widgets table
+  (SE 375 / 393-pt / 430-pt device classes);
 - WidgetKit SwiftUI environment values, widget URLs, accentability, accessory
   backgrounds, and widget container-background syntax.
+
+Coverage of the 2876 iPhoneOS 26.1 public identifiers: **332 implemented**,
+2518 declared, 26 deferred (preview / unobserved constant). The first pass
+marked 2389 SwiftUI `View` lookalikes `implemented` off one inert test; those
+rows are `declared` again. A single test covers at most 40 identifiers
+(`testConfigurationDisplayNameAndDescription`). The Widget, Timeline,
+WidgetCenter, and WidgetFamily families stay nondeferred except the
+`#Preview` timeline builders, which AGENTS.md forbids prioritizing.
 
 Linux has no `chronod`, SpringBoard, extension host, or system widget gallery.
 Presentation is therefore explicitly host-driven. Reload requests are retained
@@ -56,15 +69,20 @@ are not present as modules there, so WidgetKit uses module-local lookalikes for
 those dependency-owned types. `tests/agent/WidgetKitDependencyIdentity.swift`
 imports the real Foundation module for the later clean integration build.
 
-What is real on Linux:
+What is real on Linux (and has a focused behavioural test):
 
 - timeline entries, reload policies, and fail-closed timeline validation SPI;
-- process-local `WidgetCenter` / `ControlCenter` state and ordered reload
+- process-local `WidgetCenter.shared` / `ControlCenter` state and ordered reload
   requests that never claim daemon acceptance;
 - WidgetKit-owned configuration, family, location, mounting, relevance, and
   environment-value types;
+- WidgetConfiguration modifiers as an `Equatable` descriptor value store.
+
+What is declared, not implemented:
+
 - inert SwiftUI `View` method names so WidgetKit `View`-conforming types
-  typecheck without Apple SwiftUI.
+  typecheck without Apple SwiftUI. Those identifiers are `declared` with a
+  source anchor; they are not behavioural evidence.
 
 What stays deferred:
 

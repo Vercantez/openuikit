@@ -233,6 +233,15 @@ open class ASAuthorizationController: NSObject {
 
     public let authorizationRequests: [ASAuthorizationRequest]
     public weak var delegate: (any ASAuthorizationControllerDelegate)?
+    /// Darwin is `UIWindow`-backed. Linux stores the provider; `performRequests`
+    /// never presents UI.
+    public weak var presentationContextProvider:
+        (any ASAuthorizationControllerPresentationContextProviding)?
+
+    /// Documented Linux test hook. When set, `performRequests` delivers this
+    /// authorization to the delegate instead of failing closed.
+    @_spi(OpenUIKitHost)
+    public var _testAuthorization: ASAuthorization?
 
     public init(authorizationRequests: [ASAuthorizationRequest]) {
         self.authorizationRequests = authorizationRequests
@@ -247,7 +256,26 @@ open class ASAuthorizationController: NSObject {
 
     public func performRequests(options: RequestOptions = []) {
         _ = options
-        let error = ASAuthorizationError(.notInteractive)
+        if let authorization = _testAuthorization {
+            AuthenticationServicesHostCallback.queue.async { [weak self] in
+                guard let self else { return }
+                self.delegate?.authorizationController(
+                    controller: self,
+                    didCompleteWithAuthorization: authorization
+                )
+            }
+            return
+        }
+        // Linux has no Apple ID / passkey authenticator. Empty request lists
+        // complete with `.unknown`; any real request completes with
+        // `.notHandled` unless `_testAuthorization` supplies credentials.
+        // Apple's `ASAuthorizationError.Code`: unknown = 1000, notHandled = 1003
+        // (macios / iPhoneOS 26.1). Presentation-context absence is not
+        // separately coded here: Darwin's queue/code for a missing provider
+        // remains an oracle question.
+        let code: ASAuthorizationError.Code =
+            authorizationRequests.isEmpty ? .unknown : .notHandled
+        let error = ASAuthorizationError(code)
         AuthenticationServicesHostCallback.queue.async { [weak self] in
             guard let self else { return }
             self.delegate?.authorizationController(
@@ -262,6 +290,10 @@ open class ASAuthorizationController: NSObject {
     }
 }
 
+public protocol ASAuthorizationControllerPresentationContextProviding: NSObjectProtocol {
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor
+}
+
 open class ASAuthorizationAppleIDProvider: NSObject, ASAuthorizationProvider {
     public enum CredentialState: Int, Hashable, Sendable {
         case revoked = 0
@@ -274,6 +306,19 @@ open class ASAuthorizationAppleIDProvider: NSObject, ASAuthorizationProvider {
 
     public func createRequest() -> ASAuthorizationAppleIDRequest {
         ASAuthorizationAppleIDRequest(provider: self)
+    }
+
+    /// Completion-handler form of the ObjC selector
+    /// `getCredentialStateForUserID:completion:`. Linux always reports
+    /// `.notFound` (no Apple ID daemon).
+    public func getCredentialState(
+        forUserID userID: String,
+        completion: @escaping (CredentialState, (any Error)?) -> Void
+    ) {
+        _ = userID
+        AuthenticationServicesHostCallback.queue.async {
+            completion(.notFound, nil)
+        }
     }
 
     public func credentialState(forUserID userID: String) async throws -> CredentialState {
@@ -302,7 +347,6 @@ open class ASAuthorizationSingleSignOnProvider: NSObject, ASAuthorizationProvide
     }
 }
 
-@MainActor
 open class ASAuthorizationAppleIDButton: NSObject {
     public enum Style: Int, Hashable, Sendable {
         case white = 0
@@ -317,6 +361,10 @@ open class ASAuthorizationAppleIDButton: NSObject {
         public static var `default`: ButtonType { .signIn }
     }
 
+    /// Darwin is a `UIControl`. Isolated Linux stores type/style/cornerRadius
+    /// only; there is no UIKit drawing path (`draw(_:)`, intrinsic size, or
+    /// control events). Default `cornerRadius` is 0 until an Apple layout
+    /// sample records the control's intrinsic radius.
     public var cornerRadius: CGFloat = 0
 
     public init(authorizationButtonType type: ButtonType, authorizationButtonStyle style: Style) {
@@ -346,10 +394,48 @@ open class ASAuthorizationAppleIDCredential: NSObject, ASAuthorizationCredential
 
     public override init() { super.init() }
 
+    /// Host/test construction. Darwin produces this type from Sign in with
+    /// Apple; Linux never invents tokens unless a test hook supplies them.
+    @_spi(OpenUIKitHost)
+    public init(
+        user: String,
+        email: String? = nil,
+        fullName: PersonNameComponents? = nil,
+        identityToken: Data? = nil,
+        authorizationCode: Data? = nil,
+        state: String? = nil,
+        authorizedScopes: [ASAuthorization.Scope] = [],
+        realUserStatus: ASUserDetectionStatus = .unsupported,
+        userAgeRange: ASUserAgeRange = .unknown
+    ) {
+        self.user = user
+        self.email = email
+        self.fullName = fullName
+        self.identityToken = identityToken
+        self.authorizationCode = authorizationCode
+        self.state = state
+        self.authorizedScopes = authorizedScopes
+        self.realUserStatus = realUserStatus
+        self.userAgeRange = userAgeRange
+        super.init()
+    }
+
     public required init?(coder: NSCoder) { return nil }
     public func encode(with coder: NSCoder) {}
     public static var supportsSecureCoding: Bool { true }
-    public func copy(with zone: NSZone? = nil) -> Any { self }
+    public func copy(with zone: NSZone? = nil) -> Any {
+        ASAuthorizationAppleIDCredential(
+            user: user,
+            email: email,
+            fullName: fullName,
+            identityToken: identityToken,
+            authorizationCode: authorizationCode,
+            state: state,
+            authorizedScopes: authorizedScopes,
+            realUserStatus: realUserStatus,
+            userAgeRange: userAgeRange
+        )
+    }
 }
 
 open class ASAuthorizationSingleSignOnCredential: NSObject, ASAuthorizationCredential {
@@ -359,10 +445,32 @@ open class ASAuthorizationSingleSignOnCredential: NSObject, ASAuthorizationCrede
     public private(set) var authorizedScopes: [ASAuthorization.Scope] = []
 
     public override init() { super.init() }
+
+    @_spi(OpenUIKitHost)
+    public init(
+        state: String? = nil,
+        accessToken: Data? = nil,
+        identityToken: Data? = nil,
+        authorizedScopes: [ASAuthorization.Scope] = []
+    ) {
+        self.state = state
+        self.accessToken = accessToken
+        self.identityToken = identityToken
+        self.authorizedScopes = authorizedScopes
+        super.init()
+    }
+
     public required init?(coder: NSCoder) { return nil }
     public func encode(with coder: NSCoder) {}
     public static var supportsSecureCoding: Bool { true }
-    public func copy(with zone: NSZone? = nil) -> Any { self }
+    public func copy(with zone: NSZone? = nil) -> Any {
+        ASAuthorizationSingleSignOnCredential(
+            state: state,
+            accessToken: accessToken,
+            identityToken: identityToken,
+            authorizedScopes: authorizedScopes
+        )
+    }
 }
 
 public struct ASPublicKeyCredentialClientData: Hashable, Sendable {
@@ -757,7 +865,9 @@ public struct ASAuthorizationPublicKeyCredentialPRFRegistrationOutput: Hashable,
     public static var supported: Self { Self(isSupported: true) }
 }
 
-public struct ASAuthorizationPublicKeyCredentialPRFAssertionOutput: Hashable, Sendable {}
+public struct ASAuthorizationPublicKeyCredentialPRFAssertionOutput: Hashable, Sendable {
+    public init() {}
+}
 
 public struct ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput: Hashable, Sendable {
     public enum SupportRequirement: Hashable, Sendable {
@@ -880,10 +990,16 @@ open class ASAuthorizationAccountCreationPlatformPublicKeyCredentialRequest: ASA
     public required init?(coder: NSCoder) { return nil }
 }
 
-open class ASAuthorizationAccountCreationPlatformPublicKeyCredential: NSObject {
+open class ASAuthorizationAccountCreationPlatformPublicKeyCredential: NSObject, NSCopying, NSSecureCoding {
     public var contactIdentifier: ASContactIdentifier = .email(ASEmailIdentifier(value: ""))
     public var credentialRegistration = ASAuthorizationPlatformPublicKeyCredentialRegistration()
     public var name: PersonNameComponents?
+
+    public override init() { super.init() }
+    public required init?(coder: NSCoder) { return nil }
+    public func encode(with coder: NSCoder) {}
+    public static var supportsSecureCoding: Bool { true }
+    public func copy(with zone: NSZone? = nil) -> Any { self }
 }
 
 public enum ASAuthorizationResult {

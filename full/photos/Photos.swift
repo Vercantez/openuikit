@@ -45,6 +45,15 @@ open class PHObject: NSObject, NSCopying, @unchecked Sendable {
     public func copy(with zone: NSZone? = nil) -> Any {
         self
     }
+
+    open override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? PHObject else {
+            return super.isEqual(object)
+        }
+        return localIdentifier == other.localIdentifier
+    }
+
+    open override var hash: Int { localIdentifier.hashValue }
 }
 
 public final class PHImageRequestOptions: NSObject, @unchecked Sendable {
@@ -73,6 +82,12 @@ public final class PHFetchOptions: NSObject, @unchecked Sendable {
 
     @_spi(OpenUIKitHost)
     public var hostSortsByCreationDateAscending: Bool?
+
+    /// Linux corelibs has no `NSPredicate(format:)`. Darwin tests still use
+    /// format strings over the documented keys; the isolated host uses this
+    /// closure instead (PhotosLibraryTests.testFetchOptionsPredicateSortAndHidden).
+    @_spi(OpenUIKitHost)
+    public var hostPredicateEvaluates: ((PHAsset) -> Bool)?
 
     public override init() {
         super.init()
@@ -106,9 +121,59 @@ public final class PHAsset: PHObject, @unchecked Sendable {
     public let sourceType: PHAssetSourceType
     public let playbackStyle: PlaybackStyle
     public let adjustmentFormatIdentifier: String?
+    public let originalFilename: String
+    public let uniformTypeIdentifier: String
 
     let portableData: Data?
     let portableImage: UIImage?
+
+    init(
+        localIdentifier: String,
+        mediaType: PHAssetMediaType,
+        creationDate: Date?,
+        addedDate: Date,
+        modificationDate: Date?,
+        duration: TimeInterval,
+        pixelWidth: Int,
+        pixelHeight: Int,
+        isFavorite: Bool,
+        isHidden: Bool,
+        hasAdjustments: Bool,
+        representsBurst: Bool,
+        burstIdentifier: String?,
+        burstSelectionTypes: PHAssetBurstSelectionType,
+        mediaSubtypes: PHAssetMediaSubtype,
+        sourceType: PHAssetSourceType,
+        playbackStyle: PlaybackStyle,
+        adjustmentFormatIdentifier: String?,
+        data: Data?,
+        image: UIImage?,
+        originalFilename: String,
+        uniformTypeIdentifier: String
+    ) {
+        self.mediaType = mediaType
+        self.creationDate = creationDate
+        self.addedDate = addedDate
+        self.modificationDate = modificationDate
+        self.duration = duration
+        self.pixelWidth = pixelWidth
+        self.pixelHeight = pixelHeight
+        self.isFavorite = isFavorite
+        self.isHidden = isHidden
+        self.hasAdjustments = hasAdjustments
+        self.representsBurst = representsBurst
+        self.burstIdentifier = burstIdentifier
+        self.burstSelectionTypes = burstSelectionTypes
+        self.mediaSubtypes = mediaSubtypes
+        self.sourceType = sourceType
+        self.playbackStyle = playbackStyle
+        self.adjustmentFormatIdentifier = adjustmentFormatIdentifier
+        self.originalFilename = originalFilename
+        self.uniformTypeIdentifier = uniformTypeIdentifier
+        portableData = data
+        portableImage = image
+        super.init(localIdentifier: localIdentifier)
+    }
 
     @_spi(OpenUIKitHost)
     public init(
@@ -118,13 +183,14 @@ public final class PHAsset: PHObject, @unchecked Sendable {
         data: Data? = nil,
         image: UIImage? = nil
     ) {
+        let size = data.flatMap(photosImagePixelSize) ?? (0, 0)
         self.mediaType = mediaType
         self.creationDate = creationDate
         addedDate = creationDate ?? Date.distantPast
         modificationDate = creationDate
         duration = 0
-        pixelWidth = 0
-        pixelHeight = 0
+        pixelWidth = size.0
+        pixelHeight = size.1
         isFavorite = false
         isHidden = false
         hasAdjustments = false
@@ -133,15 +199,10 @@ public final class PHAsset: PHObject, @unchecked Sendable {
         burstSelectionTypes = []
         mediaSubtypes = []
         sourceType = .typeUserLibrary
-        switch mediaType {
-        case .video:
-            playbackStyle = .video
-        case .image:
-            playbackStyle = .image
-        default:
-            playbackStyle = .unsupported
-        }
+        playbackStyle = photosPlaybackStyle(for: mediaType)
         adjustmentFormatIdentifier = nil
+        originalFilename = "\(localIdentifier).bin"
+        uniformTypeIdentifier = "public.data"
         portableData = data
         portableImage = image
         super.init(localIdentifier: localIdentifier)
@@ -191,6 +252,24 @@ public final class PHAsset: PHObject, @unchecked Sendable {
         in assetCollection: PHAssetCollection,
         options: PHFetchOptions?
     ) -> PHFetchResult<PHAsset> {
+        if assetCollection.assetCollectionType == .smartAlbum {
+            return photosFetchAssets(
+                matching: {
+                    photosAssetMatchesSmartAlbum(
+                        $0,
+                        subtype: assetCollection.assetCollectionSubtype
+                    )
+                },
+                options: options
+            )
+        }
+        if let live = PhotosLibraryStore.album(identifier: assetCollection.localIdentifier) {
+            let identifiers = Set(live.transientAssetIdentifiers)
+            return photosFetchAssets(
+                matching: { identifiers.contains($0.localIdentifier) },
+                options: options
+            )
+        }
         let identifiers = Set(assetCollection.transientAssetIdentifiers)
         if identifiers.isEmpty {
             return photosFetchAssets(matching: { _ in false }, options: options)
@@ -211,7 +290,7 @@ public final class PHAsset: PHObject, @unchecked Sendable {
 
     public func canPerform(_ editOperation: PHAssetEditOperation) -> Bool {
         _ = editOperation
-        return false
+        return photosReadAccessGranted()
     }
 
     public func cancelContentEditingInputRequest(_ requestID: PHContentEditingInputRequestID) {
@@ -231,9 +310,11 @@ public final class PHAsset: PHObject, @unchecked Sendable {
 
 public final class PHFetchResult<ObjectType: AnyObject>: NSObject, @unchecked Sendable {
     let objects: [ObjectType]
+    let refetch: (() -> [ObjectType])?
 
-    init(_ objects: [ObjectType]) {
+    init(_ objects: [ObjectType], refetch: (() -> [ObjectType])? = nil) {
         self.objects = objects
+        self.refetch = refetch
         super.init()
     }
 
@@ -257,18 +338,35 @@ public final class PHFetchResult<ObjectType: AnyObject>: NSObject, @unchecked Se
     }
 
     public func contains(_ anObject: ObjectType) -> Bool {
-        objects.contains { $0 === anObject }
+        if let object = anObject as? PHObject {
+            return objects.contains { ($0 as? PHObject)?.localIdentifier == object.localIdentifier }
+        }
+        return objects.contains { $0 === anObject }
     }
 
     public func index(of anObject: ObjectType) -> Int {
-        objects.firstIndex { $0 === anObject } ?? NSNotFound
+        if let object = anObject as? PHObject {
+            return objects.firstIndex {
+                ($0 as? PHObject)?.localIdentifier == object.localIdentifier
+            } ?? NSNotFound
+        }
+        return objects.firstIndex { $0 === anObject } ?? NSNotFound
     }
 
     public func index(of anObject: ObjectType, in range: NSRange) -> Int {
         let start = max(range.location, 0)
         let end = min(range.location + range.length, objects.count)
         guard start < end else { return NSNotFound }
-        if let index = objects[start..<end].firstIndex(where: { $0 === anObject }) {
+        let slice = objects[start..<end]
+        if let object = anObject as? PHObject {
+            if let index = slice.firstIndex(where: {
+                ($0 as? PHObject)?.localIdentifier == object.localIdentifier
+            }) {
+                return index
+            }
+            return NSNotFound
+        }
+        if let index = slice.firstIndex(where: { $0 === anObject }) {
             return index
         }
         return NSNotFound
@@ -318,110 +416,80 @@ public enum PHPhotoLibraryPortable {
     public typealias AuthorizationHandler =
         @Sendable (PHAccessLevel) async -> PHAuthorizationStatus
 
-    private static let lock = NSLock()
-    nonisolated(unsafe) private static var statuses: [PHAccessLevel:
-        PHAuthorizationStatus] = [:]
-    nonisolated(unsafe) private static var authorizationHandler:
-        AuthorizationHandler?
-    nonisolated(unsafe) private static var storedAssets: [PHAsset] = []
-    nonisolated(unsafe) private static var storedCollections: [PHAssetCollection] = []
-    nonisolated(unsafe) private static var changeObservers: [ObjectIdentifier:
-        PHPhotoLibraryChangeObserver] = [:]
-    nonisolated(unsafe) private static var availabilityObservers: [ObjectIdentifier:
-        PHPhotoLibraryAvailabilityObserver] = [:]
-    nonisolated(unsafe) private static var uploadJobExtensionEnabled = false
-
     static func status(for level: PHAccessLevel) -> PHAuthorizationStatus {
-        lock.withLock { statuses[level] ?? .notDetermined }
+        PhotosLibraryStore.status(for: level)
     }
 
     static func store(
         _ status: PHAuthorizationStatus,
         for level: PHAccessLevel
     ) {
-        lock.withLock { statuses[level] = status }
+        PhotosLibraryStore.store(status, for: level)
     }
 
     static func handler() -> AuthorizationHandler? {
-        lock.withLock { authorizationHandler }
+        PhotosLibraryStore.handler()
     }
 
     static func assets() -> [PHAsset] {
-        lock.withLock { storedAssets }
+        PhotosLibraryStore.allAssets()
     }
 
     static func collections() -> [PHAssetCollection] {
-        lock.withLock { storedCollections }
+        PhotosLibraryStore.userAlbums()
     }
 
     static func isUploadJobExtensionEnabled() -> Bool {
-        lock.withLock { uploadJobExtensionEnabled }
+        PhotosLibraryStore.isUploadJobExtensionEnabled()
     }
 
     static func setUploadJobExtensionEnabled(_ enable: Bool) {
-        lock.withLock { uploadJobExtensionEnabled = enable }
+        PhotosLibraryStore.setUploadJobExtensionEnabled(enable)
     }
 
     static func registerChangeObserver(_ observer: PHPhotoLibraryChangeObserver) {
-        lock.withLock {
-            changeObservers[ObjectIdentifier(observer)] = observer
-        }
+        PhotosLibraryStore.registerChangeObserver(observer)
     }
 
     static func unregisterChangeObserver(_ observer: PHPhotoLibraryChangeObserver) {
-        lock.withLock {
-            _ = changeObservers.removeValue(forKey: ObjectIdentifier(observer))
-        }
+        PhotosLibraryStore.unregisterChangeObserver(observer)
     }
 
     static func registerAvailabilityObserver(_ observer: PHPhotoLibraryAvailabilityObserver) {
-        lock.withLock {
-            availabilityObservers[ObjectIdentifier(observer)] = observer
-        }
+        PhotosLibraryStore.registerAvailabilityObserver(observer)
     }
 
     static func unregisterAvailabilityObserver(_ observer: PHPhotoLibraryAvailabilityObserver) {
-        lock.withLock {
-            _ = availabilityObservers.removeValue(forKey: ObjectIdentifier(observer))
-        }
+        PhotosLibraryStore.unregisterAvailabilityObserver(observer)
     }
 
+    /// Documented test hook: `requestAuthorization(for:)` delivers this
+    /// handler's status instead of fail-closing to `.denied`.
     @_spi(OpenUIKitHost)
     public static func _installAuthorizationHandler(
         _ handler: AuthorizationHandler?
     ) {
-        lock.withLock { authorizationHandler = handler }
+        PhotosLibraryStore.setHandler(handler)
     }
 
     @_spi(OpenUIKitHost)
     public static func _installAssets(_ assets: [PHAsset]) {
-        lock.withLock { storedAssets = assets }
+        PhotosLibraryStore.installAssets(assets)
     }
 
     @_spi(OpenUIKitHost)
     public static func _installCollections(_ collections: [PHAssetCollection]) {
-        lock.withLock { storedCollections = collections }
+        PhotosLibraryStore.installCollections(collections)
     }
 
     @_spi(OpenUIKitHost)
     public static func _reset() {
-        lock.withLock {
-            statuses = [:]
-            authorizationHandler = nil
-            storedAssets = []
-            storedCollections = []
-            changeObservers = [:]
-            availabilityObservers = [:]
-            uploadJobExtensionEnabled = false
-        }
+        PhotosLibraryStore.reset()
     }
 }
 
 public final class PHPhotoLibrary: NSObject, @unchecked Sendable {
     private static let sharedLibrary = PHPhotoLibrary()
-    private static let callbackQueue = DispatchQueue(
-        label: "org.openuikit.Photos.host-callback"
-    )
 
     private override init() {
         super.init()
@@ -447,11 +515,13 @@ public final class PHPhotoLibrary: NSObject, @unchecked Sendable {
         requestAuthorization(for: .readWrite, handler: handler)
     }
 
+    /// Photos documents an arbitrary serial queue for the handler. This port
+    /// uses `org.openuikit.Photos.host-callback`.
     public static func requestAuthorization(
         for accessLevel: PHAccessLevel,
         handler: @escaping (PHAuthorizationStatus) -> Void
     ) {
-        callbackQueue.async {
+        PhotosLibraryStore.callbackQueue.async {
             Task {
                 let status = await requestAuthorization(for: accessLevel)
                 handler(status)
@@ -462,6 +532,10 @@ public final class PHPhotoLibrary: NSObject, @unchecked Sendable {
     public static func requestAuthorization(
         for accessLevel: PHAccessLevel
     ) async -> PHAuthorizationStatus {
+        let existing = authorizationStatus(for: accessLevel)
+        if existing != .notDetermined {
+            return existing
+        }
         let status = await PHPhotoLibraryPortable.handler()?(accessLevel)
             ?? .denied
         PHPhotoLibraryPortable.store(status, for: accessLevel)
@@ -475,7 +549,7 @@ public final class PHPhotoLibrary: NSObject, @unchecked Sendable {
     }
 
     public var currentChangeToken: PHPersistentChangeToken {
-        PHPersistentChangeToken.hostToken
+        PhotosLibraryStore.currentChangeToken()
     }
 
     public func register(_ observer: any PHPhotoLibraryChangeObserver) {
@@ -502,20 +576,42 @@ public final class PHPhotoLibrary: NSObject, @unchecked Sendable {
     }
 
     public func performChangesAndWait(_ changeBlock: @escaping () -> Void) throws {
-        _ = changeBlock
-        throw PHPhotosError(.changeNotSupported)
+        guard photosWriteAccessGranted() else {
+            throw PHPhotosError(.accessUserDenied)
+        }
+        PhotosChangeSession.begin(allowsDelete: photosReadAccessGranted())
+        changeBlock()
+        let operations = PhotosChangeSession.take()
+        if operations.contains(where: { operation in
+            if case .deleteAssets = operation { return true }
+            if case .deleteAlbums = operation { return true }
+            if case .deleteLists = operation { return true }
+            return false
+        }), !photosReadAccessGranted() {
+            throw PHPhotosError(.accessUserDenied)
+        }
+        let applied = try PhotosLibraryStore.apply(operations)
+        photosNotifyObservers(applied)
     }
 
     public func performChanges(_ changeBlock: @escaping () -> Void) async throws {
-        _ = changeBlock
-        throw PHPhotosError(.changeNotSupported)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            PhotosLibraryStore.callbackQueue.async {
+                do {
+                    try self.performChangesAndWait(changeBlock)
+                    continuation.resume()
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
 
     public func fetchPersistentChanges(
         since token: PHPersistentChangeToken
     ) throws -> PHPersistentChangeFetchResult {
-        _ = token
-        throw PHPhotosError(.persistentChangeDetailsUnavailable)
+        let changes = try PhotosLibraryStore.persistentChanges(since: token)
+        return PHPersistentChangeFetchResult(changes: changes)
     }
 
     public func cloudIdentifierMappings(
@@ -570,9 +666,36 @@ open class PHImageManager: NSObject, @unchecked Sendable {
             [AnyHashable: Any]?
         ) -> Void
     ) -> PHImageRequestID {
-        _ = options
         let requestID = claimRequestID()
-        resultHandler(asset.portableData, nil, .up, nil)
+        deliver(options: options) {
+            if self.isCancelled(requestID) {
+                resultHandler(
+                    nil,
+                    nil,
+                    .up,
+                    [
+                        PHImageCancelledKey: true,
+                        PHImageResultRequestIDKey: requestID,
+                    ]
+                )
+                return
+            }
+            if let denied = self.networkDeniedInfo(options: options, requestID: requestID) {
+                resultHandler(nil, nil, .up, denied)
+                return
+            }
+            let data = asset.portableData
+                ?? PhotosLibraryStore.resourceData(forAssetIdentifier: asset.localIdentifier)
+            var info: [AnyHashable: Any] = [
+                PHImageResultRequestIDKey: requestID,
+                PHImageResultIsDegradedKey: false,
+                PHImageResultIsInCloudKey: false,
+            ]
+            if data == nil {
+                info[PHImageErrorKey] = PHPhotosError(.missingResource)
+            }
+            resultHandler(data, asset.uniformTypeIdentifier, .up, info)
+        }
         return requestID
     }
 
@@ -586,9 +709,43 @@ open class PHImageManager: NSObject, @unchecked Sendable {
     ) -> PHImageRequestID {
         _ = targetSize
         _ = contentMode
-        _ = options
         let requestID = claimRequestID()
-        resultHandler(asset.portableImage, nil)
+        deliver(options: options) {
+            if self.isCancelled(requestID) {
+                resultHandler(
+                    nil,
+                    [
+                        PHImageCancelledKey: true,
+                        PHImageResultRequestIDKey: requestID,
+                    ]
+                )
+                return
+            }
+            if let denied = self.networkDeniedInfo(options: options, requestID: requestID) {
+                resultHandler(nil, denied)
+                return
+            }
+            var info: [AnyHashable: Any] = [
+                PHImageResultRequestIDKey: requestID,
+                PHImageResultIsDegradedKey: false,
+                PHImageResultIsInCloudKey: false,
+            ]
+            if let image = asset.portableImage {
+                resultHandler(image, info)
+                return
+            }
+            #if canImport(UIKit)
+            if let data = asset.portableData
+                ?? PhotosLibraryStore.resourceData(forAssetIdentifier: asset.localIdentifier),
+                let image = UIImage(data: data)
+            {
+                resultHandler(image, info)
+                return
+            }
+            #endif
+            info[PHImageErrorKey] = PHPhotosError(.requestNotSupportedForAsset)
+            resultHandler(nil, info)
+        }
         return requestID
     }
 
@@ -605,8 +762,32 @@ open class PHImageManager: NSObject, @unchecked Sendable {
         _ = contentMode
         _ = options
         let requestID = claimRequestID()
-        resultHandler(nil, [PHImageErrorKey: PHPhotosError(.requestNotSupportedForAsset)])
+        resultHandler(
+            nil,
+            [
+                PHLivePhotoInfoErrorKey: PHPhotosError(.requestNotSupportedForAsset),
+                PHImageErrorKey: PHPhotosError(.requestNotSupportedForAsset),
+                PHImageResultRequestIDKey: requestID,
+            ]
+        )
         return requestID
+    }
+
+    private func networkDeniedInfo(
+        options: PHImageRequestOptions?,
+        requestID: PHImageRequestID
+    ) -> [AnyHashable: Any]? {
+        _ = options
+        _ = requestID
+        return nil
+    }
+
+    /// Ice Cubes / PhotosHostRuntime deliver inline even when
+    /// `isSynchronous == false`. Darwin queue identity is unobserved
+    /// (`oracle-questions.tsv`).
+    private func deliver(options: PHImageRequestOptions?, body: @escaping () -> Void) {
+        _ = options?.isSynchronous
+        body()
     }
 
     func claimRequestID() -> PHImageRequestID {
@@ -617,40 +798,3 @@ open class PHImageManager: NSObject, @unchecked Sendable {
     }
 }
 
-func photosReadAccessGranted() -> Bool {
-    let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-    return status == .authorized || status == .limited
-}
-
-func photosFetchAssets(
-    matching predicate: (PHAsset) -> Bool,
-    options: PHFetchOptions?
-) -> PHFetchResult<PHAsset> {
-    guard photosReadAccessGranted() else {
-        return PHFetchResult([])
-    }
-    var assets = PHPhotoLibraryPortable.assets().filter(predicate)
-    #if os(Linux)
-    if let ascending = options?.hostSortsByCreationDateAscending {
-        assets.sort {
-            let left = $0.creationDate ?? .distantPast
-            let right = $1.creationDate ?? .distantPast
-            return ascending ? left < right : left > right
-        }
-    }
-    #else
-    if let descriptor = options?.sortDescriptors?.first,
-        descriptor.key == "creationDate"
-    {
-        assets.sort {
-            let left = $0.creationDate ?? .distantPast
-            let right = $1.creationDate ?? .distantPast
-            return descriptor.ascending ? left < right : left > right
-        }
-    }
-    #endif
-    if let limit = options?.fetchLimit, limit > 0, assets.count > limit {
-        assets.removeLast(assets.count - limit)
-    }
-    return PHFetchResult(assets)
-}
