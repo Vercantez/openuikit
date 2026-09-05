@@ -162,3 +162,6 @@ open class ARSKView: NSObject, ARSessionProviding {
         session.currentFrame?.hitTest(point, types: types) ?? []
     }
 }
+
+/// Apple's ARKit overlays these bits on `SCNDebugOptions`.
+public typealias ARSCNDebugOptions = SCNDebugOptions

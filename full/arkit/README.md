@@ -41,9 +41,19 @@ bash tests/acceptance/test_host.sh
 
 ## Depth pass 2026-09
 
-Wave-2 starting point was 526 implemented / 267 declared / 82 deferred. This depth pass finishes the session/configuration/anchor model with a documented simulated frame source and compiles the previously deferred UIKit/SceneKit/Metal/CoreLocation/CoreVideo signatures against host stand-ins.
+Wave-2 starting point was 526 implemented / 267 declared / 82 deferred. The first depth commit finished the session/configuration/anchor model with a documented simulated frame source, but merge review refused **874** `implemented` rows because evidence was a file path (`tests/agent/ARKitRuntime.swift`) rather than `test:full/arkit/tests/agent/<File>Tests.swift#testName`.
 
-Coverage after this pass: **874 implemented / 1 declared / 0 deferred** (875 IDs). The remaining declared row is `ARGeometrySource`'s overlapping `UInt8` subscript, which Swift cannot overload beside the `float3` subscript.
+This repair split the runtime probe into 63 top-level synchronous `func test*()` functions across focused `*Tests.swift` files. Coverage is **874 implemented / 1 declared / 0 deferred** (875 IDs). The remaining declared row is `ARGeometrySource`'s overlapping `UInt8` subscript (`source:full/arkit/ARGeometry.swift#ARGeometrySource`).
+
+Top-5 `implemented` evidence citations:
+
+1. `testBlendShapeLocationValues` — 57 (table-driven C blend-shape constants)
+2. `testARErrorCodesAndDomain` — 48 (table-driven `ARError.Code` / domain constants)
+3. `testOtherConfigurationCopies` — 42 (non-world configuration property/copy family)
+4. `testGeoTrackingEnumCases` — 32 (geo state/accuracy/reason enums)
+5. `testSpecializedAnchors` — 30 (image/object/face/geo/mesh/probe/app-clip anchors)
+
+No non-constant test is cited by more than 42 of 608 remaining implemented rows (6.9%, under the 40% bulk-relabel cap). `ARKitRuntime.swift` concatenates the suite so the sealed schema-v1 gate still prints `ARKIT_AGENT_RUNTIME_OK`.
 
 Exact gate markers from `bash full/arkit/tests/acceptance/test_host.sh` on this Linux host (Swift 6.2.4):
 
