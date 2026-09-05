@@ -78,7 +78,11 @@ forbidden:
   `UIEditMenuInteractionAnimating`, `UIKeyModifierFlags`
 
 SwiftUI `_WebKit_SwiftUI` / `View` overlay identifiers are `not-applicable`
-(owned by the SwiftUI lane), not deferred.
+(owned by the SwiftUI lane). The synthesized stdlib witness
+`Equatable.!=` on `WebView.ActivatedElementInfo`
+(`s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15_WebKit_SwiftUI0A4ViewV20ActivatedElementInfoV`)
+is `deferred`, not `not-applicable`: its precise ID is not a SwiftUI
+overlay re-export.
 
 ## Depth pass 2026-09 (wave 8)
 
@@ -87,13 +91,19 @@ The first pass kept its navigation state machine, content-rule validator,
 cookie store, and fail-closed evaluator; this pass extends them and splits
 evidence.
 
-Coverage before: implemented 638 / declared 756 / deferred 839 /
-unavailable 0 / not-applicable 0 (2233 precise IDs).
+Coverage before this depth pass: implemented 638 / declared 756 /
+deferred 839 / unavailable 0 / not-applicable 0 (2233 precise IDs).
 
-Coverage after: implemented 1133 / declared 261 / deferred 25 /
-unavailable 0 / not-applicable 814.
+Refused ledger at `c3688351`: implemented 1133 / declared 261 /
+deferred 25 / unavailable 0 / not-applicable 814. FW_MERGE refused one
+`not-applicable` row whose precise ID is synthesized `Equatable.!=` on
+SwiftUI `WebView.ActivatedElementInfo`, not a SwiftUI overlay re-export.
 
-Top-5 `implemented` evidence distribution:
+Coverage after this repair: implemented 1133 / declared 261 /
+deferred 26 / unavailable 0 / not-applicable 813.
+
+Top-5 `implemented` evidence distribution (1133 implemented rows; no
+non-member test exceeds 40%):
 
 1. `testOptionSetRawValues` (155; option-set / enum members share one
    table-driven value test)
