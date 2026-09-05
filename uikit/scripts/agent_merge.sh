@@ -89,7 +89,12 @@ echo "==> conformance apps (SKIP_CAPTURE re-render against the last round's gold
 for app in Sources/ConformanceApps/*(/:t); do
   [[ -d /tmp/hc-conformance-$app/golden ]] || { echo "   $app: no round capture, skipped"; continue; }
   rm -rf /tmp/agent_merge_conf-$app; cp -r /tmp/hc-conformance-$app /tmp/agent_merge_conf-$app
-  SKIP_CAPTURE=1 zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app $app > /tmp/agent_merge_conf-$app.log 2>&1 \
+  # A branch that changes the PROBE (how a frame is named, what is dumped)
+  # invalidates the round's goldens for that app: RECAPTURE_APPS="Pager Tabs"
+  # captures them again with the merged tree's probe before grading.
+  skip=1
+  for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" ]] && { skip=""; rm -rf /tmp/agent_merge_conf-$app/golden; echo "   $app: recapturing goldens with the merged probe"; }; done
+  SKIP_CAPTURE=$skip zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app $app > /tmp/agent_merge_conf-$app.log 2>&1 \
     || { echo "CONFORMANCE FLOW FAILED: $app (see /tmp/agent_merge_conf-$app.log)"; exit 9; }
 done
 python3 - <<'PY' || exit 9
