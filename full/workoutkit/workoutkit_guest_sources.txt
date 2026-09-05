@@ -1,0 +1,10 @@
+full/workoutkit/HealthKitCompatibility.swift
+full/workoutkit/StateError.swift
+full/workoutkit/WorkoutAlerts.swift
+full/workoutkit/WorkoutComposition.swift
+full/workoutkit/WorkoutGoal.swift
+full/workoutkit/WorkoutKit.swift
+full/workoutkit/WorkoutPlan.swift
+full/workoutkit/WorkoutScheduler.swift
+full/workoutkit/WorkoutSupport.swift
+full/workoutkit/WorkoutTypes.swift
