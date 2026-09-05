@@ -171,6 +171,12 @@ validate_bundle() {
 
 [ "$OUT" = "$W/build/focus-onboarding-guest${FULL_OUT_SUFFIX}" ] \
     || die "derived output path invariant changed"
+# Same in-repo override as build_full / widget guest: agent branches that
+# edit uikit/ are attested at HEAD:uikit. x86 cycle 96ceeded failed here
+# (EXPECTED_INREPO_UIKIT_TREE vs HEAD:uikit) with onboarding exit 2.
+if vendor_is_inrepo "$W" uikit "$UIKIT"; then
+    EXPECTED_UIKIT_TREE=$(git -C "$W" rev-parse --verify HEAD:uikit)
+fi
 assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
 assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
 if vendor_is_inrepo "$W" uikit "$UIKIT"; then

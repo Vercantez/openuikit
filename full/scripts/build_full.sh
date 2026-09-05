@@ -1229,9 +1229,12 @@ done
     -I "$OUT" -I "$APPMODS" \
     -module-name Foundation -emit-module \
     -emit-module-path "$APPINC/Foundation.swiftmodule" \
-    -emit-object -o "$OUT/foundation.o" \
+    -emit-object -o "$OUT/foundation_guest.o" \
     "${FOUNDATION_GUEST_SOURCES[@]}"
-llvm-nm-18 -u -j "$OUT/foundation.o" | LC_ALL=C sort -u \
+# Keep $OUT/foundation.o as the DTS identity object. Reminder-scene object-links
+# it (build_and_run_reminder_scene_guest.sh) and cannot see OpenCombine /
+# OpenURLTransport (x86 cycle 96ceeded: undefined Demand / _openui_url_transport_v1_*).
+llvm-nm-18 -u -j "$OUT/foundation_guest.o" | LC_ALL=C sort -u \
     > "$OUT/foundation-undefined-symbols.txt"
 foundation_string_processing_undefineds=$(awk \
     'index($0, "17_StringProcessing") { count++ } END { print count + 0 }' \
@@ -1452,7 +1455,7 @@ APP_LINK_OBJECTS=(
     "$OUT/libFoundationInternationalization.dylib" \
     "$OUT/lib_FoundationICU.dylib" \
     -o "$OUT/render_full" \
-    "$OUT/render_full.o" "$OUT/realappprobe.o" "$OUT/foundation.o" \
+    "$OUT/render_full.o" "$OUT/realappprobe.o" "$OUT/foundation_guest.o" \
     "${APP_LINK_OBJECTS[@]}" \
     "${COMMON_LINK_OBJECTS[@]}"
 

@@ -179,4 +179,12 @@ Attempt 12: `8e2b15da82cb88249d4b82a541be1d7caa84e352`.
 `realapp_focus_settings_light` and `realapp_hackers_feed_light`.
 objc duplicate-class warnings for FoundationEssentials plist types (not
 fatal). `docker swift:6.2-noble` `swift build -c release --product openrender`
-green (209.47s). x86 cycle next.
+green (209.47s).
+
+x86 cycle 1: `96ceedede0e70f2e79134fe77f0a945abd7f175d`.
+`RUNG_SCOREBOARD a=PASS b=CANNOT/onboarding guest failed c=CANNOT/scene guest failed`.
+Reminder object-links `$OUT/foundation.o` without OpenCombine / URL /
+relative-time (ld undefined Demand / `_openui_url_transport_v1_*`). Keep
+the DTS shim as `foundation.o`, facade as `foundation_guest.o`. Onboarding
+asserts `EXPECTED_INREPO_UIKIT_TREE` (exit 2); same HEAD:uikit override as
+the widget guest.
