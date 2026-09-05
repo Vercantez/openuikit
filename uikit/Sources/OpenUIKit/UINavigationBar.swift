@@ -695,6 +695,11 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         updateSearchFromScroll()
         setNeedsLayout()
         _controller?.updateContainerLayout()
+        // Pad: the floating tab bar hides to y = −SA.top while search is
+        // active (Tabs-ipad t4000). Phone keeps the bottom bar.
+        if UITabBar.isPad {
+            _controller?.tabBarController?.layoutTabBarFrame()
+        }
     }
 
     /// Hide-on-scroll for `hidesSearchBarWhenScrolling` (UIKit default true).
@@ -719,8 +724,11 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     /// Extra height the navigation controller should add to the bar frame
     /// for an active inline search. Inactive search is 0 pt (Tabs t200).
+    /// Pad: MEASURED Tabs-ipad t4000, the bar stays **54** (search is a
+    /// trailing 240/280 × 44 field in the 44 pt top chrome, not +6).
     var searchOverlayHeight: CGFloat {
         guard OpenUIKitRuntime.systemFontCut == .iOS else { return 0 }
+        if UINavigationBar.isPad { return 0 }
         guard let sc = topItem?.searchController, sc.isActive else { return 0 }
         return UINavigationBar.searchActiveExtraHeight
     }
@@ -783,18 +791,44 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     ///   * active: search fills the 60 pt bar; field `[16, 18, 288, 44]`
     ///     (bar-local y 8); dismiss `[315, 18, 44, 44]` r=17 (not "Cancel").
     func layoutSearchBar() {
-        guard let bar = hostedSearchBar else { return }
+        guard let bar = hostedSearchBar else {
+            titleLabel.isHidden = false
+            return
+        }
         let active = topItem?.searchController?.isActive == true
             && OpenUIKitRuntime.systemFontCut == .iOS
         bar._navInlineActive = active
+        if UINavigationBar.isPad {
+            // MEASURED Tabs-ipad t200 / t4000, iPad (A16) 820×1180 @2x /
+            // iOS 26.1: rest UISearchBar `[564.969, 31.817, 240, 44]`
+            // (trailing inset 15 = 820 − 240 − 565); active **280** wide
+            // at `[524.802, 31.817, 280, 44]` (same trailing 15). The
+            // inline title is gone — the floating tab bar carries it.
+            // Not the phone inline-nav 60 pt overlay (no +6, no dismiss).
+            bar._navInlineActive = false
+            bar._padTrailingChrome = true
+            bar.isHidden = false
+            titleLabel.isHidden = true
+            titleLabel.alpha = 0
+            let w: CGFloat = active ? 280 : 240
+            let trailing: CGFloat = 15
+            bar.frame = CGRect(x: bounds.width - trailing - w, y: 0,
+                               width: w, height: 44)
+            bar.setShowsCancelButton(false, animated: false)
+            bar.setNeedsLayout()
+            bar.layoutIfNeeded()
+            return
+        }
         if !active {
             // Tabs t200: UISearchBar `[0, 64, 375, 0]` — height 0 at the
             // bar's bottom edge, not isHidden (the placeholder still dumps).
+            bar._padTrailingChrome = false
             bar.isHidden = false
             bar.frame = CGRect(x: 0, y: bounds.height, width: bounds.width, height: 0)
             return
         }
         bar.isHidden = false
+        bar._padTrailingChrome = false
         titleLabel.alpha = 0
         bar.frame = bounds
         bar.setShowsCancelButton(true, animated: false)
