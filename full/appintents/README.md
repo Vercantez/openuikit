@@ -54,6 +54,19 @@ absent on this VM. The sealed gate compiles with a clean product tree
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
 `dd4c8bca7e8735289928bbd1abd44f4b35815308` matched.
 
+`bash full/appintents/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AppIntents lane=medium-full symbols=6586
+FRAMEWORK_FANOUT_REFERENCE_OK
+APPINTENTS_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AppIntents dylib=libAppIntents.dylib
+```
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. `swiftc` is Swift 6.2.4 / linux and the gate compiled with a clean product tree.
+
+`bash full/appintents/tests/test_appintents_host.sh` compiled the host runtime probe (`APPINTENTS_HOST_RUNTIME_OK`) and skipped exact ButtonKit/SFSafeSymbols consumers (`APPINTENTS_EXACT_CONSUMERS_SKIPPED`) because those caches are not on this VM.
+
 ### What this pass added
 
 - `@Property` (`EntityProperty`) stores `title` / `identifier`, applies a
