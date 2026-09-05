@@ -1,0 +1,9 @@
+{
+  "comment": "Present conformance timeline. Rest captures sit at least 0.5 s after the action that precedes them. present-safari raises SFSafariViewController (http://127.0.0.1/, fullScreen chrome). Mail is not presented: canSendMail is false on the simulator and present hung. Same file drives Tools/oracle2/confprobe (real UIKit) and openhost --app Present.",
+  "app": "Present",
+  "events": [
+    { "t": 0.40, "action": "present-safari" },
+    { "t": 1.50, "action": "dismiss" }
+  ],
+  "captures": [0.20, 1.20, 2.10]
+}

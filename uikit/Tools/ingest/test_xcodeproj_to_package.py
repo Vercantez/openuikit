@@ -119,6 +119,16 @@ class MiniAppFixtureTests(unittest.TestCase):
         self.assertIn("WebKit", no_port)
         self.assertNotIn("UIKit", no_port)
         self.assertNotIn("Foundation", no_port)
+        self.assertNotIn("Combine", no_port)
+        self.assertNotIn("os", no_port)
+
+    def test_combine_and_os_are_ported_products(self) -> None:
+        combine = ingest.classify_module("Combine")
+        self.assertEqual(combine["port"], "Combine")
+        self.assertEqual(combine["class"], "Foundation-heavy")
+        os_mod = ingest.classify_module("os")
+        self.assertEqual(os_mod["port"], "os")
+        self.assertEqual(os_mod["class"], "Foundation-heavy")
 
     def test_emit_package_layout(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -131,6 +141,14 @@ class MiniAppFixtureTests(unittest.TestCase):
             self.assertIn('.product(name: "UIKit", package: "OpenUIKit")', text)
             self.assertIn('.package(name: "OpenUIKit", path:', text)
             self.assertIn('.product(name: "OpenUIKit", package: "OpenUIKit"),', text)
+            self.assertIn(
+                '.product(name: "Combine", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+                text,
+            )
+            self.assertIn(
+                '.product(name: "os", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+                text,
+            )
             self.assertIn("-default-isolation", text)
             self.assertTrue((out / "Sources" / "MiniApp" / "MiniApp" / "AppDelegate.swift").is_file())
             self.assertTrue((out / "Sources" / "MiniApp" / "Resources" / "Assets.xcassets").is_dir())

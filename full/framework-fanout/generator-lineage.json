@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "path": "scripts/framework-fanout/generate_seed_v2.py",
+  "note": "Ordered oldest to newest. Every seed records the generator digest that produced it (reference/framework.json provenance.generatorSHA256). The deliverable validator accepts a NEWER digest from this lineage for a seed sealed under an OLDER one, prints the drift, and still refuses any digest not listed here. Append an entry for every generator change; never remove or reorder one.",
+  "lineage": [
+    {
+      "sha256": "0d45574fcf1f577023e93b359aaffea3a04e4d28367f6deb5aaf36e468755aed",
+      "commit": "ff8557d662d1977a3ae1564faa4903d4296756fe",
+      "date": "2026-09-01",
+      "reason": "fanout: add evidence-driven schema-v2 seeds"
+    },
+    {
+      "sha256": "e44f6bde16e79ca2275fd7b518384d4c2b860d3e5b9293e68770a53eb118923c",
+      "commit": "6fc0f17b01f98a63c540bc15fb03a197b6eddaf8",
+      "date": "2026-09-01",
+      "reason": "fanout: make generated gate shellcheck-clean (the digest every 2026-09-01 seed records)"
+    },
+    {
+      "sha256": "0f89b41dd33e68c451a1b8ab24269d58194d5b44f5eb195cc5836a0a14ec412d",
+      "commit": "22e2da6887cad2ff09bfec4f0c2ce3ee18a24e7b",
+      "date": "2026-09-04",
+      "reason": "framework-fanout: seed Clang modules and Swift-only SDK modules"
+    },
+    {
+      "sha256": "3866cad5abda364a3c87122baa9ca1848e121879caf03ace8f2e2a532173a842",
+      "commit": "3559b750c4ca30e4a8f975384c475c005b775c91",
+      "date": "2026-09-04",
+      "reason": "framework-fanout: pass Clang module-map flags through -Xcc"
+    },
+    {
+      "sha256": "e56ee6e70b5464f6e1d76679652d670222bf6200daf198d2f4c6aea67d7421e6",
+      "commit": "f682e158dcfd6eafe16e67cb8bf741c7085a1fa1",
+      "date": "2026-09-04",
+      "reason": "framework-fanout: allow moduleLocation/roadmap in the host-gate key check"
+    }
+  ]
+}

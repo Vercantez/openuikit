@@ -1,3 +1,6 @@
+#if HTTPCOOKIE_PORT
+import Foundation
+#else
 import FoundationEssentials
 import COpenURLTransport
 
@@ -6,7 +9,9 @@ import class ObjectiveC.NSObject
 #else
 #error("Foundation URL loading requires the ObjectiveC NSObject substrate")
 #endif
+#endif
 
+#if !HTTPCOOKIE_PORT
 public let NSURLErrorDomain = "NSURLErrorDomain"
 public let NSURLErrorFailingURLErrorKey = "NSErrorFailingURLKey"
 public let NSURLErrorFailingURLStringErrorKey = "NSErrorFailingURLStringKey"
@@ -167,6 +172,7 @@ open class HTTPURLResponse: URLResponse, @unchecked Sendable {
         return (mime?.isEmpty == false ? mime : nil, encoding)
     }
 }
+#endif
 
 public struct HTTPCookiePropertyKey: RawRepresentable, Hashable, Sendable {
     public let rawValue: String
@@ -207,7 +213,10 @@ open class HTTPCookie: NSObject, @unchecked Sendable {
         guard let rawDomain = (properties[.domain] as? String) ?? originURL?.host,
               !rawDomain.isEmpty else { return nil }
         let rawPath = (properties[.path] as? String) ?? "/"
-        guard rawPath.hasPrefix("/") else { return nil }
+        // MEASURED 2026-09-05 Apple HTTPCookie(properties:) on macOS:
+        // path "no-slash" is stored as-is (FoundationHTTPCookieOracle
+        // init.relative-path). A leading-slash requirement would reject
+        // a cookie Apple accepts.
 
         var expiration = properties[.expires] as? Date
         if expiration == nil, let text = properties[.expires] as? String {
@@ -258,11 +267,10 @@ open class HTTPCookie: NSObject, @unchecked Sendable {
 
     public class func requestHeaderFields(with cookies: [HTTPCookie]) -> [String: String] {
         guard !cookies.isEmpty else { return [:] }
-        let sorted = cookies.sorted {
-            if $0.path.count != $1.path.count { return $0.path.count > $1.path.count }
-            return $0.creationDate < $1.creationDate
-        }
-        return ["Cookie": sorted.map { "\($0.name)=\($0.value)" }.joined(separator: "; ")]
+        // MEASURED 2026-09-05 Apple HTTPCookie.requestHeaderFields:
+        // input order is preserved (`c=3; b=2; a=1` for [c,b,a] even though
+        // / is shorter than /a/b). Path-length sorting would mismatch.
+        return ["Cookie": cookies.map { "\($0.name)=\($0.value)" }.joined(separator: "; ")]
     }
 
     public class func cookies(
@@ -487,6 +495,7 @@ open class HTTPCookieStorage: NSObject, @unchecked Sendable {
     }
 }
 
+#if !HTTPCOOKIE_PORT
 open class CachedURLResponse: NSObject, @unchecked Sendable {
     public let response: URLResponse
     public let data: Data
@@ -1280,3 +1289,4 @@ open class URLSession: NSObject, @unchecked Sendable {
         return true
     }
 }
+#endif
