@@ -1,113 +1,113 @@
 precise	status	evidence	notes
-c:@CTCallStateConnected	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTCallStateDialing	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTCallStateDisconnected	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTCallStateIncoming	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyCDMA1x	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyCDMAEVDORev0	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyCDMAEVDORevA	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyCDMAEVDORevB	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyDidChangeNotification	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyEdge	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyGPRS	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyHSDPA	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyHSUPA	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyLTE	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyNR	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyNRNSA	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyWCDMA	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTRadioAccessTechnologyeHRPD	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTServiceRadioAccessTechnologyDidChangeNotification	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@CTSubscriberTokenRefreshed	declared	CoreTelephony.swift	provisional symbol-name fallback; Apple string bytes unobserved (macios Dlfcn/Field)
-c:@E@CTCellularDataRestrictedState	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@E@CTCellularDataRestrictedState@kCTCellularDataNotRestricted	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@E@CTCellularDataRestrictedState@kCTCellularDataRestricted	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@E@CTCellularDataRestrictedState@kCTCellularDataRestrictedStateUnknown	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@E@CTCellularPlanCapability	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@E@CTCellularPlanCapability@CTCellularPlanCapabilityDataAndVoice	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@E@CTCellularPlanCapability@CTCellularPlanCapabilityDataOnly	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@E@CTCellularPlanProvisioningAddPlanResult	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@E@CTCellularPlanProvisioningAddPlanResult@CTCellularPlanProvisioningAddPlanResultCancel	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@E@CTCellularPlanProvisioningAddPlanResult@CTCellularPlanProvisioningAddPlanResultFail	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@E@CTCellularPlanProvisioningAddPlanResult@CTCellularPlanProvisioningAddPlanResultSuccess	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@E@CTCellularPlanProvisioningAddPlanResult@CTCellularPlanProvisioningAddPlanResultUnknown	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@Ea@kCTErrorDomainNoError@kCTErrorDomainMach	implemented	tests/agent/CoreTelephonyRuntime.swift	macios CTErrorDomain.Mach = 2; runtime asserts
-c:@Ea@kCTErrorDomainNoError@kCTErrorDomainNoError	implemented	tests/agent/CoreTelephonyRuntime.swift	macios CTErrorDomain.NoError = 0; runtime asserts
-c:@Ea@kCTErrorDomainNoError@kCTErrorDomainPOSIX	implemented	tests/agent/CoreTelephonyRuntime.swift	macios CTErrorDomain.Posix = 1; runtime asserts
-c:@SA@CTError	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@SA@CTError@FI@domain	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@SA@CTError@FI@error	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:@T@CellularDataRestrictionDidUpdateNotifier	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCall	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCall(py)callID	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCall(py)callState	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCallCenter	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCallCenter(py)callEventHandler	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCallCenter(py)currentCalls	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCarrier	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCarrier(py)allowsVOIP	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCarrier(py)carrierName	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCarrier(py)isoCountryCode	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCarrier(py)mobileCountryCode	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCarrier(py)mobileNetworkCode	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularData	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularData(py)cellularDataRestrictionDidUpdateNotifier	implemented	tests/agent/CoreTelephonyRuntime.swift	first nil-to-nonnil assignment hops and delivers restrictedStateUnknown exactly once
-c:objc(cs)CTCellularData(py)restrictedState	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProperties	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProperties(py)associatedIccid	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProperties(py)simCapability	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProvisioning	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProvisioning(im)addPlanWith:completionHandler:	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProvisioning(im)addPlanWithRequest:properties:completionHandler:	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProvisioning(im)supportsCellularPlan	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProvisioning(im)updateCellularPlanProperties:completionHandler:	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProvisioning(py)supportsEmbeddedSIM	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProvisioningRequest	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProvisioningRequest(py)EID	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProvisioningRequest(py)ICCID	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProvisioningRequest(py)OID	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProvisioningRequest(py)address	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProvisioningRequest(py)confirmationCode	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanProvisioningRequest(py)matchingID	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanStatus	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanStatus(cm)checkValidityOfToken:completionHandler:	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTCellularPlanStatus(cm)getTokenWithCompletion:	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTSubscriber	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTSubscriber(im)refreshCarrierToken	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTSubscriber(py)SIMInserted	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTSubscriber(py)carrierToken	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTSubscriber(py)delegate	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTSubscriber(py)identifier	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTSubscriberInfo	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTSubscriberInfo(cm)subscriber	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTSubscriberInfo(cm)subscribers	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTTelephonyNetworkInfo	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTTelephonyNetworkInfo(py)currentRadioAccessTechnology	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTTelephonyNetworkInfo(py)dataServiceIdentifier	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTTelephonyNetworkInfo(py)delegate	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTTelephonyNetworkInfo(py)serviceCurrentRadioAccessTechnology	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTTelephonyNetworkInfo(py)serviceSubscriberCellularProviders	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTTelephonyNetworkInfo(py)serviceSubscriberCellularProvidersDidUpdateNotifier	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTTelephonyNetworkInfo(py)subscriberCellularProvider	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(cs)CTTelephonyNetworkInfo(py)subscriberCellularProviderDidUpdateNotifier	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(pl)CTSubscriberDelegate	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(pl)CTSubscriberDelegate(im)subscriberTokenRefreshed:	implemented	tests/agent/CoreTelephonyRuntime.swift	existential dispatch to test conformer; refreshCarrierToken does not fabricate
-c:objc(pl)CTTelephonyNetworkInfoDelegate	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(pl)CTTelephonyNetworkInfoDelegate(im)dataServiceIdentifierDidChange:	implemented	tests/agent/CoreTelephonyRuntime.swift	existential dispatch to test conformer override; Linux never fabricates
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CTCellularPlanProperties	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CTCellularPlanProvisioningRequest	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CTCellularDataRestrictedState	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CTCellularPlanCapability	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CTCellularPlanProvisioningAddPlanResult	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CTCellularDataRestrictedState	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CTCellularPlanCapability	implemented	tests/agent/CoreTelephonyRuntime.swift	runtime hashValue inequality for dataOnly vs dataAndVoice
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CTCellularPlanProvisioningAddPlanResult	implemented	tests/agent/CoreTelephonyRuntime.swift	runtime hashValue inequality for fail vs success
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CTCellularDataRestrictedState	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CTCellularPlanCapability	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CTCellularPlanProvisioningAddPlanResult	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-s:So029CTCellularPlanProvisioningAddB6ResultV8rawValueABSgSu_tcfc	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-s:So24CTCellularPlanCapabilityV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-s:So24CTCellularPlanPropertiesC13CoreTelephonyE20supportedRegionCodesSay10Foundation6LocaleV0G0VGvp	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-s:So29CTCellularDataRestrictedStateV8rawValueABSgSu_tcfc	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-s:So7CTErrora6domain5errorABs5Int32V_AFtcfc	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
-s:So7CTErroraABycfc	implemented	tests/agent/CoreTelephonyRuntime.swift	focused Linux runtime evidence
+c:@CTCallStateConnected	implemented	test:full/coretelephony/tests/agent/CTCallTests.swift#testCallStateConstants	public CTCall payload "connected"
+c:@CTCallStateDialing	implemented	test:full/coretelephony/tests/agent/CTCallTests.swift#testCallStateConstants	public CTCall payload "dialing"
+c:@CTCallStateDisconnected	implemented	test:full/coretelephony/tests/agent/CTCallTests.swift#testCallStateConstants	public CTCall payload "disconnected"
+c:@CTCallStateIncoming	implemented	test:full/coretelephony/tests/agent/CTCallTests.swift#testCallStateConstants	public CTCall payload "incoming"
+c:@CTRadioAccessTechnologyCDMA1x	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyConstants	C identifier is the string value
+c:@CTRadioAccessTechnologyCDMAEVDORev0	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyConstants	C identifier is the string value
+c:@CTRadioAccessTechnologyCDMAEVDORevA	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyConstants	C identifier is the string value
+c:@CTRadioAccessTechnologyCDMAEVDORevB	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyConstants	C identifier is the string value
+c:@CTRadioAccessTechnologyDidChangeNotification	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyNotifications	rawValue is the C notification identifier
+c:@CTRadioAccessTechnologyEdge	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyConstants	C identifier is the string value
+c:@CTRadioAccessTechnologyGPRS	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyConstants	C identifier is the string value
+c:@CTRadioAccessTechnologyHSDPA	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyConstants	C identifier is the string value
+c:@CTRadioAccessTechnologyHSUPA	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyConstants	C identifier is the string value
+c:@CTRadioAccessTechnologyLTE	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyConstants	corpus compares currentRadioAccessTechnology against this constant
+c:@CTRadioAccessTechnologyNR	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyConstants	C identifier is the string value
+c:@CTRadioAccessTechnologyNRNSA	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyConstants	C identifier is the string value
+c:@CTRadioAccessTechnologyWCDMA	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyConstants	C identifier is the string value
+c:@CTRadioAccessTechnologyeHRPD	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyConstants	C identifier is the string value
+c:@CTServiceRadioAccessTechnologyDidChangeNotification	implemented	test:full/coretelephony/tests/agent/CTRadioAccessTechnologyTests.swift#testRadioAccessTechnologyNotifications	rawValue is the C notification identifier
+c:@CTSubscriberTokenRefreshed	implemented	test:full/coretelephony/tests/agent/CTSubscriberTests.swift#testSubscriberTokenRefreshedConstant	notification name string
+c:@E@CTCellularDataRestrictedState	implemented	test:full/coretelephony/tests/agent/CTCellularDataTests.swift#testRestrictedStateEnum	UInt NS_ENUM 0...2
+c:@E@CTCellularDataRestrictedState@kCTCellularDataNotRestricted	implemented	test:full/coretelephony/tests/agent/CTCellularDataTests.swift#testRestrictedStateEnum	rawValue 2
+c:@E@CTCellularDataRestrictedState@kCTCellularDataRestricted	implemented	test:full/coretelephony/tests/agent/CTCellularDataTests.swift#testRestrictedStateEnum	rawValue 1
+c:@E@CTCellularDataRestrictedState@kCTCellularDataRestrictedStateUnknown	implemented	test:full/coretelephony/tests/agent/CTCellularDataTests.swift#testRestrictedStateEnum	rawValue 0
+c:@E@CTCellularPlanCapability	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanCapabilityEnum	Int NS_ENUM 0...1
+c:@E@CTCellularPlanCapability@CTCellularPlanCapabilityDataAndVoice	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanCapabilityEnum	rawValue 1
+c:@E@CTCellularPlanCapability@CTCellularPlanCapabilityDataOnly	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanCapabilityEnum	rawValue 0
+c:@E@CTCellularPlanProvisioningAddPlanResult	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testAddPlanResultEnum	UInt NS_ENUM 0...3
+c:@E@CTCellularPlanProvisioningAddPlanResult@CTCellularPlanProvisioningAddPlanResultCancel	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testAddPlanResultEnum	rawValue 3
+c:@E@CTCellularPlanProvisioningAddPlanResult@CTCellularPlanProvisioningAddPlanResultFail	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testAddPlanResultEnum	rawValue 1
+c:@E@CTCellularPlanProvisioningAddPlanResult@CTCellularPlanProvisioningAddPlanResultSuccess	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testAddPlanResultEnum	rawValue 2
+c:@E@CTCellularPlanProvisioningAddPlanResult@CTCellularPlanProvisioningAddPlanResultUnknown	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testAddPlanResultEnum	rawValue 0
+c:@Ea@kCTErrorDomainNoError@kCTErrorDomainMach	implemented	test:full/coretelephony/tests/agent/CTErrorTests.swift#testErrorDomainConstants	macios CTErrorDomain.Mach = 2
+c:@Ea@kCTErrorDomainNoError@kCTErrorDomainNoError	implemented	test:full/coretelephony/tests/agent/CTErrorTests.swift#testErrorDomainConstants	macios CTErrorDomain.NoError = 0
+c:@Ea@kCTErrorDomainNoError@kCTErrorDomainPOSIX	implemented	test:full/coretelephony/tests/agent/CTErrorTests.swift#testErrorDomainConstants	macios CTErrorDomain.Posix = 1
+c:@SA@CTError	implemented	test:full/coretelephony/tests/agent/CTErrorTests.swift#testCTErrorStructure	Int32 domain and error fields
+c:@SA@CTError@FI@domain	implemented	test:full/coretelephony/tests/agent/CTErrorTests.swift#testCTErrorStructure	mutable Int32
+c:@SA@CTError@FI@error	implemented	test:full/coretelephony/tests/agent/CTErrorTests.swift#testCTErrorStructure	mutable Int32
+c:@T@CellularDataRestrictionDidUpdateNotifier	implemented	test:full/coretelephony/tests/agent/CTCellularDataTests.swift#testCellularDataRestrictionNotifier	typealias assigned and invoked
+c:objc(cs)CTCall	implemented	test:full/coretelephony/tests/agent/CTCallTests.swift#testCTCallSnapshot	empty snapshot; no call stack
+c:objc(cs)CTCall(py)callID	implemented	test:full/coretelephony/tests/agent/CTCallTests.swift#testCTCallSnapshot	empty string
+c:objc(cs)CTCall(py)callState	implemented	test:full/coretelephony/tests/agent/CTCallTests.swift#testCTCallSnapshot	empty; does not fake Connected
+c:objc(cs)CTCallCenter	implemented	test:full/coretelephony/tests/agent/CTCallTests.swift#testCTCallCenterFailClosed	no telephony service
+c:objc(cs)CTCallCenter(py)callEventHandler	implemented	test:full/coretelephony/tests/agent/CTCallTests.swift#testCTCallCenterFailClosed	stored; never invoked
+c:objc(cs)CTCallCenter(py)currentCalls	implemented	test:full/coretelephony/tests/agent/CTCallTests.swift#testCTCallCenterFailClosed	nil
+c:objc(cs)CTCarrier	implemented	test:full/coretelephony/tests/agent/CTCarrierTests.swift#testCTCarrierFailClosed	no baseband
+c:objc(cs)CTCarrier(py)allowsVOIP	implemented	test:full/coretelephony/tests/agent/CTCarrierTests.swift#testCTCarrierFailClosed	false
+c:objc(cs)CTCarrier(py)carrierName	implemented	test:full/coretelephony/tests/agent/CTCarrierTests.swift#testCTCarrierFailClosed	nil
+c:objc(cs)CTCarrier(py)isoCountryCode	implemented	test:full/coretelephony/tests/agent/CTCarrierTests.swift#testCTCarrierFailClosed	nil
+c:objc(cs)CTCarrier(py)mobileCountryCode	implemented	test:full/coretelephony/tests/agent/CTCarrierTests.swift#testCTCarrierFailClosed	nil
+c:objc(cs)CTCarrier(py)mobileNetworkCode	implemented	test:full/coretelephony/tests/agent/CTCarrierTests.swift#testCTCarrierFailClosed	nil
+c:objc(cs)CTCellularData	implemented	test:full/coretelephony/tests/agent/CTCellularDataTests.swift#testCellularDataRestrictedState	no restriction daemon
+c:objc(cs)CTCellularData(py)cellularDataRestrictionDidUpdateNotifier	implemented	test:full/coretelephony/tests/agent/CTCellularDataTests.swift#testCellularDataRestrictionNotifier	first nil-to-nonnil hops unknown once
+c:objc(cs)CTCellularData(py)restrictedState	implemented	test:full/coretelephony/tests/agent/CTCellularDataTests.swift#testCellularDataRestrictedState	always unknown
+c:objc(cs)CTCellularPlanProperties	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanPropertiesStorage	local mutable bag
+c:objc(cs)CTCellularPlanProperties(py)associatedIccid	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanPropertiesStorage	round-trip storage
+c:objc(cs)CTCellularPlanProperties(py)simCapability	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanPropertiesStorage	round-trip storage
+c:objc(cs)CTCellularPlanProvisioning	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanProvisioningFailClosed	no eSIM host
+c:objc(cs)CTCellularPlanProvisioning(im)addPlanWith:completionHandler:	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanProvisioningFailClosed	async .fail
+c:objc(cs)CTCellularPlanProvisioning(im)addPlanWithRequest:properties:completionHandler:	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanProvisioningFailClosed	async .fail
+c:objc(cs)CTCellularPlanProvisioning(im)supportsCellularPlan	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanProvisioningFailClosed	false
+c:objc(cs)CTCellularPlanProvisioning(im)updateCellularPlanProperties:completionHandler:	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanProvisioningFailClosed	EPERM
+c:objc(cs)CTCellularPlanProvisioning(py)supportsEmbeddedSIM	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanProvisioningFailClosed	false
+c:objc(cs)CTCellularPlanProvisioningRequest	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanRequestStorage	local mutable request
+c:objc(cs)CTCellularPlanProvisioningRequest(py)EID	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanRequestStorage	eid round-trip
+c:objc(cs)CTCellularPlanProvisioningRequest(py)ICCID	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanRequestStorage	iccid round-trip
+c:objc(cs)CTCellularPlanProvisioningRequest(py)OID	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanRequestStorage	oid round-trip
+c:objc(cs)CTCellularPlanProvisioningRequest(py)address	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanRequestStorage	defaults to empty
+c:objc(cs)CTCellularPlanProvisioningRequest(py)confirmationCode	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanRequestStorage	round-trip storage
+c:objc(cs)CTCellularPlanProvisioningRequest(py)matchingID	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanRequestStorage	round-trip storage
+c:objc(cs)CTCellularPlanStatus	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanStatusFailClosed	no plan-status service
+c:objc(cs)CTCellularPlanStatus(cm)checkValidityOfToken:completionHandler:	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanStatusFailClosed	throws EPERM
+c:objc(cs)CTCellularPlanStatus(cm)getTokenWithCompletion:	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanStatusFailClosed	nil + EPERM
+c:objc(cs)CTSubscriber	implemented	test:full/coretelephony/tests/agent/CTSubscriberTests.swift#testSubscriberFailClosed	no SIM service
+c:objc(cs)CTSubscriber(im)refreshCarrierToken	implemented	test:full/coretelephony/tests/agent/CTSubscriberTests.swift#testSubscriberFailClosed	false; no delegate fire
+c:objc(cs)CTSubscriber(py)SIMInserted	implemented	test:full/coretelephony/tests/agent/CTSubscriberTests.swift#testSubscriberFailClosed	false
+c:objc(cs)CTSubscriber(py)carrierToken	implemented	test:full/coretelephony/tests/agent/CTSubscriberTests.swift#testSubscriberFailClosed	nil
+c:objc(cs)CTSubscriber(py)delegate	implemented	test:full/coretelephony/tests/agent/CTSubscriberTests.swift#testSubscriberDelegate	weak store
+c:objc(cs)CTSubscriber(py)identifier	implemented	test:full/coretelephony/tests/agent/CTSubscriberTests.swift#testSubscriberFailClosed	empty
+c:objc(cs)CTSubscriberInfo	implemented	test:full/coretelephony/tests/agent/CTSubscriberTests.swift#testSubscriberInfo	no subscribers
+c:objc(cs)CTSubscriberInfo(cm)subscriber	implemented	test:full/coretelephony/tests/agent/CTSubscriberTests.swift#testSubscriberInfo	empty fail-closed instance
+c:objc(cs)CTSubscriberInfo(cm)subscribers	implemented	test:full/coretelephony/tests/agent/CTSubscriberTests.swift#testSubscriberInfo	empty array
+c:objc(cs)CTTelephonyNetworkInfo	implemented	test:full/coretelephony/tests/agent/CTTelephonyNetworkInfoTests.swift#testNetworkInfoFailClosedQueries	no radio
+c:objc(cs)CTTelephonyNetworkInfo(py)currentRadioAccessTechnology	implemented	test:full/coretelephony/tests/agent/CTTelephonyNetworkInfoTests.swift#testNetworkInfoFailClosedQueries	nil; corpus compares only when present
+c:objc(cs)CTTelephonyNetworkInfo(py)dataServiceIdentifier	implemented	test:full/coretelephony/tests/agent/CTTelephonyNetworkInfoTests.swift#testNetworkInfoFailClosedQueries	nil
+c:objc(cs)CTTelephonyNetworkInfo(py)delegate	implemented	test:full/coretelephony/tests/agent/CTTelephonyNetworkInfoTests.swift#testNetworkInfoNotifiersAndDelegate	weak store; never fabricated
+c:objc(cs)CTTelephonyNetworkInfo(py)serviceCurrentRadioAccessTechnology	implemented	test:full/coretelephony/tests/agent/CTTelephonyNetworkInfoTests.swift#testNetworkInfoFailClosedQueries	nil
+c:objc(cs)CTTelephonyNetworkInfo(py)serviceSubscriberCellularProviders	implemented	test:full/coretelephony/tests/agent/CTTelephonyNetworkInfoTests.swift#testNetworkInfoFailClosedQueries	nil
+c:objc(cs)CTTelephonyNetworkInfo(py)serviceSubscriberCellularProvidersDidUpdateNotifier	implemented	test:full/coretelephony/tests/agent/CTTelephonyNetworkInfoTests.swift#testNetworkInfoNotifiersAndDelegate	stored; never invoked
+c:objc(cs)CTTelephonyNetworkInfo(py)subscriberCellularProvider	implemented	test:full/coretelephony/tests/agent/CTTelephonyNetworkInfoTests.swift#testNetworkInfoFailClosedQueries	nil
+c:objc(cs)CTTelephonyNetworkInfo(py)subscriberCellularProviderDidUpdateNotifier	implemented	test:full/coretelephony/tests/agent/CTTelephonyNetworkInfoTests.swift#testNetworkInfoNotifiersAndDelegate	stored; never invoked
+c:objc(pl)CTSubscriberDelegate	implemented	test:full/coretelephony/tests/agent/CTSubscriberTests.swift#testSubscriberDelegate	existential dispatch
+c:objc(pl)CTSubscriberDelegate(im)subscriberTokenRefreshed:	implemented	test:full/coretelephony/tests/agent/CTSubscriberTests.swift#testSubscriberDelegate	conformer override; refresh does not fabricate
+c:objc(pl)CTTelephonyNetworkInfoDelegate	implemented	test:full/coretelephony/tests/agent/CTTelephonyNetworkInfoTests.swift#testNetworkInfoNotifiersAndDelegate	NSObjectProtocol
+c:objc(pl)CTTelephonyNetworkInfoDelegate(im)dataServiceIdentifierDidChange:	implemented	test:full/coretelephony/tests/agent/CTTelephonyNetworkInfoTests.swift#testNetworkInfoNotifiersAndDelegate	existential dispatch; Linux never fabricates
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CTCellularPlanProperties	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanPropertiesInitCoder	returns nil; Apple keys unobserved
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CTCellularPlanProvisioningRequest	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanRequestInitCoder	returns nil; Apple keys unobserved
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CTCellularDataRestrictedState	implemented	test:full/coretelephony/tests/agent/CTCellularDataTests.swift#testRestrictedStateEnum	!=
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CTCellularPlanCapability	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanCapabilityEnum	!=
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CTCellularPlanProvisioningAddPlanResult	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testAddPlanResultEnum	!=
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CTCellularDataRestrictedState	implemented	test:full/coretelephony/tests/agent/CTCellularDataTests.swift#testRestrictedStateEnum	hashValue
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CTCellularPlanCapability	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanCapabilityEnum	hashValue inequality
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CTCellularPlanProvisioningAddPlanResult	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testAddPlanResultEnum	hashValue inequality
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CTCellularDataRestrictedState	implemented	test:full/coretelephony/tests/agent/CTCellularDataTests.swift#testRestrictedStateEnum	hash(into:)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CTCellularPlanCapability	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanCapabilityEnum	hash(into:)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CTCellularPlanProvisioningAddPlanResult	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testAddPlanResultEnum	hash(into:)
+s:So029CTCellularPlanProvisioningAddB6ResultV8rawValueABSgSu_tcfc	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testAddPlanResultEnum	init?(rawValue: UInt)
+s:So24CTCellularPlanCapabilityV8rawValueABSgSi_tcfc	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanCapabilityEnum	init?(rawValue: Int)
+s:So24CTCellularPlanPropertiesC13CoreTelephonyE20supportedRegionCodesSay10Foundation6LocaleV0G0VGvp	implemented	test:full/coretelephony/tests/agent/CTCellularPlanTests.swift#testPlanPropertiesStorage	[Locale.Region] storage
+s:So29CTCellularDataRestrictedStateV8rawValueABSgSu_tcfc	implemented	test:full/coretelephony/tests/agent/CTCellularDataTests.swift#testRestrictedStateEnum	init?(rawValue: UInt)
+s:So7CTErrora6domain5errorABs5Int32V_AFtcfc	implemented	test:full/coretelephony/tests/agent/CTErrorTests.swift#testCTErrorStructure	init(domain:error:)
+s:So7CTErroraABycfc	implemented	test:full/coretelephony/tests/agent/CTErrorTests.swift#testCTErrorStructure	init() zero error
