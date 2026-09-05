@@ -1,0 +1,9 @@
+full/messages/MSConversation.swift
+full/messages/MSCriticalMessaging.swift
+full/messages/MSMessage.swift
+full/messages/MSMessageErrorCode.swift
+full/messages/MSMessagesAppViewController.swift
+full/messages/MSPresentation.swift
+full/messages/MSSticker.swift
+full/messages/MSStickerBrowser.swift
+full/messages/Messages.swift

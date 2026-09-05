@@ -1,0 +1,181 @@
+precise	status	evidence	notes
+c:@E@MSMessageErrorCode	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Native enum; macios Unknown=-1, FileNotFound=1, then sequential.
+c:@E@MSMessageErrorCode@MSMessageErrorCodeAPIUnavailableInPresentationContext	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Case apiUnavailableInPresentationContext; raw value 11.
+c:@E@MSMessageErrorCode@MSMessageErrorCodeFileNotFound	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Case fileNotFound; raw value 1.
+c:@E@MSMessageErrorCode@MSMessageErrorCodeFileUnreadable	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Case fileUnreadable; raw value 2.
+c:@E@MSMessageErrorCode@MSMessageErrorCodeImproperFileType	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Case improperFileType; raw value 3.
+c:@E@MSMessageErrorCode@MSMessageErrorCodeImproperFileURL	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Case improperFileURL; raw value 4.
+c:@E@MSMessageErrorCode@MSMessageErrorCodeSendWhileNotVisible	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Case sendWhileNotVisible; raw value 10.
+c:@E@MSMessageErrorCode@MSMessageErrorCodeSendWithoutRecentInteraction	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Case sendWithoutRecentInteraction; raw value 9.
+c:@E@MSMessageErrorCode@MSMessageErrorCodeStickerFileImproperFileAttributes	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Case stickerFileImproperFileAttributes; raw value 5.
+c:@E@MSMessageErrorCode@MSMessageErrorCodeStickerFileImproperFileFormat	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Case stickerFileImproperFileFormat; raw value 7.
+c:@E@MSMessageErrorCode@MSMessageErrorCodeStickerFileImproperFileSize	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Case stickerFileImproperFileSize; raw value 6.
+c:@E@MSMessageErrorCode@MSMessageErrorCodeURLExceedsMaxSize	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Case urlExceedsMaxSize; raw value 8.
+c:@E@MSMessageErrorCode@MSMessageErrorCodeUnknown	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Case unknown; raw value -1.
+c:@E@MSMessagesAppPresentationContext	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationContextRawValues	Native enum; Swift overlay UInt; macios Messages/Media order.
+c:@E@MSMessagesAppPresentationContext@MSMessagesAppPresentationContextMedia	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationContextRawValues	Case media; raw value 1.
+c:@E@MSMessagesAppPresentationContext@MSMessagesAppPresentationContextMessages	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationContextRawValues	Case messages; raw value 0.
+c:@E@MSMessagesAppPresentationStyle	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationStyleRawValues	Native enum; UInt Compact/Expanded/Transcript.
+c:@E@MSMessagesAppPresentationStyle@MSMessagesAppPresentationStyleCompact	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationStyleRawValues	Case compact; raw value 0.
+c:@E@MSMessagesAppPresentationStyle@MSMessagesAppPresentationStyleExpanded	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationStyleRawValues	Case expanded; raw value 1.
+c:@E@MSMessagesAppPresentationStyle@MSMessagesAppPresentationStyleTranscript	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationStyleRawValues	Case transcript; raw value 2.
+c:@E@MSStickerSize	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testStickerSizeRawValues	Native enum; Int Small/Regular/Large.
+c:@E@MSStickerSize@MSStickerSizeLarge	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testStickerSizeRawValues	Case large; raw value 2.
+c:@E@MSStickerSize@MSStickerSizeRegular	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testStickerSizeRawValues	Case regular; raw value 1.
+c:@E@MSStickerSize@MSStickerSizeSmall	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testStickerSizeRawValues	Case small; raw value 0.
+c:@M@Messages@objc(cs)MSCriticalSMSMessenger	implemented	test:full/messages/tests/agent/MSRecipientTests.swift#testMessengerInit	NSObject subclass; no daemon.
+c:@M@Messages@objc(cs)MSCriticalSMSMessenger(im)init	implemented	test:full/messages/tests/agent/MSRecipientTests.swift#testMessengerInit	Override init.
+c:@MSMessagesErrorDomain	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessagesErrorDomain	String MSMessagesErrorDomain from macios ErrorDomain.
+c:@MSStickersErrorDomain	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testStickersErrorDomain	String MSStickersErrorDomain from TBD export name.
+c:objc(cs)MSConversation	implemented	test:full/messages/tests/agent/MSConversationTests.swift#testConversationParticipants	Local conversation handle.
+c:objc(cs)MSConversation(im)insertAttachment:withAlternateFilename:completionHandler:	implemented	test:full/messages/tests/agent/MSConversationTests.swift#testInsertAttachmentFailsClosedForValidFile	Valid file still fail-closed sendWhileNotVisible.
+c:objc(cs)MSConversation(im)insertMessage:completionHandler:	implemented	test:full/messages/tests/agent/MSConversationTests.swift#testInsertMessageFailsClosed	Fail-closed sendWhileNotVisible.
+c:objc(cs)MSConversation(im)insertSticker:completionHandler:	implemented	test:full/messages/tests/agent/MSConversationTests.swift#testInsertStickerFailsClosed	Fail-closed sendWhileNotVisible.
+c:objc(cs)MSConversation(im)insertText:completionHandler:	implemented	test:full/messages/tests/agent/MSConversationTests.swift#testInsertTextFailsClosed	Fail-closed sendWhileNotVisible.
+c:objc(cs)MSConversation(im)sendAttachment:withAlternateFilename:completionHandler:	implemented	test:full/messages/tests/agent/MSConversationTests.swift#testSendAttachmentFailsClosed	Fail-closed sendWhileNotVisible.
+c:objc(cs)MSConversation(im)sendMessage:completionHandler:	implemented	test:full/messages/tests/agent/MSConversationTests.swift#testSendMessageFailsClosed	Fail-closed sendWhileNotVisible.
+c:objc(cs)MSConversation(im)sendSticker:completionHandler:	implemented	test:full/messages/tests/agent/MSConversationTests.swift#testSendStickerFailsClosed	Fail-closed sendWhileNotVisible.
+c:objc(cs)MSConversation(im)sendText:completionHandler:	implemented	test:full/messages/tests/agent/MSConversationTests.swift#testSendTextFailsClosed	Fail-closed sendWhileNotVisible.
+c:objc(cs)MSConversation(py)localParticipantIdentifier	implemented	test:full/messages/tests/agent/MSConversationTests.swift#testConversationParticipants	Process-local UUID, not an Apple identity.
+c:objc(cs)MSConversation(py)remoteParticipantIdentifiers	implemented	test:full/messages/tests/agent/MSConversationTests.swift#testConversationParticipants	Empty; no remote participants.
+c:objc(cs)MSConversation(py)selectedMessage	implemented	test:full/messages/tests/agent/MSConversationTests.swift#testSelectedMessageNil	Nil without a Messages host.
+c:objc(cs)MSMessage	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testMessageDefaultInit	Interactive balloon value object.
+c:objc(cs)MSMessage(im)init	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testMessageDefaultInit	Default init; not pending.
+c:objc(cs)MSMessage(im)initWithSession:	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testMessageSessionInit	Stores the session identity.
+c:objc(cs)MSMessage(py)URL	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testMessageURLAndSummary	Optional balloon URL.
+c:objc(cs)MSMessage(py)accessibilityLabel	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testMessageURLAndSummary	Optional accessibility label.
+c:objc(cs)MSMessage(py)error	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testMessageErrorProperty	Optional error storage.
+c:objc(cs)MSMessage(py)layout	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testMessageLayoutCopying	NSCopying setter.
+c:objc(cs)MSMessage(py)pending	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testMessageDefaultInit	isPending is false on Linux.
+c:objc(cs)MSMessage(py)senderParticipantIdentifier	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testMessageDefaultInit	Null UUID until a host assigns a sender.
+c:objc(cs)MSMessage(py)session	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testMessageSessionInit	Optional session.
+c:objc(cs)MSMessage(py)shouldExpire	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testMessageShouldExpire	Stored expire flag.
+c:objc(cs)MSMessage(py)summaryText	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testMessageURLAndSummary	Optional summary text.
+c:objc(cs)MSMessageLayout	implemented	test:full/messages/tests/agent/MSLayoutTests.swift#testMessageLayoutBaseCopy	NSCopying layout base.
+c:objc(cs)MSMessageLiveLayout	implemented	test:full/messages/tests/agent/MSLayoutTests.swift#testLiveLayoutStoresAlternate	Live layout wrapping a template copy.
+c:objc(cs)MSMessageLiveLayout(im)initWithAlternateLayout:	implemented	test:full/messages/tests/agent/MSLayoutTests.swift#testLiveLayoutStoresAlternate	Copies the alternate template.
+c:objc(cs)MSMessageLiveLayout(py)alternateLayout	implemented	test:full/messages/tests/agent/MSLayoutTests.swift#testLiveLayoutStoresAlternate	Stored template copy.
+c:objc(cs)MSMessageTemplateLayout	implemented	test:full/messages/tests/agent/MSLayoutTests.swift#testTemplateLayoutCaptions	Template balloon captions.
+c:objc(cs)MSMessageTemplateLayout(py)caption	implemented	test:full/messages/tests/agent/MSLayoutTests.swift#testTemplateLayoutCaptions	Caption storage.
+c:objc(cs)MSMessageTemplateLayout(py)image	deferred		UIImage is UIKit-owned; isolated host cannot import UIKit and a public lookalike is forbidden.
+c:objc(cs)MSMessageTemplateLayout(py)imageSubtitle	implemented	test:full/messages/tests/agent/MSLayoutTests.swift#testTemplateLayoutCaptions	Image subtitle storage.
+c:objc(cs)MSMessageTemplateLayout(py)imageTitle	implemented	test:full/messages/tests/agent/MSLayoutTests.swift#testTemplateLayoutCaptions	Image title storage.
+c:objc(cs)MSMessageTemplateLayout(py)mediaFileURL	implemented	test:full/messages/tests/agent/MSLayoutTests.swift#testTemplateLayoutMediaURL	Optional media file URL.
+c:objc(cs)MSMessageTemplateLayout(py)subcaption	implemented	test:full/messages/tests/agent/MSLayoutTests.swift#testTemplateLayoutCaptions	Subcaption storage.
+c:objc(cs)MSMessageTemplateLayout(py)trailingCaption	implemented	test:full/messages/tests/agent/MSLayoutTests.swift#testTemplateLayoutCaptions	Trailing caption storage.
+c:objc(cs)MSMessageTemplateLayout(py)trailingSubcaption	implemented	test:full/messages/tests/agent/MSLayoutTests.swift#testTemplateLayoutCaptions	Trailing subcaption storage.
+c:objc(cs)MSMessagesAppViewController	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testDefaultPresentationStyleCompact	NSObject-based extension controller.
+c:objc(cs)MSMessagesAppViewController(im)didBecomeActiveWithConversation:	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testWillBecomeActiveSetsConversation	Records the supplied conversation.
+c:objc(cs)MSMessagesAppViewController(im)didCancelSendingMessage:conversation:	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testSelectReceiveSendHooks	Open hook; no host send.
+c:objc(cs)MSMessagesAppViewController(im)didReceiveMessage:conversation:	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testSelectReceiveSendHooks	Open hook; no host receive.
+c:objc(cs)MSMessagesAppViewController(im)didResignActiveWithConversation:	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testDidResignActiveClearsConversation	Clears activeConversation.
+c:objc(cs)MSMessagesAppViewController(im)didSelectMessage:conversation:	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testSelectReceiveSendHooks	Open selection hook.
+c:objc(cs)MSMessagesAppViewController(im)didStartSendingMessage:conversation:	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testSelectReceiveSendHooks	Open send-start hook.
+c:objc(cs)MSMessagesAppViewController(im)didTransitionToPresentationStyle:	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testRequestPresentationStyle	Invoked after an in-process style change.
+c:objc(cs)MSMessagesAppViewController(im)dismiss	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testDismissDoesNotCrash	No Messages chrome to dismiss.
+c:objc(cs)MSMessagesAppViewController(im)requestPresentationStyle:	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testRequestPresentationStyle	Updates presentationStyle synchronously.
+c:objc(cs)MSMessagesAppViewController(im)willBecomeActiveWithConversation:	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testWillBecomeActiveSetsConversation	Records the supplied conversation.
+c:objc(cs)MSMessagesAppViewController(im)willResignActiveWithConversation:	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testDidResignActiveClearsConversation	Does not clear until didResignActive.
+c:objc(cs)MSMessagesAppViewController(im)willSelectMessage:conversation:	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testSelectReceiveSendHooks	Open will-select hook.
+c:objc(cs)MSMessagesAppViewController(im)willTransitionToPresentationStyle:	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testRequestPresentationStyle	Invoked before an in-process style change.
+c:objc(cs)MSMessagesAppViewController(py)activeConversation	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testActiveConversationNil	Nil until a lifecycle method supplies one.
+c:objc(cs)MSMessagesAppViewController(py)presentationContext	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testDefaultPresentationContextMessages	Linux default is messages, not media.
+c:objc(cs)MSMessagesAppViewController(py)presentationStyle	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testDefaultPresentationStyleCompact	Linux default is compact (raw 0).
+c:objc(cs)MSSession	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testSessionInit	Process-local session token.
+c:objc(cs)MSSticker	implemented	test:full/messages/tests/agent/MSStickerTests.swift#testStickerLoadsPNG	File-backed sticker.
+c:objc(cs)MSSticker(im)initWithContentsOfFileURL:localizedDescription:error:	implemented	test:full/messages/tests/agent/MSStickerTests.swift#testStickerLoadsPNG	Validates file URL, type, magic, description.
+c:objc(cs)MSSticker(py)imageFileURL	implemented	test:full/messages/tests/agent/MSStickerTests.swift#testStickerLoadsPNG	Stored file URL.
+c:objc(cs)MSSticker(py)localizedDescription	implemented	test:full/messages/tests/agent/MSStickerTests.swift#testStickerLoadsPNG	Stored accessibility string.
+c:objc(cs)MSStickerBrowserView	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserDefaultSizeRegular	NSObject-based sticker grid.
+c:objc(cs)MSStickerBrowserView(im)initWithFrame:	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserDefaultSizeRegular	Default sticker size is regular.
+c:objc(cs)MSStickerBrowserView(im)initWithFrame:stickerSize:	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserInitWithSize	Stores the requested sticker size.
+c:objc(cs)MSStickerBrowserView(im)reloadData	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserReloadQueriesDataSource	Queries the data source synchronously.
+c:objc(cs)MSStickerBrowserView(im)setContentOffset:animated:	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserSetContentOffset	Stores offset; animation is ignored.
+c:objc(cs)MSStickerBrowserView(py)contentInset	deferred		UIEdgeInsets is UIKit-owned; isolated host cannot import UIKit and a public lookalike is forbidden.
+c:objc(cs)MSStickerBrowserView(py)contentOffset	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserContentOffset	Stored CGPoint.
+c:objc(cs)MSStickerBrowserView(py)dataSource	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserReloadQueriesDataSource	Weak data source.
+c:objc(cs)MSStickerBrowserView(py)stickerSize	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserDefaultSizeRegular	Immutable size chosen at init.
+c:objc(cs)MSStickerBrowserViewController	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserViewControllerSize	Default data source with zero stickers.
+c:objc(cs)MSStickerBrowserViewController(im)initWithStickerSize:	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserViewControllerSize	Creates a browser view of that size.
+c:objc(cs)MSStickerBrowserViewController(py)stickerBrowserView	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserViewControllerHasView	Owned browser view.
+c:objc(cs)MSStickerBrowserViewController(py)stickerSize	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserViewControllerSize	Mirrors the designated init size.
+c:objc(cs)MSStickerView	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testStickerViewStoresSticker	NSObject-based sticker renderer.
+c:objc(cs)MSStickerView(im)initWithFrame:sticker:	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testStickerViewStoresSticker	Stores frame and sticker.
+c:objc(cs)MSStickerView(im)isAnimating	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testStickerViewAnimationState	Local animation flag.
+c:objc(cs)MSStickerView(im)startAnimating	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testStickerViewAnimationState	Sets the local flag.
+c:objc(cs)MSStickerView(im)stopAnimating	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testStickerViewAnimationState	Clears the local flag.
+c:objc(cs)MSStickerView(py)animationDuration	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testStickerViewAnimationDurationZero	Always 0; GIF timing is not decoded.
+c:objc(cs)MSStickerView(py)sticker	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testStickerViewStoresSticker	Optional sticker.
+c:objc(pl)MSMessagesAppTranscriptPresentation	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testContentSizeThatFitsZero	Protocol implemented by the app controller.
+c:objc(pl)MSMessagesAppTranscriptPresentation(im)contentSizeThatFits:	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testContentSizeThatFitsZero	Linux returns .zero; no transcript chrome.
+c:objc(pl)MSMessagesAppTranscriptPresentation(im)invalidateMessageTintColor	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testInvalidateMessageTintColor	No-op without UIKit tint.
+c:objc(pl)MSMessagesAppTranscriptPresentation(py)messageCornerRadius	implemented	test:full/messages/tests/agent/MSMessagesAppViewControllerTests.swift#testMessageCornerRadiusZero	Linux reports 0.
+c:objc(pl)MSMessagesAppTranscriptPresentation(py)messageTintColor	deferred		UIColor is UIKit-owned; isolated host cannot import UIKit and a public lookalike is forbidden.
+c:objc(pl)MSStickerBrowserViewDataSource	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserReloadQueriesDataSource	NSObjectProtocol data source.
+c:objc(pl)MSStickerBrowserViewDataSource(im)numberOfStickersInStickerBrowserView:	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserReloadQueriesDataSource	Count query during reload.
+c:objc(pl)MSStickerBrowserViewDataSource(im)stickerBrowserView:stickerAtIndex:	implemented	test:full/messages/tests/agent/MSStickerBrowserTests.swift#testBrowserReloadQueriesDataSource	Sticker query during reload.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MSMessage	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testMessageCoding	Linux portable NSSecureCoding; not Darwin archives.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MSSession	implemented	test:full/messages/tests/agent/MSMessageTests.swift#testSessionCoding	Linux portable NSSecureCoding; not Darwin archives.
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorDomainAndCode	CustomNSError.errorDomain.
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorUserInfo	CustomNSError.errorUserInfo.
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorDomainAndCode	CustomNSError.errorCode is the raw value.
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingLocalizedErrorDefaults	Default helpAnchor is nil.
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingLocalizedErrorDefaults	Default failureReason is nil.
+s:10Foundation14LocalizedErrorPAAE16errorDescriptionSSSgvp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorDescription	LocalizedError.errorDescription.
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingLocalizedErrorDefaults	Default recoverySuggestion is nil.
+s:8Messages11MSRecipientV	implemented	test:full/messages/tests/agent/MSRecipientTests.swift#testRecipientPhoneNumber	Hashable phone-number identity.
+s:8Messages11MSRecipientV11phoneNumberACSS_tcfc	implemented	test:full/messages/tests/agent/MSRecipientTests.swift#testRecipientPhoneNumber	init(phoneNumber:).
+s:8Messages11MSRecipientV11phoneNumberSSvp	implemented	test:full/messages/tests/agent/MSRecipientTests.swift#testRecipientPhoneNumber	Stored phoneNumber.
+s:8Messages11MSRecipientV2eeoiySbAC_ACtFZ	implemented	test:full/messages/tests/agent/MSRecipientTests.swift#testRecipientEquality	Equality is phoneNumber identity.
+s:8Messages11MSRecipientV4hash4intoys6HasherVz_tF	implemented	test:full/messages/tests/agent/MSRecipientTests.swift#testRecipientHash	Hashable hash(into:).
+s:8Messages11MSRecipientV9hashValueSivp	implemented	test:full/messages/tests/agent/MSRecipientTests.swift#testRecipientHash	Hashable hashValue.
+s:8Messages17MSCriticalMessageV	implemented	test:full/messages/tests/agent/MSRecipientTests.swift#testCriticalMessageText	Critical SMS payload struct.
+s:8Messages17MSCriticalMessageV11messageTextACSS_tcfc	implemented	test:full/messages/tests/agent/MSRecipientTests.swift#testCriticalMessageText	init(messageText:).
+s:8Messages17MSCriticalMessageV11messageTextSSvp	implemented	test:full/messages/tests/agent/MSRecipientTests.swift#testCriticalMessageText	Stored messageText.
+s:8Messages22MSCriticalSMSMessengerC20requestAuthorization3forSDyAA11MSRecipientVAA0b9MessagingE6StatusOGSayAGG_tYaKF	declared	source:full/messages/MSCriticalMessaging.swift#requestAuthorization	async throws; isolated runner cannot await. Throws notSupported.
+s:8Messages22MSCriticalSMSMessengerC24checkAuthorizationStatus3forSDyAA11MSRecipientVAA0b9MessagingeF0OGSayAGG_tYaKF	declared	source:full/messages/MSCriticalMessaging.swift#checkAuthorizationStatus	async throws; isolated runner cannot await. Throws notSupported.
+s:8Messages22MSCriticalSMSMessengerC34maximumCriticalMessagingRecipientsSivp	implemented	test:full/messages/tests/agent/MSRecipientTests.swift#testMaximumCriticalMessagingRecipientsIsZero	Linux cap is 0; Darwin value unobserved.
+s:8Messages22MSCriticalSMSMessengerC4send_2toSbAA0B7MessageV_AA11MSRecipientVtYaKF	declared	source:full/messages/MSCriticalMessaging.swift#send	async throws; isolated runner cannot await. Throws notSupported.
+s:8Messages24MSCriticalMessagingErrorO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorRawValues	Int enum; digester case order.
+s:8Messages24MSCriticalMessagingErrorO10sendFailedyA2CmF	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorRawValues	Case sendFailed; raw value 4.
+s:8Messages24MSCriticalMessagingErrorO11errorDomainSSvpZ	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorDomainAndCode	Linux domain string MSCriticalMessagingError.
+s:8Messages24MSCriticalMessagingErrorO12notSupportedyA2CmF	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorRawValues	Case notSupported; raw value 2.
+s:8Messages24MSCriticalMessagingErrorO13notAuthorizedyA2CmF	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorRawValues	Case notAuthorized; raw value 3.
+s:8Messages24MSCriticalMessagingErrorO16errorDescriptionSSSgvp	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorDescription	Owned LocalizedError description.
+s:8Messages24MSCriticalMessagingErrorO28invalidAuthenticationRequestyA2CmF	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorRawValues	Case invalidAuthenticationRequest; raw value 1.
+s:8Messages24MSCriticalMessagingErrorO7unknownyA2CmF	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorRawValues	Case unknown; raw value 0.
+s:8Messages24MSCriticalMessagingErrorO8RawValuea	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorRawValues	RawValue is Int.
+s:8Messages24MSCriticalMessagingErrorO8rawValueACSgSi_tcfc	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorRawValues	init?(rawValue:).
+s:8Messages24MSCriticalMessagingErrorO8rawValueSivp	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorRawValues	rawValue property.
+s:8Messages24MSCriticalMessagingErrorO9errorCodeSivp	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorDomainAndCode	errorCode is the raw value.
+s:8Messages38MSCriticalMessagingAuthorizationStatusO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testAuthorizationStatusRawValues	Int enum; digester unknown/denied/approved.
+s:8Messages38MSCriticalMessagingAuthorizationStatusO6deniedyA2CmF	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testAuthorizationStatusRawValues	Case denied; raw value 1.
+s:8Messages38MSCriticalMessagingAuthorizationStatusO7unknownyA2CmF	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testAuthorizationStatusRawValues	Case unknown; raw value 0.
+s:8Messages38MSCriticalMessagingAuthorizationStatusO8RawValuea	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testAuthorizationStatusRawValues	RawValue is Int.
+s:8Messages38MSCriticalMessagingAuthorizationStatusO8approvedyA2CmF	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testAuthorizationStatusRawValues	Case approved; raw value 2.
+s:8Messages38MSCriticalMessagingAuthorizationStatusO8rawValueACSgSi_tcfc	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testAuthorizationStatusRawValues	init?(rawValue:).
+s:8Messages38MSCriticalMessagingAuthorizationStatusO8rawValueSivp	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testAuthorizationStatusRawValues	rawValue property.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MSMessageErrorCode	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	Synthesized !=.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MSMessagesAppPresentationContext	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationContextRawValues	Synthesized !=.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MSMessagesAppPresentationStyle	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationStyleRawValues	Synthesized !=.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MSStickerSize	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testStickerSizeRawValues	Synthesized !=.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8Messages11MSRecipientV	implemented	test:full/messages/tests/agent/MSRecipientTests.swift#testRecipientEquality	Synthesized !=.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorRawValues	Synthesized !=.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8Messages38MSCriticalMessagingAuthorizationStatusO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testAuthorizationStatusRawValues	Synthesized !=.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MSMessageErrorCode	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	RawRepresentable hashValue.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MSMessagesAppPresentationContext	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationContextRawValues	RawRepresentable hashValue.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MSMessagesAppPresentationStyle	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationStyleRawValues	RawRepresentable hashValue.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MSStickerSize	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testStickerSizeRawValues	RawRepresentable hashValue.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorRawValues	RawRepresentable hashValue.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8Messages38MSCriticalMessagingAuthorizationStatusO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testAuthorizationStatusRawValues	RawRepresentable hashValue.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MSMessageErrorCode	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	RawRepresentable hash(into:).
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MSMessagesAppPresentationContext	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationContextRawValues	RawRepresentable hash(into:).
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MSMessagesAppPresentationStyle	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationStyleRawValues	RawRepresentable hash(into:).
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MSStickerSize	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testStickerSizeRawValues	RawRepresentable hash(into:).
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingErrorRawValues	RawRepresentable hash(into:).
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8Messages38MSCriticalMessagingAuthorizationStatusO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testAuthorizationStatusRawValues	RawRepresentable hash(into:).
+s:So13MSStickerSizeV8rawValueABSgSi_tcfc	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testStickerSizeRawValues	init?(rawValue: Int).
+s:So18MSMessageErrorCodeV8rawValueABSgSi_tcfc	implemented	test:full/messages/tests/agent/MSMessageErrorCodeTests.swift#testMessageErrorCodeRawValues	init?(rawValue: Int).
+s:So30MSMessagesAppPresentationStyleV8rawValueABSgSu_tcfc	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationStyleRawValues	init?(rawValue: UInt).
+s:So32MSMessagesAppPresentationContextV8rawValueABSgSu_tcfc	implemented	test:full/messages/tests/agent/MSPresentationTests.swift#testPresentationContextRawValues	init?(rawValue: UInt).
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:8Messages24MSCriticalMessagingErrorO	implemented	test:full/messages/tests/agent/MSCriticalMessagingErrorTests.swift#testCriticalMessagingLocalizedDescription	Error.localizedDescription is nonempty.
