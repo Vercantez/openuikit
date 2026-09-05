@@ -121,6 +121,7 @@ func testActionHideWaitRun() {
     var custom = 0 as CGFloat
     node.run(SKAction.customAction(withDuration: 0) { _, t in custom = t })
     scene.update(6)
+    precondition(custom >= 0)
     let reversed = SKAction.moveBy(x: 2, y: 0, duration: 0).reversed()
     node.run(reversed)
     scene.update(7)
@@ -193,7 +194,7 @@ func testActionFollowReachWarp() {
     _ = SKAction.warp(to: warp, duration: 0)
     _ = SKAction.animate(withWarps: [warp], times: [0 as NSNumber])
     _ = SKAction.animate(withWarps: [warp], times: [0 as NSNumber], restore: true)
-    var action = SKAction.wait(forDuration: 1)
+    let action = SKAction.wait(forDuration: 1)
     action.duration = 0.5
     action.speed = 2
     action.timingMode = .easeIn

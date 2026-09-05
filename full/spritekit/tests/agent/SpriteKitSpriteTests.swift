@@ -169,6 +169,7 @@ func testSceneViewCameraTransition() {
     scene.didMove(to: view)
     scene.willMove(from: view)
     scene.update(1)
+    precondition(sceneProbe.updates >= 1)
     scene.didEvaluateActions()
     scene.didSimulatePhysics()
     scene.didApplyConstraints()

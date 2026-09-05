@@ -66,11 +66,11 @@ open class SKTexture: NSObject, NSSecureCoding, NSCopying {
         for y in 0..<h {
             for x in 0..<w {
                 let n = sk_valueNoise(x: x, y: y, smoothness: smoothness)
-                let v = UInt8(sk_clamp(n * 255, 0, 255))
+                let v = UInt8(clamping: Int(sk_clamp(n * 255, 0, 255).rounded()))
                 let i = (y * w + x) * 4
                 pixels[i] = v
-                pixels[i + 1] = grayscale ? v : UInt8((x * 13) & 255)
-                pixels[i + 2] = grayscale ? v : UInt8((y * 7) & 255)
+                pixels[i + 1] = grayscale ? v : UInt8(truncatingIfNeeded: x &* 13)
+                pixels[i + 2] = grayscale ? v : UInt8(truncatingIfNeeded: y &* 7)
                 pixels[i + 3] = 255
             }
         }
@@ -208,9 +208,9 @@ open class SKTextureAtlas: NSObject, NSSecureCoding {
 }
 
 func sk_valueNoise(x: Int, y: Int, smoothness: CGFloat) -> CGFloat {
-    let h = UInt32(bitPattern: Int32(x &* 374_761_393 &+ y &* 668_265_263))
-    let mixed = (h ^ (h >> 13)) &* 1_274_126_177
-    let unit = CGFloat(mixed % 1000) / 1000
+    let mixed = UInt32(truncatingIfNeeded: x &* 374_761_393 &+ y &* 668_265_263)
+    let stirred = (mixed ^ (mixed >> 13)) &* 1_274_126_177
+    let unit = CGFloat(stirred % 1000) / 1000
     return sk_lerp(unit, 0.5, sk_clamp(smoothness, 0, 1))
 }
 

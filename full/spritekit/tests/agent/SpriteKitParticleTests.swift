@@ -220,6 +220,7 @@ func testConstraintsRangeRegionWarp() {
     let attr = SKAttribute(name: "a", type: .float)
     precondition(attr.type == .float)
     let value = SKAttributeValue(float: 3)
+    precondition(value.floatValue == 3)
     _ = SKAttributeValue(vectorFloat2: SIMD2<Float>(1, 2))
     _ = SKAttributeValue(vectorFloat3: SIMD3<Float>(1, 2, 3))
     _ = SKAttributeValue(vectorFloat4: SIMD4<Float>(1, 2, 3, 4))
