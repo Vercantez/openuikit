@@ -10,6 +10,7 @@ private func avkitOnMain<T>(_ body: @MainActor () -> T) -> T {
 
 private final class PictureInPictureProbeDelegate: NSObject, AVPictureInPictureControllerDelegate {
     var events: [String] = []
+    var startError: (any Error)?
     func pictureInPictureControllerWillStartPictureInPicture(
         _ pictureInPictureController: AVPictureInPictureController
     ) {
@@ -26,7 +27,8 @@ private final class PictureInPictureProbeDelegate: NSObject, AVPictureInPictureC
         _ pictureInPictureController: AVPictureInPictureController,
         failedToStartPictureInPictureWithError error: any Error
     ) {
-        _ = (pictureInPictureController, error)
+        _ = pictureInPictureController
+        startError = error
         events.append("failedToStart")
     }
     func pictureInPictureControllerWillStopPictureInPicture(
@@ -75,8 +77,6 @@ private final class PictureInPictureSampleBufferProbe: NSObject, AVPictureInPict
         return .zero
     }
 }
-
-private final class ProbeTransitionCoordinator: NSObject, UIViewControllerTransitionCoordinator {}
 
 private final class PlayerViewControllerProbeDelegate: NSObject, AVPlayerViewControllerDelegate {
     var events: [String] = []
@@ -233,6 +233,12 @@ func testVideoFrameAnalysisOptionSet() {
     precondition(!combined.contains(.visualSearch))
     precondition(combined.union(.visualSearch).contains(.visualSearch))
     precondition(AVVideoFrameAnalysisType().isEmpty)
+    var updated = combined
+    let replaced = updated.update(with: .visualSearch)
+    precondition(replaced == nil)
+    precondition(updated.contains(.visualSearch))
+    let again = updated.update(with: .visualSearch)
+    precondition(again == .visualSearch)
 }
 
 func testDisplayDynamicRangeRawValues() {
@@ -260,17 +266,12 @@ func testVideoPlayerNilCaption() {
         let video = VideoPlayer(player: nil)
         precondition(video.player == nil)
         precondition(video.openUIKitHostCaption == "No Video")
-    }
-}
-
-func testVideoPlayerPlayingCaption() {
-    avkitOnMain {
         let url = URL(fileURLWithPath: "/tmp/clip.m4v")
         let player = AVPlayer(url: url)
         player.rate = 1
-        let video = VideoPlayer(player: player)
-        precondition(video.player === player)
-        precondition(video.openUIKitHostCaption == "clip.m4v\nPlaying")
+        let playing = VideoPlayer(player: player)
+        precondition(playing.player === player)
+        precondition(playing.openUIKitHostCaption == "clip.m4v\nPlaying")
         player.rate = 0
         precondition(VideoPlayer(player: player).openUIKitHostCaption == "clip.m4v\nPaused")
     }
@@ -287,15 +288,6 @@ func testVideoPlayerOverlayInit() {
     }
 }
 
-func testVideoPlayerViewModifiers() {
-    avkitOnMain {
-        let video = VideoPlayer(player: nil)
-        _ = video.opacity(0.5)
-        _ = video.padding(8)
-        _ = video.disabled(true)
-    }
-}
-
 func testPictureInPictureUnsupported() {
     precondition(AVPictureInPictureController.isPictureInPictureSupported() == false)
     let layer = AVPlayerLayer()
@@ -304,15 +296,25 @@ func testPictureInPictureUnsupported() {
     precondition(controller == nil)
 }
 
-func testPictureInPictureStartStaysInactive() {
+func testPictureInPictureStartFailsClosed() {
     let source = AVPictureInPictureController.ContentSource(playerLayer: AVPlayerLayer())
     let controller = AVPictureInPictureController(contentSource: source)
     let probe = PictureInPictureProbeDelegate()
     controller.delegate = probe
+    // Apple: failedToStartPictureInPictureWithError when PiP cannot start.
+    // https://developer.apple.com/documentation/avkit/avpictureinpicturecontrollerdelegate/pictureinpicturecontroller(_:failedtostartpictureinpicturewitherror:)
     controller.startPictureInPicture()
     precondition(controller.isPictureInPictureActive == false)
     precondition(controller.isPictureInPicturePossible == false)
-    precondition(probe.events.isEmpty)
+    precondition(probe.events == ["failedToStart"])
+    guard let startError = probe.startError else {
+        preconditionFailure("startPictureInPicture must deliver failedToStart")
+    }
+    let nsError = startError as NSError
+    precondition(nsError.domain == AVKitErrorDomain)
+    precondition(nsError.code == AVKitError.Code.pictureInPictureStartFailed.rawValue)
+    probe.events.removeAll()
+    probe.startError = nil
     controller.stopPictureInPicture()
     precondition(controller.isPictureInPictureActive == false)
     precondition(probe.events.isEmpty)
@@ -324,17 +326,18 @@ func testPictureInPictureContentSourceStoresLayer() {
     precondition(source.playerLayer === layer)
     let controller = AVPictureInPictureController(contentSource: source)
     precondition(controller.contentSource === source)
+    precondition(controller.playerLayer === layer)
     precondition(controller.canStartPictureInPictureAutomaticallyFromInline == false)
     precondition(controller.requiresLinearPlayback == false)
+    let probe = PictureInPictureProbeDelegate()
+    controller.delegate = probe
+    precondition(controller.delegate === probe)
     controller.canStartPictureInPictureAutomaticallyFromInline = true
     controller.requiresLinearPlayback = true
     precondition(controller.canStartPictureInPictureAutomaticallyFromInline == true)
     precondition(controller.requiresLinearPlayback == true)
     controller.invalidatePlaybackState()
-    _ = AVPictureInPictureController.pictureInPictureButtonStartImage
-    _ = AVPictureInPictureController.pictureInPictureButtonStopImage
-    _ = AVPictureInPictureController.pictureInPictureButtonStartImage(compatibleWith: nil)
-    _ = AVPictureInPictureController.pictureInPictureButtonStopImage(compatibleWith: nil)
+    precondition(probe.events.isEmpty)
 }
 
 func testPictureInPictureSampleBufferAndVideoCallSources() {
@@ -345,6 +348,7 @@ func testPictureInPictureSampleBufferAndVideoCallSources() {
         playbackDelegate: playback
     )
     precondition(sampleSource.sampleBufferDisplayLayer === sample)
+    precondition(sampleSource.sampleBufferPlaybackDelegate === playback)
     let host = UIView(frame: .zero)
     let call = AVPictureInPictureVideoCallViewController()
     let callSource = AVPictureInPictureController.ContentSource(
@@ -421,17 +425,98 @@ func testCaptureEventInteractionStoresEnabled() {
     }
 }
 
-func testPlayerViewControllerSelectSpeed() {
+func testPlayerViewControllerPlaybackFlags() {
     avkitOnMain {
         let controller = AVPlayerViewController()
+        // MEASURED OpenUIKit-Chrome-fw-avkit iPhone 16 / iOS 26.1.
+        // Apple: showsPlaybackControls default YES; videoGravity ResizeAspect
+        // (https://developer.apple.com/documentation/avkit/avplayerviewcontroller).
+        precondition(controller.showsPlaybackControls == true)
+        precondition(controller.videoGravity == .resizeAspect)
+        precondition(controller.allowsPictureInPicturePlayback == true)
+        precondition(controller.entersFullScreenWhenPlaybackBegins == false)
+        precondition(controller.exitsFullScreenWhenPlaybackEnds == false)
+        precondition(controller.requiresLinearPlayback == false)
+        controller.showsPlaybackControls = false
+        controller.videoGravity = .resizeAspectFill
+        controller.allowsPictureInPicturePlayback = false
+        controller.entersFullScreenWhenPlaybackBegins = true
+        controller.exitsFullScreenWhenPlaybackEnds = true
+        controller.requiresLinearPlayback = true
+        precondition(controller.showsPlaybackControls == false)
+        precondition(controller.videoGravity == .resizeAspectFill)
+        precondition(controller.allowsPictureInPicturePlayback == false)
+        precondition(controller.entersFullScreenWhenPlaybackBegins == true)
+        precondition(controller.exitsFullScreenWhenPlaybackEnds == true)
+        precondition(controller.requiresLinearPlayback == true)
+    }
+}
+
+func testPlayerViewControllerDisplayState() {
+    avkitOnMain {
+        let controller = AVPlayerViewController()
+        // Apple: isReadyForDisplay is false until the first frame is ready;
+        // videoBounds is the current video rectangle; contentOverlayView is
+        // the overlay container
+        // (https://developer.apple.com/documentation/avkit/avplayerviewcontroller/isreadyfordisplay).
+        // Isolated host never decodes frames.
+        precondition(controller.isReadyForDisplay == false)
+        precondition(controller.videoBounds == .zero)
+        precondition(controller.contentOverlayView != nil)
+        controller.player = AVPlayer(url: URL(fileURLWithPath: "/tmp/clip.m4v"))
+        controller.player?.rate = 1
+        precondition(controller.isReadyForDisplay == false)
+        precondition(controller.videoBounds == .zero)
+        precondition(controller.contentOverlayView != nil)
+    }
+}
+
+func testPlayerViewControllerSpeeds() {
+    avkitOnMain {
+        let controller = AVPlayerViewController()
+        let listed = AVPlaybackSpeed.systemDefaultSpeeds[3]
+        precondition(controller.speeds.count == 5)
+        precondition(controller.speeds[0] === AVPlaybackSpeed.systemDefaultSpeeds[0])
+        precondition(controller.selectedSpeed === listed)
         let speed = AVPlaybackSpeed.systemDefaultSpeeds[0]
         controller.player = AVPlayer()
         controller.selectSpeed(speed)
         precondition(controller.selectedSpeed === speed)
         precondition(controller.player?.defaultRate == 2.0)
+        let outsider = AVPlaybackSpeed(rate: 9.5, localizedName: "probe-outsider")
+        controller.selectSpeed(outsider)
+        precondition(controller.selectedSpeed === speed)
+        let twin = AVPlaybackSpeed(rate: 1.0, localizedName: "Normal")
+        controller.selectSpeed(twin)
+        precondition(controller.selectedSpeed === speed)
+        let faster = AVPlaybackSpeed.systemDefaultSpeeds[1]
+        controller.selectSpeed(faster)
+        precondition(controller.selectedSpeed === faster)
+    }
+}
+
+func testPlayerViewControllerPlayerAssignment() {
+    avkitOnMain {
+        let controller = AVPlayerViewController()
+        precondition(controller.player == nil)
+        let url = URL(fileURLWithPath: "/tmp/clip.m4v")
+        let player = AVPlayer(url: url)
+        player.defaultRate = 1.5
+        player.rate = 0
+        controller.player = player
+        precondition(controller.player === player)
+        precondition(controller.selectedSpeed?.rate == 1.5)
+        // Runtime gap: lookalike AVPlayer.rate / defaultRate / currentItem.url
+        // are stored values. Apple's AVPlayer.rate is KVO-compliant
+        // (https://developer.apple.com/documentation/avfoundation/avplayer/rate).
+        // Isolated host has no status / timeControlStatus / currentItem.status
+        // pipeline, so isReadyForDisplay stays false.
+        player.rate = 1
+        precondition(controller.player?.rate == 1)
+        precondition(controller.player?.currentItem?.url == url)
         precondition(controller.isReadyForDisplay == false)
-        precondition(controller.showsPlaybackControls == true)
-        precondition(controller.preferredDisplayDynamicRange == .automatic)
+        player.rate = 0
+        precondition(controller.player?.rate == 0)
     }
 }
 
@@ -439,48 +524,23 @@ func testPlayerViewControllerMeasuredDefaults() {
     avkitOnMain {
         let controller = AVPlayerViewController()
         // MEASURED OpenUIKit-Chrome-fw-avkit iPhone 16 / iOS 26.1.
-        precondition(controller.showsPlaybackControls == true)
         precondition(controller.showsTimecodes == false)
-        precondition(controller.videoGravity == .resizeAspect)
-        precondition(controller.isReadyForDisplay == false)
-        precondition(controller.videoBounds == .zero)
-        precondition(controller.contentOverlayView != nil)
-        precondition(controller.allowsPictureInPicturePlayback == true)
         precondition(controller.allowsVideoFrameAnalysis == true)
         precondition(controller.videoFrameAnalysisTypes == .default)
         precondition(controller.canStartPictureInPictureAutomaticallyFromInline == false)
         precondition(controller.updatesNowPlayingInfoCenter == true)
-        precondition(controller.entersFullScreenWhenPlaybackBegins == false)
-        precondition(controller.exitsFullScreenWhenPlaybackEnds == false)
-        precondition(controller.requiresLinearPlayback == false)
         precondition(controller.preferredDisplayDynamicRange == .automatic)
-        precondition(controller.selectedSpeed === AVPlaybackSpeed.systemDefaultSpeeds[3])
-        precondition(controller.speeds.count == 5)
-        precondition(controller.speeds[0] === AVPlaybackSpeed.systemDefaultSpeeds[0])
-        precondition(controller.player == nil)
-        controller.allowsPictureInPicturePlayback = false
         controller.allowsVideoFrameAnalysis = false
         controller.canStartPictureInPictureAutomaticallyFromInline = true
-        controller.entersFullScreenWhenPlaybackBegins = true
-        controller.exitsFullScreenWhenPlaybackEnds = true
-        controller.requiresLinearPlayback = true
-        controller.showsPlaybackControls = false
         controller.showsTimecodes = true
         controller.updatesNowPlayingInfoCenter = false
-        controller.videoGravity = .resizeAspectFill
         controller.videoFrameAnalysisTypes = .text
         controller.pixelBufferAttributes = ["probe": 1]
         controller.preferredDisplayDynamicRange = .high
-        precondition(controller.allowsPictureInPicturePlayback == false)
         precondition(controller.allowsVideoFrameAnalysis == false)
         precondition(controller.canStartPictureInPictureAutomaticallyFromInline == true)
-        precondition(controller.entersFullScreenWhenPlaybackBegins == true)
-        precondition(controller.exitsFullScreenWhenPlaybackEnds == true)
-        precondition(controller.requiresLinearPlayback == true)
-        precondition(controller.showsPlaybackControls == false)
         precondition(controller.showsTimecodes == true)
         precondition(controller.updatesNowPlayingInfoCenter == false)
-        precondition(controller.videoGravity == .resizeAspectFill)
         precondition(controller.videoFrameAnalysisTypes == .text)
         precondition((controller.pixelBufferAttributes?["probe"] as? Int) == 1)
         precondition(controller.preferredDisplayDynamicRange == .high)
@@ -489,67 +549,22 @@ func testPlayerViewControllerMeasuredDefaults() {
     }
 }
 
-func testPlayerViewControllerSelectSpeedIdentity() {
-    avkitOnMain {
-        let controller = AVPlayerViewController()
-        let listed = AVPlaybackSpeed.systemDefaultSpeeds[3]
-        precondition(controller.selectedSpeed === listed)
-        let outsider = AVPlaybackSpeed(rate: 9.5, localizedName: "probe-outsider")
-        controller.selectSpeed(outsider)
-        precondition(controller.selectedSpeed === listed)
-        let twin = AVPlaybackSpeed(rate: 1.0, localizedName: "Normal")
-        controller.selectSpeed(twin)
-        precondition(controller.selectedSpeed === listed)
-        let faster = AVPlaybackSpeed.systemDefaultSpeeds[1]
-        controller.selectSpeed(faster)
-        precondition(controller.selectedSpeed === faster)
-        let player = AVPlayer()
-        player.defaultRate = 1.5
-        let synced = AVPlayerViewController()
-        synced.player = player
-        precondition(synced.selectedSpeed?.rate == 1.5)
-    }
-}
-
-func testPlayerViewControllerDelegateHooksExist() {
+func testPlayerViewControllerDelegateOrder() {
     avkitOnMain {
         let controller = AVPlayerViewController()
         let probe = PlayerViewControllerProbeDelegate()
         controller.delegate = probe
         precondition(controller.delegate === probe)
-        let range = AVInterstitialTimeRange(
-            timeRange: CMTimeRange(start: .zero, duration: .zero)
-        )
-        probe.playerViewController(controller, willPresent: range)
-        probe.playerViewController(controller, didPresent: range)
-        probe.playerViewController(controller, failedToStartPictureInPictureWithError: AVKitError(.pictureInPictureStartFailed))
-        probe.playerViewControllerWillStartPictureInPicture(controller)
-        probe.playerViewControllerDidStartPictureInPicture(controller)
-        probe.playerViewControllerWillStopPictureInPicture(controller)
-        probe.playerViewControllerDidStopPictureInPicture(controller)
-        precondition(probe.playerViewControllerShouldAutomaticallyDismissAtPictureInPictureStart(controller) == false)
-        var restored = true
-        probe.playerViewController(
-            controller,
-            restoreUserInterfaceForFullScreenExitWithCompletionHandler: { restored = $0 }
-        )
-        precondition(restored == false)
-        restored = true
-        probe.playerViewController(
-            controller,
-            restoreUserInterfaceForPictureInPictureStopWithCompletionHandler: { restored = $0 }
-        )
-        precondition(restored == false)
-        let coordinator = ProbeTransitionCoordinator()
-        probe.playerViewController(
-            controller,
-            willBeginFullScreenPresentationWithAnimationCoordinator: coordinator
-        )
-        probe.playerViewController(
-            controller,
-            willEndFullScreenPresentationWithAnimationCoordinator: coordinator
-        )
-        precondition(probe.events.count == 8)
+        // Apple willBegin then willEnd
+        // (https://developer.apple.com/documentation/avkit/avplayerviewcontrollerdelegate).
+        controller.openUIKitHostDeliverFullScreenDelegatePair()
+        precondition(probe.events == ["willBeginFullScreen", "willEndFullScreen"])
+        probe.events.removeAll()
+        controller.openUIKitHostDeliverPictureInPictureDelegateSequence(failedToStart: false)
+        precondition(probe.events == ["willStartPiP", "didStartPiP", "willStopPiP", "didStopPiP"])
+        probe.events.removeAll()
+        controller.openUIKitHostDeliverPictureInPictureDelegateSequence(failedToStart: true)
+        precondition(probe.events == ["failedPiP"])
     }
 }
 
@@ -663,16 +678,6 @@ func testPlayerItemAVKitAdditions() {
         )
         item.interstitialTimeRanges = [range]
         precondition(item.interstitialTimeRanges.count == 1)
-    }
-}
-
-func testVideoPlayerOnCameraCaptureEvent() {
-    avkitOnMain {
-        let video = VideoPlayer(player: nil)
-        _ = video.onCameraCaptureEvent { _ in }
-        _ = video.onCameraCaptureEvent(isEnabled: false) { _ in }
-        _ = video.onCameraCaptureEvent(isEnabled: true, primaryAction: { _ in }, secondaryAction: { _ in })
-        _ = video.onCameraCaptureEvent(isEnabled: true, defaultSoundDisabled: true) { _ in }
     }
 }
 

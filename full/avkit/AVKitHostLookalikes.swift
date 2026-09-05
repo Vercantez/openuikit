@@ -1,4 +1,7 @@
 import Foundation
+#if os(macOS)
+import CoreGraphics
+#endif
 
 // Isolated host compile has Foundation only. Types owned by AVFoundation,
 // AVFAudio, UIKit, and CoreMedia are module-local lookalikes so AVKit's
@@ -6,9 +9,12 @@ import Foundation
 // dependencies (this seed lists Foundation only). Real modules are imported
 // by tests/agent/AVKitDependencyIdentity.swift for later EC2 integration.
 
-#if !canImport(AVFoundation)
+#if !canImport(AVFoundation) || os(macOS)
 
 open class AVPlayer: NSObject {
+    /// Stored overlay of AVFoundation.AVPlayer.rate. Not `@objc dynamic`;
+    /// isolated-host KVO of "rate" is a runtime gap (Apple's player is
+    /// KVO-compliant: https://developer.apple.com/documentation/avfoundation/avplayer/rate).
     public var rate: Float = 0
     /// Isolated-host stand-in for AVFoundation.AVPlayer.defaultRate.
     /// Apple iPhone 16 / iOS 26.1 default is 1.0 (OpenUIKit-Chrome-fw-avkit).
@@ -86,7 +92,7 @@ open class AVSampleBufferDisplayLayer: NSObject {
 
 #endif
 
-#if !canImport(AVFAudio)
+#if !canImport(AVFAudio) || os(macOS)
 
 open class AVAudioSession: NSObject {
     public static let sharedInstance = AVAudioSession()
@@ -98,7 +104,7 @@ open class AVAudioSession: NSObject {
 
 #endif
 
-#if !canImport(AVRouting)
+#if !canImport(AVRouting) || os(macOS)
 
 open class AVCustomRoutingController: NSObject {
     public override init() {
@@ -108,7 +114,7 @@ open class AVCustomRoutingController: NSObject {
 
 #endif
 
-#if !canImport(CoreMedia)
+#if !canImport(CoreMedia) || os(macOS)
 
 public struct CMTime: Hashable, Sendable {
     public var value: Int64
@@ -253,7 +259,7 @@ open class UITraitCollection: NSObject {
 
 public protocol UIViewControllerTransitionCoordinator: AnyObject {}
 
-#if !canImport(SwiftUI)
+#if !canImport(SwiftUI) || os(macOS)
 
 public struct UIViewRepresentableContext<Representable> {
     public init() {}

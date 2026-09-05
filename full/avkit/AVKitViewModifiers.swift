@@ -3,7 +3,7 @@ import Foundation
 import Observation
 #endif
 
-#if !canImport(SwiftUI)
+#if !canImport(SwiftUI) || os(macOS)
 
 public protocol Publisher {
     associatedtype Output

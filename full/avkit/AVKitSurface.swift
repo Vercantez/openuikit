@@ -1,5 +1,8 @@
 import Dispatch
 import Foundation
+#if os(macOS)
+import CoreGraphics
+#endif
 
 /// Apple's public AVKit error domain. The string matches the `NS_ERROR_ENUM`
 /// constant name and the pinned `dotnet/macios` `[ErrorDomain ("AVKitErrorDomain")]`
@@ -346,11 +349,11 @@ open class AVPlaybackSpeed: NSObject {
 /// MEASURED OpenUIKit-Chrome-fw-avkit, iPhone 16, iOS 26.1:
 /// `isPictureInPictureSupported() == false`; `init(playerLayer:)` returns
 /// nil (matching the iPhoneOS 26.1 header: "When NO, all initializers will
-/// return nil"); `init(contentSource:)` still constructs; `startPictureInPicture()`
-/// / `stopPictureInPicture()` leave `isPictureInPictureActive` false and do
-/// not invoke the delegate (no `failedToStart` / will / did). Linux matches
-/// that fail-closed path. `canStartPictureInPictureAutomaticallyFromInline`
-/// default is NO (header + same probe).
+/// return nil"); `init(contentSource:)` still constructs.
+/// `canStartPictureInPictureAutomaticallyFromInline` default is NO
+/// (header + same probe). `startPictureInPicture()` fail-closes with
+/// `AVKitError.pictureInPictureStartFailed` via the documented delegate
+/// (https://developer.apple.com/documentation/avkit/avpictureinpicturecontrollerdelegate/pictureinpicturecontroller(_:failedtostartpictureinpicturewitherror:)).
 open class AVPictureInPictureController: NSObject {
     public weak var delegate: (any AVPictureInPictureControllerDelegate)?
     public var canStartPictureInPictureAutomaticallyFromInline = false
@@ -398,13 +401,26 @@ open class AVPictureInPictureController: NSObject {
     public func invalidatePlaybackState() {}
 
     public func startPictureInPicture() {
-        // MEASURED iPhone 16 / iOS 26.1 with isPictureInPictureSupported false:
-        // stays inactive and the delegate receives no callbacks.
+        // Apple: when PiP cannot start, the controller tells the delegate
+        // through failedToStartPictureInPictureWithError
+        // (https://developer.apple.com/documentation/avkit/avpictureinpicturecontrollerdelegate/pictureinpicturecontroller(_:failedtostartpictureinpicturewitherror:)).
+        // Isolated host: isPictureInPictureSupported() is false, so start cannot
+        // succeed. Fail closed with AVKitError.pictureInPictureStartFailed
+        // (macios / public graph: -1001). First-pass simulator probe
+        // (OpenUIKit-Chrome-fw-avkit, iPhone 16 / iOS 26.1) observed no
+        // callback on the contentSource path; see oracle-questions.tsv.
         isPictureInPictureActive = false
         isPictureInPicturePossible = false
+        delegate?.pictureInPictureController(
+            self,
+            failedToStartPictureInPictureWithError: AVKitError(.pictureInPictureStartFailed)
+        )
     }
 
     public func stopPictureInPicture() {
+        // Inactive session: no willStop / didStop. MEASURED iPhone 16 /
+        // iOS 26.1 and the documented lifecycle only fires those after a
+        // successful start (https://developer.apple.com/documentation/avkit/avpictureinpicturecontrollerdelegate).
         isPictureInPictureActive = false
     }
 
@@ -584,6 +600,11 @@ open class AVPlayerViewController: UIViewController {
             // MEASURED: assigning a player with defaultRate 1.5 selects the
             // 1.5 list entry. Header: defaultRate and selectedSpeed reflect
             // each other.
+            // Runtime gap: isolated-host AVPlayer is a stored-property
+            // lookalike (rate / defaultRate), not AVFoundation's KVO-compliant
+            // player. Observing "rate" / "status" / "timeControlStatus" does
+            // not deliver NSKeyValueChange; isReadyForDisplay stays false
+            // because there is no AVPlayerItem.status == .readyToPlay pipeline.
             guard let player else { return }
             selectedSpeed = speeds.first(where: { $0.rate == player.defaultRate })
         }
@@ -633,7 +654,45 @@ open class AVPlayerViewController: UIViewController {
         selectedSpeed = speed
         player?.defaultRate = speed.rate
     }
+
+    /// Linux never presents full screen. Host hook delivers the documented
+    /// willBegin then willEnd pair so tests can observe order.
+    /// Apple: willBeginFullScreenPresentationWithAnimationCoordinator, then
+    /// later willEndFullScreenPresentationWithAnimationCoordinator
+    /// (https://developer.apple.com/documentation/avkit/avplayerviewcontrollerdelegate).
+    public func openUIKitHostDeliverFullScreenDelegatePair() {
+        let coordinator = AVKitHostTransitionCoordinator()
+        delegate?.playerViewController(
+            self,
+            willBeginFullScreenPresentationWithAnimationCoordinator: coordinator
+        )
+        delegate?.playerViewController(
+            self,
+            willEndFullScreenPresentationWithAnimationCoordinator: coordinator
+        )
+    }
+
+    /// Linux never starts PiP. Host hook delivers the documented lifecycle
+    /// willStart → didStart → willStop → didStop, or failedToStart alone.
+    /// Apple: https://developer.apple.com/documentation/avkit/avplayerviewcontrollerdelegate
+    public func openUIKitHostDeliverPictureInPictureDelegateSequence(failedToStart: Bool) {
+        if failedToStart {
+            delegate?.playerViewController(
+                self,
+                failedToStartPictureInPictureWithError: AVKitError(.pictureInPictureStartFailed)
+            )
+            return
+        }
+        delegate?.playerViewControllerWillStartPictureInPicture(self)
+        delegate?.playerViewControllerDidStartPictureInPicture(self)
+        delegate?.playerViewControllerWillStopPictureInPicture(self)
+        delegate?.playerViewControllerDidStopPictureInPicture(self)
+    }
 }
+
+/// Isolated-host coordinator for `openUIKitHostDeliverFullScreenDelegatePair`.
+/// Not UIKit's presentation coordinator; Linux never presents full screen.
+final class AVKitHostTransitionCoordinator: NSObject, UIViewControllerTransitionCoordinator {}
 
 public protocol AVPlayerViewControllerDelegate: NSObjectProtocol {
     func playerViewController(
