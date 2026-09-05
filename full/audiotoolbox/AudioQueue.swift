@@ -87,6 +87,8 @@ internal final class ATAudioQueueObject: ATObject {
     var enqueued: [ATAudioQueueBufferOwner] = []
     var levelMetering = false
     var sampleTime: Float64 = 0
+    var listeners: [(id: AudioQueuePropertyID, proc: AudioQueuePropertyListenerProc, user: UnsafeMutableRawPointer?)] = []
+    var renderedPCM = Data()
 }
 
 public func AudioQueueAllocateBuffer(
@@ -270,7 +272,49 @@ public func AudioQueueStart(
     return atWithLock(queue.lock) {
         queue.started = true
         queue.paused = false
+        atNotifyAudioQueue(queue, kAudioQueueProperty_IsRunning)
         atPumpAudioQueue(queue)
+        return 0
+    }
+}
+
+internal func atNotifyAudioQueue(_ queue: ATAudioQueueObject, _ id: AudioQueuePropertyID) {
+    let handle = OpaquePointer(Unmanaged.passUnretained(queue).toOpaque())
+    for listener in queue.listeners where listener.id == id {
+        listener.proc(listener.user, handle, id)
+    }
+}
+
+public func AudioQueueAddPropertyListener(
+    _ inAQ: AudioQueueRef?,
+    _ inID: AudioQueuePropertyID,
+    _ inProc: AudioQueuePropertyListenerProc?,
+    _ inUserData: UnsafeMutableRawPointer?
+) -> Int32 {
+    guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
+        return kAudioQueueErr_QueueInvalidated
+    }
+    guard let inProc else { return kAudioQueueErr_InvalidParameter }
+    return atWithLock(queue.lock) {
+        queue.listeners.append((id: inID, proc: inProc, user: inUserData))
+        return 0
+    }
+}
+
+public func AudioQueueRemovePropertyListener(
+    _ inAQ: AudioQueueRef?,
+    _ inID: AudioQueuePropertyID,
+    _ inProc: AudioQueuePropertyListenerProc?,
+    _ inUserData: UnsafeMutableRawPointer?
+) -> Int32 {
+    guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
+        return kAudioQueueErr_QueueInvalidated
+    }
+    return atWithLock(queue.lock) {
+        queue.listeners.removeAll { listener in
+            listener.id == inID && listener.user == inUserData
+        }
+        _ = inProc
         return 0
     }
 }
@@ -299,6 +343,12 @@ internal func atPumpAudioQueue(_ queue: ATAudioQueueObject) {
         guard let owner = queue.enqueued.first else { break }
         queue.enqueued.removeFirst()
         owner.enqueued = false
+        let byteSize = Int(owner.pointer.pointee.mAudioDataByteSize)
+        if byteSize > 0 {
+            queue.renderedPCM.append(
+                Data(bytes: owner.data, count: min(byteSize, owner.dataCapacity))
+            )
+        }
         let frames = Int(owner.pointer.pointee.mAudioDataByteSize) / max(Int(queue.format.mBytesPerFrame), 1)
         queue.sampleTime += Float64(max(frames, 1))
         queue.callbackInvocations += 1
@@ -323,6 +373,7 @@ public func AudioQueueStop(
     return atWithLock(queue.lock) {
         queue.started = false
         queue.paused = false
+        atNotifyAudioQueue(queue, kAudioQueueProperty_IsRunning)
         return 0
     }
 }
@@ -332,8 +383,11 @@ public func AudioQueuePause(_ inAQ: AudioQueueRef?) -> Int32 {
     guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
         return kAudioQueueErr_QueueInvalidated
     }
-    queue.paused = true
-    return 0
+    return atWithLock(queue.lock) {
+        queue.paused = true
+        atNotifyAudioQueue(queue, kAudioQueueProperty_IsRunning)
+        return 0
+    }
 }
 
 @_cdecl("AudioQueueReset")
@@ -352,10 +406,15 @@ public func AudioQueueReset(_ inAQ: AudioQueueRef?) -> Int32 {
 
 @_cdecl("AudioQueueFlush")
 public func AudioQueueFlush(_ inAQ: AudioQueueRef?) -> Int32 {
-    guard ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) != nil else {
+    guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
         return kAudioQueueErr_QueueInvalidated
     }
-    return 0
+    return atWithLock(queue.lock) {
+        if queue.started && !queue.paused {
+            atPumpAudioQueue(queue)
+        }
+        return 0
+    }
 }
 
 /// Creates an in-process PCM output queue. An offline clock pumps enqueued

@@ -205,6 +205,9 @@ open class AVURLAsset: AVAsset, @unchecked Sendable {
         self.url = url
         self.options = options
         super.init()
+        if url.isFileURL, let probe = AVLocalMediaProbe.probe(url: url) {
+            attachPortableProbe(probe)
+        }
     }
 }
 

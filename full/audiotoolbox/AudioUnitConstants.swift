@@ -228,6 +228,12 @@ public func AudioUnitSetProperty(
         guard let inData, inDataSize >= 4 else { return kAudioUnitErr_InvalidPropertyValue }
         unit.maximumFrames = inData.loadUnaligned(as: UInt32.self)
         return 0
+    case kAudioUnitProperty_SetRenderCallback:
+        guard let inData, inDataSize >= 16 else {
+            return kAudioUnitErr_InvalidPropertyValue
+        }
+        unit.renderCallback = inData.assumingMemoryBound(to: AURenderCallbackStruct.self).pointee
+        return 0
     default:
         return kAudioUnitErr_InvalidProperty
     }
@@ -267,6 +273,9 @@ public func AudioUnitSetParameter(
     return 0
 }
 
+private let atRenderDepthGate = NSLock()
+private var atRenderDepth = 0
+
 public func AudioUnitRender(
     _ inUnit: AudioUnit?,
     _ ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>?,
@@ -275,8 +284,6 @@ public func AudioUnitRender(
     _ inNumberFrames: UInt32,
     _ ioData: UnsafeMutableRawPointer?
 ) -> Int32 {
-    _ = inTimeStamp
-    _ = inOutputBusNumber
     guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
         return kAudioUnitErr_InvalidElement
     }
@@ -299,11 +306,127 @@ public func AudioUnitRender(
     let bytes = Int(inNumberFrames) * Int(max(unit.outputFormat.mBytesPerFrame, 1))
     let count = min(bytes, Int(first.dataByteSize))
     memset(dest, 0, count)
-    if unit.isMixer {
-        // Offline mixer with no connected inputs renders silence (sum of empty buses).
+    var silence = true
+    var produced = false
+    atWithLock(atRenderDepthGate) { atRenderDepth += 1 }
+    defer {
+        atWithLock(atRenderDepthGate) { atRenderDepth -= 1 }
+    }
+    if atRenderDepth > 8 {
+        unit.lastRenderError = kAudioUnitErr_TooManyFramesToProcess
+        return kAudioUnitErr_TooManyFramesToProcess
+    }
+    if let callback = unit.renderCallback.inputProc {
+        var flags = ioActionFlags?.pointee ?? []
+        let status = callback(
+            unit.renderCallback.inputProcRefCon,
+            &flags,
+            inTimeStamp,
+            inOutputBusNumber,
+            inNumberFrames,
+            ioData
+        )
+        ioActionFlags?.pointee = flags
+        unit.lastRenderError = status
+        return status
+    }
+    if let inputCallback = unit.inputCallbacks[inOutputBusNumber]?.inputProc
+        ?? unit.inputCallbacks[0]?.inputProc
+    {
+        let ref = unit.inputCallbacks[inOutputBusNumber]?.inputProcRefCon
+            ?? unit.inputCallbacks[0]?.inputProcRefCon
+        var flags = ioActionFlags?.pointee ?? []
+        let status = inputCallback(ref, &flags, inTimeStamp, inOutputBusNumber, inNumberFrames, ioData)
+        ioActionFlags?.pointee = flags
+        unit.lastRenderError = status
+        silence = flags.contains(.unitRenderAction_OutputIsSilence)
+        if status != 0 {
+            return status
+        }
+        produced = true
+    }
+    for index in 0..<Int(max(unit.inputCount, 1)) {
+        if let connection = unit.connections[UInt32(index)] {
+            let planeBytes = Int(inNumberFrames) * Int(max(unit.inputFormat.mBytesPerFrame, 1))
+            var storage = Data(count: max(planeBytes, 24))
+            var pulledStatus: Int32 = 0
+            storage.withUnsafeMutableBytes { raw in
+                var abl = [UInt8](repeating: 0, count: 24)
+                abl.withUnsafeMutableBytes { ablRaw in
+                    let samples = raw.baseAddress!
+                    ablRaw.baseAddress!.storeBytes(of: UInt32(1), toByteOffset: 0, as: UInt32.self)
+                    ablRaw.baseAddress!.storeBytes(of: unit.inputFormat.mChannelsPerFrame, toByteOffset: 8, as: UInt32.self)
+                    ablRaw.baseAddress!.storeBytes(of: UInt32(planeBytes), toByteOffset: 12, as: UInt32.self)
+                    ablRaw.baseAddress!.storeBytes(of: UInt(bitPattern: samples), toByteOffset: 16, as: UInt.self)
+                    pulledStatus = AudioUnitRender(
+                        connection.source,
+                        ioActionFlags,
+                        inTimeStamp,
+                        connection.sourceOutput,
+                        inNumberFrames,
+                        ablRaw.baseAddress
+                    )
+                }
+            }
+            if pulledStatus == 0 {
+                storage.withUnsafeBytes { raw in
+                    _ = atMixPCM(
+                        inputs: [
+                            (
+                                format: unit.inputFormat,
+                                bytes: raw.baseAddress!,
+                                byteCount: planeBytes
+                            )
+                        ],
+                        dest: unit.outputFormat,
+                        output: dest,
+                        outputByteCapacity: count
+                    )
+                }
+                produced = true
+                silence = false
+            }
+        }
+    }
+    if !produced && unit.isGenerator {
+        atRenderGenerator(unit: unit, frames: Int(inNumberFrames), dest: dest, byteCount: count)
+        silence = false
+    } else if !produced && unit.isMixer {
         _ = atMixPCM(inputs: [], dest: unit.outputFormat, output: dest, outputByteCapacity: count)
     }
-    ioActionFlags?.pointee.insert(.unitRenderAction_OutputIsSilence)
+    if silence {
+        ioActionFlags?.pointee.insert(.unitRenderAction_OutputIsSilence)
+    } else {
+        ioActionFlags?.pointee.remove(.unitRenderAction_OutputIsSilence)
+    }
     unit.lastRenderError = 0
+    unit.sampleCounter += Int64(inNumberFrames)
     return 0
+}
+
+private func atRenderGenerator(
+    unit: ATAudioUnitObject,
+    frames: Int,
+    dest: UnsafeMutableRawPointer,
+    byteCount: Int
+) {
+    let format = unit.outputFormat
+    let width = format.bytesPerSample
+    let channels = format.frameCountChannels
+    let gain = unit.parameters[0] ?? 1
+    for frame in 0..<frames {
+        let phase = Float(unit.sampleCounter + Int64(frame))
+        let sample = sinf(phase * 0.05) * gain
+        for channel in 0..<channels {
+            let offset = frame * width * channels + channel * width
+            if offset + width > byteCount { return }
+            atFloatToSample(
+                sample,
+                dest: dest.advanced(by: offset),
+                bits: Int(format.mBitsPerChannel),
+                floating: format.isFloat,
+                bigEndian: format.isBigEndian
+            )
+        }
+    }
 }

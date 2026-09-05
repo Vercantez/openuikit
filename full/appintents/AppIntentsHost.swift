@@ -102,7 +102,6 @@ extension IntentParameter {
         inputConnectionBehavior: InputConnectionBehavior? = nil,
         optionsProvider: Provider
     ) {
-        _ = optionsProvider
         self.init(
             title: title,
             description: description,
@@ -110,5 +109,15 @@ extension IntentParameter {
             requestValueDialog: requestValueDialog,
             inputConnectionBehavior: inputConnectionBehavior
         )
+        optionsProviderAttached = true
+        _ = optionsProvider
     }
+
+    public var hasOptionsProvider: Bool { optionsProviderAttached }
+
+    public func attachResolvedOptions(_ options: [Any]) {
+        storedResolvedOptions = options
+    }
+
+    public var resolvedDynamicOptions: [Any] { storedResolvedOptions }
 }

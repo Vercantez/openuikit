@@ -74,6 +74,11 @@ private final class ATAudioComponentRecord: ATObject {
     }
 }
 
+internal struct ATUnitConnection {
+    var source: AudioUnit
+    var sourceOutput: UInt32
+}
+
 internal final class ATAudioUnitObject: ATObject {
     let description: AudioComponentDescription
     var initialized = false
@@ -84,6 +89,10 @@ internal final class ATAudioUnitObject: ATObject {
     var lastRenderError: Int32 = 0
     var maximumFrames: UInt32 = 4096
     var parameters: [UInt32: Float32] = [:]
+    var connections: [UInt32: ATUnitConnection] = [:]
+    var inputCallbacks: [UInt32: AURenderCallbackStruct] = [:]
+    var renderCallback = AURenderCallbackStruct()
+    var sampleCounter: Int64 = 0
 
     var isRemoteIO: Bool {
         description.componentSubType == kAudioUnitSubType_RemoteIO
@@ -98,6 +107,11 @@ internal final class ATAudioUnitObject: ATObject {
 
     var isGenericOutput: Bool {
         description.componentSubType == kAudioUnitSubType_GenericOutput
+    }
+
+    var isGenerator: Bool {
+        description.componentType == kAudioUnitType_Generator
+            || description.componentSubType == kAudioUnitSubType_ScheduledSoundPlayer
     }
 
     init(description: AudioComponentDescription) {
@@ -115,6 +129,7 @@ private let builtinComponents: [ATAudioComponentRecord] = {
     let specs: [(UInt32, UInt32)] = [
         (kAudioUnitType_Output, kAudioUnitSubType_GenericOutput),
         (kAudioUnitType_Mixer, kAudioUnitSubType_MultiChannelMixer),
+        (kAudioUnitType_Generator, kAudioUnitSubType_ScheduledSoundPlayer),
         (kAudioUnitType_Output, kAudioUnitSubType_RemoteIO),
     ]
     return specs.map { type, subtype in

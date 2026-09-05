@@ -1,6 +1,7 @@
 full/appintents/AppIntents.swift
 full/appintents/AppIntentsAssistant.swift
 full/appintents/AppIntentsClasses.swift
+full/appintents/AppIntentsDepth.swift
 full/appintents/AppIntentsEnums.swift
 full/appintents/AppIntentsHost.swift
 full/appintents/AppIntentsLookalikes.swift

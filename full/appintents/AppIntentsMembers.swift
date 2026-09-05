@@ -157,11 +157,58 @@ extension IntentParameter {
 @propertyWrapper
 public final class EntityProperty<Value>: NSObject, @unchecked Sendable
     where Value: _IntentValue, Value: Sendable {
-    public var wrappedValue: Value {
-        get { fatalError("EntityProperty value was not supplied") }
-        set { _ = newValue }
+    private var stored: Value?
+    private var storedGetter: (() -> Value)?
+    private var storedTitle: String = ""
+    private var storedIdentifier: String?
+
+    public var projectedValue: EntityProperty<Value> { self }
+
+    public var title: LocalizedStringResource {
+        LocalizedStringResource(storedTitle)
     }
+
+    public override var description: String { storedTitle }
+
+    public var isOptional: Bool {
+        Value.self is any _OptionalIntentValue.Type
+    }
+
+    public var identifier: String? { storedIdentifier }
+
+    public var wrappedValue: Value {
+        get {
+            if let stored {
+                return stored
+            }
+            if let storedGetter {
+                return storedGetter()
+            }
+            if let optional = Value.self as? any _OptionalIntentValue.Type,
+               let value = optional._none as? Value {
+                return value
+            }
+            fatalError("EntityProperty value was not supplied")
+        }
+        set { stored = newValue }
+    }
+
     public override init() { super.init() }
+
+    public convenience init(title: LocalizedStringResource, identifier: String? = nil) {
+        self.init()
+        storedTitle = appIntentsString(title)
+        storedIdentifier = identifier
+    }
+
+    public convenience init(
+        title: LocalizedStringResource,
+        identifier: String? = nil,
+        getter: @escaping () -> Value
+    ) {
+        self.init(title: title, identifier: identifier)
+        storedGetter = getter
+    }
     public convenience init<T0, T1>(identifier p0: T0? = nil, asyncGetter p1: T1? = nil) { self.init() }
     public convenience init<T0, T1, T2>(identifier p0: T0? = nil, indexingKey p1: T1? = nil, getter p2: T2? = nil) { self.init() }
     public convenience init<T0, T1, T2>(identifier p0: T0? = nil, indexingKey p1: T1? = nil, getSetter p2: T2? = nil) { self.init() }
