@@ -154,12 +154,19 @@ the 120s sealed-gate timeout.
 ### Gate
 
 Run `bash full/coretransferable/tests/acceptance/test_host.sh` on this
-Linux host (no docker). Expected markers:
+Linux host (no docker). Observed on this host after the wait-box repair:
 
 ```
-CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
 FRAMEWORK_FANOUT_DELIVERABLE_OK module=CoreTransferable lane=medium-full symbols=305
 FRAMEWORK_FANOUT_REFERENCE_OK
 CORETRANSFERABLE_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=CoreTransferable dylib=libCoreTransferable.dylib
 ```
+
+Toolchain: Swift 6.2.4, target `x86_64-unknown-linux-gnu`. Isolated
+`swiftc` for this module is clean. The campaign line
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
+is not emitted here: `.cursor/verify-cloud-environment.sh` needs
+`scratch/ladder-corpus/focus-ios`, which is absent, and this pod
+booted from `bld-20260905-9aa65d65-...` rather than
+`bld-20260901-d3266600-...`.
