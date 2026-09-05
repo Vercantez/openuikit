@@ -1,0 +1,444 @@
+precise	kind	title	path	declaration
+c:@E@PKCanvasViewDrawingPolicy	swift.enum	PKCanvasViewDrawingPolicy	PKCanvasViewDrawingPolicy	enum PKCanvasViewDrawingPolicy
+c:@E@PKCanvasViewDrawingPolicy@PKCanvasViewDrawingPolicyAnyInput	swift.enum.case	PKCanvasViewDrawingPolicy.anyInput	PKCanvasViewDrawingPolicy.anyInput	case anyInput
+c:@E@PKCanvasViewDrawingPolicy@PKCanvasViewDrawingPolicyDefault	swift.enum.case	PKCanvasViewDrawingPolicy.default	PKCanvasViewDrawingPolicy.default	case `default`
+c:@E@PKCanvasViewDrawingPolicy@PKCanvasViewDrawingPolicyPencilOnly	swift.enum.case	PKCanvasViewDrawingPolicy.pencilOnly	PKCanvasViewDrawingPolicy.pencilOnly	case pencilOnly
+c:@E@PKContentVersion	swift.enum	PKContentVersion	PKContentVersion	enum PKContentVersion
+c:@E@PKContentVersion@PKContentVersion1	swift.enum.case	PKContentVersion.version1	PKContentVersion.version1	case version1
+c:@E@PKContentVersion@PKContentVersion2	swift.enum.case	PKContentVersion.version2	PKContentVersion.version2	case version2
+c:@E@PKContentVersion@PKContentVersion3	swift.enum.case	PKContentVersion.version3	PKContentVersion.version3	case version3
+c:@E@PKContentVersion@PKContentVersion4	swift.enum.case	PKContentVersion.version4	PKContentVersion.version4	case version4
+c:@E@PKContentVersion@PKContentVersionLatest	swift.type.property	latest	PKContentVersion.latest	static var latest: PKContentVersion { get }
+c:@E@PKToolPickerCustomItemControlOptions	swift.struct	PKToolPickerCustomItem.ControlOptions	PKToolPickerCustomItem.ControlOptions	struct ControlOptions
+c:@E@PKToolPickerCustomItemControlOptions@PKToolPickerCustomItemControlOpacity	swift.type.property	opacity	PKToolPickerCustomItem.ControlOptions.opacity	static var opacity: PKToolPickerCustomItem.ControlOptions { get }
+c:@E@PKToolPickerCustomItemControlOptions@PKToolPickerCustomItemControlWidth	swift.type.property	width	PKToolPickerCustomItem.ControlOptions.width	static var width: PKToolPickerCustomItem.ControlOptions { get }
+c:@E@PKToolPickerVisibility	swift.enum	PKToolPickerVisibility	PKToolPickerVisibility	enum PKToolPickerVisibility
+c:@E@PKToolPickerVisibility@PKToolPickerVisibilityHidden	swift.enum.case	PKToolPickerVisibility.hidden	PKToolPickerVisibility.hidden	case hidden
+c:@E@PKToolPickerVisibility@PKToolPickerVisibilityInactive	swift.enum.case	PKToolPickerVisibility.inactive	PKToolPickerVisibility.inactive	case inactive
+c:@E@PKToolPickerVisibility@PKToolPickerVisibilityVisible	swift.enum.case	PKToolPickerVisibility.visible	PKToolPickerVisibility.visible	case visible
+c:@PKAppleDrawingTypeIdentifier	swift.var	PKAppleDrawingTypeIdentifier	PKAppleDrawingTypeIdentifier	let PKAppleDrawingTypeIdentifier: CFString
+c:objc(cs)PKCanvasView	swift.class	PKCanvasView	PKCanvasView	@MainActor class PKCanvasView
+c:objc(cs)PKCanvasView(py)allowsFingerDrawing	swift.property	allowsFingerDrawing	PKCanvasView.allowsFingerDrawing	@MainActor var allowsFingerDrawing: Bool { get set }
+c:objc(cs)PKCanvasView(py)delegate	swift.property	delegate	PKCanvasView.delegate	@MainActor weak var delegate: (any PKCanvasViewDelegate)? { get set }
+c:objc(cs)PKCanvasView(py)drawing	swift.property	drawing	PKCanvasView.drawing	@MainActor var drawing: PKDrawing { get set }
+c:objc(cs)PKCanvasView(py)drawingEnabled	swift.property	isDrawingEnabled	PKCanvasView.isDrawingEnabled	@MainActor var isDrawingEnabled: Bool { get set }
+c:objc(cs)PKCanvasView(py)drawingGestureRecognizer	swift.property	drawingGestureRecognizer	PKCanvasView.drawingGestureRecognizer	@MainActor var drawingGestureRecognizer: UIGestureRecognizer { get }
+c:objc(cs)PKCanvasView(py)drawingPolicy	swift.property	drawingPolicy	PKCanvasView.drawingPolicy	@MainActor var drawingPolicy: PKCanvasViewDrawingPolicy { get set }
+c:objc(cs)PKCanvasView(py)maximumSupportedContentVersion	swift.property	maximumSupportedContentVersion	PKCanvasView.maximumSupportedContentVersion	@MainActor var maximumSupportedContentVersion: PKContentVersion { get set }
+c:objc(cs)PKCanvasView(py)rulerActive	swift.property	isRulerActive	PKCanvasView.isRulerActive	@MainActor var isRulerActive: Bool { get set }
+c:objc(cs)PKDrawing	swift.class	PKDrawingReference	PKDrawingReference	class PKDrawingReference
+c:objc(cs)PKDrawing(im)dataRepresentation	swift.method	dataRepresentation()	PKDrawingReference.dataRepresentation()	func dataRepresentation() -> Data
+c:objc(cs)PKDrawing(im)drawingByAppendingDrawing:	swift.method	appending(_:)	PKDrawingReference.appending(_:)	func appending(_ drawing: PKDrawing) -> PKDrawing
+c:objc(cs)PKDrawing(im)drawingByAppendingStrokes:	swift.method	appendingStrokes(_:)	PKDrawingReference.appendingStrokes(_:)	func appendingStrokes(_ strokes: [PKStroke]) -> PKDrawing
+c:objc(cs)PKDrawing(im)drawingByApplyingTransform:	swift.method	applying(_:)	PKDrawingReference.applying(_:)	func applying(_ transform: CGAffineTransform) -> PKDrawing
+c:objc(cs)PKDrawing(im)imageFromRect:scale:	swift.method	image(from:scale:)	PKDrawingReference.image(from:scale:)	func image(from rect: CGRect, scale: CGFloat) -> UIImage
+c:objc(cs)PKDrawing(im)init	swift.init	init()	PKDrawingReference.init()	init()
+c:objc(cs)PKDrawing(im)initWithData:error:	swift.init	init(data:)	PKDrawingReference.init(data:)	init(data: Data) throws
+c:objc(cs)PKDrawing(im)initWithStrokes:	swift.init	init(strokes:)	PKDrawingReference.init(strokes:)	convenience init(strokes: [PKStroke])
+c:objc(cs)PKDrawing(py)bounds	swift.property	bounds	PKDrawingReference.bounds	var bounds: CGRect { get }
+c:objc(cs)PKDrawing(py)requiredContentVersion	swift.property	requiredContentVersion	PKDrawingReference.requiredContentVersion	var requiredContentVersion: PKContentVersion { get }
+c:objc(cs)PKDrawing(py)strokes	swift.property	strokes	PKDrawingReference.strokes	var strokes: [PKStroke] { get }
+c:objc(cs)PKEraserTool	swift.class	PKEraserToolReference	PKEraserToolReference	class PKEraserToolReference
+c:objc(cs)PKEraserTool(cm)defaultWidthForEraserType:	swift.type.method	defaultWidth(for:)	PKEraserToolReference.defaultWidth(for:)	class func defaultWidth(for eraserType: __PKEraserType) -> CGFloat
+c:objc(cs)PKEraserTool(cm)maximumWidthForEraserType:	swift.type.method	maximumWidth(for:)	PKEraserToolReference.maximumWidth(for:)	class func maximumWidth(for eraserType: __PKEraserType) -> CGFloat
+c:objc(cs)PKEraserTool(cm)minimumWidthForEraserType:	swift.type.method	minimumWidth(for:)	PKEraserToolReference.minimumWidth(for:)	class func minimumWidth(for eraserType: __PKEraserType) -> CGFloat
+c:objc(cs)PKEraserTool(im)initWithEraserType:	swift.init	init(eraserType:)	PKEraserToolReference.init(eraserType:)	init(eraserType: __PKEraserType)
+c:objc(cs)PKEraserTool(im)initWithEraserType:width:	swift.init	init(eraserType:width:)	PKEraserToolReference.init(eraserType:width:)	init(eraserType: __PKEraserType, width: CGFloat)
+c:objc(cs)PKEraserTool(py)eraserType	swift.property	eraserType	PKEraserToolReference.eraserType	var eraserType: __PKEraserType { get }
+c:objc(cs)PKEraserTool(py)width	swift.property	width	PKEraserToolReference.width	var width: CGFloat { get }
+c:objc(cs)PKInk	swift.class	PKInkReference	PKInkReference	class PKInkReference
+c:objc(cs)PKInk(im)initWithInkType:color:	swift.init	init(inkType:color:)	PKInkReference.init(inkType:color:)	init(inkType type: __PKInkType, color: UIColor)
+c:objc(cs)PKInk(py)color	swift.property	color	PKInkReference.color	var color: UIColor { get }
+c:objc(cs)PKInk(py)inkType	swift.property	inkType	PKInkReference.inkType	var inkType: __PKInkType { get }
+c:objc(cs)PKInk(py)requiredContentVersion	swift.property	requiredContentVersion	PKInkReference.requiredContentVersion	var requiredContentVersion: PKContentVersion { get }
+c:objc(cs)PKInkingTool	swift.class	PKInkingToolReference	PKInkingToolReference	class PKInkingToolReference
+c:objc(cs)PKInkingTool(cm)convertColor:fromUserInterfaceStyle:to:	swift.type.method	convert(_:from:to:)	PKInkingToolReference.convert(_:from:to:)	class func convert(_ color: UIColor, from fromUserInterfaceStyle: UIUserInterfaceStyle, to toUserInterfaceStyle: UIUserInterfaceStyle) -> UIColor
+c:objc(cs)PKInkingTool(cm)defaultWidthForInkType:	swift.type.method	defaultWidth(forInkType:)	PKInkingToolReference.defaultWidth(forInkType:)	class func defaultWidth(forInkType inkType: __PKInkType) -> CGFloat
+c:objc(cs)PKInkingTool(cm)maximumWidthForInkType:	swift.type.method	maximumWidth(forInkType:)	PKInkingToolReference.maximumWidth(forInkType:)	class func maximumWidth(forInkType inkType: __PKInkType) -> CGFloat
+c:objc(cs)PKInkingTool(cm)minimumWidthForInkType:	swift.type.method	minimumWidth(forInkType:)	PKInkingToolReference.minimumWidth(forInkType:)	class func minimumWidth(forInkType inkType: __PKInkType) -> CGFloat
+c:objc(cs)PKInkingTool(im)initWithInk:width:	swift.init	init(ink:width:)	PKInkingToolReference.init(ink:width:)	convenience init(ink: PKInk, width: CGFloat)
+c:objc(cs)PKInkingTool(im)initWithInkType:color:	swift.init	init(inkType:color:)	PKInkingToolReference.init(inkType:color:)	convenience init(inkType type: __PKInkType, color: UIColor)
+c:objc(cs)PKInkingTool(im)initWithInkType:color:width:	swift.init	init(inkType:color:width:)	PKInkingToolReference.init(inkType:color:width:)	init(inkType type: __PKInkType, color: UIColor, width: CGFloat)
+c:objc(cs)PKInkingTool(im)initWithInkType:color:width:azimuth:	swift.init	init(inkType:color:width:azimuth:)	PKInkingToolReference.init(inkType:color:width:azimuth:)	init(inkType type: __PKInkType, color: UIColor, width: CGFloat, azimuth angle: CGFloat)
+c:objc(cs)PKInkingTool(py)azimuth	swift.property	azimuth	PKInkingToolReference.azimuth	var azimuth: CGFloat { get }
+c:objc(cs)PKInkingTool(py)color	swift.property	color	PKInkingToolReference.color	var color: UIColor { get }
+c:objc(cs)PKInkingTool(py)ink	swift.property	ink	PKInkingToolReference.ink	var ink: PKInk { get }
+c:objc(cs)PKInkingTool(py)inkType	swift.property	inkType	PKInkingToolReference.inkType	var inkType: __PKInkType { get }
+c:objc(cs)PKInkingTool(py)requiredContentVersion	swift.property	requiredContentVersion	PKInkingToolReference.requiredContentVersion	var requiredContentVersion: PKContentVersion { get }
+c:objc(cs)PKInkingTool(py)width	swift.property	width	PKInkingToolReference.width	var width: CGFloat { get }
+c:objc(cs)PKLassoTool	swift.class	PKLassoToolReference	PKLassoToolReference	class PKLassoToolReference
+c:objc(cs)PKLassoTool(im)init	swift.init	init()	PKLassoToolReference.init()	init()
+c:objc(cs)PKResponderState	swift.class	PKResponderState	PKResponderState	class PKResponderState
+c:objc(cs)PKResponderState(py)activeToolPicker	swift.property	activeToolPicker	PKResponderState.activeToolPicker	var activeToolPicker: PKToolPicker? { get set }
+c:objc(cs)PKStroke	swift.class	PKStrokeReference	PKStrokeReference	class PKStrokeReference
+c:objc(cs)PKStroke(im)initWithInk:strokePath:transform:mask:	swift.init	init(ink:strokePath:transform:mask:)	PKStrokeReference.init(ink:strokePath:transform:mask:)	init(ink: PKInk, strokePath: PKStrokePath, transform: CGAffineTransform, mask: UIBezierPath?)
+c:objc(cs)PKStroke(im)initWithInk:strokePath:transform:mask:randomSeed:	swift.init	init(ink:strokePath:transform:mask:randomSeed:)	PKStrokeReference.init(ink:strokePath:transform:mask:randomSeed:)	init(ink: PKInk, strokePath: PKStrokePath, transform: CGAffineTransform, mask: UIBezierPath?, randomSeed: UInt32)
+c:objc(cs)PKStroke(py)ink	swift.property	ink	PKStrokeReference.ink	var ink: PKInk { get }
+c:objc(cs)PKStroke(py)mask	swift.property	mask	PKStrokeReference.mask	var mask: UIBezierPath? { get }
+c:objc(cs)PKStroke(py)maskedPathRanges	swift.property	maskedPathRanges	PKStrokeReference.maskedPathRanges	var maskedPathRanges: [__PKFloatRange] { get }
+c:objc(cs)PKStroke(py)path	swift.property	path	PKStrokeReference.path	var path: PKStrokePath { get }
+c:objc(cs)PKStroke(py)randomSeed	swift.property	randomSeed	PKStrokeReference.randomSeed	var randomSeed: UInt32 { get }
+c:objc(cs)PKStroke(py)renderBounds	swift.property	renderBounds	PKStrokeReference.renderBounds	var renderBounds: CGRect { get }
+c:objc(cs)PKStroke(py)requiredContentVersion	swift.property	requiredContentVersion	PKStrokeReference.requiredContentVersion	var requiredContentVersion: PKContentVersion { get }
+c:objc(cs)PKStroke(py)transform	swift.property	transform	PKStrokeReference.transform	var transform: CGAffineTransform { get }
+c:objc(cs)PKStrokePath	swift.class	PKStrokePathReference	PKStrokePathReference	class PKStrokePathReference
+c:objc(cs)PKStrokePath(im)enumerateInterpolatedPointsInRange:strideByDistance:usingBlock:	swift.method	enumerateInterpolatedPoints(in:strideByDistance:using:)	PKStrokePathReference.enumerateInterpolatedPoints(in:strideByDistance:using:)	func enumerateInterpolatedPoints(in range: __PKFloatRange, strideByDistance distanceStep: CGFloat, using block: @escaping (PKStrokePoint, UnsafeMutablePointer<ObjCBool>) -> Void)
+c:objc(cs)PKStrokePath(im)enumerateInterpolatedPointsInRange:strideByParametricStep:usingBlock:	swift.method	enumerateInterpolatedPoints(in:strideByParametricStep:using:)	PKStrokePathReference.enumerateInterpolatedPoints(in:strideByParametricStep:using:)	func enumerateInterpolatedPoints(in range: __PKFloatRange, strideByParametricStep parametricStep: CGFloat, using block: @escaping (PKStrokePoint, UnsafeMutablePointer<ObjCBool>) -> Void)
+c:objc(cs)PKStrokePath(im)enumerateInterpolatedPointsInRange:strideByTime:usingBlock:	swift.method	enumerateInterpolatedPoints(in:strideByTime:using:)	PKStrokePathReference.enumerateInterpolatedPoints(in:strideByTime:using:)	func enumerateInterpolatedPoints(in range: __PKFloatRange, strideByTime timeStep: TimeInterval, using block: @escaping (PKStrokePoint, UnsafeMutablePointer<ObjCBool>) -> Void)
+c:objc(cs)PKStrokePath(im)initWithControlPoints:creationDate:	swift.init	init(controlPoints:creationDate:)	PKStrokePathReference.init(controlPoints:creationDate:)	init(controlPoints: [PKStrokePoint], creationDate: Date)
+c:objc(cs)PKStrokePath(im)interpolatedLocationAt:	swift.method	interpolatedLocation(at:)	PKStrokePathReference.interpolatedLocation(at:)	func interpolatedLocation(at parametricValue: CGFloat) -> CGPoint
+c:objc(cs)PKStrokePath(im)interpolatedPointAt:	swift.method	interpolatedPoint(at:)	PKStrokePathReference.interpolatedPoint(at:)	func interpolatedPoint(at parametricValue: CGFloat) -> PKStrokePoint
+c:objc(cs)PKStrokePath(im)objectAtIndexedSubscript:	swift.subscript	subscript(_:)	PKStrokePathReference.subscript(_:)	subscript(i: Int) -> PKStrokePoint { get }
+c:objc(cs)PKStrokePath(im)parametricValue:offsetByDistance:	swift.method	parametricValue(_:offsetByDistance:)	PKStrokePathReference.parametricValue(_:offsetByDistance:)	func parametricValue(_ parametricValue: CGFloat, offsetByDistance distanceStep: CGFloat) -> CGFloat
+c:objc(cs)PKStrokePath(im)parametricValue:offsetByTime:	swift.method	parametricValue(_:offsetByTime:)	PKStrokePathReference.parametricValue(_:offsetByTime:)	func parametricValue(_ parametricValue: CGFloat, offsetByTime timeStep: TimeInterval) -> CGFloat
+c:objc(cs)PKStrokePath(im)pointAtIndex:	swift.method	point(at:)	PKStrokePathReference.point(at:)	func point(at i: Int) -> PKStrokePoint
+c:objc(cs)PKStrokePath(py)count	swift.property	count	PKStrokePathReference.count	var count: Int { get }
+c:objc(cs)PKStrokePath(py)creationDate	swift.property	creationDate	PKStrokePathReference.creationDate	var creationDate: Date { get }
+c:objc(cs)PKStrokePoint	swift.class	PKStrokePointReference	PKStrokePointReference	class PKStrokePointReference
+c:objc(cs)PKStrokePoint(im)initWithLocation:timeOffset:size:opacity:force:azimuth:altitude:	swift.init	init(location:timeOffset:size:opacity:force:azimuth:altitude:)	PKStrokePointReference.init(location:timeOffset:size:opacity:force:azimuth:altitude:)	init(location: CGPoint, timeOffset: TimeInterval, size: CGSize, opacity: CGFloat, force: CGFloat, azimuth: CGFloat, altitude: CGFloat)
+c:objc(cs)PKStrokePoint(im)initWithLocation:timeOffset:size:opacity:force:azimuth:altitude:secondaryScale:	swift.init	init(location:timeOffset:size:opacity:force:azimuth:altitude:secondaryScale:)	PKStrokePointReference.init(location:timeOffset:size:opacity:force:azimuth:altitude:secondaryScale:)	init(location: CGPoint, timeOffset: TimeInterval, size: CGSize, opacity: CGFloat, force: CGFloat, azimuth: CGFloat, altitude: CGFloat, secondaryScale: CGFloat)
+c:objc(cs)PKStrokePoint(im)initWithLocation:timeOffset:size:opacity:force:azimuth:altitude:secondaryScale:threshold:	swift.init	init(location:timeOffset:size:opacity:force:azimuth:altitude:secondaryScale:threshold:)	PKStrokePointReference.init(location:timeOffset:size:opacity:force:azimuth:altitude:secondaryScale:threshold:)	init(location: CGPoint, timeOffset: TimeInterval, size: CGSize, opacity: CGFloat, force: CGFloat, azimuth: CGFloat, altitude: CGFloat, secondaryScale: CGFloat, threshold: CGFloat)
+c:objc(cs)PKStrokePoint(py)altitude	swift.property	altitude	PKStrokePointReference.altitude	var altitude: CGFloat { get }
+c:objc(cs)PKStrokePoint(py)azimuth	swift.property	azimuth	PKStrokePointReference.azimuth	var azimuth: CGFloat { get }
+c:objc(cs)PKStrokePoint(py)force	swift.property	force	PKStrokePointReference.force	var force: CGFloat { get }
+c:objc(cs)PKStrokePoint(py)location	swift.property	location	PKStrokePointReference.location	var location: CGPoint { get }
+c:objc(cs)PKStrokePoint(py)opacity	swift.property	opacity	PKStrokePointReference.opacity	var opacity: CGFloat { get }
+c:objc(cs)PKStrokePoint(py)secondaryScale	swift.property	secondaryScale	PKStrokePointReference.secondaryScale	var secondaryScale: CGFloat { get }
+c:objc(cs)PKStrokePoint(py)size	swift.property	size	PKStrokePointReference.size	var size: CGSize { get }
+c:objc(cs)PKStrokePoint(py)threshold	swift.property	threshold	PKStrokePointReference.threshold	var threshold: CGFloat { get }
+c:objc(cs)PKStrokePoint(py)timeOffset	swift.property	timeOffset	PKStrokePointReference.timeOffset	var timeOffset: TimeInterval { get }
+c:objc(cs)PKToolPicker	swift.class	PKToolPicker	PKToolPicker	class PKToolPicker
+c:objc(cs)PKToolPicker(cm)sharedToolPickerForWindow:	swift.type.method	shared(for:)	PKToolPicker.shared(for:)	class func shared(for window: UIWindow) -> PKToolPicker?
+c:objc(cs)PKToolPicker(cpy)defaultToolItems	swift.type.property	defaultToolItems	PKToolPicker.defaultToolItems	class var defaultToolItems: [PKToolPickerItem] { get }
+c:objc(cs)PKToolPicker(im)addObserver:	swift.method	addObserver(_:)	PKToolPicker.addObserver(_:)	func addObserver(_ observer: any PKToolPickerObserver)
+c:objc(cs)PKToolPicker(im)frameObscuredInView:	swift.method	frameObscured(in:)	PKToolPicker.frameObscured(in:)	func frameObscured(in view: UIView) -> CGRect
+c:objc(cs)PKToolPicker(im)init	swift.init	init()	PKToolPicker.init()	init()
+c:objc(cs)PKToolPicker(im)initWithToolItems:	swift.init	init(toolItems:)	PKToolPicker.init(toolItems:)	init(toolItems items: [PKToolPickerItem])
+c:objc(cs)PKToolPicker(im)removeObserver:	swift.method	removeObserver(_:)	PKToolPicker.removeObserver(_:)	func removeObserver(_ observer: any PKToolPickerObserver)
+c:objc(cs)PKToolPicker(im)setVisible:forFirstResponder:	swift.method	setVisible(_:forFirstResponder:)	PKToolPicker.setVisible(_:forFirstResponder:)	func setVisible(_ visible: Bool, forFirstResponder responder: UIResponder)
+c:objc(cs)PKToolPicker(py)accessoryItem	swift.property	accessoryItem	PKToolPicker.accessoryItem	var accessoryItem: UIBarButtonItem? { get set }
+c:objc(cs)PKToolPicker(py)colorMaximumLinearExposure	swift.property	colorMaximumLinearExposure	PKToolPicker.colorMaximumLinearExposure	var colorMaximumLinearExposure: CGFloat { get set }
+c:objc(cs)PKToolPicker(py)colorUserInterfaceStyle	swift.property	colorUserInterfaceStyle	PKToolPicker.colorUserInterfaceStyle	var colorUserInterfaceStyle: UIUserInterfaceStyle { get set }
+c:objc(cs)PKToolPicker(py)delegate	swift.property	delegate	PKToolPicker.delegate	weak var delegate: (any PKToolPicker.Delegate)? { get set }
+c:objc(cs)PKToolPicker(py)isVisible	swift.property	isVisible	PKToolPicker.isVisible	var isVisible: Bool { get }
+c:objc(cs)PKToolPicker(py)maximumSupportedContentVersion	swift.property	maximumSupportedContentVersion	PKToolPicker.maximumSupportedContentVersion	var maximumSupportedContentVersion: PKContentVersion { get set }
+c:objc(cs)PKToolPicker(py)overrideUserInterfaceStyle	swift.property	overrideUserInterfaceStyle	PKToolPicker.overrideUserInterfaceStyle	var overrideUserInterfaceStyle: UIUserInterfaceStyle { get set }
+c:objc(cs)PKToolPicker(py)rulerActive	swift.property	isRulerActive	PKToolPicker.isRulerActive	var isRulerActive: Bool { get set }
+c:objc(cs)PKToolPicker(py)selectedToolItem	swift.property	selectedToolItem	PKToolPicker.selectedToolItem	var selectedToolItem: PKToolPickerItem { get set }
+c:objc(cs)PKToolPicker(py)selectedToolItemIdentifier	swift.property	selectedToolItemIdentifier	PKToolPicker.selectedToolItemIdentifier	var selectedToolItemIdentifier: String { get set }
+c:objc(cs)PKToolPicker(py)showsDrawingPolicyControls	swift.property	showsDrawingPolicyControls	PKToolPicker.showsDrawingPolicyControls	var showsDrawingPolicyControls: Bool { get set }
+c:objc(cs)PKToolPicker(py)stateAutosaveName	swift.property	stateAutosaveName	PKToolPicker.stateAutosaveName	var stateAutosaveName: String? { get set }
+c:objc(cs)PKToolPicker(py)toolItems	swift.property	toolItems	PKToolPicker.toolItems	var toolItems: [PKToolPickerItem] { get }
+c:objc(cs)PKToolPickerCustomItem	swift.class	PKToolPickerCustomItem	PKToolPickerCustomItem	class PKToolPickerCustomItem
+c:objc(cs)PKToolPickerCustomItem(im)reloadImage	swift.method	reloadImage()	PKToolPickerCustomItem.reloadImage()	func reloadImage()
+c:objc(cs)PKToolPickerCustomItem(py)allowsColorSelection	swift.property	allowsColorSelection	PKToolPickerCustomItem.allowsColorSelection	var allowsColorSelection: Bool { get set }
+c:objc(cs)PKToolPickerCustomItem(py)color	swift.property	color	PKToolPickerCustomItem.color	var color: UIColor { get set }
+c:objc(cs)PKToolPickerCustomItem(py)width	swift.property	width	PKToolPickerCustomItem.width	var width: CGFloat { get set }
+c:objc(cs)PKToolPickerEraserItem	swift.class	PKToolPickerEraserItem	PKToolPickerEraserItem	class PKToolPickerEraserItem
+c:objc(cs)PKToolPickerInkingItem	swift.class	PKToolPickerInkingItem	PKToolPickerInkingItem	class PKToolPickerInkingItem
+c:objc(cs)PKToolPickerInkingItem(py)allowsColorSelection	swift.property	allowsColorSelection	PKToolPickerInkingItem.allowsColorSelection	var allowsColorSelection: Bool { get set }
+c:objc(cs)PKToolPickerItem	swift.class	PKToolPickerItem	PKToolPickerItem	class PKToolPickerItem
+c:objc(cs)PKToolPickerItem(py)identifier	swift.property	identifier	PKToolPickerItem.identifier	var identifier: String { get }
+c:objc(cs)PKToolPickerLassoItem	swift.class	PKToolPickerLassoItem	PKToolPickerLassoItem	class PKToolPickerLassoItem
+c:objc(cs)PKToolPickerLassoItem(im)init	swift.init	init()	PKToolPickerLassoItem.init()	init()
+c:objc(cs)PKToolPickerRulerItem	swift.class	PKToolPickerRulerItem	PKToolPickerRulerItem	class PKToolPickerRulerItem
+c:objc(cs)PKToolPickerRulerItem(im)init	swift.init	init()	PKToolPickerRulerItem.init()	init()
+c:objc(cs)PKToolPickerScribbleItem	swift.class	PKToolPickerScribbleItem	PKToolPickerScribbleItem	class PKToolPickerScribbleItem
+c:objc(cs)PKToolPickerScribbleItem(im)init	swift.init	init()	PKToolPickerScribbleItem.init()	init()
+c:objc(cs)UIResponder(py)pencilKitResponderState	swift.property	pencilKitResponderState	UIResponder.pencilKitResponderState	@MainActor var pencilKitResponderState: PKResponderState { get }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)PKDrawing	swift.init	init(coder:)	PKDrawingReference.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)PKCanvasViewDelegate	swift.protocol	PKCanvasViewDelegate	PKCanvasViewDelegate	@MainActor protocol PKCanvasViewDelegate : UIScrollViewDelegate
+c:objc(pl)PKCanvasViewDelegate(im)canvasViewDidBeginUsingTool:	swift.method	canvasViewDidBeginUsingTool(_:)	PKCanvasViewDelegate.canvasViewDidBeginUsingTool(_:)	@MainActor optional func canvasViewDidBeginUsingTool(_ canvasView: PKCanvasView)
+c:objc(pl)PKCanvasViewDelegate(im)canvasViewDidEndUsingTool:	swift.method	canvasViewDidEndUsingTool(_:)	PKCanvasViewDelegate.canvasViewDidEndUsingTool(_:)	@MainActor optional func canvasViewDidEndUsingTool(_ canvasView: PKCanvasView)
+c:objc(pl)PKCanvasViewDelegate(im)canvasViewDidFinishRendering:	swift.method	canvasViewDidFinishRendering(_:)	PKCanvasViewDelegate.canvasViewDidFinishRendering(_:)	@MainActor optional func canvasViewDidFinishRendering(_ canvasView: PKCanvasView)
+c:objc(pl)PKCanvasViewDelegate(im)canvasViewDrawingDidChange:	swift.method	canvasViewDrawingDidChange(_:)	PKCanvasViewDelegate.canvasViewDrawingDidChange(_:)	@MainActor optional func canvasViewDrawingDidChange(_ canvasView: PKCanvasView)
+c:objc(pl)PKToolPickerDelegate	swift.protocol	PKToolPicker.Delegate	PKToolPicker.Delegate	@MainActor protocol Delegate : NSObjectProtocol
+c:objc(pl)PKToolPickerObserver	swift.protocol	PKToolPickerObserver	PKToolPickerObserver	@MainActor protocol PKToolPickerObserver : NSObjectProtocol
+c:objc(pl)PKToolPickerObserver(im)toolPickerFramesObscuredDidChange:	swift.method	toolPickerFramesObscuredDidChange(_:)	PKToolPickerObserver.toolPickerFramesObscuredDidChange(_:)	@MainActor optional func toolPickerFramesObscuredDidChange(_ toolPicker: PKToolPicker)
+c:objc(pl)PKToolPickerObserver(im)toolPickerIsRulerActiveDidChange:	swift.method	toolPickerIsRulerActiveDidChange(_:)	PKToolPickerObserver.toolPickerIsRulerActiveDidChange(_:)	@MainActor optional func toolPickerIsRulerActiveDidChange(_ toolPicker: PKToolPicker)
+c:objc(pl)PKToolPickerObserver(im)toolPickerSelectedToolDidChange:	swift.method	toolPickerSelectedToolDidChange(_:)	PKToolPickerObserver.toolPickerSelectedToolDidChange(_:)	@MainActor optional func toolPickerSelectedToolDidChange(_ toolPicker: PKToolPicker)
+c:objc(pl)PKToolPickerObserver(im)toolPickerSelectedToolItemDidChange:	swift.method	toolPickerSelectedToolItemDidChange(_:)	PKToolPickerObserver.toolPickerSelectedToolItemDidChange(_:)	@MainActor optional func toolPickerSelectedToolItemDidChange(_ toolPicker: PKToolPicker)
+c:objc(pl)PKToolPickerObserver(im)toolPickerVisibilityDidChange:	swift.method	toolPickerVisibilityDidChange(_:)	PKToolPickerObserver.toolPickerVisibilityDidChange(_:)	@MainActor optional func toolPickerVisibilityDidChange(_ toolPicker: PKToolPicker)
+s:9PencilKit11PKLassoToolV	swift.struct	PKLassoTool	PKLassoTool	struct PKLassoTool
+s:9PencilKit11PKLassoToolV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	PKLassoTool.==(_:_:)	static func == (a: PKLassoTool, b: PKLassoTool) -> Bool
+s:9PencilKit11PKLassoToolVACycfc	swift.init	init()	PKLassoTool.init()	init()
+s:9PencilKit12PKEraserToolV	swift.struct	PKEraserTool	PKEraserTool	struct PKEraserTool
+s:9PencilKit12PKEraserToolV10EraserTypeO	swift.enum	PKEraserTool.EraserType	PKEraserTool.EraserType	enum EraserType
+s:9PencilKit12PKEraserToolV10EraserTypeO12defaultWidth14CoreFoundation7CGFloatVvp	swift.property	defaultWidth	PKEraserTool.EraserType.defaultWidth	var defaultWidth: CGFloat { get }
+s:9PencilKit12PKEraserToolV10EraserTypeO15validWidthRangeSNy14CoreFoundation7CGFloatVGvp	swift.property	validWidthRange	PKEraserTool.EraserType.validWidthRange	var validWidthRange: ClosedRange<CGFloat> { get }
+s:9PencilKit12PKEraserToolV10EraserTypeO16fixedWidthBitmapyA2EmF	swift.enum.case	PKEraserTool.EraserType.fixedWidthBitmap	PKEraserTool.EraserType.fixedWidthBitmap	case fixedWidthBitmap
+s:9PencilKit12PKEraserToolV10EraserTypeO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	PKEraserTool.EraserType.==(_:_:)	static func == (a: PKEraserTool.EraserType, b: PKEraserTool.EraserType) -> Bool
+s:9PencilKit12PKEraserToolV10EraserTypeO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	PKEraserTool.EraserType.hash(into:)	func hash(into hasher: inout Hasher)
+s:9PencilKit12PKEraserToolV10EraserTypeO6bitmapyA2EmF	swift.enum.case	PKEraserTool.EraserType.bitmap	PKEraserTool.EraserType.bitmap	case bitmap
+s:9PencilKit12PKEraserToolV10EraserTypeO6vectoryA2EmF	swift.enum.case	PKEraserTool.EraserType.vector	PKEraserTool.EraserType.vector	case vector
+s:9PencilKit12PKEraserToolV10EraserTypeO9hashValueSivp	swift.property	hashValue	PKEraserTool.EraserType.hashValue	var hashValue: Int { get }
+s:9PencilKit12PKEraserToolV10eraserTypeAC06EraserF0Ovp	swift.property	eraserType	PKEraserTool.eraserType	var eraserType: PKEraserTool.EraserType { get set }
+s:9PencilKit12PKEraserToolV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	PKEraserTool.==(_:_:)	static func == (a: PKEraserTool, b: PKEraserTool) -> Bool
+s:9PencilKit12PKEraserToolV5width14CoreFoundation7CGFloatVvp	swift.property	width	PKEraserTool.width	var width: CGFloat { get set }
+s:9PencilKit12PKEraserToolV_5widthA2C10EraserTypeO_14CoreFoundation7CGFloatVtcfc	swift.init	init(_:width:)	PKEraserTool.init(_:width:)	init(_ eraserType: PKEraserTool.EraserType, width: CGFloat)
+s:9PencilKit12PKEraserToolVyA2C10EraserTypeOcfc	swift.init	init(_:)	PKEraserTool.init(_:)	init(_ eraserType: PKEraserTool.EraserType)
+s:9PencilKit12PKInkingToolV	swift.struct	PKInkingTool	PKInkingTool	struct PKInkingTool
+s:9PencilKit12PKInkingToolV12convertColor_4from2toSo7UIColorCAH_So20UIUserInterfaceStyleVAJtFZ	swift.type.method	convertColor(_:from:to:)	PKInkingTool.convertColor(_:from:to:)	static func convertColor(_ color: UIColor, from: UIUserInterfaceStyle, to: UIUserInterfaceStyle) -> UIColor
+s:9PencilKit12PKInkingToolV22requiredContentVersionSo09PKContentG0Vvp	swift.property	requiredContentVersion	PKInkingTool.requiredContentVersion	var requiredContentVersion: PKContentVersion { get }
+s:9PencilKit12PKInkingToolV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	PKInkingTool.==(_:_:)	static func == (a: PKInkingTool, b: PKInkingTool) -> Bool
+s:9PencilKit12PKInkingToolV3ink5widthAcA5PKInkV_14CoreFoundation7CGFloatVtcfc	swift.init	init(ink:width:)	PKInkingTool.init(ink:width:)	init(ink: PKInk, width: CGFloat)
+s:9PencilKit12PKInkingToolV3inkAA5PKInkVvp	swift.property	ink	PKInkingTool.ink	var ink: PKInk { get }
+s:9PencilKit12PKInkingToolV5colorSo7UIColorCvp	swift.property	color	PKInkingTool.color	var color: UIColor { get set }
+s:9PencilKit12PKInkingToolV5width14CoreFoundation7CGFloatVvp	swift.property	width	PKInkingTool.width	var width: CGFloat { get set }
+s:9PencilKit12PKInkingToolV7InkTypeO	swift.enum	PKInkingTool.InkType	PKInkingTool.InkType	enum InkType
+s:9PencilKit12PKInkingToolV7InkTypeO10watercoloryA2EmF	swift.enum.case	PKInkingTool.InkType.watercolor	PKInkingTool.InkType.watercolor	case watercolor
+s:9PencilKit12PKInkingToolV7InkTypeO11fountainPenyA2EmF	swift.enum.case	PKInkingTool.InkType.fountainPen	PKInkingTool.InkType.fountainPen	case fountainPen
+s:9PencilKit12PKInkingToolV7InkTypeO12defaultWidth14CoreFoundation7CGFloatVvp	swift.property	defaultWidth	PKInkingTool.InkType.defaultWidth	var defaultWidth: CGFloat { get }
+s:9PencilKit12PKInkingToolV7InkTypeO15validWidthRangeSNy14CoreFoundation7CGFloatVGvp	swift.property	validWidthRange	PKInkingTool.InkType.validWidthRange	var validWidthRange: ClosedRange<CGFloat> { get }
+s:9PencilKit12PKInkingToolV7InkTypeO22requiredContentVersionSo09PKContentI0Vvp	swift.property	requiredContentVersion	PKInkingTool.InkType.requiredContentVersion	var requiredContentVersion: PKContentVersion { get }
+s:9PencilKit12PKInkingToolV7InkTypeO3penyA2EmF	swift.enum.case	PKInkingTool.InkType.pen	PKInkingTool.InkType.pen	case pen
+s:9PencilKit12PKInkingToolV7InkTypeO4reedyA2EmF	swift.enum.case	PKInkingTool.InkType.reed	PKInkingTool.InkType.reed	case reed
+s:9PencilKit12PKInkingToolV7InkTypeO6crayonyA2EmF	swift.enum.case	PKInkingTool.InkType.crayon	PKInkingTool.InkType.crayon	case crayon
+s:9PencilKit12PKInkingToolV7InkTypeO6markeryA2EmF	swift.enum.case	PKInkingTool.InkType.marker	PKInkingTool.InkType.marker	case marker
+s:9PencilKit12PKInkingToolV7InkTypeO6pencilyA2EmF	swift.enum.case	PKInkingTool.InkType.pencil	PKInkingTool.InkType.pencil	case pencil
+s:9PencilKit12PKInkingToolV7InkTypeO8RawValuea	swift.typealias	PKInkingTool.InkType.RawValue	PKInkingTool.InkType.RawValue	typealias RawValue = String
+s:9PencilKit12PKInkingToolV7InkTypeO8monolineyA2EmF	swift.enum.case	PKInkingTool.InkType.monoline	PKInkingTool.InkType.monoline	case monoline
+s:9PencilKit12PKInkingToolV7InkTypeO8rawValueAESgSS_tcfc	swift.init	init(rawValue:)	PKInkingTool.InkType.init(rawValue:)	init?(rawValue: String)
+s:9PencilKit12PKInkingToolV7InkTypeO8rawValueSSvp	swift.property	rawValue	PKInkingTool.InkType.rawValue	var rawValue: String { get }
+s:9PencilKit12PKInkingToolV7azimuth14CoreFoundation7CGFloatVvp	swift.property	azimuth	PKInkingTool.azimuth	var azimuth: CGFloat { get set }
+s:9PencilKit12PKInkingToolV7inkTypeAC03InkF0Ovp	swift.property	inkType	PKInkingTool.inkType	var inkType: PKInkingTool.InkType { get set }
+s:9PencilKit12PKInkingToolV_5color5width7azimuthA2C7InkTypeO_So7UIColorC14CoreFoundation7CGFloatVSgAMtcfc	swift.init	init(_:color:width:azimuth:)	PKInkingTool.init(_:color:width:azimuth:)	init(_ inkType: PKInkingTool.InkType, color: UIColor = UIColor.black, width: CGFloat? = nil, azimuth: CGFloat)
+s:9PencilKit12PKInkingToolV_5color5widthA2C7InkTypeO_So7UIColorC14CoreFoundation7CGFloatVSgtcfc	swift.init	init(_:color:width:)	PKInkingTool.init(_:color:width:)	init(_ inkType: PKInkingTool.InkType, color: UIColor = UIColor.black, width: CGFloat? = nil)
+s:9PencilKit12PKStrokePathV	swift.struct	PKStrokePath	PKStrokePath	struct PKStrokePath
+s:9PencilKit12PKStrokePathV10startIndexSivp	swift.property	startIndex	PKStrokePath.startIndex	var startIndex: Int { get }
+s:9PencilKit12PKStrokePathV11SubSequencea	swift.typealias	PKStrokePath.SubSequence	PKStrokePath.SubSequence	typealias SubSequence = Slice<PKStrokePath>
+s:9PencilKit12PKStrokePathV12creationDate10Foundation0F0Vvp	swift.property	creationDate	PKStrokePath.creationDate	var creationDate: Date { get }
+s:9PencilKit12PKStrokePathV13controlPoints12creationDateACx_10Foundation0H0VtcSTRzAA0C5PointV7ElementRtzlufc	swift.init	init(controlPoints:creationDate:)	PKStrokePath.init(controlPoints:creationDate:)	init<T>(controlPoints: T, creationDate: Date) where T : Sequence, T.Element == PKStrokePoint
+s:9PencilKit12PKStrokePathV15parametricValue_8offsetBy14CoreFoundation7CGFloatVAH_AC17InterpolatedSliceV6StrideOtF	swift.method	parametricValue(_:offsetBy:)	PKStrokePath.parametricValue(_:offsetBy:)	func parametricValue(_ parametricValue: CGFloat, offsetBy step: PKStrokePath.InterpolatedSlice.Stride) -> CGFloat
+s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.struct	PKStrokePath.InterpolatedSlice	PKStrokePath.InterpolatedSlice	struct InterpolatedSlice
+s:9PencilKit12PKStrokePathV17InterpolatedSliceV4nextAA0C5PointVSgyF	swift.method	next()	PKStrokePath.InterpolatedSlice.next()	mutating func next() -> PKStrokePoint?
+s:9PencilKit12PKStrokePathV17InterpolatedSliceV6StrideO	swift.enum	PKStrokePath.InterpolatedSlice.Stride	PKStrokePath.InterpolatedSlice.Stride	enum Stride
+s:9PencilKit12PKStrokePathV17InterpolatedSliceV6StrideO14parametricStepyAG14CoreFoundation7CGFloatVcAGmF	swift.enum.case	PKStrokePath.InterpolatedSlice.Stride.parametricStep(_:)	PKStrokePath.InterpolatedSlice.Stride.parametricStep(_:)	case parametricStep(CGFloat)
+s:9PencilKit12PKStrokePathV17InterpolatedSliceV6StrideO4timeyAGSdcAGmF	swift.enum.case	PKStrokePath.InterpolatedSlice.Stride.time(_:)	PKStrokePath.InterpolatedSlice.Stride.time(_:)	case time(TimeInterval)
+s:9PencilKit12PKStrokePathV17InterpolatedSliceV6StrideO8distanceyAG14CoreFoundation7CGFloatVcAGmF	swift.enum.case	PKStrokePath.InterpolatedSlice.Stride.distance(_:)	PKStrokePath.InterpolatedSlice.Stride.distance(_:)	case distance(CGFloat)
+s:9PencilKit12PKStrokePathV17InterpolatedSliceV7Elementa	swift.typealias	PKStrokePath.InterpolatedSlice.Element	PKStrokePath.InterpolatedSlice.Element	typealias Element = PKStrokePoint
+s:9PencilKit12PKStrokePathV17InterpolatedSliceV8Iteratora	swift.typealias	PKStrokePath.InterpolatedSlice.Iterator	PKStrokePath.InterpolatedSlice.Iterator	typealias Iterator = PKStrokePath.InterpolatedSlice
+s:9PencilKit12PKStrokePathV17interpolatedPoint2atAA0cF0V14CoreFoundation7CGFloatV_tF	swift.method	interpolatedPoint(at:)	PKStrokePath.interpolatedPoint(at:)	func interpolatedPoint(at parametricValue: CGFloat) -> PKStrokePoint
+s:9PencilKit12PKStrokePathV18interpolatedPoints2in2byAC17InterpolatedSliceVSNy14CoreFoundation7CGFloatVGSg_AH6StrideOtF	swift.method	interpolatedPoints(in:by:)	PKStrokePath.interpolatedPoints(in:by:)	func interpolatedPoints(in range: ClosedRange<CGFloat>? = nil, by stride: PKStrokePath.InterpolatedSlice.Stride) -> PKStrokePath.InterpolatedSlice
+s:9PencilKit12PKStrokePathV20interpolatedLocation2atSo7CGPointV14CoreFoundation7CGFloatV_tF	swift.method	interpolatedLocation(at:)	PKStrokePath.interpolatedLocation(at:)	func interpolatedLocation(at parametricValue: CGFloat) -> CGPoint
+s:9PencilKit12PKStrokePathV5Indexa	swift.typealias	PKStrokePath.Index	PKStrokePath.Index	typealias Index = Int
+s:9PencilKit12PKStrokePathV7Elementa	swift.typealias	PKStrokePath.Element	PKStrokePath.Element	typealias Element = PKStrokePoint
+s:9PencilKit12PKStrokePathV7Indicesa	swift.typealias	PKStrokePath.Indices	PKStrokePath.Indices	typealias Indices = Range<PKStrokePath.Index>
+s:9PencilKit12PKStrokePathV8Iteratora	swift.typealias	PKStrokePath.Iterator	PKStrokePath.Iterator	typealias Iterator = IndexingIterator<PKStrokePath>
+s:9PencilKit12PKStrokePathV8endIndexSivp	swift.property	endIndex	PKStrokePath.endIndex	var endIndex: Int { get }
+s:9PencilKit12PKStrokePathVACycfc	swift.init	init()	PKStrokePath.init()	init()
+s:9PencilKit12PKStrokePathVyAA0C5PointVSicip	swift.subscript	subscript(_:)	PKStrokePath.subscript(_:)	subscript(index: PKStrokePath.Index) -> PKStrokePoint { get }
+s:9PencilKit13PKStrokePointV	swift.struct	PKStrokePoint	PKStrokePoint	struct PKStrokePoint
+s:9PencilKit13PKStrokePointV10timeOffsetSdvp	swift.property	timeOffset	PKStrokePoint.timeOffset	var timeOffset: TimeInterval { get }
+s:9PencilKit13PKStrokePointV14secondaryScale14CoreFoundation7CGFloatVvp	swift.property	secondaryScale	PKStrokePoint.secondaryScale	var secondaryScale: CGFloat { get }
+s:9PencilKit13PKStrokePointV4sizeSo6CGSizeVvp	swift.property	size	PKStrokePoint.size	var size: CGSize { get }
+s:9PencilKit13PKStrokePointV5force14CoreFoundation7CGFloatVvp	swift.property	force	PKStrokePoint.force	var force: CGFloat { get }
+s:9PencilKit13PKStrokePointV7azimuth14CoreFoundation7CGFloatVvp	swift.property	azimuth	PKStrokePoint.azimuth	var azimuth: CGFloat { get }
+s:9PencilKit13PKStrokePointV7opacity14CoreFoundation7CGFloatVvp	swift.property	opacity	PKStrokePoint.opacity	var opacity: CGFloat { get }
+s:9PencilKit13PKStrokePointV8altitude14CoreFoundation7CGFloatVvp	swift.property	altitude	PKStrokePoint.altitude	var altitude: CGFloat { get }
+s:9PencilKit13PKStrokePointV8location10timeOffset4size7opacity5force7azimuth8altitude14secondaryScale9thresholdACSo7CGPointV_SdSo6CGSizeV14CoreFoundation7CGFloatVA5Stcfc	swift.init	init(location:timeOffset:size:opacity:force:azimuth:altitude:secondaryScale:threshold:)	PKStrokePoint.init(location:timeOffset:size:opacity:force:azimuth:altitude:secondaryScale:threshold:)	init(location: CGPoint, timeOffset: TimeInterval, size: CGSize, opacity: CGFloat, force: CGFloat, azimuth: CGFloat, altitude: CGFloat, secondaryScale: CGFloat, threshold: CGFloat)
+s:9PencilKit13PKStrokePointV8location10timeOffset4size7opacity5force7azimuth8altitude14secondaryScaleACSo7CGPointV_SdSo6CGSizeV14CoreFoundation7CGFloatVA4Rtcfc	swift.init	init(location:timeOffset:size:opacity:force:azimuth:altitude:secondaryScale:)	PKStrokePoint.init(location:timeOffset:size:opacity:force:azimuth:altitude:secondaryScale:)	init(location: CGPoint, timeOffset: TimeInterval, size: CGSize, opacity: CGFloat, force: CGFloat, azimuth: CGFloat, altitude: CGFloat, secondaryScale: CGFloat)
+s:9PencilKit13PKStrokePointV8location10timeOffset4size7opacity5force7azimuth8altitudeACSo7CGPointV_SdSo6CGSizeV14CoreFoundation7CGFloatVA3Qtcfc	swift.init	init(location:timeOffset:size:opacity:force:azimuth:altitude:)	PKStrokePoint.init(location:timeOffset:size:opacity:force:azimuth:altitude:)	init(location: CGPoint, timeOffset: TimeInterval, size: CGSize, opacity: CGFloat, force: CGFloat, azimuth: CGFloat, altitude: CGFloat)
+s:9PencilKit13PKStrokePointV8locationSo7CGPointVvp	swift.property	location	PKStrokePoint.location	var location: CGPoint { get }
+s:9PencilKit13PKStrokePointV9threshold14CoreFoundation7CGFloatVvp	swift.property	threshold	PKStrokePoint.threshold	var threshold: CGFloat { get }
+s:9PencilKit5PKInkV	swift.struct	PKInk	PKInk	struct PKInk
+s:9PencilKit5PKInkV22requiredContentVersionSo09PKContentF0Vvp	swift.property	requiredContentVersion	PKInk.requiredContentVersion	var requiredContentVersion: PKContentVersion { get }
+s:9PencilKit5PKInkV5colorSo7UIColorCvp	swift.property	color	PKInk.color	var color: UIColor { get set }
+s:9PencilKit5PKInkV7InkTypea	swift.typealias	PKInk.InkType	PKInk.InkType	typealias InkType = PKInkingTool.InkType
+s:9PencilKit5PKInkV7inkTypeAA12PKInkingToolV03InkE0Ovp	swift.property	inkType	PKInk.inkType	var inkType: PKInk.InkType { get set }
+s:9PencilKit5PKInkV_5colorAcA12PKInkingToolV7InkTypeO_So7UIColorCtcfc	swift.init	init(_:color:)	PKInk.init(_:color:)	init(_ inkType: PKInk.InkType, color: UIColor = UIColor.black)
+s:9PencilKit6PKToolP	swift.protocol	PKTool	PKTool	protocol PKTool
+s:9PencilKit8PKStrokeV	swift.struct	PKStroke	PKStroke	struct PKStroke
+s:9PencilKit8PKStrokeV10randomSeeds6UInt32Vvp	swift.property	randomSeed	PKStroke.randomSeed	var randomSeed: UInt32 { get set }
+s:9PencilKit8PKStrokeV12renderBoundsSo6CGRectVvp	swift.property	renderBounds	PKStroke.renderBounds	var renderBounds: CGRect { get }
+s:9PencilKit8PKStrokeV16maskedPathRangesSaySNy14CoreFoundation7CGFloatVGGvp	swift.property	maskedPathRanges	PKStroke.maskedPathRanges	var maskedPathRanges: [ClosedRange<CGFloat>] { get }
+s:9PencilKit8PKStrokeV22requiredContentVersionSo09PKContentF0Vvp	swift.property	requiredContentVersion	PKStroke.requiredContentVersion	var requiredContentVersion: PKContentVersion { get }
+s:9PencilKit8PKStrokeV3ink4path9transform4mask10randomSeedAcA5PKInkV_AA0C4PathVSo17CGAffineTransformVSo08UIBezierK0CSgs6UInt32Vtcfc	swift.init	init(ink:path:transform:mask:randomSeed:)	PKStroke.init(ink:path:transform:mask:randomSeed:)	init(ink: PKInk, path: PKStrokePath, transform: CGAffineTransform = .identity, mask: UIBezierPath? = nil, randomSeed: UInt32)
+s:9PencilKit8PKStrokeV3ink4path9transform4maskAcA5PKInkV_AA0C4PathVSo17CGAffineTransformVSo08UIBezierI0CSgtcfc	swift.init	init(ink:path:transform:mask:)	PKStroke.init(ink:path:transform:mask:)	init(ink: PKInk, path: PKStrokePath, transform: CGAffineTransform = .identity, mask: UIBezierPath? = nil)
+s:9PencilKit8PKStrokeV3inkAA5PKInkVvp	swift.property	ink	PKStroke.ink	var ink: PKInk { get set }
+s:9PencilKit8PKStrokeV4maskSo12UIBezierPathCSgvp	swift.property	mask	PKStroke.mask	var mask: UIBezierPath? { get set }
+s:9PencilKit8PKStrokeV4pathAA0C4PathVvp	swift.property	path	PKStroke.path	var path: PKStrokePath { get set }
+s:9PencilKit8PKStrokeV9transformSo17CGAffineTransformVvp	swift.property	transform	PKStroke.transform	var transform: CGAffineTransform { get set }
+s:9PencilKit9PKDrawingV	swift.struct	PKDrawing	PKDrawing	struct PKDrawing
+s:9PencilKit9PKDrawingV11transformed5usingACSo17CGAffineTransformV_tF	swift.method	transformed(using:)	PKDrawing.transformed(using:)	func transformed(using transform: CGAffineTransform) -> PKDrawing
+s:9PencilKit9PKDrawingV18dataRepresentation10Foundation4DataVyF	swift.method	dataRepresentation()	PKDrawing.dataRepresentation()	func dataRepresentation() -> Data
+s:9PencilKit9PKDrawingV22requiredContentVersionSo09PKContentF0Vvp	swift.property	requiredContentVersion	PKDrawing.requiredContentVersion	var requiredContentVersion: PKContentVersion { get }
+s:9PencilKit9PKDrawingV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	PKDrawing.==(_:_:)	static func == (a: PKDrawing, b: PKDrawing) -> Bool
+s:9PencilKit9PKDrawingV4dataAC10Foundation4DataV_tKcfc	swift.init	init(data:)	PKDrawing.init(data:)	init(data: Data) throws
+s:9PencilKit9PKDrawingV4draw2in5frame4from22darkUserInterfaceStyleySo12CGContextRefa_So6CGRectVALSbtYaF	swift.method	draw(in:frame:from:darkUserInterfaceStyle:)	PKDrawing.draw(in:frame:from:darkUserInterfaceStyle:)	nonisolated(nonsending) func draw(in cgContext: CGContext, frame: CGRect, from sourceRect: CGRect, darkUserInterfaceStyle: Bool = false) async
+s:9PencilKit9PKDrawingV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	PKDrawing.init(from:)	init(from decoder: any Decoder) throws
+s:9PencilKit9PKDrawingV5image4from5scaleSo7UIImageCSo6CGRectV_14CoreFoundation7CGFloatVtF	swift.method	image(from:scale:)	PKDrawing.image(from:scale:)	func image(from rect: CGRect, scale: CGFloat) -> UIImage
+s:9PencilKit9PKDrawingV6appendyyACF	swift.method	append(_:)	PKDrawing.append(_:)	mutating func append(_ toAppend: PKDrawing)
+s:9PencilKit9PKDrawingV6boundsSo6CGRectVvp	swift.property	bounds	PKDrawing.bounds	var bounds: CGRect { get }
+s:9PencilKit9PKDrawingV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	PKDrawing.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9PencilKit9PKDrawingV7strokesACx_tcSTRzAA8PKStrokeV7ElementRtzlufc	swift.init	init(strokes:)	PKDrawing.init(strokes:)	init<S>(strokes: S) where S : Sequence, S.Element == PKStroke
+s:9PencilKit9PKDrawingV7strokesSayAA8PKStrokeVGvp	swift.property	strokes	PKDrawing.strokes	var strokes: [PKStroke] { get set }
+s:9PencilKit9PKDrawingV9appendingyA2CF	swift.method	appending(_:)	PKDrawing.appending(_:)	func appending(_ toAppend: PKDrawing) -> PKDrawing
+s:9PencilKit9PKDrawingV9transform5usingySo17CGAffineTransformV_tF	swift.method	transform(using:)	PKDrawing.transform(using:)	mutating func transform(using transform: CGAffineTransform)
+s:9PencilKit9PKDrawingVACycfc	swift.init	init()	PKDrawing.init()	init()
+s:SKsE10difference4from2bys20CollectionDifferenceVy7ElementQzGqd___SbAG_AGtXEtSKRd__AFQyd__AGRSlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	difference(from:by:)	PKStrokePath.difference(from:by:)	func difference<C>(from other: C, by areEquivalent: (C.Element, Self.Element) -> Bool) -> CollectionDifference<Self.Element> where C : BidirectionalCollection, Self.Element == C.Element
+s:SKsE4last5where7ElementQzSgSbADKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	last(where:)	PKStrokePath.last(where:)	func last(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Element?
+s:SKsE4last7ElementQzSgvp::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.property	last	PKStrokePath.last	var last: Self.Element? { get }
+s:SKsE6suffixy11SubSequenceQzSiF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	suffix(_:)	PKStrokePath.suffix(_:)	func suffix(_ maxLength: Int) -> Self.SubSequence
+s:SKsE8dropLasty11SubSequenceQzSiF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	dropLast(_:)	PKStrokePath.dropLast(_:)	func dropLast(_ k: Int) -> Self.SubSequence
+s:SKsE8reverseds18ReversedCollectionVyxGyF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	reversed()	PKStrokePath.reversed()	func reversed() -> ReversedCollection<Self>
+s:SKsE9formIndex6beforey0B0Qzz_tF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	formIndex(before:)	PKStrokePath.formIndex(before:)	func formIndex(before i: inout Self.Index)
+s:SKsE9lastIndex5where0B0QzSgSb7ElementQzKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	lastIndex(where:)	PKStrokePath.lastIndex(where:)	func lastIndex(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Index?
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PKCanvasViewDrawingPolicy	swift.func.op	!=(_:_:)	PKCanvasViewDrawingPolicy.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PKContentVersion	swift.func.op	!=(_:_:)	PKContentVersion.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.func.op	!=(_:_:)	PKToolPickerCustomItem.ControlOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PKToolPickerVisibility	swift.func.op	!=(_:_:)	PKToolPickerVisibility.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9PencilKit11PKLassoToolV	swift.func.op	!=(_:_:)	PKLassoTool.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9PencilKit12PKEraserToolV	swift.func.op	!=(_:_:)	PKEraserTool.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9PencilKit12PKEraserToolV10EraserTypeO	swift.func.op	!=(_:_:)	PKEraserTool.EraserType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9PencilKit12PKInkingToolV	swift.func.op	!=(_:_:)	PKInkingTool.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9PencilKit12PKInkingToolV7InkTypeO	swift.func.op	!=(_:_:)	PKInkingTool.InkType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9PencilKit9PKDrawingV	swift.func.op	!=(_:_:)	PKDrawing.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tAA14SortComparatorRd__8ComparedQyd__AERSlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	sorted(using:)	PKStrokePath.sorted(using:)	func sorted<Comparator>(using comparator: Comparator) -> [Self.Element] where Comparator : SortComparator, Self.Element == Comparator.Compared
+s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tAA14SortComparatorRd__8ComparedQyd__AERSlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	sorted(using:)	PKStrokePath.InterpolatedSlice.sorted(using:)	func sorted<Comparator>(using comparator: Comparator) -> [Self.Element] where Comparator : SortComparator, Self.Element == Comparator.Compared
+s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tSTRd__AA14SortComparatorRd_0_ADQyd__Rsd_0_8ComparedQyd_0_AERSr0_lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	sorted(using:)	PKStrokePath.sorted(using:)	func sorted<S, Comparator>(using comparators: S) -> [Self.Element] where S : Sequence, Comparator : SortComparator, Comparator == S.Element, Self.Element == Comparator.Compared
+s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tSTRd__AA14SortComparatorRd_0_ADQyd__Rsd_0_8ComparedQyd_0_AERSr0_lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	sorted(using:)	PKStrokePath.InterpolatedSlice.sorted(using:)	func sorted<S, Comparator>(using comparators: S) -> [Self.Element] where S : Sequence, Comparator : SortComparator, Comparator == S.Element, Self.Element == Comparator.Compared
+s:ST10FoundationE7compareySo18NSComparisonResultV8ComparedQyd___AFtAA14SortComparatorRd__7ElementQzRsd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	compare(_:_:)	PKStrokePath.compare(_:_:)	func compare<Comparator>(_ lhs: Comparator.Compared, _ rhs: Comparator.Compared) -> ComparisonResult where Comparator : SortComparator, Comparator == Self.Element
+s:ST10FoundationE7compareySo18NSComparisonResultV8ComparedQyd___AFtAA14SortComparatorRd__7ElementQzRsd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	compare(_:_:)	PKStrokePath.InterpolatedSlice.compare(_:_:)	func compare<Comparator>(_ lhs: Comparator.Compared, _ rhs: Comparator.Compared) -> ComparisonResult where Comparator : SortComparator, Comparator == Self.Element
+s:ST10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	formatted(_:)	PKStrokePath.formatted(_:)	func formatted<S>(_ style: S) -> S.FormatOutput where Self == S.FormatInput, S : FormatStyle
+s:ST10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	formatted(_:)	PKStrokePath.InterpolatedSlice.formatted(_:)	func formatted<S>(_ style: S) -> S.FormatOutput where Self == S.FormatInput, S : FormatStyle
+s:ST7CombineE9publisherAA10PublishersO8SequenceVy_xs5NeverOGvp::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.property	publisher	PKStrokePath.publisher	var publisher: Publishers.Sequence<Self, Never> { get }
+s:ST7CombineE9publisherAA10PublishersO8SequenceVy_xs5NeverOGvp::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.property	publisher	PKStrokePath.InterpolatedSlice.publisher	var publisher: Publishers.Sequence<Self, Never> { get }
+s:STs8IteratorSTQzRszrlE04makeA0xyF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	makeIterator()	PKStrokePath.InterpolatedSlice.makeIterator()	func makeIterator() -> Self
+s:STsE10allSatisfyyS2b7ElementQzKXEKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	allSatisfy(_:)	PKStrokePath.allSatisfy(_:)	func allSatisfy(_ predicate: (Self.Element) throws -> Bool) rethrows -> Bool
+s:STsE10allSatisfyyS2b7ElementQzKXEKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	allSatisfy(_:)	PKStrokePath.InterpolatedSlice.allSatisfy(_:)	func allSatisfy(_ predicate: (Self.Element) throws -> Bool) rethrows -> Bool
+s:STsE10compactMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	compactMap(_:)	PKStrokePath.compactMap(_:)	func compactMap<ElementOfResult>(_ transform: (Self.Element) throws -> ElementOfResult?) rethrows -> [ElementOfResult]
+s:STsE10compactMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	compactMap(_:)	PKStrokePath.InterpolatedSlice.compactMap(_:)	func compactMap<ElementOfResult>(_ transform: (Self.Element) throws -> ElementOfResult?) rethrows -> [ElementOfResult]
+s:STsE10enumerateds18EnumeratedSequenceVyxGyF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	enumerated()	PKStrokePath.enumerated()	func enumerated() -> EnumeratedSequence<Self>
+s:STsE10enumerateds18EnumeratedSequenceVyxGyF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	enumerated()	PKStrokePath.InterpolatedSlice.enumerated()	func enumerated() -> EnumeratedSequence<Self>
+s:STsE13elementsEqual_2bySbqd___Sb7ElementQz_ACQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	elementsEqual(_:by:)	PKStrokePath.elementsEqual(_:by:)	func elementsEqual<OtherSequence>(_ other: OtherSequence, by areEquivalent: (Self.Element, OtherSequence.Element) throws -> Bool) rethrows -> Bool where OtherSequence : Sequence
+s:STsE13elementsEqual_2bySbqd___Sb7ElementQz_ACQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	elementsEqual(_:by:)	PKStrokePath.InterpolatedSlice.elementsEqual(_:by:)	func elementsEqual<OtherSequence>(_ other: OtherSequence, by areEquivalent: (Self.Element, OtherSequence.Element) throws -> Bool) rethrows -> Bool where OtherSequence : Sequence
+s:STsE19underestimatedCountSivp::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.property	underestimatedCount	PKStrokePath.InterpolatedSlice.underestimatedCount	var underestimatedCount: Int { get }
+s:STsE25lexicographicallyPrecedes_2bySbqd___Sb7ElementQz_ADtKXEtKSTRd__ACQyd__ADRSlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	lexicographicallyPrecedes(_:by:)	PKStrokePath.lexicographicallyPrecedes(_:by:)	func lexicographicallyPrecedes<OtherSequence>(_ other: OtherSequence, by areInIncreasingOrder: (Self.Element, Self.Element) throws -> Bool) rethrows -> Bool where OtherSequence : Sequence, Self.Element == OtherSequence.Element
+s:STsE25lexicographicallyPrecedes_2bySbqd___Sb7ElementQz_ADtKXEtKSTRd__ACQyd__ADRSlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	lexicographicallyPrecedes(_:by:)	PKStrokePath.InterpolatedSlice.lexicographicallyPrecedes(_:by:)	func lexicographicallyPrecedes<OtherSequence>(_ other: OtherSequence, by areInIncreasingOrder: (Self.Element, Self.Element) throws -> Bool) rethrows -> Bool where OtherSequence : Sequence, Self.Element == OtherSequence.Element
+s:STsE32withContiguousStorageIfAvailableyqd__Sgqd__SRy7ElementQzGKXEKlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	withContiguousStorageIfAvailable(_:)	PKStrokePath.withContiguousStorageIfAvailable(_:)	func withContiguousStorageIfAvailable<R>(_ body: (UnsafeBufferPointer<Self.Element>) throws -> R) rethrows -> R?
+s:STsE32withContiguousStorageIfAvailableyqd__Sgqd__SRy7ElementQzGKXEKlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	withContiguousStorageIfAvailable(_:)	PKStrokePath.InterpolatedSlice.withContiguousStorageIfAvailable(_:)	func withContiguousStorageIfAvailable<R>(_ body: (UnsafeBufferPointer<Self.Element>) throws -> R) rethrows -> R?
+s:STsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	map(_:)	PKStrokePath.map(_:)	func map<T, E>(_ transform: (Self.Element) throws(E) -> T) throws(E) -> [T] where E : Error
+s:STsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	map(_:)	PKStrokePath.InterpolatedSlice.map(_:)	func map<T, E>(_ transform: (Self.Element) throws(E) -> T) throws(E) -> [T] where E : Error
+s:STsE3max2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	max(by:)	PKStrokePath.max(by:)	@warn_unqualified_access func max(by areInIncreasingOrder: (Self.Element, Self.Element) throws -> Bool) rethrows -> Self.Element?
+s:STsE3max2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	max(by:)	PKStrokePath.InterpolatedSlice.max(by:)	@warn_unqualified_access func max(by areInIncreasingOrder: (Self.Element, Self.Element) throws -> Bool) rethrows -> Self.Element?
+s:STsE3min2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	min(by:)	PKStrokePath.min(by:)	@warn_unqualified_access func min(by areInIncreasingOrder: (Self.Element, Self.Element) throws -> Bool) rethrows -> Self.Element?
+s:STsE3min2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	min(by:)	PKStrokePath.InterpolatedSlice.min(by:)	@warn_unqualified_access func min(by areInIncreasingOrder: (Self.Element, Self.Element) throws -> Bool) rethrows -> Self.Element?
+s:STsE4drop5whiles17DropWhileSequenceVyxGSb7ElementQzKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	drop(while:)	PKStrokePath.InterpolatedSlice.drop(while:)	func drop(while predicate: (Self.Element) throws -> Bool) rethrows -> DropWhileSequence<Self>
+s:STsE4lazys12LazySequenceVyxGvp::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.property	lazy	PKStrokePath.lazy	var lazy: LazySequence<Self> { get }
+s:STsE4lazys12LazySequenceVyxGvp::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.property	lazy	PKStrokePath.InterpolatedSlice.lazy	var lazy: LazySequence<Self> { get }
+s:STsE5count5whereSiSb7ElementQzqd__YKXE_tqd__YKs5ErrorRd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	count(where:)	PKStrokePath.count(where:)	func count<E>(where predicate: (Self.Element) throws(E) -> Bool) throws(E) -> Int where E : Error
+s:STsE5count5whereSiSb7ElementQzqd__YKXE_tqd__YKs5ErrorRd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	count(where:)	PKStrokePath.InterpolatedSlice.count(where:)	func count<E>(where predicate: (Self.Element) throws(E) -> Bool) throws(E) -> Int where E : Error
+s:STsE5first5where7ElementQzSgSbADKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	first(where:)	PKStrokePath.first(where:)	func first(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Element?
+s:STsE5first5where7ElementQzSgSbADKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	first(where:)	PKStrokePath.InterpolatedSlice.first(where:)	func first(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Element?
+s:STsE5split9maxSplits25omittingEmptySubsequences14whereSeparatorSays10ArraySliceVy7ElementQzGGSi_S2bAHKXEtKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	split(maxSplits:omittingEmptySubsequences:whereSeparator:)	PKStrokePath.InterpolatedSlice.split(maxSplits:omittingEmptySubsequences:whereSeparator:)	func split(maxSplits: Int = Int.max, omittingEmptySubsequences: Bool = true, whereSeparator isSeparator: (Self.Element) throws -> Bool) rethrows -> [ArraySlice<Self.Element>]
+s:STsE6filterySay7ElementQzGSbACKXEKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	filter(_:)	PKStrokePath.filter(_:)	func filter(_ isIncluded: (Self.Element) throws -> Bool) rethrows -> [Self.Element]
+s:STsE6filterySay7ElementQzGSbACKXEKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	filter(_:)	PKStrokePath.InterpolatedSlice.filter(_:)	func filter(_ isIncluded: (Self.Element) throws -> Bool) rethrows -> [Self.Element]
+s:STsE6prefix5whileSay7ElementQzGSbADKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	prefix(while:)	PKStrokePath.InterpolatedSlice.prefix(while:)	func prefix(while predicate: (Self.Element) throws -> Bool) rethrows -> [Self.Element]
+s:STsE6prefixys14PrefixSequenceVyxGSiF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	prefix(_:)	PKStrokePath.InterpolatedSlice.prefix(_:)	func prefix(_ maxLength: Int) -> PrefixSequence<Self>
+s:STsE6reduce4into_qd__qd__n_yqd__z_7ElementQztKXEtKlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	reduce(into:_:)	PKStrokePath.reduce(into:_:)	func reduce<Result>(into initialResult: Result, _ updateAccumulatingResult: (inout Result, Self.Element) throws -> ()) rethrows -> Result
+s:STsE6reduce4into_qd__qd__n_yqd__z_7ElementQztKXEtKlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	reduce(into:_:)	PKStrokePath.InterpolatedSlice.reduce(into:_:)	func reduce<Result>(into initialResult: Result, _ updateAccumulatingResult: (inout Result, Self.Element) throws -> ()) rethrows -> Result
+s:STsE6reduceyqd__qd___qd__qd___7ElementQztKXEtKlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	reduce(_:_:)	PKStrokePath.reduce(_:_:)	func reduce<Result>(_ initialResult: Result, _ nextPartialResult: (Result, Self.Element) throws -> Result) rethrows -> Result
+s:STsE6reduceyqd__qd___qd__qd___7ElementQztKXEtKlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	reduce(_:_:)	PKStrokePath.InterpolatedSlice.reduce(_:_:)	func reduce<Result>(_ initialResult: Result, _ nextPartialResult: (Result, Self.Element) throws -> Result) rethrows -> Result
+s:STsE6sorted2bySay7ElementQzGSbAD_ADtKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	sorted(by:)	PKStrokePath.sorted(by:)	func sorted(by areInIncreasingOrder: (Self.Element, Self.Element) throws -> Bool) rethrows -> [Self.Element]
+s:STsE6sorted2bySay7ElementQzGSbAD_ADtKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	sorted(by:)	PKStrokePath.InterpolatedSlice.sorted(by:)	func sorted(by areInIncreasingOrder: (Self.Element, Self.Element) throws -> Bool) rethrows -> [Self.Element]
+s:STsE6starts4with2bySbqd___Sb7ElementQz_ADQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	starts(with:by:)	PKStrokePath.starts(with:by:)	func starts<PossiblePrefix>(with possiblePrefix: PossiblePrefix, by areEquivalent: (Self.Element, PossiblePrefix.Element) throws -> Bool) rethrows -> Bool where PossiblePrefix : Sequence
+s:STsE6starts4with2bySbqd___Sb7ElementQz_ADQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	starts(with:by:)	PKStrokePath.InterpolatedSlice.starts(with:by:)	func starts<PossiblePrefix>(with possiblePrefix: PossiblePrefix, by areEquivalent: (Self.Element, PossiblePrefix.Element) throws -> Bool) rethrows -> Bool where PossiblePrefix : Sequence
+s:STsE6suffixySay7ElementQzGSiF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	suffix(_:)	PKStrokePath.InterpolatedSlice.suffix(_:)	func suffix(_ maxLength: Int) -> [Self.Element]
+s:STsE7flatMapySay7ElementQyd__Gqd__ABQzKXEKSTRd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	flatMap(_:)	PKStrokePath.flatMap(_:)	func flatMap<SegmentOfResult>(_ transform: (Self.Element) throws -> SegmentOfResult) rethrows -> [SegmentOfResult.Element] where SegmentOfResult : Sequence
+s:STsE7flatMapySay7ElementQyd__Gqd__ABQzKXEKSTRd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	flatMap(_:)	PKStrokePath.InterpolatedSlice.flatMap(_:)	func flatMap<SegmentOfResult>(_ transform: (Self.Element) throws -> SegmentOfResult) rethrows -> [SegmentOfResult.Element] where SegmentOfResult : Sequence
+s:STsE7flatMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	flatMap(_:)	PKStrokePath.flatMap(_:)	func flatMap<ElementOfResult>(_ transform: (Self.Element) throws -> ElementOfResult?) rethrows -> [ElementOfResult]
+s:STsE7flatMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	flatMap(_:)	PKStrokePath.InterpolatedSlice.flatMap(_:)	func flatMap<ElementOfResult>(_ transform: (Self.Element) throws -> ElementOfResult?) rethrows -> [ElementOfResult]
+s:STsE7forEachyyy7ElementQzKXEKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	forEach(_:)	PKStrokePath.forEach(_:)	func forEach(_ body: (Self.Element) throws -> Void) rethrows
+s:STsE7forEachyyy7ElementQzKXEKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	forEach(_:)	PKStrokePath.InterpolatedSlice.forEach(_:)	func forEach(_ body: (Self.Element) throws -> Void) rethrows
+s:STsE8contains5whereS2b7ElementQzKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	contains(where:)	PKStrokePath.contains(where:)	func contains(where predicate: (Self.Element) throws -> Bool) rethrows -> Bool
+s:STsE8contains5whereS2b7ElementQzKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	contains(where:)	PKStrokePath.InterpolatedSlice.contains(where:)	func contains(where predicate: (Self.Element) throws -> Bool) rethrows -> Bool
+s:STsE8dropLastySay7ElementQzGSiF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	dropLast(_:)	PKStrokePath.InterpolatedSlice.dropLast(_:)	func dropLast(_ k: Int = 1) -> [Self.Element]
+s:STsE8reversedSay7ElementQzGyF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	reversed()	PKStrokePath.InterpolatedSlice.reversed()	func reversed() -> [Self.Element]
+s:STsE8shuffled5usingSay7ElementQzGqd__z_tSGRd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	shuffled(using:)	PKStrokePath.shuffled(using:)	func shuffled<T>(using generator: inout T) -> [Self.Element] where T : RandomNumberGenerator
+s:STsE8shuffled5usingSay7ElementQzGqd__z_tSGRd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	shuffled(using:)	PKStrokePath.InterpolatedSlice.shuffled(using:)	func shuffled<T>(using generator: inout T) -> [Self.Element] where T : RandomNumberGenerator
+s:STsE8shuffledSay7ElementQzGyF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	shuffled()	PKStrokePath.shuffled()	func shuffled() -> [Self.Element]
+s:STsE8shuffledSay7ElementQzGyF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	shuffled()	PKStrokePath.InterpolatedSlice.shuffled()	func shuffled() -> [Self.Element]
+s:STsE9dropFirstys04DropB8SequenceVyxGSiF::SYNTHESIZED::s:9PencilKit12PKStrokePathV17InterpolatedSliceV	swift.method	dropFirst(_:)	PKStrokePath.InterpolatedSlice.dropFirst(_:)	func dropFirst(_ k: Int = 1) -> DropFirstSequence<Self>
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PKCanvasViewDrawingPolicy	swift.property	hashValue	PKCanvasViewDrawingPolicy.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PKContentVersion	swift.property	hashValue	PKContentVersion.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PKToolPickerVisibility	swift.property	hashValue	PKToolPickerVisibility.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:9PencilKit12PKInkingToolV7InkTypeO	swift.property	hashValue	PKInkingTool.InkType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PKCanvasViewDrawingPolicy	swift.method	hash(into:)	PKCanvasViewDrawingPolicy.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PKContentVersion	swift.method	hash(into:)	PKContentVersion.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PKToolPickerVisibility	swift.method	hash(into:)	PKToolPickerVisibility.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:9PencilKit12PKInkingToolV7InkTypeO	swift.method	hash(into:)	PKInkingTool.InkType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SksE5index_8offsetBy07limitedC05IndexQzSgAE_SiAEtF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	index(_:offsetBy:limitedBy:)	PKStrokePath.index(_:offsetBy:limitedBy:)	func index(_ i: Self.Index, offsetBy distance: Int, limitedBy limit: Self.Index) -> Self.Index?
+s:Sl17_StringProcessingE14trimmingPrefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	trimmingPrefix(while:)	PKStrokePath.trimmingPrefix(while:)	func trimmingPrefix(while predicate: (Self.Element) throws -> Bool) rethrows -> Self.SubSequence
+s:SlsE10firstIndex5where0B0QzSgSb7ElementQzKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	firstIndex(where:)	PKStrokePath.firstIndex(where:)	func firstIndex(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Index?
+s:SlsE13randomElement0B0QzSgyF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	randomElement()	PKStrokePath.randomElement()	func randomElement() -> Self.Element?
+s:SlsE13randomElement5using0B0QzSgqd__z_tSGRd__lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	randomElement(using:)	PKStrokePath.randomElement(using:)	func randomElement<T>(using generator: inout T) -> Self.Element? where T : RandomNumberGenerator
+s:SlsE17removingSubrangesys18DiscontiguousSliceVyxGs8RangeSetVy5IndexQzGF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	removingSubranges(_:)	PKStrokePath.removingSubranges(_:)	func removingSubranges(_ subranges: RangeSet<Self.Index>) -> DiscontiguousSlice<Self>
+s:SlsE19underestimatedCountSivp::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.property	underestimatedCount	PKStrokePath.underestimatedCount	var underestimatedCount: Int { get }
+s:SlsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	map(_:)	PKStrokePath.map(_:)	func map<T, E>(_ transform: (Self.Element) throws(E) -> T) throws(E) -> [T] where E : Error
+s:SlsE4drop5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	drop(while:)	PKStrokePath.drop(while:)	func drop(while predicate: (Self.Element) throws -> Bool) rethrows -> Self.SubSequence
+s:SlsE5countSivp::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.property	count	PKStrokePath.count	var count: Int { get }
+s:SlsE5first7ElementQzSgvp::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.property	first	PKStrokePath.first	var first: Self.Element? { get }
+s:SlsE5split9maxSplits25omittingEmptySubsequences14whereSeparatorSay11SubSequenceQzGSi_S2b7ElementQzKXEtKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	split(maxSplits:omittingEmptySubsequences:whereSeparator:)	PKStrokePath.split(maxSplits:omittingEmptySubsequences:whereSeparator:)	func split(maxSplits: Int = Int.max, omittingEmptySubsequences: Bool = true, whereSeparator isSeparator: (Self.Element) throws -> Bool) rethrows -> [Self.SubSequence]
+s:SlsE6prefix4upTo11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	prefix(upTo:)	PKStrokePath.prefix(upTo:)	func prefix(upTo end: Self.Index) -> Self.SubSequence
+s:SlsE6prefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	prefix(while:)	PKStrokePath.prefix(while:)	func prefix(while predicate: (Self.Element) throws -> Bool) rethrows -> Self.SubSequence
+s:SlsE6prefix7through11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	prefix(through:)	PKStrokePath.prefix(through:)	func prefix(through position: Self.Index) -> Self.SubSequence
+s:SlsE6prefixy11SubSequenceQzSiF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	prefix(_:)	PKStrokePath.prefix(_:)	func prefix(_ maxLength: Int) -> Self.SubSequence
+s:SlsE6suffix4from11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	suffix(from:)	PKStrokePath.suffix(from:)	func suffix(from start: Self.Index) -> Self.SubSequence
+s:SlsE7indices5wheres8RangeSetVy5IndexQzGSb7ElementQzKXE_tKF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	indices(where:)	PKStrokePath.indices(where:)	func indices(where predicate: (Self.Element) throws -> Bool) rethrows -> RangeSet<Self.Index>
+s:SlsE7isEmptySbvp::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.property	isEmpty	PKStrokePath.isEmpty	var isEmpty: Bool { get }
+s:SlsE9dropFirsty11SubSequenceQzSiF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	dropFirst(_:)	PKStrokePath.dropFirst(_:)	func dropFirst(_ k: Int = 1) -> Self.SubSequence
+s:SlsE9formIndex5aftery0B0Qzz_tF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	formIndex(after:)	PKStrokePath.formIndex(after:)	func formIndex(after i: inout Self.Index)
+s:SlsE9formIndex_8offsetBy07limitedD0Sb0B0Qzz_SiAEtF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	formIndex(_:offsetBy:limitedBy:)	PKStrokePath.formIndex(_:offsetBy:limitedBy:)	func formIndex(_ i: inout Self.Index, offsetBy distance: Int, limitedBy limit: Self.Index) -> Bool
+s:SlsE9formIndex_8offsetByy0B0Qzz_SitF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	formIndex(_:offsetBy:)	PKStrokePath.formIndex(_:offsetBy:)	func formIndex(_ i: inout Self.Index, offsetBy distance: Int)
+s:Slss16IndexingIteratorVyxG0B0RtzrlE04makeB0ACyF::SYNTHESIZED::s:9PencilKit12PKStrokePathV	swift.method	makeIterator()	PKStrokePath.makeIterator()	func makeIterator() -> IndexingIterator<Self>
+s:So12PKCanvasViewC9PencilKitE4toolAC6PKTool_pvp	swift.property	tool	PKCanvasView.tool	@MainActor @preconcurrency var tool: any PKTool { get set }
+s:So12PKToolPickerC9PencilKitE12selectedToolAC0A0_pvp	swift.property	selectedTool	PKToolPicker.selectedTool	var selectedTool: any PKTool { get set }
+s:So16PKContentVersionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PKContentVersion.init(rawValue:)	init?(rawValue: Int)
+s:So16PKResponderStateC9PencilKitE20toolPickerVisibilitySo06PKToolfG0VSgvp	swift.property	toolPickerVisibility	PKResponderState.toolPickerVisibility	var toolPickerVisibility: PKToolPickerVisibility? { get set }
+s:So16PKToolPickerItemC9PencilKitE4toolAC0A0_pSgvp	swift.property	tool	PKToolPickerItem.tool	var tool: (any PKTool)? { get }
+s:So21PKToolPickerLassoItemC9PencilKitE9lassoToolAC07PKLassoH0Vvp	swift.property	lassoTool	PKToolPickerLassoItem.lassoTool	var lassoTool: PKLassoTool { get }
+s:So22PKToolPickerCustomItemC9PencilKitE13ConfigurationV	swift.struct	PKToolPickerCustomItem.Configuration	PKToolPickerCustomItem.Configuration	struct Configuration
+s:So22PKToolPickerCustomItemC9PencilKitE13ConfigurationV10identifier4nameAESS_SStcfc	swift.init	init(identifier:name:)	PKToolPickerCustomItem.Configuration.init(identifier:name:)	init(identifier: String, name: String)
+s:So22PKToolPickerCustomItemC9PencilKitE13ConfigurationV10identifierSSvp	swift.property	identifier	PKToolPickerCustomItem.Configuration.identifier	var identifier: String
+s:So22PKToolPickerCustomItemC9PencilKitE13ConfigurationV12defaultColorSo7UIColorCvp	swift.property	defaultColor	PKToolPickerCustomItem.Configuration.defaultColor	var defaultColor: UIColor
+s:So22PKToolPickerCustomItemC9PencilKitE13ConfigurationV12defaultWidth14CoreFoundation7CGFloatVvp	swift.property	defaultWidth	PKToolPickerCustomItem.Configuration.defaultWidth	var defaultWidth: CGFloat
+s:So22PKToolPickerCustomItemC9PencilKitE13ConfigurationV13imageProviderSo7UIImageCABcSgvp	swift.property	imageProvider	PKToolPickerCustomItem.Configuration.imageProvider	var imageProvider: ((PKToolPickerCustomItem) -> UIImage)?
+s:So22PKToolPickerCustomItemC9PencilKitE13ConfigurationV13widthVariantsSDy14CoreFoundation7CGFloatVSo7UIImageCGvp	swift.property	widthVariants	PKToolPickerCustomItem.Configuration.widthVariants	var widthVariants: [CGFloat : UIImage]
+s:So22PKToolPickerCustomItemC9PencilKitE13ConfigurationV20allowsColorSelectionSbvp	swift.property	allowsColorSelection	PKToolPickerCustomItem.Configuration.allowsColorSelection	var allowsColorSelection: Bool
+s:So22PKToolPickerCustomItemC9PencilKitE13ConfigurationV21toolAttributeControlsSo0abcD14ControlOptionsVvp	swift.property	toolAttributeControls	PKToolPickerCustomItem.Configuration.toolAttributeControls	var toolAttributeControls: PKToolPickerCustomItem.ControlOptions
+s:So22PKToolPickerCustomItemC9PencilKitE13ConfigurationV22viewControllerProviderSo06UIViewI0CABcSgvp	swift.property	viewControllerProvider	PKToolPickerCustomItem.Configuration.viewControllerProvider	var viewControllerProvider: ((PKToolPickerCustomItem) -> UIViewController)?
+s:So22PKToolPickerCustomItemC9PencilKitE13ConfigurationV4nameSSvp	swift.property	name	PKToolPickerCustomItem.Configuration.name	var name: String
+s:So22PKToolPickerCustomItemC9PencilKitE13configurationA2bCE13ConfigurationV_tcfc	swift.init	init(configuration:)	PKToolPickerCustomItem.init(configuration:)	convenience init(configuration: PKToolPickerCustomItem.Configuration)
+s:So22PKToolPickerCustomItemC9PencilKitE13configurationAbCE13ConfigurationVvp	swift.property	configuration	PKToolPickerCustomItem.configuration	var configuration: PKToolPickerCustomItem.Configuration { get }
+s:So22PKToolPickerEraserItemC9PencilKitE10eraserToolAC08PKEraserH0Vvp	swift.property	eraserTool	PKToolPickerEraserItem.eraserTool	var eraserTool: PKEraserTool { get }
+s:So22PKToolPickerEraserItemC9PencilKitE4type5widthAbC12PKEraserToolV0C4TypeO_14CoreFoundation7CGFloatVtcfc	swift.init	init(type:width:)	PKToolPickerEraserItem.init(type:width:)	convenience init(type: PKEraserTool.EraserType, width: CGFloat)
+s:So22PKToolPickerEraserItemC9PencilKitE4typeAbC12PKEraserToolV0C4TypeO_tcfc	swift.init	init(type:)	PKToolPickerEraserItem.init(type:)	convenience init(type: PKEraserTool.EraserType)
+s:So22PKToolPickerInkingItemC9PencilKitE10inkingToolAC08PKInkingH0Vvp	swift.property	inkingTool	PKToolPickerInkingItem.inkingTool	var inkingTool: PKInkingTool { get }
+s:So22PKToolPickerInkingItemC9PencilKitE4type5color5width10identifierAbC12PKInkingToolV7InkTypeO_So7UIColorCSg14CoreFoundation7CGFloatVSgSSSgtcfc	swift.init	init(type:color:width:identifier:)	PKToolPickerInkingItem.init(type:color:width:identifier:)	convenience init(type: PKInkingTool.InkType, color: UIColor? = nil, width: CGFloat? = nil, identifier: String? = nil)
+s:So22PKToolPickerInkingItemC9PencilKitE4type5color5width7azimuth10identifierAbC12PKInkingToolV7InkTypeO_So7UIColorCSg14CoreFoundation7CGFloatVSgASSSSgtcfc	swift.init	init(type:color:width:azimuth:identifier:)	PKToolPickerInkingItem.init(type:color:width:azimuth:identifier:)	convenience init(type: PKInkingTool.InkType, color: UIColor? = nil, width: CGFloat? = nil, azimuth: CGFloat? = nil, identifier: String? = nil)
+s:So22PKToolPickerVisibilityV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PKToolPickerVisibility.init(rawValue:)	init?(rawValue: Int)
+s:So22PKToolPickerVisibilityV9PencilKitE6toggleyyF	swift.method	toggle()	PKToolPickerVisibility.toggle()	mutating func toggle()
+s:So25PKCanvasViewDrawingPolicyV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	PKCanvasViewDrawingPolicy.init(rawValue:)	init?(rawValue: UInt)
+s:So36PKToolPickerCustomItemControlOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	PKToolPickerCustomItem.ControlOptions.init(rawValue:)	init(rawValue: UInt)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.init	init(arrayLiteral:)	PKToolPickerCustomItem.ControlOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	isDisjoint(with:)	PKToolPickerCustomItem.ControlOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	isSuperset(of:)	PKToolPickerCustomItem.ControlOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	subtracting(_:)	PKToolPickerCustomItem.ControlOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	isStrictSubset(of:)	PKToolPickerCustomItem.ControlOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	isStrictSuperset(of:)	PKToolPickerCustomItem.ControlOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.property	isEmpty	PKToolPickerCustomItem.ControlOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	isSubset(of:)	PKToolPickerCustomItem.ControlOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	subtract(_:)	PKToolPickerCustomItem.ControlOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.init	init(_:)	PKToolPickerCustomItem.ControlOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	insert(_:)	PKToolPickerCustomItem.ControlOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	remove(_:)	PKToolPickerCustomItem.ControlOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	update(with:)	PKToolPickerCustomItem.ControlOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	contains(_:)	PKToolPickerCustomItem.ControlOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	intersection(_:)	PKToolPickerCustomItem.ControlOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	symmetricDifference(_:)	PKToolPickerCustomItem.ControlOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	union(_:)	PKToolPickerCustomItem.ControlOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	formIntersection(_:)	PKToolPickerCustomItem.ControlOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	formSymmetricDifference(_:)	PKToolPickerCustomItem.ControlOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.method	formUnion(_:)	PKToolPickerCustomItem.ControlOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@PKToolPickerCustomItemControlOptions	swift.init	init()	PKToolPickerCustomItem.ControlOptions.init()	init()

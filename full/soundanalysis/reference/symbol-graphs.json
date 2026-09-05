@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 2,
+  "duplicateOccurrenceCount": 2,
+  "duplicateRelationshipOccurrenceCount": 1,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/SoundAnalysis.symbols.json",
+      "relationshipCount": 124,
+      "sha256": "5abfc987e81ff42e51aadcad7153440204ee2e86e34ced51b8436be5c9913c05",
+      "symbolCount": 79
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "SoundAnalysis",
+  "relationshipCount": 124,
+  "relationshipMultisetSHA256": "34e4c4c60b0101437a60cb527e000795cc5e98da8c563f5bf676db0c73794924",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 77,
+  "symbolMultisetSHA256": "ba42a44985401c48303620baa44ce24dc7c785c68d2fac0ce69958d91ad53ced",
+  "target": "arm64-apple-ios26.0"
+}

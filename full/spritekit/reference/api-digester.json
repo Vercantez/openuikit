@@ -1,0 +1,1501 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKVersion",
+        "printedName": "SpriteKit.SKVersion"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKScene",
+        "printedName": "SpriteKit.SKScene"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKCameraNode",
+        "printedName": "SpriteKit.SKCameraNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKNode",
+        "printedName": "SpriteKit.SKNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKSpriteNode",
+        "printedName": "SpriteKit.SKSpriteNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKEmitterNode",
+        "printedName": "SpriteKit.SKEmitterNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKShapeNode",
+        "printedName": "SpriteKit.SKShapeNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKEffectNode",
+        "printedName": "SpriteKit.SKEffectNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKFieldNode",
+        "printedName": "SpriteKit.SKFieldNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKLabelNode",
+        "printedName": "SpriteKit.SKLabelNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKVideoNode",
+        "printedName": "SpriteKit.SKVideoNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKAudioNode",
+        "printedName": "SpriteKit.SKAudioNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKCropNode",
+        "printedName": "SpriteKit.SKCropNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKLightNode",
+        "printedName": "SpriteKit.SKLightNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKReferenceNode",
+        "printedName": "SpriteKit.SKReferenceNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SK3DNode",
+        "printedName": "SpriteKit.SK3DNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKTransformNode",
+        "printedName": "SpriteKit.SKTransformNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKRegion",
+        "printedName": "SpriteKit.SKRegion"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKView",
+        "printedName": "SpriteKit.SKView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKTransition",
+        "printedName": "SpriteKit.SKTransition"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKShader",
+        "printedName": "SpriteKit.SKShader"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKUniform",
+        "printedName": "SpriteKit.SKUniform"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKAttribute",
+        "printedName": "SpriteKit.SKAttribute"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKWarpGeometry",
+        "printedName": "SpriteKit.SKWarpGeometry"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKRenderer",
+        "printedName": "SpriteKit.SKRenderer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKTileDefinition",
+        "printedName": "SpriteKit.SKTileDefinition"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKTileSet",
+        "printedName": "SpriteKit.SKTileSet"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKTileMapNode",
+        "printedName": "SpriteKit.SKTileMapNode"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKTexture",
+        "printedName": "SpriteKit.SKTexture"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKMutableTexture",
+        "printedName": "SpriteKit.SKMutableTexture"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKTextureAtlas",
+        "printedName": "SpriteKit.SKTextureAtlas"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKConstraint",
+        "printedName": "SpriteKit.SKConstraint"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKReachConstraints",
+        "printedName": "SpriteKit.SKReachConstraints"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKAction",
+        "printedName": "SpriteKit.SKAction"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKPhysicsBody",
+        "printedName": "SpriteKit.SKPhysicsBody"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKPhysicsJoint",
+        "printedName": "SpriteKit.SKPhysicsJoint"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit.SKPhysicsWorld",
+        "printedName": "SpriteKit.SKPhysicsWorld"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "SpriteKit",
+        "printedName": "SpriteKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SpriteKit",
+        "name": "simd",
+        "printedName": "simd"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "UIColor",
+            "printedName": "UIKit.UIColor",
+            "usr": "c:objc(cs)UIColor"
+          }
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "mangledName": "$s9SpriteKit7SKColora",
+        "moduleName": "SpriteKit",
+        "name": "SKColor",
+        "printedName": "SKColor",
+        "usr": "s:9SpriteKit7SKColora"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "_PlaygroundQuickLook",
+                        "printedName": "Swift._PlaygroundQuickLook",
+                        "usr": "s:s20_PlaygroundQuickLookO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "PlaygroundQuickLook",
+                    "printedName": "Swift.PlaygroundQuickLook"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo11SKShapeNodeC9SpriteKitE25customPlaygroundQuickLooks01_fgH0Ovg",
+                "moduleName": "SpriteKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So11SKShapeNodeC9SpriteKitE25customPlaygroundQuickLooks01_fgH0Ovg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "_PlaygroundQuickLook",
+                    "printedName": "Swift._PlaygroundQuickLook",
+                    "usr": "s:s20_PlaygroundQuickLookO"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "PlaygroundQuickLook",
+                "printedName": "Swift.PlaygroundQuickLook"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Available",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "deprecated": true,
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo11SKShapeNodeC9SpriteKitE25customPlaygroundQuickLooks01_fgH0Ovp",
+            "moduleName": "SpriteKit",
+            "name": "customPlaygroundQuickLook",
+            "printedName": "customPlaygroundQuickLook",
+            "usr": "s:So11SKShapeNodeC9SpriteKitE25customPlaygroundQuickLooks01_fgH0Ovp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusItem",
+            "printedName": "UIFocusItem",
+            "usr": "c:objc(pl)UIFocusItem"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusEnvironment",
+            "printedName": "UIFocusEnvironment",
+            "usr": "c:objc(pl)UIFocusEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusItemContainer",
+            "printedName": "UIFocusItemContainer",
+            "usr": "c:objc(pl)UIFocusItemContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UICoordinateSpace",
+            "printedName": "UICoordinateSpace",
+            "usr": "c:objc(pl)UICoordinateSpace"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIResponderStandardEditActions",
+            "printedName": "UIResponderStandardEditActions",
+            "usr": "c:objc(pl)UIResponderStandardEditActions"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIActivityItemsConfigurationProviding",
+            "printedName": "UIActivityItemsConfigurationProviding",
+            "usr": "c:objc(pl)UIActivityItemsConfigurationProviding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIPasteConfigurationSupporting",
+            "printedName": "UIPasteConfigurationSupporting",
+            "usr": "c:objc(pl)UIPasteConfigurationSupporting"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIUserActivityRestoring",
+            "printedName": "UIUserActivityRestoring",
+            "usr": "c:objc(pl)UIUserActivityRestoring"
+          }
+        ],
+        "declAttributes": [
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "SpriteKit",
+        "name": "SKShapeNode",
+        "objc_name": "SKShapeNode",
+        "printedName": "SKShapeNode",
+        "superclassNames": [
+          "SpriteKit.SKNode",
+          "UIKit.UIResponder",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)SKNode",
+        "usr": "c:objc(cs)SKShapeNode"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "_PlaygroundQuickLook",
+                        "printedName": "Swift._PlaygroundQuickLook",
+                        "usr": "s:s20_PlaygroundQuickLookO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "PlaygroundQuickLook",
+                    "printedName": "Swift.PlaygroundQuickLook"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo12SKSpriteNodeC9SpriteKitE25customPlaygroundQuickLooks01_fgH0Ovg",
+                "moduleName": "SpriteKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So12SKSpriteNodeC9SpriteKitE25customPlaygroundQuickLooks01_fgH0Ovg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "_PlaygroundQuickLook",
+                    "printedName": "Swift._PlaygroundQuickLook",
+                    "usr": "s:s20_PlaygroundQuickLookO"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "PlaygroundQuickLook",
+                "printedName": "Swift.PlaygroundQuickLook"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Available",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "deprecated": true,
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo12SKSpriteNodeC9SpriteKitE25customPlaygroundQuickLooks01_fgH0Ovp",
+            "moduleName": "SpriteKit",
+            "name": "customPlaygroundQuickLook",
+            "printedName": "customPlaygroundQuickLook",
+            "usr": "s:So12SKSpriteNodeC9SpriteKitE25customPlaygroundQuickLooks01_fgH0Ovp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "SKWarpable",
+            "printedName": "SKWarpable",
+            "usr": "c:objc(pl)SKWarpable"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusItem",
+            "printedName": "UIFocusItem",
+            "usr": "c:objc(pl)UIFocusItem"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusEnvironment",
+            "printedName": "UIFocusEnvironment",
+            "usr": "c:objc(pl)UIFocusEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusItemContainer",
+            "printedName": "UIFocusItemContainer",
+            "usr": "c:objc(pl)UIFocusItemContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UICoordinateSpace",
+            "printedName": "UICoordinateSpace",
+            "usr": "c:objc(pl)UICoordinateSpace"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIResponderStandardEditActions",
+            "printedName": "UIResponderStandardEditActions",
+            "usr": "c:objc(pl)UIResponderStandardEditActions"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIActivityItemsConfigurationProviding",
+            "printedName": "UIActivityItemsConfigurationProviding",
+            "usr": "c:objc(pl)UIActivityItemsConfigurationProviding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIPasteConfigurationSupporting",
+            "printedName": "UIPasteConfigurationSupporting",
+            "usr": "c:objc(pl)UIPasteConfigurationSupporting"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIUserActivityRestoring",
+            "printedName": "UIUserActivityRestoring",
+            "usr": "c:objc(pl)UIUserActivityRestoring"
+          }
+        ],
+        "declAttributes": [
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "SpriteKit",
+        "name": "SKSpriteNode",
+        "objc_name": "SKSpriteNode",
+        "printedName": "SKSpriteNode",
+        "superclassNames": [
+          "SpriteKit.SKNode",
+          "UIKit.UIResponder",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)SKNode",
+        "usr": "c:objc(cs)SKSpriteNode"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "_PlaygroundQuickLook",
+                        "printedName": "Swift._PlaygroundQuickLook",
+                        "usr": "s:s20_PlaygroundQuickLookO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "PlaygroundQuickLook",
+                    "printedName": "Swift.PlaygroundQuickLook"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo14SKTextureAtlasC9SpriteKitE25customPlaygroundQuickLooks01_fgH0Ovg",
+                "moduleName": "SpriteKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So14SKTextureAtlasC9SpriteKitE25customPlaygroundQuickLooks01_fgH0Ovg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "_PlaygroundQuickLook",
+                    "printedName": "Swift._PlaygroundQuickLook",
+                    "usr": "s:s20_PlaygroundQuickLookO"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "PlaygroundQuickLook",
+                "printedName": "Swift.PlaygroundQuickLook"
+              }
+            ],
+            "declAttributes": [
+              "Available"
+            ],
+            "declKind": "Var",
+            "deprecated": true,
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo14SKTextureAtlasC9SpriteKitE25customPlaygroundQuickLooks01_fgH0Ovp",
+            "moduleName": "SpriteKit",
+            "name": "customPlaygroundQuickLook",
+            "printedName": "customPlaygroundQuickLook",
+            "usr": "s:So14SKTextureAtlasC9SpriteKitE25customPlaygroundQuickLooks01_fgH0Ovp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "SpriteKit",
+        "name": "SKTextureAtlas",
+        "objc_name": "SKTextureAtlas",
+        "printedName": "SKTextureAtlas",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)SKTextureAtlas"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "_PlaygroundQuickLook",
+                        "printedName": "Swift._PlaygroundQuickLook",
+                        "usr": "s:s20_PlaygroundQuickLookO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "PlaygroundQuickLook",
+                    "printedName": "Swift.PlaygroundQuickLook"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo9SKTextureC9SpriteKitE25customPlaygroundQuickLooks01_efG0Ovg",
+                "moduleName": "SpriteKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So9SKTextureC9SpriteKitE25customPlaygroundQuickLooks01_efG0Ovg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "_PlaygroundQuickLook",
+                    "printedName": "Swift._PlaygroundQuickLook",
+                    "usr": "s:s20_PlaygroundQuickLookO"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "PlaygroundQuickLook",
+                "printedName": "Swift.PlaygroundQuickLook"
+              }
+            ],
+            "declAttributes": [
+              "Available"
+            ],
+            "declKind": "Var",
+            "deprecated": true,
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo9SKTextureC9SpriteKitE25customPlaygroundQuickLooks01_efG0Ovp",
+            "moduleName": "SpriteKit",
+            "name": "customPlaygroundQuickLook",
+            "printedName": "customPlaygroundQuickLook",
+            "usr": "s:So9SKTextureC9SpriteKitE25customPlaygroundQuickLooks01_efG0Ovp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "SpriteKit",
+        "name": "SKTexture",
+        "objc_name": "SKTexture",
+        "printedName": "SKTexture",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)SKTexture"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SKWarpGeometryGrid",
+                "printedName": "SpriteKit.SKWarpGeometryGrid",
+                "usr": "c:objc(cs)SKWarpGeometryGrid"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD2",
+                    "printedName": "Swift.SIMD2<Swift.Float>",
+                    "usr": "s:s5SIMD2V"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD2<Swift.Float>]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD2",
+                    "printedName": "Swift.SIMD2<Swift.Float>",
+                    "usr": "s:s5SIMD2V"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD2<Swift.Float>]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Convenience",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$sSo18SKWarpGeometryGridC9SpriteKitE7columns4rows15sourcePositions011destinationI0ABSi_SiSays5SIMD2VySfGGAKtcfc",
+            "moduleName": "SpriteKit",
+            "name": "init",
+            "printedName": "init(columns:rows:sourcePositions:destinationPositions:)",
+            "usr": "s:So18SKWarpGeometryGridC9SpriteKitE7columns4rows15sourcePositions011destinationI0ABSi_SiSays5SIMD2VySfGGAKtcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SKWarpGeometryGrid",
+                "printedName": "SpriteKit.SKWarpGeometryGrid",
+                "usr": "c:objc(cs)SKWarpGeometryGrid"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD2",
+                    "printedName": "Swift.SIMD2<Swift.Float>",
+                    "usr": "s:s5SIMD2V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD2<Swift.Float>]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo18SKWarpGeometryGridC9SpriteKitE26replacingBySourcePositions9positionsABSays5SIMD2VySfGG_tF",
+            "moduleName": "SpriteKit",
+            "name": "replacingBySourcePositions",
+            "printedName": "replacingBySourcePositions(positions:)",
+            "usr": "s:So18SKWarpGeometryGridC9SpriteKitE26replacingBySourcePositions9positionsABSays5SIMD2VySfGG_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SKWarpGeometryGrid",
+                "printedName": "SpriteKit.SKWarpGeometryGrid",
+                "usr": "c:objc(cs)SKWarpGeometryGrid"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "SIMD2",
+                    "printedName": "Swift.SIMD2<Swift.Float>",
+                    "usr": "s:s5SIMD2V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.SIMD2<Swift.Float>]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo18SKWarpGeometryGridC9SpriteKitE31replacingByDestinationPositions9positionsABSays5SIMD2VySfGG_tF",
+            "moduleName": "SpriteKit",
+            "name": "replacingByDestinationPositions",
+            "printedName": "replacingByDestinationPositions(positions:)",
+            "usr": "s:So18SKWarpGeometryGridC9SpriteKitE31replacingByDestinationPositions9positionsABSays5SIMD2VySfGG_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "10.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "SpriteKit",
+        "name": "SKWarpGeometryGrid",
+        "objc_name": "SKWarpGeometryGrid",
+        "printedName": "SKWarpGeometryGrid",
+        "superclassNames": [
+          "SpriteKit.SKWarpGeometry",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)SKWarpGeometry",
+        "usr": "c:objc(cs)SKWarpGeometryGrid"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "SpriteKit",
+    "printedName": "SpriteKit"
+  }
+}

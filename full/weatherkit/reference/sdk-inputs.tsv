@@ -1,0 +1,3 @@
+category	sdkRelativePath	size	sha256
+swiftinterface	System/Library/Frameworks/WeatherKit.framework/Modules/WeatherKit.swiftmodule/arm64e-apple-ios.swiftinterface	67560	0356c6a7dd42e87bc726ef2a7ff08e2a87c9b323a6799ced498212ed7a183f67
+tbd	System/Library/Frameworks/WeatherKit.framework/WeatherKit.tbd	385697	678ee5e56f4dd4cc852fcac1283658e3c56c3fa25e69a3369614f3eeddd749c7

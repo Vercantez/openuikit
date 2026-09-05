@@ -1,0 +1,220 @@
+precise	kind	title	path	declaration
+c:@E@SHErrorCode	swift.enum	SHError.Code	SHError.Code	enum Code
+c:@E@SHErrorCode@SHErrorCodeAudioDiscontinuity	swift.enum.case	SHError.Code.audioDiscontinuity	SHError.Code.audioDiscontinuity	case audioDiscontinuity
+c:@E@SHErrorCode@SHErrorCodeCustomCatalogInvalid	swift.enum.case	SHError.Code.customCatalogInvalid	SHError.Code.customCatalogInvalid	case customCatalogInvalid
+c:@E@SHErrorCode@SHErrorCodeCustomCatalogInvalidURL	swift.enum.case	SHError.Code.customCatalogInvalidURL	SHError.Code.customCatalogInvalidURL	case customCatalogInvalidURL
+c:@E@SHErrorCode@SHErrorCodeInternalError	swift.enum.case	SHError.Code.internalError	SHError.Code.internalError	case internalError
+c:@E@SHErrorCode@SHErrorCodeInvalidAudioFormat	swift.enum.case	SHError.Code.invalidAudioFormat	SHError.Code.invalidAudioFormat	case invalidAudioFormat
+c:@E@SHErrorCode@SHErrorCodeMatchAttemptFailed	swift.enum.case	SHError.Code.matchAttemptFailed	SHError.Code.matchAttemptFailed	case matchAttemptFailed
+c:@E@SHErrorCode@SHErrorCodeMediaItemFetchFailed	swift.enum.case	SHError.Code.mediaItemFetchFailed	SHError.Code.mediaItemFetchFailed	case mediaItemFetchFailed
+c:@E@SHErrorCode@SHErrorCodeMediaLibrarySyncFailed	swift.enum.case	SHError.Code.mediaLibrarySyncFailed	SHError.Code.mediaLibrarySyncFailed	case mediaLibrarySyncFailed
+c:@E@SHErrorCode@SHErrorCodeSignatureDurationInvalid	swift.enum.case	SHError.Code.signatureDurationInvalid	SHError.Code.signatureDurationInvalid	case signatureDurationInvalid
+c:@E@SHErrorCode@SHErrorCodeSignatureInvalid	swift.enum.case	SHError.Code.signatureInvalid	SHError.Code.signatureInvalid	case signatureInvalid
+c:@SHErrorDomain	swift.var	SHErrorDomain	SHErrorDomain	let SHErrorDomain: String
+c:@SHMediaItemAppleMusicID	swift.type.property	appleMusicID	SHMediaItemProperty.appleMusicID	static let appleMusicID: SHMediaItemProperty
+c:@SHMediaItemAppleMusicURL	swift.type.property	appleMusicURL	SHMediaItemProperty.appleMusicURL	static let appleMusicURL: SHMediaItemProperty
+c:@SHMediaItemArtist	swift.type.property	artist	SHMediaItemProperty.artist	static let artist: SHMediaItemProperty
+c:@SHMediaItemArtworkURL	swift.type.property	artworkURL	SHMediaItemProperty.artworkURL	static let artworkURL: SHMediaItemProperty
+c:@SHMediaItemConfidence	swift.type.property	confidence	SHMediaItemProperty.confidence	static let confidence: SHMediaItemProperty
+c:@SHMediaItemCreationDate	swift.type.property	creationDate	SHMediaItemProperty.creationDate	static let creationDate: SHMediaItemProperty
+c:@SHMediaItemExplicitContent	swift.type.property	explicitContent	SHMediaItemProperty.explicitContent	static let explicitContent: SHMediaItemProperty
+c:@SHMediaItemFrequencySkew	swift.type.property	frequencySkew	SHMediaItemProperty.frequencySkew	static let frequencySkew: SHMediaItemProperty
+c:@SHMediaItemGenres	swift.type.property	genres	SHMediaItemProperty.genres	static let genres: SHMediaItemProperty
+c:@SHMediaItemISRC	swift.type.property	ISRC	SHMediaItemProperty.ISRC	static let ISRC: SHMediaItemProperty
+c:@SHMediaItemMatchOffset	swift.type.property	matchOffset	SHMediaItemProperty.matchOffset	static let matchOffset: SHMediaItemProperty
+c:@SHMediaItemShazamID	swift.type.property	shazamID	SHMediaItemProperty.shazamID	static let shazamID: SHMediaItemProperty
+c:@SHMediaItemSubtitle	swift.type.property	subtitle	SHMediaItemProperty.subtitle	static let subtitle: SHMediaItemProperty
+c:@SHMediaItemTitle	swift.type.property	title	SHMediaItemProperty.title	static let title: SHMediaItemProperty
+c:@SHMediaItemVideoURL	swift.type.property	videoURL	SHMediaItemProperty.videoURL	static let videoURL: SHMediaItemProperty
+c:@SHMediaItemWebURL	swift.type.property	webURL	SHMediaItemProperty.webURL	static let webURL: SHMediaItemProperty
+c:@T@SHMediaItemProperty	swift.struct	SHMediaItemProperty	SHMediaItemProperty	struct SHMediaItemProperty
+c:objc(cs)SHCatalog	swift.class	SHCatalog	SHCatalog	class SHCatalog
+c:objc(cs)SHCatalog(py)maximumQuerySignatureDuration	swift.property	maximumQuerySignatureDuration	SHCatalog.maximumQuerySignatureDuration	var maximumQuerySignatureDuration: TimeInterval { get }
+c:objc(cs)SHCatalog(py)minimumQuerySignatureDuration	swift.property	minimumQuerySignatureDuration	SHCatalog.minimumQuerySignatureDuration	var minimumQuerySignatureDuration: TimeInterval { get }
+c:objc(cs)SHCustomCatalog	swift.class	SHCustomCatalog	SHCustomCatalog	class SHCustomCatalog
+c:objc(cs)SHCustomCatalog(im)addCustomCatalogFromURL:error:	swift.method	add(from:)	SHCustomCatalog.add(from:)	func add(from customCatalogURL: URL) throws
+c:objc(cs)SHCustomCatalog(im)addReferenceSignature:representingMediaItems:error:	swift.method	addReferenceSignature(_:representing:)	SHCustomCatalog.addReferenceSignature(_:representing:)	func addReferenceSignature(_ signature: SHSignature, representing mediaItems: [SHMediaItem]) throws
+c:objc(cs)SHCustomCatalog(im)init	swift.init	init()	SHCustomCatalog.init()	init()
+c:objc(cs)SHCustomCatalog(im)initWithDataRepresentation:error:	swift.init	init(dataRepresentation:)	SHCustomCatalog.init(dataRepresentation:)	init(dataRepresentation: Data) throws
+c:objc(cs)SHCustomCatalog(im)writeToURL:error:	swift.method	write(to:)	SHCustomCatalog.write(to:)	func write(to destinationURL: URL) throws
+c:objc(cs)SHCustomCatalog(py)dataRepresentation	swift.property	dataRepresentation	SHCustomCatalog.dataRepresentation	var dataRepresentation: Data { get }
+c:objc(cs)SHMatch	swift.class	SHMatch	SHMatch	class SHMatch
+c:objc(cs)SHMatch(py)mediaItems	swift.property	mediaItems	SHMatch.mediaItems	var mediaItems: [SHMatchedMediaItem] { get }
+c:objc(cs)SHMatch(py)querySignature	swift.property	querySignature	SHMatch.querySignature	var querySignature: SHSignature { get }
+c:objc(cs)SHMatchedMediaItem	swift.class	SHMatchedMediaItem	SHMatchedMediaItem	class SHMatchedMediaItem
+c:objc(cs)SHMatchedMediaItem(py)confidence	swift.property	confidence	SHMatchedMediaItem.confidence	var confidence: Float { get }
+c:objc(cs)SHMatchedMediaItem(py)frequencySkew	swift.property	frequencySkew	SHMatchedMediaItem.frequencySkew	var frequencySkew: Float { get }
+c:objc(cs)SHMatchedMediaItem(py)matchOffset	swift.property	matchOffset	SHMatchedMediaItem.matchOffset	var matchOffset: TimeInterval { get }
+c:objc(cs)SHMatchedMediaItem(py)predictedCurrentMatchOffset	swift.property	predictedCurrentMatchOffset	SHMatchedMediaItem.predictedCurrentMatchOffset	var predictedCurrentMatchOffset: TimeInterval { get }
+c:objc(cs)SHMediaItem	swift.class	SHMediaItem	SHMediaItem	class SHMediaItem
+c:objc(cs)SHMediaItem(cm)fetchMediaItemWithShazamID:completionHandler:	swift.type.method	fetch(shazamID:)	SHMediaItem.fetch(shazamID:)	class func fetch(shazamID: String) async throws -> SHMediaItem
+c:objc(cs)SHMediaItem(im)objectForKeyedSubscript:	swift.subscript	subscript(_:)	SHMediaItem.subscript(_:)	subscript(key: SHMediaItemProperty) -> Any { get }
+c:objc(cs)SHMediaItem(py)appleMusicID	swift.property	appleMusicID	SHMediaItem.appleMusicID	var appleMusicID: String? { get }
+c:objc(cs)SHMediaItem(py)appleMusicURL	swift.property	appleMusicURL	SHMediaItem.appleMusicURL	var appleMusicURL: URL? { get }
+c:objc(cs)SHMediaItem(py)artist	swift.property	artist	SHMediaItem.artist	var artist: String? { get }
+c:objc(cs)SHMediaItem(py)artworkURL	swift.property	artworkURL	SHMediaItem.artworkURL	var artworkURL: URL? { get }
+c:objc(cs)SHMediaItem(py)creationDate	swift.property	creationDate	SHMediaItem.creationDate	var creationDate: Date? { get }
+c:objc(cs)SHMediaItem(py)explicitContent	swift.property	explicitContent	SHMediaItem.explicitContent	var explicitContent: Bool { get }
+c:objc(cs)SHMediaItem(py)genres	swift.property	genres	SHMediaItem.genres	var genres: [String] { get }
+c:objc(cs)SHMediaItem(py)isrc	swift.property	isrc	SHMediaItem.isrc	var isrc: String? { get }
+c:objc(cs)SHMediaItem(py)shazamID	swift.property	shazamID	SHMediaItem.shazamID	var shazamID: String? { get }
+c:objc(cs)SHMediaItem(py)subtitle	swift.property	subtitle	SHMediaItem.subtitle	var subtitle: String? { get }
+c:objc(cs)SHMediaItem(py)title	swift.property	title	SHMediaItem.title	var title: String? { get }
+c:objc(cs)SHMediaItem(py)videoURL	swift.property	videoURL	SHMediaItem.videoURL	var videoURL: URL? { get }
+c:objc(cs)SHMediaItem(py)webURL	swift.property	webURL	SHMediaItem.webURL	var webURL: URL? { get }
+c:objc(cs)SHMediaLibrary	swift.class	SHMediaLibrary	SHMediaLibrary	class SHMediaLibrary
+c:objc(cs)SHMediaLibrary(cpy)defaultLibrary	swift.type.property	default	SHMediaLibrary.default	class var `default`: SHMediaLibrary { get }
+c:objc(cs)SHMediaLibrary(im)addMediaItems:completionHandler:	swift.method	add(_:)	SHMediaLibrary.add(_:)	func add(_ mediaItems: [SHMediaItem]) async throws
+c:objc(cs)SHSession	swift.class	SHSession	SHSession	class SHSession
+c:objc(cs)SHSession(im)init	swift.init	init()	SHSession.init()	init()
+c:objc(cs)SHSession(im)initWithCatalog:	swift.init	init(catalog:)	SHSession.init(catalog:)	init(catalog: SHCatalog)
+c:objc(cs)SHSession(im)matchSignature:	swift.method	match(_:)	SHSession.match(_:)	func match(_ signature: SHSignature)
+c:objc(cs)SHSession(im)matchStreamingBuffer:atTime:	swift.method	matchStreamingBuffer(_:at:)	SHSession.matchStreamingBuffer(_:at:)	func matchStreamingBuffer(_ buffer: AVAudioPCMBuffer, at time: AVAudioTime?)
+c:objc(cs)SHSession(py)catalog	swift.property	catalog	SHSession.catalog	var catalog: SHCatalog { get }
+c:objc(cs)SHSession(py)delegate	swift.property	delegate	SHSession.delegate	weak var delegate: (any SHSessionDelegate)? { get set }
+c:objc(cs)SHSignature	swift.class	SHSignature	SHSignature	class SHSignature
+c:objc(cs)SHSignature(im)initWithDataRepresentation:error:	swift.init	init(dataRepresentation:)	SHSignature.init(dataRepresentation:)	init(dataRepresentation: Data) throws
+c:objc(cs)SHSignature(py)dataRepresentation	swift.property	dataRepresentation	SHSignature.dataRepresentation	var dataRepresentation: Data { get }
+c:objc(cs)SHSignature(py)duration	swift.property	duration	SHSignature.duration	var duration: TimeInterval { get }
+c:objc(cs)SHSignatureGenerator	swift.class	SHSignatureGenerator	SHSignatureGenerator	class SHSignatureGenerator
+c:objc(cs)SHSignatureGenerator(cm)generateSignatureFromAsset:completionHandler:	swift.type.method	generateSignature(from:completionHandler:)	SHSignatureGenerator.generateSignature(from:completionHandler:)	class func generateSignature(from asset: AVAsset, completionHandler: @escaping (SHSignature?, (any Error)?) -> Void)
+c:objc(cs)SHSignatureGenerator(im)appendBuffer:atTime:error:	swift.method	append(_:at:)	SHSignatureGenerator.append(_:at:)	func append(_ buffer: AVAudioPCMBuffer, at time: AVAudioTime?) throws
+c:objc(cs)SHSignatureGenerator(im)signature	swift.method	signature()	SHSignatureGenerator.signature()	func signature() -> SHSignature
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SHMatch	swift.init	init(coder:)	SHMatch.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SHMediaItem	swift.init	init(coder:)	SHMediaItem.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SHSignature	swift.init	init(coder:)	SHSignature.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)SHSessionDelegate	swift.protocol	SHSessionDelegate	SHSessionDelegate	protocol SHSessionDelegate : NSObjectProtocol
+c:objc(pl)SHSessionDelegate(im)session:didFindMatch:	swift.method	session(_:didFind:)	SHSessionDelegate.session(_:didFind:)	optional func session(_ session: SHSession, didFind match: SHMatch)
+c:objc(pl)SHSessionDelegate(im)session:didNotFindMatchForSignature:error:	swift.method	session(_:didNotFindMatchFor:error:)	SHSessionDelegate.session(_:didNotFindMatchFor:error:)	optional func session(_ session: SHSession, didNotFindMatchFor signature: SHSignature, error: (any Error)?)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@SHErrorCode	swift.type.property	errorDomain	SHError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SHErrorCode	swift.property	errorUserInfo	SHError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SHErrorCode	swift.property	errorCode	SHError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@SHErrorCode	swift.func.op	~=(_:_:)	SHError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SHErrorCode	swift.property	errorUserInfo	SHError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@SHErrorCode	swift.func.op	==(_:_:)	SHError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@SHErrorCode	swift.property	code	SHError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SHErrorCode	swift.method	hash(into:)	SHError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@SHErrorCode	swift.property	userInfo	SHError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SHErrorCode	swift.property	errorCode	SHError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@SHErrorCode	swift.property	hashValue	SHError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@SHErrorCode	swift.init	init(_:userInfo:)	SHError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:22UniformTypeIdentifiers6UTTypeV9ShazamKitE15shazamSignatureACvpZ	swift.type.property	shazamSignature	UTType.shazamSignature	static var shazamSignature: UTType { get }
+s:22UniformTypeIdentifiers6UTTypeV9ShazamKitE19shazamCustomCatalogACvpZ	swift.type.property	shazamCustomCatalog	UTType.shazamCustomCatalog	static var shazamCustomCatalog: UTType { get }
+s:9ShazamKit16SHManagedSessionC	swift.class	SHManagedSession	SHManagedSession	final class SHManagedSession
+s:9ShazamKit16SHManagedSessionC5StateO	swift.enum	SHManagedSession.State	SHManagedSession.State	@frozen enum State
+s:9ShazamKit16SHManagedSessionC5StateO12prerecordingyA2EmF	swift.enum.case	SHManagedSession.State.prerecording	SHManagedSession.State.prerecording	case prerecording
+s:9ShazamKit16SHManagedSessionC5StateO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	SHManagedSession.State.==(_:_:)	static func == (a: SHManagedSession.State, b: SHManagedSession.State) -> Bool
+s:9ShazamKit16SHManagedSessionC5StateO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	SHManagedSession.State.hash(into:)	func hash(into hasher: inout Hasher)
+s:9ShazamKit16SHManagedSessionC5StateO4idleyA2EmF	swift.enum.case	SHManagedSession.State.idle	SHManagedSession.State.idle	case idle
+s:9ShazamKit16SHManagedSessionC5StateO8matchingyA2EmF	swift.enum.case	SHManagedSession.State.matching	SHManagedSession.State.matching	case matching
+s:9ShazamKit16SHManagedSessionC5StateO9hashValueSivp	swift.property	hashValue	SHManagedSession.State.hashValue	var hashValue: Int { get }
+s:9ShazamKit16SHManagedSessionC5stateAC5StateOvp	swift.property	state	SHManagedSession.state	@MainActor final var state: SHManagedSession.State { get }
+s:9ShazamKit16SHManagedSessionC6cancelyyF	swift.method	cancel()	SHManagedSession.cancel()	final func cancel()
+s:9ShazamKit16SHManagedSessionC6resultSo9SHSessionCAAE6ResultOyYaF	swift.method	result()	SHManagedSession.result()	final func result() async -> SHSession.Result
+s:9ShazamKit16SHManagedSessionC7catalogACSo9SHCatalogC_tcfc	swift.init	init(catalog:)	SHManagedSession.init(catalog:)	init(catalog: SHCatalog)
+s:9ShazamKit16SHManagedSessionC7prepareyyYaF	swift.method	prepare()	SHManagedSession.prepare()	final func prepare() async
+s:9ShazamKit16SHManagedSessionC7resultsSo9SHSessionCAAE7ResultsVvp	swift.property	results	SHManagedSession.results	final var results: SHSession.Results { get }
+s:9ShazamKit16SHManagedSessionCACycfc	swift.init	init()	SHManagedSession.init()	init()
+s:9ShazamKit9SHLibraryC	swift.class	SHLibrary	SHLibrary	final class SHLibrary
+s:9ShazamKit9SHLibraryC11removeItemsyySaySo11SHMediaItemCGYaKF	swift.method	removeItems(_:)	SHLibrary.removeItems(_:)	final func removeItems(_ items: [SHMediaItem]) async throws
+s:9ShazamKit9SHLibraryC5itemsSaySo11SHMediaItemCGvp	swift.property	items	SHLibrary.items	@MainActor final var items: [SHMediaItem] { get }
+s:9ShazamKit9SHLibraryC7defaultACvpZ	swift.type.property	default	SHLibrary.default	static let `default`: SHLibrary
+s:9ShazamKit9SHLibraryC8addItemsyySaySo11SHMediaItemCGYaKF	swift.method	addItems(_:)	SHLibrary.addItems(_:)	final func addItems(_ items: [SHMediaItem]) async throws
+s:SC11SHErrorCodeLeV	swift.struct	SHError	SHError	struct SHError
+s:SC11SHErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	SHError.errorDomain	static var errorDomain: String { get }
+s:SC11SHErrorCodeLeV13internalErrorSoAAVvpZ	swift.type.property	internalError	SHError.internalError	static var internalError: SHError.Code { get }
+s:SC11SHErrorCodeLeV16signatureInvalidSoAAVvpZ	swift.type.property	signatureInvalid	SHError.signatureInvalid	static var signatureInvalid: SHError.Code { get }
+s:SC11SHErrorCodeLeV18audioDiscontinuitySoAAVvpZ	swift.type.property	audioDiscontinuity	SHError.audioDiscontinuity	static var audioDiscontinuity: SHError.Code { get }
+s:SC11SHErrorCodeLeV18invalidAudioFormatSoAAVvpZ	swift.type.property	invalidAudioFormat	SHError.invalidAudioFormat	static var invalidAudioFormat: SHError.Code { get }
+s:SC11SHErrorCodeLeV18matchAttemptFailedSoAAVvpZ	swift.type.property	matchAttemptFailed	SHError.matchAttemptFailed	static var matchAttemptFailed: SHError.Code { get }
+s:SC11SHErrorCodeLeV20customCatalogInvalidSoAAVvpZ	swift.type.property	customCatalogInvalid	SHError.customCatalogInvalid	static var customCatalogInvalid: SHError.Code { get }
+s:SC11SHErrorCodeLeV20mediaItemFetchFailedSoAAVvpZ	swift.type.property	mediaItemFetchFailed	SHError.mediaItemFetchFailed	static var mediaItemFetchFailed: SHError.Code { get }
+s:SC11SHErrorCodeLeV22mediaLibrarySyncFailedSoAAVvpZ	swift.type.property	mediaLibrarySyncFailed	SHError.mediaLibrarySyncFailed	static var mediaLibrarySyncFailed: SHError.Code { get }
+s:SC11SHErrorCodeLeV23customCatalogInvalidURLSoAAVvpZ	swift.type.property	customCatalogInvalidURL	SHError.customCatalogInvalidURL	static var customCatalogInvalidURL: SHError.Code { get }
+s:SC11SHErrorCodeLeV24signatureDurationInvalidSoAAVvpZ	swift.type.property	signatureDurationInvalid	SHError.signatureDurationInvalid	static var signatureDurationInvalid: SHError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SHErrorCode	swift.func.op	!=(_:_:)	SHError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SHMediaItemProperty	swift.func.op	!=(_:_:)	SHMediaItemProperty.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9ShazamKit16SHManagedSessionC5StateO	swift.func.op	!=(_:_:)	SHManagedSession.State.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SHErrorCode	swift.property	hashValue	SHError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SHErrorCode	swift.method	hash(into:)	SHError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV	swift.method	next()	SHSignature.Slices.Iterator.next()	mutating func next() async throws(Self.Failure) -> Self.Element?
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV	swift.method	next()	SHSession.Results.Iterator.next()	mutating func next() async throws(Self.Failure) -> Self.Element?
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV	swift.method	next(isolation:)	SHSignature.Slices.Iterator.next(isolation:)	mutating func next(isolation actor: isolated (any Actor)?) async throws(Self.Failure) -> Self.Element?
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV	swift.method	next(isolation:)	SHSession.Results.Iterator.next(isolation:)	mutating func next(isolation actor: isolated (any Actor)?) async throws(Self.Failure) -> Self.Element?
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	allSatisfy(_:)	SHSignature.Slices.allSatisfy(_:)	func allSatisfy(_ predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	allSatisfy(_:)	SHSession.Results.allSatisfy(_:)	func allSatisfy(_ predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	compactMap(_:)	SHSignature.Slices.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async -> ElementOfResult?) -> AsyncCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	compactMap(_:)	SHSession.Results.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async -> ElementOfResult?) -> AsyncCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	compactMap(_:)	SHSignature.Slices.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async throws -> ElementOfResult?) -> AsyncThrowingCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	compactMap(_:)	SHSession.Results.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async throws -> ElementOfResult?) -> AsyncThrowingCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	map(_:)	SHSignature.Slices.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async -> Transformed) -> AsyncMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	map(_:)	SHSession.Results.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async -> Transformed) -> AsyncMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	map(_:)	SHSignature.Slices.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async throws -> Transformed) -> AsyncThrowingMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	map(_:)	SHSession.Results.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async throws -> Transformed) -> AsyncThrowingMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	max(by:)	SHSignature.Slices.max(by:)	@warn_unqualified_access func max(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	max(by:)	SHSession.Results.max(by:)	@warn_unqualified_access func max(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	min(by:)	SHSignature.Slices.min(by:)	@warn_unqualified_access func min(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	min(by:)	SHSession.Results.min(by:)	@warn_unqualified_access func min(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	drop(while:)	SHSignature.Slices.drop(while:)	@preconcurrency func drop(while predicate: @escaping (Self.Element) async -> Bool) -> AsyncDropWhileSequence<Self>
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	drop(while:)	SHSession.Results.drop(while:)	@preconcurrency func drop(while predicate: @escaping (Self.Element) async -> Bool) -> AsyncDropWhileSequence<Self>
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	first(where:)	SHSignature.Slices.first(where:)	func first(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	first(where:)	SHSession.Results.first(where:)	func first(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	filter(_:)	SHSignature.Slices.filter(_:)	@preconcurrency func filter(_ isIncluded: @escaping (Self.Element) async -> Bool) -> AsyncFilterSequence<Self>
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	filter(_:)	SHSession.Results.filter(_:)	@preconcurrency func filter(_ isIncluded: @escaping (Self.Element) async -> Bool) -> AsyncFilterSequence<Self>
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	prefix(while:)	SHSignature.Slices.prefix(while:)	@preconcurrency func prefix(while predicate: @escaping (Self.Element) async -> Bool) rethrows -> AsyncPrefixWhileSequence<Self>
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	prefix(while:)	SHSession.Results.prefix(while:)	@preconcurrency func prefix(while predicate: @escaping (Self.Element) async -> Bool) rethrows -> AsyncPrefixWhileSequence<Self>
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	prefix(_:)	SHSignature.Slices.prefix(_:)	func prefix(_ count: Int) -> AsyncPrefixSequence<Self>
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	prefix(_:)	SHSession.Results.prefix(_:)	func prefix(_ count: Int) -> AsyncPrefixSequence<Self>
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	reduce(into:_:)	SHSignature.Slices.reduce(into:_:)	func reduce<Result>(into initialResult: Result, _ updateAccumulatingResult: (inout Result, Self.Element) async throws -> Void) async rethrows -> Result
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	reduce(into:_:)	SHSession.Results.reduce(into:_:)	func reduce<Result>(into initialResult: Result, _ updateAccumulatingResult: (inout Result, Self.Element) async throws -> Void) async rethrows -> Result
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	reduce(_:_:)	SHSignature.Slices.reduce(_:_:)	func reduce<Result>(_ initialResult: Result, _ nextPartialResult: (Result, Self.Element) async throws -> Result) async rethrows -> Result
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	reduce(_:_:)	SHSession.Results.reduce(_:_:)	func reduce<Result>(_ initialResult: Result, _ nextPartialResult: (Result, Self.Element) async throws -> Result) async rethrows -> Result
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	flatMap(_:)	SHSignature.Slices.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async throws -> SegmentOfResult) -> AsyncThrowingFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	flatMap(_:)	SHSession.Results.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async throws -> SegmentOfResult) -> AsyncThrowingFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	flatMap(_:)	SHSignature.Slices.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == SegmentOfResult.Failure
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	flatMap(_:)	SHSession.Results.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == SegmentOfResult.Failure
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	flatMap(_:)	SHSignature.Slices.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	flatMap(_:)	SHSession.Results.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	flatMap(_:)	SHSignature.Slices.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == Never, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	flatMap(_:)	SHSession.Results.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == Never, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	contains(where:)	SHSignature.Slices.contains(where:)	func contains(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	contains(where:)	SHSession.Results.contains(where:)	func contains(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	dropFirst(_:)	SHSignature.Slices.dropFirst(_:)	func dropFirst(_ count: Int = 1) -> AsyncDropFirstSequence<Self>
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	swift.method	dropFirst(_:)	SHSession.Results.dropFirst(_:)	func dropFirst(_ count: Int = 1) -> AsyncDropFirstSequence<Self>
+s:Sci12_ConcurrencySQ7ElementRpzrlE8containsySbACYaKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	swift.method	contains(_:)	SHSignature.Slices.contains(_:)	func contains(_ search: Self.Element) async rethrows -> Bool
+s:So11SHErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SHError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So11SHMediaItemC9ShazamKitE10propertiesABSDySo0aB8PropertyaypG_tcfc	swift.init	init(properties:)	SHMediaItem.init(properties:)	convenience init(properties: [SHMediaItemProperty : Any])
+s:So11SHMediaItemC9ShazamKitE10timeRangesSaySnySdGGvp	swift.property	timeRanges	SHMediaItem.timeRanges	var timeRanges: [Range<TimeInterval>] { get }
+s:So11SHMediaItemC9ShazamKitE19frequencySkewRangesSaySnySfGGvp	swift.property	frequencySkewRanges	SHMediaItem.frequencySkewRanges	var frequencySkewRanges: [Range<Float>] { get }
+s:So11SHMediaItemC9ShazamKitE2IDa	swift.typealias	SHMediaItem.ID	SHMediaItem.ID	typealias ID = UUID
+s:So11SHMediaItemC9ShazamKitE2id10Foundation4UUIDVvp	swift.property	id	SHMediaItem.id	var id: UUID { get }
+s:So11SHMediaItemC9ShazamKitE5songsSay05MusicD04SongVGvp	swift.property	songs	SHMediaItem.songs	var songs: [Song] { get }
+s:So11SHSignatureC9ShazamKitE6SlicesV	swift.struct	SHSignature.Slices	SHSignature.Slices	struct Slices
+s:So11SHSignatureC9ShazamKitE6SlicesV13AsyncIteratora	swift.typealias	SHSignature.Slices.AsyncIterator	SHSignature.Slices.AsyncIterator	typealias AsyncIterator = SHSignature.Slices.Iterator
+s:So11SHSignatureC9ShazamKitE6SlicesV17makeAsyncIteratorAE0G0VyF	swift.method	makeAsyncIterator()	SHSignature.Slices.makeAsyncIterator()	func makeAsyncIterator() -> SHSignature.Slices.Iterator
+s:So11SHSignatureC9ShazamKitE6SlicesV7Elementa	swift.typealias	SHSignature.Slices.Element	SHSignature.Slices.Element	typealias Element = SHSignature
+s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV	swift.struct	SHSignature.Slices.Iterator	SHSignature.Slices.Iterator	struct Iterator
+s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV4nextABSgyYaKF	swift.method	next()	SHSignature.Slices.Iterator.next()	mutating func next() async throws -> SHSignature.Slices.Element?
+s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV7Elementa	swift.typealias	SHSignature.Slices.Iterator.Element	SHSignature.Slices.Iterator.Element	typealias Element = SHSignature.Slices.Element
+s:So11SHSignatureC9ShazamKitE6slices4from8duration6strideAbCE6SlicesVSd_S2dSgtKF	swift.method	slices(from:duration:stride:)	SHSignature.slices(from:duration:stride:)	func slices(from start: TimeInterval, duration: TimeInterval, stride: TimeInterval? = nil) throws -> SHSignature.Slices
+s:So19SHMediaItemPropertya8rawValueABSS_tcfc	swift.init	init(rawValue:)	SHMediaItemProperty.init(rawValue:)	init(rawValue: String)
+s:So19SHMediaItemPropertya9ShazamKitE10timeRangesABvpZ	swift.type.property	timeRanges	SHMediaItemProperty.timeRanges	static let timeRanges: SHMediaItemProperty
+s:So19SHMediaItemPropertya9ShazamKitE19frequencySkewRangesABvpZ	swift.type.property	frequencySkewRanges	SHMediaItemProperty.frequencySkewRanges	static let frequencySkewRanges: SHMediaItemProperty
+s:So19SHMediaItemPropertyayABSScfc	swift.init	init(_:)	SHMediaItemProperty.init(_:)	init(_ rawValue: String)
+s:So9SHSessionC9ShazamKitE6ResultO	swift.enum	SHSession.Result	SHSession.Result	@frozen enum Result
+s:So9SHSessionC9ShazamKitE6ResultO5erroryAEs5Error_p_So11SHSignatureCtcAEmF	swift.enum.case	SHSession.Result.error(_:_:)	SHSession.Result.error(_:_:)	case error(any Error, SHSignature)
+s:So9SHSessionC9ShazamKitE6ResultO5matchyAESo7SHMatchCcAEmF	swift.enum.case	SHSession.Result.match(_:)	SHSession.Result.match(_:)	case match(SHMatch)
+s:So9SHSessionC9ShazamKitE6ResultO7noMatchyAESo11SHSignatureCcAEmF	swift.enum.case	SHSession.Result.noMatch(_:)	SHSession.Result.noMatch(_:)	case noMatch(SHSignature)
+s:So9SHSessionC9ShazamKitE6result4fromAbCE6ResultOSo11SHSignatureC_tYaF	swift.method	result(from:)	SHSession.result(from:)	func result(from signature: SHSignature) async -> SHSession.Result
+s:So9SHSessionC9ShazamKitE7ResultsV	swift.struct	SHSession.Results	SHSession.Results	struct Results
+s:So9SHSessionC9ShazamKitE7ResultsV13AsyncIteratora	swift.typealias	SHSession.Results.AsyncIterator	SHSession.Results.AsyncIterator	typealias AsyncIterator = SHSession.Results.Iterator
+s:So9SHSessionC9ShazamKitE7ResultsV17makeAsyncIteratorAE0G0VyF	swift.method	makeAsyncIterator()	SHSession.Results.makeAsyncIterator()	func makeAsyncIterator() -> SHSession.Results.Iterator
+s:So9SHSessionC9ShazamKitE7ResultsV7Elementa	swift.typealias	SHSession.Results.Element	SHSession.Results.Element	typealias Element = SHSession.Result
+s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV	swift.struct	SHSession.Results.Iterator	SHSession.Results.Iterator	struct Iterator
+s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV4nextAbCE6ResultOSgyYaF	swift.method	next()	SHSession.Results.Iterator.next()	mutating func next() async -> SHSession.Results.Element?
+s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV7Elementa	swift.typealias	SHSession.Results.Iterator.Element	SHSession.Results.Iterator.Element	typealias Element = SHSession.Results.Element
+s:So9SHSessionC9ShazamKitE7resultsAbCE7ResultsVvp	swift.property	results	SHSession.results	var results: SHSession.Results { get }
+s:s12IdentifiablePsRlzCrlE2idSOvp::SYNTHESIZED::c:objc(cs)SHMediaItem	swift.property	id	SHMediaItem.id	var id: ObjectIdentifier { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@SHMediaItemProperty	swift.property	hashValue	SHMediaItemProperty.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SHMediaItemProperty	swift.method	hash(into:)	SHMediaItemProperty.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@SHErrorCode	swift.property	localizedDescription	SHError.localizedDescription	var localizedDescription: String { get }

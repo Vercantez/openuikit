@@ -1,0 +1,2685 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NearbyInteraction",
+        "name": "NearbyInteraction.NIError",
+        "printedName": "NearbyInteraction.NIError"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NearbyInteraction",
+        "name": "NearbyInteraction.NIAlgorithmConvergenceStatusReason",
+        "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatusReason"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NearbyInteraction",
+        "name": "NearbyInteraction.NIConfiguration",
+        "printedName": "NearbyInteraction.NIConfiguration"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NearbyInteraction",
+        "name": "NearbyInteraction.NIDeviceCapability",
+        "printedName": "NearbyInteraction.NIDeviceCapability"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NearbyInteraction",
+        "name": "NearbyInteraction.NINearbyObject",
+        "printedName": "NearbyInteraction.NINearbyObject"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NearbyInteraction",
+        "name": "NearbyInteraction.NISession",
+        "printedName": "NearbyInteraction.NISession"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NearbyInteraction",
+        "name": "NearbyInteraction.NIDLTDOAMeasurement",
+        "printedName": "NearbyInteraction.NIDLTDOAMeasurement"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NearbyInteraction",
+        "name": "NearbyInteraction.NIExport",
+        "printedName": "NearbyInteraction.NIExport"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11NIErrorCodeLeV8_nsErrorSo7NSErrorCvg",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC11NIErrorCodeLeV8_nsErrorSo7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC11NIErrorCodeLeV8_nsErrorSo7NSErrorCvp",
+            "moduleName": "NearbyInteraction",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC11NIErrorCodeLeV8_nsErrorSo7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NIError",
+                "printedName": "NearbyInteraction.NIError",
+                "usr": "c:@E@NIErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC11NIErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc",
+            "moduleName": "NearbyInteraction",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC11NIErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11NIErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11NIErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC11NIErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "NearbyInteraction",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC11NIErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "NearbyInteraction.NIError.Code",
+                        "usr": "c:@E@NIErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "NearbyInteraction.NIError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo11NIErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "NearbyInteraction",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So11NIErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11NIErrorCodeV8rawValueSivg",
+                    "moduleName": "NearbyInteraction",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11NIErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo11NIErrorCodeV8rawValueSivp",
+                "moduleName": "NearbyInteraction",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So11NIErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11NIErrorCodeV8RawValuea",
+                "moduleName": "NearbyInteraction",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So11NIErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NIError",
+                    "printedName": "NearbyInteraction.NIError",
+                    "usr": "c:@E@NIErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "NearbyInteraction",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@NIErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "NearbyInteraction.NIError.Code",
+                        "usr": "c:@E@NIErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "NearbyInteraction.NIError.Code",
+                            "usr": "c:@E@NIErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "NearbyInteraction.NIError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(NearbyInteraction.NIError.Code.Type) -> NearbyInteraction.NIError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "NearbyInteraction",
+                "name": "unsupportedPlatform",
+                "printedName": "unsupportedPlatform",
+                "usr": "c:@E@NIErrorCode@NIErrorCodeUnsupportedPlatform"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "NearbyInteraction.NIError.Code",
+                        "usr": "c:@E@NIErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "NearbyInteraction.NIError.Code",
+                            "usr": "c:@E@NIErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "NearbyInteraction.NIError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(NearbyInteraction.NIError.Code.Type) -> NearbyInteraction.NIError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "NearbyInteraction",
+                "name": "invalidConfiguration",
+                "printedName": "invalidConfiguration",
+                "usr": "c:@E@NIErrorCode@NIErrorCodeInvalidConfiguration"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "NearbyInteraction.NIError.Code",
+                        "usr": "c:@E@NIErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "NearbyInteraction.NIError.Code",
+                            "usr": "c:@E@NIErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "NearbyInteraction.NIError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(NearbyInteraction.NIError.Code.Type) -> NearbyInteraction.NIError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "NearbyInteraction",
+                "name": "sessionFailed",
+                "printedName": "sessionFailed",
+                "usr": "c:@E@NIErrorCode@NIErrorCodeSessionFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "NearbyInteraction.NIError.Code",
+                        "usr": "c:@E@NIErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "NearbyInteraction.NIError.Code",
+                            "usr": "c:@E@NIErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "NearbyInteraction.NIError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(NearbyInteraction.NIError.Code.Type) -> NearbyInteraction.NIError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "NearbyInteraction",
+                "name": "resourceUsageTimeout",
+                "printedName": "resourceUsageTimeout",
+                "usr": "c:@E@NIErrorCode@NIErrorCodeResourceUsageTimeout"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "NearbyInteraction.NIError.Code",
+                        "usr": "c:@E@NIErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "NearbyInteraction.NIError.Code",
+                            "usr": "c:@E@NIErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "NearbyInteraction.NIError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(NearbyInteraction.NIError.Code.Type) -> NearbyInteraction.NIError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "NearbyInteraction",
+                "name": "activeSessionsLimitExceeded",
+                "printedName": "activeSessionsLimitExceeded",
+                "usr": "c:@E@NIErrorCode@NIErrorCodeActiveSessionsLimitExceeded"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "NearbyInteraction.NIError.Code",
+                        "usr": "c:@E@NIErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "NearbyInteraction.NIError.Code",
+                            "usr": "c:@E@NIErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "NearbyInteraction.NIError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(NearbyInteraction.NIError.Code.Type) -> NearbyInteraction.NIError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "NearbyInteraction",
+                "name": "userDidNotAllow",
+                "printedName": "userDidNotAllow",
+                "usr": "c:@E@NIErrorCode@NIErrorCodeUserDidNotAllow"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "NearbyInteraction.NIError.Code",
+                        "usr": "c:@E@NIErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "NearbyInteraction.NIError.Code",
+                            "usr": "c:@E@NIErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "NearbyInteraction.NIError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(NearbyInteraction.NIError.Code.Type) -> NearbyInteraction.NIError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "16.0",
+                "kind": "Var",
+                "moduleName": "NearbyInteraction",
+                "name": "invalidARConfiguration",
+                "printedName": "invalidARConfiguration",
+                "usr": "c:@E@NIErrorCode@NIErrorCodeInvalidARConfiguration"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "NearbyInteraction.NIError.Code",
+                        "usr": "c:@E@NIErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "NearbyInteraction.NIError.Code",
+                            "usr": "c:@E@NIErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "NearbyInteraction.NIError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(NearbyInteraction.NIError.Code.Type) -> NearbyInteraction.NIError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "16.0",
+                "kind": "Var",
+                "moduleName": "NearbyInteraction",
+                "name": "accessoryPeerDeviceUnavailable",
+                "printedName": "accessoryPeerDeviceUnavailable",
+                "usr": "c:@E@NIErrorCode@NIErrorCodeAccessoryPeerDeviceUnavailable"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "NearbyInteraction.NIError.Code",
+                        "usr": "c:@E@NIErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "NearbyInteraction.NIError.Code",
+                            "usr": "c:@E@NIErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "NearbyInteraction.NIError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(NearbyInteraction.NIError.Code.Type) -> NearbyInteraction.NIError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "17.0",
+                "kind": "Var",
+                "moduleName": "NearbyInteraction",
+                "name": "incompatiblePeerDevice",
+                "printedName": "incompatiblePeerDevice",
+                "usr": "c:@E@NIErrorCode@NIErrorCodeIncompatiblePeerDevice"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "NearbyInteraction.NIError.Code",
+                        "usr": "c:@E@NIErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "NearbyInteraction.NIError.Code",
+                            "usr": "c:@E@NIErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "NearbyInteraction.NIError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(NearbyInteraction.NIError.Code.Type) -> NearbyInteraction.NIError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "17.0",
+                "kind": "Var",
+                "moduleName": "NearbyInteraction",
+                "name": "activeExtendedDistanceSessionsLimitExceeded",
+                "printedName": "activeExtendedDistanceSessionsLimitExceeded",
+                "usr": "c:@E@NIErrorCode@NIErrorCodeActiveExtendedDistanceSessionsLimitExceeded"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "NearbyInteraction.NIError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "14.0",
+            "kind": "TypeDecl",
+            "moduleName": "NearbyInteraction",
+            "name": "Code",
+            "objc_name": "NIErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@NIErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "NearbyInteraction.NIError.Code",
+                    "usr": "c:@E@NIErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11NIErrorCodeLeV19unsupportedPlatformSoAAVvgZ",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11NIErrorCodeLeV19unsupportedPlatformSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "NearbyInteraction.NIError.Code",
+                "usr": "c:@E@NIErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "NearbyInteraction",
+            "name": "unsupportedPlatform",
+            "printedName": "unsupportedPlatform",
+            "static": true,
+            "usr": "c:@E@NIErrorCode@NIErrorCodeUnsupportedPlatform"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "NearbyInteraction.NIError.Code",
+                    "usr": "c:@E@NIErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11NIErrorCodeLeV20invalidConfigurationSoAAVvgZ",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11NIErrorCodeLeV20invalidConfigurationSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "NearbyInteraction.NIError.Code",
+                "usr": "c:@E@NIErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "NearbyInteraction",
+            "name": "invalidConfiguration",
+            "printedName": "invalidConfiguration",
+            "static": true,
+            "usr": "c:@E@NIErrorCode@NIErrorCodeInvalidConfiguration"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "NearbyInteraction.NIError.Code",
+                    "usr": "c:@E@NIErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11NIErrorCodeLeV13sessionFailedSoAAVvgZ",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11NIErrorCodeLeV13sessionFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "NearbyInteraction.NIError.Code",
+                "usr": "c:@E@NIErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "NearbyInteraction",
+            "name": "sessionFailed",
+            "printedName": "sessionFailed",
+            "static": true,
+            "usr": "c:@E@NIErrorCode@NIErrorCodeSessionFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "NearbyInteraction.NIError.Code",
+                    "usr": "c:@E@NIErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11NIErrorCodeLeV20resourceUsageTimeoutSoAAVvgZ",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11NIErrorCodeLeV20resourceUsageTimeoutSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "NearbyInteraction.NIError.Code",
+                "usr": "c:@E@NIErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "NearbyInteraction",
+            "name": "resourceUsageTimeout",
+            "printedName": "resourceUsageTimeout",
+            "static": true,
+            "usr": "c:@E@NIErrorCode@NIErrorCodeResourceUsageTimeout"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "NearbyInteraction.NIError.Code",
+                    "usr": "c:@E@NIErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11NIErrorCodeLeV27activeSessionsLimitExceededSoAAVvgZ",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11NIErrorCodeLeV27activeSessionsLimitExceededSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "NearbyInteraction.NIError.Code",
+                "usr": "c:@E@NIErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "NearbyInteraction",
+            "name": "activeSessionsLimitExceeded",
+            "printedName": "activeSessionsLimitExceeded",
+            "static": true,
+            "usr": "c:@E@NIErrorCode@NIErrorCodeActiveSessionsLimitExceeded"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "NearbyInteraction.NIError.Code",
+                    "usr": "c:@E@NIErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11NIErrorCodeLeV15userDidNotAllowSoAAVvgZ",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11NIErrorCodeLeV15userDidNotAllowSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "NearbyInteraction.NIError.Code",
+                "usr": "c:@E@NIErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "NearbyInteraction",
+            "name": "userDidNotAllow",
+            "printedName": "userDidNotAllow",
+            "static": true,
+            "usr": "c:@E@NIErrorCode@NIErrorCodeUserDidNotAllow"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "NearbyInteraction.NIError.Code",
+                    "usr": "c:@E@NIErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11NIErrorCodeLeV22invalidARConfigurationSoAAVvgZ",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11NIErrorCodeLeV22invalidARConfigurationSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "NearbyInteraction.NIError.Code",
+                "usr": "c:@E@NIErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "16.0",
+            "kind": "Var",
+            "moduleName": "NearbyInteraction",
+            "name": "invalidARConfiguration",
+            "printedName": "invalidARConfiguration",
+            "static": true,
+            "usr": "c:@E@NIErrorCode@NIErrorCodeInvalidARConfiguration"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "NearbyInteraction.NIError.Code",
+                    "usr": "c:@E@NIErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11NIErrorCodeLeV30accessoryPeerDeviceUnavailableSoAAVvgZ",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11NIErrorCodeLeV30accessoryPeerDeviceUnavailableSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "NearbyInteraction.NIError.Code",
+                "usr": "c:@E@NIErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "16.0",
+            "kind": "Var",
+            "moduleName": "NearbyInteraction",
+            "name": "accessoryPeerDeviceUnavailable",
+            "printedName": "accessoryPeerDeviceUnavailable",
+            "static": true,
+            "usr": "c:@E@NIErrorCode@NIErrorCodeAccessoryPeerDeviceUnavailable"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "NearbyInteraction.NIError.Code",
+                    "usr": "c:@E@NIErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11NIErrorCodeLeV22incompatiblePeerDeviceSoAAVvgZ",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11NIErrorCodeLeV22incompatiblePeerDeviceSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "NearbyInteraction.NIError.Code",
+                "usr": "c:@E@NIErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.0",
+            "kind": "Var",
+            "moduleName": "NearbyInteraction",
+            "name": "incompatiblePeerDevice",
+            "printedName": "incompatiblePeerDevice",
+            "static": true,
+            "usr": "c:@E@NIErrorCode@NIErrorCodeIncompatiblePeerDevice"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "NearbyInteraction.NIError.Code",
+                    "usr": "c:@E@NIErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11NIErrorCodeLeV43activeExtendedDistanceSessionsLimitExceededSoAAVvgZ",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11NIErrorCodeLeV43activeExtendedDistanceSessionsLimitExceededSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "NearbyInteraction.NIError.Code",
+                "usr": "c:@E@NIErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.0",
+            "kind": "Var",
+            "moduleName": "NearbyInteraction",
+            "name": "activeExtendedDistanceSessionsLimitExceeded",
+            "printedName": "activeExtendedDistanceSessionsLimitExceeded",
+            "static": true,
+            "usr": "c:@E@NIErrorCode@NIErrorCodeActiveExtendedDistanceSessionsLimitExceeded"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "14.0",
+        "kind": "TypeDecl",
+        "moduleName": "NearbyInteraction",
+        "name": "NIError",
+        "printedName": "NIError",
+        "usr": "c:@E@NIErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NearbyInteraction",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NearbyInteraction",
+        "name": "NearbyInteraction",
+        "printedName": "NearbyInteraction"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NearbyInteraction",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NearbyInteraction",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "NearbyInteraction",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NIAlgorithmConvergenceStatus",
+                    "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus",
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NIAlgorithmConvergenceStatus",
+                        "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus",
+                        "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(NearbyInteraction.NIAlgorithmConvergenceStatus.Type) -> NearbyInteraction.NIAlgorithmConvergenceStatus"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO7unknownyA2CmF",
+            "moduleName": "NearbyInteraction",
+            "name": "unknown",
+            "printedName": "unknown",
+            "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO7unknownyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NIAlgorithmConvergenceStatus",
+                        "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus",
+                        "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Reason",
+                            "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Reason",
+                            "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[NearbyInteraction.NIAlgorithmConvergenceStatus.Reason]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "([NearbyInteraction.NIAlgorithmConvergenceStatus.Reason]) -> NearbyInteraction.NIAlgorithmConvergenceStatus"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NIAlgorithmConvergenceStatus",
+                        "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus",
+                        "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(NearbyInteraction.NIAlgorithmConvergenceStatus.Type) -> ([NearbyInteraction.NIAlgorithmConvergenceStatus.Reason]) -> NearbyInteraction.NIAlgorithmConvergenceStatus"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO12notConvergedyACSayAC6ReasonVGcACmF",
+            "moduleName": "NearbyInteraction",
+            "name": "notConverged",
+            "printedName": "notConverged",
+            "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO12notConvergedyACSayAC6ReasonVGcACmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NIAlgorithmConvergenceStatus",
+                    "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus",
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NIAlgorithmConvergenceStatus",
+                        "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus",
+                        "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(NearbyInteraction.NIAlgorithmConvergenceStatus.Type) -> NearbyInteraction.NIAlgorithmConvergenceStatus"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO9convergedyA2CmF",
+            "moduleName": "NearbyInteraction",
+            "name": "converged",
+            "printedName": "converged",
+            "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO9convergedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NIAlgorithmConvergenceStatus",
+                "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus",
+                "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NIAlgorithmConvergenceStatus",
+                "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus",
+                "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO2eeoiySbAC_ACtFZ",
+            "moduleName": "NearbyInteraction",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV8rawValueSSvg",
+                    "moduleName": "NearbyInteraction",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV8rawValueSSvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV8rawValueSSvs",
+                    "moduleName": "NearbyInteraction",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV8rawValueSSvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV8rawValueSSvp",
+                "moduleName": "NearbyInteraction",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV8rawValueSSvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Reason",
+                    "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Reason",
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV8rawValueAESS_tcfc",
+                "moduleName": "NearbyInteraction",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV8rawValueAESS_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Swift.String?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20localizedDescriptionSSSgvg",
+                    "moduleName": "NearbyInteraction",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20localizedDescriptionSSSgvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20localizedDescriptionSSSgvp",
+                "moduleName": "NearbyInteraction",
+                "name": "localizedDescription",
+                "printedName": "localizedDescription",
+                "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20localizedDescriptionSSSgvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_iOS": "16.0",
+                "intro_tvOS": "16.0",
+                "intro_watchOS": "9.0",
+                "kind": "TypeAlias",
+                "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV8RawValuea",
+                "moduleName": "NearbyInteraction",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV8RawValuea"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Reason",
+                        "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Reason",
+                        "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "isFromExtension": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV26insufficientSignalStrengthAEvgZ",
+                    "moduleName": "NearbyInteraction",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV26insufficientSignalStrengthAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Reason",
+                    "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Reason",
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isFromExtension": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV26insufficientSignalStrengthAEvpZ",
+                "moduleName": "NearbyInteraction",
+                "name": "insufficientSignalStrength",
+                "printedName": "insufficientSignalStrength",
+                "static": true,
+                "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV26insufficientSignalStrengthAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Reason",
+                        "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Reason",
+                        "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "isFromExtension": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV27insufficientHorizontalSweepAEvgZ",
+                    "moduleName": "NearbyInteraction",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV27insufficientHorizontalSweepAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Reason",
+                    "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Reason",
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isFromExtension": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV27insufficientHorizontalSweepAEvpZ",
+                "moduleName": "NearbyInteraction",
+                "name": "insufficientHorizontalSweep",
+                "printedName": "insufficientHorizontalSweep",
+                "static": true,
+                "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV27insufficientHorizontalSweepAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Reason",
+                        "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Reason",
+                        "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "isFromExtension": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV25insufficientVerticalSweepAEvgZ",
+                    "moduleName": "NearbyInteraction",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV25insufficientVerticalSweepAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Reason",
+                    "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Reason",
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isFromExtension": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV25insufficientVerticalSweepAEvpZ",
+                "moduleName": "NearbyInteraction",
+                "name": "insufficientVerticalSweep",
+                "printedName": "insufficientVerticalSweep",
+                "static": true,
+                "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV25insufficientVerticalSweepAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Reason",
+                        "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Reason",
+                        "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "isFromExtension": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20insufficientMovementAEvgZ",
+                    "moduleName": "NearbyInteraction",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20insufficientMovementAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Reason",
+                    "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Reason",
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isFromExtension": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20insufficientMovementAEvpZ",
+                "moduleName": "NearbyInteraction",
+                "name": "insufficientMovement",
+                "printedName": "insufficientMovement",
+                "static": true,
+                "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20insufficientMovementAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Reason",
+                        "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Reason",
+                        "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "isFromExtension": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20insufficientLightingAEvgZ",
+                    "moduleName": "NearbyInteraction",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20insufficientLightingAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Reason",
+                    "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Reason",
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isFromExtension": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20insufficientLightingAEvpZ",
+                "moduleName": "NearbyInteraction",
+                "name": "insufficientLighting",
+                "printedName": "insufficientLighting",
+                "static": true,
+                "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV20insufficientLightingAEvpZ"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus.Reason.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Available"
+            ],
+            "declKind": "Struct",
+            "intro_iOS": "16.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV",
+            "moduleName": "NearbyInteraction",
+            "name": "Reason",
+            "printedName": "Reason",
+            "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO6ReasonV"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_iOS": "16.0",
+        "intro_tvOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s17NearbyInteraction28NIAlgorithmConvergenceStatusO",
+        "moduleName": "NearbyInteraction",
+        "name": "NIAlgorithmConvergenceStatus",
+        "printedName": "NIAlgorithmConvergenceStatus",
+        "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Float?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo14NINearbyObjectC17NearbyInteractionE8distanceSfSgvg",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So14NINearbyObjectC17NearbyInteractionE8distanceSfSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Float",
+                    "printedName": "Swift.Float",
+                    "usr": "s:Sf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Float?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo14NINearbyObjectC17NearbyInteractionE8distanceSfSgvp",
+            "moduleName": "NearbyInteraction",
+            "name": "distance",
+            "printedName": "distance",
+            "usr": "s:So14NINearbyObjectC17NearbyInteractionE8distanceSfSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Float",
+                                "printedName": "Swift.Float",
+                                "usr": "s:Sf"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "SIMD3",
+                            "printedName": "Swift.SIMD3<Swift.Float>",
+                            "usr": "s:s5SIMD3V"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "simd_float3",
+                        "printedName": "simd.simd_float3"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "simd.simd_float3?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo14NINearbyObjectC17NearbyInteractionE9directions5SIMD3VySfGSgvg",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So14NINearbyObjectC17NearbyInteractionE9directions5SIMD3VySfGSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Float",
+                            "printedName": "Swift.Float",
+                            "usr": "s:Sf"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "SIMD3",
+                        "printedName": "Swift.SIMD3<Swift.Float>",
+                        "usr": "s:s5SIMD3V"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "simd_float3",
+                    "printedName": "simd.simd_float3"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "simd.simd_float3?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo14NINearbyObjectC17NearbyInteractionE9directions5SIMD3VySfGSgvp",
+            "moduleName": "NearbyInteraction",
+            "name": "direction",
+            "printedName": "direction",
+            "usr": "s:So14NINearbyObjectC17NearbyInteractionE9directions5SIMD3VySfGSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Float",
+                        "printedName": "Swift.Float",
+                        "usr": "s:Sf"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Float?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo14NINearbyObjectC17NearbyInteractionE15horizontalAngleSfSgvg",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So14NINearbyObjectC17NearbyInteractionE15horizontalAngleSfSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Float",
+                    "printedName": "Swift.Float",
+                    "usr": "s:Sf"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Float?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "16.0",
+            "intro_tvOS": "16.0",
+            "intro_watchOS": "9.0",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo14NINearbyObjectC17NearbyInteractionE15horizontalAngleSfSgvp",
+            "moduleName": "NearbyInteraction",
+            "name": "horizontalAngle",
+            "printedName": "horizontalAngle",
+            "usr": "s:So14NINearbyObjectC17NearbyInteractionE15horizontalAngleSfSgvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "14.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "NearbyInteraction",
+        "name": "NINearbyObject",
+        "objc_name": "NINearbyObject",
+        "printedName": "NINearbyObject",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)NINearbyObject"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NIAlgorithmConvergenceStatus",
+                    "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus",
+                    "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo22NIAlgorithmConvergenceC17NearbyInteractionE6statusAC0aB6StatusOvg",
+                "moduleName": "NearbyInteraction",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So22NIAlgorithmConvergenceC17NearbyInteractionE6statusAC0aB6StatusOvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NIAlgorithmConvergenceStatus",
+                "printedName": "NearbyInteraction.NIAlgorithmConvergenceStatus",
+                "usr": "s:17NearbyInteraction28NIAlgorithmConvergenceStatusO"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo22NIAlgorithmConvergenceC17NearbyInteractionE6statusAC0aB6StatusOvp",
+            "moduleName": "NearbyInteraction",
+            "name": "status",
+            "printedName": "status",
+            "usr": "s:So22NIAlgorithmConvergenceC17NearbyInteractionE6statusAC0aB6StatusOvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "16.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "NearbyInteraction",
+        "name": "NIAlgorithmConvergence",
+        "objc_name": "NIAlgorithmConvergence",
+        "printedName": "NIAlgorithmConvergence",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)NIAlgorithmConvergence"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "simd_float4x4",
+                    "printedName": "simd.simd_float4x4",
+                    "usr": "c:@SA@simd_float4x4"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "simd.simd_float4x4?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NINearbyObject",
+                "printedName": "NearbyInteraction.NINearbyObject",
+                "usr": "c:objc(cs)NINearbyObject"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo9NISessionC17NearbyInteractionE14worldTransform3forSo13simd_float4x4aSgSo14NINearbyObjectC_tF",
+            "moduleName": "NearbyInteraction",
+            "name": "worldTransform",
+            "printedName": "worldTransform(for:)",
+            "usr": "s:So9NISessionC17NearbyInteractionE14worldTransform3forSo13simd_float4x4aSgSo14NINearbyObjectC_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "14.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "NearbyInteraction",
+        "name": "NISession",
+        "objc_name": "NISession",
+        "printedName": "NISession",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)NISession"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "NearbyInteraction",
+    "printedName": "NearbyInteraction"
+  }
+}

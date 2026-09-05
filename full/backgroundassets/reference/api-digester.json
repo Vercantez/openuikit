@@ -1,0 +1,4444 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BABase",
+        "printedName": "BackgroundAssets.BABase"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BATypes",
+        "printedName": "BackgroundAssets.BATypes"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BADownload",
+        "printedName": "BackgroundAssets.BADownload"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BAAppExtensionInfo",
+        "printedName": "BackgroundAssets.BAAppExtensionInfo"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BADownloaderExtension",
+        "printedName": "BackgroundAssets.BADownloaderExtension"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BADownloadManager",
+        "printedName": "BackgroundAssets.BADownloadManager"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BAURLDownload",
+        "printedName": "BackgroundAssets.BAURLDownload"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BAError",
+        "printedName": "BackgroundAssets.BAError"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BAAssetPack",
+        "printedName": "BackgroundAssets.BAAssetPack"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BAAssetPackManager",
+        "printedName": "BackgroundAssets.BAAssetPackManager"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BAAssetPackManifest",
+        "printedName": "BackgroundAssets.BAAssetPackManifest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BAAssetPackStatus",
+        "printedName": "BackgroundAssets.BAAssetPackStatus"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BAManagedAssetPackDownloadDelegate",
+        "printedName": "BackgroundAssets.BAManagedAssetPackDownloadDelegate"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BAManagedDownloaderExtension",
+        "printedName": "BackgroundAssets.BAManagedDownloaderExtension"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets.BAManagedError",
+        "printedName": "BackgroundAssets.BAManagedError"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "BackgroundAssets",
+        "printedName": "BackgroundAssets"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "ExtensionFoundation",
+        "printedName": "ExtensionFoundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "System",
+        "printedName": "System"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BackgroundAssets",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AssetPack",
+                "printedName": "BackgroundAssets.AssetPack",
+                "usr": "s:16BackgroundAssets9AssetPackV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.ManagedDownloaderExtension>",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets26ManagedDownloaderExtensionP14shouldDownloadySbAA9AssetPackVF",
+            "moduleName": "BackgroundAssets",
+            "name": "shouldDownload",
+            "printedName": "shouldDownload(_:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:16BackgroundAssets26ManagedDownloaderExtensionP14shouldDownloadySbAA9AssetPackVF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedDownloaderExtensionConfiguration",
+                        "printedName": "BackgroundAssets.ManagedDownloaderExtensionConfiguration",
+                        "usr": "s:16BackgroundAssets39ManagedDownloaderExtensionConfigurationP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some BackgroundAssets.ManagedDownloaderExtensionConfiguration"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : BackgroundAssets.ManagedDownloaderExtension>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets26ManagedDownloaderExtensionPAAE13configurationQrvg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets26ManagedDownloaderExtensionPAAE13configurationQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedDownloaderExtensionConfiguration",
+                    "printedName": "BackgroundAssets.ManagedDownloaderExtensionConfiguration",
+                    "usr": "s:16BackgroundAssets39ManagedDownloaderExtensionConfigurationP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some BackgroundAssets.ManagedDownloaderExtensionConfiguration"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_Macosx": "26",
+            "intro_iOS": "26",
+            "intro_tvOS": "26",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets26ManagedDownloaderExtensionPAAE13configurationQrvp",
+            "moduleName": "BackgroundAssets",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:16BackgroundAssets26ManagedDownloaderExtensionPAAE13configurationQrvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AssetPack",
+                "printedName": "BackgroundAssets.AssetPack",
+                "usr": "s:16BackgroundAssets9AssetPackV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.ManagedDownloaderExtension>",
+            "intro_Macosx": "26",
+            "intro_iOS": "26",
+            "intro_tvOS": "26",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets26ManagedDownloaderExtensionPAAE14shouldDownloadySbAA9AssetPackVF",
+            "moduleName": "BackgroundAssets",
+            "name": "shouldDownload",
+            "printedName": "shouldDownload(_:)",
+            "usr": "s:16BackgroundAssets26ManagedDownloaderExtensionPAAE14shouldDownloadySbAA9AssetPackVF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "BADownload",
+                    "printedName": "BackgroundAssets.BADownload",
+                    "usr": "c:objc(cs)BADownload"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<BackgroundAssets.BADownload>",
+                "usr": "s:Sh"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BAContentRequest",
+                "printedName": "BackgroundAssets.BAContentRequest",
+                "usr": "c:@E@BAContentRequest"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BAAppExtensionInfo",
+                "printedName": "BackgroundAssets.BAAppExtensionInfo",
+                "usr": "c:objc(cs)BAAppExtensionInfo"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.ManagedDownloaderExtension>",
+            "intro_Macosx": "26",
+            "intro_iOS": "26",
+            "intro_tvOS": "26",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets26ManagedDownloaderExtensionPAAE9downloads3for11manifestURL13extensionInfoShySo10BADownloadCGSo16BAContentRequestV_10Foundation0I0VSo05BAAppeK0CtF",
+            "moduleName": "BackgroundAssets",
+            "name": "downloads",
+            "printedName": "downloads(for:manifestURL:extensionInfo:)",
+            "usr": "s:16BackgroundAssets26ManagedDownloaderExtensionPAAE9downloads3for11manifestURL13extensionInfoShySo10BADownloadCGSo16BAContentRequestV_10Foundation0I0VSo05BAAppeK0CtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AuthChallengeDisposition",
+                    "printedName": "Foundation.URLSession.AuthChallengeDisposition",
+                    "usr": "c:@E@NSURLSessionAuthChallengeDisposition"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URLCredential",
+                        "printedName": "Foundation.URLCredential",
+                        "usr": "c:objc(cs)NSURLCredential"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.URLCredential?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Tuple",
+                "printedName": "(Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?)"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BADownload",
+                "printedName": "BackgroundAssets.BADownload",
+                "usr": "c:objc(cs)BADownload"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URLAuthenticationChallenge",
+                "printedName": "Foundation.URLAuthenticationChallenge",
+                "usr": "c:objc(cs)NSURLAuthenticationChallenge"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.ManagedDownloaderExtension>",
+            "intro_Macosx": "26",
+            "intro_iOS": "26",
+            "intro_tvOS": "26",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets26ManagedDownloaderExtensionPAAE18backgroundDownload_10didReceiveSo36NSURLSessionAuthChallengeDispositionV_So15NSURLCredentialCSgtSo10BADownloadC_So019NSURLAuthenticationL0CtYaF",
+            "moduleName": "BackgroundAssets",
+            "name": "backgroundDownload",
+            "printedName": "backgroundDownload(_:didReceive:)",
+            "usr": "s:16BackgroundAssets26ManagedDownloaderExtensionPAAE18backgroundDownload_10didReceiveSo36NSURLSessionAuthChallengeDispositionV_So15NSURLCredentialCSgtSo10BADownloadC_So019NSURLAuthenticationL0CtYaF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BADownload",
+                "printedName": "BackgroundAssets.BADownload",
+                "usr": "c:objc(cs)BADownload"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Error",
+                "printedName": "any Swift.Error",
+                "usr": "s:s5ErrorP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.ManagedDownloaderExtension>",
+            "intro_Macosx": "26",
+            "intro_iOS": "26",
+            "intro_tvOS": "26",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets26ManagedDownloaderExtensionPAAE18backgroundDownload_15failedWithErrorySo10BADownloadC_s0J0_ptF",
+            "moduleName": "BackgroundAssets",
+            "name": "backgroundDownload",
+            "printedName": "backgroundDownload(_:failedWithError:)",
+            "usr": "s:16BackgroundAssets26ManagedDownloaderExtensionPAAE18backgroundDownload_15failedWithErrorySo10BADownloadC_s0J0_ptF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BADownload",
+                "printedName": "BackgroundAssets.BADownload",
+                "usr": "c:objc(cs)BADownload"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.ManagedDownloaderExtension>",
+            "intro_Macosx": "26",
+            "intro_iOS": "26",
+            "intro_tvOS": "26",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets26ManagedDownloaderExtensionPAAE18backgroundDownload_19finishedWithFileURLySo10BADownloadC_10Foundation0K0VtF",
+            "moduleName": "BackgroundAssets",
+            "name": "backgroundDownload",
+            "printedName": "backgroundDownload(_:finishedWithFileURL:)",
+            "usr": "s:16BackgroundAssets26ManagedDownloaderExtensionPAAE18backgroundDownload_19finishedWithFileURLySo10BADownloadC_10Foundation0K0VtF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s16BackgroundAssets21BADownloaderExtensionP",
+            "name": "BADownloaderExtension",
+            "printedName": "BADownloaderExtension",
+            "usr": "s:16BackgroundAssets21BADownloaderExtensionP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA0P",
+            "name": "AppExtension",
+            "printedName": "AppExtension",
+            "usr": "s:19ExtensionFoundation03AppA0P"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : BackgroundAssets.BADownloaderExtension, Self.Configuration : BackgroundAssets.ManagedDownloaderExtensionConfiguration>",
+        "intro_Macosx": "26",
+        "intro_iOS": "26",
+        "intro_tvOS": "26",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BackgroundAssets26ManagedDownloaderExtensionP",
+        "moduleName": "BackgroundAssets",
+        "name": "ManagedDownloaderExtension",
+        "printedName": "ManagedDownloaderExtension",
+        "usr": "s:16BackgroundAssets26ManagedDownloaderExtensionP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "BADownload",
+                    "printedName": "BackgroundAssets.BADownload",
+                    "usr": "c:objc(cs)BADownload"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<BackgroundAssets.BADownload>",
+                "usr": "s:Sh"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BAContentRequest",
+                "printedName": "BackgroundAssets.BAContentRequest",
+                "usr": "c:@E@BAContentRequest"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BAAppExtensionInfo",
+                "printedName": "BackgroundAssets.BAAppExtensionInfo",
+                "usr": "c:objc(cs)BAAppExtensionInfo"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.BADownloaderExtension>",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets21BADownloaderExtensionP9downloads3for11manifestURL13extensionInfoShySo10BADownloadCGSo16BAContentRequestV_10Foundation0H0VSo05BAAppdJ0CtF",
+            "moduleName": "BackgroundAssets",
+            "name": "downloads",
+            "printedName": "downloads(for:manifestURL:extensionInfo:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:16BackgroundAssets21BADownloaderExtensionP9downloads3for11manifestURL13extensionInfoShySo10BADownloadCGSo16BAContentRequestV_10Foundation0H0VSo05BAAppdJ0CtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AuthChallengeDisposition",
+                    "printedName": "Foundation.URLSession.AuthChallengeDisposition",
+                    "usr": "c:@E@NSURLSessionAuthChallengeDisposition"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URLCredential",
+                        "printedName": "Foundation.URLCredential",
+                        "usr": "c:objc(cs)NSURLCredential"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.URLCredential?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Tuple",
+                "printedName": "(Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?)"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BADownload",
+                "printedName": "BackgroundAssets.BADownload",
+                "usr": "c:objc(cs)BADownload"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URLAuthenticationChallenge",
+                "printedName": "Foundation.URLAuthenticationChallenge",
+                "usr": "c:objc(cs)NSURLAuthenticationChallenge"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.BADownloaderExtension>",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets21BADownloaderExtensionP18backgroundDownload_10didReceiveSo36NSURLSessionAuthChallengeDispositionV_So15NSURLCredentialCSgtSo10BADownloadC_So019NSURLAuthenticationK0CtYaF",
+            "moduleName": "BackgroundAssets",
+            "name": "backgroundDownload",
+            "printedName": "backgroundDownload(_:didReceive:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:16BackgroundAssets21BADownloaderExtensionP18backgroundDownload_10didReceiveSo36NSURLSessionAuthChallengeDispositionV_So15NSURLCredentialCSgtSo10BADownloadC_So019NSURLAuthenticationK0CtYaF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BADownload",
+                "printedName": "BackgroundAssets.BADownload",
+                "usr": "c:objc(cs)BADownload"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Error",
+                "printedName": "any Swift.Error",
+                "usr": "s:s5ErrorP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.BADownloaderExtension>",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets21BADownloaderExtensionP18backgroundDownload_15failedWithErrorySo10BADownloadC_s0I0_ptF",
+            "moduleName": "BackgroundAssets",
+            "name": "backgroundDownload",
+            "printedName": "backgroundDownload(_:failedWithError:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:16BackgroundAssets21BADownloaderExtensionP18backgroundDownload_15failedWithErrorySo10BADownloadC_s0I0_ptF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BADownload",
+                "printedName": "BackgroundAssets.BADownload",
+                "usr": "c:objc(cs)BADownload"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.BADownloaderExtension>",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets21BADownloaderExtensionP18backgroundDownload_19finishedWithFileURLySo10BADownloadC_10Foundation0J0VtF",
+            "moduleName": "BackgroundAssets",
+            "name": "backgroundDownload",
+            "printedName": "backgroundDownload(_:finishedWithFileURL:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:16BackgroundAssets21BADownloaderExtensionP18backgroundDownload_19finishedWithFileURLySo10BADownloadC_10Foundation0J0VtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "deprecated": true,
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.BADownloaderExtension>",
+            "intro_Macosx": "13.0",
+            "intro_iOS": "16.1",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets21BADownloaderExtensionP22extensionWillTerminateyyF",
+            "moduleName": "BackgroundAssets",
+            "name": "extensionWillTerminate",
+            "printedName": "extensionWillTerminate()",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:16BackgroundAssets21BADownloaderExtensionP22extensionWillTerminateyyF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "BADownload",
+                    "printedName": "BackgroundAssets.BADownload",
+                    "usr": "c:objc(cs)BADownload"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<BackgroundAssets.BADownload>",
+                "usr": "s:Sh"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BAContentRequest",
+                "printedName": "BackgroundAssets.BAContentRequest",
+                "usr": "c:@E@BAContentRequest"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BAAppExtensionInfo",
+                "printedName": "BackgroundAssets.BAAppExtensionInfo",
+                "usr": "c:objc(cs)BAAppExtensionInfo"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.BADownloaderExtension>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets21BADownloaderExtensionPAAE9downloads3for11manifestURL13extensionInfoShySo10BADownloadCGSo16BAContentRequestV_10Foundation0H0VSo05BAAppdJ0CtF",
+            "moduleName": "BackgroundAssets",
+            "name": "downloads",
+            "printedName": "downloads(for:manifestURL:extensionInfo:)",
+            "usr": "s:16BackgroundAssets21BADownloaderExtensionPAAE9downloads3for11manifestURL13extensionInfoShySo10BADownloadCGSo16BAContentRequestV_10Foundation0H0VSo05BAAppdJ0CtF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AuthChallengeDisposition",
+                    "printedName": "Foundation.URLSession.AuthChallengeDisposition",
+                    "usr": "c:@E@NSURLSessionAuthChallengeDisposition"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URLCredential",
+                        "printedName": "Foundation.URLCredential",
+                        "usr": "c:objc(cs)NSURLCredential"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.URLCredential?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Tuple",
+                "printedName": "(Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?)"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BADownload",
+                "printedName": "BackgroundAssets.BADownload",
+                "usr": "c:objc(cs)BADownload"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URLAuthenticationChallenge",
+                "printedName": "Foundation.URLAuthenticationChallenge",
+                "usr": "c:objc(cs)NSURLAuthenticationChallenge"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.BADownloaderExtension>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets21BADownloaderExtensionPAAE18backgroundDownload_10didReceiveSo36NSURLSessionAuthChallengeDispositionV_So15NSURLCredentialCSgtSo10BADownloadC_So019NSURLAuthenticationK0CtYaF",
+            "moduleName": "BackgroundAssets",
+            "name": "backgroundDownload",
+            "printedName": "backgroundDownload(_:didReceive:)",
+            "usr": "s:16BackgroundAssets21BADownloaderExtensionPAAE18backgroundDownload_10didReceiveSo36NSURLSessionAuthChallengeDispositionV_So15NSURLCredentialCSgtSo10BADownloadC_So019NSURLAuthenticationK0CtYaF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BADownload",
+                "printedName": "BackgroundAssets.BADownload",
+                "usr": "c:objc(cs)BADownload"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Error",
+                "printedName": "any Swift.Error",
+                "usr": "s:s5ErrorP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.BADownloaderExtension>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets21BADownloaderExtensionPAAE18backgroundDownload_15failedWithErrorySo10BADownloadC_s0I0_ptF",
+            "moduleName": "BackgroundAssets",
+            "name": "backgroundDownload",
+            "printedName": "backgroundDownload(_:failedWithError:)",
+            "usr": "s:16BackgroundAssets21BADownloaderExtensionPAAE18backgroundDownload_15failedWithErrorySo10BADownloadC_s0I0_ptF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "BADownload",
+                "printedName": "BackgroundAssets.BADownload",
+                "usr": "c:objc(cs)BADownload"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.BADownloaderExtension>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets21BADownloaderExtensionPAAE18backgroundDownload_19finishedWithFileURLySo10BADownloadC_10Foundation0J0VtF",
+            "moduleName": "BackgroundAssets",
+            "name": "backgroundDownload",
+            "printedName": "backgroundDownload(_:finishedWithFileURL:)",
+            "usr": "s:16BackgroundAssets21BADownloaderExtensionPAAE18backgroundDownload_19finishedWithFileURLySo10BADownloadC_10Foundation0J0VtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BackgroundAssets.BADownloaderExtension>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets21BADownloaderExtensionPAAE22extensionWillTerminateyyF",
+            "moduleName": "BackgroundAssets",
+            "name": "extensionWillTerminate",
+            "printedName": "extensionWillTerminate()",
+            "usr": "s:16BackgroundAssets21BADownloaderExtensionPAAE22extensionWillTerminateyyF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "BADownloaderExtensionConfiguration",
+                        "printedName": "BackgroundAssets.BADownloaderExtensionConfiguration",
+                        "usr": "s:16BackgroundAssets34BADownloaderExtensionConfigurationP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some BackgroundAssets.BADownloaderExtensionConfiguration"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : BackgroundAssets.BADownloaderExtension>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets21BADownloaderExtensionPAAE13configurationQrvg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets21BADownloaderExtensionPAAE13configurationQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "BADownloaderExtensionConfiguration",
+                    "printedName": "BackgroundAssets.BADownloaderExtensionConfiguration",
+                    "usr": "s:16BackgroundAssets34BADownloaderExtensionConfigurationP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some BackgroundAssets.BADownloaderExtensionConfiguration"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets21BADownloaderExtensionPAAE13configurationQrvp",
+            "moduleName": "BackgroundAssets",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:16BackgroundAssets21BADownloaderExtensionPAAE13configurationQrvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA0P",
+            "name": "AppExtension",
+            "printedName": "AppExtension",
+            "usr": "s:19ExtensionFoundation03AppA0P"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionFoundation.AppExtension>",
+        "intro_Macosx": "13.0",
+        "intro_iOS": "16.1",
+        "intro_tvOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BackgroundAssets21BADownloaderExtensionP",
+        "moduleName": "BackgroundAssets",
+        "name": "BADownloaderExtension",
+        "printedName": "BADownloaderExtension",
+        "usr": "s:16BackgroundAssets21BADownloaderExtensionP"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA13ConfigurationP",
+            "name": "AppExtensionConfiguration",
+            "printedName": "AppExtensionConfiguration",
+            "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionFoundation.AppExtensionConfiguration>",
+        "intro_Macosx": "13.0",
+        "intro_iOS": "16.1",
+        "intro_tvOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BackgroundAssets34BADownloaderExtensionConfigurationP",
+        "moduleName": "BackgroundAssets",
+        "name": "BADownloaderExtensionConfiguration",
+        "printedName": "BADownloaderExtensionConfiguration",
+        "usr": "s:16BackgroundAssets34BADownloaderExtensionConfigurationP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DownloadStatusUpdate",
+                            "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate",
+                            "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AssetPack",
+                            "printedName": "BackgroundAssets.AssetPack",
+                            "usr": "s:16BackgroundAssets9AssetPackV"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(BackgroundAssets.AssetPack) -> BackgroundAssets.AssetPackManager.DownloadStatusUpdate"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DownloadStatusUpdate",
+                            "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate",
+                            "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(BackgroundAssets.AssetPackManager.DownloadStatusUpdate.Type) -> (BackgroundAssets.AssetPack) -> BackgroundAssets.AssetPackManager.DownloadStatusUpdate"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO5beganyAeA0cD0VcAEmF",
+                "moduleName": "BackgroundAssets",
+                "name": "began",
+                "printedName": "began",
+                "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO5beganyAeA0cD0VcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DownloadStatusUpdate",
+                            "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate",
+                            "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AssetPack",
+                            "printedName": "BackgroundAssets.AssetPack",
+                            "usr": "s:16BackgroundAssets9AssetPackV"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(BackgroundAssets.AssetPack) -> BackgroundAssets.AssetPackManager.DownloadStatusUpdate"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DownloadStatusUpdate",
+                            "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate",
+                            "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(BackgroundAssets.AssetPackManager.DownloadStatusUpdate.Type) -> (BackgroundAssets.AssetPack) -> BackgroundAssets.AssetPackManager.DownloadStatusUpdate"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO6pausedyAeA0cD0VcAEmF",
+                "moduleName": "BackgroundAssets",
+                "name": "paused",
+                "printedName": "paused",
+                "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO6pausedyAeA0cD0VcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DownloadStatusUpdate",
+                            "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate",
+                            "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "AssetPack",
+                                "printedName": "BackgroundAssets.AssetPack",
+                                "usr": "s:16BackgroundAssets9AssetPackV"
+                              },
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Progress",
+                                "printedName": "Foundation.Progress",
+                                "usr": "c:objc(cs)NSProgress"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(BackgroundAssets.AssetPack, Foundation.Progress)"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(BackgroundAssets.AssetPack, Foundation.Progress) -> BackgroundAssets.AssetPackManager.DownloadStatusUpdate"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DownloadStatusUpdate",
+                            "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate",
+                            "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(BackgroundAssets.AssetPackManager.DownloadStatusUpdate.Type) -> (BackgroundAssets.AssetPack, Foundation.Progress) -> BackgroundAssets.AssetPackManager.DownloadStatusUpdate"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO11downloadingyAeA0cD0V_So10NSProgressCtcAEmF",
+                "moduleName": "BackgroundAssets",
+                "name": "downloading",
+                "printedName": "downloading",
+                "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO11downloadingyAeA0cD0V_So10NSProgressCtcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DownloadStatusUpdate",
+                            "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate",
+                            "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AssetPack",
+                            "printedName": "BackgroundAssets.AssetPack",
+                            "usr": "s:16BackgroundAssets9AssetPackV"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(BackgroundAssets.AssetPack) -> BackgroundAssets.AssetPackManager.DownloadStatusUpdate"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DownloadStatusUpdate",
+                            "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate",
+                            "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(BackgroundAssets.AssetPackManager.DownloadStatusUpdate.Type) -> (BackgroundAssets.AssetPack) -> BackgroundAssets.AssetPackManager.DownloadStatusUpdate"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO8finishedyAeA0cD0VcAEmF",
+                "moduleName": "BackgroundAssets",
+                "name": "finished",
+                "printedName": "finished",
+                "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO8finishedyAeA0cD0VcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DownloadStatusUpdate",
+                            "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate",
+                            "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "AssetPack",
+                                "printedName": "BackgroundAssets.AssetPack",
+                                "usr": "s:16BackgroundAssets9AssetPackV"
+                              },
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Error",
+                                "printedName": "any Swift.Error",
+                                "usr": "s:s5ErrorP"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(BackgroundAssets.AssetPack, any Swift.Error)"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(BackgroundAssets.AssetPack, any Swift.Error) -> BackgroundAssets.AssetPackManager.DownloadStatusUpdate"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DownloadStatusUpdate",
+                            "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate",
+                            "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "BackgroundAssets.AssetPackManager.DownloadStatusUpdate.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(BackgroundAssets.AssetPackManager.DownloadStatusUpdate.Type) -> (BackgroundAssets.AssetPack, any Swift.Error) -> BackgroundAssets.AssetPackManager.DownloadStatusUpdate"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO6failedyAeA0cD0V_s5Error_ptcAEmF",
+                "moduleName": "BackgroundAssets",
+                "name": "failed",
+                "printedName": "failed",
+                "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO6failedyAeA0cD0V_s5Error_ptcAEmF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO11descriptionSSvg",
+                    "moduleName": "BackgroundAssets",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO11descriptionSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO11descriptionSSvp",
+                "moduleName": "BackgroundAssets",
+                "name": "description",
+                "printedName": "description",
+                "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO11descriptionSSvp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss23CustomStringConvertibleP",
+                "name": "CustomStringConvertible",
+                "printedName": "CustomStringConvertible",
+                "usr": "s:s23CustomStringConvertibleP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO",
+            "moduleName": "BackgroundAssets",
+            "name": "DownloadStatusUpdate",
+            "printedName": "DownloadStatusUpdate",
+            "usr": "s:16BackgroundAssets16AssetPackManagerC20DownloadStatusUpdateO"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AssetPackManager",
+                    "printedName": "BackgroundAssets.AssetPackManager",
+                    "usr": "s:16BackgroundAssets16AssetPackManagerC"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets16AssetPackManagerC6sharedACvgZ",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:16BackgroundAssets16AssetPackManagerC6sharedACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AssetPackManager",
+                "printedName": "BackgroundAssets.AssetPackManager",
+                "usr": "s:16BackgroundAssets16AssetPackManagerC"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC6sharedACvpZ",
+            "moduleName": "BackgroundAssets",
+            "name": "shared",
+            "printedName": "shared",
+            "static": true,
+            "usr": "s:16BackgroundAssets16AssetPackManagerC6sharedACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Sendable",
+                        "printedName": "Swift.Sendable",
+                        "usr": "s:s8SendableP"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AsyncSequence",
+                        "printedName": "_Concurrency.AsyncSequence",
+                        "usr": "s:Sci"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some Swift.Sendable & _Concurrency.AsyncSequence<BackgroundAssets.AssetPackManager.DownloadStatusUpdate, Swift.Never>"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets16AssetPackManagerC13statusUpdatesQrvg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets16AssetPackManagerC13statusUpdatesQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Sendable",
+                    "printedName": "Swift.Sendable",
+                    "usr": "s:s8SendableP"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AsyncSequence",
+                    "printedName": "_Concurrency.AsyncSequence",
+                    "usr": "s:Sci"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some Swift.Sendable & _Concurrency.AsyncSequence<BackgroundAssets.AssetPackManager.DownloadStatusUpdate, Swift.Never>"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC13statusUpdatesQrvp",
+            "moduleName": "BackgroundAssets",
+            "name": "statusUpdates",
+            "printedName": "statusUpdates",
+            "usr": "s:16BackgroundAssets16AssetPackManagerC13statusUpdatesQrvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AssetPack",
+                        "printedName": "BackgroundAssets.AssetPack",
+                        "usr": "s:16BackgroundAssets9AssetPackV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<BackgroundAssets.AssetPack>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets16AssetPackManagerC03allC5PacksShyAA0cD0VGvg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "throwing": true,
+                "usr": "s:16BackgroundAssets16AssetPackManagerC03allC5PacksShyAA0cD0VGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AssetPack",
+                    "printedName": "BackgroundAssets.AssetPack",
+                    "usr": "s:16BackgroundAssets9AssetPackV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<BackgroundAssets.AssetPack>",
+                "usr": "s:Sh"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC03allC5PacksShyAA0cD0VGvp",
+            "moduleName": "BackgroundAssets",
+            "name": "allAssetPacks",
+            "printedName": "allAssetPacks",
+            "usr": "s:16BackgroundAssets16AssetPackManagerC03allC5PacksShyAA0cD0VGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AssetPack",
+                "printedName": "BackgroundAssets.AssetPack",
+                "usr": "s:16BackgroundAssets9AssetPackV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC05assetD06withIDAA0cD0VSS_tYaKF",
+            "moduleName": "BackgroundAssets",
+            "name": "assetPack",
+            "printedName": "assetPack(withID:)",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets16AssetPackManagerC05assetD06withIDAA0cD0VSS_tYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Status",
+                "printedName": "BackgroundAssets.AssetPack.Status",
+                "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC6status02ofcD6WithIDAA0cD0V6StatusVSS_tYaKF",
+            "moduleName": "BackgroundAssets",
+            "name": "status",
+            "printedName": "status(ofAssetPackWithID:)",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets16AssetPackManagerC6status02ofcD6WithIDAA0cD0V6StatusVSS_tYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AssetPack",
+                "printedName": "BackgroundAssets.AssetPack",
+                "usr": "s:16BackgroundAssets9AssetPackV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC23ensureLocalAvailability2ofyAA0cD0V_tYaKF",
+            "moduleName": "BackgroundAssets",
+            "name": "ensureLocalAvailability",
+            "printedName": "ensureLocalAvailability(of:)",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets16AssetPackManagerC23ensureLocalAvailability2ofyAA0cD0V_tYaKF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<Swift.String>",
+                    "usr": "s:Sh"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<Swift.String>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Tuple",
+                "printedName": "(updatingIDs: Swift.Set<Swift.String>, removedIDs: Swift.Set<Swift.String>)"
+              }
+            ],
+            "declAttributes": [
+              "DiscardableResult"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC15checkForUpdatesShySSG11updatingIDs_AE07removedJ0tyYaKF",
+            "moduleName": "BackgroundAssets",
+            "name": "checkForUpdates",
+            "printedName": "checkForUpdates()",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets16AssetPackManagerC15checkForUpdatesShySSG11updatingIDs_AE07removedJ0tyYaKF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Sendable",
+                    "printedName": "Swift.Sendable",
+                    "usr": "s:s8SendableP"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AsyncSequence",
+                    "printedName": "_Concurrency.AsyncSequence",
+                    "usr": "s:Sci"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some Swift.Sendable & _Concurrency.AsyncSequence<BackgroundAssets.AssetPackManager.DownloadStatusUpdate, Swift.Never>"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC13statusUpdates03forcD6WithIDQrSS_tF",
+            "moduleName": "BackgroundAssets",
+            "name": "statusUpdates",
+            "printedName": "statusUpdates(forAssetPackWithID:)",
+            "usr": "s:16BackgroundAssets16AssetPackManagerC13statusUpdates03forcD6WithIDQrSS_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FilePath",
+                "printedName": "System.FilePath",
+                "usr": "s:6System8FilePathV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ReadingOptions",
+                    "printedName": "Foundation.NSData.ReadingOptions",
+                    "usr": "c:@E@NSDataReadingOptions"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNameAlias",
+                "name": "ReadingOptions",
+                "printedName": "Foundation.Data.ReadingOptions"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC8contents2at011searchingIncD6WithID7options10Foundation4DataV6System8FilePathV_SSSgSo20NSDataReadingOptionsVtKF",
+            "moduleName": "BackgroundAssets",
+            "name": "contents",
+            "printedName": "contents(at:searchingInAssetPackWithID:options:)",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets16AssetPackManagerC8contents2at011searchingIncD6WithID7options10Foundation4DataV6System8FilePathV_SSSgSo20NSDataReadingOptionsVtKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FileDescriptor",
+                "printedName": "System.FileDescriptor",
+                "usr": "s:6System14FileDescriptorV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FilePath",
+                "printedName": "System.FilePath",
+                "usr": "s:6System8FilePathV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC10descriptor3for011searchingIncD6WithID6System14FileDescriptorVAG0M4PathV_SSSgtKF",
+            "moduleName": "BackgroundAssets",
+            "name": "descriptor",
+            "printedName": "descriptor(for:searchingInAssetPackWithID:)",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets16AssetPackManagerC10descriptor3for011searchingIncD6WithID6System14FileDescriptorVAG0M4PathV_SSSgtKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FilePath",
+                "printedName": "System.FilePath",
+                "usr": "s:6System8FilePathV"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC3url3for10Foundation3URLV6System8FilePathV_tKF",
+            "moduleName": "BackgroundAssets",
+            "name": "url",
+            "printedName": "url(for:)",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets16AssetPackManagerC3url3for10Foundation3URLV6System8FilePathV_tKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC6remove05assetD6WithIDySS_tYaKF",
+            "moduleName": "BackgroundAssets",
+            "name": "remove",
+            "printedName": "remove(assetPackWithID:)",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets16AssetPackManagerC6remove05assetD6WithIDySS_tYaKF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UnownedSerialExecutor",
+                    "printedName": "_Concurrency.UnownedSerialExecutor",
+                    "usr": "s:Sce"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets16AssetPackManagerC15unownedExecutorScevg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets16AssetPackManagerC15unownedExecutorScevg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UnownedSerialExecutor",
+                "printedName": "_Concurrency.UnownedSerialExecutor",
+                "usr": "s:Sce"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Nonisolated",
+              "Semantics",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_Macosx": "26",
+            "intro_iOS": "26",
+            "intro_tvOS": "26",
+            "intro_watchOS": "6.0",
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets16AssetPackManagerC15unownedExecutorScevp",
+            "moduleName": "BackgroundAssets",
+            "name": "unownedExecutor",
+            "printedName": "unownedExecutor",
+            "usr": "s:16BackgroundAssets16AssetPackManagerC15unownedExecutorScevp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sScA",
+            "name": "Actor",
+            "printedName": "Actor",
+            "usr": "s:ScA"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "intro_Macosx": "26",
+        "intro_iOS": "26",
+        "intro_tvOS": "26",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BackgroundAssets16AssetPackManagerC",
+        "moduleName": "BackgroundAssets",
+        "name": "AssetPackManager",
+        "printedName": "AssetPackManager",
+        "usr": "s:16BackgroundAssets16AssetPackManagerC"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedBackgroundAssetsError",
+                        "printedName": "BackgroundAssets.ManagedBackgroundAssetsError",
+                        "usr": "s:16BackgroundAssets07ManagedaB5ErrorO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Tuple",
+                        "printedName": "(withID: Swift.String)"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Swift.String) -> BackgroundAssets.ManagedBackgroundAssetsError"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedBackgroundAssetsError",
+                        "printedName": "BackgroundAssets.ManagedBackgroundAssetsError",
+                        "usr": "s:16BackgroundAssets07ManagedaB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "BackgroundAssets.ManagedBackgroundAssetsError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(BackgroundAssets.ManagedBackgroundAssetsError.Type) -> (Swift.String) -> BackgroundAssets.ManagedBackgroundAssetsError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets07ManagedaB5ErrorO17assetPackNotFoundyACSS_tcACmF",
+            "moduleName": "BackgroundAssets",
+            "name": "assetPackNotFound",
+            "printedName": "assetPackNotFound",
+            "usr": "s:16BackgroundAssets07ManagedaB5ErrorO17assetPackNotFoundyACSS_tcACmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedBackgroundAssetsError",
+                        "printedName": "BackgroundAssets.ManagedBackgroundAssetsError",
+                        "usr": "s:16BackgroundAssets07ManagedaB5ErrorO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "FilePath",
+                            "printedName": "System.FilePath",
+                            "usr": "s:6System8FilePathV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Tuple",
+                        "printedName": "(at: System.FilePath)"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(System.FilePath) -> BackgroundAssets.ManagedBackgroundAssetsError"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedBackgroundAssetsError",
+                        "printedName": "BackgroundAssets.ManagedBackgroundAssetsError",
+                        "usr": "s:16BackgroundAssets07ManagedaB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "BackgroundAssets.ManagedBackgroundAssetsError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(BackgroundAssets.ManagedBackgroundAssetsError.Type) -> (System.FilePath) -> BackgroundAssets.ManagedBackgroundAssetsError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets07ManagedaB5ErrorO12fileNotFoundyAC6System8FilePathV_tcACmF",
+            "moduleName": "BackgroundAssets",
+            "name": "fileNotFound",
+            "printedName": "fileNotFound",
+            "usr": "s:16BackgroundAssets07ManagedaB5ErrorO12fileNotFoundyAC6System8FilePathV_tcACmF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets07ManagedaB5ErrorO11descriptionSSvg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets07ManagedaB5ErrorO11descriptionSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets07ManagedaB5ErrorO11descriptionSSvp",
+            "moduleName": "BackgroundAssets",
+            "name": "description",
+            "printedName": "description",
+            "usr": "s:16BackgroundAssets07ManagedaB5ErrorO11descriptionSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets07ManagedaB5ErrorO16errorDescriptionSSSgvg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets07ManagedaB5ErrorO16errorDescriptionSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets07ManagedaB5ErrorO16errorDescriptionSSSgvp",
+            "moduleName": "BackgroundAssets",
+            "name": "errorDescription",
+            "printedName": "errorDescription",
+            "usr": "s:16BackgroundAssets07ManagedaB5ErrorO16errorDescriptionSSSgvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation14LocalizedErrorP",
+            "name": "LocalizedError",
+            "printedName": "LocalizedError",
+            "usr": "s:10Foundation14LocalizedErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_Macosx": "26",
+        "intro_iOS": "26",
+        "intro_tvOS": "26",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BackgroundAssets07ManagedaB5ErrorO",
+        "moduleName": "BackgroundAssets",
+        "name": "ManagedBackgroundAssetsError",
+        "printedName": "ManagedBackgroundAssetsError",
+        "usr": "s:16BackgroundAssets07ManagedaB5ErrorO"
+      },
+      {
+        "children": [
+          {
+            "declKind": "AssociatedType",
+            "kind": "AssociatedType",
+            "mangledName": "$s16BackgroundAssets39ManagedDownloaderExtensionConfigurationP27DownloadManagerDelegateTypeQa",
+            "moduleName": "BackgroundAssets",
+            "name": "DownloadManagerDelegateType",
+            "printedName": "DownloadManagerDelegateType",
+            "protocolReq": true,
+            "usr": "s:16BackgroundAssets39ManagedDownloaderExtensionConfigurationP27DownloadManagerDelegateTypeQa"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DependentMember",
+                    "printedName": "Self.DownloadManagerDelegateType"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : BackgroundAssets.ManagedDownloaderExtensionConfiguration>",
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets39ManagedDownloaderExtensionConfigurationP23downloadManagerDelegate08DownloadhI4TypeQzvgZ",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "static": true,
+                "usr": "s:16BackgroundAssets39ManagedDownloaderExtensionConfigurationP23downloadManagerDelegate08DownloadhI4TypeQzvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DependentMember",
+                "printedName": "Self.DownloadManagerDelegateType"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets39ManagedDownloaderExtensionConfigurationP23downloadManagerDelegate08DownloadhI4TypeQzvpZ",
+            "moduleName": "BackgroundAssets",
+            "name": "downloadManagerDelegate",
+            "printedName": "downloadManagerDelegate",
+            "protocolReq": true,
+            "static": true,
+            "usr": "s:16BackgroundAssets39ManagedDownloaderExtensionConfigurationP23downloadManagerDelegate08DownloadhI4TypeQzvpZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s16BackgroundAssets34BADownloaderExtensionConfigurationP",
+            "name": "BADownloaderExtensionConfiguration",
+            "printedName": "BADownloaderExtensionConfiguration",
+            "usr": "s:16BackgroundAssets34BADownloaderExtensionConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA13ConfigurationP",
+            "name": "AppExtensionConfiguration",
+            "printedName": "AppExtensionConfiguration",
+            "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Documentation",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : BackgroundAssets.BADownloaderExtensionConfiguration, Self.DownloadManagerDelegateType : BackgroundAssets.BADownloadManagerDelegate, Self.DownloadManagerDelegateType : Swift.Sendable>",
+        "intro_Macosx": "26",
+        "intro_iOS": "26",
+        "intro_tvOS": "26",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BackgroundAssets39ManagedDownloaderExtensionConfigurationP",
+        "moduleName": "BackgroundAssets",
+        "name": "ManagedDownloaderExtensionConfiguration",
+        "printedName": "ManagedDownloaderExtensionConfiguration",
+        "usr": "s:16BackgroundAssets39ManagedDownloaderExtensionConfigurationP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Status",
+                        "printedName": "BackgroundAssets.AssetPack.Status",
+                        "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV17downloadAvailableAEvgZ",
+                    "moduleName": "BackgroundAssets",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV17downloadAvailableAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Status",
+                    "printedName": "BackgroundAssets.AssetPack.Status",
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV17downloadAvailableAEvpZ",
+                "moduleName": "BackgroundAssets",
+                "name": "downloadAvailable",
+                "printedName": "downloadAvailable",
+                "static": true,
+                "usr": "s:16BackgroundAssets9AssetPackV6StatusV17downloadAvailableAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Status",
+                        "printedName": "BackgroundAssets.AssetPack.Status",
+                        "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV15updateAvailableAEvgZ",
+                    "moduleName": "BackgroundAssets",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV15updateAvailableAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Status",
+                    "printedName": "BackgroundAssets.AssetPack.Status",
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV15updateAvailableAEvpZ",
+                "moduleName": "BackgroundAssets",
+                "name": "updateAvailable",
+                "printedName": "updateAvailable",
+                "static": true,
+                "usr": "s:16BackgroundAssets9AssetPackV6StatusV15updateAvailableAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Status",
+                        "printedName": "BackgroundAssets.AssetPack.Status",
+                        "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV8upToDateAEvgZ",
+                    "moduleName": "BackgroundAssets",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV8upToDateAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Status",
+                    "printedName": "BackgroundAssets.AssetPack.Status",
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV8upToDateAEvpZ",
+                "moduleName": "BackgroundAssets",
+                "name": "upToDate",
+                "printedName": "upToDate",
+                "static": true,
+                "usr": "s:16BackgroundAssets9AssetPackV6StatusV8upToDateAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Status",
+                        "printedName": "BackgroundAssets.AssetPack.Status",
+                        "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV9outOfDateAEvgZ",
+                    "moduleName": "BackgroundAssets",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV9outOfDateAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Status",
+                    "printedName": "BackgroundAssets.AssetPack.Status",
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV9outOfDateAEvpZ",
+                "moduleName": "BackgroundAssets",
+                "name": "outOfDate",
+                "printedName": "outOfDate",
+                "static": true,
+                "usr": "s:16BackgroundAssets9AssetPackV6StatusV9outOfDateAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Status",
+                        "printedName": "BackgroundAssets.AssetPack.Status",
+                        "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV8obsoleteAEvgZ",
+                    "moduleName": "BackgroundAssets",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV8obsoleteAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Status",
+                    "printedName": "BackgroundAssets.AssetPack.Status",
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV8obsoleteAEvpZ",
+                "moduleName": "BackgroundAssets",
+                "name": "obsolete",
+                "printedName": "obsolete",
+                "static": true,
+                "usr": "s:16BackgroundAssets9AssetPackV6StatusV8obsoleteAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Status",
+                        "printedName": "BackgroundAssets.AssetPack.Status",
+                        "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV11downloadingAEvgZ",
+                    "moduleName": "BackgroundAssets",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV11downloadingAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Status",
+                    "printedName": "BackgroundAssets.AssetPack.Status",
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV11downloadingAEvpZ",
+                "moduleName": "BackgroundAssets",
+                "name": "downloading",
+                "printedName": "downloading",
+                "static": true,
+                "usr": "s:16BackgroundAssets9AssetPackV6StatusV11downloadingAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Status",
+                        "printedName": "BackgroundAssets.AssetPack.Status",
+                        "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV10downloadedAEvgZ",
+                    "moduleName": "BackgroundAssets",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV10downloadedAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Status",
+                    "printedName": "BackgroundAssets.AssetPack.Status",
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV10downloadedAEvpZ",
+                "moduleName": "BackgroundAssets",
+                "name": "downloaded",
+                "printedName": "downloaded",
+                "static": true,
+                "usr": "s:16BackgroundAssets9AssetPackV6StatusV10downloadedAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV8rawValueSivg",
+                    "moduleName": "BackgroundAssets",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV8rawValueSivp",
+                "moduleName": "BackgroundAssets",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:16BackgroundAssets9AssetPackV6StatusV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Status",
+                    "printedName": "BackgroundAssets.AssetPack.Status",
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV8rawValueAESi_tcfc",
+                "moduleName": "BackgroundAssets",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:16BackgroundAssets9AssetPackV6StatusV8rawValueAESi_tcfc"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Status",
+                    "printedName": "BackgroundAssets.AssetPack.Status",
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "26",
+                "intro_iOS": "26",
+                "intro_tvOS": "26",
+                "kind": "TypeAlias",
+                "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV19ArrayLiteralElementa",
+                "moduleName": "BackgroundAssets",
+                "name": "ArrayLiteralElement",
+                "printedName": "ArrayLiteralElement",
+                "usr": "s:16BackgroundAssets9AssetPackV6StatusV19ArrayLiteralElementa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Status",
+                    "printedName": "BackgroundAssets.AssetPack.Status",
+                    "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "26",
+                "intro_iOS": "26",
+                "intro_tvOS": "26",
+                "kind": "TypeAlias",
+                "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV7Elementa",
+                "moduleName": "BackgroundAssets",
+                "name": "Element",
+                "printedName": "Element",
+                "usr": "s:16BackgroundAssets9AssetPackV6StatusV7Elementa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "26",
+                "intro_iOS": "26",
+                "intro_tvOS": "26",
+                "kind": "TypeAlias",
+                "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV8RawValuea",
+                "moduleName": "BackgroundAssets",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:16BackgroundAssets9AssetPackV6StatusV8RawValuea"
+              }
+            ],
+            "conformances": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Status",
+                            "printedName": "BackgroundAssets.AssetPack.Status",
+                            "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "BackgroundAssets.AssetPack.Status.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss9OptionSetP",
+                "name": "OptionSet",
+                "printedName": "OptionSet",
+                "usr": "s:s9OptionSetP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "BackgroundAssets.AssetPack.Status.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Status",
+                            "printedName": "BackgroundAssets.AssetPack.Status",
+                            "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "BackgroundAssets.AssetPack.Status.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss10SetAlgebraP",
+                "name": "SetAlgebra",
+                "printedName": "SetAlgebra",
+                "usr": "s:s10SetAlgebraP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Status",
+                            "printedName": "BackgroundAssets.AssetPack.Status",
+                            "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "ArrayLiteralElement",
+                        "printedName": "BackgroundAssets.AssetPack.Status.ArrayLiteralElement"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "ArrayLiteralElement",
+                    "printedName": "ArrayLiteralElement"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss25ExpressibleByArrayLiteralP",
+                "name": "ExpressibleByArrayLiteral",
+                "printedName": "ExpressibleByArrayLiteral",
+                "usr": "s:s25ExpressibleByArrayLiteralP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "kind": "TypeDecl",
+            "mangledName": "$s16BackgroundAssets9AssetPackV6StatusV",
+            "moduleName": "BackgroundAssets",
+            "name": "Status",
+            "printedName": "Status",
+            "usr": "s:16BackgroundAssets9AssetPackV6StatusV"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DecodingConfiguration",
+                "printedName": "BackgroundAssets.AssetPackManifest.DecodingConfiguration",
+                "usr": "s:16BackgroundAssets17AssetPackManifestV21DecodingConfigurationV"
+              }
+            ],
+            "declKind": "TypeAlias",
+            "kind": "TypeAlias",
+            "mangledName": "$s16BackgroundAssets9AssetPackV21DecodingConfigurationa",
+            "moduleName": "BackgroundAssets",
+            "name": "DecodingConfiguration",
+            "printedName": "DecodingConfiguration",
+            "usr": "s:16BackgroundAssets9AssetPackV21DecodingConfigurationa"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets9AssetPackV2idSSvg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets9AssetPackV2idSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets9AssetPackV2idSSvp",
+            "moduleName": "BackgroundAssets",
+            "name": "id",
+            "printedName": "id",
+            "usr": "s:16BackgroundAssets9AssetPackV2idSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets9AssetPackV12downloadSizeSivg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets9AssetPackV12downloadSizeSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets9AssetPackV12downloadSizeSivp",
+            "moduleName": "BackgroundAssets",
+            "name": "downloadSize",
+            "printedName": "downloadSize",
+            "usr": "s:16BackgroundAssets9AssetPackV12downloadSizeSivp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets9AssetPackV7versionSivg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets9AssetPackV7versionSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets9AssetPackV7versionSivp",
+            "moduleName": "BackgroundAssets",
+            "name": "version",
+            "printedName": "version",
+            "usr": "s:16BackgroundAssets9AssetPackV7versionSivp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Data?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets9AssetPackV8userInfo10Foundation4DataVSgvg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets9AssetPackV8userInfo10Foundation4DataVSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Data?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets9AssetPackV8userInfo10Foundation4DataVSgvp",
+            "moduleName": "BackgroundAssets",
+            "name": "userInfo",
+            "printedName": "userInfo",
+            "usr": "s:16BackgroundAssets9AssetPackV8userInfo10Foundation4DataVSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets9AssetPackV11descriptionSSvg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets9AssetPackV11descriptionSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets9AssetPackV11descriptionSSvp",
+            "moduleName": "BackgroundAssets",
+            "name": "description",
+            "printedName": "description",
+            "usr": "s:16BackgroundAssets9AssetPackV11descriptionSSvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AssetPack",
+                "printedName": "BackgroundAssets.AssetPack",
+                "usr": "s:16BackgroundAssets9AssetPackV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DecodingConfiguration",
+                    "printedName": "BackgroundAssets.AssetPackManifest.DecodingConfiguration",
+                    "usr": "s:16BackgroundAssets17AssetPackManifestV21DecodingConfigurationV"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "DecodingConfiguration",
+                "printedName": "BackgroundAssets.AssetPack.DecodingConfiguration"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s16BackgroundAssets9AssetPackV4from13configurationACs7Decoder_p_AA0cD8ManifestV21DecodingConfigurationVtKcfc",
+            "moduleName": "BackgroundAssets",
+            "name": "init",
+            "printedName": "init(from:configuration:)",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets9AssetPackV4from13configurationACs7Decoder_p_AA0cD8ManifestV21DecodingConfigurationVtKcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "BADownload",
+                "printedName": "BackgroundAssets.BADownload",
+                "usr": "c:objc(cs)BADownload"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "BAContentRequest",
+                    "printedName": "BackgroundAssets.BAContentRequest",
+                    "usr": "c:@E@BAContentRequest"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "BackgroundAssets.BAContentRequest?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets9AssetPackV8download3forSo10BADownloadCSo16BAContentRequestVSg_tF",
+            "moduleName": "BackgroundAssets",
+            "name": "download",
+            "printedName": "download(for:)",
+            "usr": "s:16BackgroundAssets9AssetPackV8download3forSo10BADownloadCSo16BAContentRequestVSg_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets9AssetPackV6encode2toys7Encoder_p_tKF",
+            "moduleName": "BackgroundAssets",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets9AssetPackV6encode2toys7Encoder_p_tKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets9AssetPackV4hash4intoys6HasherVz_tF",
+            "moduleName": "BackgroundAssets",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:16BackgroundAssets9AssetPackV4hash4intoys6HasherVz_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AssetPack",
+                "printedName": "BackgroundAssets.AssetPack",
+                "usr": "s:16BackgroundAssets9AssetPackV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AssetPack",
+                "printedName": "BackgroundAssets.AssetPack",
+                "usr": "s:16BackgroundAssets9AssetPackV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets9AssetPackV2eeoiySbAC_ACtFZ",
+            "moduleName": "BackgroundAssets",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:16BackgroundAssets9AssetPackV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "26",
+            "intro_iOS": "26",
+            "intro_tvOS": "26",
+            "kind": "TypeAlias",
+            "mangledName": "$s16BackgroundAssets9AssetPackV2IDa",
+            "moduleName": "BackgroundAssets",
+            "name": "ID",
+            "printedName": "ID",
+            "usr": "s:16BackgroundAssets9AssetPackV2IDa"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets9AssetPackV9hashValueSivg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets9AssetPackV9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets9AssetPackV9hashValueSivp",
+            "moduleName": "BackgroundAssets",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:16BackgroundAssets9AssetPackV9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DecodingConfiguration",
+                        "printedName": "BackgroundAssets.AssetPackManifest.DecodingConfiguration",
+                        "usr": "s:16BackgroundAssets17AssetPackManifestV21DecodingConfigurationV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "DecodingConfiguration",
+                    "printedName": "BackgroundAssets.AssetPack.DecodingConfiguration"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "DecodingConfiguration",
+                "printedName": "DecodingConfiguration"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation26DecodableWithConfigurationP",
+            "name": "DecodableWithConfiguration",
+            "printedName": "DecodableWithConfiguration",
+            "usr": "s:10Foundation26DecodableWithConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ID",
+                    "printedName": "BackgroundAssets.AssetPack.ID"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "ID",
+                "printedName": "ID"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss12IdentifiableP",
+            "name": "Identifiable",
+            "printedName": "Identifiable",
+            "usr": "s:s12IdentifiableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26",
+        "intro_iOS": "26",
+        "intro_tvOS": "26",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BackgroundAssets9AssetPackV",
+        "moduleName": "BackgroundAssets",
+        "name": "AssetPack",
+        "printedName": "AssetPack",
+        "usr": "s:16BackgroundAssets9AssetPackV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s16BackgroundAssets17AssetPackManifestV21DecodingConfigurationV11descriptionSSvg",
+                    "moduleName": "BackgroundAssets",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16BackgroundAssets17AssetPackManifestV21DecodingConfigurationV11descriptionSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s16BackgroundAssets17AssetPackManifestV21DecodingConfigurationV11descriptionSSvp",
+                "moduleName": "BackgroundAssets",
+                "name": "description",
+                "printedName": "description",
+                "usr": "s:16BackgroundAssets17AssetPackManifestV21DecodingConfigurationV11descriptionSSvp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss23CustomStringConvertibleP",
+                "name": "CustomStringConvertible",
+                "printedName": "CustomStringConvertible",
+                "usr": "s:s23CustomStringConvertibleP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "kind": "TypeDecl",
+            "mangledName": "$s16BackgroundAssets17AssetPackManifestV21DecodingConfigurationV",
+            "moduleName": "BackgroundAssets",
+            "name": "DecodingConfiguration",
+            "printedName": "DecodingConfiguration",
+            "usr": "s:16BackgroundAssets17AssetPackManifestV21DecodingConfigurationV"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AssetPack",
+                        "printedName": "BackgroundAssets.AssetPack",
+                        "usr": "s:16BackgroundAssets9AssetPackV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<BackgroundAssets.AssetPack>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets17AssetPackManifestV10assetPacksShyAA0cD0VGvg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets17AssetPackManifestV10assetPacksShyAA0cD0VGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AssetPack",
+                    "printedName": "BackgroundAssets.AssetPack",
+                    "usr": "s:16BackgroundAssets9AssetPackV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<BackgroundAssets.AssetPack>",
+                "usr": "s:Sh"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets17AssetPackManifestV10assetPacksShyAA0cD0VGvp",
+            "moduleName": "BackgroundAssets",
+            "name": "assetPacks",
+            "printedName": "assetPacks",
+            "usr": "s:16BackgroundAssets17AssetPackManifestV10assetPacksShyAA0cD0VGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s16BackgroundAssets17AssetPackManifestV11descriptionSSvg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BackgroundAssets17AssetPackManifestV11descriptionSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s16BackgroundAssets17AssetPackManifestV11descriptionSSvp",
+            "moduleName": "BackgroundAssets",
+            "name": "description",
+            "printedName": "description",
+            "usr": "s:16BackgroundAssets17AssetPackManifestV11descriptionSSvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AssetPackManifest",
+                "printedName": "BackgroundAssets.AssetPackManifest",
+                "usr": "s:16BackgroundAssets17AssetPackManifestV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s16BackgroundAssets17AssetPackManifestV10contentsOf10appGroupIDAC10Foundation3URLV_SStKcfc",
+            "moduleName": "BackgroundAssets",
+            "name": "init",
+            "printedName": "init(contentsOf:appGroupID:)",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets17AssetPackManifestV10contentsOf10appGroupIDAC10Foundation3URLV_SStKcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AssetPackManifest",
+                "printedName": "BackgroundAssets.AssetPackManifest",
+                "usr": "s:16BackgroundAssets17AssetPackManifestV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s16BackgroundAssets17AssetPackManifestV4from10appGroupIDAC10Foundation4DataV_SStKcfc",
+            "moduleName": "BackgroundAssets",
+            "name": "init",
+            "printedName": "init(from:appGroupID:)",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets17AssetPackManifestV4from10appGroupIDAC10Foundation4DataV_SStKcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AssetPackManifest",
+                "printedName": "BackgroundAssets.AssetPackManifest",
+                "usr": "s:16BackgroundAssets17AssetPackManifestV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DecodingConfiguration",
+                "printedName": "BackgroundAssets.AssetPackManifest.DecodingConfiguration",
+                "usr": "s:16BackgroundAssets17AssetPackManifestV21DecodingConfigurationV"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s16BackgroundAssets17AssetPackManifestV4from13configurationACs7Decoder_p_AC21DecodingConfigurationVtKcfc",
+            "moduleName": "BackgroundAssets",
+            "name": "init",
+            "printedName": "init(from:configuration:)",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets17AssetPackManifestV4from13configurationACs7Decoder_p_AC21DecodingConfigurationVtKcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "BADownload",
+                    "printedName": "BackgroundAssets.BADownload",
+                    "usr": "c:objc(cs)BADownload"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<BackgroundAssets.BADownload>",
+                "usr": "s:Sh"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "BAContentRequest",
+                    "printedName": "BackgroundAssets.BAContentRequest",
+                    "usr": "c:@E@BAContentRequest"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "BackgroundAssets.BAContentRequest?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets17AssetPackManifestV12allDownloads3forShySo10BADownloadCGSo16BAContentRequestVSg_tF",
+            "moduleName": "BackgroundAssets",
+            "name": "allDownloads",
+            "printedName": "allDownloads(for:)",
+            "usr": "s:16BackgroundAssets17AssetPackManifestV12allDownloads3forShySo10BADownloadCGSo16BAContentRequestVSg_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BackgroundAssets17AssetPackManifestV6encode2toys7Encoder_p_tKF",
+            "moduleName": "BackgroundAssets",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:16BackgroundAssets17AssetPackManifestV6encode2toys7Encoder_p_tKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DecodingConfiguration",
+                    "printedName": "BackgroundAssets.AssetPackManifest.DecodingConfiguration",
+                    "usr": "s:16BackgroundAssets17AssetPackManifestV21DecodingConfigurationV"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "DecodingConfiguration",
+                "printedName": "DecodingConfiguration"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation26DecodableWithConfigurationP",
+            "name": "DecodableWithConfiguration",
+            "printedName": "DecodableWithConfiguration",
+            "usr": "s:10Foundation26DecodableWithConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26",
+        "intro_iOS": "26",
+        "intro_tvOS": "26",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BackgroundAssets17AssetPackManifestV",
+        "moduleName": "BackgroundAssets",
+        "name": "AssetPackManifest",
+        "printedName": "AssetPackManifest",
+        "usr": "s:16BackgroundAssets17AssetPackManifestV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Int?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo18BAAppExtensionInfoC16BackgroundAssetsE40restrictedEssentialDownloadSizeRemainingSiSgvg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So18BAAppExtensionInfoC16BackgroundAssetsE40restrictedEssentialDownloadSizeRemainingSiSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Int?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.4",
+            "intro_tvOS": "18.4",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo18BAAppExtensionInfoC16BackgroundAssetsE40restrictedEssentialDownloadSizeRemainingSiSgvp",
+            "moduleName": "BackgroundAssets",
+            "name": "restrictedEssentialDownloadSizeRemaining",
+            "printedName": "restrictedEssentialDownloadSizeRemaining",
+            "usr": "s:So18BAAppExtensionInfoC16BackgroundAssetsE40restrictedEssentialDownloadSizeRemainingSiSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Int?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo18BAAppExtensionInfoC16BackgroundAssetsE31restrictedDownloadSizeRemainingSiSgvg",
+                "moduleName": "BackgroundAssets",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So18BAAppExtensionInfoC16BackgroundAssetsE31restrictedDownloadSizeRemainingSiSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Int?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo18BAAppExtensionInfoC16BackgroundAssetsE31restrictedDownloadSizeRemainingSiSgvp",
+            "moduleName": "BackgroundAssets",
+            "name": "restrictedDownloadSizeRemaining",
+            "printedName": "restrictedDownloadSizeRemaining",
+            "usr": "s:So18BAAppExtensionInfoC16BackgroundAssetsE31restrictedDownloadSizeRemainingSiSgvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "SynthesizedProtocol",
+          "Sendable",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "16.1",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "BackgroundAssets",
+        "name": "BAAppExtensionInfo",
+        "objc_name": "BAAppExtensionInfo",
+        "printedName": "BAAppExtensionInfo",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)BAAppExtensionInfo"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "BackgroundAssets",
+    "printedName": "BackgroundAssets"
+  }
+}

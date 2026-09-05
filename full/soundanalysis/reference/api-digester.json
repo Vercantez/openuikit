@@ -1,0 +1,1339 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "SoundAnalysis.SNDefines",
+        "printedName": "SoundAnalysis.SNDefines"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "SoundAnalysis.SNTypes",
+        "printedName": "SoundAnalysis.SNTypes"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "SoundAnalysis.SNError",
+        "printedName": "SoundAnalysis.SNError"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "SoundAnalysis.SNRequest",
+        "printedName": "SoundAnalysis.SNRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "SoundAnalysis.SNResult",
+        "printedName": "SoundAnalysis.SNResult"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "SoundAnalysis.SNAnalyzer",
+        "printedName": "SoundAnalysis.SNAnalyzer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "SoundAnalysis.SNTimeDurationConstraint",
+        "printedName": "SoundAnalysis.SNTimeDurationConstraint"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "SoundAnalysis.SNClassifySoundRequest",
+        "printedName": "SoundAnalysis.SNClassifySoundRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "SoundAnalysis.SNClassificationResult",
+        "printedName": "SoundAnalysis.SNClassificationResult"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11SNErrorCodeLeV8_nsErrorSo7NSErrorCvg",
+                "moduleName": "SoundAnalysis",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC11SNErrorCodeLeV8_nsErrorSo7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC11SNErrorCodeLeV8_nsErrorSo7NSErrorCvp",
+            "moduleName": "SoundAnalysis",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC11SNErrorCodeLeV8_nsErrorSo7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SNError",
+                "printedName": "SoundAnalysis.SNError",
+                "usr": "c:@E@SNErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC11SNErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc",
+            "moduleName": "SoundAnalysis",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC11SNErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11SNErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "SoundAnalysis",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SNErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC11SNErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "SoundAnalysis",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC11SNErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SoundAnalysis.SNError.Code",
+                        "usr": "c:@E@SNErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "SoundAnalysis.SNError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo11SNErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "SoundAnalysis",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So11SNErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11SNErrorCodeV8rawValueSivg",
+                    "moduleName": "SoundAnalysis",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11SNErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo11SNErrorCodeV8rawValueSivp",
+                "moduleName": "SoundAnalysis",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So11SNErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11SNErrorCodeV8RawValuea",
+                "moduleName": "SoundAnalysis",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So11SNErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SNError",
+                    "printedName": "SoundAnalysis.SNError",
+                    "usr": "c:@E@SNErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "SoundAnalysis",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@SNErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SoundAnalysis.SNError.Code",
+                        "usr": "c:@E@SNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SoundAnalysis.SNError.Code",
+                            "usr": "c:@E@SNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SoundAnalysis.SNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SoundAnalysis.SNError.Code.Type) -> SoundAnalysis.SNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SoundAnalysis",
+                "name": "unknownError",
+                "printedName": "unknownError",
+                "usr": "c:@E@SNErrorCode@SNErrorCodeUnknownError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SoundAnalysis.SNError.Code",
+                        "usr": "c:@E@SNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SoundAnalysis.SNError.Code",
+                            "usr": "c:@E@SNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SoundAnalysis.SNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SoundAnalysis.SNError.Code.Type) -> SoundAnalysis.SNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SoundAnalysis",
+                "name": "operationFailed",
+                "printedName": "operationFailed",
+                "usr": "c:@E@SNErrorCode@SNErrorCodeOperationFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SoundAnalysis.SNError.Code",
+                        "usr": "c:@E@SNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SoundAnalysis.SNError.Code",
+                            "usr": "c:@E@SNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SoundAnalysis.SNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SoundAnalysis.SNError.Code.Type) -> SoundAnalysis.SNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SoundAnalysis",
+                "name": "invalidFormat",
+                "printedName": "invalidFormat",
+                "usr": "c:@E@SNErrorCode@SNErrorCodeInvalidFormat"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SoundAnalysis.SNError.Code",
+                        "usr": "c:@E@SNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SoundAnalysis.SNError.Code",
+                            "usr": "c:@E@SNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SoundAnalysis.SNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SoundAnalysis.SNError.Code.Type) -> SoundAnalysis.SNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SoundAnalysis",
+                "name": "invalidModel",
+                "printedName": "invalidModel",
+                "usr": "c:@E@SNErrorCode@SNErrorCodeInvalidModel"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SoundAnalysis.SNError.Code",
+                        "usr": "c:@E@SNErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SoundAnalysis.SNError.Code",
+                            "usr": "c:@E@SNErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SoundAnalysis.SNError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SoundAnalysis.SNError.Code.Type) -> SoundAnalysis.SNError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SoundAnalysis",
+                "name": "invalidFile",
+                "printedName": "invalidFile",
+                "usr": "c:@E@SNErrorCode@SNErrorCodeInvalidFile"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "SoundAnalysis.SNError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "13.0",
+            "kind": "TypeDecl",
+            "moduleName": "SoundAnalysis",
+            "name": "Code",
+            "objc_name": "SNErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@SNErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SoundAnalysis.SNError.Code",
+                    "usr": "c:@E@SNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SNErrorCodeLeV12unknownErrorSoAAVvgZ",
+                "moduleName": "SoundAnalysis",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SNErrorCodeLeV12unknownErrorSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SoundAnalysis.SNError.Code",
+                "usr": "c:@E@SNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SoundAnalysis",
+            "name": "unknownError",
+            "printedName": "unknownError",
+            "static": true,
+            "usr": "c:@E@SNErrorCode@SNErrorCodeUnknownError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SoundAnalysis.SNError.Code",
+                    "usr": "c:@E@SNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SNErrorCodeLeV15operationFailedSoAAVvgZ",
+                "moduleName": "SoundAnalysis",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SNErrorCodeLeV15operationFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SoundAnalysis.SNError.Code",
+                "usr": "c:@E@SNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SoundAnalysis",
+            "name": "operationFailed",
+            "printedName": "operationFailed",
+            "static": true,
+            "usr": "c:@E@SNErrorCode@SNErrorCodeOperationFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SoundAnalysis.SNError.Code",
+                    "usr": "c:@E@SNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SNErrorCodeLeV13invalidFormatSoAAVvgZ",
+                "moduleName": "SoundAnalysis",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SNErrorCodeLeV13invalidFormatSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SoundAnalysis.SNError.Code",
+                "usr": "c:@E@SNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SoundAnalysis",
+            "name": "invalidFormat",
+            "printedName": "invalidFormat",
+            "static": true,
+            "usr": "c:@E@SNErrorCode@SNErrorCodeInvalidFormat"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SoundAnalysis.SNError.Code",
+                    "usr": "c:@E@SNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SNErrorCodeLeV12invalidModelSoAAVvgZ",
+                "moduleName": "SoundAnalysis",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SNErrorCodeLeV12invalidModelSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SoundAnalysis.SNError.Code",
+                "usr": "c:@E@SNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SoundAnalysis",
+            "name": "invalidModel",
+            "printedName": "invalidModel",
+            "static": true,
+            "usr": "c:@E@SNErrorCode@SNErrorCodeInvalidModel"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SoundAnalysis.SNError.Code",
+                    "usr": "c:@E@SNErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11SNErrorCodeLeV11invalidFileSoAAVvgZ",
+                "moduleName": "SoundAnalysis",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11SNErrorCodeLeV11invalidFileSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SoundAnalysis.SNError.Code",
+                "usr": "c:@E@SNErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SoundAnalysis",
+            "name": "invalidFile",
+            "printedName": "invalidFile",
+            "static": true,
+            "usr": "c:@E@SNErrorCode@SNErrorCodeInvalidFile"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "13.0",
+        "kind": "TypeDecl",
+        "moduleName": "SoundAnalysis",
+        "name": "SNError",
+        "printedName": "SNError",
+        "usr": "c:@E@SNErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "AVFAudio",
+        "printedName": "AVFAudio"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "CoreML",
+        "printedName": "CoreML"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "CoreMedia",
+        "printedName": "CoreMedia"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "SoundAnalysis",
+        "printedName": "SoundAnalysis"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SoundAnalysis",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SNTimeDurationConstraint",
+                        "printedName": "SoundAnalysis.SNTimeDurationConstraint",
+                        "usr": "s:13SoundAnalysis24SNTimeDurationConstraintO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "CMTime",
+                            "printedName": "CoreMedia.CMTime",
+                            "usr": "c:@SA@CMTime"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[CoreMedia.CMTime]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "([CoreMedia.CMTime]) -> SoundAnalysis.SNTimeDurationConstraint"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SNTimeDurationConstraint",
+                        "printedName": "SoundAnalysis.SNTimeDurationConstraint",
+                        "usr": "s:13SoundAnalysis24SNTimeDurationConstraintO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "SoundAnalysis.SNTimeDurationConstraint.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(SoundAnalysis.SNTimeDurationConstraint.Type) -> ([CoreMedia.CMTime]) -> SoundAnalysis.SNTimeDurationConstraint"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s13SoundAnalysis24SNTimeDurationConstraintO19enumeratedDurationsyACSaySo6CMTimeaGcACmF",
+            "moduleName": "SoundAnalysis",
+            "name": "enumeratedDurations",
+            "printedName": "enumeratedDurations",
+            "usr": "s:13SoundAnalysis24SNTimeDurationConstraintO19enumeratedDurationsyACSaySo6CMTimeaGcACmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SNTimeDurationConstraint",
+                        "printedName": "SoundAnalysis.SNTimeDurationConstraint",
+                        "usr": "s:13SoundAnalysis24SNTimeDurationConstraintO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CMTimeRange",
+                        "printedName": "CoreMedia.CMTimeRange",
+                        "usr": "c:@SA@CMTimeRange"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CoreMedia.CMTimeRange) -> SoundAnalysis.SNTimeDurationConstraint"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SNTimeDurationConstraint",
+                        "printedName": "SoundAnalysis.SNTimeDurationConstraint",
+                        "usr": "s:13SoundAnalysis24SNTimeDurationConstraintO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "SoundAnalysis.SNTimeDurationConstraint.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(SoundAnalysis.SNTimeDurationConstraint.Type) -> (CoreMedia.CMTimeRange) -> SoundAnalysis.SNTimeDurationConstraint"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s13SoundAnalysis24SNTimeDurationConstraintO13durationRangeyACSo06CMTimeG0acACmF",
+            "moduleName": "SoundAnalysis",
+            "name": "durationRange",
+            "printedName": "durationRange",
+            "usr": "s:13SoundAnalysis24SNTimeDurationConstraintO13durationRangeyACSo06CMTimeG0acACmF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_Macosx": "12.0",
+        "intro_iOS": "15.0",
+        "intro_tvOS": "15.0",
+        "intro_watchOS": "8.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s13SoundAnalysis24SNTimeDurationConstraintO",
+        "moduleName": "SoundAnalysis",
+        "name": "SNTimeDurationConstraint",
+        "printedName": "SNTimeDurationConstraint",
+        "usr": "s:13SoundAnalysis24SNTimeDurationConstraintO"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SNTimeDurationConstraint",
+                    "printedName": "SoundAnalysis.SNTimeDurationConstraint",
+                    "usr": "s:13SoundAnalysis24SNTimeDurationConstraintO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo22SNClassifySoundRequestC0B8AnalysisE24windowDurationConstraintAC06SNTimefG0Ovg",
+                "moduleName": "SoundAnalysis",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So22SNClassifySoundRequestC0B8AnalysisE24windowDurationConstraintAC06SNTimefG0Ovg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SNTimeDurationConstraint",
+                "printedName": "SoundAnalysis.SNTimeDurationConstraint",
+                "usr": "s:13SoundAnalysis24SNTimeDurationConstraintO"
+              }
+            ],
+            "declAttributes": [
+              "NonObjC",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_Macosx": "12.0",
+            "intro_iOS": "15.0",
+            "intro_tvOS": "15.0",
+            "intro_watchOS": "8.0",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo22SNClassifySoundRequestC0B8AnalysisE24windowDurationConstraintAC06SNTimefG0Ovp",
+            "moduleName": "SoundAnalysis",
+            "name": "windowDurationConstraint",
+            "printedName": "windowDurationConstraint",
+            "usr": "s:So22SNClassifySoundRequestC0B8AnalysisE24windowDurationConstraintAC06SNTimefG0Ovp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "SNRequest",
+            "printedName": "SNRequest",
+            "usr": "c:objc(pl)SNRequest"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "13.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "SoundAnalysis",
+        "name": "SNClassifySoundRequest",
+        "objc_name": "SNClassifySoundRequest",
+        "printedName": "SNClassifySoundRequest",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)SNClassifySoundRequest"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "SoundAnalysis",
+    "printedName": "SoundAnalysis"
+  }
+}
