@@ -1,0 +1,202 @@
+precise	status	evidence	notes
+c:@CLSContextTopicArtsAndMusic	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSContextTopicComputerScienceAndEngineering	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSContextTopicHealthAndFitness	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSContextTopicLiteracyAndWriting	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSContextTopicMath	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSContextTopicScience	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSContextTopicSocialScience	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSContextTopicWorldLanguage	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSErrorCodeDomain	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSErrorObjectKey	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSErrorSuccessfulObjectsKey	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSErrorUnderlyingErrorsKey	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSPredicateKeyPathDateCreated	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSPredicateKeyPathIdentifier	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSPredicateKeyPathParent	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSPredicateKeyPathTitle	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSPredicateKeyPathTopic	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@CLSPredicateKeyPathUniversalLinkURL	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@E@CLSBinaryValueType	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSBinaryValueType@CLSBinaryValueTypeCorrectIncorrect	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSBinaryValueType@CLSBinaryValueTypePassFail	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSBinaryValueType@CLSBinaryValueTypeTrueFalse	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSBinaryValueType@CLSBinaryValueTypeYesNo	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeApp	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeAudio	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeBook	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeChallenge	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeChapter	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeCourse	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeCustom	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeDocument	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeExercise	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeGame	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeLesson	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeLevel	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeNone	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypePage	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeQuiz	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeSection	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeTask	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSContextType@CLSContextTypeVideo	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSErrorCode@CLSErrorCodeAuthorizationDenied	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSErrorCode@CLSErrorCodeClassKitUnavailable	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSErrorCode@CLSErrorCodeDatabaseInaccessible	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSErrorCode@CLSErrorCodeInvalidAccountCredentials	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSErrorCode@CLSErrorCodeInvalidArgument	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSErrorCode@CLSErrorCodeInvalidCreate	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSErrorCode@CLSErrorCodeInvalidModification	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSErrorCode@CLSErrorCodeInvalidUpdate	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSErrorCode@CLSErrorCodeLimits	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSErrorCode@CLSErrorCodeNone	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSErrorCode@CLSErrorCodePartialFailure	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSProgressReportingCapabilityKind	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSProgressReportingCapabilityKind@CLSProgressReportingCapabilityKindBinary	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSProgressReportingCapabilityKind@CLSProgressReportingCapabilityKindDuration	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSProgressReportingCapabilityKind@CLSProgressReportingCapabilityKindPercent	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSProgressReportingCapabilityKind@CLSProgressReportingCapabilityKindQuantity	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@E@CLSProgressReportingCapabilityKind@CLSProgressReportingCapabilityKindScore	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+c:@T@CLSContextTopic	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@T@CLSErrorUserInfoKey	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:@T@CLSPredicateKeyPath	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+c:objc(cs)CLSActivity	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testActivityLifecycle	Process-local activity state machine
+c:objc(cs)CLSActivity(im)addAdditionalActivityItem:	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testActivityItems	Primary and additional items
+c:objc(cs)CLSActivity(im)addProgressRangeFromStart:toEnd:	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testActivityProgress	Progress clamp and range union-by-max
+c:objc(cs)CLSActivity(im)removeAllActivityItems	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testActivityItems	Primary and additional items
+c:objc(cs)CLSActivity(im)start	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testActivityLifecycle	Process-local activity state machine
+c:objc(cs)CLSActivity(im)stop	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testActivityLifecycle	Process-local activity state machine
+c:objc(cs)CLSActivity(py)additionalActivityItems	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testActivityItems	Primary and additional items
+c:objc(cs)CLSActivity(py)duration	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testActivityLifecycle	Process-local activity state machine
+c:objc(cs)CLSActivity(py)primaryActivityItem	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testActivityItems	Primary and additional items
+c:objc(cs)CLSActivity(py)progress	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testActivityProgress	Progress clamp and range union-by-max
+c:objc(cs)CLSActivity(py)started	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testActivityLifecycle	Process-local activity state machine
+c:objc(cs)CLSActivityItem	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testBinaryItem	Activity item identity
+c:objc(cs)CLSActivityItem(py)identifier	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testBinaryItem	Activity item identity
+c:objc(cs)CLSActivityItem(py)title	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testBinaryItem	Activity item identity
+c:objc(cs)CLSBinaryItem	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testBinaryItem	Binary item
+c:objc(cs)CLSBinaryItem(im)initWithIdentifier:title:type:	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testBinaryItem	Binary item
+c:objc(cs)CLSBinaryItem(py)value	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testBinaryItem	Binary item
+c:objc(cs)CLSBinaryItem(py)valueType	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testBinaryItem	Binary item
+c:objc(cs)CLSContext	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextInit	Context construction
+c:objc(cs)CLSContext(im)addChildContext:	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextHierarchy	Hierarchy
+c:objc(cs)CLSContext(im)addNavigationChildContext:	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextNavigation	Navigation children
+c:objc(cs)CLSContext(im)addProgressReportingCapabilities:	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextCapabilities	Progress capabilities
+c:objc(cs)CLSContext(im)becomeActive	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextActive	Active state machine
+c:objc(cs)CLSContext(im)createNewActivity	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextActivity	createNewActivity
+c:objc(cs)CLSContext(im)descendantMatchingIdentifierPath:completion:	declared	source:full/classkit/CLSContext.swift#descendant	Async overlay; sync walk is process-local
+c:objc(cs)CLSContext(im)initWithType:identifier:title:	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextInit	Context construction
+c:objc(cs)CLSContext(im)removeFromParent	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextHierarchy	Hierarchy
+c:objc(cs)CLSContext(im)removeNavigationChildContext:	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextNavigation	Navigation children
+c:objc(cs)CLSContext(im)resetProgressReportingCapabilities	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextCapabilities	Progress capabilities
+c:objc(cs)CLSContext(im)resignActive	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextActive	Active state machine
+c:objc(cs)CLSContext(im)setType:	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextInit	Context construction
+c:objc(cs)CLSContext(py)active	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextActive	Active state machine
+c:objc(cs)CLSContext(py)assignable	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextProperties	Context metadata
+c:objc(cs)CLSContext(py)currentActivity	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextActivity	createNewActivity
+c:objc(cs)CLSContext(py)customTypeName	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextInit	Context construction
+c:objc(cs)CLSContext(py)displayOrder	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextProperties	Context metadata
+c:objc(cs)CLSContext(py)identifier	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextInit	Context construction
+c:objc(cs)CLSContext(py)identifierPath	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextHierarchy	Hierarchy
+c:objc(cs)CLSContext(py)navigationChildContexts	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextNavigation	Navigation children
+c:objc(cs)CLSContext(py)parent	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextHierarchy	Hierarchy
+c:objc(cs)CLSContext(py)progressReportingCapabilities	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextCapabilities	Progress capabilities
+c:objc(cs)CLSContext(py)suggestedAge	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextProperties	Context metadata
+c:objc(cs)CLSContext(py)suggestedCompletionTime	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextProperties	Context metadata
+c:objc(cs)CLSContext(py)summary	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextProperties	Context metadata
+c:objc(cs)CLSContext(py)thumbnail	deferred		CGImage requires CoreGraphics, which is not a seeded dependency
+c:objc(cs)CLSContext(py)title	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextInit	Context construction
+c:objc(cs)CLSContext(py)topic	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextProperties	Context metadata
+c:objc(cs)CLSContext(py)type	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextInit	Context construction
+c:objc(cs)CLSContext(py)universalLinkURL	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testContextProperties	Context metadata
+c:objc(cs)CLSDataStore	implemented	test:full/classkit/tests/agent/ClassKitDataStoreTests.swift#testDataStoreShared	Shared store
+c:objc(cs)CLSDataStore(cpy)shared	implemented	test:full/classkit/tests/agent/ClassKitDataStoreTests.swift#testDataStoreShared	Shared store
+c:objc(cs)CLSDataStore(im)completeAllAssignedActivitiesMatching:	implemented	test:full/classkit/tests/agent/ClassKitDataStoreTests.swift#testDataStoreCompleteAssigned	No-op without Schoolwork
+c:objc(cs)CLSDataStore(im)contextsMatchingIdentifierPath:completion:	declared	source:full/classkit/CLSDataStore.swift#contexts	Async overlay around process-local portableContexts
+c:objc(cs)CLSDataStore(im)contextsMatchingPredicate:completion:	declared	source:full/classkit/CLSDataStore.swift#contexts	Async overlay; Linux NSPredicate format strings are unavailable
+c:objc(cs)CLSDataStore(im)fetchActivityForURL:completion:	declared	source:full/classkit/CLSDataStore.swift#fetchActivity	Async fail-closed classKitUnavailable; no Schoolwork URL fetch
+c:objc(cs)CLSDataStore(im)removeContext:	implemented	test:full/classkit/tests/agent/ClassKitDataStoreTests.swift#testDataStoreRemove	Remove from parent
+c:objc(cs)CLSDataStore(im)saveWithCompletion:	implemented	test:full/classkit/tests/agent/ClassKitDataStoreTests.swift#testDataStoreSaveFailClosed	Fail-closed save
+c:objc(cs)CLSDataStore(py)activeContext	implemented	test:full/classkit/tests/agent/ClassKitDataStoreTests.swift#testDataStoreShared	Shared store
+c:objc(cs)CLSDataStore(py)delegate	implemented	test:full/classkit/tests/agent/ClassKitDataStoreTests.swift#testDataStoreDelegate	Delegate
+c:objc(cs)CLSDataStore(py)mainAppContext	implemented	test:full/classkit/tests/agent/ClassKitDataStoreTests.swift#testDataStoreShared	Shared store
+c:objc(cs)CLSDataStore(py)runningActivity	implemented	test:full/classkit/tests/agent/ClassKitDataStoreTests.swift#testDataStoreShared	Shared store
+c:objc(cs)CLSObject	implemented	test:full/classkit/tests/agent/ClassKitObjectTests.swift#testCLSObjectDates	Object timestamps
+c:objc(cs)CLSObject(py)dateCreated	implemented	test:full/classkit/tests/agent/ClassKitObjectTests.swift#testCLSObjectDates	Object timestamps
+c:objc(cs)CLSObject(py)dateLastModified	implemented	test:full/classkit/tests/agent/ClassKitObjectTests.swift#testCLSObjectDates	Object timestamps
+c:objc(cs)CLSProgressReportingCapability	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testProgressReportingCapability	Capability
+c:objc(cs)CLSProgressReportingCapability(im)initWithKind:details:	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testProgressReportingCapability	Capability
+c:objc(cs)CLSProgressReportingCapability(py)details	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testProgressReportingCapability	Capability
+c:objc(cs)CLSProgressReportingCapability(py)kind	implemented	test:full/classkit/tests/agent/ClassKitContextTests.swift#testProgressReportingCapability	Capability
+c:objc(cs)CLSQuantityItem	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testQuantityItem	Quantity item
+c:objc(cs)CLSQuantityItem(im)initWithIdentifier:title:	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testQuantityItem	Quantity item
+c:objc(cs)CLSQuantityItem(py)quantity	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testQuantityItem	Quantity item
+c:objc(cs)CLSScoreItem	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testScoreItem	Score item
+c:objc(cs)CLSScoreItem(im)initWithIdentifier:title:score:maxScore:	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testScoreItem	Score item
+c:objc(cs)CLSScoreItem(py)maxScore	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testScoreItem	Score item
+c:objc(cs)CLSScoreItem(py)score	implemented	test:full/classkit/tests/agent/ClassKitActivityTests.swift#testScoreItem	Score item
+c:objc(cs)NSUserActivity(py)contextIdentifierPath	deferred		NSUserActivity is not in Linux Foundation
+c:objc(cs)NSUserActivity(py)isClassKitDeepLink	deferred		NSUserActivity is not in Linux Foundation
+c:objc(pl)CLSContextProvider	implemented	test:full/classkit/tests/agent/ClassKitDataStoreTests.swift#testContextProviderConformance	Protocol existential
+c:objc(pl)CLSContextProvider(im)updateDescendantsOfContext:completion:	declared	source:full/classkit/CLSDataStore.swift#updateDescendants	Async protocol requirement; no ClassKit catalog on Linux
+c:objc(pl)CLSDataStoreDelegate	implemented	test:full/classkit/tests/agent/ClassKitDataStoreTests.swift#testDataStoreDelegate	Delegate
+c:objc(pl)CLSDataStoreDelegate(im)createContextForIdentifier:parentContext:parentIdentifierPath:	implemented	test:full/classkit/tests/agent/ClassKitDataStoreTests.swift#testDataStoreDelegate	Delegate
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CLSObject	implemented	test:full/classkit/tests/agent/ClassKitObjectTests.swift#testCLSObjectCoding	NSSecureCoding round trip
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorPatternMatching	Pattern match
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SC12CLSErrorCodeLeV	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SC12CLSErrorCodeLeV11errorDomainSSvpZ	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SC12CLSErrorCodeLeV13invalidCreateSoAAVvpZ	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SC12CLSErrorCodeLeV13invalidUpdateSoAAVvpZ	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SC12CLSErrorCodeLeV14partialFailureSoAAVvpZ	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SC12CLSErrorCodeLeV15invalidArgumentSoAAVvpZ	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SC12CLSErrorCodeLeV19authorizationDeniedSoAAVvpZ	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SC12CLSErrorCodeLeV19classKitUnavailableSoAAVvpZ	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SC12CLSErrorCodeLeV19invalidModificationSoAAVvpZ	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SC12CLSErrorCodeLeV20databaseInaccessibleSoAAVvpZ	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SC12CLSErrorCodeLeV25invalidAccountCredentialsSoAAVvpZ	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SC12CLSErrorCodeLeV4noneSoAAVvpZ	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SC12CLSErrorCodeLeV6limitsSoAAVvpZ	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLSBinaryValueType	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Hashable/Equatable synthesis for Int enums
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLSContextType	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Hashable/Equatable synthesis for Int enums
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLSProgressReportingCapabilityKind	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Hashable/Equatable synthesis for Int enums
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CLSContextTopic	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CLSErrorUserInfoKey	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CLSPredicateKeyPath	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLSBinaryValueType	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Hashable/Equatable synthesis for Int enums
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLSContextType	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Hashable/Equatable synthesis for Int enums
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Hashable/Equatable synthesis for Int enums
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLSProgressReportingCapabilityKind	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Hashable/Equatable synthesis for Int enums
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLSBinaryValueType	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Hashable/Equatable synthesis for Int enums
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLSContextType	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Hashable/Equatable synthesis for Int enums
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Hashable/Equatable synthesis for Int enums
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLSProgressReportingCapabilityKind	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Hashable/Equatable synthesis for Int enums
+s:So12CLSErrorCodeV8rawValueABSgSi_tcfc	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+s:So14CLSContextTypeV8rawValueABSgSi_tcfc	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+s:So15CLSContextTopica8rawValueABSS_tcfc	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:So18CLSBinaryValueTypeV03rawB0ABSgSi_tcfc	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+s:So19CLSErrorUserInfoKeya8rawValueABSS_tcfc	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:So19CLSErrorUserInfoKeyayABSScfc	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:So19CLSPredicateKeyPatha8rawValueABSS_tcfc	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:So19CLSPredicateKeyPathayABSScfc	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:So34CLSProgressReportingCapabilityKindV8rawValueABSgSi_tcfc	implemented	test:full/classkit/tests/agent/ClassKitEnumTests.swift#testEnumRawValues	Exact raw values from macios/API digester
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CLSContextTopic	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CLSErrorUserInfoKey	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CLSPredicateKeyPath	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CLSContextTopic	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CLSErrorUserInfoKey	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CLSPredicateKeyPath	implemented	test:full/classkit/tests/agent/ClassKitConstantTests.swift#testTypedConstants	Linux constant identity
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CLSErrorCode	implemented	test:full/classkit/tests/agent/ClassKitErrorTests.swift#testCLSErrorBridging	CLSError overlay

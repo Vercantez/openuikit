@@ -1,0 +1,4 @@
+full/datadetection/DDMatch.swift
+full/datadetection/DataDetection.swift
+full/datadetection/DataDetectorMatch.swift
+full/datadetection/DataDetectorParsing.swift

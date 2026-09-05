@@ -44,11 +44,20 @@ private func makeAda() -> CNMutableContact {
 }
 
 @MainActor
+private func assertFailClosedCompletion(_ editor: CNContactViewController) {
+    let probe = EditorProbe()
+    editor.delegate = probe
+    ContactsUIHostControl.reportViewControllerCompletion(editor)
+    precondition(probe.completed == .some(nil))
+}
+
+@MainActor
 func testViewControllerClass() {
     let editor = CNContactViewController(for: makeAda())
     precondition(type(of: editor) === CNContactViewController.self)
     let asController: UIViewController = editor
     precondition(asController === editor)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -57,6 +66,7 @@ func testViewControllerInitFor() {
     let editor = CNContactViewController(for: ada)
     precondition(editor.contact.givenName == "Ada")
     precondition(editor.allowsEditing == true)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -65,15 +75,18 @@ func testViewControllerInitForContact() {
     let editor = CNContactViewController(forContact: ada)
     precondition(editor.contact.familyName == "Lovelace")
     precondition(editor.allowsEditing == true)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
 func testViewControllerInitForNewContact() {
     let fresh = CNContactViewController(forNewContact: nil)
     precondition(fresh.allowsEditing == true)
+    assertFailClosedCompletion(fresh)
     let ada = makeAda()
     let seeded = CNContactViewController(forNewContact: ada)
     precondition(seeded.contact.givenName == "Ada")
+    assertFailClosedCompletion(seeded)
 }
 
 @MainActor
@@ -81,12 +94,15 @@ func testViewControllerInitForUnknownContact() {
     let editor = CNContactViewController(forUnknownContact: makeAda())
     precondition(editor.allowsEditing == false)
     precondition(editor.contact.givenName == "Ada")
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
 func testViewControllerDescriptorForRequiredKeys() {
     let descriptor = CNContactViewController.descriptorForRequiredKeys()
     _ = descriptor
+    let editor = CNContactViewController(for: makeAda())
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -104,6 +120,7 @@ func testViewControllerHighlightProperty() {
         ContactsUIHostControl.highlightedPropertyIdentifier(editor)
             == ada.emailAddresses[0].identifier
     )
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -113,6 +130,7 @@ func testViewControllerAllowsActions() {
     precondition(editor.allowsActions == false)
     editor.allowsActions = true
     precondition(editor.allowsActions == true)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -120,6 +138,7 @@ func testViewControllerAllowsEditing() {
     let editor = CNContactViewController(for: makeAda())
     editor.allowsEditing = false
     precondition(editor.allowsEditing == false)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -130,6 +149,7 @@ func testViewControllerAlternateName() {
     let sections = ContactsUIHostControl.linuxContactSections(editor)
     let nameRow = sections.first { $0.kind == .name }?.rows.first
     precondition(nameRow?.value == "Ada L.")
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -138,6 +158,7 @@ func testViewControllerContact() {
     let editor = CNContactViewController(for: ada)
     precondition(editor.contact.givenName == "Ada")
     precondition(editor.contact.identifier == ada.identifier)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -146,6 +167,7 @@ func testViewControllerContactStore() {
     let store = CNContactStore()
     editor.contactStore = store
     precondition(editor.contactStore === store)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -154,6 +176,8 @@ func testViewControllerDelegateProperty() {
     let probe = EditorProbe()
     editor.delegate = probe
     precondition(editor.delegate === probe)
+    ContactsUIHostControl.reportViewControllerCompletion(editor)
+    precondition(probe.completed == .some(nil))
 }
 
 @MainActor
@@ -170,6 +194,7 @@ func testViewControllerDisplayedPropertyKeys() {
     precondition(kinds.contains(.phone))
     precondition(kinds.contains(.email))
     precondition(kinds.contains(.address))
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -179,6 +204,7 @@ func testViewControllerMessage() {
     precondition(editor.message == "Mathematician")
     let sections = ContactsUIHostControl.linuxContactSections(editor)
     precondition(sections.contains { $0.kind == .message })
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -187,6 +213,7 @@ func testViewControllerParentContainer() {
     let container = CNContainer()
     editor.parentContainer = container
     precondition(editor.parentContainer === container)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -195,6 +222,7 @@ func testViewControllerParentGroup() {
     let group = CNGroup()
     editor.parentGroup = group
     precondition(editor.parentGroup === group)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -204,6 +232,7 @@ func testViewControllerShouldShowLinkedContacts() {
     precondition(editor.shouldShowLinkedContacts == true)
     editor.shouldShowLinkedContacts = false
     precondition(editor.shouldShowLinkedContacts == false)
+    assertFailClosedCompletion(editor)
 }
 
 @MainActor
@@ -213,6 +242,8 @@ func testViewControllerDelegateProtocol() {
     editor.delegate = probe
     let existential: any CNContactViewControllerDelegate = probe
     _ = existential
+    ContactsUIHostControl.reportViewControllerCompletion(editor)
+    precondition(probe.completed == .some(nil))
 }
 
 @MainActor

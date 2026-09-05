@@ -45,13 +45,81 @@ absent on this VM. The sealed gate compiles with a clean product tree
 `origin/agent/fw-contactsui` did not exist; this pass publishes that branch
 from the Cursor-created work branch.
 
+## Depth pass 2026-09 (wave 8)
+
+SDK DEPTH second pass. Keeps the first-pass picker / editor / access-button
+sources and focused tests green, then extends host-driven picker dispatch
+and reclassifies synthesized SwiftUI.View members.
+
+Coverage before this pass: **58 implemented / 768 declared / 21 deferred / 0 unavailable / 0 not-applicable**
+(826 nondeferred, floor 85).
+
+Coverage after this pass: **58 implemented / 78 declared / 21 deferred / 0 unavailable / 690 not-applicable**
+(136 nondeferred, floor 85). 690 `s:7SwiftUI4ViewPAAE…` rows are
+`not-applicable` with note `SwiftUI cross-import overlay; owned by the SwiftUI lane`.
+78 identity modifiers that `linuxExerciseIdentityModifiers()` actually
+walks stay `declared` (a no-op is not Apple layout; they compile in
+`ContactsUIViewSurface.swift`). 21 TipKit/AppIntents synthesized members
+stay deferred. The campaign brief estimated ~150 SwiftUI overlay
+re-exports; the pinned graph has 768 `View` PAAE members plus 21
+TipKit/AppIntents members.
+
+Top-5 implemented evidence (unchanged; enum members share one table-driven
+test; no other single test exceeds 40% of the remaining 48 implemented rows):
+
+| Rows | Share | Evidence |
+| ---: | ---: | --- |
+| 10 | 17.2% | `ContactsUICaptionTests.swift#testCaptionCases` (table-driven Caption enum / raw values / Equatable / Hashable) |
+| 2 | 3.4% | `ContactsUIAccessButtonTests.swift#testAccessButtonInit` |
+| 2 | 3.4% | `ContactsUIAccessButtonTests.swift#testAccessButtonBody` |
+| 2 | 3.4% | `ContactsUIStyleTests.swift#testStyleAutomatic` |
+| 1 | 1.7% | 42 other focused tests, one identifier each (e.g. `ContactsUIPickerTests.swift#testPickerDidSelectContact`) |
+
+Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` did not emit
+`CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
+absent on this VM. The sealed gate compiles with a clean product tree
+(`products=clean`). Active Cursor Build observed on this run was
+`bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3` (campaign expected
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
+`dd4c8bca7e8735289928bbd1abd44f4b35815308` matched.
+
+Wave-8 additions on top of the first pass:
+
+- Host SPI `reportPickerDidShow` posts
+  `CNContactPickerViewControllerPickerDidShowNotification`. Cancel and an
+  accepted selection post `…DidHideNotification` and clear visibility.
+  A failing enabling / selection / `displayedPropertyKeys` predicate is
+  fail-closed: no `didSelect`, no hide notification.
+- Every picker and view-controller focused test scripts a selection or
+  completion and asserts what the delegate received (including `nil`
+  contact on fail-closed `didCompleteWith`).
+- `ContactAccessPickerModel` (SPI) snapshots
+  `queryString` / `ignoredEmails` / `ignoredPhoneNumbers` and always
+  returns `[]` from `failClosedApprovedIdentifiers()`.
+
+`bash full/contactsui/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+CONTACTSUI_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=ContactsUI dylib=libContactsUI.dylib
+```
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. `swiftc` is Swift 6.2.4 / linux and the gate compiled with a clean product tree.
+
 ### What is real
 
 - `CNContactPickerViewController` stores `displayedPropertyKeys` and the three
-  picker predicates. Documented host SPI scripts cancel and selection:
+  picker predicates. Documented host SPI scripts appear / cancel / selection:
+  `reportPickerDidShow`, `reportPickerCancel`,
   `reportPickerSelection(_:contact:)`, `…contacts:`, `…property:`,
   `…properties:`. A failing enabling or selection predicate is fail-closed
-  (no `didSelect`).
+  (no `didSelect`, picker stays visible if it was shown).
+- TBD notification names
+  `CNContactPickerViewControllerPickerDidShowNotification` and
+  `…DidHideNotification` are posted only from that host SPI. Linux never
+  presents picker chrome, so it never posts them from `viewDidAppear`.
 - Portable predicate formats used by the Contacts corpus / Darwin picker
   docs — `givenName == %@`, `emailAddresses.@count > 0`,
   `key == %@`, `BEGINSWITH[cd]` / `CONTAINS[cd]` — are compiled to
@@ -74,12 +142,15 @@ from the Cursor-created work branch.
 - `ContactAccessButton` stores query / ignore sets, caption, and style
   (including `imageColor`). `body` is `EmptyView`. Approval and
   `contactAccessPicker(isPresented:completionHandler:)` always deliver `[]`.
+  SPI `ContactAccessPickerModel` is the fail-closed sheet model (no grant
+  identifiers).
 - `UIApplicationShortcutIcon(contact:)` on the UIKit lookalike stores the
   contact identifier. It does not produce Apple shortcut artwork.
 - Linux identity `View` modifiers on `ContactAccessButton` compile as `Self`
-  no-ops (`ContactsUIViewSurface.swift`). They are **declared**, not
-  implemented: a no-op is not Apple layout and is not a focused behavioral
-  test.
+  no-ops (`ContactsUIViewSurface.swift`). Synthesized SwiftUI.View PAAE
+  members are **not-applicable** (owned by the SwiftUI lane) except the 78
+  walked by `linuxExerciseIdentityModifiers()`, which stay **declared**.
+  None of those rows are `implemented`.
 
 ### Fail-closed boundaries
 

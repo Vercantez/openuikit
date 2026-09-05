@@ -1,0 +1,9 @@
+full/shazamkit/SHCatalog.swift
+full/shazamkit/SHError.swift
+full/shazamkit/SHLibrary.swift
+full/shazamkit/SHManagedSession.swift
+full/shazamkit/SHMediaItem.swift
+full/shazamkit/SHMediaItemProperty.swift
+full/shazamkit/SHSession.swift
+full/shazamkit/SHSignature.swift
+full/shazamkit/ShazamKit.swift

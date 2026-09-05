@@ -1,0 +1,220 @@
+precise	status	evidence	notes
+c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+c:@E@SHErrorCode@SHErrorCodeAudioDiscontinuity	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+c:@E@SHErrorCode@SHErrorCodeCustomCatalogInvalid	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+c:@E@SHErrorCode@SHErrorCodeCustomCatalogInvalidURL	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+c:@E@SHErrorCode@SHErrorCodeInternalError	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+c:@E@SHErrorCode@SHErrorCodeInvalidAudioFormat	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+c:@E@SHErrorCode@SHErrorCodeMatchAttemptFailed	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+c:@E@SHErrorCode@SHErrorCodeMediaItemFetchFailed	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+c:@E@SHErrorCode@SHErrorCodeMediaLibrarySyncFailed	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+c:@E@SHErrorCode@SHErrorCodeSignatureDurationInvalid	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+c:@E@SHErrorCode@SHErrorCodeSignatureInvalid	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+c:@SHErrorDomain	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorDomainConstant	literal SHErrorDomain
+c:@SHMediaItemAppleMusicID	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemAppleMusicURL	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemArtist	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemArtworkURL	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemConfidence	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemCreationDate	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemExplicitContent	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemFrequencySkew	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemGenres	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemISRC	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemMatchOffset	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemShazamID	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemSubtitle	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemTitle	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemVideoURL	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@SHMediaItemWebURL	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+c:@T@SHMediaItemProperty	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyType	
+c:objc(cs)SHCatalog	implemented	test:full/shazamkit/tests/agent/SHCatalogTests.swift#testSHCatalogType	
+c:objc(cs)SHCatalog(py)maximumQuerySignatureDuration	implemented	test:full/shazamkit/tests/agent/SHCatalogTests.swift#testSHCatalogMaximumQuerySignatureDuration	Apple catalog absent: max 0
+c:objc(cs)SHCatalog(py)minimumQuerySignatureDuration	implemented	test:full/shazamkit/tests/agent/SHCatalogTests.swift#testSHCatalogMinimumQuerySignatureDuration	Apple catalog absent: min 0
+c:objc(cs)SHCustomCatalog	implemented	test:full/shazamkit/tests/agent/SHCatalogTests.swift#testSHCustomCatalogType	
+c:objc(cs)SHCustomCatalog(im)addCustomCatalogFromURL:error:	implemented	test:full/shazamkit/tests/agent/SHCatalogTests.swift#testSHCustomCatalogAddFromURL	
+c:objc(cs)SHCustomCatalog(im)addReferenceSignature:representingMediaItems:error:	implemented	test:full/shazamkit/tests/agent/SHCatalogTests.swift#testSHCustomCatalogAddReferenceSignature	exact dataRepresentation match
+c:objc(cs)SHCustomCatalog(im)init	implemented	test:full/shazamkit/tests/agent/SHCatalogTests.swift#testSHCustomCatalogInit	
+c:objc(cs)SHCustomCatalog(im)initWithDataRepresentation:error:	implemented	test:full/shazamkit/tests/agent/SHCatalogTests.swift#testSHCustomCatalogInitDataRepresentation	
+c:objc(cs)SHCustomCatalog(im)writeToURL:error:	implemented	test:full/shazamkit/tests/agent/SHCatalogTests.swift#testSHCustomCatalogWriteToURL	
+c:objc(cs)SHCustomCatalog(py)dataRepresentation	implemented	test:full/shazamkit/tests/agent/SHCatalogTests.swift#testSHCustomCatalogDataRepresentation	host-local OpenUIKit.SHCustomCatalog.v1 envelope
+c:objc(cs)SHMatch	implemented	test:full/shazamkit/tests/agent/SHMatchTests.swift#testSHMatchType	
+c:objc(cs)SHMatch(py)mediaItems	implemented	test:full/shazamkit/tests/agent/SHMatchTests.swift#testSHMatchMediaItems	
+c:objc(cs)SHMatch(py)querySignature	implemented	test:full/shazamkit/tests/agent/SHMatchTests.swift#testSHMatchQuerySignature	
+c:objc(cs)SHMatchedMediaItem	implemented	test:full/shazamkit/tests/agent/SHMatchTests.swift#testSHMatchedMediaItemType	
+c:objc(cs)SHMatchedMediaItem(py)confidence	implemented	test:full/shazamkit/tests/agent/SHMatchTests.swift#testSHMatchedMediaItemConfidence	
+c:objc(cs)SHMatchedMediaItem(py)frequencySkew	implemented	test:full/shazamkit/tests/agent/SHMatchTests.swift#testSHMatchedMediaItemFrequencySkew	
+c:objc(cs)SHMatchedMediaItem(py)matchOffset	implemented	test:full/shazamkit/tests/agent/SHMatchTests.swift#testSHMatchedMediaItemMatchOffset	
+c:objc(cs)SHMatchedMediaItem(py)predictedCurrentMatchOffset	implemented	test:full/shazamkit/tests/agent/SHMatchTests.swift#testSHMatchedMediaItemPredictedCurrentMatchOffset	matchOffset plus elapsed time
+c:objc(cs)SHMediaItem	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemType	
+c:objc(cs)SHMediaItem(cm)fetchMediaItemWithShazamID:completionHandler:	declared	source:full/shazamkit/SHLibrary.swift#fetch	async Apple catalog fetch; runner cannot await; throws mediaItemFetchFailed
+c:objc(cs)SHMediaItem(im)objectForKeyedSubscript:	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemSubscript	missing keys return NSNull
+c:objc(cs)SHMediaItem(py)appleMusicID	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemAppleMusicID	
+c:objc(cs)SHMediaItem(py)appleMusicURL	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemAppleMusicURL	
+c:objc(cs)SHMediaItem(py)artist	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemArtist	
+c:objc(cs)SHMediaItem(py)artworkURL	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemArtworkURL	
+c:objc(cs)SHMediaItem(py)creationDate	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemCreationDate	
+c:objc(cs)SHMediaItem(py)explicitContent	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemExplicitContent	defaults false
+c:objc(cs)SHMediaItem(py)genres	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemGenres	defaults empty
+c:objc(cs)SHMediaItem(py)isrc	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemISRC	
+c:objc(cs)SHMediaItem(py)shazamID	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemShazamID	
+c:objc(cs)SHMediaItem(py)subtitle	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemSubtitle	
+c:objc(cs)SHMediaItem(py)title	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemTitle	
+c:objc(cs)SHMediaItem(py)videoURL	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemVideoURL	
+c:objc(cs)SHMediaItem(py)webURL	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemWebURL	
+c:objc(cs)SHMediaLibrary	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHMediaLibraryType	
+c:objc(cs)SHMediaLibrary(cpy)defaultLibrary	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHMediaLibraryDefault	
+c:objc(cs)SHMediaLibrary(im)addMediaItems:completionHandler:	declared	source:full/shazamkit/SHLibrary.swift#add	async; throws mediaLibrarySyncFailed; runner cannot await
+c:objc(cs)SHSession	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionType	
+c:objc(cs)SHSession(im)init	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionInit	
+c:objc(cs)SHSession(im)initWithCatalog:	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionInitCatalog	
+c:objc(cs)SHSession(im)matchSignature:	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionMatchCustomCatalogHit	custom catalog exact-byte match
+c:objc(cs)SHSession(im)matchStreamingBuffer:atTime:	deferred		requires AVAudioPCMBuffer/AVAudioTime; seed depends only on Foundation
+c:objc(cs)SHSession(py)catalog	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionCatalog	
+c:objc(cs)SHSession(py)delegate	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionDelegate	weak; callbacks are synchronous
+c:objc(cs)SHSignature	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureType	
+c:objc(cs)SHSignature(im)initWithDataRepresentation:error:	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureInitData	
+c:objc(cs)SHSignature(py)dataRepresentation	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureDataRepresentation	
+c:objc(cs)SHSignature(py)duration	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureDuration	opaque bytes report duration 0
+c:objc(cs)SHSignatureGenerator	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureGeneratorType	
+c:objc(cs)SHSignatureGenerator(cm)generateSignatureFromAsset:completionHandler:	deferred		requires AVAsset; seed depends only on Foundation
+c:objc(cs)SHSignatureGenerator(im)appendBuffer:atTime:error:	deferred		requires AVAudioPCMBuffer/AVAudioTime; seed depends only on Foundation
+c:objc(cs)SHSignatureGenerator(im)signature	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureGeneratorSignature	empty until AV buffers are available
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SHMatch	implemented	test:full/shazamkit/tests/agent/SHMatchTests.swift#testSHMatchInitCoder	returns nil
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SHMediaItem	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemInitCoder	returns nil; supportsSecureCoding is false
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SHSignature	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureInitCoder	returns nil
+c:objc(pl)SHSessionDelegate	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionDelegateType	
+c:objc(pl)SHSessionDelegate(im)session:didFindMatch:	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionMatchCustomCatalogHit	invoked synchronously on hit
+c:objc(pl)SHSessionDelegate(im)session:didNotFindMatchForSignature:error:	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionMatchCustomCatalogMiss	nil error on local miss
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorErrorDomain	
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorErrorUserInfo	
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorErrorCode	
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodePatternMatch	
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorErrorUserInfo	
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorEquality	
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeProperty	
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorHashInto	
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorUserInfo	
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorErrorCode	
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorHashValue	
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorInitUserInfo	
+s:22UniformTypeIdentifiers6UTTypeV9ShazamKitE15shazamSignatureACvpZ	deferred		requires UniformTypeIdentifiers; seed depends only on Foundation
+s:22UniformTypeIdentifiers6UTTypeV9ShazamKitE19shazamCustomCatalogACvpZ	deferred		requires UniformTypeIdentifiers; seed depends only on Foundation
+s:9ShazamKit16SHManagedSessionC	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionType	
+s:9ShazamKit16SHManagedSessionC5StateO	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionStateCases	
+s:9ShazamKit16SHManagedSessionC5StateO12prerecordingyA2EmF	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionStateCases	
+s:9ShazamKit16SHManagedSessionC5StateO2eeoiySbAE_AEtFZ	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionStateEquality	
+s:9ShazamKit16SHManagedSessionC5StateO4hash4intoys6HasherVz_tF	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionStateHashInto	
+s:9ShazamKit16SHManagedSessionC5StateO4idleyA2EmF	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionStateCases	
+s:9ShazamKit16SHManagedSessionC5StateO8matchingyA2EmF	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionStateCases	
+s:9ShazamKit16SHManagedSessionC5StateO9hashValueSivp	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionStateHashValue	
+s:9ShazamKit16SHManagedSessionC5stateAC5StateOvp	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionState	starts idle; no microphone
+s:9ShazamKit16SHManagedSessionC6cancelyyF	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionCancel	
+s:9ShazamKit16SHManagedSessionC6resultSo9SHSessionCAAE6ResultOyYaF	declared	source:full/shazamkit/SHManagedSession.swift#result	async; fail-closed matchAttemptFailed; runner cannot await
+s:9ShazamKit16SHManagedSessionC7catalogACSo9SHCatalogC_tcfc	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionInitCatalog	
+s:9ShazamKit16SHManagedSessionC7prepareyyYaF	declared	source:full/shazamkit/SHManagedSession.swift#prepare	async; would enter prerecording; runner cannot await
+s:9ShazamKit16SHManagedSessionC7resultsSo9SHSessionCAAE7ResultsVvp	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionResults	
+s:9ShazamKit16SHManagedSessionCACycfc	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionInit	
+s:9ShazamKit9SHLibraryC	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHLibraryType	
+s:9ShazamKit9SHLibraryC11removeItemsyySaySo11SHMediaItemCGYaKF	declared	source:full/shazamkit/SHLibrary.swift#removeItems	async; throws mediaLibrarySyncFailed; runner cannot await
+s:9ShazamKit9SHLibraryC5itemsSaySo11SHMediaItemCGvp	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHLibraryItems	always empty on Linux
+s:9ShazamKit9SHLibraryC7defaultACvpZ	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHLibraryDefault	
+s:9ShazamKit9SHLibraryC8addItemsyySaySo11SHMediaItemCGYaKF	declared	source:full/shazamkit/SHLibrary.swift#addItems	async; throws mediaLibrarySyncFailed; runner cannot await
+s:SC11SHErrorCodeLeV	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorStruct	SHError value type
+s:SC11SHErrorCodeLeV11errorDomainSSvpZ	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorErrorDomain	
+s:SC11SHErrorCodeLeV13internalErrorSoAAVvpZ	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+s:SC11SHErrorCodeLeV16signatureInvalidSoAAVvpZ	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+s:SC11SHErrorCodeLeV18audioDiscontinuitySoAAVvpZ	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+s:SC11SHErrorCodeLeV18invalidAudioFormatSoAAVvpZ	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+s:SC11SHErrorCodeLeV18matchAttemptFailedSoAAVvpZ	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+s:SC11SHErrorCodeLeV20customCatalogInvalidSoAAVvpZ	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+s:SC11SHErrorCodeLeV20mediaItemFetchFailedSoAAVvpZ	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+s:SC11SHErrorCodeLeV22mediaLibrarySyncFailedSoAAVvpZ	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+s:SC11SHErrorCodeLeV23customCatalogInvalidURLSoAAVvpZ	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+s:SC11SHErrorCodeLeV24signatureDurationInvalidSoAAVvpZ	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorInequality	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SHMediaItemProperty	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyInequality	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9ShazamKit16SHManagedSessionC5StateO	implemented	test:full/shazamkit/tests/agent/SHManagedSessionTests.swift#testSHManagedSessionStateInequality	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeHashValue	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeHashInto	
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV	declared	source:full/shazamkit/SHSignature.swift#next	protocol next; runner cannot await
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV	declared	source:full/shazamkit/SHSession.swift#next	protocol next; runner cannot await
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV	declared	source:full/shazamkit/SHSignature.swift#next	protocol next; runner cannot await
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV	declared	source:full/shazamkit/SHSession.swift#next	protocol next; runner cannot await
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	declared	source:full/shazamkit/SHSignature.swift#Slices	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	declared	source:full/shazamkit/SHSession.swift#Results	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSignatureSlicesCompactMap	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSessionResultsCompactMap	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSignatureSlicesThrowingCompactMap	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSessionResultsThrowingCompactMap	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSignatureSlicesMap	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSessionResultsMap	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSignatureSlicesThrowingMap	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSessionResultsThrowingMap	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	declared	source:full/shazamkit/SHSignature.swift#Slices	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	declared	source:full/shazamkit/SHSession.swift#Results	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	declared	source:full/shazamkit/SHSignature.swift#Slices	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	declared	source:full/shazamkit/SHSession.swift#Results	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSignatureSlicesDropWhile	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSessionResultsDropWhile	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	declared	source:full/shazamkit/SHSignature.swift#Slices	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	declared	source:full/shazamkit/SHSession.swift#Results	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSignatureSlicesFilter	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSessionResultsFilter	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSignatureSlicesPrefixWhile	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSessionResultsPrefixWhile	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSignatureSlicesPrefix	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSessionResultsPrefix	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	declared	source:full/shazamkit/SHSignature.swift#Slices	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	declared	source:full/shazamkit/SHSession.swift#Results	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	declared	source:full/shazamkit/SHSignature.swift#Slices	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	declared	source:full/shazamkit/SHSession.swift#Results	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSignatureSlicesThrowingFlatMap	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSessionResultsThrowingFlatMap	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSignatureSlicesFlatMapMatchingFailure	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSessionResultsFlatMapMatchingFailure	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSignatureSlicesFlatMapNeverSegment	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSessionResultsFlatMapNeverSegment	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	not-applicable		Slices.Iterator.next() throws so Self.Failure is not Never
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSessionResultsFlatMapNeverNever	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	declared	source:full/shazamkit/SHSignature.swift#Slices	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	declared	source:full/shazamkit/SHSession.swift#Results	AsyncSequence consumer; runner cannot await
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSignatureSlicesDropFirst	synchronous combinator on empty sequence
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHAsyncSequenceTests.swift#testSessionResultsDropFirst	synchronous combinator on empty sequence
+s:Sci12_ConcurrencySQ7ElementRpzrlE8containsySbACYaKF::SYNTHESIZED::s:So11SHSignatureC9ShazamKitE6SlicesV	declared	source:full/shazamkit/SHSignature.swift#Slices	AsyncSequence consumer; runner cannot await
+s:So11SHErrorCodeV8rawValueABSgSi_tcfc	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorCodeRawValues	exact raw values from pinned macios SHErrorCode integers
+s:So11SHMediaItemC9ShazamKitE10propertiesABSDySo0aB8PropertyaypG_tcfc	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemInitProperties	
+s:So11SHMediaItemC9ShazamKitE10timeRangesSaySnySdGGvp	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemTimeRanges	
+s:So11SHMediaItemC9ShazamKitE19frequencySkewRangesSaySnySfGGvp	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemFrequencySkewRanges	
+s:So11SHMediaItemC9ShazamKitE2IDa	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemIDTypealias	
+s:So11SHMediaItemC9ShazamKitE2id10Foundation4UUIDVvp	implemented	test:full/shazamkit/tests/agent/SHMediaItemTests.swift#testSHMediaItemUUID	
+s:So11SHMediaItemC9ShazamKitE5songsSay05MusicD04SongVGvp	deferred		requires MusicKit Song; seed depends only on Foundation
+s:So11SHSignatureC9ShazamKitE6SlicesV	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureSlicesType	
+s:So11SHSignatureC9ShazamKitE6SlicesV13AsyncIteratora	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureSlicesAsyncIterator	
+s:So11SHSignatureC9ShazamKitE6SlicesV17makeAsyncIteratorAE0G0VyF	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureSlicesMakeAsyncIterator	
+s:So11SHSignatureC9ShazamKitE6SlicesV7Elementa	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureSlicesElement	
+s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureSlicesIteratorType	
+s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV4nextABSgyYaKF	declared	source:full/shazamkit/SHSignature.swift#next	async iterator; sealed runner cannot await
+s:So11SHSignatureC9ShazamKitE6SlicesV8IteratorV7Elementa	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureSlicesIteratorElement	
+s:So11SHSignatureC9ShazamKitE6slices4from8duration6strideAbCE6SlicesVSd_S2dSgtKF	implemented	test:full/shazamkit/tests/agent/SHSignatureTests.swift#testSHSignatureSlicesInvalid	non-empty windows fail closed
+s:So19SHMediaItemPropertya8rawValueABSS_tcfc	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyInitRawValue	
+s:So19SHMediaItemPropertya9ShazamKitE10timeRangesABvpZ	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+s:So19SHMediaItemPropertya9ShazamKitE19frequencySkewRangesABvpZ	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyConstants	raw values are ObjC constant names
+s:So19SHMediaItemPropertyayABSScfc	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyInitString	
+s:So9SHSessionC9ShazamKitE6ResultO	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionResultType	
+s:So9SHSessionC9ShazamKitE6ResultO5erroryAEs5Error_p_So11SHSignatureCtcAEmF	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionResultErrorCase	
+s:So9SHSessionC9ShazamKitE6ResultO5matchyAESo7SHMatchCcAEmF	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionResultMatchCase	
+s:So9SHSessionC9ShazamKitE6ResultO7noMatchyAESo11SHSignatureCcAEmF	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionResultNoMatchCase	
+s:So9SHSessionC9ShazamKitE6result4fromAbCE6ResultOSo11SHSignatureC_tYaF	declared	source:full/shazamkit/SHSession.swift#result	async one-shot match; runner cannot await
+s:So9SHSessionC9ShazamKitE7ResultsV	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionResults	empty; no microphone stream
+s:So9SHSessionC9ShazamKitE7ResultsV13AsyncIteratora	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionResultsAsyncIterator	
+s:So9SHSessionC9ShazamKitE7ResultsV17makeAsyncIteratorAE0G0VyF	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionResultsMakeAsyncIterator	
+s:So9SHSessionC9ShazamKitE7ResultsV7Elementa	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionResultsElement	
+s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionResultsIteratorType	
+s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV4nextAbCE6ResultOSgyYaF	declared	source:full/shazamkit/SHSession.swift#next	async iterator; runner cannot await
+s:So9SHSessionC9ShazamKitE7ResultsV8IteratorV7Elementa	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionResultsIteratorElement	
+s:So9SHSessionC9ShazamKitE7resultsAbCE7ResultsVvp	implemented	test:full/shazamkit/tests/agent/SHSessionTests.swift#testSHSessionResults	
+s:s12IdentifiablePsRlzCrlE2idSOvp::SYNTHESIZED::c:objc(cs)SHMediaItem	not-applicable		SHMediaItem is Identifiable with UUID ID, not ObjectIdentifier
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@SHMediaItemProperty	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyHashValue	
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SHMediaItemProperty	implemented	test:full/shazamkit/tests/agent/SHMediaItemPropertyTests.swift#testSHMediaItemPropertyHashInto	
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@SHErrorCode	implemented	test:full/shazamkit/tests/agent/SHErrorTests.swift#testSHErrorLocalizedDescription	process-local English

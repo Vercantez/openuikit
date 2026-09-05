@@ -129,6 +129,75 @@ public struct PHPickerFilter: Equatable, Hashable, Sendable {
     public func _matches(_ contentTypes: [UTType]) -> Bool {
         storage.matches(contentTypes)
     }
+
+    /// Evaluate this filter against portable Photos-lane asset attributes.
+    /// Linux classifies the stored flags; it is not Apple's Photos-library
+    /// media-subtype detector.
+    @_spi(OpenUIKitHost)
+    public func _matches(_ asset: PHPickerHostAsset) -> Bool {
+        storage.matches(asset)
+    }
+}
+
+/// Host-only Photos-lane asset record used by `PHPickerFilter._matches`
+/// and `PHPickerViewController`'s library-driven presentation. Isolated
+/// PhotosUI cannot import the Photos module.
+public struct PHPickerHostAsset: Equatable, Hashable, Sendable {
+    public enum MediaKind: Equatable, Hashable, Sendable {
+        case image
+        case video
+        case unknown
+    }
+
+    public var identifier: String
+    public var mediaKind: MediaKind
+    public var playbackStyle: PHAsset.PlaybackStyle
+    public var representsBurst: Bool
+    public var isLivePhoto: Bool
+    public var isScreenshot: Bool
+    public var isPanorama: Bool
+    public var isDepthEffect: Bool
+    public var isSpatial: Bool
+    public var isCinematic: Bool
+    public var isSlomo: Bool
+    public var isTimelapse: Bool
+    public var isScreenRecording: Bool
+    public var typeIdentifier: String
+    public var payload: Data
+
+    public init(
+        identifier: String,
+        mediaKind: MediaKind,
+        typeIdentifier: String,
+        payload: Data,
+        playbackStyle: PHAsset.PlaybackStyle = .unsupported,
+        representsBurst: Bool = false,
+        isLivePhoto: Bool = false,
+        isScreenshot: Bool = false,
+        isPanorama: Bool = false,
+        isDepthEffect: Bool = false,
+        isSpatial: Bool = false,
+        isCinematic: Bool = false,
+        isSlomo: Bool = false,
+        isTimelapse: Bool = false,
+        isScreenRecording: Bool = false
+    ) {
+        self.identifier = identifier
+        self.mediaKind = mediaKind
+        self.playbackStyle = playbackStyle
+        self.representsBurst = representsBurst
+        self.isLivePhoto = isLivePhoto
+        self.isScreenshot = isScreenshot
+        self.isPanorama = isPanorama
+        self.isDepthEffect = isDepthEffect
+        self.isSpatial = isSpatial
+        self.isCinematic = isCinematic
+        self.isSlomo = isSlomo
+        self.isTimelapse = isTimelapse
+        self.isScreenRecording = isScreenRecording
+        self.typeIdentifier = typeIdentifier
+        self.payload = payload
+    }
 }
 
 private extension PHPickerFilter.Storage {
@@ -157,6 +226,43 @@ private extension PHPickerFilter.Storage {
             return filters.allSatisfy { $0.matches(contentTypes) }
         case .not(let filter):
             return !filter.matches(contentTypes)
+        }
+    }
+
+    func matches(_ asset: PHPickerHostAsset) -> Bool {
+        switch self {
+        case .images:
+            return asset.mediaKind == .image
+        case .videos:
+            return asset.mediaKind == .video
+        case .livePhotos:
+            return asset.isLivePhoto
+        case .depthEffectPhotos:
+            return asset.isDepthEffect
+        case .screenshots:
+            return asset.isScreenshot
+        case .slomoVideos:
+            return asset.isSlomo
+        case .spatialMedia:
+            return asset.isSpatial
+        case .cinematicVideos:
+            return asset.isCinematic
+        case .timelapseVideos:
+            return asset.isTimelapse
+        case .screenRecordings:
+            return asset.isScreenRecording
+        case .bursts:
+            return asset.representsBurst
+        case .panoramas:
+            return asset.isPanorama
+        case .playbackStyle(let style):
+            return asset.playbackStyle == style
+        case .any(let filters):
+            return filters.contains { $0.matches(asset) }
+        case .all(let filters):
+            return filters.allSatisfy { $0.matches(asset) }
+        case .not(let filter):
+            return !filter.matches(asset)
         }
     }
 }

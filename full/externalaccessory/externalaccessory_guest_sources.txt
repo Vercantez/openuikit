@@ -1,0 +1,6 @@
+full/externalaccessory/EAAccessory.swift
+full/externalaccessory/EAAccessoryManager.swift
+full/externalaccessory/EABluetoothAccessoryPickerError.swift
+full/externalaccessory/EASession.swift
+full/externalaccessory/EAWiFiUnconfiguredAccessory.swift
+full/externalaccessory/ExternalAccessory.swift
