@@ -3,14 +3,17 @@ import Foundation
 /// Linux starting implementation of Apple's public CoreImage module.
 ///
 /// Real: software `CIColor` / `CIVector` / `CIImage` / `CIFilter` surface,
-/// a deterministic CPU `CILinearGradient` rasterizer (the original lane
-/// slice), filter-name registry, barcode descriptors, fail-closed detectors,
-/// and typed option / format constants.
+/// CPU `createCGImage` / `render(toBitmap:)`, named filters measured on
+/// iPhone SE 2x / iOS 26.1 (color controls, sepia, matrix, exposure, photo
+/// cubes, Gaussian blur pad 3×radius), ISO 18004 QR + Code 128, PNG
+/// round-trip and JPEG representation, filter-name registry, barcode
+/// descriptors, and typed option / format constants.
 ///
-/// Fail-closed: Metal, EAGL, IOSurface, CVPixelBuffer, AVDepthData, JPEG/HEIF
-/// /TIFF/PNG/EXR codecs, RAW decode, and CIKL/Metal kernel compilation. Those
-/// paths return nil, throw `CIRenderError.unsupported`, or yield empty
-/// results rather than fabricating GPU or Apple-service objects.
+/// Fail-closed: Metal, EAGL, IOSurface, CVPixelBuffer, AVDepthData, HEIF /
+/// TIFF / OpenEXR, RAW decode, Aztec/PDF417 generators, QR detection, and
+/// CIKL/Metal kernel compilation. Those paths return nil, throw
+/// `CIRenderError.unsupported`, or yield empty results rather than
+/// fabricating GPU or Apple-service objects.
 
 public var COREIMAGE_SUPPORTS_IOSURFACE: Int32 { 0 }
 public var COREIMAGE_SUPPORTS_OPENGLES: Int32 { 0 }

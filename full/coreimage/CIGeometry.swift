@@ -1,4 +1,10 @@
 import Foundation
+#if canImport(Glibc)
+import Glibc
+#else
+import func Darwin.cos
+import func Darwin.sin
+#endif
 
 /// Module-local CoreGraphics lookalike for the isolated Linux host gate.
 /// The clean EC2 integration build uses the real CoreGraphics types; this
@@ -92,6 +98,14 @@ public struct CGAffineTransform: Equatable, Sendable {
         self.init(a: sx, b: 0, c: 0, d: sy, tx: 0, ty: 0)
     }
 
+    /// Rotation about the origin. MEASURED iPhone SE 2x / iOS 26.1 ciprobe:
+    /// a 4×2 rect at the origin rotated +π/2 has extent (−2, 0, 2, 4).
+    public init(rotationAngle angle: CGFloat) {
+        let c = CGFloat(cos(Double(angle)))
+        let s = CGFloat(sin(Double(angle)))
+        self.init(a: c, b: s, c: -s, d: c, tx: 0, ty: 0)
+    }
+
     public func concatenating(_ other: CGAffineTransform) -> CGAffineTransform {
         CGAffineTransform(
             a: a * other.a + b * other.c,
@@ -159,3 +173,89 @@ func ciByte(_ component: CGFloat) -> UInt8 {
 func ciClamp01(_ value: CGFloat) -> CGFloat {
     max(0, min(1, value))
 }
+
+#if !os(Linux)
+/// Defining a module-local `CGImage` poisons the CoreGraphics Swift overlay on
+/// Apple compilers (C `CGRect` has no `width` / `zero`). Linux Foundation already
+/// ships the Swift geometry types. Restore the overlay the original seed used.
+extension CGPoint: @retroactive Equatable {
+    public static var zero: CGPoint { CGPoint(x: 0, y: 0) }
+    public static func == (lhs: CGPoint, rhs: CGPoint) -> Bool {
+        lhs.x == rhs.x && lhs.y == rhs.y
+    }
+}
+
+extension CGSize: @retroactive Equatable {
+    public static var zero: CGSize { CGSize(width: 0, height: 0) }
+    public static func == (lhs: CGSize, rhs: CGSize) -> Bool {
+        lhs.width == rhs.width && lhs.height == rhs.height
+    }
+}
+
+extension CGRect: @retroactive Equatable {
+    public init(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
+        self.init(origin: CGPoint(x: x, y: y), size: CGSize(width: width, height: height))
+    }
+
+    public static var zero: CGRect { CGRect(x: 0, y: 0, width: 0, height: 0) }
+    public static var null: CGRect {
+        CGRect(x: CGFloat.infinity, y: CGFloat.infinity, width: 0, height: 0)
+    }
+    public static var infinite: CGRect {
+        CGRect(
+            x: -CGFloat.greatestFiniteMagnitude / 2,
+            y: -CGFloat.greatestFiniteMagnitude / 2,
+            width: CGFloat.greatestFiniteMagnitude,
+            height: CGFloat.greatestFiniteMagnitude
+        )
+    }
+
+    public var width: CGFloat { size.width }
+    public var height: CGFloat { size.height }
+    public var minX: CGFloat { origin.x }
+    public var minY: CGFloat { origin.y }
+    public var maxX: CGFloat { origin.x + size.width }
+    public var maxY: CGFloat { origin.y + size.height }
+    public var isNull: Bool { origin.x.isInfinite && origin.x > 0 }
+    public var isInfinite: Bool { size.width >= CGFloat.greatestFiniteMagnitude / 2 }
+    public var isEmpty: Bool { isNull || size.width == 0 || size.height == 0 }
+
+    public func insetBy(dx: CGFloat, dy: CGFloat) -> CGRect {
+        CGRect(x: minX + dx, y: minY + dy, width: width - 2 * dx, height: height - 2 * dy)
+    }
+
+    public func intersection(_ other: CGRect) -> CGRect {
+        if isNull || other.isNull { return .null }
+        let x0 = max(minX, other.minX)
+        let y0 = max(minY, other.minY)
+        let x1 = min(maxX, other.maxX)
+        let y1 = min(maxY, other.maxY)
+        if x1 <= x0 || y1 <= y0 { return .null }
+        return CGRect(x: x0, y: y0, width: x1 - x0, height: y1 - y0)
+    }
+
+    public func union(_ other: CGRect) -> CGRect {
+        if isNull { return other }
+        if other.isNull { return self }
+        let x0 = min(minX, other.minX)
+        let y0 = min(minY, other.minY)
+        let x1 = max(maxX, other.maxX)
+        let y1 = max(maxY, other.maxY)
+        return CGRect(x: x0, y: y0, width: x1 - x0, height: y1 - y0)
+    }
+
+    public func contains(_ point: CGPoint) -> Bool {
+        if isNull { return false }
+        if isInfinite { return true }
+        return point.x >= minX && point.x < maxX && point.y >= minY && point.y < maxY
+    }
+
+    public static func == (lhs: CGRect, rhs: CGRect) -> Bool {
+        lhs.origin.x == rhs.origin.x
+            && lhs.origin.y == rhs.origin.y
+            && lhs.size.width == rhs.size.width
+            && lhs.size.height == rhs.size.height
+    }
+}
+#endif
+
