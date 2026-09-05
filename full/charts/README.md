@@ -131,8 +131,10 @@ Top-5 implemented evidence after repair:
 Chart / marks / `PlottableValue` / scales / axes / `ChartProxy` /
 stacking / interpolation families stay nondeferred except 3D-only
 synthesized `Chart3DContent` members on marks (`metalness` /
-`roughness` / `symbolRotation`). The 464 `not-applicable` rows are
-unchanged.
+`roughness` / `symbolRotation`). The 464 stdlib-operator
+`not-applicable` rows from this pass were later reclassified to
+`deferred` in the wave-8 ledger repair (they are not SwiftUI overlay
+IDs).
 
 ### SwiftUI port gaps (listed, not edited)
 
@@ -164,33 +166,51 @@ Before this pass (first-pass coverage after the merge-refusal repair):
 | deferred | 673 |
 | not-applicable | 464 |
 
-After this pass:
+After the wave-8 implementation (`65361c52`, merge-refused):
 
-| status | wave 8 |
+| status | wave 8 refused |
 | --- | ---: |
 | implemented | 689 |
 | declared | 6845 |
 | deferred | 660 |
 | not-applicable | 1280 |
 
-Nondeferred (`implemented` + `declared`) is 7534, above the 4737 floor.
-All 272 `VectorizedChartContent` census rows are `implemented` with
-per-method tests that call the identifier on every conforming plot
-type. SwiftUI `View` overlay re-exports (`s:7SwiftUI4View…`) are
-`not-applicable` with the note `SwiftUI cross-import overlay; owned by
-the SwiftUI lane` — never `implemented`.
+After the ledger repair (this revision):
 
-Top-5 implemented evidence after this pass:
+| status | after repair |
+| --- | ---: |
+| implemented | 673 |
+| declared | 6861 |
+| deferred | 1124 |
+| not-applicable | 816 |
+
+Nondeferred (`implemented` + `declared`) is 7534, above the 4737 floor.
+All 272 `VectorizedChartContent` census rows stay `implemented` with
+per-overload tests that call that identifier on every conforming plot
+type. SwiftUI `View` overlay re-exports (`s:7SwiftUI4View…`) stay
+`not-applicable` with the note `SwiftUI cross-import overlay; owned by
+the SwiftUI lane` — never `implemented`. The 464 stdlib
+Comparable/Equatable/Integer operators that had been `not-applicable`
+(for example `s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:10Foundation4DateV`)
+are now `deferred`: Charts does not redeclare those operators. Sixteen
+KeyPath plot-init overloads with no product declaration and no test
+were reclassified to `declared` (`source:full/charts/ChartsSurface.swift#BarPlot`
+and the sibling plot types).
+
+Top-5 implemented evidence after repair:
 
 | rows | share | test |
 | ---: | ---: | --- |
-| 45 | 6.5% | `ChartsWave8Tests.swift#testVectorizedAccessibilityLabel` |
-| 45 | 6.5% | `ChartsWave8Tests.swift#testVectorizedAccessibilityValue` |
-| 38 | 5.5% | `ChartsTests.swift#testPrimitivePlottable` |
-| 30 | 4.4% | `ChartsWave8Tests.swift#testVectorizedSymbolSizeKeyPath` |
-| 30 | 4.4% | `ChartsWave8Tests.swift#testVectorizedAccessibilityHiddenAndIdentifier` |
+| 38 | 5.6% | `ChartsTests.swift#testPrimitivePlottable` |
+| 26 | 3.9% | `ChartsTests.swift#testBinsAndRanges` |
+| 15 | 2.2% | `ChartsWave8Tests.swift#testVectorizedSymbolSizeBy` |
+| 15 | 2.2% | `ChartsWave8Tests.swift#testVectorizedSymbolSizeAreaKeyPath` |
+| 15 | 2.2% | `ChartsWave8Tests.swift#testVectorizedSymbolSizeCGSizeKeyPath` |
 
-No single non-catalog test exceeds 40% of implemented rows.
+No single non-catalog test exceeds 40% of implemented rows (cap 269).
+Accessibility, symbol-size, `PlottableProjection` factory, and extra
+plot-init families each cite a focused `test*` that constructs that
+overload.
 
 ### Public surface added in this pass
 

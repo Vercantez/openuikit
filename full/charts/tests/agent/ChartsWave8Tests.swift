@@ -544,7 +544,7 @@ func testVectorizedSymbolSizeBy() {
     _ = contents.13.symbolSize(by: size)
 }
 
-func testVectorizedSymbolSizeKeyPath() {
+func testVectorizedSymbolSizeAreaKeyPath() {
     let rows = chartVectorizedFixture()
     let contents = chartVectorizedContents(rows)
     _ = contents.0.symbolSize(\.area)
@@ -561,6 +561,11 @@ func testVectorizedSymbolSizeKeyPath() {
     _ = contents.11.symbolSize(\.area)
     _ = contents.12.symbolSize(\.area)
     _ = contents.13.symbolSize(\.area)
+}
+
+func testVectorizedSymbolSizeCGSizeKeyPath() {
+    let rows = chartVectorizedFixture()
+    let contents = chartVectorizedContents(rows)
     _ = contents.0.symbolSize(\.size)
     _ = contents.1.symbolSize(\.size)
     _ = contents.2.symbolSize(\.size)
@@ -616,7 +621,7 @@ func testVectorizedForegroundStyleKeyPath() {
     _ = contents.13.foregroundStyle(\.color)
 }
 
-func testVectorizedAccessibilityLabel() {
+func testVectorizedAccessibilityLabelKey() {
     let rows = chartVectorizedFixture()
     let contents = chartVectorizedContents(rows)
     _ = contents.0.accessibilityLabel(\.labelKey)
@@ -633,6 +638,11 @@ func testVectorizedAccessibilityLabel() {
     _ = contents.11.accessibilityLabel(\.labelKey)
     _ = contents.12.accessibilityLabel(\.labelKey)
     _ = contents.13.accessibilityLabel(\.labelKey)
+}
+
+func testVectorizedAccessibilityLabelText() {
+    let rows = chartVectorizedFixture()
+    let contents = chartVectorizedContents(rows)
     _ = contents.0.accessibilityLabel(\.labelText)
     _ = contents.1.accessibilityLabel(\.labelText)
     _ = contents.2.accessibilityLabel(\.labelText)
@@ -647,6 +657,11 @@ func testVectorizedAccessibilityLabel() {
     _ = contents.11.accessibilityLabel(\.labelText)
     _ = contents.12.accessibilityLabel(\.labelText)
     _ = contents.13.accessibilityLabel(\.labelText)
+}
+
+func testVectorizedAccessibilityLabelString() {
+    let rows = chartVectorizedFixture()
+    let contents = chartVectorizedContents(rows)
     _ = contents.0.accessibilityLabel(\.name)
     _ = contents.1.accessibilityLabel(\.name)
     _ = contents.2.accessibilityLabel(\.name)
@@ -663,7 +678,7 @@ func testVectorizedAccessibilityLabel() {
     _ = contents.13.accessibilityLabel(\.name)
 }
 
-func testVectorizedAccessibilityValue() {
+func testVectorizedAccessibilityValueKey() {
     let rows = chartVectorizedFixture()
     let contents = chartVectorizedContents(rows)
     _ = contents.0.accessibilityValue(\.labelKey)
@@ -680,6 +695,11 @@ func testVectorizedAccessibilityValue() {
     _ = contents.11.accessibilityValue(\.labelKey)
     _ = contents.12.accessibilityValue(\.labelKey)
     _ = contents.13.accessibilityValue(\.labelKey)
+}
+
+func testVectorizedAccessibilityValueText() {
+    let rows = chartVectorizedFixture()
+    let contents = chartVectorizedContents(rows)
     _ = contents.0.accessibilityValue(\.labelText)
     _ = contents.1.accessibilityValue(\.labelText)
     _ = contents.2.accessibilityValue(\.labelText)
@@ -694,6 +714,11 @@ func testVectorizedAccessibilityValue() {
     _ = contents.11.accessibilityValue(\.labelText)
     _ = contents.12.accessibilityValue(\.labelText)
     _ = contents.13.accessibilityValue(\.labelText)
+}
+
+func testVectorizedAccessibilityValueString() {
+    let rows = chartVectorizedFixture()
+    let contents = chartVectorizedContents(rows)
     _ = contents.0.accessibilityValue(\.identifier)
     _ = contents.1.accessibilityValue(\.identifier)
     _ = contents.2.accessibilityValue(\.identifier)
@@ -710,7 +735,7 @@ func testVectorizedAccessibilityValue() {
     _ = contents.13.accessibilityValue(\.identifier)
 }
 
-func testVectorizedAccessibilityHiddenAndIdentifier() {
+func testVectorizedAccessibilityHidden() {
     let rows = chartVectorizedFixture()
     let contents = chartVectorizedContents(rows)
     _ = contents.0.accessibilityHidden(\.hidden)
@@ -727,6 +752,11 @@ func testVectorizedAccessibilityHiddenAndIdentifier() {
     _ = contents.11.accessibilityHidden(\.hidden)
     _ = contents.12.accessibilityHidden(\.hidden)
     _ = contents.13.accessibilityHidden(\.hidden)
+}
+
+func testVectorizedAccessibilityIdentifier() {
+    let rows = chartVectorizedFixture()
+    let contents = chartVectorizedContents(rows)
     _ = contents.0.accessibilityIdentifier(\.identifier)
     _ = contents.1.accessibilityIdentifier(\.identifier)
     _ = contents.2.accessibilityIdentifier(\.identifier)
@@ -855,36 +885,67 @@ func testVectorizedChartContentProtocol() {
     let _: RectanglePlot<VectorizedRectanglePlotContent<[Int]>>.DataElement.Type = Int.self
 }
 
-func testPlottableProjectionKeyPathExtract() {
-    struct Row { var name: String; var value: Int; var day: Date }
-    let row = Row(name: "A", value: 2, day: Date(timeIntervalSinceReferenceDate: 8))
+func testPlottableProjectionType() {
+    struct Row { var name: String; var value: Int }
+    let row = Row(name: "A", value: 2)
     let projection = PlottableProjection<Row, String>.value("x", \.name)
     precondition(projection.value(from: row) == "A")
     let numeric = PlottableProjection<Row, Int>.value("y", \.value)
     precondition(numeric.value(from: row) == 2)
-    _ = PlottableProjection<Row, Int>.value("y", 3)
-    _ = PlottableProjection<Row, Int>.value(Text("y"), 1)
-    _ = PlottableProjection<Row, Int>.value(LocalizedStringKey("y"), 1)
-    _ = PlottableProjection<Row, Int>.value(LocalizedStringResource("y"), 1)
-    _ = PlottableProjection<Row, Int>.value("y", 1, 4)
-    _ = PlottableProjection<Row, Int>.value(Text("y"), 1, 4)
-    _ = PlottableProjection<Row, Int>.value(LocalizedStringKey("y"), 1, 4)
-    _ = PlottableProjection<Row, Int>.value(LocalizedStringResource("y"), 1, 4)
-    _ = PlottableProjection<Row, Int>.value("y", \.value, \.value)
-    _ = PlottableProjection<Row, Int>.value(Text("y"), \.value, \.value)
-    _ = PlottableProjection<Row, Int>.value(LocalizedStringKey("y"), \.value, \.value)
-    _ = PlottableProjection<Row, Int>.value(LocalizedStringResource("y"), \.value, \.value)
-    _ = PlottableProjection<Row, Int>.value(Text("y"), \.value)
-    _ = PlottableProjection<Row, Int>.value(LocalizedStringKey("y"), \.value)
-    _ = PlottableProjection<Row, Int>.value(LocalizedStringResource("y"), \.value)
-    _ = PlottableProjection<Row, Date>.value("day", \.day, unit: .day)
-    _ = PlottableProjection<Row, Date>.value(Text("day"), \.day, unit: .day)
-    _ = PlottableProjection<Row, Date>.value(LocalizedStringKey("day"), \.day, unit: .day)
-    _ = PlottableProjection<Row, Date>.value(LocalizedStringResource("day"), \.day, unit: .day)
-    _ = PlottableProjection<Row, Date>.value("day", row.day, unit: .day)
-    _ = PlottableProjection<Row, Date>.value(Text("day"), row.day, unit: .day)
-    _ = PlottableProjection<Row, Date>.value(LocalizedStringKey("day"), row.day, unit: .day)
-    _ = PlottableProjection<Row, Date>.value(LocalizedStringResource("day"), row.day, unit: .day)
+}
+
+func testPlottableProjectionConstantValue() {
+    struct Row { var name: String; var value: Int }
+    precondition(PlottableProjection<Row, Int>.value("y", 3).value(from: Row(name: "A", value: 0)) == 3)
+    precondition(PlottableProjection<Row, Int>.value(Text("y"), 1).value(from: Row(name: "A", value: 0)) == 1)
+    precondition(PlottableProjection<Row, Int>.value(LocalizedStringKey("y"), 1).value(from: Row(name: "A", value: 0)) == 1)
+    precondition(PlottableProjection<Row, Int>.value(LocalizedStringResource("y"), 1).value(from: Row(name: "A", value: 0)) == 1)
+}
+
+func testPlottableProjectionKeyPathValue() {
+    struct Row { var name: String; var value: Int }
+    let row = Row(name: "A", value: 2)
+    precondition(PlottableProjection<Row, Int>.value("y", \.value).value(from: row) == 2)
+    precondition(PlottableProjection<Row, Int>.value(Text("y"), \.value).value(from: row) == 2)
+    precondition(PlottableProjection<Row, Int>.value(LocalizedStringKey("y"), \.value).value(from: row) == 2)
+    precondition(PlottableProjection<Row, Int>.value(LocalizedStringResource("y"), \.value).value(from: row) == 2)
+}
+
+func testPlottableProjectionRangeConstant() {
+    struct Row { var name: String; var value: Int }
+    let row = Row(name: "A", value: 2)
+    precondition(PlottableProjection<Row, Int>.value("y", 1, 4).value(from: row) == 1)
+    precondition(PlottableProjection<Row, Int>.value(Text("y"), 1, 4).value(from: row) == 1)
+    precondition(PlottableProjection<Row, Int>.value(LocalizedStringKey("y"), 1, 4).value(from: row) == 1)
+    precondition(PlottableProjection<Row, Int>.value(LocalizedStringResource("y"), 1, 4).value(from: row) == 1)
+}
+
+func testPlottableProjectionRangeKeyPath() {
+    struct Row { var name: String; var value: Int }
+    let row = Row(name: "A", value: 2)
+    precondition(PlottableProjection<Row, Int>.value("y", \.value, \.value).value(from: row) == 2)
+    precondition(PlottableProjection<Row, Int>.value(Text("y"), \.value, \.value).value(from: row) == 2)
+    precondition(PlottableProjection<Row, Int>.value(LocalizedStringKey("y"), \.value, \.value).value(from: row) == 2)
+    precondition(PlottableProjection<Row, Int>.value(LocalizedStringResource("y"), \.value, \.value).value(from: row) == 2)
+}
+
+func testPlottableProjectionDateUnitKeyPath() {
+    struct Row { var day: Date }
+    let row = Row(day: Date(timeIntervalSinceReferenceDate: 8))
+    precondition(PlottableProjection<Row, Date>.value("day", \.day, unit: .day).value(from: row) == row.day)
+    precondition(PlottableProjection<Row, Date>.value(Text("day"), \.day, unit: .day).value(from: row) == row.day)
+    precondition(PlottableProjection<Row, Date>.value(LocalizedStringKey("day"), \.day, unit: .day).value(from: row) == row.day)
+    precondition(PlottableProjection<Row, Date>.value(LocalizedStringResource("day"), \.day, unit: .day).value(from: row) == row.day)
+}
+
+func testPlottableProjectionDateUnitConstant() {
+    struct Row { var day: Date }
+    let day = Date(timeIntervalSinceReferenceDate: 8)
+    let row = Row(day: Date(timeIntervalSinceReferenceDate: 0))
+    precondition(PlottableProjection<Row, Date>.value("day", day, unit: .day).value(from: row) == day)
+    precondition(PlottableProjection<Row, Date>.value(Text("day"), day, unit: .day).value(from: row) == day)
+    precondition(PlottableProjection<Row, Date>.value(LocalizedStringKey("day"), day, unit: .day).value(from: row) == day)
+    precondition(PlottableProjection<Row, Date>.value(LocalizedStringResource("day"), day, unit: .day).value(from: row) == day)
 }
 
 func testVectorizedBarPlotExtraInits() {
@@ -900,22 +961,35 @@ func testVectorizedBarPlotExtraInits() {
     precondition(BarPlot(rows, xStart: y, xEnd: y, y: y).chartPlotRecords.first?.y == 1)
 }
 
-func testVectorizedLineAreaPointExtraInits() {
+func testVectorizedLinePlotExtraInits() {
+    let rows = chartVectorizedFixture()
+    let x = PlottableProjection<ChartVectorizedRow, String>.value("x", \.name)
+    let y = PlottableProjection<ChartVectorizedRow, Int>.value("y", \.value)
+    let series = PlottableProjection<ChartVectorizedRow, String>.value("s", \.series)
+    precondition(LinePlot(rows, x: x, y: y, series: series).chartPlotRecords.first?.series == "s")
+}
+
+func testVectorizedAreaPlotExtraInits() {
     let rows = chartVectorizedFixture()
     let x = PlottableProjection<ChartVectorizedRow, String>.value("x", \.name)
     let y = PlottableProjection<ChartVectorizedRow, Int>.value("y", \.value)
     let series = PlottableProjection<ChartVectorizedRow, String>.value("s", \.series)
     let lo = PlottableProjection<ChartVectorizedRow, Int>.value("lo", \.lo)
     let hi = PlottableProjection<ChartVectorizedRow, Int>.value("hi", \.hi)
-    precondition(LinePlot(rows, x: x, y: y, series: series).chartPlotRecords.first?.series == "s")
     precondition(AreaPlot(rows, x: x, y: y, series: series, stacking: .center).chartPlotRecords.first?.stacking == .center)
     precondition(AreaPlot(rows, x: x, yStart: lo, yEnd: hi).chartPlotRecords.first?.yEnd == 4)
     precondition(AreaPlot(rows, xStart: y, xEnd: y, y: y).chartPlotRecords.first?.y == 1)
+}
+
+func testVectorizedPointPlotExtraInits() {
+    let rows = chartVectorizedFixture()
+    let x = PlottableProjection<ChartVectorizedRow, String>.value("x", \.name)
+    let y = PlottableProjection<ChartVectorizedRow, Int>.value("y", \.value)
     precondition(PointPlot(rows, x: 3, y: y).chartPlotRecords.first?.x == 3)
     precondition(PointPlot(rows, x: x, y: 8).chartPlotRecords.first?.y == 8)
 }
 
-func testVectorizedRuleRectangleSectorExtraInits() {
+func testVectorizedRulePlotExtraInits() {
     let rows = chartVectorizedFixture()
     let x = PlottableProjection<ChartVectorizedRow, String>.value("x", \.name)
     let y = PlottableProjection<ChartVectorizedRow, Int>.value("y", \.value)
@@ -925,9 +999,22 @@ func testVectorizedRuleRectangleSectorExtraInits() {
     precondition(RulePlot(rows, x: 5, yStart: lo, yEnd: hi).chartPlotRecords.first?.x == 5)
     precondition(RulePlot(rows, xStart: y, xEnd: y, y: 2).chartPlotRecords.first?.y == 2)
     precondition(RulePlot(rows, xStart: 0, xEnd: 10, y: y).chartPlotRecords.first?.xEnd == 10)
+}
+
+func testVectorizedRectanglePlotExtraInits() {
+    let rows = chartVectorizedFixture()
+    let x = PlottableProjection<ChartVectorizedRow, String>.value("x", \.name)
+    let y = PlottableProjection<ChartVectorizedRow, Int>.value("y", \.value)
+    let lo = PlottableProjection<ChartVectorizedRow, Int>.value("lo", \.lo)
+    let hi = PlottableProjection<ChartVectorizedRow, Int>.value("hi", \.hi)
     precondition(RectanglePlot(rows, x: x, y: y).chartPlotRecords.first?.kind == .rectangle)
     precondition(RectanglePlot(rows, x: x, yStart: lo, yEnd: hi).chartPlotRecords.first?.yEnd == 4)
     precondition(RectanglePlot(rows, xStart: y, xEnd: y, y: y).chartPlotRecords.first?.y == 1)
+}
+
+func testVectorizedSectorPlotExtraInits() {
+    let rows = chartVectorizedFixture()
+    let y = PlottableProjection<ChartVectorizedRow, Int>.value("y", \.value)
     precondition(
         SectorPlot(rows, angle: y, innerRadius: .automatic, outerRadius: .automatic, angularInset: 1)
             .chartPlotRecords.first?.kind == .sector
