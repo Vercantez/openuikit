@@ -579,6 +579,21 @@ open class INCancelWorkoutIntentResponse: INIntentResponse, @unchecked Sendable 
     }
 }
 
+open class INCarHeadUnit: NSObject, @unchecked Sendable {
+    public convenience init(bluetoothIdentifier: String?, iAP2Identifier: String?) {
+        self.init()
+        self.bluetoothIdentifier = bluetoothIdentifier
+        self.iAP2Identifier = iAP2Identifier
+    }
+    open var bluetoothIdentifier: String? = nil
+    open var iAP2Identifier: String? = nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
+    }
+    public required override init() { super.init() }
+}
+
 open class INCar: NSObject, @unchecked Sendable {
     public struct ChargingConnectorType: RawRepresentable, Hashable, Sendable {
         public let rawValue: String
@@ -595,20 +610,7 @@ open class INCar: NSObject, @unchecked Sendable {
         public static let tesla = ChargingConnectorType(rawValue: "tesla")
     }
 
-    open class HeadUnit: NSObject, @unchecked Sendable {
-        public convenience init(bluetoothIdentifier: String?, iAP2Identifier: String?) {
-            self.init()
-            self.bluetoothIdentifier = bluetoothIdentifier
-            self.iAP2Identifier = iAP2Identifier
-        }
-        open var bluetoothIdentifier: String? = nil
-        open var iAP2Identifier: String? = nil
-        public required convenience init?(coder: NSCoder) {
-            self.init()
-            inLinuxApplyCoder(self, coder)
-        }
-        public required override init() { super.init() }
-    }
+    public typealias HeadUnit = INCarHeadUnit
 
     open func maximumPower(for chargingConnectorType: INCar.ChargingConnectorType) -> Measurement<UnitPower>? { nil }
     open func setMaximumPower(_ power: Measurement<UnitPower>, for chargingConnectorType: INCar.ChargingConnectorType) { }

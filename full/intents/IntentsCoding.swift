@@ -45,7 +45,7 @@ func inLinuxApplyCoder(_ object: NSObject, _ coder: NSCoder) {
         value.displayName = inDecodeString(coder, "displayName")
         return
     }
-    if let value = object as? INCar.HeadUnit {
+    if let value = object as? INCarHeadUnit {
         value.bluetoothIdentifier = inDecodeString(coder, "bluetoothIdentifier")
         value.iAP2Identifier = inDecodeString(coder, "iAP2Identifier")
         return
@@ -275,7 +275,7 @@ extension INCar: NSSecureCoding {
     }
 }
 
-extension INCar.HeadUnit: NSSecureCoding {
+extension INCarHeadUnit: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
         inLinuxEncodeStrings(coder, [

@@ -612,7 +612,9 @@ func testNSCodingRoundTrips() {
     car.make = "Open"
     precondition(depthArchiveRoundTrip(car).make == "Open")
     let head = INCar.HeadUnit(bluetoothIdentifier: "bt", iAP2Identifier: "iap")
-    precondition(depthArchiveRoundTrip(head).bluetoothIdentifier == "bt")
+    let restoredHead = depthArchiveRoundTrip(head)
+    precondition(restoredHead.bluetoothIdentifier == "bt")
+    precondition(restoredHead.iAP2Identifier == "iap")
     let amount = INCurrencyAmount(amount: NSDecimalNumber(value: 5), currencyCode: "USD")
     precondition(depthArchiveRoundTrip(amount).currencyCode == "USD")
     var start = DateComponents()
