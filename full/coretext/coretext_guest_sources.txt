@@ -3,7 +3,9 @@ full/coretext/CTBridging.swift
 full/coretext/CTConstants.swift
 full/coretext/CTEnums.swift
 full/coretext/CTFont.swift
+full/coretext/CTGraphics.swift
 full/coretext/CTLayout.swift
+full/coretext/CTMetricsTable.swift
 full/coretext/CTOptionSets.swift
 full/coretext/CTSFNT.swift
 full/coretext/CTStringKeys.swift

@@ -8,6 +8,7 @@ full/cloudkit/CKRecord.swift
 full/cloudkit/CKRecordValue.swift
 full/cloudkit/CKRecordZone.swift
 full/cloudkit/CKShare.swift
+full/cloudkit/CKSimulatedStore.swift
 full/cloudkit/CKSubscription.swift
 full/cloudkit/CKUserIdentity.swift
 full/cloudkit/CloudKit.swift

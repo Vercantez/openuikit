@@ -174,6 +174,8 @@ public class NWProtocolFramer: NWProtocol {
             case interval(TimeInterval)
         }
 
+        public init() {}
+
         public func writeOutput(data: Data) { _ = data }
         public func passInput(to protocol: NWProtocolDefinition) { _ = `protocol` }
         public func markReady() {}

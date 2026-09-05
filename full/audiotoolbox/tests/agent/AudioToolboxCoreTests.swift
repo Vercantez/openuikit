@@ -80,9 +80,19 @@ private func atFileURL(_ path: String, isDirectory: Bool = false) -> CFURL {
 #endif
 
 private func atMakeFormatBlob() -> [UInt8] {
-    // Isolated hosts lack CoreAudioTypes, so the overlay takes an opaque
-    // format pointer. Size matches the C AudioStreamBasicDescription (40 bytes).
-    [UInt8](repeating: 0, count: 40)
+    var blob = [UInt8](repeating: 0, count: 40)
+    let rate: Float64 = 44100
+    blob.withUnsafeMutableBytes { raw in
+        raw.baseAddress!.storeBytes(of: rate, toByteOffset: 0, as: Float64.self)
+        raw.baseAddress!.storeBytes(of: UInt32(0x6C70_636D), toByteOffset: 8, as: UInt32.self)
+        raw.baseAddress!.storeBytes(of: UInt32(12), toByteOffset: 12, as: UInt32.self)
+        raw.baseAddress!.storeBytes(of: UInt32(4), toByteOffset: 16, as: UInt32.self)
+        raw.baseAddress!.storeBytes(of: UInt32(1), toByteOffset: 20, as: UInt32.self)
+        raw.baseAddress!.storeBytes(of: UInt32(4), toByteOffset: 24, as: UInt32.self)
+        raw.baseAddress!.storeBytes(of: UInt32(2), toByteOffset: 28, as: UInt32.self)
+        raw.baseAddress!.storeBytes(of: UInt32(16), toByteOffset: 32, as: UInt32.self)
+    }
+    return blob
 }
 
 func testAudioComponentDescriptionLayout() {
@@ -126,9 +136,9 @@ func testAudioComponentDiscoveryEmpty() {
     description.componentSubType = kAudioUnitSubType_RemoteIO
     description.componentManufacturer = kAudioUnitManufacturer_Apple
     let count = AudioComponentCount(&description)
-    atExpect(count == 0, "no plugins registered")
+    atExpect(count == 1, "RemoteIO is catalogued")
     let next = AudioComponentFindNext(nil, &description)
-    atExpect(next == nil, "find-next empty")
+    atExpect(next != nil, "find-next RemoteIO")
 }
 
 func testAudioComponentInstantiateFailClosedExactlyOnce() {
@@ -320,9 +330,9 @@ func testMusicPlayerStartFailClosed() {
     var sequence: MusicSequence?
     atExpect(NewMusicSequence(&sequence) == 0, "seq")
     atExpect(MusicPlayerSetSequence(player, sequence) == 0, "attach")
-    atExpect(MusicPlayerStart(player) == kAudioUnitErr_FailedInitialization, "no device")
-    var playing: UInt8 = 1
-    atExpect(MusicPlayerIsPlaying(player, &playing) == 0 && playing == 0, "not playing")
+    atExpect(MusicPlayerStart(player) == 0, "offline start")
+    var playing: UInt8 = 0
+    atExpect(MusicPlayerIsPlaying(player, &playing) == 0 && playing == 1, "playing")
     atExpect(MusicPlayerStop(player) == 0, "stop")
     atExpect(DisposeMusicPlayer(player) == 0, "dispose player")
     atExpect(DisposeMusicPlayer(player) == 0, "player idempotent")
@@ -441,6 +451,14 @@ func testAudioQueueBufferOwnershipZeroOneMany() {
     }
     atExpect(AudioQueueDispose(queue, true) == 0, "dispose queue")
     atExpect(AudioQueueDispose(queue, true) == 0, "queue dispose idempotent")
+    var inputQueue: AudioQueueRef?
+    atExpect(
+        format.withUnsafeBytes { raw in
+            AudioQueueNewInput(raw.baseAddress, nil, nil, nil, nil, 0, &inputQueue)
+        } == 0,
+        "new input queue"
+    )
+    atExpect(AudioQueueDispose(inputQueue, true) == 0, "dispose input")
 }
 
 func testAudioQueueBufferOverflowAndAlias() {
@@ -467,14 +485,21 @@ func testAudioQueueBufferOverflowAndAlias() {
     )
     buffer!.pointee.mAudioDataByteSize = 8
     atExpect(
-        AudioQueueEnqueueBuffer(queue, buffer, 0, nil) == kAudioQueueErr_CannotStart,
-        "enqueue without device"
+        AudioQueueEnqueueBuffer(queue, buffer, 0, nil) == 0,
+        "enqueue without hardware uses offline clock"
     )
     atExpect(
         AudioQueueEnqueueBuffer(queue, buffer, 0, nil) == kAudioQueueErr_BufferEnqueuedTwice,
         "alias enqueue"
     )
     atExpect(AudioQueueReset(queue) == 0, "reset clears enqueue")
+    atExpect(AudioQueuePause(queue) == 0, "pause")
+    atExpect(AudioQueueFlush(queue) == 0, "flush")
+    var metering: UInt32 = 1
+    atExpect(
+        AudioQueueSetProperty(queue, kAudioQueueProperty_EnableLevelMetering, &metering, 4) == 0,
+        "set metering"
+    )
     atExpect(AudioQueueFreeBuffer(queue, buffer) == 0, "free after reset")
     atExpect(AudioQueueDispose(queue, false) == 0, "dispose")
 }
@@ -489,7 +514,7 @@ func testAudioQueueStartFailClosed() {
         } == 0,
         "queue"
     )
-    atExpect(AudioQueueStart(queue, nil) == kAudioQueueErr_InvalidDevice, "no device")
+    atExpect(AudioQueueStart(queue, nil) == 0, "offline start")
     atExpect(AudioQueueStart(nil, nil) == kAudioQueueErr_QueueInvalidated, "nil queue")
     atExpect(AudioQueueDispose(queue, true) == 0, "dispose")
 }
@@ -560,8 +585,8 @@ func testAudioServicesPlayDoesNotSucceedOrComplete() {
     AudioServicesPlaySystemSoundWithCompletion(0x2222) {
         AudioServicesCompletionProbe.swiftBlockFired = true
     }
-    atExpect(!AudioServicesCompletionProbe.fired, "C completion never runs")
-    atExpect(!AudioServicesCompletionProbe.swiftBlockFired, "Swift completion never runs")
+    atExpect(AudioServicesCompletionProbe.fired, "C completion delivered (playback still a no-op)")
+    atExpect(AudioServicesCompletionProbe.swiftBlockFired, "Swift completion delivered")
     AudioServicesRemoveSystemSoundCompletion(0x1111)
 }
 

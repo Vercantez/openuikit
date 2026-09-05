@@ -71,6 +71,41 @@ let swiftUICombineDependencies: [Target.Dependency] = [
     .target(name: "Combine", condition: .when(platforms: [.linux])),
 ]
 
+// Linux-only C target that pumps corelibs XCTest's CFRunLoop so the ink
+// and selector lists do not stall in awaitUsingExpectation → ppoll
+// (swift-corelibs-xctest#504). MEASURED uikit-linux Swift 6.2.4: ink 3/5
+// hung at timeout 20 s; 10 ms non-main DISPATCH_SOURCE_TYPE_TIMER +
+// dispatch_async_f onto _dispatch_main_q made ink 20/20 and selector 20/20
+// (docs/agent_reports/linux-xctest.md). Empty on Darwin so the test count
+// is unchanged. Package.swift is evaluated on the build host.
+#if os(Linux)
+let linuxXCTestSupportTargets: [Target] = [
+    .target(name: "CLinuxXCTestSupport", publicHeadersPath: "include"),
+]
+let openUIKitTestDeps: [Target.Dependency] = [
+    "OpenUIKit", "UIKit", "ConformanceApps",
+    "SafariServices", "MessageUI", "LinkPresentation",
+    "CLinuxXCTestSupport",
+]
+let openUIKitCTestDeps: [Target.Dependency] = [
+    "OpenUIKitC", "OpenUIKit", "COpenUIKitABI",
+    "CLinuxXCTestSupport",
+]
+let swiftUITestLinuxDeps: [Target.Dependency] = [
+    "CLinuxXCTestSupport",
+]
+#else
+let linuxXCTestSupportTargets: [Target] = []
+let openUIKitTestDeps: [Target.Dependency] = [
+    "OpenUIKit", "UIKit", "ConformanceApps",
+    "SafariServices", "MessageUI", "LinkPresentation",
+]
+let openUIKitCTestDeps: [Target.Dependency] = [
+    "OpenUIKitC", "OpenUIKit", "COpenUIKitABI",
+]
+let swiftUITestLinuxDeps: [Target.Dependency] = []
+#endif
+
 // Linux 6.2.4 XCTest cannot invoke `@MainActor` SwiftUI test methods
 // (discovery casts them to `() throws -> Void` and traps; linux-trial).
 // Package.swift is evaluated on the build host: the Linux image compiles a
@@ -83,7 +118,7 @@ let swiftUITestTarget: Target = .testTarget(
         "OpenUIKit",
         "Symbols",
         "DeveloperToolsSupport",
-    ] + swiftUICombineDependencies,
+    ] + swiftUICombineDependencies + swiftUITestLinuxDeps,
     sources: ["SwiftUILinuxStub.swift"],
     swiftSettings: [
         .unsafeFlags([
@@ -161,14 +196,17 @@ let coreProducts: [Product] = [
     .library(name: "OpenCoreGraphics", targets: ["OpenCoreGraphics"]),
     // Combine is a product so an ingested SwiftPM package can
     // `import Combine` on Linux (17/20 ladder apps; 357 files under
-    // local Package.swift trees, scratch/ladder-corpus 2026-09-05).
-    // Darwin dependents keep the SDK module via
+    // local Package.swift trees, scratch/ladder-corpus 2026-09-05,
+    // docs/agent_reports/combine-product.md; MEASURED focus-ios
+    // a2832521 Blockzilla: 15 files, AppDelegate.swift:8,
+    // docs/agent_reports/focus-e2e.md). Darwin dependents keep the
+    // SDK module via
     // `.product(..., condition: .when(platforms: [.linux]))`.
     .library(name: "Combine", targets: ["Combine"]),
     // Logger / OSLog / os_log / OSAllocatedUnfairLock / os_signpost.
     // 13/20 ladder apps `import os` (202 files); call shapes in
     // Sources/os/*.swift. Darwin dependents keep the SDK `os` the
-    // same way Combine does.
+    // same way Combine does (docs/agent_reports/combine-product.md).
     .library(name: "os", targets: ["os"]),
     .executable(name: "openrender", targets: ["openrender"]),
     .executable(name: "openhost", targets: ["openhost"]),
@@ -188,6 +226,19 @@ let frameworkProducts: [Product] = [
     .library(name: "SafariServices", targets: ["SafariServices"]),
     .library(name: "MessageUI", targets: ["MessageUI"]),
     .library(name: "LinkPresentation", targets: ["LinkPresentation"]),
+    // Harness stubs RealAppProbe already compiles (Focus Settings).
+    // Publishing them lets an ingested Blockzilla `import Glean` on
+    // Linux without a second target of the same name (SwiftPM refuses
+    // Glean/Intents/Onboarding/Licenses/DesignSystem in both packages;
+    // MEASURED focus-e2e wave1). Darwin dependents keep linux-only
+    // `.product(..., condition: .when(platforms: [.linux]))`. These
+    // are not Mozilla Glean / the SDK Intents framework.
+    .library(name: "Glean", targets: ["Glean"]),
+    .library(name: "Intents", targets: ["Intents"]),
+    .library(name: "IntentsUI", targets: ["IntentsUI"]),
+    .library(name: "Onboarding", targets: ["Onboarding"]),
+    .library(name: "Licenses", targets: ["Licenses"]),
+    .library(name: "DesignSystem", targets: ["DesignSystem"]),
 ]
 
 let coreTargets: [Target] = [
@@ -357,7 +408,7 @@ let coreTargets: [Target] = [
                 "SwiftUI",
                 .target(name: "Combine", condition: .when(platforms: [.linux])),
             ],
-            exclude: ["FocusModules", "HackersModules"],
+            exclude: ["FocusModules", "HackersModules", "Focus/script.json"],
             swiftSettings: [
                 .enableUpcomingFeature("IsolatedDefaultValues"),
                 .unsafeFlags([
@@ -480,8 +531,7 @@ let testTargets: [Target] = [
     // cannot call `@preconcurrency @MainActor` UIKit without -swift-version 5.
     .testTarget(
         name: "OpenUIKitTests",
-        dependencies: ["OpenUIKit", "UIKit", "ConformanceApps",
-                       "SafariServices", "MessageUI", "LinkPresentation"],
+        dependencies: openUIKitTestDeps,
         swiftSettings: [
             .unsafeFlags([
                 "-swift-version", "5",
@@ -493,7 +543,7 @@ let testTargets: [Target] = [
     swiftUITestTarget,
     .testTarget(
         name: "OpenUIKitCTests",
-        dependencies: ["OpenUIKitC", "OpenUIKit", "COpenUIKitABI"],
+        dependencies: openUIKitCTestDeps,
         swiftSettings: [
             .unsafeFlags([
                 "-swift-version", "5",
@@ -562,6 +612,6 @@ let package = Package(
     platforms: [.macOS(.v11)],
     products: coreProducts + frameworkProducts,
     dependencies: platformCombinePackages + previewMacroPackages,
-    targets: coreTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets,
+    targets: coreTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets + linuxXCTestSupportTargets,
     cxxLanguageStandard: .cxx17
 )

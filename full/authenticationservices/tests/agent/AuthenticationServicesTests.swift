@@ -48,6 +48,29 @@ func asWait(_ semaphore: DispatchSemaphore, _ message: String) {
     precondition(semaphore.wait(timeout: .now() + 10) == .success, message)
 }
 
+final class WebAuthAnchorProvider: NSObject, ASWebAuthenticationPresentationContextProviding, @unchecked Sendable {
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        _ = session
+        return NSObject()
+    }
+}
+
+final class AuthorizationAnchorProvider: NSObject, ASAuthorizationControllerPresentationContextProviding, @unchecked Sendable {
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        _ = controller
+        return NSObject()
+    }
+}
+
+final class ModificationAnchorProvider: NSObject, ASAccountAuthenticationModificationControllerPresentationContextProviding, @unchecked Sendable {
+    func presentationAnchor(
+        for controller: ASAccountAuthenticationModificationController
+    ) -> ASPresentationAnchor {
+        _ = controller
+        return NSObject()
+    }
+}
+
 func testASWebAuthenticationSessionErrorDomain() {
     precondition(
         ASWebAuthenticationSessionErrorDomain
@@ -256,6 +279,8 @@ func testWebAuthenticationSessionHTTPSCallbackRejectedWithoutHostScheme() {
             semaphore.signal()
         }
     )
+    let webAnchor = WebAuthAnchorProvider()
+    session.presentationContextProvider = webAnchor
     precondition(session.start())
     asWait(semaphore, "https callback session did not complete")
     let typed = errorBox.load() as? ASWebAuthenticationSessionError
@@ -412,4 +437,102 @@ func testBrowserSessionEquality() {
     precondition(WebAuthenticationSession.BrowserSession.shared == .shared)
     precondition(WebAuthenticationSession.BrowserSession.ephemeral == .ephemeral)
     precondition(WebAuthenticationSession.BrowserSession.shared != .ephemeral)
+}
+
+func testWebAuthenticationSessionProviderRequiredThenCanceled() {
+    _ = asAwait { () -> Bool in
+        AuthenticationServicesPortable._reset()
+        return true
+    }
+    let semaphore = DispatchSemaphore(value: 0)
+    let errorBox = ASLocked<(any Error)?>(nil)
+    let session = ASWebAuthenticationSession(
+        url: URL(string: "https://social.example/oauth/authorize")!,
+        callbackURLScheme: "icecubesapp",
+        completionHandler: { _, error in
+            errorBox.store(error)
+            semaphore.signal()
+        }
+    )
+    let webAnchor = WebAuthAnchorProvider()
+    session.presentationContextProvider = webAnchor
+    precondition(session.canStart)
+    precondition(session.start())
+    asWait(semaphore, "provider-without-hook session did not complete")
+    let typed = errorBox.load() as? ASWebAuthenticationSessionError
+    precondition(typed?.code == .canceledLogin)
+    precondition(!session.canStart)
+}
+
+func testWebAuthenticationSessionTestHookDeliversCallback() {
+    _ = asAwait { () -> Bool in
+        AuthenticationServicesPortable._reset()
+        return true
+    }
+    let semaphore = DispatchSemaphore(value: 0)
+    let urlBox = ASLocked<URL?>(nil)
+    let errorBox = ASLocked<(any Error)?>(nil)
+    let session = ASWebAuthenticationSession(
+        URL: URL(string: "https://social.example/oauth/authorize")!,
+        callback: .customScheme("icecubesapp"),
+        completionHandler: { url, error in
+            urlBox.store(url)
+            errorBox.store(error)
+            semaphore.signal()
+        }
+    )
+    let webAnchor = WebAuthAnchorProvider()
+    session.presentationContextProvider = webAnchor
+    session.prefersEphemeralWebBrowserSession = true
+    session._testCallbackURL = URL(string: "icecubesapp://oauth?code=hook")
+    precondition(session.start())
+    asWait(semaphore, "test-hook session did not complete")
+    precondition(errorBox.load() == nil)
+    precondition(urlBox.load()?.absoluteString == "icecubesapp://oauth?code=hook")
+    let _: ASWebAuthenticationSession.CompletionHandler = { _, _ in }
+}
+
+func testWebAuthenticationSessionTestHookMismatch() {
+    _ = asAwait { () -> Bool in
+        AuthenticationServicesPortable._reset()
+        return true
+    }
+    let semaphore = DispatchSemaphore(value: 0)
+    let errorBox = ASLocked<(any Error)?>(nil)
+    let session = ASWebAuthenticationSession(
+        url: URL(string: "https://social.example/oauth/authorize")!,
+        callbackURLScheme: "icecubesapp",
+        completionHandler: { _, error in
+            errorBox.store(error)
+            semaphore.signal()
+        }
+    )
+    let webAnchor = WebAuthAnchorProvider()
+    session.presentationContextProvider = webAnchor
+    session._testCallbackURL = URL(string: "wrong://oauth")
+    precondition(session.start())
+    asWait(semaphore, "mismatch hook session did not complete")
+    let typed = errorBox.load() as? ASWebAuthenticationSessionError
+    precondition(typed?.code == .presentationContextInvalid)
+}
+
+func testASWebAuthenticationSessionErrorUserInfoAndInit() {
+    let typed = ASWebAuthenticationSessionError(
+        .canceledLogin,
+        userInfo: [NSLocalizedDescriptionKey: "from-userinfo"]
+    )
+    precondition(typed.userInfo[NSLocalizedDescriptionKey] as? String == "from-userinfo")
+    precondition(typed.errorUserInfo[NSLocalizedDescriptionKey] as? String == "from-userinfo")
+    precondition(typed.errorCode == 1)
+    precondition(typed.code == .canceledLogin)
+    precondition(!typed.localizedDescription.isEmpty)
+    precondition(ASWebAuthenticationSessionError.Code(rawValue: 2) == .presentationContextNotProvided)
+    var hasher = Hasher()
+    typed.hash(into: &hasher)
+    _ = hasher.finalize()
+    _ = typed.hashValue
+    _ = ASWebAuthenticationSessionError.Code.canceledLogin.hashValue
+    var codeHasher = Hasher()
+    ASWebAuthenticationSessionError.Code.canceledLogin.hash(into: &codeHasher)
+    _ = codeHasher.finalize()
 }

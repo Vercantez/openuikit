@@ -45,6 +45,13 @@ open class INIntent: NSObject, @unchecked Sendable {
         super.init()
     }
 
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        identifier = inDecodeString(coder, "identifier")
+        suggestedInvocationPhrase = inDecodeString(coder, "suggestedInvocationPhrase")
+        intentDescription = inDecodeString(coder, "intentDescription")
+    }
+
     open func keyImage() -> INImage? {
         nil
     }
@@ -55,6 +62,11 @@ open class INIntentResponse: NSObject, @unchecked Sendable {
 
     public override init() {
         super.init()
+    }
+
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        _ = coder
     }
 }
 
@@ -85,11 +97,29 @@ open class INInteraction: NSObject, @unchecked Sendable {
     public let intentResponse: INIntentResponse?
     open var identifier: String?
     open var direction: INInteractionDirection = .unspecified
+    open var dateInterval: DateInterval?
+    open var groupIdentifier: String?
+    open var intentHandlingStatus: INIntentHandlingStatus = .unspecified
 
     public init(intent: INIntent, response: INIntentResponse?) {
         self.intent = intent
         self.intentResponse = response
         super.init()
+    }
+
+    public required convenience init?(coder: NSCoder) {
+        guard let intent = coder.decodeObject(of: INIntent.self, forKey: "intent") else {
+            return nil
+        }
+        let response = coder.decodeObject(of: INIntentResponse.self, forKey: "intentResponse")
+        self.init(intent: intent, response: response)
+        identifier = inDecodeString(coder, "identifier")
+        if coder.containsValue(forKey: "direction") {
+            direction = INInteractionDirection(
+                rawValue: Int(coder.decodeInt64(forKey: "direction"))
+            ) ?? .unspecified
+        }
+        groupIdentifier = inDecodeString(coder, "groupIdentifier")
     }
 
     open func donate(completion: ((Error?) -> Void)? = nil) {
@@ -113,6 +143,25 @@ open class INInteraction: NSObject, @unchecked Sendable {
             }
         }
         completion?(nil)
+    }
+
+    public static func delete(with groupIdentifier: String) async throws {
+        _interactionStore.withLock { state in
+            let keys = state.interactions.compactMap { key, value in
+                value.groupIdentifier == groupIdentifier ? key : nil
+            }
+            for key in keys {
+                state.interactions.removeValue(forKey: key)
+            }
+        }
+    }
+
+    open func parameterValue(for parameter: INParameter) -> Any? {
+        let path = parameter.parameterKeyPath
+        if path == "identifier" { return intent.identifier }
+        if path == "suggestedInvocationPhrase" { return intent.suggestedInvocationPhrase }
+        if path == "intentDescription" { return intent.intentDescription }
+        return nil
     }
 
     @_spi(OpenIntentsHost)
@@ -217,6 +266,27 @@ open class INSpeakableString: NSObject, @unchecked Sendable {
         self.spokenPhrase = spokenPhrase
         self.pronunciationHint = pronunciationHint
         super.init()
+    }
+
+    public convenience init(
+        identifier: String,
+        spokenPhrase: String,
+        pronunciationHint: String?
+    ) {
+        self.init(
+            vocabularyIdentifier: identifier,
+            spokenPhrase: spokenPhrase,
+            pronunciationHint: pronunciationHint
+        )
+    }
+
+    public required convenience init?(coder: NSCoder) {
+        guard let phrase = inDecodeString(coder, "spokenPhrase") else { return nil }
+        self.init(
+            vocabularyIdentifier: inDecodeString(coder, "vocabularyIdentifier"),
+            spokenPhrase: phrase,
+            pronunciationHint: inDecodeString(coder, "pronunciationHint")
+        )
     }
 }
 
@@ -393,6 +463,14 @@ open class INShortcut: NSObject, @unchecked Sendable {
         self.userActivity = userActivity
         super.init()
     }
+
+    public required convenience init?(coder: NSCoder) {
+        if let intent = coder.decodeObject(of: INIntent.self, forKey: "intent") {
+            self.init(intent: intent)
+            return
+        }
+        return nil
+    }
 }
 
 open class INVoiceShortcut: NSObject, @unchecked Sendable {
@@ -424,6 +502,8 @@ open class INVoiceShortcutCenter: NSObject, @unchecked Sendable {
     open func getAllVoiceShortcuts(
         completion: @escaping ([INVoiceShortcut]?, Error?) -> Void
     ) {
+        // Linux has no Siri/Shortcuts daemon. A fresh process is empty; the
+        // in-process store is only the host SPI install path (IntentsUI).
         let values = state.withLock { state in
             state.values.values.sorted { $0.identifier.uuidString < $1.identifier.uuidString }
         }
@@ -434,7 +514,25 @@ open class INVoiceShortcutCenter: NSObject, @unchecked Sendable {
         with identifier: UUID,
         completion: @escaping (INVoiceShortcut?, Error?) -> Void
     ) {
-        completion(state.withLock { $0.values[identifier] }, nil)
+        if let value = state.withLock({ $0.values[identifier] }) {
+            completion(value, nil)
+        } else {
+            completion(nil, INIntentError(.voiceShortcutGetFailed))
+        }
+    }
+
+    open func getVoiceShortcut(with identifier: UUID) async throws -> INVoiceShortcut {
+        try await withCheckedThrowingContinuation { continuation in
+            getVoiceShortcut(with: identifier, completion: { value, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else if let value {
+                    continuation.resume(returning: value)
+                } else {
+                    continuation.resume(throwing: INIntentError(.voiceShortcutGetFailed))
+                }
+            })
+        }
     }
 
     open func setShortcutSuggestions(_ suggestions: [INShortcut]) {
@@ -482,6 +580,23 @@ open class INVoiceShortcutCenter: NSObject, @unchecked Sendable {
         state.withLock {
             $0.values.removeAll(keepingCapacity: false)
             $0.suggestions.removeAll(keepingCapacity: false)
+        }
+    }
+}
+
+extension INVoiceShortcutCenter {
+    /// Swift overlay of `getAllVoiceShortcuts(completion:)`.
+    /// public-surface.tsv names this `allVoiceShortcuts() async throws`.
+    /// Linux returns the in-process store (empty until host SPI `install`).
+    public func allVoiceShortcuts() async throws -> [INVoiceShortcut] {
+        try await withCheckedThrowingContinuation { continuation in
+            getAllVoiceShortcuts { values, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: values ?? [])
+                }
+            }
         }
     }
 }
@@ -534,6 +649,22 @@ open class INImage: NSObject, @unchecked Sendable {
         self.init(url: URL, width: width, height: height)
     }
 
+    public required convenience init?(coder: NSCoder) {
+        if let data = inDecodeData(coder, "imageData") {
+            self.init(imageData: data)
+            return
+        }
+        if let name = inDecodeString(coder, "namedImage") {
+            self.init(named: name)
+            return
+        }
+        if let urlString = inDecodeString(coder, "imageURL"), let url = URL(string: urlString) {
+            self.init(url: url)
+            return
+        }
+        return nil
+    }
+
     open class func systemImageNamed(_ systemImageName: String) -> Self {
         self.init(named: systemImageName)
     }
@@ -548,6 +679,7 @@ public enum INPersonHandleType: Int, Sendable {
 public struct INPersonHandleLabel: RawRepresentable, Hashable, Sendable {
     public let rawValue: String
     public init(rawValue: String) { self.rawValue = rawValue }
+    public init(_ rawValue: String) { self.rawValue = rawValue }
     public static let home = Self(rawValue: "home")
     public static let work = Self(rawValue: "work")
     public static let mobile = Self(rawValue: "mobile")
@@ -556,26 +688,38 @@ public struct INPersonHandleLabel: RawRepresentable, Hashable, Sendable {
     public static let homeFax = Self(rawValue: "homeFax")
     public static let workFax = Self(rawValue: "workFax")
     public static let pager = Self(rawValue: "pager")
+    public static let school = Self(rawValue: "school")
     public static let other = Self(rawValue: "other")
 }
 
 open class INPersonHandle: NSObject, @unchecked Sendable {
-    public let value: String
+    public let value: String?
     public let type: INPersonHandleType
     public let label: INPersonHandleLabel?
 
-    public init(value: String, type: INPersonHandleType) {
+    public init(value: String?, type: INPersonHandleType) {
         self.value = value
         self.type = type
         self.label = nil
         super.init()
     }
 
-    public init(value: String, type: INPersonHandleType, label: INPersonHandleLabel?) {
+    public init(value: String?, type: INPersonHandleType, label: INPersonHandleLabel?) {
         self.value = value
         self.type = type
         self.label = label
         super.init()
+    }
+
+    public required convenience init?(coder: NSCoder) {
+        let rawType = Int(coder.decodeInt64(forKey: "type"))
+        let type = INPersonHandleType(rawValue: rawType) ?? .unknown
+        let labelRaw = inDecodeString(coder, "label")
+        self.init(
+            value: inDecodeString(coder, "value"),
+            type: type,
+            label: labelRaw.map { INPersonHandleLabel(rawValue: $0) }
+        )
     }
 }
 
@@ -587,29 +731,227 @@ public enum INPersonSuggestionType: Int, Sendable {
 
 open class INPerson: NSObject, @unchecked Sendable {
     public let personHandle: INPersonHandle?
-    public let nameComponents: Any?
-    public let displayName: String?
+    public let nameComponents: PersonNameComponents?
+    public let displayName: String
     public let image: INImage?
     public let contactIdentifier: String?
     public let customIdentifier: String?
-    open var aliases: [INSpeakableString]?
-    open var suggestionType: INPersonSuggestionType = .none
+    public let aliases: [INPersonHandle]?
+    public let suggestionType: INPersonSuggestionType
+    public let isMe: Bool
+    public let isContactSuggestion: Bool
+    public let relationship: INPersonRelationship?
+    public var siriMatches: [INPerson]?
+    public var handle: String? { personHandle?.value }
 
     public init(
         personHandle: INPersonHandle?,
-        nameComponents: Any?,
+        nameComponents: PersonNameComponents?,
+        displayName: String?,
+        image: INImage?,
+        contactIdentifier: String?,
+        customIdentifier: String?,
+        aliases: [INPersonHandle]? = nil,
+        suggestionType: INPersonSuggestionType = .none,
+        isMe: Bool = false,
+        isContactSuggestion: Bool = false,
+        relationship: INPersonRelationship? = nil
+    ) {
+        self.personHandle = personHandle
+        self.nameComponents = nameComponents
+        self.displayName = displayName ?? personHandle?.value ?? ""
+        self.image = image
+        self.contactIdentifier = contactIdentifier
+        self.customIdentifier = customIdentifier
+        self.aliases = aliases
+        self.suggestionType = suggestionType
+        self.isMe = isMe
+        self.isContactSuggestion = isContactSuggestion
+        self.relationship = relationship
+        super.init()
+    }
+
+    public convenience init(
+        personHandle: INPersonHandle,
+        nameComponents: PersonNameComponents?,
         displayName: String?,
         image: INImage?,
         contactIdentifier: String?,
         customIdentifier: String?
     ) {
-        self.personHandle = personHandle
-        self.nameComponents = nameComponents
-        self.displayName = displayName
-        self.image = image
-        self.contactIdentifier = contactIdentifier
-        self.customIdentifier = customIdentifier
-        super.init()
+        self.init(
+            personHandle: Optional(personHandle),
+            nameComponents: nameComponents,
+            displayName: displayName,
+            image: image,
+            contactIdentifier: contactIdentifier,
+            customIdentifier: customIdentifier
+        )
+    }
+
+    public convenience init(
+        handle: String,
+        displayName: String?,
+        contactIdentifier: String?
+    ) {
+        self.init(
+            personHandle: INPersonHandle(value: handle, type: .unknown),
+            nameComponents: nil,
+            displayName: displayName,
+            image: nil,
+            contactIdentifier: contactIdentifier,
+            customIdentifier: nil
+        )
+    }
+
+    public convenience init(
+        handle: String,
+        nameComponents: PersonNameComponents,
+        contactIdentifier: String?
+    ) {
+        self.init(
+            personHandle: INPersonHandle(value: handle, type: .unknown),
+            nameComponents: nameComponents,
+            displayName: nil,
+            image: nil,
+            contactIdentifier: contactIdentifier,
+            customIdentifier: nil
+        )
+    }
+
+    public convenience init(
+        handle: String,
+        nameComponents: PersonNameComponents?,
+        displayName: String?,
+        image: INImage?,
+        contactIdentifier: String?
+    ) {
+        self.init(
+            personHandle: INPersonHandle(value: handle, type: .unknown),
+            nameComponents: nameComponents,
+            displayName: displayName,
+            image: image,
+            contactIdentifier: contactIdentifier,
+            customIdentifier: nil
+        )
+    }
+
+    public convenience init(
+        personHandle: INPersonHandle,
+        nameComponents: PersonNameComponents?,
+        displayName: String?,
+        image: INImage?,
+        contactIdentifier: String?,
+        customIdentifier: String?,
+        aliases: [INPersonHandle]?,
+        suggestionType: INPersonSuggestionType
+    ) {
+        self.init(
+            personHandle: Optional(personHandle),
+            nameComponents: nameComponents,
+            displayName: displayName,
+            image: image,
+            contactIdentifier: contactIdentifier,
+            customIdentifier: customIdentifier,
+            aliases: aliases,
+            suggestionType: suggestionType
+        )
+    }
+
+    public convenience init(
+        personHandle: INPersonHandle,
+        nameComponents: PersonNameComponents?,
+        displayName: String?,
+        image: INImage?,
+        contactIdentifier: String?,
+        customIdentifier: String?,
+        isContactSuggestion: Bool,
+        suggestionType: INPersonSuggestionType
+    ) {
+        self.init(
+            personHandle: Optional(personHandle),
+            nameComponents: nameComponents,
+            displayName: displayName,
+            image: image,
+            contactIdentifier: contactIdentifier,
+            customIdentifier: customIdentifier,
+            suggestionType: suggestionType,
+            isContactSuggestion: isContactSuggestion
+        )
+    }
+
+    public convenience init(
+        personHandle: INPersonHandle,
+        nameComponents: PersonNameComponents?,
+        displayName: String?,
+        image: INImage?,
+        contactIdentifier: String?,
+        customIdentifier: String?,
+        isMe: Bool
+    ) {
+        self.init(
+            personHandle: Optional(personHandle),
+            nameComponents: nameComponents,
+            displayName: displayName,
+            image: image,
+            contactIdentifier: contactIdentifier,
+            customIdentifier: customIdentifier,
+            isMe: isMe
+        )
+    }
+
+    public convenience init(
+        personHandle: INPersonHandle,
+        nameComponents: PersonNameComponents?,
+        displayName: String?,
+        image: INImage?,
+        contactIdentifier: String?,
+        customIdentifier: String?,
+        isMe: Bool,
+        suggestionType: INPersonSuggestionType
+    ) {
+        self.init(
+            personHandle: Optional(personHandle),
+            nameComponents: nameComponents,
+            displayName: displayName,
+            image: image,
+            contactIdentifier: contactIdentifier,
+            customIdentifier: customIdentifier,
+            suggestionType: suggestionType,
+            isMe: isMe
+        )
+    }
+
+    public convenience init(
+        personHandle: INPersonHandle,
+        nameComponents: PersonNameComponents?,
+        displayName: String?,
+        image: INImage?,
+        contactIdentifier: String?,
+        customIdentifier: String?,
+        relationship: INPersonRelationship?
+    ) {
+        self.init(
+            personHandle: Optional(personHandle),
+            nameComponents: nameComponents,
+            displayName: displayName,
+            image: image,
+            contactIdentifier: contactIdentifier,
+            customIdentifier: customIdentifier,
+            relationship: relationship
+        )
+    }
+
+    public required convenience init?(coder: NSCoder) {
+        let handle = coder.decodeObject(of: INPersonHandle.self, forKey: "personHandle")
+        self.init(
+            personHandle: handle,
+            nameComponents: nil,
+            displayName: inDecodeString(coder, "displayName"),
+            image: coder.decodeObject(of: INImage.self, forKey: "image"),
+            contactIdentifier: inDecodeString(coder, "contactIdentifier"),
+            customIdentifier: inDecodeString(coder, "customIdentifier")
+        )
     }
 }
 
@@ -627,25 +969,28 @@ open class INPersonResolutionResult: INIntentResolutionResult, @unchecked Sendab
     }
 }
 
-public enum INMediaItemType: Int, Sendable {
+public enum INMediaItemType: Int, Hashable, Sendable {
     case unknown = 0
-    case song
-    case album
-    case artist
-    case genre
-    case playlist
-    case podcastShow
-    case podcastEpisode
-    case podcastPlaylist
-    case musicStation
-    case audioBook
-    case movie
-    case tvShow
-    case tvShowEpisode
-    case musicVideo
-    case podcastStation
-    case radioStation
-    case station
+    case song = 1
+    case album = 2
+    case artist = 3
+    case genre = 4
+    case playlist = 5
+    case podcastShow = 6
+    case podcastEpisode = 7
+    case podcastPlaylist = 8
+    case musicStation = 9
+    case audioBook = 10
+    case movie = 11
+    case tvShow = 12
+    case tvShowEpisode = 13
+    case musicVideo = 14
+    case podcastStation = 15
+    case radioStation = 16
+    case station = 17
+    case music = 18
+    case algorithmicRadioStation = 19
+    case news = 20
 }
 
 open class INMediaItem: NSObject, @unchecked Sendable {
@@ -653,13 +998,41 @@ open class INMediaItem: NSObject, @unchecked Sendable {
     public let title: String?
     public let type: INMediaItemType
     public let artwork: INImage?
+    public let artist: String?
 
     public init(identifier: String?, title: String?, type: INMediaItemType, artwork: INImage?) {
         self.identifier = identifier
         self.title = title
         self.type = type
         self.artwork = artwork
+        self.artist = nil
         super.init()
+    }
+
+    public init(
+        identifier: String?,
+        title: String?,
+        type: INMediaItemType,
+        artwork: INImage?,
+        artist: String?
+    ) {
+        self.identifier = identifier
+        self.title = title
+        self.type = type
+        self.artwork = artwork
+        self.artist = artist
+        super.init()
+    }
+
+    public required convenience init?(coder: NSCoder) {
+        let rawType = Int(coder.decodeInt64(forKey: "type"))
+        self.init(
+            identifier: inDecodeString(coder, "identifier"),
+            title: inDecodeString(coder, "title"),
+            type: INMediaItemType(rawValue: rawType) ?? .unknown,
+            artwork: coder.decodeObject(of: INImage.self, forKey: "artwork"),
+            artist: inDecodeString(coder, "artist")
+        )
     }
 }
 
@@ -667,9 +1040,42 @@ open class INMediaSearch: NSObject, @unchecked Sendable {
     open var mediaName: String?
     open var artistName: String?
     open var albumName: String?
+    open var mediaType: INMediaItemType = .unknown
+    open var sortOrder: INMediaSortOrder = .unknown
+    open var genreNames: [String]?
+    open var moodNames: [String]?
+    open var activityNames: [String]?
+    open var releaseDate: INDateComponentsRange?
+    open var reference: INMediaReference = .unknown
+    open var mediaIdentifier: String?
 
     public override init() {
         super.init()
+    }
+
+    public convenience init(
+        mediaType: INMediaItemType = .unknown,
+        sortOrder: INMediaSortOrder = .unknown,
+        mediaName: String? = nil,
+        artistName: String? = nil,
+        albumName: String? = nil,
+        genreNames: [String]? = nil,
+        moodNames: [String]? = nil,
+        releaseDate: INDateComponentsRange? = nil,
+        reference: INMediaReference = .unknown,
+        mediaIdentifier: String? = nil
+    ) {
+        self.init()
+        self.mediaType = mediaType
+        self.sortOrder = sortOrder
+        self.mediaName = mediaName
+        self.artistName = artistName
+        self.albumName = albumName
+        self.genreNames = genreNames
+        self.moodNames = moodNames
+        self.releaseDate = releaseDate
+        self.reference = reference
+        self.mediaIdentifier = mediaIdentifier
     }
 }
 

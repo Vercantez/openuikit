@@ -193,6 +193,8 @@ internal final class ATMusicPlayerObject: ATObject {
     var time: MusicTimeStamp = 0
     var playing = false
     var rate: Float64 = 1
+    var startHost: TimeInterval = 0
+    var startStamp: MusicTimeStamp = 0
 }
 
 @_cdecl("NewMusicSequence")
@@ -600,8 +602,10 @@ public func MusicPlayerStart(_ inPlayer: MusicPlayer?) -> Int32 {
     guard let player = ATRegistry.shared.lookup(inPlayer, as: ATMusicPlayerObject.self) else {
         return atParamError
     }
-    _ = player
-    return kAudioUnitErr_FailedInitialization
+    player.playing = true
+    player.startHost = Date().timeIntervalSince1970
+    player.startStamp = player.time
+    return 0
 }
 
 @_cdecl("MusicPlayerStop")
@@ -632,6 +636,12 @@ public func MusicPlayerGetTime(
 ) -> Int32 {
     guard let player = ATRegistry.shared.lookup(inPlayer, as: ATMusicPlayerObject.self) else {
         return atParamError
+    }
+    if player.playing {
+        let elapsed = Date().timeIntervalSince1970 - player.startHost
+        let bpm = atSequenceTempo(player.sequence) * player.rate
+        let beatsPerSecond = bpm / 60.0
+        player.time = player.startStamp + elapsed * beatsPerSecond
     }
     outTime?.pointee = player.time
     return 0
@@ -680,9 +690,8 @@ public func MusicSequenceFileLoadData(
     _ inFileTypeHint: MusicSequenceFileTypeID,
     _ inFlags: MusicSequenceLoadFlags
 ) -> Int32 {
-    _ = inFileTypeHint
     _ = inFlags
-    guard ATRegistry.shared.lookup(inSequence, as: ATMusicSequenceObject.self) != nil else {
+    guard let sequence = ATRegistry.shared.lookup(inSequence, as: ATMusicSequenceObject.self) else {
         return atParamError
     }
     guard let inData else { return atParamError }
@@ -690,6 +699,187 @@ public func MusicSequenceFileLoadData(
     if length <= 0 {
         return kAudioFileInvalidFileError
     }
-    return kAudioFileUnsupportedFileTypeError
+    if inFileTypeHint != .midiType && inFileTypeHint != .anyType {
+        return kAudioFileUnsupportedFileTypeError
+    }
+    let bytes = [UInt8](UnsafeBufferPointer(start: CFDataGetBytePtr(inData), count: length))
+    return atLoadSMF(sequence: sequence, bytes: bytes)
+}
+
+internal func atSequenceTempo(_ sequence: ATMusicSequenceObject?) -> Float64 {
+    guard let sequence else { return 120 }
+    if let tempoEvent = sequence.tempoTrack.events.first(where: { $0.type == kMusicEventType_ExtendedTempo }),
+       tempoEvent.payload.count >= 8
+    {
+        return tempoEvent.payload.withUnsafeBytes { $0.loadUnaligned(as: Float64.self) }
+    }
+    return 120
+}
+
+internal func atLoadSMF(sequence: ATMusicSequenceObject, bytes: [UInt8]) -> Int32 {
+    guard bytes.count >= 14,
+          bytes[0] == 0x4D, bytes[1] == 0x54, bytes[2] == 0x68, bytes[3] == 0x64
+    else {
+        return kAudioFileUnsupportedFileTypeError
+    }
+    func be32(_ i: Int) -> UInt32 {
+        (UInt32(bytes[i]) << 24) | (UInt32(bytes[i + 1]) << 16) | (UInt32(bytes[i + 2]) << 8) | UInt32(bytes[i + 3])
+    }
+    func be16(_ i: Int) -> UInt16 {
+        (UInt16(bytes[i]) << 8) | UInt16(bytes[i + 1])
+    }
+    let headerLen = be32(4)
+    if headerLen < 6 { return kAudioFileInvalidFileError }
+    let format = be16(8)
+    let ntrks = Int(be16(10))
+    let division = be16(12)
+    _ = format
+    let ticksPerBeat = Float64(division & 0x7FFF)
+    if ticksPerBeat <= 0 { return kAudioFileInvalidFileError }
+    var offset = 8 + Int(headerLen)
+    var trackIndex = 0
+    while offset + 8 <= bytes.count && trackIndex < ntrks {
+        if bytes[offset] != 0x4D || bytes[offset + 1] != 0x54
+            || bytes[offset + 2] != 0x72 || bytes[offset + 3] != 0x6B
+        {
+            return kAudioFileInvalidFileError
+        }
+        let chunkLen = Int(be32(offset + 4))
+        let start = offset + 8
+        let end = min(start + chunkLen, bytes.count)
+        let status = atParseSMFTrack(
+            sequence: sequence,
+            bytes: bytes,
+            start: start,
+            end: end,
+            ticksPerBeat: ticksPerBeat,
+            isFirst: trackIndex == 0
+        )
+        if status != 0 { return status }
+        offset = start + chunkLen
+        trackIndex += 1
+    }
+    return 0
+}
+
+internal func atParseSMFTrack(
+    sequence: ATMusicSequenceObject,
+    bytes: [UInt8],
+    start: Int,
+    end: Int,
+    ticksPerBeat: Float64,
+    isFirst: Bool
+) -> Int32 {
+    var i = start
+    var tick: UInt32 = 0
+    var running: UInt8 = 0
+    let track: ATMusicTrackObject
+    if isFirst {
+        track = sequence.tempoTrack
+    } else {
+        let created = ATMusicTrackObject(sequence: sequence, isTempo: false)
+        sequence.tracks.append(created)
+        _ = ATRegistry.shared.retain(created)
+        track = created
+    }
+    func readVLQ() -> UInt32? {
+        var value: UInt32 = 0
+        while i < end {
+            let b = bytes[i]
+            i += 1
+            value = (value << 7) | UInt32(b & 0x7F)
+            if b & 0x80 == 0 { return value }
+            if value > 0x0FFF_FFFF { return nil }
+        }
+        return nil
+    }
+    while i < end {
+        guard let delta = readVLQ() else { break }
+        tick += delta
+        if i >= end { break }
+        var statusByte = bytes[i]
+        if statusByte < 0x80 {
+            statusByte = running
+        } else {
+            i += 1
+            running = statusByte
+        }
+        let time = Float64(tick) / ticksPerBeat
+        if statusByte == 0xFF {
+            if i >= end { break }
+            let meta = bytes[i]
+            i += 1
+            guard let len = readVLQ() else { break }
+            let payloadStart = i
+            i = min(i + Int(len), end)
+            if meta == 0x51 && len >= 3 {
+                let us = (UInt32(bytes[payloadStart]) << 16)
+                    | (UInt32(bytes[payloadStart + 1]) << 8)
+                    | UInt32(bytes[payloadStart + 2])
+                var bpm = 60_000_000.0 / Float64(max(us, 1))
+                let payload = withUnsafeBytes(of: &bpm) { Data($0) }
+                sequence.tempoTrack.events.append(
+                    ATMusicEvent(time: time, type: kMusicEventType_ExtendedTempo, payload: payload)
+                )
+            }
+            continue
+        }
+        if statusByte >= 0x80 && statusByte < 0xF0 {
+            let command = statusByte & 0xF0
+            let channel = statusByte & 0x0F
+            if command == 0x90 || command == 0x80 {
+                if i + 1 >= end { break }
+                let note = bytes[i]
+                let vel = bytes[i + 1]
+                i += 2
+                var message = MIDINoteMessage(
+                    channel: channel,
+                    note: note,
+                    velocity: command == 0x80 ? 0 : vel,
+                    releaseVelocity: 0,
+                    duration: command == 0x80 ? 0 : 0.5
+                )
+                let payload = withUnsafeBytes(of: &message) { Data($0) }
+                track.events.append(
+                    ATMusicEvent(time: time, type: kMusicEventType_MIDINoteMessage, payload: payload)
+                )
+            } else {
+                let dataBytes = (command == 0xC0 || command == 0xD0) ? 1 : 2
+                if i + dataBytes > end { break }
+                var message = MIDIChannelMessage(
+                    status: statusByte,
+                    data1: bytes[i],
+                    data2: dataBytes == 2 ? bytes[i + 1] : 0,
+                    reserved: 0
+                )
+                i += dataBytes
+                let payload = withUnsafeBytes(of: &message) { Data($0) }
+                track.events.append(
+                    ATMusicEvent(time: time, type: kMusicEventType_MIDIChannelMessage, payload: payload)
+                )
+            }
+        } else if statusByte == 0xF0 || statusByte == 0xF7 {
+            guard let len = readVLQ() else { break }
+            i = min(i + Int(len), end)
+        }
+    }
+    return 0
+}
+
+public func MusicSequenceFileLoad(
+    _ inSequence: MusicSequence?,
+    _ inFileRef: CFURL?,
+    _ inFileTypeHint: MusicSequenceFileTypeID,
+    _ inFlags: MusicSequenceLoadFlags
+) -> Int32 {
+    guard let inFileRef else { return atParamError }
+    guard let path = atPathFromCFURL(inFileRef) else { return kAudioFileInvalidFileError }
+    guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else {
+        return kAudioFileFileNotFoundError
+    }
+    let cf = data.withUnsafeBytes { buffer in
+        CFDataCreate(kCFAllocatorDefault, buffer.bindMemory(to: UInt8.self).baseAddress, data.count)!
+    }
+    return MusicSequenceFileLoadData(inSequence, cf, inFileTypeHint, inFlags)
 }
 #endif

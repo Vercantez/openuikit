@@ -1,10 +1,12 @@
+import Synchronization
+
 // Generated Intents classes. Members that need CoreLocation/Contacts/EventKit/CoreGraphics
 // types are omitted (coverage: deferred). Remaining members are source-compatible stubs
 // or fail-closed. Existing operational types stay in Intents.swift.
 
 open class INAccountTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with accountTypeToConfirm: INAccountType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedAccountType: INAccountType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with accountTypeToConfirm: INAccountType) -> Self { self.init(outcome: .confirmationRequired, value: accountTypeToConfirm) }
+    open class func success(with resolvedAccountType: INAccountType) -> Self { self.init(outcome: .success, value: resolvedAccountType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -47,7 +49,7 @@ open class INAddMediaIntentResponse: INIntentResponse, @unchecked Sendable {
 }
 
 open class INAddMediaMediaDestinationResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INAddMediaMediaDestinationUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INAddMediaMediaDestinationUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -57,8 +59,8 @@ open class INAddMediaMediaDestinationResolutionResult: INIntentResolutionResult,
 }
 
 open class INAddMediaMediaItemResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func successes(with resolvedMediaItems: [INMediaItem]) -> [INAddMediaMediaItemResolutionResult] { [] }
-    open class func unsupported(forReason reason: INAddMediaMediaItemUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func successes(with resolvedMediaItems: [INMediaItem]) -> [INAddMediaMediaItemResolutionResult] { resolvedMediaItems.map { self.init(outcome: .success, value: $0) } }
+    open class func unsupported(forReason reason: INAddMediaMediaItemUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -93,7 +95,7 @@ open class INAddTasksIntentResponse: INIntentResponse, @unchecked Sendable {
 }
 
 open class INAddTasksTargetTaskListResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with taskListToConfirm: INTaskList?, forReason reason: INAddTasksTargetTaskListConfirmationReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with taskListToConfirm: INTaskList?, forReason reason: INAddTasksTargetTaskListConfirmationReason) -> Self { self.init(outcome: .confirmationRequired, value: taskListToConfirm) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -103,7 +105,7 @@ open class INAddTasksTargetTaskListResolutionResult: INIntentResolutionResult, @
 }
 
 open class INAddTasksTemporalEventTriggerResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INAddTasksTemporalEventTriggerUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INAddTasksTemporalEventTriggerUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -204,8 +206,8 @@ open class INBalanceAmount: NSObject, @unchecked Sendable {
 }
 
 open class INBalanceTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with balanceTypeToConfirm: INBalanceType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedBalanceType: INBalanceType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with balanceTypeToConfirm: INBalanceType) -> Self { self.init(outcome: .confirmationRequired, value: balanceTypeToConfirm) }
+    open class func success(with resolvedBalanceType: INBalanceType) -> Self { self.init(outcome: .success, value: resolvedBalanceType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -243,17 +245,17 @@ open class INBillPayee: NSObject, @unchecked Sendable {
 }
 
 open class INBillPayeeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with billPayeeToConfirm: INBillPayee?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with billPayeesToDisambiguate: [INBillPayee]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedBillPayee: INBillPayee) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with billPayeeToConfirm: INBillPayee?) -> Self { self.init(outcome: .confirmationRequired, value: billPayeeToConfirm) }
+    open class func disambiguation(with billPayeesToDisambiguate: [INBillPayee]) -> Self { self.init(outcome: .disambiguation, value: billPayeesToDisambiguate) }
+    open class func success(with resolvedBillPayee: INBillPayee) -> Self { self.init(outcome: .success, value: resolvedBillPayee) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INBillTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with billTypeToConfirm: INBillType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedBillType: INBillType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with billTypeToConfirm: INBillType) -> Self { self.init(outcome: .confirmationRequired, value: billTypeToConfirm) }
+    open class func success(with resolvedBillType: INBillType) -> Self { self.init(outcome: .success, value: resolvedBillType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -334,16 +336,16 @@ open class INBusTrip: NSObject, @unchecked Sendable {
 }
 
 open class INCallCapabilityResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with callCapabilityToConfirm: INCallCapability) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedCallCapability: INCallCapability) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with callCapabilityToConfirm: INCallCapability) -> Self { self.init(outcome: .confirmationRequired, value: callCapabilityToConfirm) }
+    open class func success(with resolvedCallCapability: INCallCapability) -> Self { self.init(outcome: .success, value: resolvedCallCapability) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INCallDestinationTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with callDestinationTypeToConfirm: INCallDestinationType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedCallDestinationType: INCallDestinationType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with callDestinationTypeToConfirm: INCallDestinationType) -> Self { self.init(outcome: .confirmationRequired, value: callDestinationTypeToConfirm) }
+    open class func success(with resolvedCallDestinationType: INCallDestinationType) -> Self { self.init(outcome: .success, value: resolvedCallDestinationType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -362,51 +364,90 @@ open class INCallGroup: NSObject, @unchecked Sendable {
 }
 
 open class INCallRecord: NSObject, @unchecked Sendable {
-    open var callCapability: INCallCapability?
-    open var callRecordType: INCallRecordType?
+    open var callCapability: INCallCapability = .unknown
+    open var callRecordType: INCallRecordType = .unknown
     open var caller: INPerson? = nil
     open var dateCreated: Date? = nil
     open var identifier: String = ""
     open var participants: [INPerson]? = nil
+    open var callDuration: Double? = nil
+    open var unseen: Bool? = nil
+    open var numberOfCalls: Int? = nil
     public required override init() { super.init() }
+    public convenience init(
+        identifier: String,
+        dateCreated: Date? = nil,
+        caller: INPerson? = nil,
+        callRecordType: INCallRecordType = .unknown,
+        callCapability: INCallCapability = .unknown,
+        callDuration: Double? = nil,
+        unseen: Bool? = nil,
+        numberOfCalls: Int? = nil
+    ) {
+        self.init()
+        self.identifier = identifier
+        self.dateCreated = dateCreated
+        self.caller = caller
+        self.callRecordType = callRecordType
+        self.callCapability = callCapability
+        self.callDuration = callDuration
+        self.unseen = unseen
+        self.numberOfCalls = numberOfCalls
+    }
     public convenience init?(coder: NSCoder) {
-        return nil
+        guard let identifier = coder.decodeObject(of: NSString.self, forKey: "identifier") as String? else {
+            return nil
+        }
+        self.init()
+        self.identifier = identifier
+        if coder.containsValue(forKey: "callRecordType") {
+            self.callRecordType = INCallRecordType(rawValue: Int(coder.decodeInt64(forKey: "callRecordType"))) ?? .unknown
+        }
+        if coder.containsValue(forKey: "callCapability") {
+            self.callCapability = INCallCapability(rawValue: Int(coder.decodeInt64(forKey: "callCapability"))) ?? .unknown
+        }
     }
 }
 
+
 open class INCallRecordFilter: NSObject, @unchecked Sendable {
-    open var callCapability: INCallCapability?
+    open var callCapability: INCallCapability = .unknown
     open var callTypes: INCallRecordTypeOptions = []
     open var participants: [INPerson]? = nil
     public required override init() { super.init() }
     public convenience init(participants: [INPerson]?, callTypes: INCallRecordTypeOptions = [], callCapability: INCallCapability) {
         self.init()
+        self.participants = participants
+        self.callTypes = callTypes
+        self.callCapability = callCapability
     }
     public convenience init?(coder: NSCoder) {
-        return nil
+        self.init()
+        _ = coder
     }
 }
 
+
 open class INCallRecordResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with callRecordToConfirm: INCallRecord?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with callRecordsToDisambiguate: [INCallRecord]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedCallRecord: INCallRecord) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with callRecordToConfirm: INCallRecord?) -> Self { self.init(outcome: .confirmationRequired, value: callRecordToConfirm) }
+    open class func disambiguation(with callRecordsToDisambiguate: [INCallRecord]) -> Self { self.init(outcome: .disambiguation, value: callRecordsToDisambiguate) }
+    open class func success(with resolvedCallRecord: INCallRecord) -> Self { self.init(outcome: .success, value: resolvedCallRecord) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INCallRecordTypeOptionsResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with callRecordTypeOptionsToConfirm: INCallRecordTypeOptions = []) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedCallRecordTypeOptions: INCallRecordTypeOptions = []) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with callRecordTypeOptionsToConfirm: INCallRecordTypeOptions = []) -> Self { self.init(outcome: .confirmationRequired, value: callRecordTypeOptionsToConfirm) }
+    open class func success(with resolvedCallRecordTypeOptions: INCallRecordTypeOptions = []) -> Self { self.init(outcome: .success, value: resolvedCallRecordTypeOptions) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INCallRecordTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with callRecordTypeToConfirm: INCallRecordType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedCallRecordType: INCallRecordType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with callRecordTypeToConfirm: INCallRecordType) -> Self { self.init(outcome: .confirmationRequired, value: callRecordTypeToConfirm) }
+    open class func success(with resolvedCallRecordType: INCallRecordType) -> Self { self.init(outcome: .success, value: resolvedCallRecordType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -490,40 +531,40 @@ open class INCar: NSObject, @unchecked Sendable {
 }
 
 open class INCarAirCirculationModeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with carAirCirculationModeToConfirm: INCarAirCirculationMode) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedCarAirCirculationMode: INCarAirCirculationMode) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with carAirCirculationModeToConfirm: INCarAirCirculationMode) -> Self { self.init(outcome: .confirmationRequired, value: carAirCirculationModeToConfirm) }
+    open class func success(with resolvedCarAirCirculationMode: INCarAirCirculationMode) -> Self { self.init(outcome: .success, value: resolvedCarAirCirculationMode) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INCarAudioSourceResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with carAudioSourceToConfirm: INCarAudioSource) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedCarAudioSource: INCarAudioSource) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with carAudioSourceToConfirm: INCarAudioSource) -> Self { self.init(outcome: .confirmationRequired, value: carAudioSourceToConfirm) }
+    open class func success(with resolvedCarAudioSource: INCarAudioSource) -> Self { self.init(outcome: .success, value: resolvedCarAudioSource) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INCarDefrosterResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with carDefrosterToConfirm: INCarDefroster) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedCarDefroster: INCarDefroster) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with carDefrosterToConfirm: INCarDefroster) -> Self { self.init(outcome: .confirmationRequired, value: carDefrosterToConfirm) }
+    open class func success(with resolvedCarDefroster: INCarDefroster) -> Self { self.init(outcome: .success, value: resolvedCarDefroster) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INCarSeatResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with carSeatToConfirm: INCarSeat) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedCarSeat: INCarSeat) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with carSeatToConfirm: INCarSeat) -> Self { self.init(outcome: .confirmationRequired, value: carSeatToConfirm) }
+    open class func success(with resolvedCarSeat: INCarSeat) -> Self { self.init(outcome: .success, value: resolvedCarSeat) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INCarSignalOptionsResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with carSignalOptionsToConfirm: INCarSignalOptions = []) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedCarSignalOptions: INCarSignalOptions = []) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with carSignalOptionsToConfirm: INCarSignalOptions = []) -> Self { self.init(outcome: .confirmationRequired, value: carSignalOptionsToConfirm) }
+    open class func success(with resolvedCarSignalOptions: INCarSignalOptions = []) -> Self { self.init(outcome: .success, value: resolvedCarSignalOptions) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -580,9 +621,9 @@ open class INCurrencyAmount: NSObject, @unchecked Sendable {
 }
 
 open class INCurrencyAmountResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with currencyAmountToConfirm: INCurrencyAmount?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with currencyAmountsToDisambiguate: [INCurrencyAmount]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedCurrencyAmount: INCurrencyAmount) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with currencyAmountToConfirm: INCurrencyAmount?) -> Self { self.init(outcome: .confirmationRequired, value: currencyAmountToConfirm) }
+    open class func disambiguation(with currencyAmountsToDisambiguate: [INCurrencyAmount]) -> Self { self.init(outcome: .disambiguation, value: currencyAmountsToDisambiguate) }
+    open class func success(with resolvedCurrencyAmount: INCurrencyAmount) -> Self { self.init(outcome: .success, value: resolvedCurrencyAmount) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -616,34 +657,46 @@ open class INDateComponentsRange: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(start startDateComponents: DateComponents?, end endDateComponents: DateComponents?) {
         self.init()
+        self.startDateComponents = startDateComponents
+        self.endDateComponents = endDateComponents
     }
     public convenience init(startDateComponents: DateComponents?, endDateComponents: DateComponents?) {
         self.init()
+        self.startDateComponents = startDateComponents
+        self.endDateComponents = endDateComponents
     }
     public convenience init(start startDateComponents: DateComponents?, end endDateComponents: DateComponents?, recurrenceRule: INRecurrenceRule?) {
         self.init()
+        self.startDateComponents = startDateComponents
+        self.endDateComponents = endDateComponents
+        self.recurrenceRule = recurrenceRule
     }
     public convenience init(startDateComponents: DateComponents?, endDateComponents: DateComponents?, recurrenceRule: INRecurrenceRule?) {
         self.init()
+        self.startDateComponents = startDateComponents
+        self.endDateComponents = endDateComponents
+        self.recurrenceRule = recurrenceRule
     }
     public convenience init?(coder: NSCoder) {
-        return nil
+        self.init()
+        _ = coder
     }
 }
 
+
 open class INDateComponentsRangeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with dateComponentsRangeToConfirm: INDateComponentsRange?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with dateComponentsRangesToDisambiguate: [INDateComponentsRange]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedDateComponentsRange: INDateComponentsRange) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with dateComponentsRangeToConfirm: INDateComponentsRange?) -> Self { self.init(outcome: .confirmationRequired, value: dateComponentsRangeToConfirm) }
+    open class func disambiguation(with dateComponentsRangesToDisambiguate: [INDateComponentsRange]) -> Self { self.init(outcome: .disambiguation, value: dateComponentsRangesToDisambiguate) }
+    open class func success(with resolvedDateComponentsRange: INDateComponentsRange) -> Self { self.init(outcome: .success, value: resolvedDateComponentsRange) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INDateComponentsResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with dateComponentsToConfirm: DateComponents?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with dateComponentsToDisambiguate: [DateComponents]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedDateComponents: DateComponents) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with dateComponentsToConfirm: DateComponents?) -> Self { self.init(outcome: .confirmationRequired, value: dateComponentsToConfirm) }
+    open class func disambiguation(with dateComponentsToDisambiguate: [DateComponents]) -> Self { self.init(outcome: .disambiguation, value: dateComponentsToDisambiguate) }
+    open class func success(with resolvedDateComponents: DateComponents) -> Self { self.init(outcome: .success, value: resolvedDateComponents) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -662,8 +715,8 @@ open class INDateRelevanceProvider: NSObject, @unchecked Sendable {
 }
 
 open class INDateSearchTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with dateSearchTypeToConfirm: INDateSearchType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedDateSearchType: INDateSearchType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with dateSearchTypeToConfirm: INDateSearchType) -> Self { self.init(outcome: .confirmationRequired, value: dateSearchTypeToConfirm) }
+    open class func success(with resolvedDateSearchType: INDateSearchType) -> Self { self.init(outcome: .success, value: resolvedDateSearchType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -676,11 +729,14 @@ open class INDefaultCardTemplate: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(title: String) {
         self.init()
+        self.title = title
     }
     public convenience init?(coder: NSCoder) {
-        return nil
+        self.init()
+        _ = coder
     }
 }
+
 
 open class INDeleteTasksIntent: INIntent, @unchecked Sendable {
     open var taskList: INTaskList? = nil
@@ -698,7 +754,7 @@ open class INDeleteTasksIntentResponse: INIntentResponse, @unchecked Sendable {
 }
 
 open class INDeleteTasksTaskListResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INDeleteTasksTaskListUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INDeleteTasksTaskListUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -708,7 +764,7 @@ open class INDeleteTasksTaskListResolutionResult: INIntentResolutionResult, @unc
 }
 
 open class INDeleteTasksTaskResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INDeleteTasksTaskUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INDeleteTasksTaskUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -751,9 +807,9 @@ open class INEndWorkoutIntentResponse: INIntentResponse, @unchecked Sendable {
 }
 
 open class INEnergyResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with energyToConfirm: Measurement<UnitEnergy>?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with energyToDisambiguate: [Measurement<UnitEnergy>]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedEnergy: Measurement<UnitEnergy>) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with energyToConfirm: Measurement<UnitEnergy>?) -> Self { self.init(outcome: .confirmationRequired, value: energyToConfirm) }
+    open class func disambiguation(with energyToDisambiguate: [Measurement<UnitEnergy>]) -> Self { self.init(outcome: .disambiguation, value: energyToDisambiguate) }
+    open class func success(with resolvedEnergy: Measurement<UnitEnergy>) -> Self { self.init(outcome: .success, value: resolvedEnergy) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -778,9 +834,9 @@ open class INFile: NSObject, @unchecked Sendable {
 }
 
 open class INFileResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with fileToConfirm: INFile?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with filesToDisambiguate: [INFile]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedFile: INFile) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with fileToConfirm: INFile?) -> Self { self.init(outcome: .confirmationRequired, value: fileToConfirm) }
+    open class func disambiguation(with filesToDisambiguate: [INFile]) -> Self { self.init(outcome: .disambiguation, value: filesToDisambiguate) }
+    open class func success(with resolvedFile: INFile) -> Self { self.init(outcome: .success, value: resolvedFile) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1028,23 +1084,13 @@ open class INIntentDonationMetadata: NSObject, @unchecked Sendable {
     }
 }
 
-extension INInteraction {
-    public func parameterValue(for parameter: INParameter) -> Any? { nil }
-    public var dateInterval: DateInterval? {
-        get { nil }
-        set { _ = newValue }
-    }
-    public var groupIdentifier: String? {
-        get { nil }
-        set { _ = newValue }
-    }
-    public var intentHandlingStatus: INIntentHandlingStatus? { nil }
-}
+
+
 
 open class INLengthResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with lengthToConfirm: Measurement<UnitLength>?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with lengthsToDisambiguate: [Measurement<UnitLength>]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedLength: Measurement<UnitLength>) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with lengthToConfirm: Measurement<UnitLength>?) -> Self { self.init(outcome: .confirmationRequired, value: lengthToConfirm) }
+    open class func disambiguation(with lengthsToDisambiguate: [Measurement<UnitLength>]) -> Self { self.init(outcome: .disambiguation, value: lengthsToDisambiguate) }
+    open class func success(with resolvedLength: Measurement<UnitLength>) -> Self { self.init(outcome: .success, value: resolvedLength) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1083,8 +1129,8 @@ open class INLocationRelevanceProvider: NSObject, @unchecked Sendable {
 }
 
 open class INLocationSearchTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with locationSearchTypeToConfirm: INLocationSearchType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedLocationSearchType: INLocationSearchType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with locationSearchTypeToConfirm: INLocationSearchType) -> Self { self.init(outcome: .confirmationRequired, value: locationSearchTypeToConfirm) }
+    open class func success(with resolvedLocationSearchType: INLocationSearchType) -> Self { self.init(outcome: .success, value: resolvedLocationSearchType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1096,17 +1142,17 @@ open class INLodgingReservation: INReservation, @unchecked Sendable {
 }
 
 open class INMassResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with massToConfirm: Measurement<UnitMass>?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with massToDisambiguate: [Measurement<UnitMass>]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedMass: Measurement<UnitMass>) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with massToConfirm: Measurement<UnitMass>?) -> Self { self.init(outcome: .confirmationRequired, value: massToConfirm) }
+    open class func disambiguation(with massToDisambiguate: [Measurement<UnitMass>]) -> Self { self.init(outcome: .disambiguation, value: massToDisambiguate) }
+    open class func success(with resolvedMass: Measurement<UnitMass>) -> Self { self.init(outcome: .success, value: resolvedMass) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INMediaAffinityTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with mediaAffinityTypeToConfirm: INMediaAffinityType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedMediaAffinityType: INMediaAffinityType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with mediaAffinityTypeToConfirm: INMediaAffinityType) -> Self { self.init(outcome: .confirmationRequired, value: mediaAffinityTypeToConfirm) }
+    open class func success(with resolvedMediaAffinityType: INMediaAffinityType) -> Self { self.init(outcome: .success, value: resolvedMediaAffinityType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1124,38 +1170,29 @@ open class INMediaDestinationReference: NSObject, @unchecked Sendable {
 }
 
 open class INMediaDestinationResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with mediaDestinationToConfirm: INMediaDestination?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with mediaDestinationsToDisambiguate: [INMediaDestination]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedMediaDestination: INMediaDestination) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with mediaDestinationToConfirm: INMediaDestination?) -> Self { self.init(outcome: .confirmationRequired, value: mediaDestinationToConfirm) }
+    open class func disambiguation(with mediaDestinationsToDisambiguate: [INMediaDestination]) -> Self { self.init(outcome: .disambiguation, value: mediaDestinationsToDisambiguate) }
+    open class func success(with resolvedMediaDestination: INMediaDestination) -> Self { self.init(outcome: .success, value: resolvedMediaDestination) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
-extension INMediaItem {
-    public var artist: String? { nil }
-}
+
+
 
 open class INMediaItemResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with mediaItemToConfirm: INMediaItem?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with mediaItemsToDisambiguate: [INMediaItem]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedMediaItem: INMediaItem) -> Self { self.init(outcome: .success, value: nil) }
-    open class func successes(with resolvedMediaItems: [INMediaItem]) -> [INMediaItemResolutionResult] { [] }
+    open class func confirmationRequired(with mediaItemToConfirm: INMediaItem?) -> Self { self.init(outcome: .confirmationRequired, value: mediaItemToConfirm) }
+    open class func disambiguation(with mediaItemsToDisambiguate: [INMediaItem]) -> Self { self.init(outcome: .disambiguation, value: mediaItemsToDisambiguate) }
+    open class func success(with resolvedMediaItem: INMediaItem) -> Self { self.init(outcome: .success, value: resolvedMediaItem) }
+    open class func successes(with resolvedMediaItems: [INMediaItem]) -> [INMediaItemResolutionResult] { resolvedMediaItems.map { self.init(outcome: .success, value: $0) } }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
-extension INMediaSearch {
-    public var activityNames: [String]? { nil }
-    public var genreNames: [String]? { nil }
-    public var mediaIdentifier: String? { nil }
-    public var mediaType: INMediaItemType? { nil }
-    public var moodNames: [String]? { nil }
-    public var reference: INMediaReference? { nil }
-    public var releaseDate: INDateComponentsRange? { nil }
-    public var sortOrder: INMediaSortOrder? { nil }
-}
+
+
 
 open class INMediaUserContext: INUserContext, @unchecked Sendable {
     public enum SubscriptionStatus: Int, Hashable, Sendable {
@@ -1221,16 +1258,16 @@ open class INMessage: NSObject, @unchecked Sendable {
 }
 
 open class INMessageAttributeOptionsResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with messageAttributeOptionsToConfirm: INMessageAttributeOptions = []) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedMessageAttributeOptions: INMessageAttributeOptions = []) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with messageAttributeOptionsToConfirm: INMessageAttributeOptions = []) -> Self { self.init(outcome: .confirmationRequired, value: messageAttributeOptionsToConfirm) }
+    open class func success(with resolvedMessageAttributeOptions: INMessageAttributeOptions = []) -> Self { self.init(outcome: .success, value: resolvedMessageAttributeOptions) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INMessageAttributeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with messageAttributeToConfirm: INMessageAttribute) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedMessageAttribute: INMessageAttribute) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with messageAttributeToConfirm: INMessageAttribute) -> Self { self.init(outcome: .confirmationRequired, value: messageAttributeToConfirm) }
+    open class func success(with resolvedMessageAttribute: INMessageAttribute) -> Self { self.init(outcome: .success, value: resolvedMessageAttribute) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1288,34 +1325,34 @@ open class INNoteContent: NSObject, @unchecked Sendable {
 }
 
 open class INNoteContentResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with noteContentToConfirm: INNoteContent?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with noteContentsToDisambiguate: [INNoteContent]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedNoteContent: INNoteContent) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with noteContentToConfirm: INNoteContent?) -> Self { self.init(outcome: .confirmationRequired, value: noteContentToConfirm) }
+    open class func disambiguation(with noteContentsToDisambiguate: [INNoteContent]) -> Self { self.init(outcome: .disambiguation, value: noteContentsToDisambiguate) }
+    open class func success(with resolvedNoteContent: INNoteContent) -> Self { self.init(outcome: .success, value: resolvedNoteContent) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INNoteContentTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with noteContentTypeToConfirm: INNoteContentType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedNoteContentType: INNoteContentType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with noteContentTypeToConfirm: INNoteContentType) -> Self { self.init(outcome: .confirmationRequired, value: noteContentTypeToConfirm) }
+    open class func success(with resolvedNoteContentType: INNoteContentType) -> Self { self.init(outcome: .success, value: resolvedNoteContentType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INNoteResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with noteToConfirm: INNote?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with notesToDisambiguate: [INNote]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedNote: INNote) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with noteToConfirm: INNote?) -> Self { self.init(outcome: .confirmationRequired, value: noteToConfirm) }
+    open class func disambiguation(with notesToDisambiguate: [INNote]) -> Self { self.init(outcome: .disambiguation, value: notesToDisambiguate) }
+    open class func success(with resolvedNote: INNote) -> Self { self.init(outcome: .success, value: resolvedNote) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INNotebookItemTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with notebookItemTypeToConfirm: INNotebookItemType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedNotebookItemType: INNotebookItemType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with notebookItemTypeToConfirm: INNotebookItemType) -> Self { self.init(outcome: .confirmationRequired, value: notebookItemTypeToConfirm) }
+    open class func success(with resolvedNotebookItemType: INNotebookItemType) -> Self { self.init(outcome: .success, value: resolvedNotebookItemType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1340,30 +1377,41 @@ extension INObjectCollection {
 }
 
 open class INOutgoingMessageTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with outgoingMessageTypeToConfirm: INOutgoingMessageType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedOutgoingMessageType: INOutgoingMessageType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with outgoingMessageTypeToConfirm: INOutgoingMessageType) -> Self { self.init(outcome: .confirmationRequired, value: outgoingMessageTypeToConfirm) }
+    open class func success(with resolvedOutgoingMessageType: INOutgoingMessageType) -> Self { self.init(outcome: .success, value: resolvedOutgoingMessageType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INParameter: NSObject, @unchecked Sendable {
-    open func index(forSubKeyPath subKeyPath: String) -> Int { 0 }
-    open func isEqual(to parameter: INParameter) -> Bool { false }
-    open func setIndex(_ index: Int, forSubKeyPath subKeyPath: String) { }
-    open var parameterClass: AnyClass?
+    private var indexes: [String: Int] = [:]
+    open var parameterClass: AnyClass = INIntent.self
     open var parameterKeyPath: String = ""
     public required override init() { super.init() }
     public convenience init(for aClass: AnyClass, keyPath: String) {
         self.init()
+        self.parameterClass = aClass
+        self.parameterKeyPath = keyPath
     }
     public convenience init(forClass aClass: AnyClass, keyPath: String) {
-        self.init()
+        self.init(for: aClass, keyPath: keyPath)
+    }
+    open func index(forSubKeyPath subKeyPath: String) -> Int {
+        indexes[subKeyPath] ?? NSNotFound
+    }
+    open func setIndex(_ index: Int, forSubKeyPath subKeyPath: String) {
+        indexes[subKeyPath] = index
+    }
+    open func isEqual(to parameter: INParameter) -> Bool {
+        parameterClass == parameter.parameterClass && parameterKeyPath == parameter.parameterKeyPath
     }
     public convenience init?(coder: NSCoder) {
-        return nil
+        let path = coder.decodeObject(of: NSString.self, forKey: "parameterKeyPath") as String? ?? ""
+        self.init(for: INIntent.self, keyPath: path)
     }
 }
+
 
 open class INPauseWorkoutIntent: INIntent, @unchecked Sendable {
     open var workoutName: INSpeakableString? = nil
@@ -1431,9 +1479,9 @@ open class INPaymentAccount: NSObject, @unchecked Sendable {
 }
 
 open class INPaymentAccountResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with paymentAccountToConfirm: INPaymentAccount?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with paymentAccountsToDisambiguate: [INPaymentAccount]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedPaymentAccount: INPaymentAccount) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with paymentAccountToConfirm: INPaymentAccount?) -> Self { self.init(outcome: .confirmationRequired, value: paymentAccountToConfirm) }
+    open class func disambiguation(with paymentAccountsToDisambiguate: [INPaymentAccount]) -> Self { self.init(outcome: .disambiguation, value: paymentAccountsToDisambiguate) }
+    open class func success(with resolvedPaymentAccount: INPaymentAccount) -> Self { self.init(outcome: .success, value: resolvedPaymentAccount) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1452,9 +1500,9 @@ open class INPaymentAmount: NSObject, @unchecked Sendable {
 }
 
 open class INPaymentAmountResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with paymentAmountToConfirm: INPaymentAmount?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with paymentAmountsToDisambiguate: [INPaymentAmount]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedPaymentAmount: INPaymentAmount) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with paymentAmountToConfirm: INPaymentAmount?) -> Self { self.init(outcome: .confirmationRequired, value: paymentAmountToConfirm) }
+    open class func disambiguation(with paymentAmountsToDisambiguate: [INPaymentAmount]) -> Self { self.init(outcome: .disambiguation, value: paymentAmountsToDisambiguate) }
+    open class func success(with resolvedPaymentAmount: INPaymentAmount) -> Self { self.init(outcome: .success, value: resolvedPaymentAmount) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1476,9 +1524,9 @@ open class INPaymentMethod: NSObject, @unchecked Sendable {
 }
 
 open class INPaymentMethodResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with paymentMethodToConfirm: INPaymentMethod?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with paymentMethodsToDisambiguate: [INPaymentMethod]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedPaymentMethod: INPaymentMethod) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with paymentMethodToConfirm: INPaymentMethod?) -> Self { self.init(outcome: .confirmationRequired, value: paymentMethodToConfirm) }
+    open class func disambiguation(with paymentMethodsToDisambiguate: [INPaymentMethod]) -> Self { self.init(outcome: .disambiguation, value: paymentMethodsToDisambiguate) }
+    open class func success(with resolvedPaymentMethod: INPaymentMethod) -> Self { self.init(outcome: .success, value: resolvedPaymentMethod) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1505,20 +1553,15 @@ open class INPaymentRecord: NSObject, @unchecked Sendable {
 }
 
 open class INPaymentStatusResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with paymentStatusToConfirm: INPaymentStatus) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedPaymentStatus: INPaymentStatus) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with paymentStatusToConfirm: INPaymentStatus) -> Self { self.init(outcome: .confirmationRequired, value: paymentStatusToConfirm) }
+    open class func success(with resolvedPaymentStatus: INPaymentStatus) -> Self { self.init(outcome: .success, value: resolvedPaymentStatus) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
-extension INPerson {
-    public var isContactSuggestion: Bool { false }
-    public var handle: String? { nil }
-    public var isMe: Bool { false }
-    public var relationship: INPersonRelationship? { nil }
-    public var siriMatches: [INPerson]? { nil }
-}
+
+
 
 open class INPlacemarkResolutionResult: INIntentResolutionResult, @unchecked Sendable {
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
@@ -1530,23 +1573,50 @@ open class INPlayMediaIntent: INIntent, @unchecked Sendable {
     open var mediaContainer: INMediaItem? = nil
     open var mediaItems: [INMediaItem]? = nil
     open var mediaSearch: INMediaSearch? = nil
-    open var playbackQueueLocation: INPlaybackQueueLocation?
-    open var playbackRepeatMode: INPlaybackRepeatMode?
+    open var playbackQueueLocation: INPlaybackQueueLocation = .unknown
+    open var playbackRepeatMode: INPlaybackRepeatMode = .unknown
+    open var playShuffled: Bool? = nil
+    open var resumePlayback: Bool? = nil
+    open var playbackSpeed: Double? = nil
     public required override init() { super.init() }
+    public convenience init(
+        mediaItems: [INMediaItem]? = nil,
+        mediaContainer: INMediaItem? = nil,
+        playShuffled: Bool? = nil,
+        playbackRepeatMode: INPlaybackRepeatMode = .unknown,
+        resumePlayback: Bool? = nil,
+        playbackQueueLocation: INPlaybackQueueLocation = .unknown,
+        playbackSpeed: Double? = nil,
+        mediaSearch: INMediaSearch? = nil
+    ) {
+        self.init()
+        self.mediaItems = mediaItems
+        self.mediaContainer = mediaContainer
+        self.playShuffled = playShuffled
+        self.playbackRepeatMode = playbackRepeatMode
+        self.resumePlayback = resumePlayback
+        self.playbackQueueLocation = playbackQueueLocation
+        self.playbackSpeed = playbackSpeed
+        self.mediaSearch = mediaSearch
+    }
 }
 
+
 open class INPlayMediaIntentResponse: INIntentResponse, @unchecked Sendable {
-    open var code: INPlayMediaIntentResponseCode?
+    open var code: INPlayMediaIntentResponseCode = .unspecified
     open var nowPlayingInfo: [String : Any]? = nil
     public required override init() { super.init() }
     public convenience init(code: INPlayMediaIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
+
 open class INPlayMediaMediaItemResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func successes(with resolvedMediaItems: [INMediaItem]) -> [INPlayMediaMediaItemResolutionResult] { [] }
-    open class func unsupported(forReason reason: INPlayMediaMediaItemUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func successes(with resolvedMediaItems: [INMediaItem]) -> [INPlayMediaMediaItemResolutionResult] { resolvedMediaItems.map { self.init(outcome: .success, value: $0) } }
+    open class func unsupported(forReason reason: INPlayMediaMediaItemUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1556,7 +1626,7 @@ open class INPlayMediaMediaItemResolutionResult: INIntentResolutionResult, @unch
 }
 
 open class INPlayMediaPlaybackSpeedResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INPlayMediaPlaybackSpeedUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INPlayMediaPlaybackSpeedUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1566,29 +1636,35 @@ open class INPlayMediaPlaybackSpeedResolutionResult: INIntentResolutionResult, @
 }
 
 open class INPlaybackQueueLocationResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with playbackQueueLocationToConfirm: INPlaybackQueueLocation) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedPlaybackQueueLocation: INPlaybackQueueLocation) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with playbackQueueLocationToConfirm: INPlaybackQueueLocation) -> Self { self.init(outcome: .confirmationRequired, value: playbackQueueLocationToConfirm) }
+    open class func success(with resolvedPlaybackQueueLocation: INPlaybackQueueLocation) -> Self { self.init(outcome: .success, value: resolvedPlaybackQueueLocation) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INPlaybackRepeatModeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with playbackRepeatModeToConfirm: INPlaybackRepeatMode) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedPlaybackRepeatMode: INPlaybackRepeatMode) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with playbackRepeatModeToConfirm: INPlaybackRepeatMode) -> Self { self.init(outcome: .confirmationRequired, value: playbackRepeatModeToConfirm) }
+    open class func success(with resolvedPlaybackRepeatMode: INPlaybackRepeatMode) -> Self { self.init(outcome: .success, value: resolvedPlaybackRepeatMode) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INPreferences: NSObject, @unchecked Sendable {
+    // Apple: INSiriAuthorizationStatus.denied is "The user denied
+    // authorization for the app to use Siri"; .restricted is ineligibility
+    // because of active restrictions (see INFocusStatusAuthorizationStatus).
+    // Linux has no Siri prompt or account, so the host stays .denied and
+    // invokes the request handler synchronously with that status.
     open class func requestSiriAuthorization(_ handler: @escaping (INSiriAuthorizationStatus) -> Void) {
-        handler(.restricted)
+        handler(.denied)
     }
-    open class func siriAuthorizationStatus() -> INSiriAuthorizationStatus { .restricted }
+    open class func siriAuthorizationStatus() -> INSiriAuthorizationStatus { .denied }
     open class func siriLanguageCode() -> String { "" }
     public required override init() { super.init() }
 }
+
 
 open class INPriceRange: NSObject, @unchecked Sendable {
     open var currencyCode: String = ""
@@ -1616,8 +1692,8 @@ open class INPriceRange: NSObject, @unchecked Sendable {
 }
 
 open class INRadioTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with radioTypeToConfirm: INRadioType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedRadioType: INRadioType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with radioTypeToConfirm: INRadioType) -> Self { self.init(outcome: .confirmationRequired, value: radioTypeToConfirm) }
+    open class func success(with resolvedRadioType: INRadioType) -> Self { self.init(outcome: .success, value: resolvedRadioType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1640,16 +1716,16 @@ open class INRecurrenceRule: NSObject, @unchecked Sendable {
 }
 
 open class INRelativeReferenceResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with relativeReferenceToConfirm: INRelativeReference) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedRelativeReference: INRelativeReference) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with relativeReferenceToConfirm: INRelativeReference) -> Self { self.init(outcome: .confirmationRequired, value: relativeReferenceToConfirm) }
+    open class func success(with resolvedRelativeReference: INRelativeReference) -> Self { self.init(outcome: .success, value: resolvedRelativeReference) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INRelativeSettingResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with relativeSettingToConfirm: INRelativeSetting) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedRelativeSetting: INRelativeSetting) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with relativeSettingToConfirm: INRelativeSetting) -> Self { self.init(outcome: .confirmationRequired, value: relativeSettingToConfirm) }
+    open class func success(with resolvedRelativeSetting: INRelativeSetting) -> Self { self.init(outcome: .success, value: resolvedRelativeSetting) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1664,24 +1740,41 @@ open class INRelevanceProvider: NSObject, @unchecked Sendable {
 
 open class INRelevantShortcut: NSObject, @unchecked Sendable {
     open var relevanceProviders: [INRelevanceProvider] = []
-    open var shortcut: INShortcut?
-    open var shortcutRole: INRelevantShortcutRole?
+    open var shortcut: INShortcut
+    open var shortcutRole: INRelevantShortcutRole = .action
     open var watchTemplate: INDefaultCardTemplate? = nil
     open var widgetKind: String? = nil
-    public required override init() { super.init() }
-    public convenience init(shortcut: INShortcut) {
-        self.init()
+    public init(shortcut: INShortcut) {
+        self.shortcut = shortcut
+        super.init()
     }
     public convenience init?(coder: NSCoder) {
-        return nil
+        guard let shortcut = coder.decodeObject(of: INShortcut.self, forKey: "shortcut") else {
+            return nil
+        }
+        self.init(shortcut: shortcut)
+        widgetKind = coder.decodeObject(of: NSString.self, forKey: "widgetKind") as String?
     }
 }
 
+
 open class INRelevantShortcutStore: NSObject, @unchecked Sendable {
-    public static var `default`: INRelevantShortcutStore { fatalError("Intents.INRelevantShortcutStore.default is unavailable on this Linux host") }
-    open func setRelevantShortcuts(_ shortcuts: [INRelevantShortcut]) async throws { }
+    public static let `default` = INRelevantShortcutStore()
+    private let state = Mutex<[INRelevantShortcut]>([])
     public required override init() { super.init() }
+    open func setRelevantShortcuts(_ shortcuts: [INRelevantShortcut]) async throws {
+        state.withLock { $0 = shortcuts }
+    }
+    open func setRelevantShortcuts(_ shortcuts: [INRelevantShortcut], completion: ((Error?) -> Void)? = nil) {
+        state.withLock { $0 = shortcuts }
+        completion?(nil)
+    }
+    @_spi(OpenIntentsHost)
+    public var storedShortcuts: [INRelevantShortcut] {
+        state.withLock { $0 }
+    }
 }
+
 
 open class INRentalCar: NSObject, @unchecked Sendable {
     open var make: String? = nil
@@ -1705,7 +1798,7 @@ open class INRentalCarReservation: NSObject, @unchecked Sendable {
 }
 
 open class INRequestPaymentCurrencyAmountResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INRequestPaymentCurrencyAmountUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INRequestPaymentCurrencyAmountUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1734,7 +1827,7 @@ open class INRequestPaymentIntentResponse: INIntentResponse, @unchecked Sendable
 }
 
 open class INRequestPaymentPayerResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INRequestPaymentPayerUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INRequestPaymentPayerUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1821,9 +1914,9 @@ open class INRestaurantGuestDisplayPreferences: NSObject, @unchecked Sendable {
 }
 
 open class INRestaurantGuestResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with restaurantGuestToConfirm: INRestaurantGuest?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with restaurantGuestsToDisambiguate: [INRestaurantGuest]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedRestaurantGuest: INRestaurantGuest) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with restaurantGuestToConfirm: INRestaurantGuest?) -> Self { self.init(outcome: .confirmationRequired, value: restaurantGuestToConfirm) }
+    open class func disambiguation(with restaurantGuestsToDisambiguate: [INRestaurantGuest]) -> Self { self.init(outcome: .disambiguation, value: restaurantGuestsToDisambiguate) }
+    open class func success(with resolvedRestaurantGuest: INRestaurantGuest) -> Self { self.init(outcome: .success, value: resolvedRestaurantGuest) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -1885,9 +1978,9 @@ open class INRestaurantReservationUserBooking: NSObject, @unchecked Sendable {
 }
 
 open class INRestaurantResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with restaurantToConfirm: INRestaurant?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with restaurantsToDisambiguate: [INRestaurant]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedRestaurant: INRestaurant) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with restaurantToConfirm: INRestaurant?) -> Self { self.init(outcome: .confirmationRequired, value: restaurantToConfirm) }
+    open class func disambiguation(with restaurantsToDisambiguate: [INRestaurant]) -> Self { self.init(outcome: .disambiguation, value: restaurantsToDisambiguate) }
+    open class func success(with resolvedRestaurant: INRestaurant) -> Self { self.init(outcome: .success, value: resolvedRestaurant) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2112,8 +2205,8 @@ open class INSearchForMediaIntentResponse: INIntentResponse, @unchecked Sendable
 }
 
 open class INSearchForMediaMediaItemResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func successes(with resolvedMediaItems: [INMediaItem]) -> [INSearchForMediaMediaItemResolutionResult] { [] }
-    open class func unsupported(forReason reason: INSearchForMediaMediaItemUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func successes(with resolvedMediaItems: [INMediaItem]) -> [INSearchForMediaMediaItemResolutionResult] { resolvedMediaItems.map { self.init(outcome: .success, value: $0) } }
+    open class func unsupported(forReason reason: INSearchForMediaMediaItemUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2125,45 +2218,83 @@ open class INSearchForMediaMediaItemResolutionResult: INIntentResolutionResult, 
 open class INSearchForMessagesIntent: INIntent, @unchecked Sendable {
     open var attributes: INMessageAttributeOptions = []
     open var conversationIdentifiers: [String]? = nil
-    open var conversationIdentifiersOperator: INConditionalOperator?
+    open var conversationIdentifiersOperator: INConditionalOperator = .all
     open var dateTimeRange: INDateComponentsRange? = nil
     open var groupNames: [String]? = nil
-    open var groupNamesOperator: INConditionalOperator?
+    open var groupNamesOperator: INConditionalOperator = .all
     open var identifiers: [String]? = nil
-    open var identifiersOperator: INConditionalOperator?
+    open var identifiersOperator: INConditionalOperator = .all
     open var notificationIdentifiers: [String]? = nil
-    open var notificationIdentifiersOperator: INConditionalOperator?
+    open var notificationIdentifiersOperator: INConditionalOperator = .all
     open var recipients: [INPerson]? = nil
-    open var recipientsOperator: INConditionalOperator?
+    open var recipientsOperator: INConditionalOperator = .all
     open var searchTerms: [String]? = nil
-    open var searchTermsOperator: INConditionalOperator?
+    open var searchTermsOperator: INConditionalOperator = .all
     open var senders: [INPerson]? = nil
-    open var sendersOperator: INConditionalOperator?
+    open var sendersOperator: INConditionalOperator = .all
     open var speakableGroupNames: [INSpeakableString]? = nil
-    open var speakableGroupNamesOperator: INConditionalOperator?
+    open var speakableGroupNamesOperator: INConditionalOperator = .all
     public required override init() { super.init() }
     public convenience init(recipients: [INPerson]?, senders: [INPerson]?, searchTerms: [String]?, attributes: INMessageAttributeOptions = [], dateTime dateTimeRange: INDateComponentsRange?, identifiers: [String]?, notificationIdentifiers: [String]?, groupNames: [String]?) {
         self.init()
+        self.recipients = recipients
+        self.senders = senders
+        self.searchTerms = searchTerms
+        self.attributes = attributes
+        self.dateTimeRange = dateTimeRange
+        self.identifiers = identifiers
+        self.notificationIdentifiers = notificationIdentifiers
+        self.groupNames = groupNames
     }
     public convenience init(recipients: [INPerson]?, senders: [INPerson]?, searchTerms: [String]?, attributes: INMessageAttributeOptions = [], dateTime dateTimeRange: INDateComponentsRange?, identifiers: [String]?, notificationIdentifiers: [String]?, speakableGroupNames: [INSpeakableString]?) {
         self.init()
+        self.recipients = recipients
+        self.senders = senders
+        self.searchTerms = searchTerms
+        self.attributes = attributes
+        self.dateTimeRange = dateTimeRange
+        self.identifiers = identifiers
+        self.notificationIdentifiers = notificationIdentifiers
+        self.speakableGroupNames = speakableGroupNames
     }
     public convenience init(recipients: [INPerson]?, senders: [INPerson]?, searchTerms: [String]?, attributes: INMessageAttributeOptions = [], dateTime dateTimeRange: INDateComponentsRange?, identifiers: [String]?, notificationIdentifiers: [String]?, speakableGroupNames: [INSpeakableString]?, conversationIdentifiers: [String]?) {
         self.init()
+        self.recipients = recipients
+        self.senders = senders
+        self.searchTerms = searchTerms
+        self.attributes = attributes
+        self.dateTimeRange = dateTimeRange
+        self.identifiers = identifiers
+        self.notificationIdentifiers = notificationIdentifiers
+        self.speakableGroupNames = speakableGroupNames
+        self.conversationIdentifiers = conversationIdentifiers
     }
     public convenience init(recipients: [INPerson]?, senders: [INPerson]?, searchTerms: [String]?, attributes: INMessageAttributeOptions = [], dateTimeRange: INDateComponentsRange?, identifiers: [String]?, notificationIdentifiers: [String]?, speakableGroupNames: [INSpeakableString]?, conversationIdentifiers: [String]?) {
         self.init()
+        self.recipients = recipients
+        self.senders = senders
+        self.searchTerms = searchTerms
+        self.attributes = attributes
+        self.dateTimeRange = dateTimeRange
+        self.identifiers = identifiers
+        self.notificationIdentifiers = notificationIdentifiers
+        self.speakableGroupNames = speakableGroupNames
+        self.conversationIdentifiers = conversationIdentifiers
     }
 }
 
+
 open class INSearchForMessagesIntentResponse: INIntentResponse, @unchecked Sendable {
-    open var code: INSearchForMessagesIntentResponseCode?
+    open var code: INSearchForMessagesIntentResponseCode = .unspecified
     open var messages: [INMessage]? = nil
     public required override init() { super.init() }
     public convenience init(code: INSearchForMessagesIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
+
 
 open class INSearchForNotebookItemsIntent: INIntent, @unchecked Sendable {
     open var content: String? = nil
@@ -2238,7 +2369,7 @@ open class INSendMessageIntent: INIntent, @unchecked Sendable {
     open var content: String? = nil
     open var conversationIdentifier: String? = nil
     open var groupName: String? = nil
-    open var outgoingMessageType: INOutgoingMessageType?
+    open var outgoingMessageType: INOutgoingMessageType = .unknown
     open var recipients: [INPerson]? = nil
     open var sender: INPerson? = nil
     open var serviceName: String? = nil
@@ -2246,17 +2377,44 @@ open class INSendMessageIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(recipients: [INPerson]?, content: String?, groupName: String?, serviceName: String?, sender: INPerson?) {
         self.init()
+        self.recipients = recipients
+        self.content = content
+        self.groupName = groupName
+        self.serviceName = serviceName
+        self.sender = sender
     }
     public convenience init(recipients: [INPerson]?, content: String?, speakableGroupName: INSpeakableString?, conversationIdentifier: String?, serviceName: String?, sender: INPerson?) {
         self.init()
+        self.recipients = recipients
+        self.content = content
+        self.speakableGroupName = speakableGroupName
+        self.conversationIdentifier = conversationIdentifier
+        self.serviceName = serviceName
+        self.sender = sender
     }
     public convenience init(recipients: [INPerson]?, outgoingMessageType: INOutgoingMessageType, content: String?, speakableGroupName: INSpeakableString?, conversationIdentifier: String?, serviceName: String?, sender: INPerson?) {
         self.init()
+        self.recipients = recipients
+        self.outgoingMessageType = outgoingMessageType
+        self.content = content
+        self.speakableGroupName = speakableGroupName
+        self.conversationIdentifier = conversationIdentifier
+        self.serviceName = serviceName
+        self.sender = sender
     }
     public convenience init(recipients: [INPerson]?, outgoingMessageType: INOutgoingMessageType, content: String?, speakableGroupName: INSpeakableString?, conversationIdentifier: String?, serviceName: String?, sender: INPerson?, attachments: [INSendMessageAttachment]?) {
         self.init()
+        self.recipients = recipients
+        self.outgoingMessageType = outgoingMessageType
+        self.content = content
+        self.speakableGroupName = speakableGroupName
+        self.conversationIdentifier = conversationIdentifier
+        self.serviceName = serviceName
+        self.sender = sender
+        self.attachments = attachments
     }
 }
+
 
 open class INSendMessageIntentDonationMetadata: NSObject, @unchecked Sendable {
     open var mentionsCurrentUser: Bool = false
@@ -2267,17 +2425,20 @@ open class INSendMessageIntentDonationMetadata: NSObject, @unchecked Sendable {
 }
 
 open class INSendMessageIntentResponse: INIntentResponse, @unchecked Sendable {
-    open var code: INSendMessageIntentResponseCode?
+    open var code: INSendMessageIntentResponseCode = .unspecified
     open var sentMessage: INMessage? = nil
     open var sentMessages: [INMessage]? = nil
     public required override init() { super.init() }
     public convenience init(code: INSendMessageIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
+
 open class INSendMessageRecipientResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INSendMessageRecipientUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INSendMessageRecipientUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2287,7 +2448,7 @@ open class INSendMessageRecipientResolutionResult: INIntentResolutionResult, @un
 }
 
 open class INSendPaymentCurrencyAmountResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INSendPaymentCurrencyAmountUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INSendPaymentCurrencyAmountUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2316,7 +2477,7 @@ open class INSendPaymentIntentResponse: INIntentResponse, @unchecked Sendable {
 }
 
 open class INSendPaymentPayeeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INSendPaymentPayeeUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INSendPaymentPayeeUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2529,7 +2690,7 @@ open class INSetTaskAttributeIntentResponse: INIntentResponse, @unchecked Sendab
 }
 
 open class INSetTaskAttributeTemporalEventTriggerResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INSetTaskAttributeTemporalEventTriggerUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INSetTaskAttributeTemporalEventTriggerUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2585,7 +2746,7 @@ open class INSnoozeTasksIntentResponse: INIntentResponse, @unchecked Sendable {
 }
 
 open class INSnoozeTasksTaskResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INSnoozeTasksTaskUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INSnoozeTasksTaskUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2603,27 +2764,27 @@ open class INSpatialEventTrigger: NSObject, @unchecked Sendable {
 }
 
 open class INSpatialEventTriggerResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with spatialEventTriggerToConfirm: INSpatialEventTrigger?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with spatialEventTriggersToDisambiguate: [INSpatialEventTrigger]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedSpatialEventTrigger: INSpatialEventTrigger) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with spatialEventTriggerToConfirm: INSpatialEventTrigger?) -> Self { self.init(outcome: .confirmationRequired, value: spatialEventTriggerToConfirm) }
+    open class func disambiguation(with spatialEventTriggersToDisambiguate: [INSpatialEventTrigger]) -> Self { self.init(outcome: .disambiguation, value: spatialEventTriggersToDisambiguate) }
+    open class func success(with resolvedSpatialEventTrigger: INSpatialEventTrigger) -> Self { self.init(outcome: .success, value: resolvedSpatialEventTrigger) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INSpeakableStringResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with stringToConfirm: INSpeakableString?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with stringsToDisambiguate: [INSpeakableString]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedString: INSpeakableString) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with stringToConfirm: INSpeakableString?) -> Self { self.init(outcome: .confirmationRequired, value: stringToConfirm) }
+    open class func disambiguation(with stringsToDisambiguate: [INSpeakableString]) -> Self { self.init(outcome: .disambiguation, value: stringsToDisambiguate) }
+    open class func success(with resolvedString: INSpeakableString) -> Self { self.init(outcome: .success, value: resolvedString) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INSpeedResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with speedToConfirm: Measurement<UnitSpeed>?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with speedToDisambiguate: [Measurement<UnitSpeed>]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedSpeed: Measurement<UnitSpeed>) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with speedToConfirm: Measurement<UnitSpeed>?) -> Self { self.init(outcome: .confirmationRequired, value: speedToConfirm) }
+    open class func disambiguation(with speedToDisambiguate: [Measurement<UnitSpeed>]) -> Self { self.init(outcome: .disambiguation, value: speedToDisambiguate) }
+    open class func success(with resolvedSpeed: Measurement<UnitSpeed>) -> Self { self.init(outcome: .success, value: resolvedSpeed) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2650,7 +2811,7 @@ open class INStartAudioCallIntentResponse: INIntentResponse, @unchecked Sendable
 }
 
 open class INStartCallCallCapabilityResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INStartCallCallCapabilityUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INStartCallCallCapabilityUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2660,7 +2821,7 @@ open class INStartCallCallCapabilityResolutionResult: INIntentResolutionResult, 
 }
 
 open class INStartCallCallRecordToCallBackResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INStartCallCallRecordToCallBackUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INStartCallCallRecordToCallBackUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2670,7 +2831,7 @@ open class INStartCallCallRecordToCallBackResolutionResult: INIntentResolutionRe
 }
 
 open class INStartCallContactResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func unsupported(forReason reason: INStartCallContactUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func unsupported(forReason reason: INStartCallContactUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2680,29 +2841,44 @@ open class INStartCallContactResolutionResult: INIntentResolutionResult, @unchec
 }
 
 open class INStartCallIntent: INIntent, @unchecked Sendable {
-    open var audioRoute: INCallAudioRoute?
-    open var callCapability: INCallCapability?
+    open var audioRoute: INCallAudioRoute = .unknown
+    open var callCapability: INCallCapability = .unknown
     open var callRecordFilter: INCallRecordFilter? = nil
     open var callRecordToCallBack: INCallRecord? = nil
     open var contacts: [INPerson]? = nil
-    open var destinationType: INCallDestinationType?
-    open var recordTypeForRedialing: INCallRecordType?
+    open var destinationType: INCallDestinationType = .unknown
+    open var recordTypeForRedialing: INCallRecordType = .unknown
     public required override init() { super.init() }
     public convenience init(audioRoute: INCallAudioRoute, destinationType: INCallDestinationType, contacts: [INPerson]?, recordTypeForRedialing: INCallRecordType, callCapability: INCallCapability) {
         self.init()
+        self.audioRoute = audioRoute
+        self.destinationType = destinationType
+        self.contacts = contacts
+        self.recordTypeForRedialing = recordTypeForRedialing
+        self.callCapability = callCapability
     }
     public convenience init(callRecordFilter: INCallRecordFilter?, callRecordToCallBack: INCallRecord?, audioRoute: INCallAudioRoute, destinationType: INCallDestinationType, contacts: [INPerson]?, callCapability: INCallCapability) {
         self.init()
+        self.callRecordFilter = callRecordFilter
+        self.callRecordToCallBack = callRecordToCallBack
+        self.audioRoute = audioRoute
+        self.destinationType = destinationType
+        self.contacts = contacts
+        self.callCapability = callCapability
     }
 }
 
+
 open class INStartCallIntentResponse: INIntentResponse, @unchecked Sendable {
-    open var code: INStartCallIntentResponseCode?
+    open var code: INStartCallIntentResponseCode = .unspecified
     public required override init() { super.init() }
     public convenience init(code: INStartCallIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
+
 
 open class INStartPhotoPlaybackIntent: INIntent, @unchecked Sendable {
     open var albumName: String? = nil
@@ -2812,43 +2988,43 @@ open class INTaskList: NSObject, @unchecked Sendable {
 }
 
 open class INTaskListResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with taskListToConfirm: INTaskList?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with taskListsToDisambiguate: [INTaskList]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedTaskList: INTaskList) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with taskListToConfirm: INTaskList?) -> Self { self.init(outcome: .confirmationRequired, value: taskListToConfirm) }
+    open class func disambiguation(with taskListsToDisambiguate: [INTaskList]) -> Self { self.init(outcome: .disambiguation, value: taskListsToDisambiguate) }
+    open class func success(with resolvedTaskList: INTaskList) -> Self { self.init(outcome: .success, value: resolvedTaskList) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INTaskPriorityResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with taskPriorityToConfirm: INTaskPriority) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedTaskPriority: INTaskPriority) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with taskPriorityToConfirm: INTaskPriority) -> Self { self.init(outcome: .confirmationRequired, value: taskPriorityToConfirm) }
+    open class func success(with resolvedTaskPriority: INTaskPriority) -> Self { self.init(outcome: .success, value: resolvedTaskPriority) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INTaskResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with taskToConfirm: INTask?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with tasksToDisambiguate: [INTask]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedTask: INTask) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with taskToConfirm: INTask?) -> Self { self.init(outcome: .confirmationRequired, value: taskToConfirm) }
+    open class func disambiguation(with tasksToDisambiguate: [INTask]) -> Self { self.init(outcome: .disambiguation, value: tasksToDisambiguate) }
+    open class func success(with resolvedTask: INTask) -> Self { self.init(outcome: .success, value: resolvedTask) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INTaskStatusResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with taskStatusToConfirm: INTaskStatus) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedTaskStatus: INTaskStatus) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with taskStatusToConfirm: INTaskStatus) -> Self { self.init(outcome: .confirmationRequired, value: taskStatusToConfirm) }
+    open class func success(with resolvedTaskStatus: INTaskStatus) -> Self { self.init(outcome: .success, value: resolvedTaskStatus) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INTemperatureResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with temperatureToConfirm: Measurement<UnitTemperature>?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with temperaturesToDisambiguate: [Measurement<UnitTemperature>]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedTemperature: Measurement<UnitTemperature>) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with temperatureToConfirm: Measurement<UnitTemperature>?) -> Self { self.init(outcome: .confirmationRequired, value: temperatureToConfirm) }
+    open class func disambiguation(with temperaturesToDisambiguate: [Measurement<UnitTemperature>]) -> Self { self.init(outcome: .disambiguation, value: temperaturesToDisambiguate) }
+    open class func success(with resolvedTemperature: Measurement<UnitTemperature>) -> Self { self.init(outcome: .success, value: resolvedTemperature) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2866,17 +3042,17 @@ open class INTemporalEventTrigger: NSObject, @unchecked Sendable {
 }
 
 open class INTemporalEventTriggerResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with temporalEventTriggerToConfirm: INTemporalEventTrigger?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with temporalEventTriggersToDisambiguate: [INTemporalEventTrigger]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedTemporalEventTrigger: INTemporalEventTrigger) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with temporalEventTriggerToConfirm: INTemporalEventTrigger?) -> Self { self.init(outcome: .confirmationRequired, value: temporalEventTriggerToConfirm) }
+    open class func disambiguation(with temporalEventTriggersToDisambiguate: [INTemporalEventTrigger]) -> Self { self.init(outcome: .disambiguation, value: temporalEventTriggersToDisambiguate) }
+    open class func success(with resolvedTemporalEventTrigger: INTemporalEventTrigger) -> Self { self.init(outcome: .success, value: resolvedTemporalEventTrigger) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INTemporalEventTriggerTypeOptionsResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with temporalEventTriggerTypeOptionsToConfirm: INTemporalEventTriggerTypeOptions = []) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedTemporalEventTriggerTypeOptions: INTemporalEventTriggerTypeOptions = []) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with temporalEventTriggerTypeOptionsToConfirm: INTemporalEventTriggerTypeOptions = []) -> Self { self.init(outcome: .confirmationRequired, value: temporalEventTriggerTypeOptionsToConfirm) }
+    open class func success(with resolvedTemporalEventTriggerTypeOptions: INTemporalEventTriggerTypeOptions = []) -> Self { self.init(outcome: .success, value: resolvedTemporalEventTriggerTypeOptions) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2929,8 +3105,8 @@ open class INTicketedEventReservation: NSObject, @unchecked Sendable {
 }
 
 open class INTimeIntervalResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with timeIntervalToConfirm: TimeInterval) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedTimeInterval: TimeInterval) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with timeIntervalToConfirm: TimeInterval) -> Self { self.init(outcome: .confirmationRequired, value: timeIntervalToConfirm) }
+    open class func success(with resolvedTimeInterval: TimeInterval) -> Self { self.init(outcome: .success, value: resolvedTimeInterval) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -2994,9 +3170,9 @@ open class INTransferMoneyIntentResponse: INIntentResponse, @unchecked Sendable 
 }
 
 open class INURLResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with urlToConfirm: URL?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with urlsToDisambiguate: [URL]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedURL: URL) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with urlToConfirm: URL?) -> Self { self.init(outcome: .confirmationRequired, value: urlToConfirm) }
+    open class func disambiguation(with urlsToDisambiguate: [URL]) -> Self { self.init(outcome: .disambiguation, value: urlsToDisambiguate) }
+    open class func success(with resolvedURL: URL) -> Self { self.init(outcome: .success, value: resolvedURL) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -3044,8 +3220,8 @@ open class INUpdateMediaAffinityIntentResponse: INIntentResponse, @unchecked Sen
 }
 
 open class INUpdateMediaAffinityMediaItemResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func successes(with resolvedMediaItems: [INMediaItem]) -> [INUpdateMediaAffinityMediaItemResolutionResult] { [] }
-    open class func unsupported(forReason reason: INUpdateMediaAffinityMediaItemUnsupportedReason) -> Self { self.init(outcome: .success, value: nil) }
+    open class func successes(with resolvedMediaItems: [INMediaItem]) -> [INUpdateMediaAffinityMediaItemResolutionResult] { resolvedMediaItems.map { self.init(outcome: .success, value: $0) } }
+    open class func unsupported(forReason reason: INUpdateMediaAffinityMediaItemUnsupportedReason) -> Self { self.init(outcome: .unsupported, value: reason) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -3063,8 +3239,8 @@ open class INUserContext: NSObject, @unchecked Sendable {
 }
 
 open class INVisualCodeTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with visualCodeTypeToConfirm: INVisualCodeType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedVisualCodeType: INVisualCodeType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with visualCodeTypeToConfirm: INVisualCodeType) -> Self { self.init(outcome: .confirmationRequired, value: visualCodeTypeToConfirm) }
+    open class func success(with resolvedVisualCodeType: INVisualCodeType) -> Self { self.init(outcome: .success, value: resolvedVisualCodeType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
@@ -3078,30 +3254,26 @@ open class INVocabulary: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
 }
 
-extension INVoiceShortcutCenter {
-    public func allVoiceShortcuts() async throws -> [INVoiceShortcut] { [] }
-}
-
 open class INVolumeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with volumeToConfirm: Measurement<UnitVolume>?) -> Self { self.init(outcome: .success, value: nil) }
-    open class func disambiguation(with volumeToDisambiguate: [Measurement<UnitVolume>]) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedVolume: Measurement<UnitVolume>) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with volumeToConfirm: Measurement<UnitVolume>?) -> Self { self.init(outcome: .confirmationRequired, value: volumeToConfirm) }
+    open class func disambiguation(with volumeToDisambiguate: [Measurement<UnitVolume>]) -> Self { self.init(outcome: .disambiguation, value: volumeToDisambiguate) }
+    open class func success(with resolvedVolume: Measurement<UnitVolume>) -> Self { self.init(outcome: .success, value: resolvedVolume) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INWorkoutGoalUnitTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with workoutGoalUnitTypeToConfirm: INWorkoutGoalUnitType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedWorkoutGoalUnitType: INWorkoutGoalUnitType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with workoutGoalUnitTypeToConfirm: INWorkoutGoalUnitType) -> Self { self.init(outcome: .confirmationRequired, value: workoutGoalUnitTypeToConfirm) }
+    open class func success(with resolvedWorkoutGoalUnitType: INWorkoutGoalUnitType) -> Self { self.init(outcome: .success, value: resolvedWorkoutGoalUnitType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
 open class INWorkoutLocationTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
-    open class func confirmationRequired(with workoutLocationTypeToConfirm: INWorkoutLocationType) -> Self { self.init(outcome: .success, value: nil) }
-    open class func success(with resolvedWorkoutLocationType: INWorkoutLocationType) -> Self { self.init(outcome: .success, value: nil) }
+    open class func confirmationRequired(with workoutLocationTypeToConfirm: INWorkoutLocationType) -> Self { self.init(outcome: .confirmationRequired, value: workoutLocationTypeToConfirm) }
+    open class func success(with resolvedWorkoutLocationType: INWorkoutLocationType) -> Self { self.init(outcome: .success, value: resolvedWorkoutLocationType) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }

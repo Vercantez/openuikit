@@ -1,0 +1,6 @@
+{
+  "comment": "Firefox Focus browser home. Rest capture of unmodified HomeViewController (mozilla-mobile/focus-ios a2832521). Window is iPhone 16 points 393x852. No named actions: the home overlay has no URL bar (WKWebView/SnapKit are listed ingest blockers). Capture 0.20 is after viewDidLoad (wordmark + '0 trackers blocked so far').",
+  "app": "focus",
+  "events": [],
+  "captures": [0.20]
+}

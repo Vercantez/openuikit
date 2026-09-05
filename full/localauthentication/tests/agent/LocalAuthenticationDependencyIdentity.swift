@@ -4,6 +4,7 @@ import LocalAuthentication
 /// Isolated-host identity probe. Real Foundation values pass through
 /// LocalAuthentication APIs. The sealed host gate does not compile this file.
 func localAuthenticationDependencyIdentityProbe() {
+    LocalAuthenticationTestHook.setSimulatedDevicePasscodeEnabled(false)
     let context = LAContext()
     let reason: String = "dependency-identity"
     context.localizedReason = reason
@@ -31,10 +32,11 @@ func localAuthenticationDependencyIdentityProbe() {
 
     var typed: LAError?
     precondition(!context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &typed))
-    precondition(typed?.code == .biometryNotAvailable)
+    precondition(typed?.code == .passcodeNotSet)
+    precondition(typed?._nsError.domain == "com.apple.LocalAuthentication")
 
     let domain: String = LAErrorDomain
-    precondition(!domain.isEmpty)
+    precondition(domain == "com.apple.LocalAuthentication")
     let bridged = LAError(.userCancel, userInfo: ["foundation": domain])
     precondition(bridged.userInfo["foundation"] as? String == domain)
     let ns = bridged as NSError

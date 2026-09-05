@@ -29,6 +29,8 @@ func testErrorCodes() {
     precondition((MKError.Code.placemarkNotFound ~= other) == false)
     precondition(MKError.Code(rawValue: 1) == .unknown)
     precondition(MKError.Code(rawValue: 99) == nil)
+    _ = error.hashValue
+    _ = MKError.Code.unknown.hashValue
 }
 
 func testMapTypeAndVisibilityEnums() {
@@ -87,6 +89,23 @@ func testMapTypeAndVisibilityEnums() {
     MKMapType.standard.hash(into: &hasher)
     MKFeatureVisibility.visible.hash(into: &hasher)
     _ = hasher.finalize()
+    _ = MKMapType.standard.hashValue
+    _ = MKFeatureVisibility.visible.hashValue
+    _ = MKOverlayLevel.aboveRoads.hashValue
+    _ = MKUserTrackingMode.none.hashValue
+    _ = MKPinAnnotationColor.red.hashValue
+    _ = MKLookAroundBadgePosition.topLeading.hashValue
+    _ = MKDirections.RoutePreference.any.hashValue
+    _ = MKLocalSearchRegionPriority.default.hashValue
+    _ = MKLocalSearchCompleter.FilterType.locationsAndQueries.hashValue
+    _ = MKAnnotationView.CollisionMode.rectangle.hashValue
+    _ = MKAnnotationView.DragState.none.hashValue
+    _ = MKMapConfiguration.ElevationStyle.flat.hashValue
+    _ = MKStandardMapConfiguration.EmphasisStyle.default.hashValue
+    _ = MKScaleView.Alignment.leading.hashValue
+    _ = MKMapFeatureAnnotation.FeatureType.pointOfInterest.hashValue
+    _ = MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle.automatic.hashValue
+    _ = MKAddressRepresentations.ContextStyle.automatic.hashValue
 }
 
 func testTransportOptionSet() {
@@ -281,19 +300,19 @@ func testDistanceFormatter() {
     formatter.units = .metric
     formatter.unitStyle = .abbreviated
     let km = formatter.string(fromDistance: 5000)
-    precondition(km.contains("km") || km.contains("5"))
+    precondition(mk_testContains(km, "km") || mk_testContains(km, "5"))
     let meters = formatter.string(fromDistance: 12)
-    precondition(meters.contains("m"))
+    precondition(mk_testContains(meters, "m"))
     let parsed = formatter.distance(from: "5 km")
     precondition(abs(parsed - 5000) < 1)
     precondition(formatter.distance(from: "") == 0)
     formatter.units = .imperial
     let miles = formatter.string(fromDistance: 1609.344)
-    precondition(miles.contains("mi") || miles.contains("1"))
+    precondition(mk_testContains(miles, "mi") || mk_testContains(miles, "1"))
     formatter.units = .imperialWithYards
     formatter.unitStyle = .full
     let yards = formatter.string(fromDistance: 9.144)
-    precondition(yards.contains("yard") || yards.contains("10"))
+    precondition(mk_testContains(yards, "yard") || mk_testContains(yards, "10"))
     formatter.units = .default
     formatter.unitStyle = .default
     _ = formatter.string(fromDistance: 100)
@@ -323,6 +342,41 @@ func testPointOfInterestFilter() {
     precondition(copied.includes(.airport))
 }
 
+func testPointOfInterestCategoryRawValues() {
+    // Darwin macOS 26.1: raw strings are `MKPOICategory…` (not `MKPointOfInterestCategory…`).
+    let samples: [(MKPointOfInterestCategory, String)] = [
+        (.atm, "MKPOICategoryATM"),
+        (.airport, "MKPOICategoryAirport"),
+        (.cafe, "MKPOICategoryCafe"),
+        (.evCharger, "MKPOICategoryEVCharger"),
+        (.museum, "MKPOICategoryMuseum"),
+        (.nationalPark, "MKPOICategoryNationalPark"),
+        (.restaurant, "MKPOICategoryRestaurant"),
+        (.zoo, "MKPOICategoryZoo"),
+    ]
+    for (category, raw) in samples {
+        precondition(category.rawValue == raw)
+    }
+    let all: [MKPointOfInterestCategory] = [
+        .atm, .airport, .amusementPark, .animalService, .aquarium, .automotiveRepair,
+        .bakery, .bank, .baseball, .basketball, .beach, .beauty, .bowling, .brewery,
+        .cafe, .campground, .carRental, .castle, .conventionCenter, .distillery,
+        .evCharger, .fairground, .fireStation, .fishing, .fitnessCenter, .foodMarket,
+        .fortress, .gasStation, .goKart, .golf, .hiking, .hospital, .hotel, .kayaking,
+        .landmark, .laundry, .library, .mailbox, .marina, .miniGolf, .movieTheater,
+        .museum, .musicVenue, .nationalMonument, .nationalPark, .nightlife, .park,
+        .parking, .pharmacy, .planetarium, .police, .postOffice, .publicTransport,
+        .rvPark, .restaurant, .restroom, .rockClimbing, .school, .skatePark, .skating,
+        .skiing, .soccer, .spa, .stadium, .store, .surfing, .swimming, .tennis,
+        .theater, .university, .volleyball, .winery, .zoo,
+    ]
+    for category in all {
+        precondition(category.rawValue.hasPrefix("MKPOICategory"))
+        precondition(MKPointOfInterestCategory(rawValue: category.rawValue) == category)
+    }
+    precondition(all.count == 73)
+}
+
 func testDisplayPriorities() {
     precondition(MKFeatureDisplayPriority.required.rawValue == 1000)
     precondition(MKFeatureDisplayPriority.defaultHigh.rawValue == 750)
@@ -339,6 +393,10 @@ func testDisplayPriorities() {
     precondition(MKFeatureDisplayPriority.required != MKFeatureDisplayPriority.defaultLow)
     precondition(MKAnnotationViewZPriority.max != .min)
     precondition(MKPointOfInterestCategory.airport != .zoo)
+    precondition(MKPointOfInterestCategory.airport.rawValue == "MKPOICategoryAirport")
+    _ = MKFeatureDisplayPriority.required.hashValue
+    _ = MKAnnotationViewZPriority.max.hashValue
+    _ = MKPointOfInterestCategory.airport.hashValue
 }
 
 func testNotificationName() {
@@ -346,4 +404,21 @@ func testNotificationName() {
         Notification.Name.MKAnnotationCalloutInfoDidChange.rawValue
             == "MKAnnotationCalloutInfoDidChangeNotification"
     )
+    precondition(MKAnnotationCalloutInfoDidChangeNotification == "MKAnnotationCalloutInfoDidChangeNotification")
+    precondition(MKErrorDomain == "MKErrorDomain")
+    precondition(MKLaunchOptionsDirectionsModeKey == "MKLaunchOptionsDirectionsMode")
+    precondition(MKLaunchOptionsMapCenterKey == "MKLaunchOptionsMapCenter")
+    precondition(MKLaunchOptionsMapSpanKey == "MKLaunchOptionsMapSpan")
+    precondition(MKLaunchOptionsMapTypeKey == "MKLaunchOptionsMapType")
+    precondition(MKLaunchOptionsShowsTrafficKey == "MKLaunchOptionsShowsTraffic")
+    precondition(MKLaunchOptionsCameraKey == "MKLaunchOptionsCameraKey")
+    precondition(MKLaunchOptionsDirectionsModeDriving == "MKLaunchOptionsDirectionsModeDriving")
+    precondition(MKLaunchOptionsDirectionsModeWalking == "MKLaunchOptionsDirectionsModeWalking")
+    precondition(MKLaunchOptionsDirectionsModeTransit == "MKLaunchOptionsDirectionsModeTransit")
+    precondition(MKLaunchOptionsDirectionsModeDefault == "MKLaunchOptionsDirectionsModeDefault")
+    precondition(MKLaunchOptionsDirectionsModeCycling == "MKLaunchOptionsDirectionsModeCycling")
+    precondition(MKMapViewDefaultAnnotationViewReuseIdentifier == "MKMapViewDefaultAnnotationViewReuseIdentifier")
+    precondition(MKMapViewDefaultClusterAnnotationViewReuseIdentifier == "MKMapViewDefaultClusterAnnotationViewReuseIdentifier")
+    precondition(MKMapItemTypeIdentifier == "com.apple.mapkit.map-item")
+    precondition(MKMapCameraZoomDefault == -1)
 }

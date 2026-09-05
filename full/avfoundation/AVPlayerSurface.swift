@@ -1,3 +1,4 @@
+import Dispatch
 import Foundation
 
 open class AVCoordinatedPlaybackParticipant: NSObject, @unchecked Sendable {
@@ -223,77 +224,215 @@ extension AVPlayer {
     public static let noItemToPlay = WaitingReason(rawValue: "noItemToPlay")
     public static let waitingForCoordinatedPlayback = WaitingReason(rawValue: "waitingForCoordinatedPlayback")
   }
-  public var status: AVPlayer.Status { AVPlayer.Status(rawValue: 0)! }
+
+  public var status: AVPlayer.Status {
+    playbackEngine.lock.withLock { playbackEngine.status() }
+  }
+
   public var error: (any Error)? { nil }
-  public var timeControlStatus: AVPlayer.TimeControlStatus { AVPlayer.TimeControlStatus(rawValue: 0)! }
+
+  public var timeControlStatus: AVPlayer.TimeControlStatus {
+    playbackEngine.lock.withLock { playbackEngine.timeControlStatus() }
+  }
+
   public var reasonForWaitingToPlay: AVPlayer.WaitingReason? { nil }
-  public func playImmediately(atRate rate: Float) {}
+
+  public func playImmediately(atRate rate: Float) {
+    playbackEngine.lock.withLock { playbackEngine.setRate(rate) }
+    AVFoundationPortable.emit(
+      .play(player: ObjectIdentifier(self), url: currentItem?.url)
+    )
+  }
+
   public var actionAtItemEnd: AVPlayer.ActionAtItemEnd {
-      get { AVPlayer.ActionAtItemEnd(rawValue: 0)! }
-      set { _ = newValue }
-    }
+    get { playbackEngine.lock.withLock { playbackEngine.actionAtItemEnd } }
+    set { playbackEngine.lock.withLock { playbackEngine.actionAtItemEnd = newValue } }
+  }
+
   public var automaticallyWaitsToMinimizeStalling: Bool {
-      get { false }
-      set { _ = newValue }
-    }
-  public func setRate(_ rate: Float, time itemTime: CMTime, atHostTime hostClockTime: CMTime) {}
-  public func preroll(atRate rate: Float) async -> Bool { false }
+    get { playbackEngine.lock.withLock { playbackEngine.automaticallyWaitsToMinimizeStalling } }
+    set { playbackEngine.lock.withLock { playbackEngine.automaticallyWaitsToMinimizeStalling = newValue } }
+  }
+
+  public func setRate(_ rate: Float, time itemTime: CMTime, atHostTime hostClockTime: CMTime) {
+    _ = hostClockTime
+    playbackEngine.lock.lock()
+    _ = playbackEngine.seek(to: itemTime)
+    playbackEngine.setRate(rate)
+    playbackEngine.lock.unlock()
+  }
+
+  public func preroll(atRate rate: Float) async -> Bool {
+    _ = rate
+    return false
+  }
+
   public func cancelPendingPrerolls() {}
+
   public var sourceClock: CMClock? {
-      get { nil }
-      set { _ = newValue }
+    get { playbackEngine.lock.withLock { playbackEngine.sourceClock } }
+    set { playbackEngine.lock.withLock { playbackEngine.sourceClock = newValue } }
+  }
+
+  public func addPeriodicTimeObserver(
+    forInterval interval: CMTime,
+    queue: DispatchQueue?,
+    using block: @escaping (CMTime) -> Void
+  ) -> Any {
+    let token = AVPlayerTimeObserverToken(
+      kind: .periodic(interval: interval, block: block),
+      queue: queue ?? playbackEngine.pulseQueue
+    )
+    playbackEngine.lock.lock()
+    token.lastPeriodicFire = playbackEngine.currentSeconds()
+    playbackEngine.observers[ObjectIdentifier(token)] = token
+    playbackEngine.ensurePulse()
+    playbackEngine.lock.unlock()
+    return token
+  }
+
+  public func addBoundaryTimeObserver(
+    forTimes times: [NSValue],
+    queue: DispatchQueue?,
+    using block: @escaping () -> Void
+  ) -> Any {
+    let boundaries = times.map(avTime(from:))
+    let token = AVPlayerTimeObserverToken(
+      kind: .boundary(times: boundaries, block: block),
+      queue: queue ?? playbackEngine.pulseQueue
+    )
+    playbackEngine.lock.lock()
+    playbackEngine.observers[ObjectIdentifier(token)] = token
+    playbackEngine.ensurePulse()
+    playbackEngine.lock.unlock()
+    return token
+  }
+
+  public func removeTimeObserver(_ observer: Any) {
+    guard let token = observer as? AVPlayerTimeObserverToken else { return }
+    playbackEngine.lock.withLock {
+      _ = playbackEngine.observers.removeValue(forKey: ObjectIdentifier(token))
     }
-  public func addPeriodicTimeObserver(forInterval interval: CMTime, queue: DispatchQueue?, using block: @escaping (CMTime) -> Void) -> Any { 0 }
-  public func addBoundaryTimeObserver(forTimes times: [NSValue], queue: DispatchQueue?, using block: @escaping () -> Void) -> Any { 0 }
-  public func removeTimeObserver(_ observer: Any) {}
+  }
+
   public var appliesMediaSelectionCriteriaAutomatically: Bool {
-      get { false }
-      set { _ = newValue }
+    get { playbackEngine.lock.withLock { playbackEngine.appliesMediaSelectionCriteriaAutomatically } }
+    set { playbackEngine.lock.withLock { playbackEngine.appliesMediaSelectionCriteriaAutomatically = newValue } }
+  }
+
+  public func setMediaSelectionCriteria(
+    _ criteria: AVPlayerMediaSelectionCriteria?,
+    forMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic
+  ) {
+    playbackEngine.lock.withLock {
+      if let criteria {
+        playbackEngine.mediaSelection[mediaCharacteristic.rawValue] = criteria
+      } else {
+        playbackEngine.mediaSelection.removeValue(forKey: mediaCharacteristic.rawValue)
+      }
     }
-  public func setMediaSelectionCriteria(_ criteria: AVPlayerMediaSelectionCriteria?, forMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic) {}
-  public func mediaSelectionCriteria(forMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic) -> AVPlayerMediaSelectionCriteria? { nil }
+  }
+
+  public func mediaSelectionCriteria(
+    forMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic
+  ) -> AVPlayerMediaSelectionCriteria? {
+    playbackEngine.lock.withLock {
+      playbackEngine.mediaSelection[mediaCharacteristic.rawValue]
+    }
+  }
+
   public var allowsExternalPlayback: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { playbackEngine.lock.withLock { playbackEngine.allowsExternalPlayback } }
+    set { playbackEngine.lock.withLock { playbackEngine.allowsExternalPlayback = newValue } }
+  }
+
   public var isExternalPlaybackActive: Bool { false }
+
   public var usesExternalPlaybackWhileExternalScreenIsActive: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { playbackEngine.lock.withLock { playbackEngine.usesExternalPlaybackWhileExternalScreenIsActive } }
+    set { playbackEngine.lock.withLock { playbackEngine.usesExternalPlaybackWhileExternalScreenIsActive = newValue } }
+  }
+
   public var externalPlaybackVideoGravity: AVLayerVideoGravity {
-      get { AVLayerVideoGravity(rawValue: "") }
-      set { _ = newValue }
-    }
+    get { playbackEngine.lock.withLock { playbackEngine.externalPlaybackVideoGravity } }
+    set { playbackEngine.lock.withLock { playbackEngine.externalPlaybackVideoGravity = newValue } }
+  }
+
   public var isOutputObscuredDueToInsufficientExternalProtection: Bool { false }
-  public class var availableHDRModes: AVPlayer.HDRMode { AVPlayer.HDRMode(rawValue: 0) }
+  public class var availableHDRModes: AVPlayer.HDRMode { [] }
   public class var eligibleForHDRPlayback: Bool { false }
   public var playbackCoordinator: AVPlayerPlaybackCoordinator { AVPlayerPlaybackCoordinator() }
+
   public var videoOutput: AVPlayerVideoOutput? {
-      get { nil }
-      set { _ = newValue }
-    }
+    get { playbackEngine.lock.withLock { playbackEngine.videoOutput } }
+    set { playbackEngine.lock.withLock { playbackEngine.videoOutput = newValue } }
+  }
+
   public var networkResourcePriority: AVPlayer.NetworkResourcePriority {
-      get { AVPlayer.NetworkResourcePriority(rawValue: 0)! }
-      set { _ = newValue }
-    }
+    get { playbackEngine.lock.withLock { playbackEngine.networkResourcePriority } }
+    set { playbackEngine.lock.withLock { playbackEngine.networkResourcePriority = newValue } }
+  }
+
   public var audioOutputSuppressedDueToNonMixableAudioRoute: Bool { false }
+
   public class var isObservationEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { false }
+    set { _ = newValue }
+  }
+
   public var isClosedCaptionDisplayEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { playbackEngine.lock.withLock { playbackEngine.closedCaptionDisplayEnabled } }
+    set { playbackEngine.lock.withLock { playbackEngine.closedCaptionDisplayEnabled = newValue } }
+  }
+
   public var masterClock: CMClock? {
-      get { nil }
-      set { _ = newValue }
+    get { playbackEngine.lock.withLock { playbackEngine.masterClock } }
+    set { playbackEngine.lock.withLock { playbackEngine.masterClock = newValue } }
+  }
+
+  public func seek(to time: CMTime) async -> Bool {
+    let finished = playbackEngine.lock.withLock { playbackEngine.seek(to: time) }
+    if finished {
+      AVFoundationPortable.emit(.seek(player: ObjectIdentifier(self), time: time))
     }
-  public static let rateDidChangeNotification: Notification.Name = Notification.Name("rateDidChangeNotification")
-  public static let rateDidChangeReasonKey: String = "rateDidChangeReasonKey"
-  public static let rateDidChangeOriginatingParticipantKey: String = "rateDidChangeOriginatingParticipantKey"
-  public static let eligibleForHDRPlaybackDidChangeNotification: Notification.Name = Notification.Name("eligibleForHDRPlaybackDidChangeNotification")
+    return finished
+  }
+
+  public func seek(to time: CMTime, completionHandler: @escaping (Bool) -> Void) {
+    let finished = playbackEngine.lock.withLock { playbackEngine.seek(to: time) }
+    if finished {
+      AVFoundationPortable.emit(.seek(player: ObjectIdentifier(self), time: time))
+    }
+    completionHandler(finished)
+  }
+
+  public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) {
+    _ = (toleranceBefore, toleranceAfter)
+    seek(to: time)
+  }
+
+  public func seek(
+    to time: CMTime,
+    toleranceBefore: CMTime,
+    toleranceAfter: CMTime
+  ) async -> Bool {
+    _ = (toleranceBefore, toleranceAfter)
+    return await seek(to: time)
+  }
+
+  public func seek(to date: Date) {
+    _ = date
+  }
+
+  public func seek(to date: Date) async -> Bool {
+    _ = date
+    return false
+  }
+
+  public static let rateDidChangeNotification: Notification.Name = Notification.Name("AVPlayerRateDidChangeNotification")
+  public static let rateDidChangeReasonKey: String = "AVPlayerRateDidChangeReasonKey"
+  public static let rateDidChangeOriginatingParticipantKey: String = "AVPlayerRateDidChangeOriginatingParticipantKey"
+  public static let eligibleForHDRPlaybackDidChangeNotification: Notification.Name = Notification.Name("AVPlayerEligibleForHDRPlaybackDidChangeNotification")
 }
 
 public struct AVPlayerIntegratedTimelineSnapshotsOutOfSyncReason: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
@@ -467,14 +606,15 @@ extension AVPlayerItem {
     case readyToPlay = 1
     case failed = 2
   }
-  convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [AVPartialAsyncProperty<AVAsset>] = []) { self.init() }
-  public func seek(to date: Date) async -> Bool { false }
-  convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]?) { self.init() }
-  public func copy(with zone: NSZone? = nil) -> Any { 0 }
-  public var status: AVPlayerItem.Status { AVPlayerItem.Status(rawValue: 0)! }
+  public convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]?) {
+    self.init(asset: asset)
+    _ = automaticallyLoadedAssetKeys
+  }
+  public func copy(with zone: NSZone? = nil) -> Any { self }
+  public var status: AVPlayerItem.Status { .readyToPlay }
   public var error: (any Error)? { nil }
   public var tracks: [AVPlayerItemTrack] { [] }
-  public var duration: CMTime { .zero }
+  public var duration: CMTime { asset.duration }
   public var presentationSize: CGSize { .zero }
   public var timedMetadata: [AVMetadataItem]? { nil }
   public var automaticallyLoadedAssetKeys: [String] { [] }
@@ -494,7 +634,6 @@ extension AVPlayerItem {
       get { false }
       set { _ = newValue }
     }
-  public func currentTime() -> CMTime { .zero }
   public var forwardPlaybackEndTime: CMTime {
       get { .zero }
       set { _ = newValue }
@@ -504,12 +643,26 @@ extension AVPlayerItem {
       set { _ = newValue }
     }
   public var seekableTimeRanges: [NSValue] { [] }
-  public func seek(to time: CMTime) async -> Bool { false }
-  public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) async -> Bool { false }
+  public func seek(to time: CMTime) async -> Bool {
+    _portableSetCurrentTime(time)
+    return time.isValid
+  }
+  public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) async -> Bool {
+    _ = (toleranceBefore, toleranceAfter)
+    return await seek(to: time)
+  }
   public func cancelPendingSeeks() {}
   public func currentDate() -> Date? { nil }
-  public func seek(to date: Date, completionHandler: ((Bool) -> Void)? = nil) -> Bool { false }
-  public func step(byCount stepCount: Int) {}
+  public func seek(to date: Date, completionHandler: ((Bool) -> Void)? = nil) -> Bool {
+    _ = date
+    completionHandler?(false)
+    return false
+  }
+  public func seek(to date: Date) async -> Bool {
+    _ = date
+    return false
+  }
+  public func step(byCount stepCount: Int) { _ = stepCount }
   public var timebase: CMTimebase? { nil }
   public var videoComposition: AVVideoComposition? {
       get { nil }
@@ -602,14 +755,19 @@ extension AVPlayerItem {
   public func add(_ collector: AVPlayerItemMediaDataCollector) {}
   public func remove(_ collector: AVPlayerItemMediaDataCollector) {}
   public var mediaDataCollectors: [AVPlayerItemMediaDataCollector] { [] }
-  public func seek(to time: CMTime) {}
-  public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) {}
+  public func seek(to time: CMTime) {
+    _portableSetCurrentTime(time)
+  }
+  public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) {
+    _ = (toleranceBefore, toleranceAfter)
+    seek(to: time)
+  }
   public func seek(to date: Date) -> Bool { false }
   public func selectedMediaOption(in mediaSelectionGroup: AVMediaSelectionGroup) -> AVMediaSelectionOption? { nil }
   public static let timeJumpedNotification: Notification.Name = Notification.Name("timeJumpedNotification")
-  public static let didPlayToEndTimeNotification: Notification.Name = Notification.Name("didPlayToEndTimeNotification")
-  public static let failedToPlayToEndTimeNotification: Notification.Name = Notification.Name("failedToPlayToEndTimeNotification")
-  public static let playbackStalledNotification: Notification.Name = Notification.Name("playbackStalledNotification")
+  public static let didPlayToEndTimeNotification: Notification.Name = Notification.Name("AVPlayerItemDidPlayToEndTimeNotification")
+  public static let failedToPlayToEndTimeNotification: Notification.Name = Notification.Name("AVPlayerItemFailedToPlayToEndTimeNotification")
+  public static let playbackStalledNotification: Notification.Name = Notification.Name("AVPlayerItemPlaybackStalledNotification")
   public static let newAccessLogEntryNotification: Notification.Name = Notification.Name("newAccessLogEntryNotification")
   public static let newErrorLogEntryNotification: Notification.Name = Notification.Name("newErrorLogEntryNotification")
   public static let recommendedTimeOffsetFromLiveDidChangeNotification: Notification.Name = Notification.Name("recommendedTimeOffsetFromLiveDidChangeNotification")

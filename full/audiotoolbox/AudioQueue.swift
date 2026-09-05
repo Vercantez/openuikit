@@ -1,4 +1,7 @@
 import Foundation
+#if os(Linux)
+import Glibc
+#endif
 
 public struct AudioQueueProcessingTapFlags: OptionSet, Sendable, Hashable {
     public let rawValue: UInt32
@@ -74,9 +77,16 @@ internal final class ATAudioQueueObject: ATObject {
     let lock = NSLock()
     var buffers: [ObjectIdentifier: ATAudioQueueBufferOwner] = [:]
     var started = false
+    var paused = false
+    var isInput = false
     var outputCallback: AudioQueueOutputCallback?
+    var inputCallback: AudioQueueInputCallback?
     var callbackUserData: UnsafeMutableRawPointer?
     var callbackInvocations: UInt64 = 0
+    var format = ATASBD()
+    var enqueued: [ATAudioQueueBufferOwner] = []
+    var levelMetering = false
+    var sampleTime: Float64 = 0
 }
 
 public func AudioQueueAllocateBuffer(
@@ -223,7 +233,10 @@ public func AudioQueueEnqueueBuffer(
             return kAudioQueueErr_InvalidParameter
         }
         owner.enqueued = true
-        return kAudioQueueErr_CannotStart
+        if !queue.enqueued.contains(where: { $0 === owner }) {
+            queue.enqueued.append(owner)
+        }
+        return 0
     }
 }
 
@@ -248,10 +261,55 @@ public func AudioQueueStart(
     _ inStartTime: UnsafeRawPointer?
 ) -> Int32 {
     _ = inStartTime
-    guard ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) != nil else {
+    guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
         return kAudioQueueErr_QueueInvalidated
     }
-    return kAudioQueueErr_InvalidDevice
+    if queue.format.mFormatID != 0 && queue.format.mFormatID != atFormatLinearPCM {
+        return kAudioQueueErr_CodecNotFound
+    }
+    return atWithLock(queue.lock) {
+        queue.started = true
+        queue.paused = false
+        atPumpAudioQueue(queue)
+        return 0
+    }
+}
+
+internal func atPumpAudioQueue(_ queue: ATAudioQueueObject) {
+    var pumps = 0
+    while queue.started && !queue.paused && pumps < 32 {
+        if queue.isInput {
+            guard let owner = queue.enqueued.first else { break }
+            queue.enqueued.removeFirst()
+            owner.enqueued = false
+            let frames = owner.dataCapacity / max(Int(queue.format.mBytesPerFrame), 1)
+            memset(owner.data, 0, owner.dataCapacity)
+            owner.pointer.pointee.mAudioDataByteSize = UInt32(min(owner.dataCapacity, frames * Int(max(queue.format.mBytesPerFrame, 1))))
+            queue.callbackInvocations += 1
+            queue.sampleTime += Float64(frames)
+            let user = queue.callbackUserData
+            let callback = queue.inputCallback
+            let buffer = owner.pointer
+            queue.lock.unlock()
+            callback?(user, OpaquePointer(Unmanaged.passUnretained(queue).toOpaque()), buffer, nil, 0, nil)
+            queue.lock.lock()
+            pumps += 1
+            continue
+        }
+        guard let owner = queue.enqueued.first else { break }
+        queue.enqueued.removeFirst()
+        owner.enqueued = false
+        let frames = Int(owner.pointer.pointee.mAudioDataByteSize) / max(Int(queue.format.mBytesPerFrame), 1)
+        queue.sampleTime += Float64(max(frames, 1))
+        queue.callbackInvocations += 1
+        let user = queue.callbackUserData
+        let callback = queue.outputCallback
+        let buffer = owner.pointer
+        queue.lock.unlock()
+        callback?(user, OpaquePointer(Unmanaged.passUnretained(queue).toOpaque()), buffer)
+        queue.lock.lock()
+        pumps += 1
+    }
 }
 
 public func AudioQueueStop(
@@ -262,15 +320,19 @@ public func AudioQueueStop(
     guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
         return kAudioQueueErr_QueueInvalidated
     }
-    queue.started = false
-    return 0
+    return atWithLock(queue.lock) {
+        queue.started = false
+        queue.paused = false
+        return 0
+    }
 }
 
 @_cdecl("AudioQueuePause")
 public func AudioQueuePause(_ inAQ: AudioQueueRef?) -> Int32 {
-    guard ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) != nil else {
+    guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
         return kAudioQueueErr_QueueInvalidated
     }
+    queue.paused = true
     return 0
 }
 
@@ -283,6 +345,7 @@ public func AudioQueueReset(_ inAQ: AudioQueueRef?) -> Int32 {
         for owner in queue.buffers.values {
             owner.enqueued = false
         }
+        queue.enqueued.removeAll()
         return 0
     }
 }
@@ -295,9 +358,8 @@ public func AudioQueueFlush(_ inAQ: AudioQueueRef?) -> Int32 {
     return 0
 }
 
-/// Creates an in-process queue object that never reaches hardware. Format
-/// bytes are not interpreted; CoreAudioTypes `AudioStreamBasicDescription`
-/// is required before a converter/codec path can be added.
+/// Creates an in-process PCM output queue. An offline clock pumps enqueued
+/// buffers and invokes the output callback; there is no hardware device.
 public func AudioQueueNewOutput(
     _ inFormat: UnsafeRawPointer?,
     _ inCallbackProc: AudioQueueOutputCallback?,
@@ -311,10 +373,139 @@ public func AudioQueueNewOutput(
     _ = inCallbackRunLoopMode
     _ = inFlags
     outAQ?.pointee = nil
-    guard inFormat != nil else { return kAudioQueueErr_InvalidParameter }
+    guard let inFormat, var format = atLoadASBD(inFormat) else {
+        return kAudioQueueErr_InvalidParameter
+    }
+    if format.mFormatID != 0 && format.mFormatID != atFormatLinearPCM {
+        return kAudioQueueErr_CodecNotFound
+    }
+    if format.mFormatID == atFormatLinearPCM {
+        if format.validatePCM() != 0 {
+            return kAudioQueueErr_InvalidParameter
+        }
+        atFillPCMASBD(&format)
+    }
     let queue = ATAudioQueueObject()
+    queue.format = format
     queue.outputCallback = inCallbackProc
     queue.callbackUserData = inUserData
     outAQ?.pointee = ATRegistry.shared.retain(queue)
     return 0
+}
+
+public func AudioQueueNewInput(
+    _ inFormat: UnsafeRawPointer?,
+    _ inCallbackProc: AudioQueueInputCallback?,
+    _ inUserData: UnsafeMutableRawPointer?,
+    _ inCallbackRunLoop: UnsafeRawPointer?,
+    _ inCallbackRunLoopMode: UnsafeRawPointer?,
+    _ inFlags: UInt32,
+    _ outAQ: UnsafeMutablePointer<AudioQueueRef?>?
+) -> Int32 {
+    _ = inCallbackRunLoop
+    _ = inCallbackRunLoopMode
+    _ = inFlags
+    outAQ?.pointee = nil
+    guard let inFormat, var format = atLoadASBD(inFormat) else {
+        return kAudioQueueErr_InvalidParameter
+    }
+    if format.mFormatID != 0 && format.mFormatID != atFormatLinearPCM {
+        return kAudioQueueErr_CodecNotFound
+    }
+    if format.mFormatID == atFormatLinearPCM {
+        if format.validatePCM() != 0 {
+            return kAudioQueueErr_InvalidParameter
+        }
+        atFillPCMASBD(&format)
+    }
+    let queue = ATAudioQueueObject()
+    queue.format = format
+    queue.isInput = true
+    queue.inputCallback = inCallbackProc
+    queue.callbackUserData = inUserData
+    outAQ?.pointee = ATRegistry.shared.retain(queue)
+    return 0
+}
+
+public func AudioQueueGetProperty(
+    _ inAQ: AudioQueueRef?,
+    _ inID: AudioQueuePropertyID,
+    _ outData: UnsafeMutableRawPointer?,
+    _ ioDataSize: UnsafeMutablePointer<UInt32>?
+) -> Int32 {
+    guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
+        return kAudioQueueErr_QueueInvalidated
+    }
+    switch inID {
+    case kAudioQueueProperty_IsRunning:
+        ioDataSize?.pointee = 4
+        let running: UInt32 = (queue.started && !queue.paused) ? 1 : 0
+        outData?.storeBytes(of: running, as: UInt32.self)
+        return 0
+    case kAudioQueueProperty_StreamDescription:
+        if let ioDataSize, ioDataSize.pointee < UInt32(atASBDSize) {
+            return kAudioQueueErr_InvalidPropertySize
+        }
+        ioDataSize?.pointee = UInt32(atASBDSize)
+        if let outData { atStoreASBD(queue.format, to: outData) }
+        return 0
+    case kAudioQueueDeviceProperty_SampleRate:
+        ioDataSize?.pointee = 8
+        outData?.storeBytes(of: queue.format.mSampleRate, as: Float64.self)
+        return 0
+    case kAudioQueueDeviceProperty_NumberChannels:
+        ioDataSize?.pointee = 4
+        outData?.storeBytes(of: queue.format.mChannelsPerFrame, as: UInt32.self)
+        return 0
+    case kAudioQueueProperty_EnableLevelMetering:
+        ioDataSize?.pointee = 4
+        let enabled: UInt32 = queue.levelMetering ? 1 : 0
+        outData?.storeBytes(of: enabled, as: UInt32.self)
+        return 0
+    case kAudioQueueProperty_MaximumOutputPacketSize:
+        ioDataSize?.pointee = 4
+        outData?.storeBytes(of: queue.format.mBytesPerPacket, as: UInt32.self)
+        return 0
+    default:
+        return kAudioQueueErr_InvalidProperty
+    }
+}
+
+public func AudioQueueGetPropertySize(
+    _ inAQ: AudioQueueRef?,
+    _ inID: AudioQueuePropertyID,
+    _ outDataSize: UnsafeMutablePointer<UInt32>?
+) -> Int32 {
+    guard ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) != nil else {
+        return kAudioQueueErr_QueueInvalidated
+    }
+    switch inID {
+    case kAudioQueueProperty_StreamDescription:
+        outDataSize?.pointee = UInt32(atASBDSize)
+    case kAudioQueueDeviceProperty_SampleRate:
+        outDataSize?.pointee = 8
+    default:
+        outDataSize?.pointee = 4
+    }
+    return 0
+}
+
+public func AudioQueueSetProperty(
+    _ inAQ: AudioQueueRef?,
+    _ inID: AudioQueuePropertyID,
+    _ inData: UnsafeRawPointer?,
+    _ inDataSize: UInt32
+) -> Int32 {
+    guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
+        return kAudioQueueErr_QueueInvalidated
+    }
+    if inID == kAudioQueueProperty_EnableLevelMetering {
+        guard let inData, inDataSize >= 4 else { return kAudioQueueErr_InvalidPropertySize }
+        queue.levelMetering = inData.loadUnaligned(as: UInt32.self) != 0
+        return 0
+    }
+    if inID == kAudioQueueProperty_MagicCookie {
+        return 0
+    }
+    return kAudioQueueErr_InvalidProperty
 }

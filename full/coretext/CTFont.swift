@@ -1,5 +1,8 @@
 import CoreFoundation
 import Foundation
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
 
 enum _PortableMetrics {
     static let familyName = "OpenUIKit Portable"
@@ -183,12 +186,26 @@ public final class CTFont: Hashable, @unchecked Sendable {
     let metrics: _SFNTMetrics
     let descriptor: CTFontDescriptor
     let data: Data?
+    let matrix: CGAffineTransform
+    let sfui: _SFUIFace?
+    let symbolicTraits: CTFontSymbolicTraits
 
-    init(size: CGFloat, metrics: _SFNTMetrics, descriptor: CTFontDescriptor, data: Data?) {
+    init(
+        size: CGFloat,
+        metrics: _SFNTMetrics,
+        descriptor: CTFontDescriptor,
+        data: Data?,
+        matrix: CGAffineTransform = _ctIdentityTransform(),
+        sfui: _SFUIFace? = nil,
+        symbolicTraits: CTFontSymbolicTraits = []
+    ) {
         self.size = size > 0 ? size : 12
         self.metrics = metrics
         self.descriptor = descriptor
         self.data = data
+        self.matrix = matrix
+        self.sfui = sfui
+        self.symbolicTraits = symbolicTraits
     }
 
     public convenience init(_ name: CFString, size: CGFloat) {
@@ -196,12 +213,23 @@ public final class CTFont: Hashable, @unchecked Sendable {
     }
 
     public convenience init(_ descriptor: CTFontDescriptor, size: CGFloat) {
-        let resolved = _CTFontResolve(descriptor: descriptor, requestedSize: size)
+        self.init(descriptor, transform: _ctIdentityTransform(), requestedSize: size)
+    }
+
+    public convenience init(_ descriptor: CTFontDescriptor, transform matrix: CGAffineTransform) {
+        self.init(descriptor, transform: matrix, requestedSize: 0)
+    }
+
+    convenience init(_ descriptor: CTFontDescriptor, transform matrix: CGAffineTransform, requestedSize: CGFloat) {
+        let resolved = _CTFontResolve(descriptor: descriptor, requestedSize: requestedSize)
         self.init(
             size: resolved.size,
             metrics: resolved.metrics,
             descriptor: resolved.descriptor,
-            data: resolved.data
+            data: resolved.data,
+            matrix: matrix,
+            sfui: resolved.sfui,
+            symbolicTraits: resolved.symbolicTraits
         )
     }
 
@@ -217,18 +245,16 @@ public final class CTFont: Hashable, @unchecked Sendable {
         } else {
             resolvedSize = _CTFontUISize(uiType)
         }
-        var metrics = _PortableMetricsSnapshot()
-        metrics.familyName = "OpenUIKit UI"
-        metrics.postScriptName = "OpenUIKitUI-\(uiType)"
-        metrics.fullName = "OpenUIKit UI \(uiType)"
-        let descriptor = CTFontDescriptor(
-            attributes: [
-                _ctString(kCTFontNameAttribute): metrics.postScriptName,
-                _ctString(kCTFontFamilyNameAttribute): metrics.familyName,
-                _ctString(kCTFontSizeAttribute): resolvedSize,
-            ]
+        let bold = _CTFontUIBold(uiType)
+        let resolved = _CTFontResolveSFUI(size: resolvedSize, bold: bold)
+        self.init(
+            size: resolved.size,
+            metrics: resolved.metrics,
+            descriptor: resolved.descriptor,
+            data: nil,
+            sfui: resolved.sfui,
+            symbolicTraits: bold ? .boldTrait : []
         )
-        self.init(size: resolvedSize, metrics: metrics, descriptor: descriptor, data: nil)
     }
 
     public convenience init(font currentFont: CTFont, string: CFString, range: CFRange) {
@@ -246,17 +272,27 @@ public final class CTFont: Hashable, @unchecked Sendable {
             size: currentFont.size,
             metrics: currentFont.metrics,
             descriptor: currentFont.descriptor,
-            data: currentFont.data
+            data: currentFont.data,
+            matrix: currentFont.matrix,
+            sfui: currentFont.sfui,
+            symbolicTraits: currentFont.symbolicTraits
         )
     }
 
-    convenience init(name: String, size: CGFloat) {
+    public convenience init(_ name: CFString, transform matrix: CGAffineTransform) {
+        self.init(name: _ctString(name), size: 0, matrix: matrix)
+    }
+
+    convenience init(name: String, size: CGFloat, matrix: CGAffineTransform = _ctIdentityTransform()) {
         let resolved = _CTFontResolve(name: name, size: size)
         self.init(
             size: resolved.size,
             metrics: resolved.metrics,
             descriptor: resolved.descriptor,
-            data: resolved.data
+            data: resolved.data,
+            matrix: matrix,
+            sfui: resolved.sfui,
+            symbolicTraits: resolved.symbolicTraits
         )
     }
 
@@ -304,15 +340,77 @@ private func _CTFontUISize(_ uiType: CTFontUIFontType) -> CGFloat {
     }
 }
 
+private func _CTFontUIBold(_ uiType: CTFontUIFontType) -> Bool {
+    switch uiType {
+    case .emphasizedSystem, .smallEmphasizedSystem, .miniEmphasizedSystem, .emphasizedSystemDetail:
+        return true
+    default:
+        return false
+    }
+}
+
 private struct _ResolvedFont {
     var size: CGFloat
     var metrics: _SFNTMetrics
     var descriptor: CTFontDescriptor
     var data: Data?
+    var sfui: _SFUIFace?
+    var symbolicTraits: CTFontSymbolicTraits
+}
+
+private func _CTFontMetricsFromSFUI(_ face: _SFUIFace, bold: Bool) -> _SFNTMetrics {
+    let upe = CGFloat(_SFUITable.unitsPerEm)
+    let s = face.pointSize > 0 ? face.pointSize : 17
+    var metrics = _SFNTMetrics()
+    metrics.familyName = _SFUITable.familyName
+    metrics.styleName = bold ? _SFUITable.styleBold : _SFUITable.styleRegular
+    metrics.fullName = bold ? _SFUITable.boldFullName : _SFUITable.regularFullName
+    metrics.postScriptName = bold ? _SFUITable.boldPostScript : _SFUITable.regularPostScript
+    metrics.unitsPerEm = upe
+    metrics.ascent = face.ascender * upe / s
+    metrics.descent = (-face.descender) * upe / s
+    metrics.leading = face.leading * upe / s
+    metrics.capHeight = face.capHeight * upe / s
+    metrics.xHeight = face.xHeight * upe / s
+    metrics.glyphCount = 95
+    metrics.format = .trueType
+    metrics.boundingBox = CGRect(
+        x: 0,
+        y: face.descender * upe / s,
+        width: _SFUITable.advance(face, scalar: 77) * upe / s,
+        height: (face.ascender - face.descender) * upe / s
+    )
+    return metrics
+}
+
+private func _CTFontResolveSFUI(size: CGFloat, bold: Bool) -> _ResolvedFont {
+    let requested = size > 0 ? size : 12
+    let face = _SFUITable.face(size: requested, bold: bold)
+    let metrics = _CTFontMetricsFromSFUI(face, bold: bold)
+    let descriptor = CTFontDescriptor(
+        attributes: [
+            _ctString(kCTFontNameAttribute): metrics.postScriptName,
+            _ctString(kCTFontFamilyNameAttribute): metrics.familyName,
+            _ctString(kCTFontDisplayNameAttribute): metrics.fullName,
+            _ctString(kCTFontSizeAttribute): requested,
+            _ctString(kCTFontStyleNameAttribute): metrics.styleName,
+        ]
+    )
+    return _ResolvedFont(
+        size: requested,
+        metrics: metrics,
+        descriptor: descriptor,
+        data: nil,
+        sfui: face,
+        symbolicTraits: bold ? .boldTrait : []
+    )
 }
 
 private func _CTFontResolve(name: String, size: CGFloat) -> _ResolvedFont {
     let requested = size > 0 ? size : 12
+    if _SFUITable.isSystemName(name) {
+        return _CTFontResolveSFUI(size: requested, bold: _SFUITable.isBoldName(name))
+    }
     for data in _portableCopyRegisteredData() {
         let metrics = _SFNTMetrics.parse(data: data)
         if metrics.postScriptName == name
@@ -326,7 +424,14 @@ private func _CTFontResolve(name: String, size: CGFloat) -> _ResolvedFont {
                     _ctString(kCTFontSizeAttribute): requested,
                 ]
             )
-            return _ResolvedFont(size: requested, metrics: metrics, descriptor: descriptor, data: data)
+            return _ResolvedFont(
+                size: requested,
+                metrics: metrics,
+                descriptor: descriptor,
+                data: data,
+                sfui: nil,
+                symbolicTraits: []
+            )
         }
     }
     var metrics = _PortableMetricsSnapshot()
@@ -346,7 +451,14 @@ private func _CTFontResolve(name: String, size: CGFloat) -> _ResolvedFont {
             _ctString(kCTFontSizeAttribute): requested,
         ]
     )
-    return _ResolvedFont(size: requested, metrics: metrics, descriptor: descriptor, data: nil)
+    return _ResolvedFont(
+        size: requested,
+        metrics: metrics,
+        descriptor: descriptor,
+        data: nil,
+        sfui: nil,
+        symbolicTraits: []
+    )
 }
 
 private func _CTFontResolve(descriptor: CTFontDescriptor, requestedSize: CGFloat) -> _ResolvedFont {
@@ -354,8 +466,20 @@ private func _CTFontResolve(descriptor: CTFontDescriptor, requestedSize: CGFloat
         ?? (descriptor.attributes[_ctString(kCTFontFamilyNameAttribute)] as? String)
         ?? _PortableMetrics.postScriptName
     let sizeValue = descriptor.attributes[_ctString(kCTFontSizeAttribute)] as? CGFloat
+        ?? (descriptor.attributes[_ctString(kCTFontSizeAttribute)] as? Double).map { CGFloat($0) }
+        ?? (descriptor.attributes[_ctString(kCTFontSizeAttribute)] as? NSNumber).map { CGFloat($0.doubleValue) }
     let size = requestedSize > 0 ? requestedSize : (sizeValue ?? 12)
-    return _CTFontResolve(name: name, size: size)
+    var traits: CTFontSymbolicTraits = []
+    if let traitsDict = descriptor.attributes[_ctString(kCTFontTraitsAttribute)] as? [String: Any],
+       let raw = traitsDict[_ctString(kCTFontSymbolicTrait)] as? NSNumber {
+        traits = CTFontSymbolicTraits(rawValue: raw.uint32Value)
+    }
+    var resolved = _CTFontResolve(name: name, size: size)
+    if traits.contains(.boldTrait), resolved.sfui != nil {
+        resolved = _CTFontResolveSFUI(size: size, bold: true)
+    }
+    resolved.symbolicTraits = traits.union(resolved.symbolicTraits)
+    return resolved
 }
 
 private func _scale(_ font: CTFont, _ units: CGFloat) -> CGFloat {
@@ -433,8 +557,22 @@ public func CTFontDescriptorCreateCopyWithSymbolicTraits(
     _ symTraitValue: CTFontSymbolicTraits,
     _ symTraitMask: CTFontSymbolicTraits
 ) -> CTFontDescriptor {
-    _ = (symTraitValue, symTraitMask)
-    return original
+    var merged = original.attributes
+    let current: CTFontSymbolicTraits
+    if let traits = merged[_ctString(kCTFontTraitsAttribute)] as? [String: Any],
+       let raw = traits[_ctString(kCTFontSymbolicTrait)] as? NSNumber {
+        current = CTFontSymbolicTraits(rawValue: raw.uint32Value)
+    } else {
+        current = []
+    }
+    let updated = CTFontSymbolicTraits(rawValue: (current.rawValue & ~symTraitMask.rawValue) | (symTraitValue.rawValue & symTraitMask.rawValue))
+    var traitsDict: [String: Any] = [:]
+    if let existing = merged[_ctString(kCTFontTraitsAttribute)] as? [String: Any] {
+        traitsDict = existing
+    }
+    traitsDict[_ctString(kCTFontSymbolicTrait)] = NSNumber(value: updated.rawValue)
+    merged[_ctString(kCTFontTraitsAttribute)] = traitsDict
+    return CTFontDescriptor(attributes: merged)
 }
 
 public func CTFontDescriptorCreateCopyWithVariation(
@@ -512,8 +650,7 @@ public func CTFontGetBoundingBox(_ font: CTFont) -> CGRect {
     )
 }
 public func CTFontGetSymbolicTraits(_ font: CTFont) -> CTFontSymbolicTraits {
-    _ = font
-    return []
+    font.symbolicTraits
 }
 public func CTFontGetStringEncoding(_ font: CTFont) -> CFStringEncoding {
     _ = font
@@ -555,8 +692,16 @@ public func CTFontCopyAttribute(_ font: CTFont, _ attribute: CFString) -> CFType
     CTFontDescriptorCopyAttribute(font.descriptor, attribute)
 }
 public func CTFontCopyTraits(_ font: CTFont) -> CFDictionary {
-    _ = font
-    return _ctEmptyCFDictionary()
+    // Bold weight 0.4 MEASURED 2026-09-05 Darwin CTFontCopyTraits on
+    // CTFontCreateCopyWithSymbolicTraits(.traitBold) at 17 pt. Regular is 0.
+    let weight: CGFloat = font.symbolicTraits.contains(.boldTrait) ? 0.4 : 0
+    let traits: [String: Any] = [
+        _ctString(kCTFontSymbolicTrait): NSNumber(value: font.symbolicTraits.rawValue),
+        _ctString(kCTFontWeightTrait): NSNumber(value: Double(weight)),
+        _ctString(kCTFontSlantTrait): NSNumber(value: 0.0),
+        _ctString(kCTFontWidthTrait): NSNumber(value: 0.0),
+    ]
+    return _ctCFDictionary(traits as NSDictionary)
 }
 public func CTFontCopyVariation(_ font: CTFont) -> CFDictionary? {
     _ = font
@@ -727,4 +872,327 @@ public func CTFontCollectionCopyFontAttributes(
     _ = (attributeNames, options)
     let values = collection.descriptors.map { CTFontDescriptorCopyAttributes($0) }
     return _ctCFArray(values as NSArray)
+}
+
+func _ctCharAdvance(_ font: CTFont, scalar: UInt32) -> CGFloat {
+    if let face = font.sfui {
+        return _SFUITable.advance(face, scalar: scalar)
+    }
+    return max(font.size * 0.5, 1)
+}
+
+func _ctGlyphForCharacter(_ scalar: UniChar) -> CGGlyph {
+    CGGlyph(scalar)
+}
+
+public func CTFontCreateWithName(
+    _ name: CFString,
+    _ size: CGFloat,
+    _ matrix: UnsafePointer<CGAffineTransform>?
+) -> CTFont {
+    CTFont(name: _ctString(name), size: size, matrix: matrix?.pointee ?? _ctIdentityTransform())
+}
+
+public func CTFontCreateWithNameAndOptions(
+    _ name: CFString,
+    _ size: CGFloat,
+    _ matrix: UnsafePointer<CGAffineTransform>?,
+    _ options: CTFontOptions
+) -> CTFont {
+    _ = options
+    return CTFontCreateWithName(name, size, matrix)
+}
+
+public func CTFontCreateWithFontDescriptor(
+    _ descriptor: CTFontDescriptor,
+    _ size: CGFloat,
+    _ matrix: UnsafePointer<CGAffineTransform>?
+) -> CTFont {
+    CTFont(descriptor, transform: matrix?.pointee ?? _ctIdentityTransform(), requestedSize: size)
+}
+
+public func CTFontCreateWithFontDescriptorAndOptions(
+    _ descriptor: CTFontDescriptor,
+    _ size: CGFloat,
+    _ matrix: UnsafePointer<CGAffineTransform>?,
+    _ options: CTFontOptions
+) -> CTFont {
+    _ = options
+    return CTFontCreateWithFontDescriptor(descriptor, size, matrix)
+}
+
+public func CTFontCreateCopyWithAttributes(
+    _ font: CTFont,
+    _ size: CGFloat,
+    _ matrix: UnsafePointer<CGAffineTransform>?,
+    _ attributes: CTFontDescriptor?
+) -> CTFont {
+    let base: CTFontDescriptor
+    if let attributes {
+        base = CTFontDescriptorCreateCopyWithAttributes(
+            font.descriptor,
+            CTFontDescriptorCopyAttributes(attributes)
+        )
+    } else {
+        base = font.descriptor
+    }
+    let resolvedSize = size > 0 ? size : font.size
+    var transform = matrix?.pointee ?? font.matrix
+    return withUnsafePointer(to: &transform) { pointer in
+        CTFontCreateWithFontDescriptor(base, resolvedSize, pointer)
+    }
+}
+
+public func CTFontCreateCopyWithFamily(
+    _ font: CTFont,
+    _ size: CGFloat,
+    _ matrix: UnsafePointer<CGAffineTransform>?,
+    _ family: CFString
+) -> CTFont? {
+    let copied = CTFontDescriptorCreateCopyWithFamily(font.descriptor, family)
+    let resolvedSize = size > 0 ? size : font.size
+    return CTFontCreateWithFontDescriptor(copied, resolvedSize, matrix)
+}
+
+public func CTFontCreateCopyWithSymbolicTraits(
+    _ font: CTFont,
+    _ size: CGFloat,
+    _ matrix: UnsafePointer<CGAffineTransform>?,
+    _ symTraitValue: CTFontSymbolicTraits,
+    _ symTraitMask: CTFontSymbolicTraits
+) -> CTFont? {
+    let copied = CTFontDescriptorCreateCopyWithSymbolicTraits(font.descriptor, symTraitValue, symTraitMask)
+    let resolvedSize = size > 0 ? size : font.size
+    let created = CTFontCreateWithFontDescriptor(copied, resolvedSize, matrix)
+    let traits = CTFontSymbolicTraits(
+        rawValue: (font.symbolicTraits.rawValue & ~symTraitMask.rawValue)
+            | (symTraitValue.rawValue & symTraitMask.rawValue)
+    )
+    let bold = traits.contains(.boldTrait)
+    if font.sfui != nil || _SFUITable.isSystemName(font.metrics.postScriptName) {
+        let resolved = _CTFontResolveSFUI(size: resolvedSize, bold: bold)
+        return CTFont(
+            size: resolved.size,
+            metrics: resolved.metrics,
+            descriptor: resolved.descriptor,
+            data: nil,
+            matrix: matrix?.pointee ?? font.matrix,
+            sfui: resolved.sfui,
+            symbolicTraits: traits
+        )
+    }
+    return CTFont(
+        size: created.size,
+        metrics: created.metrics,
+        descriptor: created.descriptor,
+        data: created.data,
+        matrix: matrix?.pointee ?? font.matrix,
+        sfui: created.sfui,
+        symbolicTraits: traits
+    )
+}
+
+public func CTFontGetMatrix(_ font: CTFont) -> CGAffineTransform {
+    font.matrix
+}
+
+public func CTFontGetGlyphsForCharacters(
+    _ font: CTFont,
+    _ characters: UnsafePointer<UniChar>,
+    _ glyphs: UnsafeMutablePointer<CGGlyph>,
+    _ count: CFIndex
+) -> Bool {
+    _ = font
+    guard count > 0 else { return true }
+    var missing = false
+    for i in 0..<count {
+        let ch = characters[i]
+        if ch == 0 {
+            glyphs[i] = 0
+            missing = true
+        } else {
+            glyphs[i] = _ctGlyphForCharacter(ch)
+        }
+    }
+    return !missing
+}
+
+public func CTFontGetAdvancesForGlyphs(
+    _ font: CTFont,
+    _ orientation: CTFontOrientation,
+    _ glyphs: UnsafePointer<CGGlyph>,
+    _ advances: UnsafeMutablePointer<CGSize>?,
+    _ count: CFIndex
+) -> Double {
+    _ = orientation
+    var total: Double = 0
+    for i in 0..<count {
+        let glyph = glyphs[i]
+        let width = _ctCharAdvance(font, scalar: UInt32(glyph))
+        total += Double(width)
+        advances?[i] = CGSize(width: width, height: 0)
+    }
+    return total
+}
+
+public func CTFontGetBoundingRectsForGlyphs(
+    _ font: CTFont,
+    _ orientation: CTFontOrientation,
+    _ glyphs: UnsafePointer<CGGlyph>,
+    _ boundingRects: UnsafeMutablePointer<CGRect>?,
+    _ count: CFIndex
+) -> CGRect {
+    _ = orientation
+    var unionRect = CGRect.zero
+    var haveUnion = false
+    let ascent = CTFontGetAscent(font)
+    let descent = CTFontGetDescent(font)
+    for i in 0..<count {
+        let width = _ctCharAdvance(font, scalar: UInt32(glyphs[i]))
+        let box = CGRect(x: 0, y: -descent, width: width, height: ascent + descent)
+        boundingRects?[i] = box
+        if !haveUnion {
+            unionRect = box
+            haveUnion = true
+        } else {
+            unionRect = unionRect.union(box)
+        }
+    }
+    return haveUnion ? unionRect : .zero
+}
+
+public func CTFontGetOpticalBoundsForGlyphs(
+    _ font: CTFont,
+    _ glyphs: UnsafePointer<CGGlyph>,
+    _ boundingRects: UnsafeMutablePointer<CGRect>?,
+    _ count: CFIndex,
+    _ options: CFOptionFlags
+) -> CGRect {
+    _ = options
+    return CTFontGetBoundingRectsForGlyphs(font, .horizontal, glyphs, boundingRects, count)
+}
+
+public func CTFontGetVerticalTranslationsForGlyphs(
+    _ font: CTFont,
+    _ glyphs: UnsafePointer<CGGlyph>,
+    _ translations: UnsafeMutablePointer<CGSize>,
+    _ count: CFIndex
+) {
+    _ = (font, glyphs)
+    for i in 0..<count {
+        translations[i] = .zero
+    }
+}
+
+public func CTFontGetLigatureCaretPositions(
+    _ font: CTFont,
+    _ glyph: CGGlyph,
+    _ positions: UnsafeMutablePointer<CGFloat>?,
+    _ maxPositions: CFIndex
+) -> CFIndex {
+    _ = glyph
+    if maxPositions > 0 {
+        positions?[0] = _ctCharAdvance(font, scalar: UInt32(glyph)) * 0.5
+        return 1
+    }
+    return 0
+}
+
+public func CTFontGetGlyphWithName(_ font: CTFont, _ glyphName: CFString) -> CGGlyph {
+    _ = font
+    let name = _ctString(glyphName)
+    if name.count == 1, let scalar = name.unicodeScalars.first {
+        return CGGlyph(truncatingIfNeeded: scalar.value)
+    }
+    if name == "space" { return 32 }
+    return 0
+}
+
+public func CTFontCopyNameForGlyph(_ font: CTFont, _ glyph: CGGlyph) -> CFString? {
+    _ = font
+    if glyph >= 32 && glyph <= 126, let scalar = Unicode.Scalar(UInt32(glyph)) {
+        return _ctCFString(String(scalar))
+    }
+    return nil
+}
+
+public func CTFontCreatePathForGlyph(
+    _ font: CTFont,
+    _ glyph: CGGlyph,
+    _ matrix: UnsafePointer<CGAffineTransform>?
+) -> CGPath? {
+    let width = _ctCharAdvance(font, scalar: UInt32(glyph))
+    let box = CGRect(
+        x: 0,
+        y: -CTFontGetDescent(font),
+        width: width,
+        height: CTFontGetAscent(font) + CTFontGetDescent(font)
+    )
+    return CGPath(rect: box, transform: matrix)
+}
+
+public func CTFontDrawGlyphs(
+    _ font: CTFont,
+    _ glyphs: UnsafePointer<CGGlyph>,
+    _ positions: UnsafePointer<CGPoint>,
+    _ count: Int,
+    _ context: CGContext
+) {
+    _ = (font, glyphs, positions, count)
+    _ctRecordLineDraw(context)
+}
+
+public func CTFontCopyGraphicsFont(
+    _ font: CTFont,
+    _ attributes: UnsafeMutablePointer<Unmanaged<CTFontDescriptor>?>?
+) -> CGFont {
+    attributes?.pointee = Unmanaged.passRetained(font.descriptor)
+    return _ctMakeGraphicsFont(named: font.metrics.postScriptName)
+}
+
+public func CTFontCreateWithGraphicsFont(
+    _ graphicsFont: CGFont,
+    _ size: CGFloat,
+    _ matrix: UnsafePointer<CGAffineTransform>?,
+    _ attributes: CTFontDescriptor?
+) -> CTFont {
+    _ = attributes
+    return CTFontCreateWithName(
+        _ctCFString(_ctGraphicsFontName(graphicsFont)),
+        size,
+        matrix
+    )
+}
+
+public func CTFontDrawImageFromAdaptiveImageProviderAtPoint(
+    _ font: CTFont,
+    _ provider: any CTAdaptiveImageProviding,
+    _ point: CGPoint,
+    _ context: CGContext
+) {
+    _ = (font, provider, point)
+    _ctRecordLineDraw(context)
+}
+
+public func CTFontManagerRegisterGraphicsFont(
+    _ font: CGFont,
+    _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?
+) -> Bool {
+    _ = font
+    if let error {
+        let value = NSError(
+            domain: _ctString(kCTFontManagerErrorDomain),
+            code: CTFontManagerError.unsupportedScope.rawValue,
+            userInfo: nil
+        )
+        error.pointee = Unmanaged.passRetained(_ctCFError(value))
+    }
+    return false
+}
+
+public func CTFontManagerUnregisterGraphicsFont(
+    _ font: CGFont,
+    _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?
+) -> Bool {
+    return CTFontManagerRegisterGraphicsFont(font, error)
 }
