@@ -58,6 +58,9 @@ public enum _UIKeyboardChrome {
     /// SE default keyboard + QuickType. MEASURED Forms t1200 / kbprobe
     /// keyboardFrameEnd height, iPhone SE 2x / iOS 26.1.
     public static let overlap: CGFloat = 260
+    /// Number pad has no QuickType. MEASURED kbstateprobe numberpad,
+    /// iPhone SE 2x / iOS 26.1: frameEnd [0, 434, 375, 233].
+    public static let numberPadOverlap: CGFloat = 233
     /// MEASURED keyboardWillShow duration 0.3833 s = 23/60.
     public static let presentDuration: Double = 23.0 / 60.0
     /// UITextEffectsWindow.windowLevel.rawValue.
@@ -84,6 +87,13 @@ public enum _UIKeyboardChrome {
 
     static var isIOS: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
 
+    /// Height of the keyboard currently shown, or the SE alphabetic 260.
+    /// Phone number pad is 233 (kbstateprobe numberpad). Pad docked
+    /// alphabetic is 337 (kbstateprobe iPad has_text).
+    public static var currentOverlap: CGFloat {
+        attached?.panel.state.overlap ?? overlap
+    }
+
     /// Show or hide the keyboard window for `window`'s first responder.
     static func sync(from window: UIWindow) {
         guard isIOS else {
@@ -98,7 +108,7 @@ public enum _UIKeyboardChrome {
             kb.frame = window.bounds
             let appearing = kb.isHidden
             kb.isHidden = false
-            kb.layoutKeyboard(animated: appearing)
+            kb.layoutKeyboard(animated: appearing, responder: responder)
         } else if let kb = attached, !kb.isHidden {
             kb.dismissAnimated()
         }
@@ -111,6 +121,7 @@ public enum _UIKeyboardChrome {
               let kb = attached,
               !kb.isHidden,
               appWindow.firstResponder is UIKeyInput else { return base }
+        kb.layoutKeyboard(animated: false, responder: appWindow.firstResponder)
         kb.layoutIfNeeded()
         let overlay = UIRenderer.render(kb, scale: scale)
         composite(overlay, over: base)
@@ -199,10 +210,11 @@ final class _UIKeyboardWindow: UIWindow {
         addSubview(panel)
     }
 
-    func layoutKeyboard(animated: Bool) {
-        let rest = restPanelFrame
+    func layoutKeyboard(animated: Bool, responder: UIResponder? = nil) {
+        let state = _UIKeyboardResolved.resolve(from: responder)
+        let rest = restPanelFrame(overlap: state.overlap)
         panel.bounds = CGRect(origin: .zero, size: rest.size)
-        panel.buildIfNeeded(width: rest.width)
+        panel.buildIfNeeded(width: rest.width, state: state)
         panel.removeAllAnimations()
         if animated, panel.frame.origin.y != rest.origin.y {
             if panel.frame == .zero || panel.frame.origin.y >= bounds.height - 1 {
@@ -230,15 +242,18 @@ final class _UIKeyboardWindow: UIWindow {
         })
     }
 
-    var restPanelFrame: CGRect {
-        let h = _UIKeyboardChrome.overlap
-        return CGRect(x: 0, y: bounds.height - h, width: bounds.width, height: h)
+    var restPanelFrame: CGRect { restPanelFrame(overlap: panel.state.overlap) }
+
+    func restPanelFrame(overlap: CGFloat) -> CGRect {
+        CGRect(x: 0, y: bounds.height - overlap, width: bounds.width, height: overlap)
     }
 }
 
 @preconcurrency @MainActor
 final class _UIKeyboardPanel: UIView {
     private var builtWidth: CGFloat = -1
+    private var builtSignature: Int = -1
+    var state = _UIKeyboardResolved()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -275,8 +290,8 @@ final class _UIKeyboardPanel: UIView {
         let ink = keyInkColor(t)
         for sub in subviews {
             if let key = sub as? _UIKeyboardKey {
-                key.backgroundColor = cap
-                key.label?.textColor = ink
+                key.backgroundColor = capColor(for: key, traits: t, defaultCap: cap)
+                key.label?.textColor = inkColor(for: key, traits: t, defaultInk: ink)
                 key.setNeedsDisplay()
             } else if sub.tag == 2601 {
                 if t.userInterfaceStyle == .dark {
@@ -294,6 +309,38 @@ final class _UIKeyboardPanel: UIView {
         }
     }
 
+    func capColor(for key: _UIKeyboardKey, traits t: UITraitCollection,
+                    defaultCap: UIColor) -> UIColor {
+        switch key.kind {
+        case .search, .go, .done:
+            if key.kind == .search, !state.searchReturnEnabled {
+                // MEASURED kbstateprobe search_empty, SE 2x: empty search
+                // return interior (190, 192, 195).
+                if t.userInterfaceStyle == .dark {
+                    return UIColor(white: 61.0 / 255.0, alpha: 1)
+                }
+                return UIColor(red: 190.0 / 255.0, green: 192.0 / 255.0,
+                               blue: 195.0 / 255.0, alpha: 1)
+            }
+            return .systemBlue
+        default:
+            return defaultCap
+        }
+    }
+
+    func inkColor(for key: _UIKeyboardKey, traits t: UITraitCollection,
+                    defaultInk: UIColor) -> UIColor {
+        switch key.kind {
+        case .search, .go, .done:
+            if key.kind == .search, !state.searchReturnEnabled {
+                return defaultInk
+            }
+            return UIColor(white: 1, alpha: 1)
+        default:
+            return defaultInk
+        }
+    }
+
     func keyCapColor(_ t: UITraitCollection) -> UIColor {
         // MEASURED letter-cap interiors: light 255, dark 61.
         if t.userInterfaceStyle == .dark {
@@ -307,10 +354,61 @@ final class _UIKeyboardPanel: UIView {
             : UIColor(white: 0, alpha: 1)
     }
 
-    func buildIfNeeded(width: CGFloat) {
-        if abs(builtWidth - width) < 0.25, !subviews.isEmpty { return }
+    func buildIfNeeded(width: CGFloat, state: _UIKeyboardResolved) {
+        if abs(builtWidth - width) < 0.25, builtSignature == state.signature,
+           !subviews.isEmpty {
+            self.state = state
+            applyFill(traitCollection)
+            applyLetterCase(state.shifted)
+            return
+        }
         for s in subviews { s.removeFromSuperview() }
         builtWidth = width
+        builtSignature = state.signature
+        self.state = state
+        if state.layout == .numberPad {
+            buildNumberPad(width: width)
+        } else if state.isPad {
+            buildPadAlphabetic(width: width, shifted: state.shifted,
+                                returnStyle: state.returnStyle)
+        } else {
+            buildPhoneAlphabetic(width: width, shifted: state.shifted,
+                                  returnStyle: state.returnStyle)
+        }
+        applyFill(traitCollection)
+    }
+
+    /// ASCII A–Z fold. Avoid String.uppercased (guest StringProcessing).
+    static func folded(_ s: String, up: Bool) -> String {
+        var out = ""
+        for ch in s {
+            if let v = ch.asciiValue {
+                if up, v >= 97, v <= 122,
+                   let u = UnicodeScalar(UInt32(v) - 32) {
+                    out.append(Character(u))
+                    continue
+                }
+                if !up, v >= 65, v <= 90,
+                   let u = UnicodeScalar(UInt32(v) + 32) {
+                    out.append(Character(u))
+                    continue
+                }
+            }
+            out.append(ch)
+        }
+        return out
+    }
+
+    func applyLetterCase(_ shifted: Bool) {
+        for sub in subviews {
+            guard let key = sub as? _UIKeyboardKey, key.kind == .letter,
+                  let t = key.label?.text, t.count == 1 else { continue }
+            key.label?.text = _UIKeyboardPanel.folded(t, up: shifted)
+        }
+    }
+
+    func buildPhoneAlphabetic(width: CGFloat, shifted: Bool,
+                               returnStyle: _UIKeyboardResolved.ReturnStyle) {
         let sx = width / 375
         let y0 = _UIKeyboardChrome.quickTypeHeight
         let kh = _UIKeyboardChrome.keyHeight
@@ -328,10 +426,13 @@ final class _UIKeyboardPanel: UIView {
         let row3LetterX: [CGFloat] = [63, 99.5, 136, 172.5, 208.5, 245, 281.5]
         let row3LetterW: [CGFloat] = [30.5, 30.5, 30.5, 30, 30.5, 30.5, 30.5]
 
+        func letterText(_ s: String) -> String {
+            _UIKeyboardPanel.folded(s, up: shifted)
+        }
         func addLetter(text: String, x: CGFloat, y: CGFloat, w: CGFloat) {
             let key = _UIKeyboardKey(kind: .letter)
             key.frame = CGRect(x: x * sx, y: y, width: w * sx, height: kh)
-            key.installLabel(text, size: _UIKeyboardChrome.letterFontSize)
+            key.installLabel(letterText(text), size: _UIKeyboardChrome.letterFontSize)
             addSubview(key)
         }
         var i = 0
@@ -345,7 +446,7 @@ final class _UIKeyboardPanel: UIView {
             i += 1
         }
         let y3 = y0 + 2 * (kh + gap)
-        addGlyph(.shift, x: 8.5 * sx, y: y3, w: 41.5 * sx, h: kh)
+        addGlyph(shifted ? .shiftOn : .shiftOff, x: 8.5 * sx, y: y3, w: 41.5 * sx, h: kh)
         i = 0
         while i < letters[2].count {
             addLetter(text: letters[2][i], x: row3LetterX[i], y: y3, w: row3LetterW[i])
@@ -360,18 +461,123 @@ final class _UIKeyboardPanel: UIView {
         let space = _UIKeyboardKey(kind: .space)
         space.frame = CGRect(x: 136 * sx, y: y4, width: 139.5 * sx, height: kh)
         addSubview(space)
-        addGlyph(.return, x: 281.5 * sx, y: y4, w: 85 * sx, h: kh)
+        addReturn(style: returnStyle, x: 281.5 * sx, y: y4, w: 85 * sx, h: kh)
         // MEASURED Forms t1200 / Notes t1200 golden, iPhone SE 2x: empty
         // QuickType has two 1 pt (2 device-px) dividers at x=125.5 / 247.5,
         // y 420–443.5 (panel-local 13–36.5). Light RGB (208, 210, 214) vs
         // panel 226; dark mid (54, 54, 58) over panel ~27.
         addQuickTypeDivider(x: 125.5 * sx)
         addQuickTypeDivider(x: 247.5 * sx)
-        applyFill(traitCollection)
     }
 
-    func addQuickTypeDivider(x: CGFloat) {
-        let v = UIView(frame: CGRect(x: x, y: 13, width: 1, height: 23.5))
+    /// MEASURED kbstateprobe numberpad, iPhone SE 2x / iOS 26.1:
+    /// frameEnd [0, 434, 375, 233], no QuickType. Keys 113.5×47, xs
+    /// 7.5 / 129 / 250, row y 24 / 78 / 132 / 186 (panel-local), pitch 54.
+    func buildNumberPad(width: CGFloat) {
+        let sx = width / 375
+        let kh: CGFloat = 47
+        let xs: [CGFloat] = [7.5, 129, 250]
+        let w: CGFloat = 113.5
+        let digits = [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"]]
+        var row = 0
+        while row < 3 {
+            var col = 0
+            while col < 3 {
+                let y: CGFloat = 24 + CGFloat(row) * 54
+                addLetterKey(kind: .digit, text: digits[row][col],
+                             size: 25, x: xs[col] * sx, y: y, w: w * sx, h: kh)
+                col += 1
+            }
+            row += 1
+        }
+        addLetterKey(kind: .digit, text: "0", size: 25,
+                      x: xs[1] * sx, y: 24 + 3 * 54, w: w * sx, h: kh)
+        addGlyph(.delete, x: xs[2] * sx, y: 24 + 3 * 54, w: w * sx, h: kh)
+    }
+
+    /// MEASURED kbstateprobe iPad has_text / textview_empty, iPad (A16)
+    /// 820×1180 @2x / iOS 26.1: docked panel height 337, shortcut bar 64,
+    /// letter keys 51×52 pitch 65, row y 64/128/192/256.
+    func buildPadAlphabetic(width: CGFloat, shifted: Bool,
+                            returnStyle: _UIKeyboardResolved.ReturnStyle) {
+        let sx = width / 820
+        let kh: CGFloat = 52
+        func letterText(_ s: String) -> String {
+            _UIKeyboardPanel.folded(s, up: shifted)
+        }
+        func addL(_ t: String, x: CGFloat, y: CGFloat, w: CGFloat) {
+            addLetterKey(kind: .letter, text: letterText(t),
+                         size: _UIKeyboardChrome.letterFontSize,
+                         x: x * sx, y: y, w: w * sx, h: kh)
+        }
+        addGlyph(.tab, x: 11 * sx, y: 64, w: 67 * sx, h: kh)
+        let row1 = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
+        var i = 0
+        while i < row1.count {
+            addL(row1[i], x: 92 + 65 * CGFloat(i), y: 64, w: 51)
+            i += 1
+        }
+        addGlyph(.delete, x: 742 * sx, y: 64, w: 67 * sx, h: kh)
+
+        let row2 = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
+        i = 0
+        while i < row2.count {
+            addL(row2[i], x: 111.5 + 65 * CGFloat(i), y: 128, w: 51)
+            i += 1
+        }
+        addReturn(style: returnStyle, x: 696.5 * sx, y: 128, w: 112.5 * sx, h: kh)
+
+        addGlyph(shifted ? .shiftOn : .shiftOff,
+                 x: 9 * sx, y: 192, w: 120 * sx, h: kh)
+        let row3 = ["Z", "X", "C", "V", "B", "N", "M", ",", "."]
+        i = 0
+        while i < row3.count {
+            addL(row3[i], x: 139 + 65 * CGFloat(i), y: 192, w: 55)
+            i += 1
+        }
+        addGlyph(shifted ? .shiftOn : .shiftOff,
+                 x: 723.5 * sx, y: 192, w: 87.5 * sx, h: kh)
+
+        addGlyph(.emoji, x: 9 * sx, y: 256, w: 59 * sx, h: kh)
+        addLetterKey(kind: .digit, text: ".?123", size: 16,
+                      x: 78 * sx, y: 256, w: 58.5 * sx, h: kh)
+        addGlyph(.mic, x: 146.5 * sx, y: 256, w: 59 * sx, h: kh)
+        let space = _UIKeyboardKey(kind: .space)
+        space.frame = CGRect(x: 215.5 * sx, y: 256, width: 400 * sx, height: kh)
+        addSubview(space)
+        addLetterKey(kind: .digit, text: ".?123", size: 16,
+                      x: 625.5 * sx, y: 256, w: 87.5 * sx, h: kh)
+        addGlyph(.dismiss, x: 723 * sx, y: 256, w: 88 * sx, h: kh)
+        // Pad shortcut bar: three 1 pt suggestion dividers at the
+        // QuickType slots. MEASURED has_text: two verticals in the
+        // centre third of the 64 pt bar (phone empty-bar geometry scaled
+        // across 820: 125.5/375·820 ≈ 274.5, 247.5/375·820 ≈ 541).
+        addQuickTypeDivider(x: 274.5 * sx, y: 20, h: 28)
+        addQuickTypeDivider(x: 541 * sx, y: 20, h: 28)
+    }
+
+    func addLetterKey(kind: _UIKeyboardKey.Kind, text: String, size: CGFloat,
+                       x: CGFloat, y: CGFloat, w: CGFloat, h: CGFloat) {
+        let key = _UIKeyboardKey(kind: kind)
+        key.frame = CGRect(x: x, y: y, width: w, height: h)
+        key.installLabel(text, size: size)
+        addSubview(key)
+    }
+
+    func addReturn(style: _UIKeyboardResolved.ReturnStyle,
+                   x: CGFloat, y: CGFloat, w: CGFloat, h: CGFloat) {
+        let kind: _UIKeyboardKey.Kind
+        switch style {
+        case .arrow: kind = .return
+        case .search: kind = .search
+        case .go: kind = .go
+        case .done: kind = .done
+        }
+        addGlyph(kind, x: x, y: y, w: w, h: h)
+    }
+
+    func addQuickTypeDivider(x: CGFloat, y: CGFloat = 13, h: CGFloat = 23.5) {
+        let v = UIView(frame: CGRect(x: x, y: y, width: 1, height: h))
         v.isUserInteractionEnabled = false
         v.tag = 2601
         addSubview(v)
@@ -394,7 +600,10 @@ final class _UIKeyboardPanel: UIView {
 
 @preconcurrency @MainActor
 final class _UIKeyboardKey: UIView {
-    enum Kind { case letter, digit, space, shift, delete, emoji, mic, `return` }
+    enum Kind {
+        case letter, digit, space, shiftOn, shiftOff, delete, emoji, mic
+        case `return`, search, go, done, tab, dismiss
+    }
     let kind: Kind
     var label: UILabel?
 
@@ -404,11 +613,17 @@ final class _UIKeyboardKey: UIView {
         case .letter: return 0
         case .digit: return 1
         case .space: return 2
-        case .shift: return 3
+        case .shiftOn: return 3
+        case .shiftOff: return 13
         case .delete: return 4
         case .emoji: return 5
         case .mic: return 6
         case .return: return 7
+        case .search: return 8
+        case .go: return 9
+        case .done: return 10
+        case .tab: return 11
+        case .dismiss: return 12
         }
     }
 
@@ -451,20 +666,14 @@ final class _UIKeyboardKey: UIView {
         switch kind {
         case .letter, .digit, .space:
             return
-        case .shift:
-            // Filled up-arrow. MEASURED field_white_light / Forms t1200
-            // shift crop: solid triangle+stem, ~11 % of the 41.5×42 cap.
-            var p = Path()
-            let cx = bounds.midX, cy = bounds.midY
-            p.move(to: CGPoint(x: cx, y: cy - 9))
-            p.addLine(to: CGPoint(x: cx + 8, y: cy + 1))
-            p.addLine(to: CGPoint(x: cx + 3.5, y: cy + 1))
-            p.addLine(to: CGPoint(x: cx + 3.5, y: cy + 9))
-            p.addLine(to: CGPoint(x: cx - 3.5, y: cy + 9))
-            p.addLine(to: CGPoint(x: cx - 3.5, y: cy + 1))
-            p.addLine(to: CGPoint(x: cx - 8, y: cy + 1))
-            p.close()
-            canvas.fill(p, color: ink)
+        case .shiftOn:
+            // Filled up-arrow. MEASURED kbstateprobe empty_sentences /
+            // Forms t1200, iPhone SE 2x: shift-on ink ~11 % of 41.5×42.
+            fillShift(canvas, bounds: bounds, color: ink)
+        case .shiftOff:
+            // Outline up-arrow. MEASURED kbstateprobe has_text: shift-off
+            // ink 0.045 of the cap vs filled 0.108.
+            strokeShift(canvas, bounds: bounds, color: ink, lineWidth: w)
         case .delete:
             // Outline chevron + X. MEASURED Forms t1200 delete crop is
             // stroke, not fill (golden dark 7.5 % vs a filled body 21 %).
@@ -534,6 +743,83 @@ final class _UIKeyboardKey: UIView {
             head.addLine(to: CGPoint(x: c.x - 8, y: c.y + 2))
             head.addLine(to: CGPoint(x: c.x - 2, y: c.y + 7))
             canvas.stroke(head, color: ink, lineWidth: w)
+        case .search:
+            // Magnifying glass. MEASURED kbstateprobe search_text, SE 2x:
+            // blue return [281.5, 621, 85, 42] with a white glass.
+            let c = CGPoint(x: bounds.midX - 1, y: bounds.midY - 1)
+            canvas.stroke(Path.roundedRect(CGRect(x: c.x - 7, y: c.y - 7,
+                                                   width: 12, height: 12),
+                                          cornerRadius: 6), color: ink, lineWidth: w)
+            var handle = Path()
+            handle.move(to: CGPoint(x: c.x + 3.5, y: c.y + 3.5))
+            handle.addLine(to: CGPoint(x: c.x + 9, y: c.y + 9))
+            canvas.stroke(handle, color: ink, lineWidth: w)
+        case .go:
+            // Right-pointing arrow. MEASURED kbstateprobe return_go.
+            let c = CGPoint(x: bounds.midX, y: bounds.midY)
+            var p = Path()
+            p.move(to: CGPoint(x: c.x - 8, y: c.y))
+            p.addLine(to: CGPoint(x: c.x + 6, y: c.y))
+            canvas.stroke(p, color: ink, lineWidth: w)
+            var head = Path()
+            head.move(to: CGPoint(x: c.x + 1, y: c.y - 6))
+            head.addLine(to: CGPoint(x: c.x + 8, y: c.y))
+            head.addLine(to: CGPoint(x: c.x + 1, y: c.y + 6))
+            canvas.stroke(head, color: ink, lineWidth: w)
+        case .done:
+            // Checkmark. MEASURED kbstateprobe return_done.
+            let c = CGPoint(x: bounds.midX, y: bounds.midY)
+            var p = Path()
+            p.move(to: CGPoint(x: c.x - 8, y: c.y + 1))
+            p.addLine(to: CGPoint(x: c.x - 2, y: c.y + 8))
+            p.addLine(to: CGPoint(x: c.x + 9, y: c.y - 7))
+            canvas.stroke(p, color: ink, lineWidth: w)
+        case .tab:
+            let c = CGPoint(x: bounds.midX, y: bounds.midY)
+            var p = Path()
+            p.move(to: CGPoint(x: c.x - 8, y: c.y))
+            p.addLine(to: CGPoint(x: c.x + 5, y: c.y))
+            canvas.stroke(p, color: ink, lineWidth: w)
+            var head = Path()
+            head.move(to: CGPoint(x: c.x, y: c.y - 5))
+            head.addLine(to: CGPoint(x: c.x + 6, y: c.y))
+            head.addLine(to: CGPoint(x: c.x, y: c.y + 5))
+            canvas.stroke(head, color: ink, lineWidth: w)
+            canvas.stroke(Path.rect(CGRect(x: c.x + 7, y: c.y - 7, width: 1.7, height: 14)),
+                          color: ink, lineWidth: w)
+        case .dismiss:
+            let c = CGPoint(x: bounds.midX, y: bounds.midY - 1)
+            canvas.stroke(Path.roundedRect(CGRect(x: c.x - 10, y: c.y - 7,
+                                                   width: 20, height: 12),
+                                          cornerRadius: 2), color: ink, lineWidth: w)
+            var chev = Path()
+            chev.move(to: CGPoint(x: c.x - 5, y: c.y + 8))
+            chev.addLine(to: CGPoint(x: c.x, y: c.y + 12))
+            chev.addLine(to: CGPoint(x: c.x + 5, y: c.y + 8))
+            canvas.stroke(chev, color: ink, lineWidth: w)
         }
+    }
+
+    func shiftPath(bounds: CGRect) -> Path {
+        var p = Path()
+        let cx = bounds.midX, cy = bounds.midY
+        p.move(to: CGPoint(x: cx, y: cy - 9))
+        p.addLine(to: CGPoint(x: cx + 8, y: cy + 1))
+        p.addLine(to: CGPoint(x: cx + 3.5, y: cy + 1))
+        p.addLine(to: CGPoint(x: cx + 3.5, y: cy + 9))
+        p.addLine(to: CGPoint(x: cx - 3.5, y: cy + 9))
+        p.addLine(to: CGPoint(x: cx - 3.5, y: cy + 1))
+        p.addLine(to: CGPoint(x: cx - 8, y: cy + 1))
+        p.close()
+        return p
+    }
+
+    func fillShift(_ canvas: Canvas, bounds: CGRect, color: CGColor) {
+        canvas.fill(shiftPath(bounds: bounds), color: color)
+    }
+
+    func strokeShift(_ canvas: Canvas, bounds: CGRect, color: CGColor,
+                      lineWidth: CGFloat) {
+        canvas.stroke(shiftPath(bounds: bounds), color: color, lineWidth: lineWidth)
     }
 }
