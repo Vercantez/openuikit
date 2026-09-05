@@ -1,6 +1,6 @@
 import Foundation
 
-#if !canImport(SwiftUI)
+#if !canImport(SwiftUI) || os(macOS)
 
 // MARK: - Isolated-host SwiftUI lookalikes
 
