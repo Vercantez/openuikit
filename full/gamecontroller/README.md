@@ -10,8 +10,33 @@ Linux guest stack with UIKit or CoreServices.
 
 ## Depth pass 2026-09
 
-Coverage after this depth pass: **1102 implemented** / 9 deferred / 11
-unavailable / 146 not-applicable (1268 IDs). Target was implemented ≥ 950.
+### Coverage ledger repair
+
+The merge-refused revision `5790e784` reported **1102 implemented** / 9 deferred /
+11 unavailable / 146 not-applicable, but every implemented row cited only the
+file path `tests/agent/GameControllerRuntime.swift` (not
+`test:full/gamecontroller/tests/agent/<File>Tests.swift#testName`).
+
+After splitting the runtime probe into focused `*Tests.swift` functions and
+reclassifying compile-only rows:
+
+**1043 implemented** / **58 declared** / **10 deferred** / **11 unavailable** /
+**146 not-applicable** (1268 IDs). Nondeferred 1101 remains well above the
+large-partitioned floor of 127.
+
+Top-5 implemented evidence (by row count):
+
+1. `GCKeyCodeTests.swift#testHIDKeyCodeValues` — 138 (13.2%) — table-driven HID constants
+2. `GCKeyNameTests.swift#testHIDKeyNameStrings` — 134 (12.8%) — table-driven `GCKey*` strings
+3. `GCLiveInputTests.swift#testLiveInputAndPhysicalElementProtocols` — 99 (9.5%)
+4. `GCSnapshotTests.swift#testSnapshotRoundTrip` — 98 (9.4%)
+5. `GCEnumTests.swift#testEnumAndOptionSetMembers` — 86 (8.2%) — table-driven enums/option-sets
+
+No non-enum / non-constant test exceeds 9.5% of implemented rows (40% cap would
+be 417). `UIScene.ConnectionOptions.gameControllerActivationContext` moved from
+a false `implemented` to **deferred** (UIKit overlay). Protocol witnesses with
+no public instance (`GCSwitchElement`, `GCPhysicalInputSource`) and typealiases
+are **declared**.
 
 The input model is a **simulated device source**. This container has no
 `/dev/input` (no `js*` joystick nodes), so Linux evdev/joystick reading is a
