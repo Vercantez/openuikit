@@ -283,9 +283,16 @@ func testCIMacrosAndFailClosedCodecs() {
     precondition(COREIMAGE_SUPPORTS_OPENGLES == 0)
     precondition(UNIFIED_CORE_IMAGE == 1)
     let context = CIContext()
-    let image = CIImage(color: .white)
-    precondition(context.jpegRepresentation(of: image, colorSpace: .sRGB) == nil)
-    precondition(context.pngRepresentation(of: image, format: .RGBA8, colorSpace: .sRGB) == nil)
+    let image = CIImage(color: .white).cropped(to: CGRect(x: 0, y: 0, width: 2, height: 2))
+    let png = context.pngRepresentation(of: image, format: .RGBA8, colorSpace: .sRGB)
+    precondition(png != nil)
+    let pngBytes = [UInt8](png!)
+    precondition(pngBytes.count >= 4)
+    precondition(pngBytes[0] == 0x89 && pngBytes[1] == 0x50 && pngBytes[2] == 0x4E && pngBytes[3] == 0x47)
+    let jpeg = context.jpegRepresentation(of: image, colorSpace: .sRGB)
+    precondition(jpeg != nil)
+    let jpegBytes = [UInt8](jpeg!)
+    precondition(jpegBytes.count >= 2 && jpegBytes[0] == 0xFF && jpegBytes[1] == 0xD8)
     do {
         _ = try context.heif10Representation(of: image, colorSpace: .sRGB)
         preconditionFailure("heif must fail closed")
@@ -529,3 +536,13 @@ func testCIAllOptionStatics() {
     ]
     precondition(Set(rawOpts.map(\.rawValue)).count == rawOpts.count)
 }
+
+func ciTestPixel(_ image: CIImage, rect: CGRect = CGRect(x: 0, y: 0, width: 1, height: 1)) -> (UInt8, UInt8, UInt8, UInt8) {
+    let context = CIContext()
+    guard let bitmap = context.createCGImage(image, from: rect) else {
+        preconditionFailure("createCGImage")
+    }
+    precondition(bitmap.pixels.count >= 4)
+    return (bitmap.pixels[0], bitmap.pixels[1], bitmap.pixels[2], bitmap.pixels[3])
+}
+
