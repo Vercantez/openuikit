@@ -1,9 +1,16 @@
+import Dispatch
 import Foundation
 #if canImport(CoreMedia)
 @_exported import CoreMedia
 #endif
 #if canImport(CoreGraphics)
 import CoreGraphics
+#endif
+#if canImport(CoreImage)
+import CoreImage
+#endif
+#if canImport(QuartzCore)
+import QuartzCore
 #endif
 #if canImport(OpenUIKit)
 // The portable Foundation facade deliberately preserves OpenUIKit's
@@ -167,8 +174,20 @@ public struct AVFileType: RawRepresentable, Hashable, Sendable,
 }
 
 open class AVAsset: NSObject, @unchecked Sendable {
+    let loadState = AVAssetLoadState()
+
     public override init() {
         super.init()
+    }
+
+    public class func asset(with url: URL) -> AVAsset {
+        AVURLAsset(url: url)
+    }
+
+    @_spi(OpenUIKitHost)
+    public func _portableInjectDuration(_ seconds: Double) {
+        loadState.injectedDuration = seconds
+        loadState.markLoaded(["duration"])
     }
 }
 
@@ -192,6 +211,8 @@ open class AVURLAsset: AVAsset, @unchecked Sendable {
 open class AVPlayerItem: NSObject, @unchecked Sendable {
     public let asset: AVAsset
     public var url: URL? { (asset as? AVURLAsset)?.url }
+    private let itemLock = NSLock()
+    private var storedTime: CMTime = .zero
 
     public override init() {
         self.asset = AVAsset()
@@ -205,6 +226,26 @@ open class AVPlayerItem: NSObject, @unchecked Sendable {
 
     public convenience init(url: URL) {
         self.init(asset: AVURLAsset(url: url))
+    }
+
+    public convenience init(
+        asset: AVAsset,
+        automaticallyLoadedAssetKeys: [AVPartialAsyncProperty<AVAsset>]
+    ) {
+        self.init(asset: asset)
+        _ = automaticallyLoadedAssetKeys
+    }
+
+    func _portableSetCurrentTime(_ time: CMTime) {
+        itemLock.withLock { storedTime = time }
+    }
+
+    func _portableDurationSeconds() -> Double? {
+        asset.loadState.injectedDuration
+    }
+
+    public func currentTime() -> CMTime {
+        itemLock.withLock { storedTime }
     }
 }
 
@@ -227,24 +268,17 @@ public enum AVPlayerAudiovisualBackgroundPlaybackPolicy: Int, Sendable {
 }
 
 open class AVPlayer: NSObject, @unchecked Sendable {
-    private let stateLock = NSLock()
-    private var storedItem: AVPlayerItem?
-    private var storedRate: Float = 0
-    private var storedDefaultRate: Float = 1
-    private var storedVolume: Float = 1
-    private var storedTime: CMTime = .zero
-    private var storedMuted = false
-    private var storedPreventsDisplaySleep = true
-    private var storedBackgroundPolicy =
-        AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic
+    let playbackEngine = AVPlaybackEngine()
 
     public override init() {
         super.init()
+        playbackEngine.owner = self
     }
 
     public init(playerItem item: AVPlayerItem?) {
-        storedItem = item
         super.init()
+        playbackEngine.owner = self
+        playbackEngine.item = item
     }
 
     public convenience init(url URL: URL) {
@@ -252,28 +286,32 @@ open class AVPlayer: NSObject, @unchecked Sendable {
     }
 
     public var currentItem: AVPlayerItem? {
-        stateLock.withLock { storedItem }
+        playbackEngine.lock.withLock { playbackEngine.item }
     }
 
     public var rate: Float {
-        get { stateLock.withLock { storedRate } }
-        set { stateLock.withLock { storedRate = newValue } }
+        get { playbackEngine.lock.withLock { playbackEngine.rate } }
+        set {
+            playbackEngine.lock.lock()
+            playbackEngine.setRate(newValue)
+            playbackEngine.lock.unlock()
+        }
     }
 
     public var defaultRate: Float {
-        get { stateLock.withLock { storedDefaultRate } }
-        set { stateLock.withLock { storedDefaultRate = newValue } }
+        get { playbackEngine.lock.withLock { playbackEngine.defaultRate } }
+        set { playbackEngine.lock.withLock { playbackEngine.defaultRate = newValue } }
     }
 
     public var volume: Float {
-        get { stateLock.withLock { storedVolume } }
-        set { stateLock.withLock { storedVolume = newValue } }
+        get { playbackEngine.lock.withLock { playbackEngine.volume } }
+        set { playbackEngine.lock.withLock { playbackEngine.volume = newValue } }
     }
 
     public var isMuted: Bool {
-        get { stateLock.withLock { storedMuted } }
+        get { playbackEngine.lock.withLock { playbackEngine.muted } }
         set {
-            stateLock.withLock { storedMuted = newValue }
+            playbackEngine.lock.withLock { playbackEngine.muted = newValue }
             AVFoundationPortable.emit(
                 .muted(player: ObjectIdentifier(self), value: newValue)
             )
@@ -281,21 +319,28 @@ open class AVPlayer: NSObject, @unchecked Sendable {
     }
 
     public var preventsDisplaySleepDuringVideoPlayback: Bool {
-        get { stateLock.withLock { storedPreventsDisplaySleep } }
-        set { stateLock.withLock { storedPreventsDisplaySleep = newValue } }
+        get { playbackEngine.lock.withLock { playbackEngine.preventsDisplaySleep } }
+        set {
+            playbackEngine.lock.withLock { playbackEngine.preventsDisplaySleep = newValue }
+        }
     }
 
     public var audiovisualBackgroundPlaybackPolicy:
         AVPlayerAudiovisualBackgroundPlaybackPolicy
     {
-        get { stateLock.withLock { storedBackgroundPolicy } }
-        set { stateLock.withLock { storedBackgroundPolicy = newValue } }
+        get { playbackEngine.lock.withLock { playbackEngine.backgroundPolicy } }
+        set {
+            playbackEngine.lock.withLock { playbackEngine.backgroundPolicy = newValue }
+        }
     }
 
     public func play() {
-        let url = stateLock.withLock { () -> URL? in
-            storedRate = 1
-            return storedItem?.url
+        // iOS 16+: play() applies defaultRate (Apple AVPlayer.play()).
+        // Measured testAVPlayerStatusAndTimeControl: defaultRate 1 → rate 1.
+        let url = playbackEngine.lock.withLock { () -> URL? in
+            let playRate = playbackEngine.defaultRate == 0 ? 1 : playbackEngine.defaultRate
+            playbackEngine.setRate(playRate)
+            return playbackEngine.item?.url
         }
         AVFoundationPortable.emit(
             .play(player: ObjectIdentifier(self), url: url)
@@ -303,27 +348,27 @@ open class AVPlayer: NSObject, @unchecked Sendable {
     }
 
     public func pause() {
-        stateLock.withLock { storedRate = 0 }
+        playbackEngine.lock.withLock { playbackEngine.setRate(0) }
         AVFoundationPortable.emit(.pause(player: ObjectIdentifier(self)))
     }
 
     public func seek(to time: CMTime) {
-        guard time.isValid else { return }
-        stateLock.withLock { storedTime = time }
+        let applied = playbackEngine.lock.withLock { playbackEngine.seek(to: time) }
+        guard applied else { return }
         AVFoundationPortable.emit(
             .seek(player: ObjectIdentifier(self), time: time)
         )
     }
 
     public func currentTime() -> CMTime {
-        stateLock.withLock { storedTime }
+        playbackEngine.lock.withLock { playbackEngine.currentTime() }
     }
 
     public func replaceCurrentItem(with item: AVPlayerItem?) {
-        let url = stateLock.withLock { () -> URL? in
-            storedItem = item
-            storedTime = .zero
-            storedRate = 0
+        let url = playbackEngine.lock.withLock { () -> URL? in
+            playbackEngine.item = item
+            _ = playbackEngine.seek(to: .zero)
+            playbackEngine.setRate(0)
             return item?.url
         }
         AVFoundationPortable.emit(

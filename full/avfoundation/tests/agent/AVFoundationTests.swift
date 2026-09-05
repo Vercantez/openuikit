@@ -2,7 +2,7 @@ import Dispatch
 import Foundation
 import AVFoundation
 
-private final class AVFLocked<Value>: @unchecked Sendable {
+final class AVFLocked<Value>: @unchecked Sendable {
     private let lock = NSLock()
     private var value: Value
 
@@ -23,7 +23,7 @@ private final class AVFLocked<Value>: @unchecked Sendable {
     }
 }
 
-private func avfAwait<T>(_ body: @escaping () async throws -> T) -> Result<T, Error> {
+func avfAwait<T>(_ body: @escaping () async throws -> T) -> Result<T, Error> {
     let semaphore = DispatchSemaphore(value: 0)
     let box = AVFLocked<Result<T, Error>?>(nil)
     Task {
