@@ -172,6 +172,9 @@ public protocol LibraryTrackFilter {
 
 public protocol LibraryArtistFilter {
     var id: MusicItemID { get }
+    var name: String { get }
+    var genres: MusicItemCollection<Genre>? { get }
+    var playlists: MusicItemCollection<Playlist>? { get }
 }
 
 public protocol LibraryPlaylistFilter {
@@ -202,6 +205,8 @@ public protocol LibrarySongSortProperties {
 public protocol LibraryAlbumSortProperties {
     var title: String { get }
     var artistName: String { get }
+    var trackCount: Int { get }
+    var releaseDate: Date? { get }
     var lastPlayedDate: Date? { get }
     var libraryAddedDate: Date? { get }
 }
@@ -217,6 +222,7 @@ public protocol LibraryTrackSortProperties {
 
 public protocol LibraryArtistSortProperties {
     var name: String { get }
+    var albumCount: Int? { get }
     var libraryAddedDate: Date? { get }
 }
 

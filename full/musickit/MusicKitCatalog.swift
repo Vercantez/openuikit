@@ -186,6 +186,44 @@ public struct MusicCatalogSearchResponse: Hashable, Sendable, Codable, CustomStr
         }
         public var description: String { title }
         public var debugDescription: String { title }
+
+        public init(from decoder: any Decoder) throws {
+            let root = try decoder.container(keyedBy: ResourceKey.self)
+            let type = try root.decodeIfPresent(String.self, forKey: .type) ?? ""
+            switch type {
+            case "music-videos": self = .musicVideo(try MusicVideo(from: decoder))
+            case "record-labels": self = .recordLabel(try RecordLabel(from: decoder))
+            case "songs": self = .song(try Song(from: decoder))
+            case "albums": self = .album(try Album(from: decoder))
+            case "artists": self = .artist(try Artist(from: decoder))
+            case "apple-curators", "curators": self = .curator(try Curator(from: decoder))
+            case "stations": self = .station(try Station(from: decoder))
+            case "playlists": self = .playlist(try Playlist(from: decoder))
+            case "radio-shows": self = .radioShow(try RadioShow(from: decoder))
+            default:
+                throw DecodingError.dataCorruptedError(
+                    forKey: .type,
+                    in: root,
+                    debugDescription: "unknown search top result \(type)"
+                )
+            }
+        }
+
+        public func encode(to encoder: any Encoder) throws {
+            switch self {
+            case .musicVideo(let item): try item.encode(to: encoder)
+            case .recordLabel(let item): try item.encode(to: encoder)
+            case .song(let item): try item.encode(to: encoder)
+            case .album(let item): try item.encode(to: encoder)
+            case .artist(let item): try item.encode(to: encoder)
+            case .curator(let item): try item.encode(to: encoder)
+            case .station(let item): try item.encode(to: encoder)
+            case .playlist(let item): try item.encode(to: encoder)
+            case .radioShow(let item): try item.encode(to: encoder)
+            }
+        }
+
+        private enum ResourceKey: String, CodingKey { case type }
     }
 
     public let radioShows: MusicItemCollection<RadioShow>
@@ -214,6 +252,44 @@ public struct MusicCatalogSearchResponse: Hashable, Sendable, Codable, CustomStr
 
     public var description: String { "MusicCatalogSearchResponse(songs: \(songs.count))" }
     public var debugDescription: String { description }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let results = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .results)
+        func collection<T: Decodable & MusicItem & Hashable>(_ key: CodingKeys) -> MusicItemCollection<T> {
+            (try? results.decode(MusicItemCollection<T>.self, forKey: key)) ?? MusicItemCollection([])
+        }
+        radioShows = collection(.radioShows)
+        topResults = collection(.topResults)
+        musicVideos = collection(.musicVideos)
+        recordLabels = collection(.recordLabels)
+        songs = collection(.songs)
+        albums = collection(.albums)
+        artists = collection(.artists)
+        curators = collection(.curators)
+        stations = collection(.stations)
+        playlists = collection(.playlists)
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        var results = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .results)
+        try results.encode(songs, forKey: .songs)
+        try results.encode(albums, forKey: .albums)
+        try results.encode(artists, forKey: .artists)
+        try results.encode(playlists, forKey: .playlists)
+        try results.encode(musicVideos, forKey: .musicVideos)
+        try results.encode(recordLabels, forKey: .recordLabels)
+        try results.encode(curators, forKey: .curators)
+        try results.encode(stations, forKey: .stations)
+        try results.encode(radioShows, forKey: .radioShows)
+        try results.encode(topResults, forKey: .topResults)
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case results, songs, albums, artists, playlists, musicVideos
+        case recordLabels, curators, stations, radioShows, topResults
+    }
 }
 
 public struct MusicCatalogChartsRequest: Hashable {
@@ -249,22 +325,55 @@ public struct MusicCatalogChartsRequest: Hashable {
     }
 }
 
-public struct MusicCatalogChart<MusicItemType: MusicCatalogChartRequestable & Hashable>: Hashable {
-    public var kind: MusicCatalogChartKind
-    public var title: String
-    public var items: MusicItemCollection<MusicItemType>
+public struct MusicCatalogChart<MusicItemType: MusicCatalogChartRequestable & Hashable & Codable>: Hashable,
+    Sendable, Codable, CustomStringConvertible, CustomDebugStringConvertible
+{
+    public typealias ID = String
+    public let id: String
+    public let kind: MusicCatalogChartKind
+    public let items: MusicItemCollection<MusicItemType>
+    public let title: String
+
     public init(
+        id: String = "",
         kind: MusicCatalogChartKind,
         title: String,
         items: MusicItemCollection<MusicItemType> = MusicItemCollection([])
     ) {
+        self.id = id
         self.kind = kind
         self.title = title
         self.items = items
     }
+
+    public var description: String { title }
+    public var debugDescription: String { description }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeIfPresent(String.self, forKey: .id) ?? ""
+        kind = try container.decodeIfPresent(MusicCatalogChartKind.self, forKey: .kind) ?? .mostPlayed
+        title = try container.decodeIfPresent(String.self, forKey: .title)
+            ?? container.decodeIfPresent(String.self, forKey: .name)
+            ?? ""
+        items = try container.decodeIfPresent(MusicItemCollection<MusicItemType>.self, forKey: .data)
+            ?? MusicItemCollection([])
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(kind, forKey: .kind)
+        try container.encode(title, forKey: .title)
+        try container.encode(items, forKey: .data)
+    }
+
+    private enum CodingKeys: String, CodingKey { case id, kind, title, name, data }
 }
 
-public struct MusicCatalogChartsResponse: Hashable {
+public struct MusicCatalogChartsResponse: Hashable, Sendable, Codable, CustomStringConvertible,
+    CustomDebugStringConvertible
+{
     public var songCharts: [MusicCatalogChart<Song>]
     public var albumCharts: [MusicCatalogChart<Album>]
     public var playlistCharts: [MusicCatalogChart<Playlist>]
@@ -275,6 +384,27 @@ public struct MusicCatalogChartsResponse: Hashable {
         playlistCharts = []
         musicVideoCharts = []
     }
+
+    public var description: String { "MusicCatalogChartsResponse(songs: \(songCharts.count))" }
+    public var debugDescription: String { description }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        songCharts = try container.decodeIfPresent([MusicCatalogChart<Song>].self, forKey: .songs) ?? []
+        albumCharts = try container.decodeIfPresent([MusicCatalogChart<Album>].self, forKey: .albums) ?? []
+        playlistCharts = try container.decodeIfPresent([MusicCatalogChart<Playlist>].self, forKey: .playlists) ?? []
+        musicVideoCharts = try container.decodeIfPresent([MusicCatalogChart<MusicVideo>].self, forKey: .musicVideos) ?? []
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(songCharts, forKey: .songs)
+        try container.encode(albumCharts, forKey: .albums)
+        try container.encode(playlistCharts, forKey: .playlists)
+        try container.encode(musicVideoCharts, forKey: .musicVideos)
+    }
+
+    private enum CodingKeys: String, CodingKey { case songs, albums, playlists, musicVideos }
 }
 
 public struct MusicCatalogResourceRequest<MusicItemType: MusicItem & Decodable & Hashable> {
@@ -303,11 +433,15 @@ public struct MusicCatalogResourceRequest<MusicItemType: MusicItem & Decodable &
     }
 }
 
-public struct MusicCatalogResourceResponse<MusicItemType: MusicItem & Hashable>: Hashable {
+public struct MusicCatalogResourceResponse<MusicItemType: MusicItem & Hashable>: Hashable,
+    CustomStringConvertible, CustomDebugStringConvertible
+{
     public var items: MusicItemCollection<MusicItemType>
     public init(items: MusicItemCollection<MusicItemType> = MusicItemCollection([])) {
         self.items = items
     }
+    public var description: String { "MusicCatalogResourceResponse(\(items.count))" }
+    public var debugDescription: String { description }
 }
 
 public struct MusicRecentlyPlayedRequest<MusicItemType: MusicRecentlyPlayedRequestable & Hashable> {
@@ -319,12 +453,20 @@ public struct MusicRecentlyPlayedRequest<MusicItemType: MusicRecentlyPlayedReque
     }
 }
 
-public struct MusicRecentlyPlayedResponse<MusicItemType: MusicRecentlyPlayedRequestable & Hashable>: Hashable {
+public struct MusicRecentlyPlayedResponse<MusicItemType: MusicRecentlyPlayedRequestable & Hashable>: Hashable,
+    CustomStringConvertible, CustomDebugStringConvertible
+{
     public var items: MusicItemCollection<MusicItemType>
     public init(items: MusicItemCollection<MusicItemType> = MusicItemCollection([])) {
         self.items = items
     }
+    public var description: String { "MusicRecentlyPlayedResponse(\(items.count))" }
+    public var debugDescription: String { description }
 }
+
+public typealias MusicRecentlyPlayedContainerRequest = MusicRecentlyPlayedRequest<RecentlyPlayedMusicItem>
+public typealias MusicRecentlyPlayedContainerResponse = MusicRecentlyPlayedResponse<RecentlyPlayedMusicItem>
+public typealias MusicTokenProvider = MusicUserTokenProvider & MusicDeveloperTokenProvider
 
 public struct MusicPersonalRecommendationsRequest: Hashable {
     public var limit: Int?
@@ -340,12 +482,18 @@ public struct MusicPersonalRecommendationsRequest: Hashable {
     }
 }
 
-public struct MusicPersonalRecommendation: MusicItem, Hashable, Sendable {
-    public enum Item: MusicItem, Hashable, Sendable {
+public struct MusicPersonalRecommendation: MusicItem, Hashable, Sendable, Codable,
+    CustomStringConvertible, CustomDebugStringConvertible
+{
+    public enum Item: MusicItem, Hashable, Sendable, Codable, CustomStringConvertible,
+        CustomDebugStringConvertible
+    {
         case album(Album)
         case station(Station)
         case playlist(Playlist)
         case song(Song)
+
+        public typealias ID = MusicItemID
         public var id: MusicItemID {
             switch self {
             case .album(let item): return item.id
@@ -354,16 +502,69 @@ public struct MusicPersonalRecommendation: MusicItem, Hashable, Sendable {
             case .song(let item): return item.id
             }
         }
+        public var title: String {
+            switch self {
+            case .album(let item): return item.title
+            case .station(let item): return item.name
+            case .playlist(let item): return item.name
+            case .song(let item): return item.title
+            }
+        }
+        public var subtitle: String? {
+            switch self {
+            case .album(let item): return item.artistName
+            case .station: return nil
+            case .playlist: return nil
+            case .song(let item): return item.artistName
+            }
+        }
+        public var artwork: Artwork? {
+            switch self {
+            case .album(let item): return item.artwork
+            case .station(let item): return item.artwork
+            case .playlist(let item): return item.artwork
+            case .song(let item): return item.artwork
+            }
+        }
+        public var description: String { title }
+        public var debugDescription: String { title }
     }
 
+    public typealias ID = MusicItemID
     public let id: MusicItemID
-    public var title: String
+    public var title: String?
+    public var reason: String?
+    public var nextRefreshDate: Date?
     public var items: MusicItemCollection<Item>
-    public init(id: MusicItemID, title: String, items: MusicItemCollection<Item> = MusicItemCollection([])) {
+    public var types: [any MusicPersonalRecommendationItem.Type] {
+        [Album.self, Station.self, Playlist.self]
+    }
+    public var albums: MusicItemCollection<Album> {
+        MusicItemCollection(items.compactMap { if case .album(let item) = $0 { return item }; return nil })
+    }
+    public var stations: MusicItemCollection<Station> {
+        MusicItemCollection(items.compactMap { if case .station(let item) = $0 { return item }; return nil })
+    }
+    public var playlists: MusicItemCollection<Playlist> {
+        MusicItemCollection(items.compactMap { if case .playlist(let item) = $0 { return item }; return nil })
+    }
+
+    public init(
+        id: MusicItemID,
+        title: String? = nil,
+        reason: String? = nil,
+        nextRefreshDate: Date? = nil,
+        items: MusicItemCollection<Item> = MusicItemCollection([])
+    ) {
         self.id = id
         self.title = title
+        self.reason = reason
+        self.nextRefreshDate = nextRefreshDate
         self.items = items
     }
+
+    public var description: String { title ?? id.rawValue }
+    public var debugDescription: String { description }
 }
 
 public struct MusicPersonalRecommendationsResponse: Hashable {
@@ -388,14 +589,22 @@ public struct MusicCatalogSearchSuggestionsRequest {
     }
 }
 
-public struct MusicCatalogSearchSuggestionsResponse: Hashable {
-    public struct Suggestion: Hashable, Sendable {
+public struct MusicCatalogSearchSuggestionsResponse: Hashable, CustomStringConvertible,
+    CustomDebugStringConvertible
+{
+    public struct Suggestion: Hashable, Sendable, Identifiable, CustomStringConvertible,
+        CustomDebugStringConvertible
+    {
+        public typealias ID = String
         public var displayTerm: String
         public var searchTerm: String
+        public var id: String { searchTerm }
         public init(displayTerm: String, searchTerm: String) {
             self.displayTerm = displayTerm
             self.searchTerm = searchTerm
         }
+        public var description: String { displayTerm }
+        public var debugDescription: String { displayTerm }
     }
 
     public var suggestions: [Suggestion]
@@ -407,4 +616,7 @@ public struct MusicCatalogSearchSuggestionsResponse: Hashable {
         self.suggestions = suggestions
         self.topResults = topResults
     }
+
+    public var description: String { "MusicCatalogSearchSuggestionsResponse(\(suggestions.count))" }
+    public var debugDescription: String { description }
 }

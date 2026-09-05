@@ -194,24 +194,158 @@ public struct MusicLibrarySection<SectionType, MusicItemType: MusicItem & Hashab
     public var debugDescription: String { description }
 }
 
-public struct MusicLibrarySectionedRequest<SectionType, MusicItemType: MusicItem & Hashable>
+public struct MusicLibrarySectionedRequest<SectionType, MusicItemType: MusicLibraryRequestable & Hashable>
     where SectionType: MusicLibrarySectionRequestable & Hashable
 {
+    public var includeOnlyDownloadedContent = false
     public var limit: Int = 0
     public var offset: Int = 0
+    var textFilter: String?
+    var sectionTextFilter: String?
+
     public init() {}
+
+    public mutating func filterItems(text: String) {
+        textFilter = text
+    }
+
+    public mutating func filterItems<Value: MusicLibraryRequestFilterValueEquatable>(
+        matching keyPath: KeyPath<MusicItemType, Value>,
+        equalTo value: Value
+    ) {
+        _ = (keyPath, value)
+        textFilter = String(describing: value)
+    }
+
+    public mutating func filterItems<Value: MusicLibraryRequestFilterValueEquatable>(
+        matching keyPath: KeyPath<MusicItemType, Value?>,
+        equalTo value: Value?
+    ) {
+        _ = (keyPath, value)
+        textFilter = String(describing: value)
+    }
+
+    public mutating func filterItems<RelatedMusicItemType: MusicItem>(
+        matching keyPath: KeyPath<MusicItemType, MusicItemCollection<RelatedMusicItemType>?>,
+        contains relatedItem: RelatedMusicItemType
+    ) {
+        _ = keyPath
+        textFilter = relatedItem.id.rawValue
+    }
+
+    public mutating func filterItems(
+        matching keyPath: KeyPath<MusicItemType, String>,
+        contains text: String
+    ) {
+        _ = keyPath
+        textFilter = text
+    }
+
+    public mutating func filterItems(
+        matching keyPath: KeyPath<MusicItemType, String?>,
+        contains text: String
+    ) {
+        _ = keyPath
+        textFilter = text
+    }
+
+    public mutating func filterItems<Value: MusicLibraryRequestFilterValueMembershipComparable>(
+        matching keyPath: KeyPath<MusicItemType, Value>,
+        memberOf values: [Value]
+    ) {
+        _ = keyPath
+        textFilter = values.map { String(describing: $0) }.joined(separator: ",")
+    }
+
+    public mutating func filterItems<Value: MusicLibraryRequestFilterValueMembershipComparable>(
+        matching keyPath: KeyPath<MusicItemType, Value?>,
+        memberOf values: [Value?]
+    ) {
+        _ = keyPath
+        textFilter = values.map { String(describing: $0) }.joined(separator: ",")
+    }
+
+    public mutating func sortItems<Value>(
+        by keyPath: KeyPath<MusicItemType, Value>,
+        ascending: Bool
+    ) {
+        _ = (keyPath, ascending)
+    }
+
+    public mutating func filterSections(text: String) {
+        sectionTextFilter = text
+    }
+
+    public mutating func filterSections<Value: MusicLibraryRequestFilterValueEquatable>(
+        matching keyPath: KeyPath<SectionType, Value>,
+        equalTo value: Value
+    ) {
+        _ = (keyPath, value)
+        sectionTextFilter = String(describing: value)
+    }
+
+    public mutating func filterSections<Value: MusicLibraryRequestFilterValueEquatable>(
+        matching keyPath: KeyPath<SectionType, Value?>,
+        equalTo value: Value?
+    ) {
+        _ = (keyPath, value)
+        sectionTextFilter = String(describing: value)
+    }
+
+    public mutating func filterSections(
+        matching keyPath: KeyPath<SectionType, String>,
+        contains text: String
+    ) {
+        _ = keyPath
+        sectionTextFilter = text
+    }
+
+    public mutating func filterSections(
+        matching keyPath: KeyPath<SectionType, String?>,
+        contains text: String
+    ) {
+        _ = keyPath
+        sectionTextFilter = text
+    }
+
+    public mutating func filterSections<Value: MusicLibraryRequestFilterValueMembershipComparable>(
+        matching keyPath: KeyPath<SectionType, Value>,
+        memberOf values: [Value]
+    ) {
+        _ = keyPath
+        sectionTextFilter = values.map { String(describing: $0) }.joined(separator: ",")
+    }
+
+    public mutating func filterSections<Value: MusicLibraryRequestFilterValueMembershipComparable>(
+        matching keyPath: KeyPath<SectionType, Value?>,
+        memberOf values: [Value?]
+    ) {
+        _ = keyPath
+        sectionTextFilter = values.map { String(describing: $0) }.joined(separator: ",")
+    }
+
+    public mutating func sortSections<Value>(
+        by keyPath: KeyPath<SectionType, Value>,
+        ascending: Bool
+    ) {
+        _ = (keyPath, ascending)
+    }
+
     public func response() async throws -> MusicLibrarySectionedResponse<SectionType, MusicItemType> {
         throw MusicLibrary.Error.permissionDenied
     }
 }
 
-public struct MusicLibrarySectionedResponse<SectionType, MusicItemType: MusicItem & Hashable>: Hashable
+public struct MusicLibrarySectionedResponse<SectionType, MusicItemType: MusicItem & Hashable>: Hashable,
+    CustomStringConvertible, CustomDebugStringConvertible
     where SectionType: MusicLibrarySectionRequestable & Hashable
 {
     public var sections: [MusicLibrarySection<SectionType, MusicItemType>]
     public init(sections: [MusicLibrarySection<SectionType, MusicItemType>] = []) {
         self.sections = sections
     }
+    public var description: String { "MusicLibrarySectionedResponse(\(sections.count))" }
+    public var debugDescription: String { description }
 }
 
 public struct MusicLibrarySearchRequest: Hashable {
@@ -240,13 +374,19 @@ public struct MusicLibrarySearchRequest: Hashable {
     }
 }
 
-public struct MusicLibrarySearchResponse: Hashable, Sendable {
-    public enum TopResult: MusicItem, Hashable, Sendable {
+public struct MusicLibrarySearchResponse: Hashable, Sendable, CustomStringConvertible,
+    CustomDebugStringConvertible
+{
+    public enum TopResult: MusicItem, Hashable, Sendable, Codable, CustomStringConvertible,
+        CustomDebugStringConvertible
+    {
         case song(Song)
         case album(Album)
         case artist(Artist)
         case playlist(Playlist)
         case musicVideo(MusicVideo)
+
+        public typealias ID = MusicItemID
         public var id: MusicItemID {
             switch self {
             case .song(let item): return item.id
@@ -256,6 +396,56 @@ public struct MusicLibrarySearchResponse: Hashable, Sendable {
             case .musicVideo(let item): return item.id
             }
         }
+        public var title: String {
+            switch self {
+            case .song(let item): return item.title
+            case .album(let item): return item.title
+            case .artist(let item): return item.name
+            case .playlist(let item): return item.name
+            case .musicVideo(let item): return item.title
+            }
+        }
+        public var artwork: Artwork? {
+            switch self {
+            case .song(let item): return item.artwork
+            case .album(let item): return item.artwork
+            case .artist(let item): return item.artwork
+            case .playlist(let item): return item.artwork
+            case .musicVideo(let item): return item.artwork
+            }
+        }
+        public var description: String { title }
+        public var debugDescription: String { title }
+
+        public init(from decoder: any Decoder) throws {
+            let root = try decoder.container(keyedBy: ResourceKey.self)
+            let type = try root.decodeIfPresent(String.self, forKey: .type) ?? ""
+            switch type {
+            case "songs": self = .song(try Song(from: decoder))
+            case "albums": self = .album(try Album(from: decoder))
+            case "artists": self = .artist(try Artist(from: decoder))
+            case "playlists": self = .playlist(try Playlist(from: decoder))
+            case "music-videos": self = .musicVideo(try MusicVideo(from: decoder))
+            default:
+                throw DecodingError.dataCorruptedError(
+                    forKey: .type,
+                    in: root,
+                    debugDescription: "unknown library search top result \(type)"
+                )
+            }
+        }
+
+        public func encode(to encoder: any Encoder) throws {
+            switch self {
+            case .song(let item): try item.encode(to: encoder)
+            case .album(let item): try item.encode(to: encoder)
+            case .artist(let item): try item.encode(to: encoder)
+            case .playlist(let item): try item.encode(to: encoder)
+            case .musicVideo(let item): try item.encode(to: encoder)
+            }
+        }
+
+        private enum ResourceKey: String, CodingKey { case type }
     }
 
     public var songs: MusicItemCollection<Song>
@@ -273,6 +463,9 @@ public struct MusicLibrarySearchResponse: Hashable, Sendable {
         musicVideos = MusicItemCollection([])
         topResults = MusicItemCollection([])
     }
+
+    public var description: String { "MusicLibrarySearchResponse(songs: \(songs.count))" }
+    public var debugDescription: String { description }
 }
 
 extension Genre: MusicLibrarySectionRequestable {}

@@ -350,6 +350,7 @@ public struct Artist: MusicItem, FilterableMusicItem, MusicLibraryRequestable,
     public var genreNames: [String]?
     public var editorialNotes: EditorialNotes?
     public var libraryAddedDate: Date?
+    public var albumCount: Int?
     public var url: URL?
     public var artwork: Artwork?
     public var topMusicVideos: MusicItemCollection<MusicVideo>?
@@ -375,6 +376,7 @@ public struct Artist: MusicItem, FilterableMusicItem, MusicLibraryRequestable,
         self.genreNames = nil
         self.editorialNotes = nil
         self.libraryAddedDate = nil
+        self.albumCount = nil
         self.url = nil
         self.artwork = nil
     }
@@ -396,6 +398,7 @@ public struct Artist: MusicItem, FilterableMusicItem, MusicLibraryRequestable,
             url = nil
         }
         libraryAddedDate = nil
+        albumCount = nil
         topMusicVideos = nil
         fullAlbums = nil
         liveAlbums = nil
@@ -486,7 +489,7 @@ public struct Genre: MusicItem, FilterableMusicItem, MusicLibraryRequestable,
 }
 
 public struct Station: MusicItem, PlayableMusicItem, FilterableMusicItem,
-    MusicCatalogSearchable, MusicRecentlyPlayedRequestable, StationFilter,
+    MusicCatalogSearchable, MusicRecentlyPlayedRequestable, MusicPersonalRecommendationItem, StationFilter,
     Hashable, Sendable, Codable, CustomStringConvertible, CustomDebugStringConvertible
 {
     public typealias FilterType = StationFilter

@@ -649,8 +649,8 @@ public struct RadioShow: MusicItem, FilterableMusicItem, MusicCatalogSearchable,
     }
 }
 
-public enum RecentlyPlayedMusicItem: MusicItem, PlayableMusicItem, Hashable, Sendable, Codable,
-    CustomStringConvertible, CustomDebugStringConvertible
+public enum RecentlyPlayedMusicItem: MusicItem, PlayableMusicItem, MusicRecentlyPlayedRequestable,
+    Hashable, Sendable, Codable, CustomStringConvertible, CustomDebugStringConvertible
 {
     case album(Album)
     case station(Station)

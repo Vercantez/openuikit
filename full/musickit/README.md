@@ -9,23 +9,23 @@ library, or hardware playback parity.
 
 Coverage after this seed+depth run:
 
-- **implemented:** 947
-- **declared:** 478
-- **nondeferred:** 1425 (floor 1267)
-- **not-applicable:** 1109
+- **implemented:** 905
+- **declared:** 460
+- **nondeferred:** 1365 (floor 1267)
+- **not-applicable:** 1169
 - **deferred / unavailable:** 0 / 0
 
-Top-5 implemented evidence distribution (947 implemented rows):
+Top-5 implemented evidence distribution (905 implemented rows):
 
-1. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testPlaylistAndVideo` — 169 (17.8%)
-2. `test:full/musickit/tests/agent/MusicKitEnumTests.swift#testEnumRawValues` — 158 (16.7%)
-3. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testSupportingTypes` — 99 (10.5%)
-4. `test:full/musickit/tests/agent/MusicKitBehaviorTests.swift#testPlayerQueue` — 75 (7.9%)
-5. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testArtistGenreStation` — 72 (7.6%)
+1. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testPlaylistAndVideo` — 164 (18.1%)
+2. `test:full/musickit/tests/agent/MusicKitEnumTests.swift#testEnumRawValues` — 148 (16.4%)
+3. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testSupportingTypes` — 94 (10.4%)
+4. `test:full/musickit/tests/agent/MusicKitBehaviorTests.swift#testPlayerQueue` — 71 (7.8%)
+5. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testArtistGenreStation` — 69 (7.6%)
 
 Enum / option-set members share `testEnumRawValues`. No other single test is
 cited by more than 40% of the remaining implemented rows
-(40% cap after the enum table = 315.6).
+(40% cap after the enum table = 302.8).
 
 ## Public surface implemented
 
