@@ -1,5 +1,4 @@
 @_spi(OpenUIKitHost) import WidgetKit
-import Dispatch
 import Foundation
 
 func testWidgetFamilyCases() {
@@ -76,16 +75,8 @@ func testWidgetCenterReloadAndConfigurations() {
         installed.value = try? result.get()
     }
     precondition(installed.value == [info])
-    // getCurrentConfigurations and currentConfigurations() are the same snapshot.
-    // Cited: Apple WidgetCenter.getCurrentConfigurations / currentConfigurations.
-    let asyncBox = _ValueBox<[WidgetInfo]>()
-    let done = DispatchSemaphore(value: 0)
-    Task {
-        asyncBox.value = try? await center.currentConfigurations()
-        done.signal()
-    }
-    precondition(done.wait(timeout: .now() + .seconds(5)) == .success)
-    precondition(asyncBox.value == [info])
+    precondition(center.portableCurrentConfigurations() == [info])
+    precondition(center.portableCurrentPushInfo == nil)
     // invalidateConfigurationRecommendations does not drop installed widgets
     // (Apple: it asks WidgetKit for new recommendations, not current configs).
     center.invalidateConfigurationRecommendations()
@@ -161,29 +152,19 @@ func testActivityFamilyAndLevelOfDetail() {
 }
 
 func testControlCenterFailClosed() {
-    let center = ControlCenter()
+    let center = ControlCenter.shared
+    center.resetProcessLocalState()
     center.reloadControls(ofKind: "toggle")
     center.reloadAllControls()
-    var controls: [ControlInfo]?
-    let lock = NSLock()
-    let done = { (value: [ControlInfo]) in
-        lock.lock()
-        controls = value
-        lock.unlock()
-    }
-    // currentControls is async; drive it with a semaphore from a detached task.
-    let semaphore = DispatchSemaphore(value: 0)
-    Task {
-        let value = await center.currentControls()
-        done(value)
-        semaphore.signal()
-    }
-    precondition(semaphore.wait(timeout: .now() + .seconds(5)) == .success)
-    lock.lock()
-    let snapshot = controls
-    lock.unlock()
-    precondition(snapshot?.isEmpty == true)
+    precondition(center.drainReloadKinds() == ["toggle"])
+    precondition(center.drainReloadAllCount() == 1)
+    precondition(center.portableCurrentControls().isEmpty)
+    let info = ControlInfo(kind: "toggle", pushInfo: ControlPushInfo(token: Data([1])))
+    center.installCurrentControls([info])
+    precondition(center.portableCurrentControls() == [info])
+    precondition(ControlCenter().portableCurrentControls() == [info])
     _ = ControlCenter.shared
+    center.resetProcessLocalState()
 }
 
 func testWidgetAccentedRenderingMode() {
@@ -236,37 +217,33 @@ func testTimelineRuntimeValidation() {
         family: .systemSmall,
         displaySize: CGSize(width: 1, height: 1)
     )
-    let runtime = WidgetTimelineRuntime()
-    let semaphore = DispatchSemaphore(value: 0)
-    let box = _EvalBox()
-    Task {
-        do {
-            let evaluation = try await runtime.evaluate(
-                Provider(),
-                configuration: Intent(),
-                context: context
+    let provider = Provider()
+    precondition(provider.placeholder(in: context).date == Date(timeIntervalSinceReferenceDate: 1))
+    do {
+        let evaluation = try WidgetTimelineValidation.evaluate(
+            Timeline(
+                entries: [
+                    Entry(date: Date(timeIntervalSinceReferenceDate: 10)),
+                    Entry(date: Date(timeIntervalSinceReferenceDate: 20)),
+                ],
+                policy: .after(Date(timeIntervalSinceReferenceDate: 30))
             )
-            box.nextReload = evaluation.nextReload
-            box.count = await runtime.evaluationCount
-        } catch {
-            box.failed = true
-        }
-        semaphore.signal()
+        )
+        precondition(evaluation.nextReload == Date(timeIntervalSinceReferenceDate: 30))
+        precondition(
+            WidgetTimelineValidation.entry(
+                at: Date(timeIntervalSinceReferenceDate: 15),
+                in: evaluation.timeline
+            )?.date == Date(timeIntervalSinceReferenceDate: 10)
+        )
+    } catch {
+        preconditionFailure("valid timeline must not throw")
     }
-    precondition(semaphore.wait(timeout: .now() + .seconds(5)) == .success)
-    precondition(box.failed == false)
-    precondition(box.nextReload == Date(timeIntervalSinceReferenceDate: 30))
-    precondition(box.count == 1)
+    _ = Intent()
 }
 
 private final class _ValueBox<T>: @unchecked Sendable {
     var value: T?
-}
-
-private final class _EvalBox: @unchecked Sendable {
-    var nextReload: Date?
-    var count: UInt64 = 0
-    var failed = false
 }
 
 func testEnvironmentValuesDefaults() {
@@ -285,10 +262,20 @@ func testWidgetRelevanceAndPush() {
     let group = WidgetRelevanceGroup.named("mail")
     precondition(group != .automatic)
     precondition(WidgetRelevanceGroup.ungrouped != .automatic)
+    let context = RelevantContext()
     let relevance = WidgetRelevance<Void>([
         WidgetRelevanceAttribute(group: .automatic),
+        WidgetRelevanceAttribute(context: context),
     ])
     _ = relevance
+    _ = WidgetRelevanceAttribute(configuration: "cfg", group: .named("mail"))
+    _ = WidgetRelevanceAttribute(configuration: "cfg", context: context)
+    let intent = INIntent()
+    _ = WidgetRelevanceAttribute(configuration: intent, group: .automatic)
+    _ = WidgetRelevanceAttribute(configuration: intent, context: context)
+    struct ConfigIntent: WidgetConfigurationIntent {}
+    _ = WidgetRelevanceAttribute(configuration: ConfigIntent(), group: .ungrouped)
+    _ = WidgetRelevanceAttribute(configuration: ConfigIntent(), context: context)
     let push = WidgetPushInfo(token: Data([1, 2, 3]))
     precondition(push.token.count == 3)
 }
