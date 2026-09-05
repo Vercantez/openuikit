@@ -74,6 +74,8 @@ def device_of(src):
                 label = "iPhone SE (3rd generation) @2x"
             elif b == (393, 852) and scale == 3:
                 label = "iPhone 16 @3x"
+            elif b == (667, 375) and scale == 2:
+                label = "iPhone SE (3rd generation) @2x landscape"
             elif b == (820, 1180) and scale == 2:
                 label = "iPad (A16) @2x"
             else:
@@ -90,6 +92,8 @@ def device_of(src):
                         label = "iPhone 16 @3x"
                     elif w == 375:
                         label = "iPhone SE (3rd generation) @2x"
+                    elif (w, h) == (667, 375):
+                        label = "iPhone SE (3rd generation) @2x landscape"
                     elif (w, h) == (820, 1180):
                         label = "iPad (A16) @2x"
         cat = d.get("contentSizeCategory") or d.get("windowContentSizeCategory")

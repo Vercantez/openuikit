@@ -181,6 +181,41 @@ final class ConformanceRegistryTests: XCTestCase {
         XCTAssertEqual(ConformanceClock.contentSizeCategory(for: "large"), .large)
     }
 
+    /// Landscape captures append `.landscape` so portrait goldens keep
+    /// `t200` and the scoreboard can hold both timelines
+    /// (`NavFlow:t200` vs `NavFlow:t200.landscape`). Env wins over the
+    /// script field so `conformance_flow.sh --landscape` can drive a
+    /// portrait script.json. Combined suffix order is `.dark` then `.rtl`
+    /// then `.ax1` / `.xxxl` then `.landscape`.
+    func testLandscapeCaptureSuffixAndOrientationResolution() {
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, orientation: "portrait"), "t200")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, orientation: "landscape"),
+                       "t200.landscape")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.08, orientation: "landscape"),
+                       "t080.landscape")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 1.0, orientation: "landscape"),
+                       "t1000.landscape")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, style: "dark",
+                                                     direction: "rtl",
+                                                     orientation: "landscape"),
+                       "t200.dark.rtl.landscape")
+        XCTAssertEqual(ConformanceClock.captureSuffix(for: 0.20, style: "dark",
+                                                     direction: "rtl",
+                                                     contentSize: "ax1",
+                                                     orientation: "landscape"),
+                       "t200.dark.rtl.ax1.landscape")
+        XCTAssertEqual(ConformanceClock.resolvedOrientation(script: "portrait", environment: nil),
+                       "portrait")
+        XCTAssertEqual(ConformanceClock.resolvedOrientation(script: "landscape", environment: nil),
+                       "landscape")
+        XCTAssertEqual(ConformanceClock.resolvedOrientation(script: "portrait",
+                                                            environment: "landscape"),
+                       "landscape")
+        XCTAssertEqual(ConformanceClock.resolvedOrientation(script: "landscape",
+                                                            environment: "portrait"),
+                       "landscape")
+    }
+
     @MainActor
     func testRegistryHasEveryScannedApp() throws {
         let root = try Self.repoRoot()

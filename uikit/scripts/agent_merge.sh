@@ -147,6 +147,13 @@ for app in Sources/ConformanceApps/*(/:t); do
     SKIP_CAPTURE=$skipxx zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-xxxl $app --xxxl > /tmp/agent_merge_conf-$app-xxxl.log 2>&1 \
       || { echo "CONFORMANCE FLOW FAILED: $app --xxxl (see /tmp/agent_merge_conf-$app-xxxl.log)"; exit 9; }
   fi
+  if [[ -d /tmp/hc-conformance-$app-landscape/golden ]]; then
+    rm -rf /tmp/agent_merge_conf-$app-landscape; cp -r /tmp/hc-conformance-$app-landscape /tmp/agent_merge_conf-$app-landscape
+    skipl=1
+    for r in ${=RECAPTURE_APPS:-}; do [[ "$r" == "$app" ]] && { skipl=""; rm -rf /tmp/agent_merge_conf-$app-landscape/golden; echo "   $app-landscape: recapturing goldens with the merged probe"; }; done
+    SKIP_CAPTURE=$skipl zsh scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-landscape $app --landscape > /tmp/agent_merge_conf-$app-landscape.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --landscape (see /tmp/agent_merge_conf-$app-landscape.log)"; exit 9; }
+  fi
 done
 python3 - <<'PY' || exit 9
 import json, os, glob
