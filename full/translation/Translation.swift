@@ -2,9 +2,31 @@
 
 /// Linux starting implementation of Apple's public `Translation` module.
 ///
-/// There is no on-device translation model, download service, or Apple ML
-/// runtime on this host. Session and availability APIs fail closed: they
-/// never invent a translated string or report a language pair as installed.
+/// There is no on-device translation model, language-identification service,
+/// download UI, or Apple ML runtime on this host. Session and availability
+/// APIs fail closed: they never invent a translated string or report a
+/// language pair as installed or supported for download.
+
+// MARK: - Language pairing
+
+/// Apple's docs refuse same-language pairing (English US → English UK).
+/// Script distinguishes written forms (zh-Hans vs zh-Hant) until an oracle
+/// records Apple's matching rule.
+private func translationLanguagesAreSamePair(
+    _ source: Locale.Language,
+    _ target: Locale.Language
+) -> Bool {
+    if let sourceCode = source.languageCode, let targetCode = target.languageCode {
+        if sourceCode != targetCode {
+            return false
+        }
+        if let sourceScript = source.script, let targetScript = target.script {
+            return sourceScript == targetScript
+        }
+        return true
+    }
+    return source.maximalIdentifier == target.maximalIdentifier
+}
 
 // MARK: - TranslationError
 
@@ -72,41 +94,44 @@ public struct TranslationError: Error, LocalizedError, Sendable {
 
 /// Reports whether Apple translation models exist for a language pair.
 /// Linux has none, so every query is `.unsupported` after local validation.
-public class LanguageAvailability {
+public class LanguageAvailability: @unchecked Sendable {
     public enum Status: Hashable, Sendable {
+        /// Model present and ready. Never returned on Linux.
         case installed
+        /// Pairing exists but is not downloaded. Never returned on Linux.
         case supported
+        /// Pairing cannot be used. The only status this host reports.
         case unsupported
     }
 
     public init() {}
 
-    /// Languages with an installed model. Always empty on Linux.
+    /// Languages with a usable model. Always empty on Linux.
     public var supportedLanguages: [Locale.Language] {
         get async { [] }
     }
 
     /// Pairwise model status. Linux never reports `.installed` or `.supported`.
+    /// Same-language pairings are `.unsupported` per Apple's documented rule.
     public func status(
         from source: Locale.Language,
         to target: Locale.Language?
     ) async -> Status {
-        _ = source
-        _ = target
+        if let target, translationLanguagesAreSamePair(source, target) {
+            return .unsupported
+        }
         return .unsupported
     }
 
-    /// Status after inspecting `text`. Empty source text fails locally with
-    /// `unableToIdentifyLanguage`; any nonempty text is `.unsupported`.
+    /// Status after inspecting `text`. Linux has no language-identification
+    /// model, so this always throws ``TranslationError/unableToIdentifyLanguage``.
     public func status(
         for text: String,
         to target: Locale.Language?
     ) async throws -> Status {
+        _ = text
         _ = target
-        if text.isEmpty {
-            throw TranslationError.unableToIdentifyLanguage
-        }
-        return .unsupported
+        throw TranslationError.unableToIdentifyLanguage
     }
 }
 
@@ -115,9 +140,9 @@ public class LanguageAvailability {
 /// A translation session bound to an optional source/target pair.
 ///
 /// Linux constructs the type and records cancellation, but never downloads
-/// models or produces `targetText`. Translation entry points throw
-/// `TranslationError.notInstalled` after local preconditions.
-public class TranslationSession {
+/// models or produces `targetText`. Public construction uses
+/// ``init(installedSource:target:)``, which cannot request downloads.
+public class TranslationSession: @unchecked Sendable {
     public let sourceLanguage: Locale.Language?
     public let targetLanguage: Locale.Language?
 
@@ -136,10 +161,11 @@ public class TranslationSession {
         self.targetLanguage = targetLanguage
     }
 
-    /// Linux cannot prompt for model downloads.
+    /// Direct `init(installedSource:target:)` sessions cannot prompt for
+    /// language packs. Always `false` on this host.
     public var canRequestDownloads: Bool { false }
 
-    /// Linux has no ready translation engine.
+    /// Linux has no installed translation engine.
     public var isReady: Bool {
         get async { false }
     }
@@ -156,33 +182,41 @@ public class TranslationSession {
         return cancelled
     }
 
+    /// Documented local preflight, then fail closed. Never returns success.
+    private func translationFailure(hasContent: Bool) -> TranslationError {
+        if isCancelled {
+            return .alreadyCancelled
+        }
+        if !hasContent {
+            return .nothingToTranslate
+        }
+        if sourceLanguage == nil {
+            return .unableToIdentifyLanguage
+        }
+        if let source = sourceLanguage, let target = targetLanguage,
+           translationLanguagesAreSamePair(source, target) {
+            return .unsupportedLanguagePairing
+        }
+        return .notInstalled
+    }
+
     public func prepareTranslation() async throws {
-        if isCancelled { throw TranslationError.alreadyCancelled }
-        throw TranslationError.notInstalled
+        let failure = translationFailure(hasContent: true)
+        throw failure
     }
 
     public func translate(_ string: String) async throws -> Response {
-        if isCancelled { throw TranslationError.alreadyCancelled }
-        if string.isEmpty { throw TranslationError.nothingToTranslate }
-        throw TranslationError.notInstalled
+        throw translationFailure(hasContent: !string.isEmpty)
     }
 
     public func translations(from batch: [Request]) async throws -> [Response] {
-        if isCancelled { throw TranslationError.alreadyCancelled }
-        if batch.isEmpty || batch.allSatisfy({ $0.sourceText.isEmpty }) {
-            throw TranslationError.nothingToTranslate
-        }
-        throw TranslationError.notInstalled
+        let hasContent = !batch.isEmpty && !batch.allSatisfy({ $0.sourceText.isEmpty })
+        throw translationFailure(hasContent: hasContent)
     }
 
     public func translate(batch: [Request]) -> BatchResponse {
-        if isCancelled {
-            return BatchResponse(failure: .alreadyCancelled)
-        }
-        if batch.isEmpty || batch.allSatisfy({ $0.sourceText.isEmpty }) {
-            return BatchResponse(failure: .nothingToTranslate)
-        }
-        return BatchResponse(failure: .notInstalled)
+        let hasContent = !batch.isEmpty && !batch.allSatisfy({ $0.sourceText.isEmpty })
+        return BatchResponse(failure: translationFailure(hasContent: hasContent))
     }
 
     public struct Request {
