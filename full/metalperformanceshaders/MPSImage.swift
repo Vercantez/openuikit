@@ -417,6 +417,18 @@ open class MPSImage: NSObject {
             host.bytes = hostStorage
         }
     }
+
+    func mpsHostStorageCount() -> Int { hostStorage.count }
+
+    func mpsWithHostStorage<R>(_ body: (UnsafeMutableRawBufferPointer) -> R) -> R {
+        hostStorage.withUnsafeMutableBytes(body)
+    }
+
+    func mpsCommitHostStorage() {
+        if let host = texture as? MPSHostTexture {
+            host.bytes = hostStorage
+        }
+    }
 }
 
 open class MPSTemporaryImage: MPSImage {
@@ -484,11 +496,8 @@ public func MPSGetImageType(_ image: MPSImage) -> MPSImageType {
 
 public func MPSImageBatchIncrementReadCount(_ batch: [MPSImage], _ amount: Int) -> Int {
     for image in batch {
-        if let temporary = image as? MPSTemporaryImage {
-            temporary.readCount += amount
-        } else {
-            image.readCount += amount
-        }
+        if image.readCount == Int.max { continue }
+        image.readCount += amount
     }
     return batch.count
 }
