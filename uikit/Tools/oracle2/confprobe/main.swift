@@ -12,10 +12,13 @@
 // Per capture time t in the app's script it writes, into the app container's
 // Documents (the shell script copies them out):
 //
-//   <app>.t<ms>.png          light LTR capture (default)
+//   <app>.t<ms>.png          light LTR portrait capture (default)
 //   <app>.t<ms>.dark.png     dark capture (`"style":"dark"` or CONFPROBE_STYLE)
 //   <app>.t<ms>.rtl.png      RTL capture (`"direction":"rtl"` or CONFPROBE_DIRECTION)
-//   <app>.t<ms>.layout.json  {"name", "t", "style", "direction", "clock", "screen", "views"}
+//   <app>.t<ms>.landscape.png  landscape capture (`"orientation":"landscape"`
+//                              or CONFPROBE_ORIENTATION)
+//   <app>.t<ms>.layout.json  {"name", "t", "style", "direction", "orientation",
+//                            "clock", "screen", "views"}
 //                            — absolute MODEL frames plus presentation-layer
 //                            geometry (pframe / pabs / popacity) and the
 //                            CADisplayLink timestamp of this capture
@@ -237,13 +240,15 @@ func dumpLayout(_ v: UIView, path: String, absOrigin: CGPoint,
 }
 
 /// `{t, action}` steps, capture times, optional `"style"` (`light` /
-/// `dark`) and `"direction"` (`ltr` / `rtl`), read out of the app's
-/// script.json (copied into the bundle by scripts/conformance_probe_sim.sh).
-/// `CONFPROBE_STYLE` / `CONFPROBE_DIRECTION` override the fields so
-/// `conformance_flow.sh --dark` / `--rtl` can replay a light LTR script
-/// without rewriting it.
+/// `dark`), `"direction"` (`ltr` / `rtl`), and `"orientation"`
+/// (`portrait` / `landscape`), read out of the app's script.json
+/// (copied into the bundle by scripts/conformance_probe_sim.sh).
+/// `CONFPROBE_STYLE` / `CONFPROBE_DIRECTION` / `CONFPROBE_ORIENTATION`
+/// override the fields so `conformance_flow.sh --dark` / `--rtl` /
+/// `--landscape` can replay a light LTR portrait script without rewriting
+/// it.
 func loadScript() -> (steps: [(t: Double, action: String)], captures: [Double],
-                       style: String, direction: String) {
+                       style: String, direction: String, orientation: String) {
     guard let url = Bundle.main.url(forResource: "script", withExtension: "json"),
           let data = try? Data(contentsOf: url),
           let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
@@ -262,7 +267,10 @@ func loadScript() -> (steps: [(t: Double, action: String)], captures: [Double],
     let direction = ConformanceClock.resolvedDirection(
         script: (obj["direction"] as? String) ?? "ltr",
         environment: ProcessInfo.processInfo.environment["CONFPROBE_DIRECTION"])
-    return (steps, captures, style, direction)
+    let orientation = ConformanceClock.resolvedOrientation(
+        script: (obj["orientation"] as? String) ?? "portrait",
+        environment: ProcessInfo.processInfo.environment["CONFPROBE_ORIENTATION"])
+    return (steps, captures, style, direction, orientation)
 }
 
     /// First CASpringAnimation.beginTime in the tree (absolute media time).
@@ -370,6 +378,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     /// `ltr` or `rtl`. Set on the window *before* `makeRoot()` so
     /// `semanticContentAttribute` is in place for the first layout.
     var direction: String = "ltr"
+    /// `portrait` or `landscape`. The SE is rotated to landscapeLeft
+    /// before the first capture (`conformance_flow.sh --landscape`).
+    var orientation: String = "portrait"
     var performAction: ((String) -> Void)?
     var link: CADisplayLink?
     var frameIndex = 0
@@ -412,7 +423,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             }
             fatalError("confprobe: unknown app \"\(appName)\" (have \(have))")
         }
-        (steps, captures, style, direction) = loadScript()
+        (steps, captures, style, direction, orientation) = loadScript()
         // RTL: `UIView.appearance()` BEFORE the window. MEASURED /tmp/rtlprobe,
         // iPhone SE 2x / iOS 26.1: window-only `semanticContentAttribute =
         // .forceRightToLeft` stamps the window (1/76 views `uiDir=rtl`,
@@ -445,16 +456,73 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         w.makeKeyAndVisible()
         window = w
         performAction = entry.perform
-        if w.bounds.size != entry.windowSize {
-            print("confprobe: WARNING device \(w.bounds.size) != app \(entry.windowSize)")
+        if orientation == "landscape" {
+            // Pin the interface to landscapeLeft before makeRoot's first
+            // layout. The shell also rotates the SE device; this is the
+            // in-process authority if the Simulator window is still
+            // portrait. MEASURED: UIInterfaceOrientation.landscapeLeft
+            // on iPhone SE 2x is 667×375.
+            if let scene = w.windowScene {
+                scene.requestGeometryUpdate(
+                    .iOS(interfaceOrientations: .landscapeLeft)
+                ) { error in
+                    print("confprobe: requestGeometryUpdate \(error)")
+                }
+            }
         }
-        print("confprobe: style=\(style) direction=\(direction)")
+        let expected = orientation == "landscape"
+            ? CGSize(width: 667, height: 375) : entry.windowSize
+        if w.bounds.size != expected {
+            print("confprobe: WARNING device \(w.bounds.size) != expected \(expected)")
+        }
+        print("confprobe: style=\(style) direction=\(direction) orientation=\(orientation)")
         tracing = ProcessInfo.processInfo.environment["CONFPROBE_TRACE"] != nil
         // Let the first frame commit before the timeline starts: UIKit skips
         // presentation work for a hierarchy that has never been displayed,
         // and afterScreenUpdates: false would hand back an empty bitmap.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [self] in startLink() }
+        // Landscape waits until the window is actually 667×375 so the first
+        // capture is not a portrait frame with a .landscape name.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [self] in
+            waitForLandscapeThenStart(attempts: 0)
+        }
         return true
+    }
+
+    func application(_ application: UIApplication,
+                     supportedInterfaceOrientationsFor window: UIWindow?)
+        -> UIInterfaceOrientationMask {
+        orientation == "landscape" ? .landscapeLeft : .allButUpsideDown
+    }
+
+    func requestLandscape(_ w: UIWindow) {
+        if let scene = w.windowScene {
+            scene.requestGeometryUpdate(
+                .iOS(interfaceOrientations: .landscapeLeft)
+            ) { error in
+                print("confprobe: requestGeometryUpdate \(error)")
+            }
+        }
+    }
+
+    func waitForLandscapeThenStart(attempts: Int) {
+        let size = window?.bounds.size ?? .zero
+        if orientation == "landscape", size.width <= size.height, attempts < 20 {
+            if let w = window { requestLandscape(w) }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [self] in
+                waitForLandscapeThenStart(attempts: attempts + 1)
+            }
+            return
+        }
+        if orientation == "landscape", let w = window {
+            let sa = w.safeAreaInsets
+            let h = w.traitCollection.horizontalSizeClass.rawValue
+            let v = w.traitCollection.verticalSizeClass.rawValue
+            let io = w.windowScene?.interfaceOrientation.rawValue ?? 0
+            print("confprobe: landscape window=\(size.width)x\(size.height)"
+                  + " sa=[\(sa.top), \(sa.left), \(sa.bottom), \(sa.right)]"
+                  + " hSize=\(h) vSize=\(v) io=\(io)")
+        }
+        startLink()
     }
 
     /// Replay the merged timeline on a 60 Hz CADisplayLink. Script times
@@ -745,7 +813,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         // PIXEL_TOL 6, 99.8 % of each generated card. compare.py / PIL read
         // PNG bytes without the ICC, so the golden has to be untagged sRGB.
         let suffix = ConformanceClock.captureSuffix(for: t, style: style,
-                                                    direction: direction)
+                                                    direction: direction,
+                                                    orientation: orientation)
         try! normalizedSRGB(img).pngData()!.write(
             to: URL(fileURLWithPath: "\(docsDir)/\(appName).\(suffix).png"))
 
@@ -777,13 +846,17 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         let payload: [String: Any] = [
             "name": "\(appName).\(suffix)",
             "t": round3(CGFloat(t)),
+            "orientation": orientation,
             "style": style,
             "direction": direction,
             "clock": clock,
             "screen": ["scale": Double(UIScreen.main.scale),
                        "bounds": [round3(w.bounds.width), round3(w.bounds.height)],
                        "windowSafeArea": [round3(sa.top), round3(sa.left),
-                                          round3(sa.bottom), round3(sa.right)]],
+                                          round3(sa.bottom), round3(sa.right)],
+                       "horizontalSizeClass": w.traitCollection.horizontalSizeClass.rawValue,
+                       "verticalSizeClass": w.traitCollection.verticalSizeClass.rawValue,
+                       "interfaceOrientation": w.windowScene?.interfaceOrientation.rawValue ?? 0],
             "views": views,
         ]
         let data: Data

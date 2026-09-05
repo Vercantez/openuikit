@@ -5,7 +5,7 @@
 #
 #   /tmp/ios_suite/golden_ios
 #   /tmp/golden_realapp_ios
-#   /tmp/hc-conformance-<App>[-dark|-ipad|-rtl|-ax1]/golden
+#   /tmp/hc-conformance-<App>[-dark|-ipad|-rtl|-ax1|-landscape]/golden
 #
 # Existing dests that already have files are left alone (a live round's
 # captures win). FORCE=1 replaces them. Named sets restrict the restore;

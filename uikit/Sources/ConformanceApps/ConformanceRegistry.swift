@@ -108,16 +108,20 @@ public enum ConformanceClock {
     }
 
     /// Frame-file suffix. Light stays `t200` so existing goldens keep their
-    /// names; dark appends `.dark` (`t200.dark`) and RTL appends `.rtl`
-    /// (`t200.rtl`) so those timelines do not collide on the scoreboard
-    /// (`NavFlow:t200` vs `NavFlow:t200.dark` vs `NavFlow:t200.rtl`).
+    /// names; dark appends `.dark` (`t200.dark`), RTL appends `.rtl`
+    /// (`t200.rtl`), and landscape appends `.landscape` (`t200.landscape`)
+    /// so those timelines do not collide on the scoreboard
+    /// (`NavFlow:t200` vs `NavFlow:t200.dark` vs `NavFlow:t200.rtl` vs
+    /// `NavFlow:t200.landscape`).
     public static func captureSuffix(for t: Double, style: String = "light",
-                                     direction: String = "ltr") -> String {
+                                     direction: String = "ltr",
+                                     orientation: String = "portrait") -> String {
         var ms = "\(Int((t * 1000).rounded()))"
         while ms.count < 3 { ms = "0" + ms }
         var suffix = "t" + ms
         if style == "dark" { suffix += ".dark" }
         if direction == "rtl" { suffix += ".rtl" }
+        if orientation == "landscape" { suffix += ".landscape" }
         return suffix
     }
 
@@ -139,5 +143,16 @@ public enum ConformanceClock {
         if let environment, environment == "rtl" { return "rtl" }
         if script == "rtl" { return "rtl" }
         return "ltr"
+    }
+
+    /// Interface orientation a replay should use. `CONFPROBE_ORIENTATION` /
+    /// `OPENUIKIT_APP_ORIENTATION` (set by `conformance_flow.sh --landscape`)
+    /// wins so a portrait `script.json` can still drive a landscape
+    /// timeline; otherwise the script's `orientation` field; otherwise
+    /// portrait. Equality only — no `String.contains`.
+    public static func resolvedOrientation(script: String, environment: String?) -> String {
+        if let environment, environment == "landscape" { return "landscape" }
+        if script == "landscape" { return "landscape" }
+        return "portrait"
     }
 }

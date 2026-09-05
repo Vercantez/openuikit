@@ -102,6 +102,8 @@ def parse_conformance(dirs):
             key = key + ".dark"
         if s.get("direction") == "rtl":
             key = key + ".rtl"
+        if s.get("orientation") == "landscape":
+            key = key + ".landscape"
         CONFORMANCE_CAPTURED[key] = captured
         for cap in s.get("captures", []):
             rows.append({"scene": f"{s.get('app')}:{cap.get('name')}", "category": "conformance",

@@ -76,7 +76,7 @@ if let dir = ProcessInfo.processInfo.environment["OPENUIKIT_FONT_DIR"] {
 
 let usage = """
 usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
-       openhost --app <name> [--scale N] [--ipad] [--script events.json --record outdir]
+       openhost --app <name> [--scale N] [--ipad] [--landscape] [--script events.json --record outdir]
        openhost --nav-demo   [--scale N] [--script events.json --record outdir]
 
 --app boots one of the DemoApp apps in a live window (see AppMode.swift):
@@ -104,6 +104,10 @@ if ProcessInfo.processInfo.environment["OPENUIKIT_FORCE_IOS"] == "1" { forceIOSC
 if ProcessInfo.processInfo.environment["OPENUIKIT_CONFORMANCE_IPAD"] == "1" {
     conformancePadIdiom = true
 }
+if ProcessInfo.processInfo.environment["OPENUIKIT_CONFORMANCE_LANDSCAPE"] == "1"
+    || ProcessInfo.processInfo.environment["OPENUIKIT_APP_ORIENTATION"] == "landscape" {
+    conformanceLandscape = true
+}
 var appName: String? = nil
 
 var it = CommandLine.arguments.dropFirst().makeIterator()
@@ -117,6 +121,10 @@ while let arg = it.next() {
         // Phone `--app` (no flag) is unchanged. Same surface as
         // realapp_settings_light_ipad / history / storage.
         conformancePadIdiom = true
+    case "--landscape":
+        // SE 2x landscapeLeft: 667×375 window, compact-height traits.
+        // Portrait `--app` (no flag) is unchanged.
+        conformanceLandscape = true
     case "--nav-demo":
         navDemo = true
     case "--large-titles":
@@ -177,6 +185,10 @@ try MainActor.assumeIsolated {
         let direction = ConformanceClock.resolvedDirection(
             script: parsed.direction,
             environment: ProcessInfo.processInfo.environment["OPENUIKIT_APP_DIRECTION"])
+        let orientation = ConformanceClock.resolvedOrientation(
+            script: parsed.orientation,
+            environment: ProcessInfo.processInfo.environment["OPENUIKIT_APP_ORIENTATION"])
+        if orientation == "landscape" { conformanceLandscape = true }
         let uiStyle: UIUserInterfaceStyle = style == "dark" ? .dark : .light
         let scene = buildAppScene(appName, scaleOverride: scale, style: uiStyle,
                                    rtl: direction == "rtl")
@@ -185,8 +197,9 @@ try MainActor.assumeIsolated {
         let written = try runConformanceScripted(scene, app: appName, steps: parsed.steps,
                                                  captures: parsed.captures, style: style,
                                                  direction: direction,
+                                                 orientation: orientation,
                                                  outdir: record)
-        print("recorded \(written.count) captures to \(record) style=\(style) direction=\(direction)")
+        print("recorded \(written.count) captures to \(record) style=\(style) direction=\(direction) orientation=\(orientation)")
         exit(0)
     }
 

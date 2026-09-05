@@ -29,13 +29,24 @@
 #
 # Run: scripts/conformance_probe_sim.sh NavFlow /tmp/conf/golden
 #      scripts/conformance_probe_sim.sh NavFlow /tmp/conf/golden --ipad
+#      scripts/conformance_probe_sim.sh NavFlow /tmp/conf/golden --landscape
 set -e
 setopt null_glob
 cd "$(dirname "$0")/.."
-APPNAME=${1:?usage: conformance_probe_sim.sh <app> <outdir> [--ipad]}
-OUTDIR=${2:?usage: conformance_probe_sim.sh <app> <outdir> [--ipad]}
+APPNAME=${1:?usage: conformance_probe_sim.sh <app> <outdir> [--ipad] [--landscape]}
+OUTDIR=${2:?usage: conformance_probe_sim.sh <app> <outdir> [--ipad] [--landscape]}
 IPAD=0
-if [[ "${3:-}" == "--ipad" || "${CONFPROBE_IPAD:-}" == "1" ]]; then IPAD=1; fi
+LANDSCAPE=0
+shift 2
+for arg in "$@"; do
+  case $arg in
+    --ipad) IPAD=1 ;;
+    --landscape) LANDSCAPE=1 ;;
+    *) echo "usage: conformance_probe_sim.sh <app> <outdir> [--ipad] [--landscape]" >&2; exit 2 ;;
+  esac
+done
+if [[ "${CONFPROBE_IPAD:-}" == "1" ]]; then IPAD=1; fi
+if [[ "${CONFPROBE_ORIENTATION:-}" == "landscape" ]]; then LANDSCAPE=1; fi
 SRCDIR="Sources/ConformanceApps/$APPNAME"
 [[ -d "$SRCDIR" ]] || { echo "no such conformance app: $SRCDIR" >&2; exit 2 }
 [[ -f "$SRCDIR/script.json" ]] || { echo "$SRCDIR/script.json missing" >&2; exit 2 }
@@ -60,6 +71,8 @@ swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend MainActor \
   -o "$APP/confprobe"
 if [[ $IPAD -eq 1 ]]; then
   cp Tools/oracle2/ConfProbe-iPad-Info.plist "$APP/Info.plist"
+elif [[ $LANDSCAPE -eq 1 ]]; then
+  cp Tools/oracle2/ConfProbe-Landscape-Info.plist "$APP/Info.plist"
 else
   cp Tools/oracle2/ConfProbe-Info.plist "$APP/Info.plist"
 fi
@@ -84,6 +97,15 @@ if [[ -z "$STATE" ]]; then
   xcrun simctl boot "$UDID"
   xcrun simctl bootstatus "$UDID"
 fi
+# Landscape: rotate the SE to landscapeLeft BEFORE launch so
+# UIScreen.main.bounds is 667×375 when the window is created. Portrait
+# is restored after the copy so a later portrait recapture on this
+# private device is not poisoned. The in-process
+# requestGeometryUpdate(.landscapeLeft) is the authority if the
+# Simulator window does not follow.
+if [[ $LANDSCAPE -eq 1 && $IPAD -eq 0 ]]; then
+  xcrun simctl ui "$UDID" orientation landscapeLeft >/dev/null 2>&1 || true
+fi
 # One PROCESS per replay: a process that has shown a sheet loses the glass
 # materials for everything it captures afterwards (docs/ORACLE_FLOW.md), and a
 # conformance script presents one. A fresh install + launch per run is the
@@ -96,8 +118,9 @@ rm -f "$CONTAINER"/Documents/* 2>/dev/null || true
 # geometry, no extra PNG). CONFPROBE_STYLE=dark pins the window dark
 # before makeRoot (scripts/conformance_flow.sh --dark). CONFPROBE_DIRECTION=rtl
 # pins semanticContentAttribute = .forceRightToLeft the same way
-# (scripts/conformance_flow.sh --rtl). simctl forwards SIMCTL_CHILD_* into
-# the app.
+# (scripts/conformance_flow.sh --rtl). CONFPROBE_ORIENTATION=landscape
+# pins landscapeLeft (scripts/conformance_flow.sh --landscape). simctl
+# forwards SIMCTL_CHILD_* into the app.
 typeset -a LAUNCH_ENV
 LAUNCH_ENV=(SIMCTL_CHILD_CONFPROBE_APP=$APPNAME)
 if [[ -n "${CONFPROBE_TRACE:-}" ]]; then
@@ -109,6 +132,9 @@ fi
 if [[ -n "${CONFPROBE_DIRECTION:-}" ]]; then
   LAUNCH_ENV+=(SIMCTL_CHILD_CONFPROBE_DIRECTION=$CONFPROBE_DIRECTION)
 fi
+if [[ -n "${CONFPROBE_ORIENTATION:-}" ]]; then
+  LAUNCH_ENV+=(SIMCTL_CHILD_CONFPROBE_ORIENTATION=$CONFPROBE_ORIENTATION)
+fi
 env $LAUNCH_ENV xcrun simctl launch --console-pty "$UDID" com.openuikit.confprobe || true
 for i in {1..90}; do [[ -f "$CONTAINER/Documents/DONE" ]] && break; sleep 1; done
 [[ -f "$CONTAINER/Documents/DONE" ]] || { echo "conformance_probe_sim: no DONE marker" >&2; exit 1 }
@@ -116,4 +142,7 @@ for i in {1..90}; do [[ -f "$CONTAINER/Documents/DONE" ]] && break; sleep 1; don
   || { echo "conformance_probe_sim: $(cat "$CONTAINER/Documents/DONE")" >&2; exit 1 }
 rm -f "$OUTDIR"/$APPNAME.* 2>/dev/null || true
 cp "$CONTAINER"/Documents/*.png "$CONTAINER"/Documents/*.json "$OUTDIR"/
-echo "captured $(ls "$OUTDIR"/$APPNAME.*.png | wc -l | tr -d ' ') frame(s) into $OUTDIR style=${CONFPROBE_STYLE:-light} direction=${CONFPROBE_DIRECTION:-ltr}"
+if [[ $LANDSCAPE -eq 1 && $IPAD -eq 0 ]]; then
+  xcrun simctl ui "$UDID" orientation portrait >/dev/null 2>&1 || true
+fi
+echo "captured $(ls "$OUTDIR"/$APPNAME.*.png | wc -l | tr -d ' ') frame(s) into $OUTDIR style=${CONFPROBE_STYLE:-light} direction=${CONFPROBE_DIRECTION:-ltr} orientation=${CONFPROBE_ORIENTATION:-portrait}"
