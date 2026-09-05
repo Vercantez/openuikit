@@ -107,11 +107,34 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
         tabBar.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
         tabBar.delegate = self
         v.addSubview(tabBar)
+        applyTabBarSafeArea()
+    }
+
+    /// The child underlaps the floating platter but reports the bar's
+    /// height as `safeAreaInsets.bottom`, so a table/scroll view can rest
+    /// its last row above the chrome. MEASURED Tabs t200, iPhone SE 2x /
+    /// iOS 26.1, window SA `[0,0,0,0]`: UITabBar `[0, 584, 375, 83]`,
+    /// table `safeAreaInsets.bottom` **83** (no home-indicator extra).
+    /// `UITabBar.barHeight` is already 83 on the iOS cut / 72 Catalyst.
+    func applyTabBarSafeArea() {
+        guard isViewLoaded else { return }
+        let inherited = view.safeAreaInsets
+        transitionView._setSafeAreaInsets(UIEdgeInsets(
+            top: inherited.top,
+            left: inherited.left,
+            bottom: max(inherited.bottom, UITabBar.barHeight),
+            right: inherited.right))
     }
 
     open override func viewDidLoad() {
         super.viewDidLoad()
+        applyTabBarSafeArea()
         installSelected()
+    }
+
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        applyTabBarSafeArea()
     }
 
     /// Swap the installed child for the current selectedIndex (appearance

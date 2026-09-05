@@ -2,8 +2,8 @@
 // Regenerating this file must change nothing (ConformanceRegistryTests).
 // Source of truth: one-line ConformanceApps.register in each
 // Sources/ConformanceApps/<App>/<App>App.swift, discovered by scanning
-// that directory. MEASURED: the six apps (NavFlow, Forms,
-// TableEditor, Feed, Modal, Pager) keep SKIP_CAPTURE=1 scores
+// that directory. MEASURED: the six existing apps (NavFlow, Forms,
+// TableEditor, Feed, Modal, Tabs) keep byte-identical SKIP_CAPTURE=1 scores
 // against /tmp/conformance-<App> goldens after switching openhost and
 // confprobe onto this table.
 import UIKit
@@ -18,6 +18,7 @@ extension ConformanceApps {
         "NavFlow",
         "Pager",
         "TableEditor",
+        "Tabs",
     ]
 
     /// Force every app's one-line `static let _register<Name>` to run.
@@ -31,5 +32,6 @@ extension ConformanceApps {
         _ = _registerNavFlow
         _ = _registerPager
         _ = _registerTableEditor
+        _ = _registerTabs
     }
 }
