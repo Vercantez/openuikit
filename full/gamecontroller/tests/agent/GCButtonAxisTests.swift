@@ -3,6 +3,13 @@ import Dispatch
 import GameController
 
 func testButtonAxisDpadHandlers() {
+    final class Box: @unchecked Sendable {
+        var handlerQueueHonored = false
+        var handlerFireCount = 0
+        var pressedFireCount = 0
+        var touchedFireCount = 0
+    }
+    let box = Box()
     GCSimulatedInput.reset()
     let snapshot = GCController.withExtendedGamepad()
     let handlerQueue = DispatchQueue(label: "gc.button.handler")
@@ -16,28 +23,24 @@ func testButtonAxisDpadHandlers() {
     precondition(pad.buttonA.isAnalog)
 
     let handlerGate = DispatchSemaphore(value: 0)
-    var handlerQueueHonored = false
-    var handlerFireCount = 0
-    var pressedFireCount = 0
-    var touchedFireCount = 0
     pad.buttonA.valueChangedHandler = { _, _, _ in
-        handlerFireCount += 1
-        handlerQueueHonored = DispatchQueue.getSpecific(key: handlerKey) == 7
+        box.handlerFireCount += 1
+        box.handlerQueueHonored = DispatchQueue.getSpecific(key: handlerKey) == 7
         handlerGate.signal()
     }
     pad.buttonA.pressedChangedHandler = { _, _, _ in
-        pressedFireCount += 1
+        box.pressedFireCount += 1
     }
     pad.buttonA.touchedChangedHandler = { _, _, _, _ in
-        touchedFireCount += 1
+        box.touchedFireCount += 1
     }
     pad.buttonA.setValue(1)
     precondition(pad.buttonA.isPressed)
     precondition(pad.buttonA.value == 1)
     precondition(pad.buttonA.isTouched)
     precondition(handlerGate.wait(timeout: .now() + 2) == .success)
-    precondition(handlerFireCount == 1)
-    precondition(handlerQueueHonored)
+    precondition(box.handlerFireCount == 1)
+    precondition(box.handlerQueueHonored)
 
     pad.leftThumbstick.setValueForXAxis(0.5, yAxis: -0.25)
     precondition(abs(pad.leftThumbstick.xAxis.value - 0.5) < 0.0001)

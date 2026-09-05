@@ -4,6 +4,13 @@ import GameController
 
 // --- GCButtonAxisTests.swift ---
 func testButtonAxisDpadHandlers() {
+    final class Box: @unchecked Sendable {
+        var handlerQueueHonored = false
+        var handlerFireCount = 0
+        var pressedFireCount = 0
+        var touchedFireCount = 0
+    }
+    let box = Box()
     GCSimulatedInput.reset()
     let snapshot = GCController.withExtendedGamepad()
     let handlerQueue = DispatchQueue(label: "gc.button.handler")
@@ -17,28 +24,24 @@ func testButtonAxisDpadHandlers() {
     precondition(pad.buttonA.isAnalog)
 
     let handlerGate = DispatchSemaphore(value: 0)
-    var handlerQueueHonored = false
-    var handlerFireCount = 0
-    var pressedFireCount = 0
-    var touchedFireCount = 0
     pad.buttonA.valueChangedHandler = { _, _, _ in
-        handlerFireCount += 1
-        handlerQueueHonored = DispatchQueue.getSpecific(key: handlerKey) == 7
+        box.handlerFireCount += 1
+        box.handlerQueueHonored = DispatchQueue.getSpecific(key: handlerKey) == 7
         handlerGate.signal()
     }
     pad.buttonA.pressedChangedHandler = { _, _, _ in
-        pressedFireCount += 1
+        box.pressedFireCount += 1
     }
     pad.buttonA.touchedChangedHandler = { _, _, _, _ in
-        touchedFireCount += 1
+        box.touchedFireCount += 1
     }
     pad.buttonA.setValue(1)
     precondition(pad.buttonA.isPressed)
     precondition(pad.buttonA.value == 1)
     precondition(pad.buttonA.isTouched)
     precondition(handlerGate.wait(timeout: .now() + 2) == .success)
-    precondition(handlerFireCount == 1)
-    precondition(handlerQueueHonored)
+    precondition(box.handlerFireCount == 1)
+    precondition(box.handlerQueueHonored)
 
     pad.leftThumbstick.setValueForXAxis(0.5, yAxis: -0.25)
     precondition(abs(pad.leftThumbstick.xAxis.value - 0.5) < 0.0001)
@@ -119,20 +122,26 @@ func testGCColorComponents() {
 
 // --- GCControllerTests.swift ---
 func testControllerRegistryAndNotifications() {
+    final class Box: @unchecked Sendable {
+        var discoveryCount = 0
+        var connected: Notification?
+        var disconnected: Notification?
+        var becameCurrent: Notification?
+    }
+    let box = Box()
     GCSimulatedInput.reset()
     precondition(!GCSimulatedInput.linuxEvdevAvailable)
     precondition(GCController.controllers().isEmpty)
     precondition(GCController.current == nil)
 
     let discoveryGate = DispatchSemaphore(value: 0)
-    var discoveryCount = 0
     GCController.startWirelessControllerDiscovery {
-        discoveryCount += 1
+        box.discoveryCount += 1
         discoveryGate.signal()
     }
-    precondition(discoveryCount == 0)
+    precondition(box.discoveryCount == 0)
     precondition(discoveryGate.wait(timeout: .now() + 2) == .success)
-    precondition(discoveryCount == 1)
+    precondition(box.discoveryCount == 1)
     GCController.stopWirelessControllerDiscovery()
 
     let snapshot = GCController.withExtendedGamepad()
@@ -162,26 +171,23 @@ func testControllerRegistryAndNotifications() {
     GCController.shouldMonitorBackgroundEvents = true
     precondition(GCController.shouldMonitorBackgroundEvents)
 
-    var connectedNote: Notification?
-    var disconnectedNote: Notification?
-    var becameCurrentNote: Notification?
     let nc = NotificationCenter.default
-    let tok1 = nc.addObserver(forName: .GCControllerDidConnect, object: nil, queue: nil) { connectedNote = $0 }
-    let tok2 = nc.addObserver(forName: .GCControllerDidDisconnect, object: nil, queue: nil) { disconnectedNote = $0 }
-    let tok3 = nc.addObserver(forName: .GCControllerDidBecomeCurrent, object: nil, queue: nil) { becameCurrentNote = $0 }
+    let tok1 = nc.addObserver(forName: .GCControllerDidConnect, object: nil, queue: nil) { box.connected = $0 }
+    let tok2 = nc.addObserver(forName: .GCControllerDidDisconnect, object: nil, queue: nil) { box.disconnected = $0 }
+    let tok3 = nc.addObserver(forName: .GCControllerDidBecomeCurrent, object: nil, queue: nil) { box.becameCurrent = $0 }
 
     let simulated = GCSimulatedInput.makeExtendedGamepad()
     GCSimulatedInput.attach(simulated)
     precondition(GCController.controllers().contains(where: { $0 === simulated }))
     precondition(GCController.current === simulated)
-    precondition(connectedNote?.object as? GCController === simulated)
-    precondition(becameCurrentNote?.object as? GCController === simulated)
+    precondition(box.connected?.object as? GCController === simulated)
+    precondition(box.becameCurrent?.object as? GCController === simulated)
     precondition(!simulated.isSnapshot)
     let captured = simulated.capture()
     precondition(captured.isSnapshot)
 
     GCSimulatedInput.detach(simulated)
-    precondition(disconnectedNote?.object as? GCController === simulated || disconnectedNote != nil)
+    precondition(box.disconnected?.object as? GCController === simulated || box.disconnected != nil)
     nc.removeObserver(tok1)
     nc.removeObserver(tok2)
     nc.removeObserver(tok3)
@@ -951,6 +957,11 @@ func testCoalescedKeyboardAndMouse() {
 
 // --- GCLiveInputTests.swift ---
 func testLiveInputAndPhysicalElementProtocols() {
+    final class Box: @unchecked Sendable {
+        var available = 0
+        var streamCount = 0
+    }
+    let box = Box()
     GCSimulatedInput.reset()
     let simulated = GCSimulatedInput.makeExtendedGamepad()
     GCSimulatedInput.attach(simulated)
@@ -971,8 +982,7 @@ func testLiveInputAndPhysicalElementProtocols() {
     _ = live.buttons
     _ = live[GCInputButtonA]
     live.elementValueDidChangeHandler = { _, _ in }
-    var available = 0
-    live.inputStateAvailableHandler = { _ in available += 1 }
+    live.inputStateAvailableHandler = { _ in box.available += 1 }
 
     let device: any GCDevice = simulated
     _ = device.handlerQueue
@@ -1082,10 +1092,9 @@ func testLiveInputAndPhysicalElementProtocols() {
     _ = physical.nextInputState()
 
     let streamGate = DispatchSemaphore(value: 0)
-    var streamCount = 0
     Task {
         for await _ in live.inputStates {
-            streamCount += 1
+            box.streamCount += 1
             streamGate.signal()
             break
         }
@@ -1093,7 +1102,7 @@ func testLiveInputAndPhysicalElementProtocols() {
     Thread.sleep(forTimeInterval: 0.05)
     simulated.extendedGamepad?.buttonY.setValue(1)
     precondition(streamGate.wait(timeout: .now() + 2) == .success)
-    precondition(streamCount == 1)
+    precondition(box.streamCount == 1)
 
     _ = (any GCAxis2DInput).self
     _ = (any GCAxisElement).self
@@ -1446,24 +1455,27 @@ func testSnapshotRoundTrip() {
 
 // --- GCVirtualControllerTests.swift ---
 func testVirtualControllerFailClosed() {
+    final class Box: @unchecked Sendable {
+        var error: (any Error)?
+        var count = 0
+    }
+    let box = Box()
     let virtualConfig = GCVirtualController.Configuration()
     virtualConfig.elements = [GCInputButtonA, GCInputDirectionPad]
     virtualConfig.isHidden = true
     let virtual = GCVirtualController(configuration: virtualConfig)
     precondition(virtual.controller == nil)
     let virtualGate = DispatchSemaphore(value: 0)
-    var virtualError: (any Error)?
-    var virtualCount = 0
     virtual.connect { error in
-        virtualError = error
-        virtualCount += 1
+        box.error = error
+        box.count += 1
         virtualGate.signal()
     }
-    precondition(virtualCount == 0)
-    precondition(virtualError == nil)
+    precondition(box.count == 0)
+    precondition(box.error == nil)
     precondition(virtualGate.wait(timeout: .now() + 2) == .success)
-    precondition(virtualCount == 1)
-    precondition(virtualError != nil)
+    precondition(box.count == 1)
+    precondition(box.error != nil)
     virtual.setValue(0.5, forButtonElement: GCInputButtonA)
     virtual.setPosition(CGPoint(x: 0.2, y: -0.3), forDirectionPadElement: GCInputDirectionPad)
     virtual.updateConfiguration(forElement: GCInputButtonA) { config in

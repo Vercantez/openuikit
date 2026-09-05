@@ -3,6 +3,11 @@ import Dispatch
 import GameController
 
 func testLiveInputAndPhysicalElementProtocols() {
+    final class Box: @unchecked Sendable {
+        var available = 0
+        var streamCount = 0
+    }
+    let box = Box()
     GCSimulatedInput.reset()
     let simulated = GCSimulatedInput.makeExtendedGamepad()
     GCSimulatedInput.attach(simulated)
@@ -23,8 +28,7 @@ func testLiveInputAndPhysicalElementProtocols() {
     _ = live.buttons
     _ = live[GCInputButtonA]
     live.elementValueDidChangeHandler = { _, _ in }
-    var available = 0
-    live.inputStateAvailableHandler = { _ in available += 1 }
+    live.inputStateAvailableHandler = { _ in box.available += 1 }
 
     let device: any GCDevice = simulated
     _ = device.handlerQueue
@@ -134,10 +138,9 @@ func testLiveInputAndPhysicalElementProtocols() {
     _ = physical.nextInputState()
 
     let streamGate = DispatchSemaphore(value: 0)
-    var streamCount = 0
     Task {
         for await _ in live.inputStates {
-            streamCount += 1
+            box.streamCount += 1
             streamGate.signal()
             break
         }
@@ -145,7 +148,7 @@ func testLiveInputAndPhysicalElementProtocols() {
     Thread.sleep(forTimeInterval: 0.05)
     simulated.extendedGamepad?.buttonY.setValue(1)
     precondition(streamGate.wait(timeout: .now() + 2) == .success)
-    precondition(streamCount == 1)
+    precondition(box.streamCount == 1)
 
     _ = (any GCAxis2DInput).self
     _ = (any GCAxisElement).self

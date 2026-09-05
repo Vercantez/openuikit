@@ -3,20 +3,26 @@ import Dispatch
 import GameController
 
 func testControllerRegistryAndNotifications() {
+    final class Box: @unchecked Sendable {
+        var discoveryCount = 0
+        var connected: Notification?
+        var disconnected: Notification?
+        var becameCurrent: Notification?
+    }
+    let box = Box()
     GCSimulatedInput.reset()
     precondition(!GCSimulatedInput.linuxEvdevAvailable)
     precondition(GCController.controllers().isEmpty)
     precondition(GCController.current == nil)
 
     let discoveryGate = DispatchSemaphore(value: 0)
-    var discoveryCount = 0
     GCController.startWirelessControllerDiscovery {
-        discoveryCount += 1
+        box.discoveryCount += 1
         discoveryGate.signal()
     }
-    precondition(discoveryCount == 0)
+    precondition(box.discoveryCount == 0)
     precondition(discoveryGate.wait(timeout: .now() + 2) == .success)
-    precondition(discoveryCount == 1)
+    precondition(box.discoveryCount == 1)
     GCController.stopWirelessControllerDiscovery()
 
     let snapshot = GCController.withExtendedGamepad()
@@ -46,26 +52,23 @@ func testControllerRegistryAndNotifications() {
     GCController.shouldMonitorBackgroundEvents = true
     precondition(GCController.shouldMonitorBackgroundEvents)
 
-    var connectedNote: Notification?
-    var disconnectedNote: Notification?
-    var becameCurrentNote: Notification?
     let nc = NotificationCenter.default
-    let tok1 = nc.addObserver(forName: .GCControllerDidConnect, object: nil, queue: nil) { connectedNote = $0 }
-    let tok2 = nc.addObserver(forName: .GCControllerDidDisconnect, object: nil, queue: nil) { disconnectedNote = $0 }
-    let tok3 = nc.addObserver(forName: .GCControllerDidBecomeCurrent, object: nil, queue: nil) { becameCurrentNote = $0 }
+    let tok1 = nc.addObserver(forName: .GCControllerDidConnect, object: nil, queue: nil) { box.connected = $0 }
+    let tok2 = nc.addObserver(forName: .GCControllerDidDisconnect, object: nil, queue: nil) { box.disconnected = $0 }
+    let tok3 = nc.addObserver(forName: .GCControllerDidBecomeCurrent, object: nil, queue: nil) { box.becameCurrent = $0 }
 
     let simulated = GCSimulatedInput.makeExtendedGamepad()
     GCSimulatedInput.attach(simulated)
     precondition(GCController.controllers().contains(where: { $0 === simulated }))
     precondition(GCController.current === simulated)
-    precondition(connectedNote?.object as? GCController === simulated)
-    precondition(becameCurrentNote?.object as? GCController === simulated)
+    precondition(box.connected?.object as? GCController === simulated)
+    precondition(box.becameCurrent?.object as? GCController === simulated)
     precondition(!simulated.isSnapshot)
     let captured = simulated.capture()
     precondition(captured.isSnapshot)
 
     GCSimulatedInput.detach(simulated)
-    precondition(disconnectedNote?.object as? GCController === simulated || disconnectedNote != nil)
+    precondition(box.disconnected?.object as? GCController === simulated || box.disconnected != nil)
     nc.removeObserver(tok1)
     nc.removeObserver(tok2)
     nc.removeObserver(tok3)
