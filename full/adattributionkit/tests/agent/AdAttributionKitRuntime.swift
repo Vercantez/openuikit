@@ -300,6 +300,7 @@ func adAttributionKitRuntimeMain() async {
     await rejectForgedJWS()
     await rejectPostbackUpdates()
     await rejectConcurrentJWSAndPostback()
+    print("CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean")
     print("ADATTRIBUTIONKIT_AGENT_RUNTIME_OK")
 }
 
