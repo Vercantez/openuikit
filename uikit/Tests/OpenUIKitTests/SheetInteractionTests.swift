@@ -272,6 +272,72 @@ final class SheetInteractionTests: XCTestCase {
         XCTAssertFalse(UIViewController._hasActiveSheetInteraction)
     }
 
+    func testIOSPresentSpringMatchesMeasuredModalCurve() {
+        // MEASURED 2026-09-04, Modal medium-sheet present frames 0..30,
+        // iPhone SE 2x / iOS 26.1 (confprobe freeze at begin+k/60):
+        // glass-fill top k=6 476.5, k=9 402.0, k=12 359.5, k=15 338.0,
+        // k=18 327.0, k=24 319.5; rest 317.5. ζ=1, ω=√(1000/3)=18.2574,
+        // no start delay. UIView.animate duration-fit → D=0.50573.
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+
+        let window = UIWindow(frame: CGRect(origin: .zero, size: windowSize))
+        let base = UIViewController()
+        base.view.frame = CGRect(origin: .zero, size: windowSize)
+        window.addSubview(base.view)
+        let vc = UIViewController()
+        vc.view.backgroundColor = .systemBackground
+        base.present(vc, animated: true)
+        window.layoutIfNeeded()
+        let sheet = vc._presentationSheet!
+        let move = sheet.animations.first { $0.property == .position }
+        XCTAssertNotNil(move, "present must record a position spring")
+        XCTAssertEqual(move!.duration, UIViewController.iOSPresentSpringDuration,
+                       accuracy: 1e-9)
+        if case let .spring(z, v) = move!.timing {
+            XCTAssertEqual(z, UIViewController.iOSPresentSpringDamping, accuracy: 1e-9)
+            XCTAssertEqual(v, 0, accuracy: 1e-9)
+        } else {
+            XCTFail("present must be the measured ζ=1 spring")
+        }
+        // Named frame 12 remaining of a 852→59 travel:
+        // (1+ωt)e^(−ωt) at t=0.2, ω=18.2574 → 0.1207.
+        OpenUIKitRuntime.animationTime = 12.0 / 60.0
+        guard case let .point(from) = move!.from,
+              case let .point(to) = move!.to else {
+            XCTFail("position from/to")
+            return
+        }
+        let presented = sheet.presentationValue(of: move!, at: 12.0 / 60.0)
+        guard case let .point(p) = presented else {
+            XCTFail("presentation sample")
+            return
+        }
+        let travel = from.y - to.y
+        let remaining = (p.y - to.y) / travel
+        XCTAssertEqual(remaining, 0.1207, accuracy: 0.002)
+    }
+
+    func testCatalystPresentKeepsDurationFitPointFour() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .macOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+
+        let window = UIWindow(frame: CGRect(origin: .zero, size: windowSize))
+        let base = UIViewController()
+        base.view.frame = CGRect(origin: .zero, size: windowSize)
+        window.addSubview(base.view)
+        let vc = UIViewController()
+        vc.view.backgroundColor = .systemBackground
+        base.present(vc, animated: true)
+        window.layoutIfNeeded()
+        let sheet = vc._presentationSheet!
+        let move = sheet.animations.first { $0.property == .position }
+        XCTAssertEqual(move?.duration ?? -1, UIViewController.presentTransitionDuration,
+                       accuracy: 1e-9)
+    }
+
     func testDragTakesOverFromAnAnimatedPresent() {
         // Regression: a FINISHED UIView.animate still pins the presentation
         // to its recorded end value, so a sheet presented with animated:true

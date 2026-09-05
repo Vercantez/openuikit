@@ -21,9 +21,11 @@
 //     R ≈ 58.2 pt — iOS draws continuous corners; a circular fit matches
 //     the measured profile within ~0.4 pt on top, ~1.7 pt on the bottom's
 //     display-concentric curve).
-//   - Present: sheet slides up from below over 0.4 s on a critically damped
-//     spring while the dim fades in (feel-matched; scripted captures via
-//     the shared animation clock). Dismiss is the exact reverse.
+//   - Present: sheet slides up from below on a critically damped spring
+//     while the dim fades in. Catalyst keeps 0.4 s (duration-fit
+//     ω·D = 9.233). iOS-cut uses the measured Modal present spring
+//     (ζ=1, ω=√(1000/3), D=0.5057 — see `iOSPresentSpringDuration`).
+//     Dismiss is the exact reverse.
 //
 // Appearance callbacks follow UIKit: the PRESENTED controller gets
 // viewWillAppear/viewDidAppear ("did" fires when the host clock passes the
@@ -542,7 +544,10 @@ final class _UIPageSheetAnimator: UIViewControllerAnimatedTransitioning {
     init(presenting: Bool) { self.presenting = presenting }
 
     func transitionDuration(using _: UIViewControllerContextTransitioning?) -> TimeInterval {
-        UIViewController.presentTransitionDuration
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            return UIViewController.iOSPresentSpringDuration
+        }
+        return UIViewController.presentTransitionDuration
     }
 
     func animateTransition(using ctx: UIViewControllerContextTransitioning) {
@@ -558,13 +563,17 @@ final class _UIPageSheetAnimator: UIViewControllerAnimatedTransitioning {
             moving.frame = up.offsetBy(dx: 0, dy: container.bounds.height - up.minY)
             let dimTarget = dim?.alpha ?? 0
             dim?.alpha = 0
-            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 1,
+            UIView.animate(withDuration: duration, delay: 0,
+                           usingSpringWithDamping: OpenUIKitRuntime.systemFontCut == .iOS
+                               ? UIViewController.iOSPresentSpringDamping : 1,
                            initialSpringVelocity: 0, options: [], animations: {
                 moving.frame = up
                 dim?.alpha = dimTarget
             }, completion: { _ in ctx.completeTransition(true) })
         } else {
-            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 1,
+            UIView.animate(withDuration: duration, delay: 0,
+                           usingSpringWithDamping: OpenUIKitRuntime.systemFontCut == .iOS
+                               ? UIViewController.iOSPresentSpringDamping : 1,
                            initialSpringVelocity: 0, options: [], animations: {
                 moving.frame = moving.frame.offsetBy(
                     dx: 0, dy: container.bounds.height - moving.frame.minY)
@@ -1033,8 +1042,33 @@ public final class _UISheetPanGestureRecognizer: UIPanGestureRecognizer {
 }
 
 extension UIViewController {
-    /// Present duration (feel-matched slide-up; critically damped spring).
+    /// Catalyst / default present duration (feel-matched slide-up;
+    /// critically damped spring, duration-fit ω·D = 9.233).
     public static let presentTransitionDuration: Double = 0.4
+
+    /// iOS-cut pageSheet present/dismiss spring duration.
+    ///
+    /// MEASURED 2026-09-04, Modal medium-sheet present, iPhone SE 2x /
+    /// iOS 26.1, confprobe freeze at `CASpringAnimation.beginTime + k/60`
+    /// (frames 0..30 after `sheet-medium`). Glass-fill top of the floating
+    /// card (interior 245 vs dimmed presenter; rest 317.5 at t1200):
+    ///
+    ///   k  0  off-screen (PNG 255, dim alpha 0 — the FROM state)
+    ///   k  1  643.5   k  4  546.0   k  6  476.5   k  9  402.0
+    ///   k 12  359.5   k 15  338.0   k 18  327.0   k 24  319.5
+    ///   k 30  318.0
+    ///
+    /// No extra delay: frame 0 is still at the bottom, frame 1 has left.
+    /// Critically damped ζ=1, ω=√(1000/3)=18.2574 (same ω as
+    /// `UISheetPhysics.settleOmega`, mass 3 / stiffness 1000) matches
+    /// k=4..30 within 0.5 pt (rms 0.28). Free fit ω=18.276, rms 0.26.
+    /// Cubic easeOut / easeInOut D=0.5 rms 71 / 127 — not a keyframe.
+    /// `UIView.animate(usingSpringWithDamping: 1)` duration-fits
+    /// ω·D = 9.2334134764, so D = 9.2334134764 / ω = 0.50573.
+    /// Catalyst keeps `presentTransitionDuration` 0.4.
+    public static let iOSPresentSpringDuration: Double =
+        9.2334134764515865 / UISheetPhysics.settleOmega
+    public static let iOSPresentSpringDamping: CGFloat = 1
 
     /// The style `modalPresentationStyle` resolves to for this
     /// presentation (.automatic → .pageSheet, the iOS default).
