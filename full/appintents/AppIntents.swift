@@ -261,10 +261,81 @@ public extension IntentResult {
 
 public protocol ParameterSummary {
     associatedtype Intent: AppIntent
+    var evaluatedDisplayString: String { get }
 }
 
-public struct IntentParameterSummary<Intent: AppIntent>: ParameterSummary {
-    public init() {}
+extension ParameterSummary {
+    public var evaluatedDisplayString: String { "" }
+}
+
+public struct IntentParameterSummary<Intent: AppIntent>: ParameterSummary,
+    ExpressibleByStringLiteral, ExpressibleByStringInterpolation
+{
+    public let evaluatedDisplayString: String
+
+    public init() { evaluatedDisplayString = "" }
+
+    public init(_ string: ParameterSummaryString<Intent>, table: String? = nil) {
+        evaluatedDisplayString = string.evaluatedDisplayString
+        _ = table
+    }
+
+    public init(
+        _ string: ParameterSummaryString<Intent>,
+        table: String? = nil,
+        @ParameterKeyPathsBuilder _ additionalParameterKeyPaths: () -> [PartialKeyPath<Intent>]
+    ) {
+        evaluatedDisplayString = string.evaluatedDisplayString
+        _ = table
+        _ = additionalParameterKeyPaths()
+    }
+
+    public init(
+        @ParameterKeyPathsBuilder _ additionalParameterKeyPaths: () -> [PartialKeyPath<Intent>]
+    ) {
+        evaluatedDisplayString = ""
+        _ = additionalParameterKeyPaths()
+    }
+
+    public init(stringLiteral value: String) { evaluatedDisplayString = value }
+    public init(stringInterpolation: StringInterpolation) {
+        evaluatedDisplayString = stringInterpolation.value
+    }
+
+    public typealias StringLiteralType = String
+    public typealias UnicodeScalarLiteralType = String
+    public typealias ExtendedGraphemeClusterLiteralType = String
+
+    public struct StringInterpolation: StringInterpolationProtocol {
+        fileprivate var value = ""
+        public init(literalCapacity: Int, interpolationCount: Int) {
+            value.reserveCapacity(literalCapacity + interpolationCount * 12)
+        }
+        public mutating func appendLiteral(_ literal: String) { value += literal }
+        public mutating func appendInterpolation<Value: _IntentValue>(
+            _ keyPath: KeyPath<Intent, IntentParameter<Value>>
+        ) {
+            _ = keyPath
+            value += "${parameter}"
+        }
+        public mutating func appendInterpolation<T>(_ other: T) {
+            value += String(describing: other)
+        }
+    }
+
+    @resultBuilder
+    public enum ParameterKeyPathsBuilder {
+        public static func buildBlock(_ blocks: PartialKeyPath<Intent>...) -> [PartialKeyPath<Intent>] {
+            Array(blocks)
+        }
+
+        public static func buildExpression<ValueType>(
+            _ expression: KeyPath<Intent, IntentParameter<ValueType>>
+        ) -> PartialKeyPath<Intent>
+        where ValueType: _IntentValue, ValueType: Sendable {
+            expression
+        }
+    }
 }
 
 public protocol AppIntent: PersistentlyIdentifiable, _SupportsAppDependencies, Sendable {
@@ -284,6 +355,11 @@ extension AppIntent {
     public typealias Parameter = IntentParameter
     public typealias Summary = IntentParameterSummary<Self>
     public typealias Option = IntentChoiceOption
+    public typealias Case = ParameterSummaryCaseCondition
+    public typealias When = ParameterSummaryWhenCondition
+    public typealias Switch<Value, CaseCondition> = ParameterSummarySwitchCondition<Self, Value, CaseCondition>
+        where Value: _IntentValue, CaseCondition: _ParameterSummarySwitchCase
+    public typealias DefaultCase = ParameterSummaryDefaultCaseCondition
 
     public static var title: LocalizedStringResource {
         LocalizedStringResource(String(describing: Self.self))
@@ -846,12 +922,12 @@ public struct IntentFileContentType: Sendable, Hashable {
     public static let heic = Self("public.heic")
 }
 
-private protocol _OptionalIntentValue {
+protocol _OptionalIntentValue {
     static var _none: Any { get }
 }
 
 extension Optional: _OptionalIntentValue {
-    fileprivate static var _none: Any { Self.none as Any }
+    static var _none: Any { Self.none as Any }
 }
 
 private final class _ParameterStorage<Value>: @unchecked Sendable {
@@ -895,6 +971,9 @@ public final class IntentParameter<Value>: @unchecked Sendable
     var storedDoubleControlStyle: DoubleControlStyle?
     var storedInclusiveRange: (lowerBound: String, upperBound: String)?
     var storedDateKind: DateKind?
+    var storedInputOptionsBox: Any?
+    var storedResolvedOptions: [Any] = []
+    var optionsProviderAttached = false
 
     public var dateKind: DateKind? { storedDateKind }
 
@@ -1258,8 +1337,33 @@ extension UniqueAppEntityQuery {
 
 public protocol UniqueAppEntity: AppEntity where DefaultQuery: UniqueAppEntityQuery {}
 
-public protocol TransientAppEntity: AppEntity {
+public protocol TransientAppEntity: AppEntity where ID == UUID {
     init()
+}
+
+public struct _TransientAppEntityQuery<Entity: TransientAppEntity>: EntityQuery, EnumerableEntityQuery {
+    public typealias Result = [Entity]
+    public init() {}
+
+    public func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
+        EntityResolutionEngine.entities(for: identifiers, as: Entity.self)
+    }
+
+    public func suggestedEntities() async throws -> [Entity] {
+        EntityResolutionEngine.suggestedEntities(Entity.self)
+    }
+
+    public func defaultResult() async -> Entity? {
+        EntityResolutionEngine.defaultResult(Entity.self)
+    }
+
+    public func allEntities() async throws -> [Entity] {
+        EntityResolutionEngine.suggestedEntities(Entity.self)
+    }
+}
+
+extension TransientAppEntity where DefaultQuery == _TransientAppEntityQuery<Self> {
+    public static var defaultQuery: _TransientAppEntityQuery<Self> { _TransientAppEntityQuery() }
 }
 
 public protocol FileEntity: AppEntity where ID == FileEntityIdentifier {}

@@ -463,10 +463,42 @@ public struct IntentParameterContext<Value: _IntentValue>: @unchecked Sendable {
     public var dateKind: IntentParameter<Value>.DateKind? { nil }
 }
 
-public struct ParameterSummaryString<Intent>: @unchecked Sendable {
-    public init() {}
-    public struct StringInterpolation: @unchecked Sendable {
+public struct ParameterSummaryString<Intent: AppIntent>: Sendable,
+    ExpressibleByStringLiteral, ExpressibleByStringInterpolation
+{
+    public let evaluatedDisplayString: String
+
+    public init() { evaluatedDisplayString = "" }
+    public init(_ value: String) { evaluatedDisplayString = value }
+    public init(stringLiteral value: String) { evaluatedDisplayString = value }
+    public init(stringInterpolation: StringInterpolation) {
+        evaluatedDisplayString = stringInterpolation.value
+    }
+
+    public typealias StringLiteralType = String
+    public typealias UnicodeScalarLiteralType = String
+    public typealias ExtendedGraphemeClusterLiteralType = String
+
+    public struct StringInterpolation: StringInterpolationProtocol {
+        fileprivate var value = ""
+
         public init() {}
+        public init(literalCapacity: Int, interpolationCount: Int) {
+            value.reserveCapacity(literalCapacity + interpolationCount * 12)
+        }
+
+        public mutating func appendLiteral(_ literal: String) { value += literal }
+
+        public mutating func appendInterpolation<Value: _IntentValue>(
+            _ keyPath: KeyPath<Intent, IntentParameter<Value>>
+        ) {
+            _ = keyPath
+            value += "${parameter}"
+        }
+
+        public mutating func appendInterpolation<T>(_ other: T) {
+            value += String(describing: other)
+        }
     }
 }
 
@@ -519,20 +551,38 @@ public struct EntityQuerySortableByProperty<Entity>: @unchecked Sendable {
     public init() {}
 }
 
-public struct ParameterSummaryCaseCondition<Intent, Value, Summary>: @unchecked Sendable {
+public struct ParameterSummaryCaseCondition<Intent, Value, Summary>: _ParameterSummarySwitchCase, @unchecked Sendable {
+    public var evaluatedDisplayString: String = ""
+    public var matched: Value?
     public init() {}
+    public init(value: Value, summary: String) {
+        matched = value
+        evaluatedDisplayString = summary
+    }
 }
 
 public struct ParameterSummaryWhenCondition<Intent, WhenCondition, Otherwise>: @unchecked Sendable {
+    public var evaluatedDisplayString: String = ""
     public init() {}
+    public init(condition: Bool, then: String, otherwise: String) {
+        evaluatedDisplayString = condition ? then : otherwise
+    }
 }
 
+extension ParameterSummaryWhenCondition: ParameterSummary where Intent: AppIntent {}
+
 public struct ParameterSummarySwitchCondition<Intent, Value, CaseCondition>: @unchecked Sendable {
+    public var evaluatedDisplayString: String = ""
     public init() {}
+    public init(evaluatedDisplayString: String) {
+        self.evaluatedDisplayString = evaluatedDisplayString
+    }
     public enum WidgetFamily: Hashable, Sendable {
         case widgetFamily
     }
 }
+
+extension ParameterSummarySwitchCondition: ParameterSummary where Intent: AppIntent, Value: _IntentValue, CaseCondition: _ParameterSummarySwitchCase {}
 
 public struct ParameterSummaryTupleCaseCondition<Intent, Value, ValueType>: @unchecked Sendable {
     public init() {}
