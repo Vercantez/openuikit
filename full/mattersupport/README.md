@@ -31,8 +31,10 @@ The public Swift surface that does not require Matter compiles to
 - `WiFiNetworkAssociation.defaultSystemNetwork` is distinct from
   `network(ssid:credentials:)`. `ThreadNetworkAssociation.defaultSystemNetwork`
   is distinct from `network(extendedPANID:)`.
-- `Codable` round-trips a Linux-local tagged layout so the graph surface
-  compiles. Darwin keys are unobserved and those rows are `declared`.
+- `Codable` round-trips a Linux-local tagged layout (Home/Room `displayName`,
+  DeviceCriteria `kind` tags, association `kind` tags). Darwin coding keys
+  remain unobserved; those rows are now `implemented` against the Linux layout
+  only.
 
 ## Fail-closed boundaries
 
@@ -60,3 +62,41 @@ clean EC2 run that builds guest Matter first (`import Matter`).
 
 Run `bash tests/acceptance/test_host.sh` from this directory. Keep generated
 products out of the tree.
+
+## Depth pass 2026-09
+
+Coverage of the 124 exact public identifiers:
+
+| status | before | after |
+| --- | --- | --- |
+| implemented | 98 | 118 |
+| declared | 20 | 0 |
+| deferred | 6 | 6 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+The 20-app corpus touches MatterSupport only in home-assistant-ios
+(`MatterRequestHandler` subclass + `MatterAddDeviceRequest(topology:shouldScanNetworks:)`
+then `perform()`). Those handler hooks, topology/home/room values, scan-result
+fields (`networkName` / `extendedPANID` / `extendedAddress`), and the two
+`ThreadNetworkAssociation` factories are implemented. The canonical inits that
+take `MTRSetupPayload?` stay deferred; Home Assistant's call site typechecks
+against the host SPI init that omits that Matter type.
+
+Raised to `implemented`: the 20 Linux-local `Codable` encode/from pairs, each
+with a focused round-trip test. Still deferred: the six Matter-typed members
+(`setupPayload`, two request inits, `WiFiScanResult.security` / `band` / canonical
+ssid-rssi-security-band init).
+
+Top-5 evidence distribution among 118 implemented rows (40% cap = 47):
+
+| citations | share | test |
+| --- | --- | --- |
+| 14 | 11.9% | `testDeviceCriteriaCases` (table-driven enum members) |
+| 14 | 11.9% | `testThreadScanResultStorage` |
+| 9 | 7.6% | `testDeviceCredentialStorage` |
+| 8 | 6.8% | `testAddDeviceRequestStorage` |
+| 8 | 6.8% | `testTopologyValueSemantics` |
+
+No non-enum test exceeds the bulk-relabel cap. Evidence form is
+`test:full/mattersupport/tests/agent/<File>Tests.swift#testName`.
