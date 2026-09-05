@@ -11,7 +11,7 @@ private enum TestBox<T>: @unchecked Sendable {
 private func waitFor<T>(_ work: @escaping @Sendable () async throws -> T) -> T {
     let semaphore = DispatchSemaphore(value: 0)
     let box = LockedBox<T>()
-    Task {
+    Task.detached {
         do {
             box.store(.value(try await work()))
         } catch {

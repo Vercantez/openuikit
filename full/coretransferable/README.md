@@ -144,6 +144,13 @@ API; they stay unavailable so this module does not redeclare them.
 - Visibility is a stored token plus `exportedContentTypes` filter; it
   does not consult a pasteboard, share sheet, or signing team.
 
+### Guest runtime repair
+
+Depth and agent tests wait on `DispatchSemaphore` after `Task.detached`.
+The lock box used by that helper must unlock after `store`. A missing
+unlock made the guest hang after the first async depth test and trip
+the 120s sealed-gate timeout.
+
 ### Gate
 
 Run `bash full/coretransferable/tests/acceptance/test_host.sh` on this

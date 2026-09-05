@@ -11,7 +11,7 @@ private enum DepthBox<T>: @unchecked Sendable {
 private func depthWait<T>(_ work: @escaping @Sendable () async throws -> T) -> T {
     let semaphore = DispatchSemaphore(value: 0)
     let box = DepthLockedBox<T>()
-    Task {
+    Task.detached {
         do {
             box.store(.value(try await work()))
         } catch {
@@ -37,6 +37,7 @@ private final class DepthLockedBox<T>: @unchecked Sendable {
     func store(_ value: DepthBox<T>) {
         lock.lock()
         storage = value
+        lock.unlock()
     }
 
     func take() -> DepthBox<T> {
@@ -191,19 +192,20 @@ func testCodableRepresentationPropertyListRoundTrip() {
 }
 
 func testBuildLimitedAvailability() {
-    let wrapped = TransferRepresentationBuilder<DepthNote>.buildLimitedAvailability(
-        DataRepresentation<DepthNote>(
+    let wrapped = TransferRepresentationBuilder<LimitedNote>.buildLimitedAvailability(
+        DataRepresentation<LimitedNote>(
             contentType: .utf8PlainText,
             exporting: { Data($0.text.utf8) },
-            importing: { DepthNote(text: String(data: $0, encoding: .utf8) ?? "") }
+            importing: { LimitedNote(text: String(data: $0, encoding: .utf8) ?? "") }
         )
     )
+    let types = wrapped._hostExportedContentTypes(visibility: .all)
+    precondition(types.contains { $0.identifier == "public.utf8-plain-text" })
     let exported = depthWait {
-        try await wrapped._hostExportData(DepthNote(text: "lim"), contentType: .utf8PlainText)
+        try await wrapped._hostExportData(LimitedNote(text: "lim"), contentType: .utf8PlainText)
     }
     precondition(String(data: exported, encoding: .utf8) == "lim")
-    let note = LimitedNote(text: "avail")
-    let again = depthWait { try await note.exported(as: .utf8PlainText) }
+    let again = depthWait { try await LimitedNote(text: "avail").exported(as: .utf8PlainText) }
     precondition(String(data: again, encoding: .utf8) == "avail")
 }
 
