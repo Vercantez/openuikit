@@ -617,6 +617,10 @@ open class UIView: UIResponder, CALayerDelegate {
     /// floating sheet). The Canvas backdrop-filter path applies
     /// `_UIGlassMaterial`; Catalyst ignores the flag.
     var _usesIOSGlass = false
+    /// Which measured glass mix `_UIGlassMaterial` applies. Bar platters
+    /// keep `.platter`. Pad popovers are two other mixes (content vs
+    /// action-sheet) — they do not share α with the platter or each other.
+    var _iosGlassKind: _UIGlassKind = .platter
     /// Dark floating sheet only. Bar platters keep the measured dark flats
     /// (19 / 25); the sheet's systemBackground fill tracks the dimmed
     /// backdrop (MEASURED /tmp/sheetfill_dark, SE 2x).

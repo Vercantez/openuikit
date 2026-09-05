@@ -83,6 +83,30 @@ enum _UIGlassMaterial {
     /// MEASURED medium_black / Modal t1200.dark interior.
     static let darkFloatingFallback: CGFloat = 57.0 / 255.0
 
+    /// Pad action-sheet popover glass. MEASURED `/tmp/ipad-open-cap`
+    /// popover_actionsheet_{white,black,red,grad}, iPad (A16) 820×1180 @2x
+    /// / iOS 26.1, one process per CASE: interiors white **246**, black
+    /// **178**, red (255, 175, 176). Two-unknown
+    /// `out = (1−α)·B + α·T`: black ⇒ α·T = 178; white 246 − 178 = 68 ⇒
+    /// 1−α = 68/255, α = **187/255**, T = **178/187**. Grad-left predicted
+    /// 223 vs measured 221. σ is not identified from the interiors; the
+    /// platter kernel (2.25) is reused. This mix is NOT the content-popover
+    /// 252/215 mix and NOT the platter 253/220 mix.
+    static let padActionSheetMixAlpha: CGFloat = 187.0 / 255.0
+    static let padActionSheetTintGray: CGFloat = 178.0 / 187.0
+    /// Ring over black: edge 233 vs interior 178 ⇒ 55/77.
+    static let padActionSheetRingAlpha: CGFloat = 55.0 / 77.0
+
+    /// Pad bar-button content popover glass. MEASURED `/tmp/ipad-open-cap`
+    /// popover_{white,black,red,grad}, iPad (A16) 820×1180 @2x / iOS 26.1:
+    /// interiors white **252**, black **215**, red (255, 216, 218).
+    /// `out = (1−α)·B + α·T`: 252 − 215 = 37 ⇒ 1−α = 37/255, α = **218/255**,
+    /// T = **215/218**. Ring over black 240/230/215 matches the platter
+    /// ring (240/233/220) within 3 counts — reused. Dump has no
+    /// `_UIRoundedRectShadowView`; the 11-count halo is not this mix.
+    static let padContentPopoverMixAlpha: CGFloat = 218.0 / 255.0
+    static let padContentPopoverTintGray: CGFloat = 215.0 / 218.0
+
     static var configuration: CanvasBackdropFilterConfiguration {
         configuration(dark: false)
     }
@@ -104,8 +128,43 @@ enum _UIGlassMaterial {
             intensity: 1)
     }
 
+    static func configuration(for view: UIView) -> CanvasBackdropFilterConfiguration {
+        switch view._iosGlassKind {
+        case .padActionSheetPopover:
+            return CanvasBackdropFilterConfiguration(
+                blurRadius: blurSigma,
+                saturation: 1,
+                tintColor: CGColor(red: padActionSheetTintGray,
+                                   green: padActionSheetTintGray,
+                                   blue: padActionSheetTintGray,
+                                   alpha: padActionSheetMixAlpha),
+                intensity: 1)
+        case .padContentPopover:
+            return CanvasBackdropFilterConfiguration(
+                blurRadius: blurSigma,
+                saturation: 1,
+                tintColor: CGColor(red: padContentPopoverTintGray,
+                                   green: padContentPopoverTintGray,
+                                   blue: padContentPopoverTintGray,
+                                   alpha: padContentPopoverMixAlpha),
+                intensity: 1)
+        case .platter:
+            return configuration(dark: view._usesIOSDarkGlass
+                && view.traitCollection.userInterfaceStyle == .dark)
+        }
+    }
+
     static var ringColor: CGColor {
         CGColor(red: 1, green: 1, blue: 1, alpha: ringAlpha)
+    }
+
+    static func ringColor(for view: UIView) -> CGColor {
+        switch view._iosGlassKind {
+        case .padActionSheetPopover:
+            return CGColor(red: 1, green: 1, blue: 1, alpha: padActionSheetRingAlpha)
+        case .padContentPopover, .platter:
+            return ringColor
+        }
     }
 
     static func shouldApply(_ view: UIView) -> Bool {
@@ -122,13 +181,23 @@ enum _UIGlassMaterial {
     /// (Modal t1200.dark interior is a flat 57 cluster; a white ring would
     /// be a new unmatched edge).
     static func apply(in canvas: Canvas, path: Path, bounds: CGRect,
-                      dark: Bool = false) {
+                      dark: Bool = false, view: UIView) {
         canvas.save()
         canvas.clip(to: path)
-        canvas.applyBackdropFilter(configuration(dark: dark), in: bounds)
+        canvas.applyBackdropFilter(configuration(for: view), in: bounds)
         if !dark {
-            canvas.stroke(path, color: ringColor, lineWidth: ringWidth * 2)
+            canvas.stroke(path, color: ringColor(for: view),
+                          lineWidth: ringWidth * 2)
         }
         canvas.restore()
     }
+}
+
+/// Measured iOS 26 glass mixes. `.platter` is the bar / floating-sheet
+/// material. Pad popovers are two other mixes (action-sheet vs content);
+/// they do not share α with the platter or each other.
+enum _UIGlassKind: Equatable {
+    case platter
+    case padActionSheetPopover
+    case padContentPopover
 }

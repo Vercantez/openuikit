@@ -102,4 +102,52 @@ final class GlassMaterialTests: XCTestCase {
         v.applyColors()
         XCTAssertTrue(v.platter._usesIOSGlass)
     }
+
+    /// MEASURED `/tmp/ipad-open-cap` popover_actionsheet_{white,black},
+    /// iPad (A16) 820×1180 @2x / iOS 26.1: interiors 246 / 178.
+    func testPadActionSheetPopoverMix() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light,
+                                                      displayScale: 2)
+        func render(over color: UIColor) -> (r: Int, g: Int, b: Int, a: Int) {
+            let root = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 80))
+            root.backgroundColor = color
+            let glass = UIView(frame: CGRect(x: 20, y: 16, width: 60, height: 48))
+            glass.isOpaque = false
+            glass._usesIOSGlass = true
+            glass._iosGlassKind = .padActionSheetPopover
+            glass.layer.cornerRadius = 24
+            root.addSubview(glass)
+            return px(UIRenderer.render(root, scale: 2), 100, 80)
+        }
+        let w = render(over: .white)
+        XCTAssertLessThanOrEqual(abs(w.r - 246), 2, "\(w)")
+        let b = render(over: .black)
+        XCTAssertLessThanOrEqual(abs(b.r - 178), 2, "\(b)")
+    }
+
+    /// MEASURED `/tmp/ipad-open-cap` popover_{white,black}: interiors 252 / 215.
+    func testPadContentPopoverMix() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer { OpenUIKitRuntime.systemFontCut = saved }
+        UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light,
+                                                      displayScale: 2)
+        func render(over color: UIColor) -> (r: Int, g: Int, b: Int, a: Int) {
+            let root = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 80))
+            root.backgroundColor = color
+            let glass = UIView(frame: CGRect(x: 20, y: 16, width: 60, height: 48))
+            glass.isOpaque = false
+            glass._usesIOSGlass = true
+            glass._iosGlassKind = .padContentPopover
+            root.addSubview(glass)
+            return px(UIRenderer.render(root, scale: 2), 100, 80)
+        }
+        let w = render(over: .white)
+        XCTAssertLessThanOrEqual(abs(w.r - 252), 2, "\(w)")
+        let b = render(over: .black)
+        XCTAssertLessThanOrEqual(abs(b.r - 215), 2, "\(b)")
+    }
 }
