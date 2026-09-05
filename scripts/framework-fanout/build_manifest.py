@@ -327,8 +327,12 @@ def verify_metadata(metadata: dict[str, Any], target: Target, dossier: Path) -> 
         type(framework_schema) is int and framework_schema in {1, 2},
         f"unsupported framework schema for {target.module}: {framework_schema!r}",
     )
+    # generate_seed_v2.py at f682e158 adds optional moduleLocation (Clang /
+    # Swift-only SDK modules) and roadmap (`none (operator override)`) records;
+    # validate_seed.py already accepts them, so the manifest builder must too.
+    optional_keys = {"moduleLocation", "roadmap"}
     refuse(
-        set(metadata) == expected_keys,
+        set(metadata) - optional_keys == expected_keys,
         f"framework.json keys differ for {target.module}",
     )
     expected_scalars = {
