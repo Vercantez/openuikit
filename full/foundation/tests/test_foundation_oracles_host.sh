@@ -18,6 +18,7 @@ run_family() {
     local sources=$4
     local golden=$TESTS/foundation-$5-apple-2026-09-05.txt
     local oracle=$TESTS/Foundation${name}Oracle.swift
+    local extra_src_defines=${6:-}
 
     echo "== $name"
     xcrun swiftc "$oracle" -o "$WORK/apple-$name"
@@ -32,6 +33,7 @@ run_family() {
     mkdir -p "$WORK/$module"
     # shellcheck disable=SC2086
     xcrun swiftc -parse-as-library -wmo -D FOUNDATION_GUEST_SERVICES_HOST \
+        $extra_src_defines \
         -module-name "$module" \
         -emit-module -emit-module-path "$WORK/$module/$module.swiftmodule" \
         -emit-object -o "$WORK/$module/$module.o" \
@@ -61,6 +63,8 @@ run_family ISO8601DateFormatter ISO8601DATEFORMATTER_PORT ISO8601DateFormatterPo
     "$SRC/ISO8601DateFormatter.swift" iso8601-date-formatter
 run_family DateComponentsFormatter DATECOMPONENTSFORMATTER_PORT DateComponentsFormatterPort \
     "$SRC/DateComponentsFormatter.swift" date-components-formatter
+run_family HTTPCookie HTTPCOOKIE_PORT HTTPCookiePort \
+    "$SRC/URLSession.swift" httpcookie "-D HTTPCOOKIE_PORT"
 
 if [ "$fail" -ne 0 ]; then
     echo "FOUNDATION_ORACLES_HOST failed" >&2

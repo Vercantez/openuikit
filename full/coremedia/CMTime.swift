@@ -196,6 +196,9 @@ public func CMTimeConvertScale(
     timescale newTimescale: Int32,
     method: CMTimeRoundingMethod
 ) -> CMTime {
+    // CMTime.h: Default == RoundHalfAwayFromZero (1). Sample 1/2 → timescale 1:
+    // half-away=1, toward-zero=0, away=1, toward-+inf=1, toward-−inf=0.
+    // QuickTime is a labeled toward-+inf stand-in (oracle-questions.tsv).
     if !time.isValid { return .invalid }
     if newTimescale == 0 { return .invalid }
     if !time.isNumeric { return time }
@@ -378,6 +381,14 @@ public func CMTimeFoldIntoRange(_ time: CMTime, foldRange: CMTimeRange) -> CMTim
     let folded = CMTimeMakeWithSeconds(offsetSeconds, preferredTimescale: duration.timescale)
     return CMTimeAdd(start, folded)
 }
+
+public func CMTIME_IS_VALID(_ time: CMTime) -> Bool { time.isValid }
+public func CMTIME_IS_INVALID(_ time: CMTime) -> Bool { !time.isValid }
+public func CMTIME_IS_POSITIVEINFINITY(_ time: CMTime) -> Bool { time.isPositiveInfinity }
+public func CMTIME_IS_NEGATIVEINFINITY(_ time: CMTime) -> Bool { time.isNegativeInfinity }
+public func CMTIME_IS_INDEFINITE(_ time: CMTime) -> Bool { time.isIndefinite }
+public func CMTIME_IS_NUMERIC(_ time: CMTime) -> Bool { time.isNumeric }
+public func CMTIME_HAS_BEEN_ROUNDED(_ time: CMTime) -> Bool { time.hasBeenRounded }
 
 public func CMTimeShow(_ time: CMTime) {
     let line = cmTimeDebugDescription(time) + "\n"
