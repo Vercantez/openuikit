@@ -97,6 +97,25 @@ public class CIColor: NSObject, NSSecureCoding, @unchecked Sendable {
         _ = coder
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? CIColor else { return false }
+        return red == other.red
+            && green == other.green
+            && blue == other.blue
+            && alpha == other.alpha
+            && colorSpace.name == other.colorSpace.name
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(red)
+        hasher.combine(green)
+        hasher.combine(blue)
+        hasher.combine(alpha)
+        hasher.combine(colorSpace.name)
+        return hasher.finalize()
+    }
+
     public static let black = CIColor(red: 0, green: 0, blue: 0, alpha: 1)
     public static let white = CIColor(red: 1, green: 1, blue: 1, alpha: 1)
     public static let gray = CIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)

@@ -103,6 +103,24 @@ public class CIVector: NSObject, NSSecureCoding, @unchecked Sendable {
         _ = coder
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? CIVector else { return false }
+        guard count == other.count else { return false }
+        for index in 0..<count {
+            if value(at: index) != other.value(at: index) { return false }
+        }
+        return true
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(count)
+        for index in 0..<count {
+            hasher.combine(value(at: index))
+        }
+        return hasher.finalize()
+    }
+
     public func value(at index: Int) -> CGFloat {
         guard index >= 0, index < values.count else { return 0 }
         return values[index]
