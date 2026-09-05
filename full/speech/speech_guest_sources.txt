@@ -3,3 +3,5 @@ full/speech/SFSpeechRecognizer.swift
 full/speech/Speech.swift
 full/speech/SpeechAnalyzer.swift
 full/speech/SpeechAttributes.swift
+full/speech/SpeechHostAudio.swift
+full/speech/SpeechLocales.swift
