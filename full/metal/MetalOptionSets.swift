@@ -147,3 +147,34 @@ public struct MTLStages: OptionSet, Hashable, Sendable {
     public static let resourceState = MTLStages(rawValue: 1 << 9)
     public static let all = MTLStages(rawValue: 0x7FFFFFFF)
 }
+
+public struct MTLFunctionOptions: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let compileToBinary = MTLFunctionOptions(rawValue: 1 << 0)
+    public static let storeFunctionInMetalPipelinesScript = MTLFunctionOptions(rawValue: 1 << 1)
+    public static var storeFunctionInMetalScript: MTLFunctionOptions { .storeFunctionInMetalPipelinesScript }
+    public static let failOnBinaryArchiveMiss = MTLFunctionOptions(rawValue: 1 << 2)
+    public static let pipelineIndependent = MTLFunctionOptions(rawValue: 1 << 3)
+}
+
+public struct MTLIndirectCommandType: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let draw = MTLIndirectCommandType(rawValue: 1 << 0)
+    public static let drawIndexed = MTLIndirectCommandType(rawValue: 1 << 1)
+    public static let drawPatches = MTLIndirectCommandType(rawValue: 1 << 2)
+    public static let drawIndexedPatches = MTLIndirectCommandType(rawValue: 1 << 3)
+    public static let concurrentDispatch = MTLIndirectCommandType(rawValue: 1 << 5)
+    public static let concurrentDispatchThreads = MTLIndirectCommandType(rawValue: 1 << 6)
+    public static let drawMeshThreadgroups = MTLIndirectCommandType(rawValue: 1 << 7)
+    public static let drawMeshThreads = MTLIndirectCommandType(rawValue: 1 << 8)
+}

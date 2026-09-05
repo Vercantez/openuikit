@@ -35,6 +35,7 @@ public var MTLResourceHazardTrackingModeMask: UInt { 0x300 }
 
 public typealias MTLGPUAddress = UInt64
 public typealias MTLTimestamp = UInt64
+public typealias CFTimeInterval = TimeInterval
 public typealias MTLCommandBufferHandler = (any MTLCommandBuffer) -> Void
 public typealias MTLDrawablePresentedHandler = (any MTLDrawable) -> Void
 public typealias MTLNewLibraryCompletionHandler = ((any MTLLibrary)?, (any Error)?) -> Void
@@ -93,8 +94,9 @@ public struct MTLResourceID: Equatable, Hashable, Sendable {
     }
 }
 
-/// Linux has no Apple GPU. The system-default device is a CPU software adapter
-/// that allocates shared buffers/textures and refuses shader compilation.
+/// Linux has no Apple GPU. The system-default device is a CPU reference
+/// adapter that allocates shared buffers/textures, executes blit/compute
+/// kernels on the CPU, and refuses shader compilation.
 public func MTLCreateSystemDefaultDevice() -> (any MTLDevice)? {
     LinuxMTLDevice.shared
 }
@@ -113,7 +115,7 @@ open class MTLArchitecture: NSObject, @unchecked Sendable {
 }
 
 func metalUnsupportedLibraryError(
-    _ code: MTLLibraryError.Code = .unsupported,
+    _ code: MTLLibraryError.Code = .compileFailure,
     reason: String
 ) -> MTLLibraryError {
     MTLLibraryError(code, userInfo: [NSLocalizedDescriptionKey: reason])
