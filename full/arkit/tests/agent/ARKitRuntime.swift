@@ -3,12 +3,49 @@ import ARKit
 
 private final class SessionProbe: NSObject, ARSessionDelegate {
     var failures: [ARError.Code] = []
+    var frames: [ARFrame] = []
+    var added: [[ARAnchor]] = []
+    var updated: [[ARAnchor]] = []
+    var removed: [[ARAnchor]] = []
+    var trackingStates: [ARCamera.TrackingState] = []
+    var order: [String] = []
 
     func session(_ session: ARSession, didFailWithError error: any Error) {
         _ = session
         if let error = error as? ARError {
             failures.append(error.code)
         }
+        order.append("fail")
+    }
+
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        _ = session
+        frames.append(frame)
+        order.append("frame")
+    }
+
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        _ = session
+        added.append(anchors)
+        order.append("add")
+    }
+
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        _ = session
+        updated.append(anchors)
+        order.append("update")
+    }
+
+    func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
+        _ = session
+        removed.append(anchors)
+        order.append("remove")
+    }
+
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        _ = session
+        trackingStates.append(camera.trackingState)
+        order.append("tracking")
     }
 }
 
@@ -26,6 +63,499 @@ private func requireUnsupported(_ error: Error, file: StaticString = #file, line
     require(error.errorCode == ARError.unsupportedConfiguration.rawValue, "errorCode mismatch")
     require(ARError.errorDomain == ARErrorDomain, "error domain mismatch")
     require(ARErrorDomain == "com.apple.arkit.error", "ARErrorDomain string mismatch")
+}
+
+private func almostEqual(_ a: Float, _ b: Float, eps: Float = 1e-4) -> Bool {
+    abs(a - b) < eps
+}
+
+private func runDepthPassExercises() async {
+    require(!ARKitTestHook.isSimulatedDeviceInstalled, "hook starts off")
+
+    let camera = ARCamera(
+        trackingState: .normal,
+        transform: .identity,
+        imageResolution: CGSize(width: 640, height: 480),
+        intrinsics: ARSimulatedCameraDefaults.intrinsics
+    )
+    require(camera.imageResolution.width == 640, "simulated image width")
+    require(almostEqual(camera.intrinsics.columns.0.x, 640), "fx")
+    require(almostEqual(camera.intrinsics.columns.2.x, 320), "cx")
+    let projection = camera.projectionMatrix(
+        for: UIInterfaceOrientation.landscapeRight,
+        viewportSize: CGSize(width: 640, height: 480),
+        zNear: 0.001,
+        zFar: 1000
+    )
+    require(almostEqual(projection.columns.0.x, 2), "pinhole m00 = 2 fx / w")
+    require(almostEqual(projection.columns.1.y, 2 * 640 / 480), "pinhole m11 = 2 fy / h")
+    require(almostEqual(projection.columns.2.x, 1 - 2 * 320 / 640), "pinhole m20")
+    require(almostEqual(projection.columns.2.y, 2 * 240 / 480 - 1), "pinhole m21")
+    require(almostEqual(projection.columns.2.w, -1), "pinhole perspective w")
+    let near: Float = 0.001
+    let far: Float = 1000
+    require(almostEqual(projection.columns.2.z, -(far + near) / (far - near)), "pinhole m22")
+    require(almostEqual(projection.columns.3.z, -2 * far * near / (far - near)), "pinhole m32")
+    require(camera.viewMatrix(for: UIInterfaceOrientation.landscapeRight) == simd_float4x4.identity, "identity view")
+    let portraitView = camera.viewMatrix(for: UIInterfaceOrientation.portrait)
+    require(almostEqual(portraitView.columns.0.x, 0), "portrait rotates X")
+    require(almostEqual(portraitView.columns.0.y, -1) || almostEqual(portraitView.columns.0.y, 1), "portrait Y")
+    _ = camera.eulerAngles
+    _ = camera.projectionMatrix
+    _ = camera.exposureDuration
+    _ = camera.exposureOffset
+    let projected = camera.projectPoint(simd_float3(0, 0, -1), orientation: UIInterfaceOrientation.landscapeRight, viewportSize: CGSize(width: 640, height: 480))
+    require(projected.x > 0 && projected.y > 0, "projectPoint in view")
+    let unprojected = camera.unprojectPoint(
+        CGPoint(x: 0.5, y: 0.5),
+        ontoPlane: simd_float4x4.identity,
+        orientation: UIInterfaceOrientation.landscapeRight,
+        viewportSize: CGSize(width: 640, height: 480)
+    )
+    _ = unprojected
+    let queryDown = ARRaycastQuery(
+        origin: simd_float3(0, 1, 0),
+        direction: simd_float3(0, -1, 0),
+        allowing: .existingPlaneGeometry,
+        alignment: .horizontal
+    )
+    let plane = ARPlaneAnchor(
+        transform: .identity,
+        alignment: .horizontal,
+        center: simd_float3(repeating: 0),
+        extent: simd_float3(2, 0, 2),
+        classification: .floor,
+        isTracked: true,
+        identifier: UUID(),
+        sessionIdentifier: UUID()
+    )
+    require(plane.geometry.vertexCount == 4, "plane quad vertices")
+    require(plane.geometry.triangleCount == 2, "two triangles")
+    require(plane.geometry.boundaryVertices.count == 4, "boundary")
+    require(plane.geometry.textureCoordinates.count == 4, "uvs")
+    require(plane.geometry.triangleIndices.count == 6, "indices")
+    require(plane.planeExtent.width == 2 && plane.planeExtent.height == 2, "extent")
+    require(plane.isTracked, "simulated plane tracked")
+    require(plane.classification == .floor, "classification stored")
+    require(plane.alignment == .horizontal, "alignment")
+    _ = plane.center
+    _ = ARPlaneAnchor.Classification.wall
+    _ = ARPlaneAnchor.Classification.ceiling
+    _ = ARPlaneAnchor.Classification.table
+    _ = ARPlaneAnchor.Classification.seat
+    _ = ARPlaneAnchor.Classification.window
+    _ = ARPlaneAnchor.Classification.door
+    _ = ARPlaneAnchor.Classification.none(.unknown)
+    require(ARPlaneAnchor.Classification.wall != .floor, "classification inequality")
+
+    let mathSession = ARSession()
+    mathSession.add(anchor: plane)
+    let rayHits = mathSession.raycast(queryDown)
+    require(rayHits.count == 1, "one plane hit")
+    require(almostEqual(rayHits[0].worldTransform.columns.3.y, 0), "hit y")
+    require(rayHits[0].target == .existingPlaneGeometry, "target type")
+    require(rayHits[0].anchor?.identifier == plane.identifier, "hit plane")
+
+    let miss = ARRaycastQuery(
+        origin: simd_float3(10, 1, 10),
+        direction: simd_float3(0, -1, 0),
+        allowing: .existingPlaneGeometry,
+        alignment: .horizontal
+    )
+    require(mathSession.raycast(miss).isEmpty, "outside extent")
+    let infinite = ARRaycastQuery(
+        origin: simd_float3(10, 1, 10),
+        direction: simd_float3(0, -1, 0),
+        allowing: .existingPlaneInfinite,
+        alignment: .horizontal
+    )
+    require(!mathSession.raycast(infinite).isEmpty, "infinite plane")
+
+    let estimated = ARRaycastQuery(
+        origin: simd_float3(0, 2, 0),
+        direction: simd_float3(0, -1, 0),
+        allowing: .estimatedPlane,
+        alignment: .horizontal
+    )
+    let estimatedHits = mathSession.raycast(estimated)
+    require(estimatedHits.contains { $0.target == .estimatedPlane }, "estimated y=0")
+
+    let frameForHit = ARFrame(anchors: [plane], camera: camera, timestamp: 1)
+    let extentHits = frameForHit.hitTest(
+        CGPoint(x: 0.5, y: 0.5),
+        types: ARHitTestResult.ResultType([.existingPlaneUsingExtent, .existingPlaneUsingGeometry, .existingPlane])
+    )
+    _ = extentHits
+    let estimatedHit = frameForHit.hitTest(
+        CGPoint(x: 0.5, y: 0.5),
+        types: ARHitTestResult.ResultType([.estimatedHorizontalPlane, .estimatedVerticalPlane, .featurePoint])
+    )
+    _ = estimatedHit
+    _ = frameForHit.displayTransform(for: UIInterfaceOrientation.portrait, viewportSize: CGSize(width: 100, height: 200))
+    _ = frameForHit.displayTransform(for: UIInterfaceOrientation.portraitUpsideDown, viewportSize: CGSize.zero)
+    _ = frameForHit.displayTransform(for: UIInterfaceOrientation.landscapeLeft, viewportSize: CGSize.zero)
+    _ = frameForHit.displayTransform(for: UIInterfaceOrientation.landscapeRight, viewportSize: CGSize.zero)
+    _ = frameForHit.displayTransform(for: UIInterfaceOrientation.unknown, viewportSize: CGSize.zero)
+    _ = frameForHit.capturedImage.width
+    _ = frameForHit.cameraGrainTexture
+    _ = frameForHit.capturedDepthData
+    _ = frameForHit.estimatedDepthData
+    _ = frameForHit.segmentationBuffer
+    _ = frameForHit.sceneDepth
+    _ = frameForHit.smoothedSceneDepth
+    _ = frameForHit.exifData
+    _ = frameForHit.detectedBody
+    _ = frameForHit.lightEstimate
+    _ = frameForHit.rawFeaturePoints
+    _ = frameForHit.geoTrackingStatus
+    _ = frameForHit.worldMappingStatus
+    _ = frameForHit.timestamp
+    _ = frameForHit.cameraGrainIntensity
+    _ = frameForHit.capturedDepthDataTimestamp
+    _ = frameForHit.anchors
+
+    ARKitTestHook.installSimulatedDevice(cameraAuthorized: false)
+    require(ARWorldTrackingConfiguration.isSupported, "hook enables isSupported")
+    require(ARConfiguration.isSupported, "base isSupported")
+    require(ARFaceTrackingConfiguration.isSupported, "face isSupported")
+    require(ARImageTrackingConfiguration.isSupported, "image isSupported")
+    require(ARBodyTrackingConfiguration.isSupported, "body isSupported")
+    require(ARGeoTrackingConfiguration.isSupported, "geo isSupported")
+    require(ARPositionalTrackingConfiguration.isSupported, "positional isSupported")
+    require(AROrientationTrackingConfiguration.isSupported, "orientation isSupported")
+    require(ARObjectScanningConfiguration.isSupported, "object scanning isSupported")
+    let unauthorized = ARSession()
+    let unauthorizedProbe = SessionProbe()
+    unauthorized.delegate = unauthorizedProbe
+    unauthorized.run(ARWorldTrackingConfiguration())
+    require(unauthorizedProbe.failures == [.cameraUnauthorized], "cameraUnauthorized")
+    require(unauthorized.currentFrame == nil, "no frame when unauthorized")
+    ARKitTestHook.removeSimulatedDevice()
+
+    ARKitTestHook.installSimulatedDevice()
+    defer { ARKitTestHook.removeSimulatedDevice() }
+
+    require(ARFaceTrackingConfiguration.supportedNumberOfTrackedFaces == 1, "tracked faces with hook")
+    require(ARConfiguration.configurableCaptureDeviceForPrimaryCamera == nil, "no capture device")
+    require(ARConfiguration.supportedVideoFormats.isEmpty, "formats stay empty")
+
+    let world = ARWorldTrackingConfiguration()
+    world.planeDetection = [.horizontal]
+    world.isLightEstimationEnabled = true
+    world.providesAudioData = true
+    world.videoHDRAllowed = true
+    world.videoFormat = .unsupportedPlaceholder
+    world.worldAlignment = .gravityAndHeading
+    world.appClipCodeTrackingEnabled = true
+    world.isAutoFocusEnabled = false
+    world.automaticImageScaleEstimationEnabled = true
+    world.isCollaborationEnabled = true
+    world.maximumNumberOfTrackedImages = 2
+    world.userFaceTrackingEnabled = true
+    world.wantsHDREnvironmentTextures = true
+    world.detectionImages = []
+    world.detectionObjects = []
+    world.initialWorldMap = ARWorldMap()
+    world.sceneReconstruction = [.mesh]
+    let worldCopy = world.copy() as! ARWorldTrackingConfiguration
+    require(worldCopy.planeDetection == world.planeDetection, "world copy planes")
+    require(worldCopy.isCollaborationEnabled, "world copy collaboration")
+    require(worldCopy.providesAudioData, "world copy audio")
+    require(worldCopy.videoHDRAllowed, "world copy hdr")
+    require(worldCopy.worldAlignment == .gravityAndHeading, "world copy alignment")
+
+    let face = ARFaceTrackingConfiguration()
+    face.maximumNumberOfTrackedFaces = 2
+    face.isWorldTrackingEnabled = true
+    require((face.copy() as! ARFaceTrackingConfiguration).maximumNumberOfTrackedFaces == 2, "face copy")
+    let image = ARImageTrackingConfiguration()
+    image.maximumNumberOfTrackedImages = 4
+    image.isAutoFocusEnabled = false
+    require((image.copy() as! ARImageTrackingConfiguration).maximumNumberOfTrackedImages == 4, "image copy")
+    let body = ARBodyTrackingConfiguration()
+    body.automaticSkeletonScaleEstimationEnabled = true
+    body.planeDetection = [.vertical]
+    require((body.copy() as! ARBodyTrackingConfiguration).automaticSkeletonScaleEstimationEnabled, "body copy")
+    let geo = ARGeoTrackingConfiguration()
+    geo.maximumNumberOfTrackedImages = 3
+    require((geo.copy() as! ARGeoTrackingConfiguration).maximumNumberOfTrackedImages == 3, "geo copy")
+    let positional = ARPositionalTrackingConfiguration()
+    positional.planeDetection = [.horizontal]
+    require(!(positional.copy() as! ARPositionalTrackingConfiguration).planeDetection.isEmpty, "positional copy")
+    let objectScan = ARObjectScanningConfiguration()
+    objectScan.planeDetection = [.vertical]
+    require((objectScan.copy() as! ARObjectScanningConfiguration).planeDetection.contains(.vertical), "object scan copy")
+    let orientation = AROrientationTrackingConfiguration()
+    orientation.isAutoFocusEnabled = false
+    require(!(orientation.copy() as! AROrientationTrackingConfiguration).isAutoFocusEnabled, "orientation copy")
+
+    let format = ARConfiguration.VideoFormat.unsupportedPlaceholder
+    _ = format.captureDevicePosition
+    _ = format.captureDeviceType
+    _ = format.defaultColorSpace
+    _ = format.defaultPhotoSettings
+    _ = format.framesPerSecond
+    _ = format.imageResolution
+    _ = format.isRecommendedForHighResolutionFrameCapturing
+    _ = format.isVideoHDRSupported
+
+    let session = ARSession()
+    let probe = SessionProbe()
+    session.delegate = probe
+    let userAnchor = ARAnchor(name: "pin", transform: .identity)
+    session.add(anchor: userAnchor)
+    session.run(world, options: [.resetTracking, .removeExistingAnchors])
+    require(probe.failures.isEmpty, "simulated run succeeds")
+    require(session.currentFrame != nil, "simulated frame")
+    require(session.currentFrame!.camera.trackingState == .normal, "normal tracking")
+    require(almostEqual(Float(session.currentFrame!.camera.imageResolution.width), 640), "frame resolution")
+    require(session.currentFrame!.anchors.contains { $0 is ARPlaneAnchor }, "plane anchor added")
+    require(probe.order.first == "frame", "frame callback first")
+    require(probe.order.contains("add"), "didAdd fired")
+    require(probe.trackingStates.contains(.normal), "tracking state callback")
+    require(session.currentFrame!.lightEstimate?.ambientIntensity == 1000, "simulated light")
+
+    let sessionHits = session.raycast(queryDown)
+    require(!sessionHits.isEmpty, "session raycast simulated plane")
+    var trackedResults: [[ARRaycastResult]] = []
+    let tracked = session.trackedRaycast(queryDown) { trackedResults.append($0) }
+    require(tracked != nil, "tracked raycast exists while running")
+    require(!trackedResults.isEmpty, "tracked handler fired")
+    tracked?.stopTracking()
+
+    let addedLater = ARAnchor(name: "later", transform: .identity)
+    session.add(anchor: addedLater)
+    require(session.currentFrame!.anchors.contains { $0.name == "later" }, "user anchor in frame")
+    require(addedLater.identifier != userAnchor.identifier, "distinct anchors")
+    session.remove(anchor: addedLater)
+    require(!session.currentFrame!.anchors.contains { $0.name == "later" }, "removed from frame")
+    require(probe.removed.contains { $0.contains { $0.name == "later" } }, "didRemove")
+
+    session.setWorldOrigin(relativeTransform: simd_float4x4.translation(simd_float3(1, 0, 0)))
+    require(session.currentFrame != nil, "frame after origin")
+
+    do {
+        _ = try NSKeyedArchiver.archivedData(withRootObject: userAnchor, requiringSecureCoding: true)
+        let data = try NSKeyedArchiver.archivedData(withRootObject: ARAnchor(transform: .identity), requiringSecureCoding: true)
+        let decoded = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARAnchor.self, from: data)
+        require(decoded != nil, "anchor round trip")
+        require(decoded!.transform == simd_float4x4.identity, "decoded transform")
+    } catch {
+        fatalError("NSSecureCoding failed: \(error)")
+    }
+
+    do {
+        _ = try await session.currentWorldMap()
+        fatalError("world map must fail closed while simulated")
+    } catch {
+        require((error as? ARError)?.code == .invalidWorldMap, "invalidWorldMap while running")
+    }
+    do {
+        _ = try await session.captureHighResolutionFrame(using: nil)
+        fatalError("hi-res must fail")
+    } catch {
+        requireUnsupported(error)
+    }
+    do {
+        _ = try await session.geoLocation(forPoint: simd_float3(repeating: 0))
+        fatalError("geo location must fail")
+    } catch {
+        require((error as? ARError)?.code == .geoTrackingNotAvailableAtLocation, "geo fail")
+    }
+
+    session.pause()
+    require(session.currentFrame != nil, "pause keeps last frame")
+    require(session.trackedRaycast(queryDown, updateHandler: { _ in }) == nil, "tracked nil when paused")
+
+    let cgImage = CGImage(width: 100, height: 50)
+    let refImage = ARReferenceImage(cgImage, orientation: .up, physicalWidth: 0.2)
+    require(abs(refImage.physicalSize.width - 0.2) < 0.0001, "physical width")
+    require(abs(refImage.physicalSize.height - 0.1) < 0.0001, "physical height from aspect")
+    _ = ARReferenceImage(CGImage: cgImage, orientation: .up, physicalWidth: 0.2)
+    _ = ARReferenceImage(CVPixelBuffer(width: 10, height: 5), orientation: .right, physicalWidth: 0.1)
+    _ = ARReferenceImage(pixelBuffer: CVPixelBuffer(width: 10, height: 5), orientation: .left, physicalWidth: 0.1)
+    refImage.name = "marker"
+    require(refImage.name == "marker", "image name")
+    _ = refImage.resourceGroupName
+    _ = refImage.hash
+    require(!refImage.isEqual(ARReferenceImage(physicalSize: .zero)), "image identity")
+
+    let object = ARReferenceObject()
+    object.name = "scan"
+    require(object.name == "scan", "object name")
+    _ = object.center
+    _ = object.extent
+    _ = object.scale
+    _ = object.rawFeaturePoints
+    _ = object.resourceGroupName
+    _ = object.applyingTransform(.identity)
+    do {
+        try object.export(to: URL(fileURLWithPath: "/tmp/out.arobject"), previewImage: nil)
+        fatalError("export fail closed")
+    } catch {
+        require((error as? ARError)?.code == .fileIOFailed, "export file IO")
+    }
+
+    let scn = ARSCNView()
+    scn.session = session
+    scn.automaticallyUpdatesLighting = false
+    scn.rendersCameraGrain = true
+    scn.rendersMotionBlur = true
+    _ = scn.scene
+    _ = scn.delegate
+    require(scn.anchor(for: SCNNode()) == nil, "no scene node map")
+    require(scn.node(for: userAnchor) == nil, "no node")
+    _ = scn.hitTest(.zero, types: .featurePoint)
+    _ = scn.raycastQuery(from: CGPoint(x: 0.5, y: 0.5), allowing: .estimatedPlane, alignment: .horizontal)
+    _ = scn.unprojectPoint(.zero, ontoPlane: .identity)
+    require(SCNDebugOptions.showWorldOrigin.rawValue == 1, "world origin bit")
+    require(SCNDebugOptions.showFeaturePoints.rawValue == 2, "feature points bit")
+    require(ARSCNFaceGeometry(device: ARKitHostMTLDevice()) == nil, "no metal face geo")
+    require(ARSCNFaceGeometry(device: ARKitHostMTLDevice(), fillMesh: true) == nil, "no fill mesh")
+    ARSCNFaceGeometry().update(from: ARFaceGeometry())
+    require(ARSCNPlaneGeometry(device: ARKitHostMTLDevice()) == nil, "no metal plane geo")
+    ARSCNPlaneGeometry().update(from: ARPlaneGeometry())
+
+    let sk = ARSKView()
+    sk.session = session
+    require(sk.anchor(for: SKNode()) == nil, "no sprite node")
+    require(sk.node(for: userAnchor) == nil, "no sprite for anchor")
+    _ = sk.hitTest(.zero, types: .existingPlane)
+    _ = sk.delegate
+
+    let geoAnchor = ARGeoAnchor(coordinate: CLLocationCoordinate2D(latitude: 37.3, longitude: -122.0), altitude: 10)
+    require(geoAnchor.coordinate.latitude == 37.3, "geo lat")
+    require(geoAnchor.altitude == 10, "geo alt")
+    _ = ARGeoAnchor(name: "place", coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0))
+    _ = geoAnchor.altitudeSource
+    ARGeoTrackingConfiguration.checkAvailability(at: CLLocationCoordinate2D(latitude: 0, longitude: 0)) { available, error in
+        require(!available, "coord availability")
+        require((error as? ARError)?.code == .geoTrackingNotAvailableAtLocation, "coord error")
+    }
+
+    let depth = ARDepthData()
+    _ = depth.confidenceMap
+    _ = depth.depthMap
+    let probeAnchor = AREnvironmentProbeAnchor(transform: .identity, extent: simd_float3(1, 1, 1))
+    require(probeAnchor.environmentTexture == nil, "no metal env texture")
+    let mesh = ARMeshAnchor(anchor: ARAnchor(transform: .identity))
+    _ = mesh.geometry.vertices
+    _ = mesh.geometry.normals
+    _ = mesh.geometry.faces
+    _ = mesh.geometry.classification
+    _ = mesh.geometry.vertices.buffer
+    _ = mesh.geometry.vertices.format
+    _ = mesh.geometry.vertices.componentsPerVector
+    _ = mesh.geometry.vertices.count
+    _ = mesh.geometry.vertices.offset
+    _ = mesh.geometry.vertices.stride
+    _ = mesh.geometry.vertices[Int32(0)]
+    _ = mesh.geometry.faces.buffer
+    _ = mesh.geometry.faces.bytesPerIndex
+    _ = mesh.geometry.faces.count
+    _ = mesh.geometry.faces.indexCountPerPrimitive
+    _ = mesh.geometry.faces.primitiveType
+    _ = mesh.geometry.faces[0]
+    let matte = ARMatteGenerator(device: ARKitHostMTLDevice(), matteResolution: .full)
+    _ = matte.generateMatte(from: session.currentFrame ?? ARFrame(), commandBuffer: ARKitHostMTLCommandBuffer())
+    _ = matte.generateDilatedDepth(from: session.currentFrame ?? ARFrame(), commandBuffer: ARKitHostMTLCommandBuffer())
+
+    require(ARSkeleton.JointName(VNRecognizedPointKey(rawValue: "head")) == nil, "vision joint map fail closed")
+    require(ARSkeleton.JointName.root != .head, "joint inequality")
+    require(ARFaceAnchor.BlendShapeLocation.jawOpen != .jawLeft, "blend inequality")
+    var planes: ARWorldTrackingConfiguration.PlaneDetection = [.horizontal]
+    require(planes.isSubset(of: [.horizontal, .vertical]), "subset")
+    require(planes.isStrictSubset(of: [.horizontal, .vertical]), "strict subset")
+    require(planes.union(.vertical).contains(.vertical), "union")
+    require(planes.intersection(.horizontal) == .horizontal, "intersection")
+    _ = planes.symmetricDifference(.vertical)
+    planes.formUnion(.vertical)
+    planes.formIntersection(.horizontal)
+    planes.formSymmetricDifference(.vertical)
+    require(!planes.isStrictSuperset(of: [.horizontal, .vertical]), "strict superset")
+    var hits: ARHitTestResult.ResultType = [.featurePoint]
+    _ = hits.isSubset(of: [.featurePoint, .existingPlane])
+    _ = hits.isStrictSubset(of: [.featurePoint, .existingPlane])
+    _ = hits.union(.existingPlane)
+    _ = hits.symmetricDifference(.existingPlane)
+    hits.formUnion(.existingPlane)
+    hits.formSymmetricDifference(.featurePoint)
+    var options: ARSession.RunOptions = [.resetTracking]
+    _ = options.isSubset(of: [.resetTracking, .removeExistingAnchors])
+    _ = options.isStrictSubset(of: [.resetTracking, .removeExistingAnchors])
+    _ = options.union(.removeExistingAnchors)
+    _ = options.symmetricDifference(.stopTrackedRaycasts)
+    options.formUnion(.removeExistingAnchors)
+    options.formSymmetricDifference(.resetSceneReconstruction)
+    var semantics: ARConfiguration.FrameSemantics = [.personSegmentation]
+    _ = semantics.isSubset(of: [.personSegmentation, .sceneDepth])
+    _ = semantics.isStrictSubset(of: [.personSegmentation, .sceneDepth])
+    _ = semantics.union(.bodyDetection)
+    _ = semantics.symmetricDifference(.sceneDepth)
+    semantics.formUnion(.smoothedSceneDepth)
+    semantics.formSymmetricDifference(.personSegmentationWithDepth)
+    var reconstruction: ARConfiguration.SceneReconstruction = [.mesh]
+    _ = reconstruction.isSubset(of: [.mesh, .meshWithClassification])
+    _ = reconstruction.isStrictSubset(of: [.mesh, .meshWithClassification])
+    _ = reconstruction.union(.meshWithClassification)
+    _ = reconstruction.symmetricDifference(.mesh)
+    reconstruction.formUnion(.meshWithClassification)
+    reconstruction.formSymmetricDifference(.mesh)
+    require(ARConfidenceLevel.high > .low, "confidence >")
+    require(ARConfidenceLevel.high >= .medium, "confidence >=")
+    require(ARConfidenceLevel.low <= .medium, "confidence <=")
+    _ = ARConfidenceLevel.low..<ARConfidenceLevel.high
+    _ = ARConfidenceLevel.low...
+    _ = ...ARConfidenceLevel.high
+    _ = ARConfidenceLevel.low...ARConfidenceLevel.medium
+    _ = ..<ARConfidenceLevel.high
+    require(ARError.unsupportedConfiguration != ARError.sensorFailed, "error code inequality")
+    require(ARConfiguration.WorldAlignment.gravity != .camera, "alignment inequality")
+    require(ARFrame.WorldMappingStatus.limited != .mapped, "mapping inequality")
+    require(ARGeoTrackingStatus.State.localizing != .localized, "geo state inequality")
+    session.update(with: ARSession.CollaborationData(priority: .optional))
+    _ = session.delegateQueue
+    let collab = ARSession.CollaborationData(priority: .critical)
+    _ = collab.priority
+    let body2d = ARBody2D()
+    _ = body2d.skeleton
+    _ = ARBodyAnchor(anchor: ARAnchor(transform: simd_float4x4.identity)).skeleton
+    _ = ARImageAnchor(anchor: ARAnchor(transform: simd_float4x4.identity)).referenceImage
+    _ = ARObjectAnchor(anchor: ARAnchor(transform: simd_float4x4.identity)).referenceObject
+    _ = ARFaceAnchor(anchor: ARAnchor(transform: simd_float4x4.identity)).blendShapes
+    _ = ARAppClipCodeAnchor(anchor: ARAnchor(transform: simd_float4x4.identity)).urlDecodingState
+    _ = ARParticipantAnchor(anchor: ARAnchor(transform: simd_float4x4.identity))
+    let directional = ARDirectionalLightEstimate()
+    _ = directional.primaryLightDirection
+    _ = directional.primaryLightIntensity
+    _ = directional.sphericalHarmonicsCoefficients
+    _ = ARWorldMap().center
+    _ = ARWorldMap().extent
+    _ = ARWorldMap().rawFeaturePoints
+    _ = ARWorldMap().anchors
+    let overlay = ARCoachingOverlayView()
+    overlay.activatesAutomatically = false
+    overlay.sessionProvider = scn
+    _ = overlay.delegate
+    require(ARGeoTrackingStatus.Accuracy.low != .high, "accuracy inequality")
+    require(ARGeoTrackingStatus.StateReason.none != .geoDataNotLoaded, "reason inequality")
+    require(ARMeshClassification.wall != .door, "mesh class inequality")
+    require(ARGeometryPrimitiveType.line != .triangle, "primitive inequality")
+    require(ARCoachingOverlayView.Goal.tracking != .geoTracking, "goal inequality")
+    require(ARSession.CollaborationData.Priority.critical != .optional, "priority inequality")
+    require(ARAppClipCodeAnchor.URLDecodingState.decoding != .decoded, "url state inequality")
+    require(ARMatteGenerator.Resolution.full != .half, "matte inequality")
+    require(ARRaycastQuery.Target.existingPlaneInfinite != .estimatedPlane, "target inequality")
+    require(ARRaycastQuery.TargetAlignment.any != .vertical, "alignment inequality")
+    require(ARWorldTrackingConfiguration.EnvironmentTexturing.none != .automatic, "texturing inequality")
+    require(ARFrame.SegmentationClass.none != .person, "seg inequality")
+    require(ARGeoAnchor.AltitudeSource.coarse != .precise, "altitude inequality")
+    require(ARPlaneAnchor.Alignment.horizontal != .vertical, "plane align inequality")
+    _ = ARConfidenceLevel.medium.hashValue
+    var hasher = Hasher()
+    ARError.Code.fileIOFailed.hash(into: &hasher)
+    ARSkeleton.JointName.head.hash(into: &hasher)
+    _ = hasher.finalize()
 }
 
 func runARKitRuntime() async {
@@ -296,7 +826,10 @@ func runARKitRuntime() async {
             allowing: .estimatedPlane,
             alignment: .horizontal
         )
-        require(frameQuery.direction == simd_float3(0, 0, -1), "fallback ray direction")
+        require({
+            let d = frameQuery.direction
+            return (d.x * d.x + d.y * d.y + d.z * d.z) > 0.8
+        }(), "fallback ray is unit length")
 
         let classification = ARPlaneAnchor.Classification.none(.notAvailable)
         require(classification == .none(.notAvailable), "plane classification none")
@@ -307,6 +840,8 @@ func runARKitRuntime() async {
                 == .limited(.insufficientFeatures),
             "limited reason"
         )
+
+        await runDepthPassExercises()
 
         print("ARKIT_AGENT_RUNTIME_OK")
 }

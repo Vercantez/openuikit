@@ -4,37 +4,54 @@ Linux starting implementation of Apple's public `ARKit` Swift surface, reconstru
 
 ## What is real
 
-- `ARError` / `ARErrorDomain`, configuration classes, `ARSession`, anchors, frames, cameras, raycast queries, skeletons, reference images/objects, world maps, and coaching overlay **types** compile into `libARKit.dylib`.
-- `ARConfiguration.isSupported` and every concrete subclass report **`false`**.
-- `ARSession.run(_:options:)` stores the requested configuration, does not start tracking, leaves `currentFrame` nil, and notifies the delegate with `ARError.unsupportedConfiguration` (code 100, domain `com.apple.arkit.error`).
-- Raycasts, tracked raycasts, world-map export, reference-object creation, high-resolution capture, geo availability, and reference-image validation fail closed (empty results, `nil`, or typed `ARError`).
-- User-created `ARAnchor` values can be added and removed locally. They never appear in a live frame because no frame is produced.
-- `ARCoachingOverlayView` is an `NSObject` stand-in (no UIKit). `isActive` stays `false`.
-- Option sets, blend-shape locations, skeleton joint names, and tracking enumerations are source-compatible constants.
+- `ARError` / `ARErrorDomain` with documented numeric codes (100–107, 200–202, 300–304, 400–401, 500–501).
+- Every `ARConfiguration` subclass stores its public properties and copies them via `NSCopying`. `isSupported` is **false** unless `ARKitTestHook.installSimulatedDevice()` is called. `supportedVideoFormats` stays empty.
+- `ARSession.run(_:options:)` validates the configuration: unsupported → `ARError.unsupportedConfiguration` (100); simulated device with camera denied → `cameraUnauthorized` (103). Otherwise it drives the documented **simulated frame source** (`ARSimulatedFrameSource`): one deterministic frame per run/add/remove, camera look-at `(0, 1.2, 1.5) → origin`, intrinsics `fx=fy=640`, image `640×480`, optional horizontal plane of extent `(2, 0, 2)`.
+- Delegate order per simulated frame: `session(_:didUpdate:)` frame, then `didAdd`, then `didUpdate` anchors, then `didRemove`.
+- `ARCamera.projectionMatrix(for:viewportSize:zNear:zFar:)` is the pinhole OpenGL matrix from intrinsics (exact `2fx/w`, `2fy/h`, principal-point columns, `-(f+n)/(f-n)`, `-2fn/(f-n)`), times a Z orientation rotation. `viewMatrix(for:)` is that rotation times the rigid inverse of the camera transform.
+- Legacy `hitTest` and `raycast` intersect simulated planes with the documented result types (`existingPlaneUsingExtent` / `UsingGeometry` clip to extent; `estimatedHorizontalPlane` is `y=0`).
+- `ARAnchor` subclasses, `ARPlaneGeometry` (quad layout), `ARFaceGeometry`, skeletons, reference images/objects, coaching overlay, and SceneKit/SpriteKit view stand-ins compile into `libARKit.dylib`.
+- `ARReferenceImage` can be built from the host `CGImage` stand-in with a physical width. Bundle loads stay fail-closed.
 
 ## Fail-closed boundaries
 
-Linux has no TrueDepth/LiDAR camera, IMU world tracking, geo localization, or ARKit privacy prompts. This module **does not** invent camera images, plane detections, face meshes, body skeletons, world maps, or collaboration data.
+Linux has no TrueDepth/LiDAR camera, IMU world tracking, geo localization, or ARKit privacy prompts. Without the test hook, `run` never invents a frame. Even with the hook:
 
-Deferred until SceneKit, SpriteKit, Metal, AVFoundation, CoreVideo, CoreLocation, Vision, and UIKit are on the compile graph:
+- `currentWorldMap` / world-map export → `invalidWorldMap`
+- high-resolution capture, reference-object creation, collaboration, geo availability/location → typed `ARError`
+- `ARSCNView` / `ARSKView` / `ARCoachingOverlayView` are `NSObject` stand-ins (no UIKit/SceneKit renderer). Hit-tests forward to the session frame; node maps return `nil`.
+- Metal matte/geometry buffers are empty host objects, not GPU resources.
+- `capturedImage` is an empty `CVPixelBuffer` stand-in, never camera pixels.
+- `ARFaceGeometry(blendShapes:)` returns `nil` (no Apple face topology).
+- `ARSkeleton.JointName(_: VNRecognizedPointKey)` returns `nil`.
 
-- `ARSCNView`, `ARSKView`, and their delegates
-- `ARSCNFaceGeometry` / `ARSCNPlaneGeometry` / `SCNDebugOptions`
-- Metal matte generation and geometry GPU buffers
-- `CVPixelBuffer` / `AVCapture*` / `CMSampleBuffer` members
-- `CLLocationCoordinate2D` geo-anchor initializers
-- UIKit orientation projection helpers
+## simd and host stand-ins
 
-## simd stand-in
-
-Darwin `import simd` is unavailable on this host. `simd_float3`, `simd_float4x4`, and `simd_float3x3` in this module are portable stand-ins so ARKit signatures can compile. They are not extra Apple ARKit symbols.
+Darwin `import simd` is unavailable. `simd_float3` / `simd_float4x4` in this module are portable stand-ins. `UIInterfaceOrientation`, `CGImage`, `CGAffineTransform`, `CVPixelBuffer`, `CLLocationCoordinate2D`, Metal/SceneKit/SpriteKit/`AVCapture*` types are likewise host stand-ins so the sealed gate can compile the public surface without importing those modules. They are not extra Apple ARKit symbols.
 
 ## Tests
 
-`tests/agent/ARKitRuntime.swift` exercises unsupported configurations, fail-closed `ARSession.run`, empty raycasts, error codes, option sets, blend shapes, and coaching inactivity, then prints `ARKIT_AGENT_RUNTIME_OK`.
+`tests/agent/ARKitRuntime.swift` exercises unsupported configurations, the simulated session/anchor/raycast path, projection/view matrices, `NSSecureCoding` for `ARAnchor`, SceneKit/SpriteKit stand-ins, and fail-closed I/O, then prints `ARKIT_AGENT_RUNTIME_OK`.
 
 Run:
 
 ```sh
 bash tests/acceptance/test_host.sh
 ```
+
+## Depth pass 2026-09
+
+Wave-2 starting point was 526 implemented / 267 declared / 82 deferred. This depth pass finishes the session/configuration/anchor model with a documented simulated frame source and compiles the previously deferred UIKit/SceneKit/Metal/CoreLocation/CoreVideo signatures against host stand-ins.
+
+Coverage after this pass: **874 implemented / 1 declared / 0 deferred** (875 IDs). The remaining declared row is `ARGeometrySource`'s overlapping `UInt8` subscript, which Swift cannot overload beside the `float3` subscript.
+
+Exact gate markers from `bash full/arkit/tests/acceptance/test_host.sh` on this Linux host (Swift 6.2.4):
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FRAMEWORK_FANOUT_REFERENCE_OK
+ARKIT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=ARKit dylib=libARKit.dylib
+```
+
+Unresolved behavioral questions (see `oracle-questions.tsv`): Apple delegate queue/async timing, exact `ARSCNDebugOptions` bit values, projection orientation convention versus a live iPhone camera buffer, and whether `getCurrentWorldMap` on a tracking session without a saved map is `invalidWorldMap` or another code.
