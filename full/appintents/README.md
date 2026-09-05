@@ -13,6 +13,70 @@ registration (`AppIntentsPortable.supportsSystemRegistration == false`).
 Wave-6 adds schema-v2 coverage for the sealed 6586-ID public surface. The
 isolated Linux host compiles these sources with `swiftc` and Foundation only.
 
+## Depth pass 2026-09 (wave 8)
+
+SDK depth for `AppIntents` in `full/appintents/` (6,586 exact IDs). This is
+a second pass: the first-pass sources and tests stay green; this round adds
+host-driven property-wrapper, resolution, summary, and AssistantSchemas
+machinery with focused synchronous tests.
+
+Coverage this round:
+
+| | implemented | declared | deferred | unavailable | not-applicable | nondeferred |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Before | 299 | 4552 | 1735 | 0 | 0 | 4851 |
+| After | 348 | 3126 | 1524 | 0 | 1588 | 3474 |
+
+Floor is 3293. SwiftUI `s:7SwiftUI…` View / Button / Toggle / ModifiedContent
+overlay re-exports (1,588 rows) are `not-applicable` with
+`SwiftUI cross-import overlay; owned by the SwiftUI lane`.
+
+Top-5 implemented evidence:
+
+| Rows | Share | Evidence |
+| ---: | ---: | --- |
+| 29 | 8.3% | `AppIntentsCorpusTests.swift#testIntentFilePersonAndItemCollection` |
+| 28 | 8.0% | `AppIntentsCorpusTests.swift#testAppShortcutBuilderUpdateAndApplicationNameToken` |
+| 21 | 6.0% | `AppIntentsCorpusTests.swift#testDisplayRepresentationImagesAndSynonyms` |
+| 19 | 5.5% | `AppIntentsCorpusTests.swift#testParameterControlStyleAndInclusiveRange` |
+| 18 | 5.2% | `AppIntentsCorpusTests.swift#testAppIntentStaticRequirements` |
+
+No non-enum test is cited by more than 8.3% of implemented rows (well under
+the 40% bulk-relabel line). Depth-pass tests are synchronous; they do not
+wait on `DispatchSemaphore` or `RunLoop`.
+
+Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` did not emit
+`CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
+absent on this VM. The sealed gate compiles with a clean product tree
+(`products=clean`). Active Cursor Build observed on this run was
+`bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3` (campaign expected
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
+`dd4c8bca7e8735289928bbd1abd44f4b35815308` matched.
+
+### What this pass added
+
+- `@Property` (`EntityProperty`) stores `title` / `identifier`, applies a
+  `getter` when unset, and returns `nil` for optional unset values instead
+  of trapping.
+- `@Parameter` accepts `inputOptions` (`String.IntentInputOptions`) and
+  records that an `optionsProvider` was attached. Dynamic options are
+  resolved from host-attached snapshots or `EntityResolutionEngine`,
+  never by inventing a Shortcuts extract.
+- `EntityResolutionEngine` is a process-local catalog for
+  `suggestedEntities`, `entities(for:)`, `entities(matching:)`,
+  `defaultResult`, and `allEntities`.
+- `TransientAppEntity` uses UUID ids and `_TransientAppEntityQuery`.
+- `ParameterSummary` / `IntentParameterSummary` / `Summary("… \(\.$url)")`
+  evaluate to display strings (`${parameter}`). `Switch` / `Case` / `When`
+  condition structs store the evaluated branch string.
+- AppShortcut phrases expand both `${applicationName}` and `${parameter}`.
+- `OpenIntent` has `Value: AppEntity` and `target`. Sample open/foreground
+  intents compile as `SystemIntent` / `ForegroundContinuableIntent`.
+- `AssistantSchemas` protocols carry the required parameter catalog; a
+  table test checks every family's parameter set. There is no Apple
+  Intelligence runtime on this host.
+
 ## Coverage honesty (second pass)
 
 The first pass marked **1575** identifiers `implemented`, but **771** of them
@@ -85,8 +149,11 @@ No implemented test is cited by more than 29 rows (9.7% of implemented).
 - Request confirmation, request choice (empty), continue-in-foreground,
   and `IntentParameter.requestValue` throw
   `AppIntentError.Unrecoverable.unsupportedOnDevice`.
-- `EntityProperty` getters trap until a value is supplied. CoreSpotlight
-  indexing keys are lookalikes on the isolated host.
+- `EntityProperty` traps only when a non-optional value was never stored
+  and no getter was supplied. Optional unset properties return `nil`.
+  CoreSpotlight indexing keys are lookalikes on the isolated host.
+- `EntityResolutionEngine` is process-local. It never claims Shortcuts
+  or Apple Intelligence resolved an entity.
 - UIKit `ShortcutsUIButton` / `SiriTipUIView` are NSObject subclasses on
   Linux; they do not present system UI.
 - Macros (`AppIntent(schema:)`, `ComputedProperty`, …) are deferred: there
