@@ -136,9 +136,27 @@ These are read off `full/foundation/`, not guessed:
 
 Graded only by `queue_box.sh arm64 verify <sha>` log lines
 (`TBD_CHECK_OK`, `difftest rc=0`, `build_full rc=0`, `GATE_B_PASS`,
-`GUEST_REALAPP_SCREENS`). Filled in after the push.
+`GUEST_REALAPP_SCREENS`). Instance IDs stay inside `queue_box.sh`.
 
-Attempt 1: *(pending)*
+Attempt 1: `16ee0569b79ea733ca2d4ededdabd537483c304f`.
+`BUILD_OK`, `TBD_CHECK_OK`, `run_linux rc=0`, `difftest rc=0`.
+`build_full rc=2`:
+`Foundation guest source manifest must contain exactly 38 lines`
+(`full/scripts/build_full.sh` line 1223). The in-tree manifest
+`full/foundation/foundation_guest_sources.txt` is **41** lines
+(foundation-oracles.md already flagged this: "Focus onboarding builder
+still pins 38; this branch's manifest is 41. Operator bump."). This
+trial cannot edit `full/` (refused unread). `guest_realapp skipped`
+`GUEST_REALAPP_SCREENS=0`. `GATE_B_FAIL rc=2` is the same `die` in the
+nested widget-guest `build_full`. HEAD:uikit override did run (the
+38-line check is after `assert_vendor_tree`).
+
+What Ledger still needs from the guest *builder*, not from Foundation
+API: the operator bump of that count from 38 → 41 (and the matching
+onboarding / `EXPECTED_FOUNDATION_SOURCE_COUNT` pins). After that bump,
+the RealAppProbe `*.swift` glob already contains LedgerStore / List /
+Screens, so the next `render_full realapp` should emit 13 PNGs or fail
+at a later, more interesting line.
 
 ## What the operator captures on the iOS simulator
 
@@ -148,3 +166,24 @@ Attempt 1: *(pending)*
   the two duplicated sources, so `realapp_ledger_light` lands next to
   the Focus/Hackers goldens. `compare_realapp.py` already has the
   `UITableView` anchor; there is no floor until that golden exists.
+
+## Ranked list of what the guest route still lacks
+
+1. **Operator bump `build_full.sh` 38 → 41** (and onboarding /
+   `EXPECTED_FOUNDATION_SOURCE_COUNT`). Without it, `render_full` is
+   never linked and Ledger cannot be proven on the box. Measured
+   attempt 1.
+2. **`URLSessionDataTask`.** Real apps call `dataTask(with:completionHandler:)`.
+   The guest facade only has async `data(for:)`. Ledger rewrote around
+   that; the next app may not.
+3. **Socket `Stream` / a public loopback helper.** POSIX `socket(2)`
+   compiled, but Linux needed `SOCK_STREAM.rawValue` and Darwin needed
+   `sin_len`. Network.framework `NWListener` is not this path.
+4. **`FoundationNetworking` on Linux ELF vs Foundation on the guest.**
+   The same `import UIKit` file does not name `URLRequest` on
+   corelibs-foundation. `canImport(FoundationNetworking)` papered over
+   it for SwiftPM; the guest does not have that module (types live on
+   FoundationGuest).
+5. **A `RealAppProbe/Ledger/` glob in `build_full.sh`** so the
+   conformance app and the guest capture are one source tree, not two
+   copies.
