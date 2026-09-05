@@ -304,6 +304,13 @@ open class UIScrollView: UIView {
 
     public func setContentOffset(_ offset: CGPoint, animated: Bool) {
         stopScrollAnimation()
+        var offset = offset
+        // MEASURED Tabs t7000 / t7000.xxxl / t7000.ax1: see
+        // `UINavigationBar.hideOnScrollContentBump`.
+        if OpenUIKitRuntime.systemFontCut == .iOS,
+           let nav = _scrollObserver as? UINavigationController {
+            offset.y += nav.navigationBar.hideOnScrollContentBump(requestedY: offset.y)
+        }
         if animated {
             UIView.animateScrollCurve(
                 withDuration: UIScrollView.animatedContentOffsetDuration,

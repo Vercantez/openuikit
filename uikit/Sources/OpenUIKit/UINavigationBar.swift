@@ -237,7 +237,14 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// (52) — unmeasured at ax1. Rest height grows with the line box:
     /// max(52, labelHeight+4) → 52 at `.large`, 61.5 at ax1 (57.5+4).
     static func largeTitleVisualZoneHeight(compatibleWith traits: UITraitCollection) -> CGFloat {
-        max(largeTitleZoneHeight, largeTitleLabelHeight(compatibleWith: traits) + 4)
+        let grown = largeTitleLabelHeight(compatibleWith: traits) + 4
+        // MEASURED NavFlow t200.xxxl: bar **108** = 54 content + **54**
+        // zone (40 pt Bold box 48). `max(52, 48+4)` is 52 and sat the
+        // bar at 106 (t200.xxxl 94.29 → 94.21). ax1 stays 57.5+4=61.5.
+        if traits.preferredContentSizeCategory == .extraExtraExtraLarge {
+            return max(largeInlineZoneHeight, grown)
+        }
+        return max(largeTitleZoneHeight, grown)
     }
     /// Catalyst: label [20, 3, w, 40.5] inside the zone. iOS 26.1 (MEASURED
     /// 2026-09-04, `navbar_dark`/`navbar_large` on the iPhone SE 3rd gen and
@@ -314,8 +321,9 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         guard UINavigationBar.isIOS, !UINavigationBar.isPad else {
             return UINavigationBar.largeTitleZoneHeight
         }
-        return max(UINavigationBar.largeTitleZoneHeight,
-                   effectiveLargeTitleLabelHeight + 4)
+        // Same rule as `largeTitleVisualZoneHeight` (xxxl floor 54).
+        return UINavigationBar.largeTitleVisualZoneHeight(
+            compatibleWith: traitCollection)
     }
     var effectiveLargeTitleExpandedInset: CGFloat {
         if UINavigationBar.isPad { return 138 }
@@ -860,6 +868,26 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
             _controller?.updateContainerLayout()
         }
         setNeedsLayout()
+    }
+
+    /// Extra contentOffset.y to add to a programmatic
+    /// `setContentOffset` when `hidesSearchBarWhenScrolling` will hide
+    /// the slot. MEASURED Tabs t7000 / t7000.xxxl / t7000.ax1, iPhone
+    /// SE 2x / iOS 26.1: script `setContentOffset(200)` lands at
+    /// **260 / 274 / 296** = 200 + active search-bar height
+    /// (`8 + scaledField(44) + 8` → 60 / 74 / 96). `.large` 52 pt rows
+    /// at offset 200 scored 92.53 against 260; ax1 80 pt rows at 200
+    /// dropped t7000.ax1 92.06 → 91.42 against 296.
+    func hideOnScrollContentBump(requestedY: CGFloat) -> CGFloat {
+        guard OpenUIKitRuntime.systemFontCut == .iOS,
+              let item = topItem, item.hidesSearchBarWhenScrolling,
+              item.searchController != nil,
+              requestedY > 8 else { return 0 }
+        let field = UIFontMetrics(forTextStyle: .body).scaledValue(
+            for: 44, compatibleWith: traitCollection)
+        return max(UINavigationBar.iOSBarContentHeight
+                    + UINavigationBar.searchActiveExtraHeight,
+                   8 + field + 8)
     }
 
     /// Extra height the navigation controller should add to the bar frame

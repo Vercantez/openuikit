@@ -370,6 +370,11 @@ open class UITableViewCell: UIView, ReusableView {
     /// `.large` is unchanged (`max(52, 44) = 52`).
     static func plainClassicRowHeight(compatibleWith traits: UITraitCollection) -> CGFloat {
         guard isIOSChrome else { return 51.5 }
+        let cat = traits.preferredContentSizeCategory
+        // MEASURED Tabs t200.xxxl / t7000.xxxl: cells **59**.
+        // `scaledValue(44)` interpolates to 58 (bases 40→52.667,
+        // 48→63.333). ax1 is a table hit **80**; `.large` max(52, 44)=52.
+        if cat == .extraExtraExtraLarge { return 59 }
         let scaled = UIFontMetrics(forTextStyle: .body).scaledValue(
             for: 44, compatibleWith: traits)
         return max(52, scaled)

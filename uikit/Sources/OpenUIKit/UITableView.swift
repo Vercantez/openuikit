@@ -701,10 +701,29 @@ open class UITableView: UIScrollView {
                     let underlapsLargeTitle = UITableView.isIOSChrome
                         && safeAreaInsets.top >= UINavigationBar.largeTitleExpandedInset(
                             compatibleWith: traitCollection)
+                    // MEASURED Notes t4000.xxxl, iPhone SE 2x / iOS 26.1:
+                    // inset-grouped first header is **38** (label y 12)
+                    // under the search overlay (table y 84, bar 74, field
+                    // 58). Inline rest SA.top **64** stays on the 55.5
+                    // path (Notes t200.xxxl golden is 38 — OPEN). Grouped
+                    // first header at SA.top 64 is **55.5** (Forms
+                    // t200.xxxl Account). The large-title threshold (116 /
+                    // ax1 125.5) does not fire for search, so Notes t4000
+                    // stayed 55.5 and dropped 78.89 → 77.50 once search
+                    // chrome matched. Pad unmeasured — keep the large-title
+                    // path only.
+                    let insetGroupedUnderNav = UITableView.isIOSChrome
+                        && style == .insetGrouped
+                        && s == 0
+                        && !UINavigationBar.isPad
+                        && safeAreaInsets.top
+                            > UINavigationBar.iOSMinimumBarTop
+                            + UINavigationBar.iOSBarContentHeight
                     let afterUntitledFooter = s > 0 && !metrics[s - 1].footerHasView
                         && metrics[s - 1].footerHeight > 0
                     let compact = UITableView.isIOSChrome && style != .plain
-                        && ((s == 0 && underlapsLargeTitle) || afterUntitledFooter)
+                        && ((s == 0 && (underlapsLargeTitle || insetGroupedUnderNav))
+                            || afterUntitledFooter)
                     m.compactHeader = compact
                     headerH = m.headerTitle != nil
                         ? UITableView.headerHeight(style: style, firstSection: s == 0,

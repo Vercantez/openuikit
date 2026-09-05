@@ -149,12 +149,31 @@ public enum UIAlertMetrics {
         return FontEngine.labelBlockHeight(for: font, lines: lines)
     }
 
-    /// MEASURED Modal t5200.ax1 / t7200.ax1: action pill **63.5** =
-    /// 12 + 39.5 + 12 (`labelLineHeight` + 24). `.large` 20.5+24=44.5
-    /// floors at **48**.
-    static func actionHeight(for font: UIFont) -> CGFloat {
-        guard OpenUIKitRuntime.systemFontCut == .iOS else { return actionHeight }
+    /// Action pill height. MEASURED iPhone SE 2x / iOS 26.1:
+    ///   `.large` (Modal t7200): **48**, 17 pt Medium labels h=20.5
+    ///   `.xxxl` (t7200.xxxl / t5200.xxxl): still **48**, 23 pt Medium
+    ///     labels h=27.5 (xxxl is not an accessibility category)
+    ///   `.ax1` (t5200.ax1 / t7200.ax1): **63.5** = 12+39.5+12
+    /// Growing by `lineHeight+24` at xxxl would be 27.5+24=51.5 and
+    /// stretched the t7200.xxxl card (97.33 → 89.45). Only
+    /// `isAccessibilityCategory` grows the pill.
+    static func actionHeight(for font: UIFont,
+                             compatibleWith traits: UITraitCollection) -> CGFloat {
+        guard OpenUIKitRuntime.systemFontCut == .iOS,
+              traits.preferredContentSizeCategory.isAccessibilityCategory else {
+            return actionHeight
+        }
         return max(actionHeight, FontEngine.labelLineHeight(for: font) + 24)
+    }
+
+    /// Stack height for `count` pills of `actionH` with 16 pt pad and
+    /// 8 pt gaps. Two actions sit on one row.
+    static func actionStackHeight(count: Int, actionH: CGFloat) -> CGFloat {
+        let pad = actionsPadding
+        if count <= 1 { return pad + actionH + pad }
+        if count == 2 { return pad + actionH + pad }
+        return pad + CGFloat(count) * actionH
+            + CGFloat(count - 1) * actionSpacing + pad
     }
 
     /// Dimming behind the card. MEASURED: black at 0.2 in light, 0.48 in
@@ -388,9 +407,15 @@ final class _UIAlertActionView: UIControl {
         // (`(63.5 − 39.5) / 2`). Full-width + `.center` painted the same
         // 17 pt glyphs at `.large` but at ax1 the 33 pt ink filled the
         // pill (t5200 blob 1028).
+        // MEASURED t7200 / t7200.xxxl: vertical origin is ceil-to-pixel
+        // of (pill − line) / 2 — `.large` (48−20.5)/2 = 13.75 → **14**
+        // (Copy abs y 211.5 − pill 197.5); xxxl (48−27.5)/2 = 10.25 →
+        // **10.5** (Copy abs y 208 − 197.5). `.rounded()` alone is 10.
         let w = min(label.intrinsicContentSize.width, bounds.width)
         let x = (bounds.width - w) / 2
-        let y = ((bounds.height - h) / 2).rounded()
+        let rawY = (bounds.height - h) / 2
+        let y = OpenUIKitRuntime.systemFontCut == .iOS
+            ? UITableView.iOSCeilToPixel(rawY) : rawY.rounded()
         label.frame = CGRect(x: x, y: y, width: w, height: h)
     }
 }
@@ -503,9 +528,11 @@ open class UIAlertController: UIViewController {
         let textWidth = width - 2 * inset
         var y: CGFloat = 0
 
-        // MEASURED Modal t5200.ax1 / Notes t11000.ax1, iPhone SE 2x /
-        // iOS 26.1: title 33 Semibold, message 30 Regular 2-line 72,
-        // action pills 63.5. `_layoutCard` runs from
+        // MEASURED Modal t5200.ax1 / Notes t11000.ax1 / t7200.ax1 /
+        // t7200.xxxl, iPhone SE 2x / iOS 26.1: title 33 Semibold,
+        // message 30 Regular 2-line 72, action pills 63.5 at ax1;
+        // xxxl action labels 23 Medium in still-48 pills (t7200.xxxl).
+        // `_layoutCard` runs from
         // `frameOfPresentedViewInContainerView` *before* the card is
         // added to the container, so `view.traitCollection` is still
         // `current` (`.large`). The presenting view is already in the
@@ -589,7 +616,8 @@ open class UIAlertController: UIViewController {
         y += pad
         let rowWidth = width - 2 * pad
         let actionFont = UIAlertMetrics.actionFont(compatibleWith: traits)
-        let actionH = UIAlertMetrics.actionHeight(for: actionFont)
+        let actionH = UIAlertMetrics.actionHeight(for: actionFont,
+                                                  compatibleWith: traits)
         if ordered.count == 2 {
             // MEASURED: exactly two actions sit side by side, cancel LEFT.
             let w = (rowWidth - UIAlertMetrics.actionSpacing) / 2
@@ -614,6 +642,23 @@ open class UIAlertController: UIViewController {
         }
         y += pad
         _refreshActionStyles()
+        // MEASURED Modal t7200.ax1 / t7200.xxxl, iPhone SE 2x / iOS 26.1:
+        // a headerless action sheet's PhoneTVMacView stays **304**
+        // (5×48 + 16×2 + 8×4) at both sizes. ax1 lays 63.5 pills
+        // (`_UIInterfaceActionSeparatableSequenceView` 381.5) and clips
+        // them in the 304 card; xxxl pills stay 48 and fit. Growing the
+        // presented frame with the 63.5 stack dropped t7200.ax1
+        // 88.97 → 74.57. Alerts with a title/message still size from
+        // scaled content (t5200.ax1 title 33 / message 30 2-line 72 /
+        // pills 63.5).
+        let headerless = !(hasTitle || hasMessage)
+        if OpenUIKitRuntime.systemFontCut == .iOS, headerless,
+           actionH > UIAlertMetrics.actionHeight {
+            card.clipsToBounds = true
+            return UIAlertMetrics.actionStackHeight(
+                count: ordered.count, actionH: UIAlertMetrics.actionHeight)
+        }
+        card.clipsToBounds = false
         return y
     }
 

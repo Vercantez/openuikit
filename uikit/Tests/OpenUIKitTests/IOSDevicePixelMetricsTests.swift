@@ -174,7 +174,18 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(UITableViewCell.plainClassicRowHeight(compatibleWith: ax1), 80)
         let actionFont = UIAlertMetrics.actionFont(compatibleWith: ax1)
         XCTAssertEqual(actionFont.pointSize, 33)
-        XCTAssertEqual(UIAlertMetrics.actionHeight(for: actionFont), 63.5)
+        XCTAssertEqual(UIAlertMetrics.actionHeight(for: actionFont, compatibleWith: ax1), 63.5)
+        let xxxl = UITraitCollection(preferredContentSizeCategory: .extraExtraExtraLarge)
+        XCTAssertEqual(UITableViewCell.plainClassicRowHeight(compatibleWith: xxxl), 59)
+        let xxxlAction = UIAlertMetrics.actionFont(compatibleWith: xxxl)
+        XCTAssertEqual(xxxlAction.pointSize, 23)
+        XCTAssertEqual(UIAlertMetrics.actionHeight(for: xxxlAction, compatibleWith: xxxl), 48)
+        XCTAssertEqual(UIAlertMetrics.actionStackHeight(count: 5, actionH: 48), 304)
+        XCTAssertEqual(
+            UIFontMetrics(forTextStyle: .body).scaledValue(for: 44, compatibleWith: xxxl),
+            58)
+        XCTAssertEqual(UINavigationBar.iOSLargeTitleBarHeight(compatibleWith: xxxl), 108)
+        XCTAssertEqual(UINavigationBar.largeTitleExpandedInset(compatibleWith: xxxl), 118)
         let titleFont = UIAlertMetrics.titleFont(compatibleWith: ax1)
         XCTAssertEqual(titleFont.pointSize, 33)
         let messageFont = UIAlertMetrics.messageFont(compatibleWith: ax1)
@@ -213,6 +224,24 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         let pill = alert.actionViews.first
         XCTAssertEqual(pill?.label.font.pointSize, 33)
         XCTAssertEqual(pill?.bounds.height, 63.5)
+
+        root.dismiss(animated: false)
+        // MEASURED Modal t7200.ax1, iPhone SE 2x / iOS 26.1: headerless
+        // action sheet PhoneTVMacView **304** with 63.5 pills clipped
+        // (separatable sequence 381.5). t7200.xxxl pills stay 48 in the
+        // same 304 card.
+        let sheet = UIAlertController(title: nil, message: nil,
+                                      preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: "Copy", style: .default))
+        sheet.addAction(UIAlertAction(title: "Share", style: .default))
+        sheet.addAction(UIAlertAction(title: "Favorite", style: .default))
+        sheet.addAction(UIAlertAction(title: "Delete", style: .destructive))
+        sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        root.present(sheet, animated: false)
+        XCTAssertEqual(sheet.actionViews.first?.label.font.pointSize, 33)
+        XCTAssertEqual(sheet.actionViews.first?.bounds.height, 63.5)
+        XCTAssertEqual(sheet.view.bounds.height, 304)
+        XCTAssertTrue(sheet.view.clipsToBounds)
 
         OpenUIKitRuntime.systemFontCut = savedCut
         if savedCut != .iOS {
