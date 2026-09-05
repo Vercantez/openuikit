@@ -6,6 +6,7 @@ import StoreKit
 /// is the sealed runner input.
 enum StoreKitRuntime {
     static func run() {
+        StoreKitTesting.reset()
         precondition(SKPaymentQueue.canMakePayments() == false)
         precondition(AppStore.canMakePayments == false)
         precondition(SKErrorDomain == "SKErrorDomain")
