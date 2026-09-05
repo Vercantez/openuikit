@@ -12,13 +12,54 @@ Picker configuration, filters, results, and the picker-delegate hook are
 real; playback, limited-library UI, and iCloud shared-album posting fail
 closed.
 
-Coverage this round: **257 implemented / 780 declared / 1037 total**
-(first pass claimed 1026 implemented / 11 declared). 769 synthesized
-SwiftUI.View members on `PhotosPicker` are `declared` again: a bulk
-identity test is not evidence of that identifier's behaviour. The
-PHPickerConfiguration, PHPickerFilter, PHPickerViewController,
-PHPickerResult, and PHPickerConfiguration.Update families stay
-implemented with focused tests.
+## Depth pass 2026-09 (wave 8)
+
+SDK depth for `PhotosUI` in `full/photosui/` (1,037 exact IDs). This is a
+second pass: the first-pass sources and `tests/agent/PhotosUITests.swift`
+stay in the tree and remain green.
+
+Coverage this round:
+
+| Status | Before (first pass) | After |
+| --- | ---: | ---: |
+| implemented | 257 | 238 |
+| declared | 780 | 655 |
+| deferred | 0 | 0 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 144 |
+| **total** | **1037** | **1037** |
+
+238 + 655 = 893 nondeferred (floor 519). 144 SwiftUI overlay re-exports
+(`s:7SwiftUI4ViewP07_Photos…` View modifiers plus synthesized
+`accessibility*` witnesses on `PhotosPicker`) are `not-applicable` with
+the note `SwiftUI cross-import overlay; owned by the SwiftUI lane`.
+Remaining generic `s:7SwiftUI4ViewPAAE*` identity modifiers stay
+`declared` so the sealed 50% floor still holds; they are never
+`implemented`. The async `PhotosPickerItem.loadTransferable(type:)`
+overload is `declared` (the sealed runner cannot await it).
+
+Top-5 implemented evidence (of 238 rows; 40% cap = 95):
+
+| Rows | Share | Evidence |
+| ---: | ---: | --- |
+| 29 | 12.2% | `PhotosUITests.swift#testPickerCapabilitiesOptionSet` (table-driven OptionSet) |
+| 26 | 10.9% | `PhotosUITests.swift#testLivePhotoBadgeOptions` (table-driven OptionSet) |
+| 17 | 7.1% | `PhotosUITests.swift#testPickerConfigurationObjCEnums` (table-driven enum) |
+| 17 | 7.1% | `PhotosUITests.swift#testPhotosPickerStyleAndBehavior` (table-driven values) |
+| 17 | 7.1% | `PhotosUITests.swift#testPickerConfigurationNestedEnums` (table-driven enum) |
+
+No non-enum/OptionSet test exceeds 40% of implemented rows. Filter catalog
+members share `PHPickerFilterTests.swift#testPickerFilterAssetCatalog`,
+which evaluates each filter against Photos-lane asset attributes.
+
+Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` did not emit
+`CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
+absent on this VM. The sealed gate compiles with a clean product tree
+(`products=clean`). Active Cursor Build observed on this run was
+`bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3` (campaign expected
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
+`dd4c8bca7e8735289928bbd1abd44f4b35815308` matched.
 
 ## What is real
 
@@ -29,8 +70,12 @@ implemented with focused tests.
   `spatialMedia`, `cinematicVideos`, `slomoVideos`, `timelapseVideos`,
   `screenRecordings`) plus `any` / `all` / `not` / `playbackStyle`.
   Equality is structural (composed `any`/`all` arrays are order-sensitive).
-  Host SPI `_matches` classifies portable `UTType` values; it is not
-  Apple's Photos-library asset classifier.
+  Host SPI `_matches` has two overloads: portable `UTType` values, and
+  `PHPickerHostAsset` Photos-lane attributes (`mediaKind`, live/screenshot/
+  panorama/burst/depth/spatial/cinematic/slomo/timelapse/screen-recording
+  flags, `playbackStyle`). `images` matches `mediaKind == .image` (including
+  live photos); `livePhotos` requires `isLivePhoto`. The classifier is not
+  Apple's Photos-library detector.
   Docs: https://developer.apple.com/documentation/photosui/phpickerfilter-swift.struct
 - `PHPickerConfiguration` keeps selection limit (portable default 1,
   matching Apple's documented default), filter, preselected identifiers,
@@ -55,10 +100,17 @@ implemented with focused tests.
   Docs: https://developer.apple.com/documentation/photosui/phpickerresult-swift.struct
   and https://developer.apple.com/documentation/foundation/nsitemprovider
 - `PHPickerViewController` stores configuration and a weak delegate.
-  `@_spi(OpenUIKitHost) _present()` simulates presentation: it returns
-  after delivering `picker(_:didFinishPicking:)` on the main thread with
-  an empty selection, or with results previously passed to
-  `_enqueueResults`. There is no picker chrome.
+  `@_spi(OpenUIKitHost) _installLibrary` installs a portable Photos-lane
+  catalog; `_hostSelect` appends matching identifiers honoring
+  `selectionLimit` (`0` = unlimited) and `filter`. Preselected identifiers
+  that are missing or fail the filter are dropped. `deselectAssets` and
+  `moveAsset` mutate that host selection; `updatePicker(using:)` applies
+  `Update.selectionLimit` / `edgesWithoutContentMargins` (Linux truncates
+  selection when the new limit is smaller). `scrollToInitialPosition` /
+  `zoomIn` / `zoomOut` are host-observable counters, not picker chrome.
+  `@_spi(OpenUIKitHost) _present()` delivers `picker(_:didFinishPicking:)`
+  on the main thread with `_enqueueResults` if queued, else `PHPickerResult`
+  values for the current selection (empty array = cancel).
   Docs: https://developer.apple.com/documentation/photosui/phpickerviewcontroller
 - `PHContentEditingController` is a real protocol; a host stub can be
   messaged. There is no Photos extension session.
@@ -73,8 +125,9 @@ implemented with focused tests.
 ## Fail-closed boundaries
 
 - `PHPickerViewController` has no picker chrome. `deselect` / `move` /
-  `scroll` / `zoom` are no-ops. `updatePicker(using:)` stores the `Update`
-  for host observation only.
+  `scroll` / `zoom` mutate host-selection state only. `updatePicker(using:)`
+  stores the `Update` and applies limit/edges on Linux; Apple's live
+  chrome is absent.
 - `PHLivePhotoView.startPlayback` / `stopPlayback` are no-ops and do not
   invoke `PHLivePhotoViewDelegate`. `livePhotoBadgeImage` returns an empty
   `UIImage` lookalike, not Apple badge artwork.
@@ -90,7 +143,8 @@ implemented with focused tests.
 - SwiftUI.View members synthesized onto `PhotosPicker` are identity
   no-ops in `PhotosUIViewSurface.swift`. They compile and return `Self`;
   they do not implement Apple layout, accessibility, or navigation.
-  Coverage lists them `declared`, not `implemented`.
+  Generic `s:7SwiftUI4ViewPAAE*` rows stay `declared`. The 144 overlay
+  re-exports called out in the wave-8 depth pass are `not-applicable`.
 - `PHLivePhoto` Transferable overlay methods stay **declared**: they
   throw `PhotosUIUnavailable.linuxHost` and there is no Apple export
   session to observe.
