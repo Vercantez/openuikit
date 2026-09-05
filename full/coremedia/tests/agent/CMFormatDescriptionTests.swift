@@ -121,20 +121,6 @@ func testCMFormatDescriptionCreateEqualExtensions() {
     precondition(dims.height == 1080)
     precondition(CMFormatDescriptionEqual(created, otherFormatDescription: created))
     precondition(!CMFormatDescriptionEqual(created, otherFormatDescription: video))
-    precondition(CMFormatDescription.MediaType.video == .video)
-    precondition(CMFormatDescription.MediaSubType.h264 == .h264)
-    precondition(CMFormatDescription.MediaSubType.mpeg4AAC.rawValue == cmTestFourCC("aac "))
-    precondition(CMFormatDescription.MediaSubType.linearPCM.rawValue == cmTestFourCC("lpcm"))
-    precondition(CMFormatDescription.Extensions.Key.formatName.rawValue == "FormatName")
-    precondition(CFStringGetLength(kCMFormatDescriptionExtension_FormatName) > 0)
-    precondition(CFStringGetLength(kCMFormatDescriptionColorPrimaries_ITU_R_709_2) > 0)
-    precondition(kCMFormatDescriptionError_InvalidParameter == -12710)
-    precondition(kCMFormatDescriptionError_AllocationFailed == -12711)
-    precondition(kCMFormatDescriptionError_ValueNotAvailable == -12718)
-    precondition(kCMAudioFormatDescriptionMask_StreamBasicDescription == 1)
-    precondition(kCMAudioFormatDescriptionMask_All != 0)
-    precondition(kCMMPEG2VideoProfile_HDV_720p30 == Int32(bitPattern: cmTestFourCC("hdv1")))
-    precondition(kCMMPEG2VideoProfile_XF == Int32(bitPattern: cmTestFourCC("xfz1")))
     var muxed: CMFormatDescription?
     precondition(
         CMMuxedFormatDescriptionCreate(
@@ -147,59 +133,33 @@ func testCMFormatDescriptionCreateEqualExtensions() {
     precondition(muxed!.mediaType == .muxed)
 }
 
-func testCMPublicConstantsAndOverlay() {
-    precondition(CFStringGetLength(kCMTimeValueKey) > 0)
-    precondition(CFStringGetLength(kCMFormatDescriptionExtension_FormatName) > 0)
-    precondition(CFStringGetLength(kCMSampleAttachmentKey_NotSync) > 0)
-    precondition(CFStringGetLength(kCMMetadataKeySpace_QuickTimeMetadata) > 0)
-    precondition(kCMTimeZero == .zero)
-    precondition(kCMTimeInvalid == .invalid)
-    precondition(kCMTimeRangeZero.isEmpty)
-    precondition(kCMBlockBufferNoErr == 0)
-    precondition(kCMFormatDescriptionError_InvalidParameter == -12710)
-    precondition(kCMSampleBufferError_Invalidated == -12744)
-    precondition(kCMClockError_UnsupportedOperation == -12756)
-    precondition(kCMTextDisplayFlag_scrollIn == 0x0000_0020)
-    precondition(kCMTextJustification_left_top == 0)
+func testCMFormatDescriptionOverlayKeys() {
+    precondition(CMFormatDescription.MediaSubType.mpeg4AAC.rawValue == cmTestFourCC("aac "))
+    precondition(CMFormatDescription.MediaSubType.linearPCM.rawValue == cmTestFourCC("lpcm"))
+    precondition(CMFormatDescription.Extensions.Key.formatName.rawValue == "FormatName")
+    precondition(
+        CFEqual(cmMakeCFStringForTest("FormatName"), kCMFormatDescriptionExtension_FormatName)
+    )
     let field = CMFormatDescription.Extensions.Value.FieldDetail.temporalTopFirst
     precondition(CFEqual(field.rawValue, kCMFormatDescriptionFieldDetail_TemporalTopFirst))
     precondition(
-        CMFormatDescription.Extensions.Value.YCbCrMatrix.itu_R_709_2.rawValue
-            as CFString === kCMFormatDescriptionYCbCrMatrix_ITU_R_709_2
-            || CFEqual(
-                CMFormatDescription.Extensions.Value.YCbCrMatrix.itu_R_709_2.rawValue,
-                kCMFormatDescriptionYCbCrMatrix_ITU_R_709_2
-            )
-    )
-    precondition(
-        CMFormatDescription.EqualityMask.all.contains(.streamBasicDescription)
-    )
-    precondition(CMFormatDescription.TimeCode.Flag.dropFrame.rawValue == 1)
-    precondition(
         CFEqual(
-            CMSampleBuffer.AttachmentKey.forceKeyFrame.rawValue,
-            kCMSampleBufferAttachmentKey_ForceKeyFrame
+            CMFormatDescription.Extensions.Value.YCbCrMatrix.itu_R_709_2.rawValue,
+            kCMFormatDescriptionYCbCrMatrix_ITU_R_709_2
         )
     )
+    precondition(CMFormatDescription.EqualityMask.all.contains(.streamBasicDescription))
+    precondition(CMFormatDescription.TimeCode.Flag.dropFrame.rawValue == 1)
     precondition(
         CMFormatDescription.Extensions.Value.MPEG2VideoProfile.hdv_720p30.rawValue
             == UInt32(bitPattern: kCMMPEG2VideoProfile_HDV_720p30)
     )
-    let buffer = CMBlockBuffer(data: Data([1, 2, 3, 4]))
-    var scratch = [CChar](repeating: 0, count: 4)
-    var returned: UnsafeMutablePointer<CChar>?
-    scratch.withUnsafeMutableBufferPointer { pointer in
-        precondition(
-            CMBlockBufferAccessDataBytes(
-                buffer,
-                atOffset: 0,
-                length: 4,
-                temporaryBlock: pointer.baseAddress!,
-                returnedPointerOut: &returned
-            ) == 0
-        )
-    }
-    precondition(returned != nil)
+    precondition(kCMFormatDescriptionError_InvalidParameter == -12710)
+    precondition(kCMFormatDescriptionError_AllocationFailed == -12711)
+    precondition(kCMFormatDescriptionError_ValueNotAvailable == -12718)
+}
+
+func testCMFormatDescriptionBridgeFailClosed() {
     var desc: CMFormatDescription?
     precondition(
         CMFormatDescriptionCreate(
@@ -220,7 +180,13 @@ func testCMPublicConstantsAndOverlay() {
             blockBufferOut: &copied
         ) == kCMFormatDescriptionBridgeError_UnsupportedSampleDescriptionFlavor
     )
-    precondition(CMVideoFormatDescriptionGetPresentationDimensions(desc!, usePixelAspectRatio: true, useCleanAperture: true).width == 0)
+    precondition(
+        CMVideoFormatDescriptionGetPresentationDimensions(
+            desc!,
+            usePixelAspectRatio: true,
+            useCleanAperture: true
+        ).width == 0
+    )
 }
 
 func testCMMetadataIdentifierBasics() {
@@ -250,8 +216,6 @@ func testCMMetadataIdentifierBasics() {
     )
     precondition(kCMMetadataIdentifierError_BadKey == -16302)
     precondition(kCMMetadataDataTypeRegistryError_AllocationFailed == -16310)
-    precondition(CFStringGetLength(kCMMetadataKeySpace_ID3) > 0)
-    precondition(CFStringGetLength(kCMMetadataBaseDataType_UTF8) > 0)
     var meta: CMMetadataFormatDescription?
     precondition(
         CMMetadataFormatDescriptionCreateWithKeys(

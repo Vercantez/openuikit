@@ -196,6 +196,9 @@ public func CMTimeConvertScale(
     timescale newTimescale: Int32,
     method: CMTimeRoundingMethod
 ) -> CMTime {
+    // CMTime.h: Default == RoundHalfAwayFromZero (1). Sample 1/2 → timescale 1:
+    // half-away=1, toward-zero=0, away=1, toward-+inf=1, toward-−inf=0.
+    // QuickTime is a labeled toward-+inf stand-in (oracle-questions.tsv).
     if !time.isValid { return .invalid }
     if newTimescale == 0 { return .invalid }
     if !time.isNumeric { return time }

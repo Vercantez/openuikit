@@ -26,13 +26,17 @@ This directory is a clean-room Linux implementation of Apple's public
   Image-buffer and AudioBufferList entry points stay deferred until
   CoreVideo/CoreAudioTypes are present.
 - `CMFormatDescription` media type/subtype, video dimensions, extensions,
-  equality, and the Swift overlay CFString wrappers (`FieldDetail`,
-  `YCbCrMatrix`, `ColorPrimaries`, `TransferFunction`, `AttachmentKey`,
-  MPEG-2 profile FourCCs from `CMFormatDescription.h` char literals).
-- `CMMetadata` identifier split (`keyspace/key`) and data-type registry.
+  equality. Audio `AudioStreamBasicDescription` bridging is compiled only
+  when `CoreAudioTypes` is imported (`CMDependencyBridges.swift`); the
+  isolated host does not claim it.
 - Public `kCMTime*` / `kCMSampleAttachment*` / `kCMFormatDescription*`
   CFString keys (suffix payloads; color aliases match this repo's CoreVideo
   strings) and OSStatus integers from the public headers.
+
+`implemented` rows cite a focused test of that identifier. Enum/option-set
+members may share one table-driven raw-value test. kCM* string payloads are
+split into family tables (time/range/mapping, format-description extensions,
+color/matrix, sample attachments, metadata key spaces).
 
 ## Fail-closed
 

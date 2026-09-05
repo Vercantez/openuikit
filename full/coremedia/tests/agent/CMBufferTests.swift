@@ -1,3 +1,4 @@
+import CoreFoundation
 import CoreMedia
 import Dispatch
 import Foundation
@@ -78,6 +79,20 @@ func testCMBlockBufferCreateCopyFill() {
     precondition(contiguous!.dataLength == 4)
     let source = CMBlockBufferCustomBlockSource()
     precondition(source.version == 1)
+    var scratch = [CChar](repeating: 0, count: 4)
+    var returned: UnsafeMutablePointer<CChar>?
+    scratch.withUnsafeMutableBufferPointer { pointer in
+        precondition(
+            CMBlockBufferAccessDataBytes(
+                buffer,
+                atOffset: 0,
+                length: 4,
+                temporaryBlock: pointer.baseAddress!,
+                returnedPointerOut: &returned
+            ) == 0
+        )
+    }
+    precondition(returned != nil)
 }
 
 func testCMSampleBufferCreateAndTiming() {
@@ -138,6 +153,12 @@ func testCMSampleBufferCreateAndTiming() {
     let got = CMGetAttachment(sbuf, key: kCMSampleAttachmentKey_DisplayImmediately, attachmentModeOut: &mode)
     precondition(got != nil)
     precondition(mode == kCMAttachmentMode_ShouldPropagate)
+    precondition(
+        CFEqual(
+            CMSampleBuffer.AttachmentKey.forceKeyFrame.rawValue,
+            kCMSampleBufferAttachmentKey_ForceKeyFrame
+        )
+    )
 }
 
 func testCMBlockBufferCopyOwnedBytes() {

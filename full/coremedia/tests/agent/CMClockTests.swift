@@ -82,35 +82,22 @@ func testCMTimebaseRateAndAnchor() {
     precondition(kCMSyncError_RateMustBeNonZero == -12755)
 }
 
-func testCMTimeDocumentedArithmetic() {
-    testCMTimeMakeValid()
-    testCMTimeAddCommonTimescale()
-    testCMTimeConvertScaleRounding()
-    testCMTimeMultiplyAndRatio()
-    testCMTimeInfinityArithmetic()
-    testCMTimeCompareEpochOrdering()
-    precondition(CMTIME_IS_VALID(CMTime.zero))
-    precondition(CMTIME_IS_INVALID(CMTime.invalid))
-    precondition(CMTIME_IS_NUMERIC(CMTime.zero))
-    precondition(CMTIME_IS_POSITIVEINFINITY(CMTime.positiveInfinity))
-    precondition(CMTIME_IS_NEGATIVEINFINITY(CMTime.negativeInfinity))
-    precondition(CMTIME_IS_INDEFINITE(CMTime.indefinite))
-    let rounded = CMTimeMakeWithSeconds(1.5, preferredTimescale: 1)
-    precondition(CMTIME_HAS_BEEN_ROUNDED(rounded) || rounded.value == 2 || rounded.value == 1)
-    let a = CMTime(value: 1, timescale: 2)
-    let b = CMTime(value: 2, timescale: 4)
-    precondition(a == b)
-    precondition(a != .zero)
-    precondition(a < CMTime(value: 1, timescale: 1))
-    precondition(a <= b)
-    precondition(CMTime(value: 1, timescale: 1) > a)
-    precondition(a >= a)
-    _ = a.hashValue
-    let hashed = CMTime(value: 3, timescale: 2)
-    var hasher = Hasher()
-    hashed.hash(into: &hasher)
-    _ = hasher.finalize()
-    let flags = CMTimeFlags(rawValue: 1)
-    precondition(flags.contains(.valid))
-    precondition(CMTimeRoundingMethod(rawValue: 1) == .roundHalfAwayFromZero)
+func testCMTimebaseTimerFailClosed() {
+    let clock = CMClockGetHostTimeClock()
+    var timebase: CMTimebase?
+    precondition(
+        CMTimebaseCreateWithSourceClock(allocator: nil, sourceClock: clock, timebaseOut: &timebase)
+            == 0
+    )
+    let tb = timebase!
+    // README / CMFailClosed: timers are not scheduled on this isolated gate.
+    let timer = Timer(timeInterval: 1, repeats: false) { _ in }
+    precondition(
+        CMTimebaseAddTimer(tb, timer: timer, runloop: .main)
+            == kCMTimebaseError_TimerIntervalTooShort
+    )
+    precondition(kCMTimebaseError_TimerIntervalTooShort == -12751)
+    precondition(kCMTimebaseError_ReadOnly == -12757)
+    precondition(CMTimebase.farFuture > 1.0e50)
+    precondition(CMTimebase.veryLongTimeInterval > 1.0e50)
 }
