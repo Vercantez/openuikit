@@ -209,7 +209,8 @@ func runConformanceScripted(_ scene: HostScene, app: String,
 func captureConformance(_ scene: HostScene, app: String, t: Double,
                         frame: Int, style: String, outdir: String) throws -> String {
     scene.window.layoutIfNeeded()
-    let bmp = UIRenderer.render(scene.window, scale: scene.scale)
+    let bmp = _UIKeyboardChrome.renderCapture(appWindow: scene.window,
+                                            scale: scene.scale)
     let suffix = ConformanceClock.captureSuffix(for: t, style: style)
     let png = "\(app).\(suffix).png"
     try writeBinaryFile(bmp.pngData(), path: "\(outdir)/\(png)")

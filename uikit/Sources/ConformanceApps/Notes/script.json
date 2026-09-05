@@ -1,0 +1,9 @@
+{
+  "comment": "Notes conformance timeline. Empty UITextView; focus-body raises the default alphabetic keyboard (shift on, uppercase). Rest captures sit at least 0.8 s after the action. Same file drives Tools/oracle2/confprobe (real UIKit) and `openhost --app Notes` (the port).",
+  "app": "Notes",
+  "events": [
+    { "t": 0.40, "action": "focus-body" },
+    { "t": 1.50, "action": "blur" }
+  ],
+  "captures": [0.20, 1.20, 2.10]
+}

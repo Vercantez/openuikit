@@ -104,7 +104,28 @@ fi
 if [[ -n "${CONFPROBE_STYLE:-}" ]]; then
   LAUNCH_ENV+=(SIMCTL_CHILD_CONFPROBE_STYLE=$CONFPROBE_STYLE)
 fi
+# Keyboard pixels live in a remote process. drawHierarchy of the app window
+# is blank there (kbprobe: UITextEffectsWindow snapOpaquePixels=0). When a
+# capture has a UIKeyInput first responder, confprobe writes NEED_SHOT and
+# waits for GOT_SHOT; this watcher takes a simctl framebuffer screenshot
+# into Documents. Unfocused captures stay drawHierarchy. Start BEFORE
+# --console-pty, which blocks until exit.
+(
+  while true; do
+    if [[ -f "$CONTAINER/Documents/DONE" ]]; then break; fi
+    if [[ -f "$CONTAINER/Documents/NEED_SHOT" ]]; then
+      name=$(cat "$CONTAINER/Documents/NEED_SHOT")
+      xcrun simctl io "$UDID" screenshot "$CONTAINER/Documents/$name" >/dev/null
+      rm -f "$CONTAINER/Documents/NEED_SHOT"
+      echo got > "$CONTAINER/Documents/GOT_SHOT"
+    fi
+    sleep 0.05
+  done
+) &
+WATCH_PID=$!
 env $LAUNCH_ENV xcrun simctl launch --console-pty "$UDID" com.openuikit.confprobe || true
+kill $WATCH_PID 2>/dev/null || true
+wait $WATCH_PID 2>/dev/null || true
 for i in {1..90}; do [[ -f "$CONTAINER/Documents/DONE" ]] && break; sleep 1; done
 [[ -f "$CONTAINER/Documents/DONE" ]] || { echo "conformance_probe_sim: no DONE marker" >&2; exit 1 }
 [[ "$(cat "$CONTAINER/Documents/DONE")" == "ok" ]] \

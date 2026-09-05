@@ -210,6 +210,7 @@ open class UIResponder: NSObject {
             _ = cur.resignFirstResponder()
         }
         w.firstResponder = self
+        _UIKeyboardChrome.sync(from: w)
         return true
     }
 
@@ -218,6 +219,7 @@ open class UIResponder: NSObject {
     open func resignFirstResponder() -> Bool {
         if let w = _firstResponderWindow, w.firstResponder === self {
             w.firstResponder = nil
+            _UIKeyboardChrome.sync(from: w)
         }
         return true
     }
