@@ -20,12 +20,11 @@
 // this incomplete Foundation umbrella: doing so would switch unrelated APIs
 // such as NSRange and geometry onto contracts this measuring shim cannot meet.
 //
-// build_full also compiles FoundationOpenUIKitAliases.swift into this module.
-// Those four notification-family aliases are not substitute implementations:
-// they deliberately republish declarations already built into OpenUIKit and
-// give the OpenUIKit -> UIKit -> Foundation build order an executable identity
-// gate.  The reusable app-facing umbrella is FoundationGuest.swift; this file
-// remains the narrow RealAppProbe measuring input.
+// build_full compiles this file (plus FoundationOpenUIKitAliases.swift) into
+// APPINC for DeveloperToolsSupport, which needs OpenUIKit's exact Bundle.
+// After UIKit is compiled without APPINC, the same APPINC path is overwritten
+// with the 38-file FoundationGuest facade so RealAppProbe sees DateFormatter
+// / JSONSerialization / URLSession. The library include roots never change.
 //
 // A MEASURING INSTRUMENT, NOT A PROPOSAL. Shipping this would be the worst
 // kind of stub: every `import Foundation` would keep compiling while the first

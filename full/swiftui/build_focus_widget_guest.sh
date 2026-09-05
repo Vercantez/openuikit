@@ -244,6 +244,12 @@ export FULL_OUT_SUFFIX
 python3 "$PREPARE_TOOL" --contract "$W/env/contract.json" --root "$W" \
     --gate focus-widget || exit $?
 
+# Same in-repo override as build_full: agent branches that edit uikit/ are
+# attested at HEAD:uikit. EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE
+# remains the pin default for an external checkout.
+if vendor_is_inrepo "$W" uikit "$UIKIT"; then
+    EXPECTED_UIKIT_TREE=$(git -C "$W" rev-parse --verify HEAD:uikit)
+fi
 assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
 assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
 if vendor_is_inrepo "$W" uikit "$UIKIT"; then
