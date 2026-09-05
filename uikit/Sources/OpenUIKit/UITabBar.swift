@@ -44,7 +44,9 @@ import Foundation
 
 @preconcurrency @MainActor
 public class UITabBarItem {
-    public var title: String?
+    public var title: String? {
+        didSet { _bar?.setNeedsLayout() }
+    }
     public var image: UIImage?
     public var tag: Int
     /// Badge text drawn on the item's icon. `nil` / `""` hides it.
@@ -116,6 +118,13 @@ final class _UITabBarItemView: UIControl {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        // Title can change after the item view is built. MEASURED
+        // /tmp/tabs-t2000-probe + Tabs t2000, iPhone SE 2x / iOS 26.1:
+        // `nav.tabBarItem = "Search"` at setViewControllers, then
+        // `child.title = "Library"` in viewDidLoad; golden first-tab
+        // label is "Library" `[84, 623, 36, 12]`, not "Search"
+        // `[84.5, 623, 35, 12]`. Re-read every pass.
+        titleLabel.text = item.title
         let size = iconView.image?.size ?? .zero
         iconView.frame = CGRect(x: (bounds.width - size.width) / 2,
                                 y: UITabBar.iconCenterY - size.height / 2,
