@@ -5,6 +5,12 @@
 // framework name while preserving OpenCombine's nominal types.
 
 @_exported import OpenCombine
+#if canImport(OpenCombineDispatch)
+@_exported import OpenCombineDispatch
+#endif
+#if canImport(OpenCombineFoundation)
+@_exported import OpenCombineFoundation
+#endif
 
 public typealias ObservableObject = OpenCombine.ObservableObject
 public typealias ObservableObjectPublisher = OpenCombine.ObservableObjectPublisher

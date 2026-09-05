@@ -85,6 +85,13 @@ private final class _SwiftUIButtonControl: UIControl {
         super.init(frame: frame)
         addSubview(normalHost)
         addSubview(pressedHost)
+        // MEASURED realapp_hackers_feed_light, iPhone 16 @3x / iOS 26.1:
+        // `place` runs before `layoutSubviews`, and `normalHost` defaulted
+        // to `.zero`, so every List row Button (PostRowView) laid its
+        // PostDisplayView into 0×0 (96 UILabels at width 0; thumbnail
+        // 55×55 at origin −27.5). Seed the hosts from `bounds` here.
+        normalHost.frame = bounds
+        pressedHost.frame = bounds
         updateAppearance()
     }
 
@@ -121,6 +128,10 @@ private final class _SwiftUIMenuControl: UIButton {
         showsMenuAsPrimaryAction = true
         addSubview(normalHost)
         addSubview(pressedHost)
+        // Same zero-host hazard as `_SwiftUIButtonControl`. MEASURED same
+        // dump: Menu label hosts were 0×0 until layoutSubviews.
+        normalHost.frame = bounds
+        pressedHost.frame = bounds
         updateAppearance()
     }
 
@@ -1797,6 +1808,60 @@ private enum _ViewRenderer {
             return CGSize(width: value, height: value)
         case .hStack(let children, _, let spacing):
             let gap = spacing ?? defaultSpacing
+            if OpenUIKitRuntime.systemFontCut == .iOS,
+               proposed.width.isFinite, proposed.width > 0 {
+                // MEASURED realapp_hackers_feed_light, iPhone 16 @3x / iOS 26.1:
+                // two-line ListCollectionViewCell is 127.333 vs one-line 107
+                // (Δ 20.333 = one headline line). Measuring every HStack
+                // child at the full proposal let the title think it had the
+                // thumbnail's width too (294+55+12) and stay one line, so
+                // the row stayed 109. Remeasure text children at the same
+                // compressed width placeHStack uses.
+                let sizes = children.map {
+                    measure($0, proposed: proposed, environment: environment)
+                }
+                var widths = sizes.map(\.width)
+                let spacerIndices = children.indices.filter { _isSpacer(children[$0]) }
+                let fixedWidth = widths.enumerated().reduce(CGFloat.zero) { partial, entry in
+                    spacerIndices.contains(entry.offset) ? partial : partial + entry.element
+                }
+                var overflow = max(0, fixedWidth + gap * CGFloat(max(0, children.count - 1)) - proposed.width)
+                let compressionOrder = children.indices.sorted { lhs, rhs in
+                    let lhsPriority = _layoutPriority(children[lhs])
+                    let rhsPriority = _layoutPriority(children[rhs])
+                    if lhsPriority == rhsPriority { return lhs < rhs }
+                    return lhsPriority < rhsPriority
+                }
+                for index in compressionOrder where overflow > 0 && _containsText(children[index]) {
+                    let reduction = min(widths[index], overflow)
+                    widths[index] -= reduction
+                    overflow -= reduction
+                }
+                for index in compressionOrder where overflow > 0 && !spacerIndices.contains(index) {
+                    let reduction = min(widths[index], overflow)
+                    widths[index] -= reduction
+                    overflow -= reduction
+                }
+                var width = gap * CGFloat(max(0, children.count - 1))
+                var height: CGFloat = 0
+                for index in children.indices {
+                    let childProposed = CGSize(
+                        width: max(0, widths[index]),
+                        height: proposed.height
+                    )
+                    let size = measure(
+                        children[index],
+                        proposed: childProposed,
+                        environment: environment
+                    )
+                    width += size.width
+                    height = max(height, size.height)
+                }
+                if children.contains(where: _isSpacer) {
+                    width = max(width, _bounded(proposed).width)
+                }
+                return CGSize(width: width, height: height)
+            }
             var width = gap * CGFloat(max(0, children.count - 1))
             var height: CGFloat = 0
             for child in children {
@@ -3671,20 +3736,32 @@ private enum _ViewRenderer {
                 // boundary. Outside a list it is layout-transparent.
                 place(content, in: rect, on: surface, environment: environment)
             case .searchable(let configuration):
-                let searchHeight = min(UISearchBar.standardHeight, max(0, rect.height))
+                let isToolbar = configuration.placement == .toolbar
+                // MEASURED realapp_hackers_feed_light, iPhone 16 @3x / iOS 26.1:
+                // `.searchable(..., placement: .toolbar)` does not insert a
+                // 44 pt UISearchBar into the hosting view (golden has none;
+                // search is a 44×44 nav platter at [333, 0] of the 54 pt
+                // bar). Insetting content by `UISearchBar.standardHeight`
+                // pushed the list to y=44 and painted a black field over
+                // the nav. Keep the bar in the tree for
+                // SwiftUIDesignSystemTests.testFeedSearchMenuListStyle… but
+                // do not steal height when placement is toolbar.
+                let searchHeight = isToolbar
+                    ? 0
+                    : min(UISearchBar.standardHeight, max(0, rect.height))
                 let search = _SwiftUISearchBar(
                     frame: CGRect(
                         x: rect.minX,
                         y: rect.minY,
                         width: rect.width,
-                        height: searchHeight
+                        height: isToolbar ? 0 : searchHeight
                     )
                 )
                 search.text = configuration.getText()
                 search.placeholder = configuration.prompt
                 search.setText = configuration.setText
                 search.accessibilityIdentifier = "SwiftUI.Searchable"
-                search.searchBarStyle = configuration.placement == .toolbar
+                search.searchBarStyle = isToolbar
                     ? .minimal : .default
                 surface.addSubview(search)
                 place(
@@ -3760,7 +3837,14 @@ private enum _ViewRenderer {
                     width: actionWidth,
                     height: host.bounds.height
                 ))
+                // MEASURED realapp_hackers_feed_light, iPhone 16 @3x / iOS 26.1:
+                // swipe actions are not visible at rest (golden cells are
+                // white; the port painted a 96×row systemOrange strip at
+                // x=297 under the clear row, blob 58597 at [282.7, 44,
+                // 110.3, 616]). Keep the action host in the tree but hidden
+                // until a pan reveals it.
                 actionHost.backgroundColor = .systemOrange
+                actionHost.isHidden = true
                 actionHost.accessibilityIdentifier = "SwiftUI.SwipeActions.actions"
                 host.insertSubview(actionHost, belowSubview: contentHost)
                 place(actions, in: actionHost.bounds, on: actionHost, environment: environment)
@@ -3768,9 +3852,11 @@ private enum _ViewRenderer {
                     guard let pan = recognizer as? UIPanGestureRecognizer else { return }
                     let translation = pan.translation(in: host)
                     let x = min(0, max(-actionWidth, translation.x))
+                    actionHost.isHidden = x == 0 && pan.state != .began && pan.state != .changed
                     contentHost.transform = CGAffineTransform(translationX: x, y: 0)
                     if pan.state == .ended || pan.state == .cancelled {
                         let target = x < -actionWidth / 2 ? -actionWidth : 0
+                        actionHost.isHidden = target == 0
                         UIView.animate(withDuration: 0.2) {
                             contentHost.transform = CGAffineTransform(
                                 translationX: target,
@@ -3963,6 +4049,32 @@ private enum _ViewRenderer {
         list.accessibilityIdentifier = "SwiftUI.List"
         list.accessibilityValue = "style=\(environment.listStyle.storage)"
         surface.addSubview(list)
+        // MEASURED realapp_hackers_feed_light, iPhone 16 @3x / iOS 26.1:
+        // UpdateCoalescingCollectionView is `[0,0,393,852]` with
+        // contentOffset `[0, -113]` and adjustedContentInset
+        // `[113, 0, 34, 0]` (59 status + 54 bar; 34 home indicator).
+        // `_SwiftUIHostingView` rebuilds this scroll view during
+        // layoutSubviews before the new view inherits safe-area insets,
+        // so `safeAreaInsetsDidChange` never rebases a retained offset.
+        // Rest is the nav-bar bottom in list space (golden first cell
+        // appears at y=113 = bar.maxY).
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            var top = surface.safeAreaInsets.top
+            if top == 0,
+               let controller = _enclosingViewController(for: surface) {
+                let nav = (controller as? UINavigationController)
+                    ?? controller.navigationController
+                if let bar = nav?.navigationBar, !bar.isHidden {
+                    top = bar.convert(
+                        CGPoint(x: 0, y: bar.bounds.maxY),
+                        to: list
+                    ).y
+                }
+            }
+            if top > 0, list.contentOffset.y == 0 {
+                list.contentOffset = CGPoint(x: 0, y: -top)
+            }
+        }
 
         var rowLayouts: [(node: _OpenViewNode, height: CGFloat)] = []
         var contentHeight: CGFloat = 0
@@ -3971,13 +4083,38 @@ private enum _ViewRenderer {
         case .insetGrouped, .sidebar: horizontalInset = 12
         case .automatic, .plain, .grouped: horizontalInset = 0
         }
+        // MEASURED realapp_hackers_feed_light, iPhone 16 @3x / iOS 26.1:
+        // `.plain` ListCollectionViewCell is full-width `[0, 0, 393, h]`
+        // with h 127.333 (two-line title) / 107 (one-line). Port content
+        // without insets measured ~75; 16+75+16 = 107 and
+        // 16+95.333+16 = 127.333. Separator
+        // `_UICollectionViewListSeparatorView [83, y, 294, 1]`:
+        // 83 = 16 leading + 55 thumbnail + 12 HStack spacing;
+        // 294 = 393 − 83 − 16 trailing; height 1 pt.
+        let iOSPlainRowInsets: UIEdgeInsets
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            switch environment.listStyle.storage {
+            case .automatic, .plain:
+                iOSPlainRowInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+            default:
+                iOSPlainRowInsets = .zero
+            }
+        } else {
+            iOSPlainRowInsets = .zero
+        }
         let proposal = CGSize(
-            width: max(0, list.bounds.width - 32 - horizontalInset * 2),
-            height: defaultFormRowHeight
+            width: max(
+                0,
+                list.bounds.width - horizontalInset * 2
+                    - iOSPlainRowInsets.left - iOSPlainRowInsets.right
+            ),
+            height: 10_000
         )
         for row in rows {
             let measured = measure(row, proposed: proposal, environment: environment)
-            let height = max(defaultFormRowHeight, measured.height)
+            let padded = measured.height
+                + iOSPlainRowInsets.top + iOSPlainRowInsets.bottom
+            let height = max(defaultFormRowHeight, padded)
             rowLayouts.append((row, height))
             contentHeight += height
         }
@@ -3994,10 +4131,35 @@ private enum _ViewRenderer {
                 width: max(0, list.bounds.width - horizontalInset * 2),
                 height: layout.height
             )
+            let rowHost: UIView
+            let contentRect: CGRect
+            if iOSPlainRowInsets != .zero {
+                let host = UIView(frame: rowFrame)
+                host.backgroundColor = list.backgroundColor
+                host.clipsToBounds = true
+                host.accessibilityIdentifier = "SwiftUI.List.row.\(index)"
+                list.addSubview(host)
+                rowHost = host
+                contentRect = CGRect(
+                    x: iOSPlainRowInsets.left,
+                    y: iOSPlainRowInsets.top,
+                    width: max(
+                        0,
+                        rowFrame.width - iOSPlainRowInsets.left - iOSPlainRowInsets.right
+                    ),
+                    height: max(
+                        0,
+                        rowFrame.height - iOSPlainRowInsets.top - iOSPlainRowInsets.bottom
+                    )
+                )
+            } else {
+                rowHost = list
+                contentRect = rowFrame
+            }
             place(
                 layout.node,
-                in: rowFrame,
-                on: list,
+                in: contentRect,
+                on: rowHost,
                 environment: environment
             )
             let separatorVisibility = _listRowSeparatorVisibility(
@@ -4005,12 +4167,31 @@ private enum _ViewRenderer {
                 edge: .bottom
             )
             if index + 1 < rowLayouts.count && separatorVisibility != .hidden {
+                let separatorHeight: CGFloat = iOSPlainRowInsets != .zero ? 1 : 0.5
+                var separatorX = rowFrame.minX + 16
+                let trailingPad: CGFloat = iOSPlainRowInsets != .zero
+                    ? iOSPlainRowInsets.right : 0
+                if iOSPlainRowInsets != .zero {
+                    var minLabelX = CGFloat.greatestFiniteMagnitude
+                    func walkHost(_ view: UIView, xInRow: CGFloat) {
+                        if view is UILabel {
+                            minLabelX = min(minLabelX, xInRow)
+                        }
+                        for child in view.subviews {
+                            walkHost(child, xInRow: xInRow + child.frame.minX)
+                        }
+                    }
+                    walkHost(rowHost, xInRow: 0)
+                    if minLabelX < 10_000 {
+                        separatorX = rowFrame.minX + minLabelX
+                    }
+                }
                 let separator = UIView(
                     frame: CGRect(
-                        x: rowFrame.minX + 16,
-                        y: rowFrame.maxY - 0.5,
-                        width: max(0, rowFrame.width - 16),
-                        height: 0.5
+                        x: separatorX,
+                        y: rowFrame.maxY - separatorHeight,
+                        width: max(0, rowFrame.maxX - separatorX - trailingPad),
+                        height: separatorHeight
                     )
                 )
                 separator.backgroundColor = .separator

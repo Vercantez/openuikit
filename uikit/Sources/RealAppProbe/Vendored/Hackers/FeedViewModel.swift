@@ -1,0 +1,485 @@
+//
+//  FeedViewModel.swift
+//  Feed
+//
+//  Copyright © 2025 Weiran Zhang. All rights reserved.
+//
+
+import Combine
+import Domain
+import Foundation
+import Observation
+import Shared
+import SwiftUI
+
+@MainActor
+@Observable
+public final class FeedViewModel: @unchecked Sendable {
+    public var isLoadingMore = false
+    public private(set) var paginationError: Error?
+    public var postType: Domain.PostType = .news
+
+    private var postIds: Set<Int> = Set()
+    private var pageIndex = 1
+    private var lastPostId = 0
+    private var isFetching = false
+
+    private let postUseCase: any PostUseCase
+    private let voteUseCase: any VoteUseCase
+    private let bookmarksController: BookmarksController
+    private let readStatusController: ReadStatusController
+    private let searchUseCase: any SearchUseCase
+    private let feedLoader: LoadingStateManager<[Domain.Post]>
+    private var settingsUseCase: any SettingsUseCase
+    private var settingsCancellable: AnyCancellable?
+    private var bookmarksObservation: AnyCancellable?
+    private var readStatusObservation: AnyCancellable?
+    private var searchTask: Task<Void, Never>?
+    private var rememberFeedCategorySetting: Bool
+    private var searchResultIds: Set<Int> = Set()
+    private let searchHitsPerPage = 20
+
+    public var posts: [Domain.Post] { feedLoader.data }
+    public var isLoading: Bool { feedLoader.isLoading }
+    public var error: Error? { feedLoader.error }
+    public var showThumbnails: Bool
+    public var compactFeedDesign: Bool
+    public var dimReadPosts: Bool
+    public var searchQuery: String = ""
+    public var searchResults: [Domain.Post] = []
+    public var isSearchInProgress = false
+    public var isLoadingMoreSearchResults = false
+    public var searchError: Error?
+    public var searchSort: SearchSort = .popular
+    public var searchDateRange: SearchDateRange = .allTime
+    public var searchPage = 0
+    public var canLoadMoreSearchResults = false
+    public var hasActiveSearch: Bool {
+        !searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    public var displayedPosts: [Domain.Post] {
+        hasActiveSearch ? searchResults : posts
+    }
+
+    @MainActor
+    public init(
+        postUseCase: any PostUseCase = DependencyContainer.shared.getPostUseCase(),
+        voteUseCase: any VoteUseCase = DependencyContainer.shared.getVoteUseCase(),
+        settingsUseCase: any SettingsUseCase = DependencyContainer.shared.getSettingsUseCase(),
+        bookmarksController: BookmarksController? = nil,
+        readStatusController: ReadStatusController? = nil,
+        searchUseCase: any SearchUseCase = DependencyContainer.shared.getSearchUseCase()
+    ) {
+        self.postUseCase = postUseCase
+        self.voteUseCase = voteUseCase
+        self.settingsUseCase = settingsUseCase
+        self.bookmarksController = bookmarksController ?? DependencyContainer.shared.makeBookmarksController()
+        self.readStatusController = readStatusController ?? DependencyContainer.shared.makeReadStatusController()
+        self.searchUseCase = searchUseCase
+        showThumbnails = settingsUseCase.showThumbnails
+        compactFeedDesign = settingsUseCase.compactFeedDesign
+        dimReadPosts = settingsUseCase.dimReadPosts
+        let rememberSetting = settingsUseCase.rememberFeedCategory
+        rememberFeedCategorySetting = rememberSetting
+        if rememberSetting, let storedPostType = settingsUseCase.lastFeedCategory {
+            postType = storedPostType
+        }
+        feedLoader = LoadingStateManager(initialData: [])
+        configureFeedLoader()
+        settingsCancellable = startObservingSettings()
+        bookmarksObservation = startObservingBookmarks()
+        readStatusObservation = startObservingReadStatus()
+    }
+}
+
+extension FeedViewModel {
+    @MainActor
+    public func loadFeed() async {
+        await feedLoader.loadIfNeeded()
+    }
+
+    @MainActor
+    public func loadNextPage() async {
+        guard !isLoadingMore && !isLoading && !posts.isEmpty else { return }
+        guard postType != .bookmarks else { return }
+
+        isLoadingMore = true
+        paginationError = nil
+        defer { isLoadingMore = false }
+
+        let usesCursorPagination = postType == .newest || postType == .jobs
+        let requestedPage = usesCursorPagination ? pageIndex : pageIndex + 1
+        let requestedNextID = usesCursorPagination ? (posts.last?.id ?? lastPostId) : lastPostId
+
+        do {
+            let fetchedPosts = try await postUseCase.getPosts(
+                type: postType,
+                page: requestedPage,
+                nextId: requestedNextID > 0 ? requestedNextID : nil,
+            )
+
+            await bookmarksController.refreshBookmarks()
+            await readStatusController.refreshReadStatus()
+            let annotatedPosts = annotatedPosts(from: fetchedPosts)
+
+            let newPosts = annotatedPosts.filter { !self.postIds.contains($0.id) }
+            let newPostIds = newPosts.map(\.id)
+
+            // Update the LoadingStateManager's data with appended posts
+            feedLoader.data.append(contentsOf: newPosts)
+            postIds.formUnion(newPostIds)
+            pageIndex = requestedPage
+            lastPostId = requestedNextID
+        } catch {
+            paginationError = error
+        }
+    }
+
+    public func clearPaginationError() {
+        paginationError = nil
+    }
+
+    @MainActor
+    public func vote(on post: Domain.Post, upvote: Bool) async throws {
+        if upvote {
+            try await voteUseCase.upvote(post: post)
+        }
+        // Unvote removed; do nothing when upvote == false
+    }
+
+    @MainActor
+    public func refreshFeed() async {
+        reset()
+        await feedLoader.refresh()
+    }
+
+    private func fetchFeed() async throws -> [Domain.Post] {
+        if postType == .bookmarks {
+            let storedPosts = await bookmarksController.bookmarkedPosts()
+            await readStatusController.refreshReadStatus()
+            let annotatedPosts = readStatusController.annotatedPosts(from: storedPosts)
+            return await MainActor.run {
+                postIds = Set(annotatedPosts.map(\.id))
+                return annotatedPosts
+            }
+        }
+
+        await bookmarksController.refreshBookmarks()
+        await readStatusController.refreshReadStatus()
+
+        do {
+            let fetchedPosts = try await postUseCase.getPosts(
+                type: postType,
+                page: pageIndex,
+                nextId: lastPostId > 0 ? lastPostId : nil,
+            )
+
+            return await MainActor.run {
+                // Filter duplicates by creating a new set from the fetched posts
+                var seenIds = Set<Int>()
+                let uniquePosts = fetchedPosts.filter { post in
+                    if seenIds.contains(post.id) {
+                        return false
+                    } else {
+                        seenIds.insert(post.id)
+                        return true
+                    }
+                }
+
+                let annotatedPosts = self.annotatedPosts(from: uniquePosts)
+
+                let newPostIds = annotatedPosts.map(\.id)
+                self.postIds.formUnion(newPostIds)
+                return annotatedPosts
+            }
+        } catch {
+            throw error
+        }
+    }
+
+    @MainActor
+    public func changePostType(_ newType: Domain.PostType) async {
+        guard postType != newType else { return }
+
+        postType = newType
+        persistLastFeedCategoryIfNeeded()
+        reset(clearPosts: true)  // Clear posts immediately to prevent flash of old data
+        await feedLoader.refresh()
+    }
+
+    @MainActor
+    private func reset(clearPosts: Bool = false) {
+        if clearPosts {
+            feedLoader.data = []
+        }
+        postIds = Set()
+        pageIndex = 1
+        lastPostId = 0
+        isFetching = false
+        paginationError = nil
+        feedLoader.reset()
+    }
+
+    private func persistLastFeedCategoryIfNeeded() {
+        guard rememberFeedCategorySetting else { return }
+        settingsUseCase.lastFeedCategory = postType
+    }
+
+    // MARK: - Post Updates
+
+    @MainActor
+    public func replacePost(_ updatedPost: Domain.Post) {
+        var postToStore = updatedPost
+        let currentReadState = feedLoader.data.first(where: { $0.id == updatedPost.id })?.isRead
+            ?? searchResults.first(where: { $0.id == updatedPost.id })?.isRead
+            ?? readStatusController.isRead(updatedPost.id)
+        postToStore.isRead = currentReadState
+
+        if let index = feedLoader.data.firstIndex(where: { $0.id == updatedPost.id }) {
+            feedLoader.data[index] = postToStore
+        }
+        if let searchIndex = searchResults.firstIndex(where: { $0.id == updatedPost.id }) {
+            searchResults[searchIndex] = postToStore
+        }
+    }
+
+    @MainActor
+    public func toggleBookmark(for post: Domain.Post) async -> Bool {
+        let newState = await bookmarksController.toggle(post: post)
+        await handleBookmarksUpdate(postId: post.id, isBookmarked: newState)
+        return newState
+    }
+
+    @MainActor
+    private func updateBookmarkState(for postId: Int, isBookmarked: Bool) {
+        if let index = feedLoader.data.firstIndex(where: { $0.id == postId }) {
+            feedLoader.data[index].isBookmarked = isBookmarked
+        }
+        if let index = searchResults.firstIndex(where: { $0.id == postId }) {
+            searchResults[index].isBookmarked = isBookmarked
+        }
+    }
+
+    @MainActor
+    public func markPostRead(_ post: Domain.Post) {
+        updateReadState(for: post.id, isRead: true)
+        Task { [readStatusController] in
+            await readStatusController.markRead(postID: post.id)
+        }
+    }
+
+    @MainActor
+    private func updateReadState(for postId: Int, isRead: Bool) {
+        if let index = feedLoader.data.firstIndex(where: { $0.id == postId }) {
+            feedLoader.data[index].isRead = isRead
+        }
+        if let index = searchResults.firstIndex(where: { $0.id == postId }) {
+            searchResults[index].isRead = isRead
+        }
+    }
+
+    @MainActor
+    private func handleBookmarksUpdate(postId: Int, isBookmarked: Bool) async {
+        updateBookmarkState(for: postId, isBookmarked: isBookmarked)
+
+        if postType == .bookmarks {
+            let posts = await bookmarksController.bookmarkedPosts()
+            await readStatusController.refreshReadStatus()
+            let annotatedPosts = readStatusController.annotatedPosts(from: posts)
+            let updatedPostIds = Set(annotatedPosts.map(\.id))
+            withAnimation(.easeInOut) {
+                postIds = updatedPostIds
+                feedLoader.data = annotatedPosts
+            }
+        }
+    }
+
+    @MainActor
+    public func updateSearchQuery(_ query: String) {
+        searchTask?.cancel()
+        searchQuery = query
+        searchError = nil
+        isLoadingMoreSearchResults = false
+
+        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            isSearchInProgress = false
+            searchResults = []
+            searchResultIds = Set()
+            searchPage = 0
+            canLoadMoreSearchResults = false
+            return
+        }
+
+        searchPage = 0
+        canLoadMoreSearchResults = false
+        searchResultIds = Set()
+        searchResults = []
+        isSearchInProgress = true
+        loadSearchPage(query: trimmed, page: 0, replaceResults: true)
+    }
+
+    @MainActor
+    public func updateSearchSort(_ sort: SearchSort) {
+        guard searchSort != sort else { return }
+        searchSort = sort
+        guard hasActiveSearch else { return }
+        updateSearchQuery(searchQuery)
+    }
+
+    @MainActor
+    public func updateSearchDateRange(_ dateRange: SearchDateRange) {
+        guard searchDateRange != dateRange else { return }
+        searchDateRange = dateRange
+        guard hasActiveSearch else { return }
+        updateSearchQuery(searchQuery)
+    }
+
+    @MainActor
+    public func loadNextSearchPage() async {
+        guard hasActiveSearch,
+              canLoadMoreSearchResults,
+              !isSearchInProgress,
+              !isLoadingMoreSearchResults
+        else { return }
+
+        isLoadingMoreSearchResults = true
+        searchError = nil
+        let trimmed = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        loadSearchPage(query: trimmed, page: searchPage + 1, replaceResults: false)
+    }
+
+    private func loadSearchPage(query: String, page: Int, replaceResults: Bool) {
+        let currentSort = searchSort
+        let currentDateRange = searchDateRange
+        searchTask = Task { [weak self] in
+            guard let self else { return }
+            do {
+                let resultsPage = try await self.searchUseCase.searchPosts(
+                    query: query,
+                    sort: currentSort,
+                    dateRange: currentDateRange,
+                    page: page,
+                    hitsPerPage: self.searchHitsPerPage
+                )
+                if Task.isCancelled { return }
+                await self.bookmarksController.refreshBookmarks()
+                await self.readStatusController.refreshReadStatus()
+                let annotated = await MainActor.run {
+                    self.annotatedPosts(from: resultsPage.posts)
+                }
+                await MainActor.run {
+                    if replaceResults {
+                        self.searchResultIds = Set()
+                        self.searchResults = []
+                    }
+                    let uniquePosts = annotated.filter { post in
+                        if self.searchResultIds.contains(post.id) {
+                            return false
+                        }
+                        self.searchResultIds.insert(post.id)
+                        return true
+                    }
+                    self.searchResults.append(contentsOf: uniquePosts)
+                    self.searchPage = resultsPage.page
+                    self.canLoadMoreSearchResults = resultsPage.hasMore
+                    self.isSearchInProgress = false
+                    self.isLoadingMoreSearchResults = false
+                    self.searchError = nil
+                }
+            } catch {
+                if Task.isCancelled { return }
+                await MainActor.run {
+                    if replaceResults {
+                        self.searchResults = []
+                        self.searchResultIds = Set()
+                    }
+                    self.isSearchInProgress = false
+                    self.isLoadingMoreSearchResults = false
+                    self.canLoadMoreSearchResults = false
+                    self.searchError = error
+                }
+            }
+        }
+    }
+}
+
+private extension FeedViewModel {
+    func configureFeedLoader() {
+        // Set up the loading function after initialization.
+        feedLoader.setLoadFunction(
+            shouldSkipLoad: { !$0.isEmpty },
+            loadData: { [weak self] in
+                try await self?.fetchFeed() ?? []
+            }
+        )
+    }
+
+    func startObservingSettings() -> AnyCancellable {
+        NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                let currentValue = self.settingsUseCase.showThumbnails
+                if self.showThumbnails != currentValue {
+                    self.showThumbnails = currentValue
+                }
+                let compactValue = self.settingsUseCase.compactFeedDesign
+                if self.compactFeedDesign != compactValue {
+                    self.compactFeedDesign = compactValue
+                }
+                let dimReadValue = self.settingsUseCase.dimReadPosts
+                if self.dimReadPosts != dimReadValue {
+                    self.dimReadPosts = dimReadValue
+                }
+                let rememberValue = self.settingsUseCase.rememberFeedCategory
+                if self.rememberFeedCategorySetting != rememberValue {
+                    self.rememberFeedCategorySetting = rememberValue
+                    if rememberValue {
+                        self.settingsUseCase.lastFeedCategory = self.postType
+                    } else {
+                        self.settingsUseCase.lastFeedCategory = nil
+                    }
+                }
+            }
+    }
+
+    func startObservingBookmarks() -> AnyCancellable {
+        NotificationCenter.default.publisher(for: .bookmarksDidChange)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] notification in
+                guard
+                    let postId = notification.userInfo?["postId"] as? Int,
+                    let isBookmarked = notification.userInfo?["isBookmarked"] as? Bool
+                else { return }
+                Task { @MainActor [weak self] in
+                    guard let self else { return }
+                    await self.handleBookmarksUpdate(postId: postId, isBookmarked: isBookmarked)
+                }
+            }
+    }
+
+    func startObservingReadStatus() -> AnyCancellable {
+        NotificationCenter.default.publisher(for: .readStatusDidChange)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] notification in
+                Task { @MainActor [weak self] in
+                    guard let self else { return }
+                    if let postId = notification.userInfo?["postId"] as? Int,
+                       let isRead = notification.userInfo?["isRead"] as? Bool {
+                        self.updateReadState(for: postId, isRead: isRead)
+                        return
+                    }
+
+                    _ = await self.readStatusController.refreshReadStatus()
+                    self.feedLoader.data = self.readStatusController.annotatedPosts(from: self.feedLoader.data)
+                    self.searchResults = self.readStatusController.annotatedPosts(from: self.searchResults)
+                }
+            }
+    }
+
+    @MainActor
+    func annotatedPosts(from posts: [Domain.Post]) -> [Domain.Post] {
+        readStatusController.annotatedPosts(from: bookmarksController.annotatedPosts(from: posts))
+    }
+}

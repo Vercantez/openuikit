@@ -29,10 +29,14 @@ sed -e 's/^import OpenUIKit$/import UIKit/' \
     Sources/RealAppProbe/RealAppScreen.swift > "$TMPSRC/RealAppScreen.swift"
 sed -e 's/^import OpenUIKit$/import UIKit/' Sources/RealAppProbe/Shims.swift > "$TMPSRC/Shims.swift"
 sed -e 's/^import OpenUIKit$/import UIKit/' Sources/RealAppProbe/Focus/FocusShims.swift > "$TMPSRC/FocusShims.swift"
+sed -e 's/^import OpenUIKit$/import UIKit/' Sources/RealAppProbe/Focus/FocusScreens.swift > "$TMPSRC/FocusScreens.swift"
+mkdir -p "$TMPSRC/Hackers"
+sed -e 's/^import OpenUIKit$/import UIKit/' \
+    Sources/RealAppProbe/Hackers/HackersScreens.swift > "$TMPSRC/Hackers/HackersScreens.swift"
 # The vendored file's two ADAPTED(objc-runtime) lines are the ledger's own
 # `Selector.named` spelling for native ELF; on Darwin compile the UPSTREAM
 # `#selector` text (pocket-casts-ios podcasts/SimpleActionView.swift:106,137).
-mkdir -p "$TMPSRC/Vendored" "$TMPSRC/Vendored/Focus"
+mkdir -p "$TMPSRC/Vendored" "$TMPSRC/Vendored/Focus" "$TMPSRC/Vendored/Hackers"
 # Interface Builder mangles a custom class with the module it was set in, so
 # the compiled xibs name `_TtC8podcasts14ThemeableTable` and friends. The port
 # resolves those through UINibClassRegistry, which keys on the DEMANGLED name;
@@ -96,9 +100,18 @@ for f in Sources/RealAppProbe/Vendored/Focus/*.swift; do
     cp "$f" "$TMPSRC/Vendored/Focus/$(basename "$f")"
   fi
 done
+# Hackers feed is weiran/Hackers 83016de. FeedView / FeedViewModel /
+# PostRowView / WhatsNewPanelRow import DesignSystem / Domain / Shared /
+# SwiftUI / Combine — no OpenUIKit, no Selector.named. Copy unmodified.
+# Domain / Shared / DesignSystem stubs are compiled beside the probe
+# (DesignSystem is the Hackers stub, which also satisfies Focus's import).
+for f in Sources/RealAppProbe/Vendored/Hackers/*.swift; do
+  cp "$f" "$TMPSRC/Vendored/Hackers/$(basename "$f")"
+done
 MODDIR="$TMPSRC/mods"
 mkdir -p "$MODDIR"
 SWIFT_SIM=(swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend MainActor
+  -enable-upcoming-feature IsolatedDefaultValues
   -target arm64-apple-ios26.0-simulator -sdk "$SDK")
 compile_stub() {
   local name=$1 src=$2
@@ -109,16 +122,32 @@ compile_stub() {
 }
 compile_stub Glean Sources/RealAppProbe/FocusModules/Glean/Glean.swift
 compile_stub Onboarding Sources/RealAppProbe/FocusModules/Onboarding/Onboarding.swift
-compile_stub DesignSystem Sources/RealAppProbe/FocusModules/DesignSystem/DesignSystem.swift
 compile_stub Licenses Sources/RealAppProbe/FocusModules/Licenses/Licenses.swift
-swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend MainActor -target arm64-apple-ios26.0-simulator -sdk "$SDK" \
+# Domain is Sendable value types (Post, Comment). Default MainActor isolation
+# makes Identifiable conformances actor-isolated and they cannot satisfy
+# Votable: Sendable. Compile it without the app-target isolation flag.
+swiftc -O -swift-version 5 -parse-as-library \
+  -target arm64-apple-ios26.0-simulator -sdk "$SDK" \
+  -emit-module -emit-module-path "$MODDIR/Domain.swiftmodule" \
+  -emit-object -o "$TMPSRC/Domain.o" \
+  -module-name Domain -I "$MODDIR" \
+  Sources/RealAppProbe/HackersModules/Domain/Domain.swift
+compile_stub Shared Sources/RealAppProbe/HackersModules/Shared/Shared.swift
+compile_stub DesignSystem Sources/RealAppProbe/HackersModules/DesignSystem/DesignSystem.swift
+swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend MainActor \
+  -enable-upcoming-feature IsolatedDefaultValues \
+  -target arm64-apple-ios26.0-simulator -sdk "$SDK" \
   -module-name realappprobe \
   -I "$MODDIR" \
   Tools/oracle2/realappprobe/main.swift \
   "$TMPSRC/RealAppScreen.swift" "$TMPSRC/Shims.swift" "$TMPSRC/FocusShims.swift" \
+  "$TMPSRC/FocusScreens.swift" \
+  "$TMPSRC/Hackers/HackersScreens.swift" \
   "$TMPSRC"/Vendored/*.swift \
   "$TMPSRC"/Vendored/Focus/*.swift \
-  "$TMPSRC"/Glean.o "$TMPSRC"/Onboarding.o "$TMPSRC"/DesignSystem.o "$TMPSRC"/Licenses.o \
+  "$TMPSRC"/Vendored/Hackers/*.swift \
+  "$TMPSRC"/Glean.o "$TMPSRC"/Onboarding.o "$TMPSRC"/Licenses.o \
+  "$TMPSRC"/Domain.o "$TMPSRC"/Shared.o "$TMPSRC"/DesignSystem.o \
   -o "$APP/realappprobe"
 cp Tools/oracle2/RealAppProbe-Info.plist "$APP/Info.plist"
 cp fixtures/realapp/assets/*.png "$APP/"

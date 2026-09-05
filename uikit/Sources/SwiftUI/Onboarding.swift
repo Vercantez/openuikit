@@ -1169,6 +1169,15 @@ func _openFlattenGroup(_ node: _OpenViewNode) -> [_OpenViewNode] {
     if case .group(let children) = node.kind {
         return children.flatMap { _openFlattenGroup($0) }
     }
+    // MEASURED realapp_hackers_feed_light, iPhone 16 @3x / iOS 26.1:
+    // `if let whatsNewPanel` / `if enableSearchPagination` false branches
+    // are Optional.none → `.empty`. Real List does not materialize those
+    // as cells (7 visible ListCollectionViewCell, no 44 pt spacers). The
+    // port floored empty rows to defaultFormRowHeight and shifted the
+    // feed by 44 pt.
+    if case .empty = node.kind {
+        return []
+    }
     return [node]
 }
 

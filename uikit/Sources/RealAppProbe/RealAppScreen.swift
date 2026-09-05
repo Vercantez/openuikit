@@ -78,6 +78,10 @@ public enum RealAppScreen {
         /// wrapped in a UINavigationController as BrowserViewController
         /// `showSettings` does.
         case focusSettings
+        /// weiran/Hackers Features/Feed FeedView.swift at 83016de — the
+        /// main post list, wrapped in a UINavigationController as the app's
+        /// NavigationStack chrome.
+        case hackersFeed
     }
 
     /// One headless configuration: which app screen, which theme, and which
@@ -166,7 +170,7 @@ public enum RealAppScreen {
         Screen(name: "realapp_storage_light_ipad", variant: .storage,
                theme: .light, style: .light, contentSizeCategory: .large,
                presentsSheet: false, idiom: .pad),
-    ] + focusScreens
+    ] + focusScreens + hackersScreens
 
     /// Firefox Focus's screen joins the table only where its stub modules
     /// (Onboarding, Glean, Licenses, DesignSystem, Intents) exist — the
@@ -180,6 +184,19 @@ public enum RealAppScreen {
     static var focusScreens: [Screen] {
         #if canImport(Onboarding)
         return focusScreenTable
+        #else
+        return []
+        #endif
+    }
+
+    /// Hackers' screen joins the table only where its stub modules (Domain,
+    /// Shared, DesignSystem) exist — the SwiftPM routes on macOS and Linux
+    /// corelibs. The Linux-hosted guest builder compiles this harness from
+    /// the top-level files and has no those modules, so there the table
+    /// stops at Pocket Casts + Focus. See Hackers/HackersScreens.swift.
+    static var hackersScreens: [Screen] {
+        #if canImport(Domain)
+        return hackersScreenTable
         #else
         return []
         #endif
@@ -268,6 +285,12 @@ public enum RealAppScreen {
             return makeFocusSettingsScreen()
             #else
             fatalError("realapp_focus_settings_light is not in this build (no Focus stub modules)")
+            #endif
+        case .hackersFeed:
+            #if canImport(Domain)
+            return makeHackersFeedScreen()
+            #else
+            fatalError("realapp_hackers_feed_light is not in this build (no Hackers stub modules)")
             #endif
         }
         let host = BackdropViewController(theme: theme)

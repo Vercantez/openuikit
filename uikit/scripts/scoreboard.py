@@ -42,6 +42,11 @@ REALAPP_FLOOR = {
     # Firefox Focus Settings (iPhone 16 / iOS 26.1). MEASURED 80.345 after
     # the opaque-bar inset, nil container fill, and inset-grouped footer wrap.
     "realapp_focus_settings_light": 80.2,   # 80.345
+    # Hackers feed (weiran/Hackers 83016de, iPhone 16 / iOS 26.1).
+    # MEASURED 84.582 after swipe-at-rest hidden, .plain listRowInsets 16,
+    # empty ViewBuilder rows dropped, list rest offset −113, HStack
+    # remeasure at placeHStack widths.
+    "realapp_hackers_feed_light": 84.4,     # 84.582
     # iPad (A16) History picker + Storage screen. MEASURED 2026-09-04:
     # history formSheet [120, 753, 580, 157] 99.760; storage large-title
     # x 20 and grouped cell margin 16 → 99.689.
