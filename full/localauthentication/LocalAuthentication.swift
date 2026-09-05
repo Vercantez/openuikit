@@ -1,12 +1,107 @@
+import Dispatch
 import Foundation
 
 #if canImport(Combine)
 @_exported import Combine
 #endif
 
-/// Process-local identity for Apple's `LAErrorDomain` constant. The isolated
-/// seed records the exported symbol, not the Apple binary string payload.
-public let LAErrorDomain = "LAErrorDomain"
+// MARK: - Unchecked work (private-queue delivery)
+
+/// Wraps a non-Sendable reply so it can hop onto the framework-private queue.
+/// Pattern taken from the AppTrackingTransparency host lane.
+private struct LAUncheckedWork: @unchecked Sendable {
+    let body: () -> Void
+}
+
+private final class LAOnceFlag: @unchecked Sendable {
+    private let lock = NSLock()
+    private var delivered = false
+
+    func take() -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        if delivered {
+            return false
+        }
+        delivered = true
+        return true
+    }
+}
+
+/// Private serial queue for `evaluatePolicy` / rights completions.
+/// Apple: LAContext.h — "The block is executed on a private queue internal to
+/// the framework in an unspecified threading context." Measured as non-inline
+/// on this port: the caller returns before the reply runs.
+private let laReplyQueue = DispatchQueue(
+    label: "LocalAuthentication.reply",
+    qos: .utility
+)
+
+private func laDeliver(_ body: @escaping () -> Void) {
+    let once = LAOnceFlag()
+    let work = LAUncheckedWork(body: body)
+    laReplyQueue.async {
+        guard once.take() else { return }
+        work.body()
+    }
+}
+
+// MARK: - Linux test hook
+
+/// Linux-only process flag. Not an Apple API.
+///
+/// Apple's `LAPolicyDeviceOwnerAuthentication` cannot start when no device
+/// passcode is set (`LAErrorPasscodeNotSet`, LAContext.h / LAError.h). Linux
+/// has no passcode broker. Tests that need a simulated credential call
+/// `LocalAuthenticationTestHook.setSimulatedDevicePasscodeEnabled(true)`.
+/// Biometric and companion policies still fail closed: this host has no
+/// Secure Enclave and no companion hardware.
+public enum LocalAuthenticationTestHook: Sendable {
+    private static let lock = NSLock()
+    private static var simulatedDevicePasscode = false
+
+    public static func setSimulatedDevicePasscodeEnabled(_ enabled: Bool) {
+        lock.lock()
+        simulatedDevicePasscode = enabled
+        lock.unlock()
+    }
+
+    public static var isSimulatedDevicePasscodeEnabled: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return simulatedDevicePasscode
+    }
+
+    /// Holds the private reply queue so a test can `invalidate()` an in-flight
+    /// `evaluatePolicy` before the reply runs. `body` must not wait on a reply.
+    public static func withHeldReplies(_ body: () -> Void) {
+        let gate = DispatchSemaphore(value: 0)
+        laReplyQueue.async {
+            gate.wait()
+        }
+        body()
+        gate.signal()
+    }
+}
+
+// MARK: - Error domain and reuse bound
+
+/// Process-local identity for Apple's `LAErrorDomain` / `kLAErrorDomain`.
+///
+/// Measured 2026-09-05 on this Mac, Xcode 26.1 / macOS 26.0
+/// (`/tmp/la-oracle.swift` against the SDK LocalAuthentication):
+/// `LAErrorDomain == kLAErrorDomain == "com.apple.LocalAuthentication"`.
+/// Corroborated by `LAPublicDefines.h`: `#define kLAErrorDomain "com.apple.LocalAuthentication"`.
+public let LAErrorDomain = "com.apple.LocalAuthentication"
+
+/// Maximum accepted Touch ID / Face ID unlock reuse interval, in seconds.
+///
+/// Measured 2026-09-05: `LATouchIDAuthenticationMaximumAllowableReuseDuration == 300.0`
+/// on the same Mac probe. Matches LAContext.h: "The maximum supported interval
+/// is 5 minutes". The stored `touchIDAuthenticationAllowableReuseDuration`
+/// property is **not** clamped on set (probe: assigning `10000` read back
+/// `10000.0`); values above 300 do not increase the accepted interval.
+public let LATouchIDAuthenticationMaximumAllowableReuseDuration: TimeInterval = 300
 
 /// Bridged Local Authentication error.
 ///
@@ -16,10 +111,11 @@ public let LAErrorDomain = "LAErrorDomain"
 /// Foundation's protocol-default `hash(into:)` / `hashValue` witnesses trap
 /// on this toolchain, so those Hashable members are provided here.
 ///
-/// Raw values come from the pinned `dotnet/macios` `LAStatus` enum
-/// (`AuthenticationFailed = -1` through `CompanionNotAvailable = -11`,
-/// `NotInteractive = -1004`). `biometry*` names are static aliases of the
-/// `touchID*` cases, matching the API-digester overlay.
+/// Raw values from `LAPublicDefines.h` (Xcode 26.1 iPhoneOS / MacOSX SDK):
+/// `kLAErrorAuthenticationFailed = -1` through `kLAErrorInvalidContext = -10`,
+/// `kLAErrorWatchNotAvailable` / `kLAErrorCompanionNotAvailable = -11`,
+/// `kLAErrorNotInteractive = -1004`. `biometry*` names are static aliases of
+/// the `touchID*` cases (`kLAErrorBiometryNotAvailable = kLAErrorTouchIDNotAvailable`).
 @frozen
 public struct LAError: Foundation._BridgedStoredNSError, @unchecked Sendable {
     public enum Code: Int, Foundation._ErrorCodeProtocol, Sendable {
@@ -51,6 +147,8 @@ public struct LAError: Foundation._BridgedStoredNSError, @unchecked Sendable {
 
     public static var _nsErrorDomain: String { LAErrorDomain }
 
+    public static var errorDomain: String { LAErrorDomain }
+
     public static var authenticationFailed: Code { .authenticationFailed }
     public static var userCancel: Code { .userCancel }
     public static var userFallback: Code { .userFallback }
@@ -67,8 +165,8 @@ public struct LAError: Foundation._BridgedStoredNSError, @unchecked Sendable {
     public static var biometryNotEnrolled: Code { .biometryNotEnrolled }
     public static var biometryLockout: Code { .biometryLockout }
 
-    /// Convenience retained from the original Linux lane so in-tree guests that
-    /// construct `LAError(_ code:)` keep compiling.
+    /// Convenience retained so in-tree guests that construct `LAError(_ code:)`
+    /// keep compiling.
     public init(_ code: Code, reason: String? = nil) {
         var info: [String: Any] = [:]
         if let reason {
@@ -89,11 +187,14 @@ public struct LAError: Foundation._BridgedStoredNSError, @unchecked Sendable {
     }
 }
 
-/// Policies accepted by the portable local-authentication boundary.
+// MARK: - Policies and types
+
+/// Policies accepted by `LAContext`.
 ///
-/// Raw values 1 and 2 match the original lane and the pinned macios
-/// `LAPolicy` enum. Companion cases share 3 and 4 with the deprecated Watch
-/// policies (macios `DeviceOwnerAuthenticationWithCompanion = 3`).
+/// Raw values from `LAPublicDefines.h`:
+/// `kLAPolicyDeviceOwnerAuthenticationWithBiometrics = 1`,
+/// `kLAPolicyDeviceOwnerAuthentication = 2`,
+/// companion / Watch share 3, biometrics-or-companion / Watch share 4.
 public enum LAPolicy: Int, Sendable {
     case deviceOwnerAuthenticationWithBiometrics = 1
     case deviceOwnerAuthentication = 2
@@ -101,6 +202,9 @@ public enum LAPolicy: Int, Sendable {
     case deviceOwnerAuthenticationWithBiometricsOrCompanion = 4
 }
 
+/// Biometry kinds. Raw values from `LAPublicDefines.h`:
+/// `kLABiometryTypeNone = 0`, `TouchID = 1<<0`, `FaceID = 1<<1`, `OpticID = 1<<2`.
+/// Measured on the Mac probe: `touchID.rawValue == 1`, `faceID == 2`, `opticID == 4`.
 public enum LABiometryType: Int, Sendable {
     case none = 0
     case touchID = 1
@@ -111,8 +215,8 @@ public enum LABiometryType: Int, Sendable {
     public static var LABiometryNone: LABiometryType { .none }
 }
 
-/// iOS Swift overlay cases only. Watch/none exist as C macros, not Swift cases.
-/// Raw values match macios `LACompanionType` bit flags (`Mac = 1 << 1`).
+/// iOS Swift overlay cases. Watch/none exist as C macros, not Swift cases.
+/// Raw values from `LAPublicDefines.h`: `Mac = 1<<1`, `Vision = 1<<2`.
 public enum LACompanionType: Int, Sendable {
     case mac = 2
     case vision = 4
@@ -123,7 +227,7 @@ public enum LACredentialType: Int, Sendable {
     case smartCardPIN = -3
 }
 
-/// Sequential NS_ENUM order from the pinned macios `LAAccessControlOperation`.
+/// Sequential NS_ENUM order from `LAPublicDefines.h` (`CreateItem = 0` … `UseKeyKeyExchange = 5`).
 public enum LAAccessControlOperation: Int, Sendable {
     case createItem = 0
     case useItem = 1
@@ -194,13 +298,25 @@ public var kLAPolicyDeviceOwnerAuthenticationWithWristDetection: Int32 { 5 }
 
 // MARK: - Context
 
-/// Linux has no device-owner authentication broker. The context is still a
-/// real mutable request object, but every capability query and evaluation
-/// fails closed with `biometryNotAvailable` (or `invalidContext` after
-/// `invalidate()`).
+/// Linux has no device-owner authentication broker, Secure Enclave, or
+/// biometric sensor. `biometryType` is always `.none`.
 ///
-/// Linux Foundation has no `NSErrorPointer` typealias. The original lane and
-/// in-tree first-party guests pass `UnsafeMutablePointer<LAError?>?`.
+/// Policy preflight (`canEvaluatePolicy`):
+/// - biometric policies → `LAError.biometryNotAvailable` (`LAContext.h`)
+/// - `deviceOwnerAuthentication` → `LAError.passcodeNotSet` unless
+///   `LocalAuthenticationTestHook` has registered a simulated passcode
+/// - companion policies → `LAError.companionNotAvailable` (`LAContext.h`)
+///
+/// `evaluatePolicy` delivers the same errors asynchronously on
+/// `LocalAuthentication.reply` (Apple: private framework queue, LAContext.h).
+/// `invalidate()` cancels in-flight evaluations with `LAError.appCancel` and
+/// later calls fail with `LAError.invalidContext` (LAContext.h).
+/// `interactionNotAllowed` → `LAError.notInteractive` (LAContext.h).
+///
+/// Linux Foundation has no `NSErrorPointer` typealias (measured
+/// `docker exec uikit-linux swift -e 'import Foundation; print(NSErrorPointer.self)'`).
+/// The original lane and in-tree first-party guests pass
+/// `UnsafeMutablePointer<LAError?>?`.
 open class LAContext: NSObject {
     public override init() {
         super.init()
@@ -210,25 +326,47 @@ open class LAContext: NSObject {
     open var localizedCancelTitle: String?
     open var localizedFallbackTitle: String?
     open var interactionNotAllowed = false
+    /// Always `.none` on Linux: no Touch ID / Face ID / Optic ID hardware.
     open private(set) var biometryType: LABiometryType = .none
     open var maxBiometryFailures: NSNumber?
+    /// Default 0 (LAContext.h). Not clamped on set (Mac probe 2026-09-05:
+    /// assigning 10000 read back 10000). The accepted reuse interval cannot
+    /// exceed `LATouchIDAuthenticationMaximumAllowableReuseDuration` (300).
     open var touchIDAuthenticationAllowableReuseDuration: TimeInterval = 0
+    /// Nil until a successful biometric evaluation. Linux never evaluates
+    /// biometrics successfully, so this stays nil (LAContext.h).
     open private(set) var evaluatedPolicyDomainState: Data?
 
     open var domainState: LADomainState {
         LADomainState(portableMarker: ())
     }
 
+    private let lock = NSLock()
     private var invalidated = false
     private var applicationPassword: Data?
+    private var inFlight: [UInt64: (Bool, Error?) -> Void] = [:]
+    private var nextFlight: UInt64 = 1
 
     open func canEvaluatePolicy(
         _ policy: LAPolicy,
         error: UnsafeMutablePointer<LAError?>? = nil
     ) -> Bool {
-        _ = policy
-        error?.pointee = failClosedError()
-        return false
+        lock.lock()
+        let isInvalid = invalidated
+        lock.unlock()
+        if isInvalid {
+            error?.pointee = LAError(
+                .invalidContext,
+                reason: "LAContext has been invalidated"
+            )
+            return false
+        }
+        if let failure = policyPreflightError(policy) {
+            error?.pointee = failure
+            return false
+        }
+        error?.pointee = nil
+        return true
     }
 
     open func evaluatePolicy(
@@ -236,9 +374,36 @@ open class LAContext: NSObject {
         localizedReason: String,
         reply: @escaping @Sendable (Bool, Error?) -> Void
     ) {
-        _ = policy
+        // Apple: LAContext.h — "localizedReason parameter is mandatory and the
+        // call will throw NSInvalidArgumentException if nil or empty string".
+        precondition(
+            !localizedReason.isEmpty,
+            "evaluatePolicy localizedReason must be nonempty"
+        )
         self.localizedReason = localizedReason
-        reply(false, failClosedError())
+
+        let flight: UInt64
+        lock.lock()
+        if invalidated {
+            lock.unlock()
+            laDeliver {
+                reply(
+                    false,
+                    LAError(.invalidContext, reason: "LAContext has been invalidated")
+                )
+            }
+            return
+        }
+        flight = nextFlight
+        nextFlight += 1
+        inFlight[flight] = { success, error in
+            reply(success, error)
+        }
+        lock.unlock()
+
+        laDeliver { [self] in
+            self.finishFlight(flight, policy: policy)
+        }
     }
 
     open func evaluatePolicy(
@@ -256,12 +421,31 @@ open class LAContext: NSObject {
         }
     }
 
+    /// Apple: LAContext.h — "Invalidation terminates any existing policy
+    /// evaluation and the respective call will fail with LAErrorAppCancel.
+    /// After the context has been invalidated, it can not be used for policy
+    /// evaluation and an attempt to do so will fail with LAErrorInvalidContext."
     open func invalidate() {
+        lock.lock()
         invalidated = true
         applicationPassword = nil
+        let pending = inFlight
+        inFlight.removeAll()
+        lock.unlock()
+        let cancel = LAError(
+            .appCancel,
+            reason: "LAContext.invalidate() canceled an in-flight evaluation"
+        )
+        for (_, reply) in pending {
+            laDeliver {
+                reply(false, cancel)
+            }
+        }
     }
 
     open func setCredential(_ credential: Data?, type: LACredentialType) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
         guard !invalidated else { return false }
         switch type {
         case .applicationPassword:
@@ -273,6 +457,8 @@ open class LAContext: NSObject {
     }
 
     open func isCredentialSet(_ type: LACredentialType) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
         guard !invalidated else { return false }
         switch type {
         case .applicationPassword:
@@ -282,11 +468,70 @@ open class LAContext: NSObject {
         }
     }
 
-    private func failClosedError() -> LAError {
-        LAError(
-            invalidated ? .invalidContext : .biometryNotAvailable,
-            reason: "Local authentication is unavailable on this host"
-        )
+    private func finishFlight(_ flight: UInt64, policy: LAPolicy) {
+        lock.lock()
+        guard let reply = inFlight.removeValue(forKey: flight) else {
+            lock.unlock()
+            return
+        }
+        let isInvalid = invalidated
+        let interactionForbidden = interactionNotAllowed
+        lock.unlock()
+
+        if isInvalid {
+            reply(
+                false,
+                LAError(.appCancel, reason: "LAContext.invalidate() canceled an in-flight evaluation")
+            )
+            return
+        }
+        if interactionForbidden {
+            // Apple: LAContext.h — "it will eventually fail with
+            // LAErrorNotInteractive instead of displaying the authentication UI."
+            reply(
+                false,
+                LAError(
+                    .notInteractive,
+                    reason: "interactionNotAllowed forbids authentication UI"
+                )
+            )
+            return
+        }
+        if let failure = policyPreflightError(policy) {
+            reply(false, failure)
+            return
+        }
+        reply(true, nil)
+    }
+
+    private func policyPreflightError(_ policy: LAPolicy) -> LAError? {
+        switch policy {
+        case .deviceOwnerAuthenticationWithBiometrics,
+             .deviceOwnerAuthenticationWithBiometricsOrCompanion:
+            // Apple: LAContext.h — biometric policy fails with
+            // LAErrorBiometryNotAvailable when Touch ID / Face ID is absent.
+            return LAError(
+                .biometryNotAvailable,
+                reason: "Biometry is not available on this host"
+            )
+        case .deviceOwnerAuthentication:
+            if LocalAuthenticationTestHook.isSimulatedDevicePasscodeEnabled {
+                return nil
+            }
+            // Apple: LAError.h — "Authentication could not start because
+            // passcode is not set on the device."
+            return LAError(
+                .passcodeNotSet,
+                reason: "Device passcode is not set on this host"
+            )
+        case .deviceOwnerAuthenticationWithCompanion:
+            // Apple: LAContext.h — "If no nearby paired companion device can
+            // be found, LAErrorCompanionNotAvailable is returned."
+            return LAError(
+                .companionNotAvailable,
+                reason: "No companion device is available on this host"
+            )
+        }
     }
 }
 
@@ -344,32 +589,86 @@ open class LADomainStateCompanion: NSObject {
 
 // MARK: - Requirements
 
+/// Apple: LARequirement.h — default is user authentication (biometry or
+/// passcode); `biometry` / `biometryCurrentSet` require a sensor.
 open class LAAuthenticationRequirement: NSObject {
+    enum Kind: Sendable {
+        case `default`
+        case biometry
+        case biometryCurrentSet
+        case biometryWithFallback(LABiometryFallbackRequirement.Kind)
+    }
+
+    var kind: Kind
+
     public required override init() {
+        self.kind = .default
         super.init()
     }
 
     private static let defaultRequirement = LAAuthenticationRequirement()
-    private static let biometryRequirement = LAAuthenticationRequirement()
-    private static let biometryCurrentSetRequirement = LAAuthenticationRequirement()
+    private static let biometryRequirement: LAAuthenticationRequirement = {
+        let value = LAAuthenticationRequirement()
+        value.kind = .biometry
+        return value
+    }()
+    private static let biometryCurrentSetRequirement: LAAuthenticationRequirement = {
+        let value = LAAuthenticationRequirement()
+        value.kind = .biometryCurrentSet
+        return value
+    }()
 
     open class var `default`: LAAuthenticationRequirement { defaultRequirement }
     open class var biometry: LAAuthenticationRequirement { biometryRequirement }
     open class var biometryCurrentSet: LAAuthenticationRequirement { biometryCurrentSetRequirement }
 
     open class func biometry(fallback: LABiometryFallbackRequirement) -> Self {
-        _ = fallback
-        return Self()
+        let value = Self()
+        value.kind = .biometryWithFallback(fallback.kind)
+        return value
+    }
+
+    /// Linux preflight: biometry-only requirements fail closed;
+    /// default / passcode fallback honor the simulated-passcode hook.
+    func preflightError() -> LAError? {
+        switch kind {
+        case .biometry, .biometryCurrentSet:
+            return LAError(
+                .biometryNotAvailable,
+                reason: "Biometry is not available on this host"
+            )
+        case .default, .biometryWithFallback:
+            if LocalAuthenticationTestHook.isSimulatedDevicePasscodeEnabled {
+                return nil
+            }
+            return LAError(
+                .passcodeNotSet,
+                reason: "Device passcode is not set on this host"
+            )
+        }
     }
 }
 
 open class LABiometryFallbackRequirement: NSObject {
+    enum Kind: Sendable {
+        case `default`
+        case devicePasscode
+    }
+
+    let kind: Kind
+
     public override init() {
+        self.kind = .default
         super.init()
     }
 
-    private static let defaultRequirement = LABiometryFallbackRequirement()
-    private static let devicePasscodeRequirement = LABiometryFallbackRequirement()
+    init(kind: Kind) {
+        self.kind = kind
+        super.init()
+    }
+
+    private static let defaultRequirement = LABiometryFallbackRequirement(kind: .default)
+    private static let devicePasscodeRequirement = LABiometryFallbackRequirement(kind: .devicePasscode)
 
     open class var `default`: LABiometryFallbackRequirement { defaultRequirement }
     open class var devicePasscode: LABiometryFallbackRequirement { devicePasscodeRequirement }
@@ -377,6 +676,9 @@ open class LABiometryFallbackRequirement: NSObject {
 
 // MARK: - Rights
 
+/// Apple: LARight.h — states in documented order:
+/// `unknown (0)` → `authorizing (1)` after `authorize` is called →
+/// `authorized (2)` on success or `notAuthorized (3)` on rejection.
 open class LARight: NSObject {
     public enum State: Int, Sendable {
         case unknown = 0
@@ -395,32 +697,72 @@ open class LARight: NSObject {
         super.init()
     }
 
-    private let requirement: LAAuthenticationRequirement
-    open private(set) var state: State = .unknown
+    let requirement: LAAuthenticationRequirement
+    private let lock = NSLock()
+    private var _state: State = .unknown
     open var tag: Int = 0
 
+    open private(set) var state: State {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return _state
+        }
+        set {
+            lock.lock()
+            _state = newValue
+            lock.unlock()
+        }
+    }
+
     open func authorize(localizedReason: String) async throws {
-        _ = localizedReason
-        throw LAError(
-            .biometryNotAvailable,
-            reason: "Local authentication is unavailable on this host"
-        )
+        try authorizeSync(localizedReason: localizedReason)
     }
 
-    open func checkCanAuthorize(completion handler: @escaping ((any Error)?) -> Void) {
-        handler(
-            LAError(
-                .biometryNotAvailable,
-                reason: "Local authentication is unavailable on this host"
-            )
-        )
+    open func authorize(
+        localizedReason: String,
+        completion handler: @escaping @Sendable ((any Error)?) -> Void
+    ) {
+        laDeliver { [self] in
+            do {
+                try self.authorizeSync(localizedReason: localizedReason)
+                handler(nil)
+            } catch {
+                handler(error)
+            }
+        }
     }
 
-    open func deauthorize(completion handler: @escaping () -> Void) {
+    private func authorizeSync(localizedReason: String) throws {
+        precondition(
+            !localizedReason.isEmpty,
+            "authorize localizedReason must be nonempty"
+        )
+        // Apple: LARight.h — unknown → authorizing when authorize is called,
+        // then authorized on success or notAuthorized on rejection.
+        state = .authorizing
+        if let error = requirement.preflightError() {
+            state = .notAuthorized
+            throw error
+        }
+        state = .authorized
+    }
+
+    open func checkCanAuthorize(completion handler: @escaping @Sendable ((any Error)?) -> Void) {
+        let error = requirement.preflightError()
+        laDeliver {
+            handler(error)
+        }
+    }
+
+    /// Apple: LARight.h — "Invalidates a previously authorized right."
+    open func deauthorize(completion handler: @escaping @Sendable () -> Void) {
         if state == .authorized {
             state = .notAuthorized
         }
-        handler()
+        laDeliver {
+            handler()
+        }
     }
 }
 
@@ -435,14 +777,19 @@ open class LAPersistedRight: LARight {
         fatalError("LAPersistedRight is produced by LARightStore")
     }
 
-    init(portableMarker: Void) {
-        super.init()
-        key = LAPrivateKey(portableMarker: ())
-        secret = LASecret(portableMarker: ())
+    let identifier: String
+
+    init(identifier: String, requirement: LAAuthenticationRequirement, secret: Data?) {
+        self.identifier = identifier
+        let privateKey = LAPrivateKey(portableMarker: ())
+        self.key = privateKey
+        self.secret = LASecret(portableMarker: (), stored: secret, owner: nil)
+        super.init(requirement: requirement)
+        self.secret.bindOwner(self)
     }
 
-    open private(set) var key: LAPrivateKey = LAPrivateKey(portableMarker: ())
-    open private(set) var secret: LASecret = LASecret(portableMarker: ())
+    open private(set) var key: LAPrivateKey
+    open private(set) var secret: LASecret
 }
 
 open class LAPrivateKey: NSObject {
@@ -469,14 +816,18 @@ open class LAPublicKey: NSObject {
         super.init()
     }
 
-    open func exportBytes(completion handler: @escaping (Data?, (any Error)?) -> Void) {
-        handler(
-            nil,
-            LAError(
-                .biometryNotAvailable,
-                reason: "Local authentication is unavailable on this host"
+    /// Linux has no Secure Enclave key material. Fail closed with
+    /// `LAError.invalidContext` (brief: keys fail closed with invalidContext).
+    open func exportBytes(completion handler: @escaping @Sendable (Data?, (any Error)?) -> Void) {
+        laDeliver {
+            handler(
+                nil,
+                LAError(
+                    .invalidContext,
+                    reason: "No Secure Enclave key material on this host"
+                )
             )
-        )
+        }
     }
 }
 
@@ -486,23 +837,57 @@ open class LASecret: NSObject {
         fatalError("LASecret is produced by LAPersistedRight")
     }
 
-    init(portableMarker: Void) {
+    private let stored: Data?
+    private weak var owner: LAPersistedRight?
+
+    init(portableMarker: Void, stored: Data? = nil, owner: LAPersistedRight? = nil) {
+        self.stored = stored
+        self.owner = owner
         super.init()
     }
 
-    open func loadData(completion handler: @escaping (Data?, (any Error)?) -> Void) {
-        handler(
-            nil,
-            LAError(
-                .biometryNotAvailable,
-                reason: "Local authentication is unavailable on this host"
-            )
-        )
+    func bindOwner(_ owner: LAPersistedRight) {
+        self.owner = owner
+    }
+
+    /// Returns the in-memory secret when the owning right is authorized.
+    /// Otherwise fails closed with `invalidContext` (no enclave).
+    open func loadData(completion handler: @escaping @Sendable (Data?, (any Error)?) -> Void) {
+        let data = stored
+        let authorized = owner?.state == .authorized
+        laDeliver {
+            if authorized, let data {
+                handler(data, nil)
+            } else {
+                handler(
+                    nil,
+                    LAError(
+                        .invalidContext,
+                        reason: "Secret is unavailable until the persisted right is authorized"
+                    )
+                )
+            }
+        }
     }
 }
 
+/// Persistent storage for `LARight` instances.
+///
+/// Apple backs this with the Keychain. Linux has an in-memory store on
+/// `LARightStore.shared` so save/load/remove round-trip in-process. Contents
+/// vanish with the process. Key operations on persisted rights still fail
+/// closed: there is no Secure Enclave.
 open class LARightStore: NSObject {
     private static let sharedStore = LARightStore(portableMarker: ())
+
+    private let lock = NSLock()
+    private var records: [String: StoredRight] = [:]
+
+    private struct StoredRight {
+        var requirementKind: LAAuthenticationRequirement.Kind
+        var secret: Data?
+        var tag: Int
+    }
 
     private init(portableMarker: Void) {
         super.init()
@@ -515,21 +900,42 @@ open class LARightStore: NSObject {
 
     open class var shared: LARightStore { sharedStore }
 
+    private func loadRecord(_ identifier: String) -> StoredRight? {
+        lock.lock()
+        defer { lock.unlock() }
+        return records[identifier]
+    }
+
+    private func storeRecord(_ identifier: String, _ record: StoredRight) {
+        lock.lock()
+        records[identifier] = record
+        lock.unlock()
+    }
+
+    private func deleteRecord(_ identifier: String) {
+        lock.lock()
+        records.removeValue(forKey: identifier)
+        lock.unlock()
+    }
+
+    private func deleteAllRecords() {
+        lock.lock()
+        records.removeAll()
+        lock.unlock()
+    }
+
     open func right(forIdentifier identifier: String) async throws -> LAPersistedRight {
-        _ = identifier
-        throw LAError(
-            .biometryNotAvailable,
-            reason: "Local authentication is unavailable on this host"
-        )
+        guard let record = loadRecord(identifier) else {
+            throw LAError(
+                .invalidContext,
+                reason: "No right stored for identifier"
+            )
+        }
+        return makePersisted(identifier: identifier, record: record)
     }
 
     open func saveRight(_ right: LARight, identifier: String) async throws -> LAPersistedRight {
-        _ = right
-        _ = identifier
-        throw LAError(
-            .biometryNotAvailable,
-            reason: "Local authentication is unavailable on this host"
-        )
+        try await saveRight(right, identifier: identifier, secret: nil)
     }
 
     open func saveRight(
@@ -537,38 +943,66 @@ open class LARightStore: NSObject {
         identifier: String,
         secret: Data
     ) async throws -> LAPersistedRight {
-        _ = right
-        _ = identifier
-        _ = secret
-        throw LAError(
-            .biometryNotAvailable,
-            reason: "Local authentication is unavailable on this host"
-        )
+        try await saveRight(right, identifier: identifier, secret: Optional(secret))
     }
 
     open func removeRight(_ right: LAPersistedRight) async throws {
-        _ = right
-        throw LAError(
-            .biometryNotAvailable,
-            reason: "Local authentication is unavailable on this host"
-        )
+        try await removeRight(forIdentifier: right.identifier)
     }
 
     open func removeRight(forIdentifier identifier: String) async throws {
-        _ = identifier
-        throw LAError(
-            .biometryNotAvailable,
-            reason: "Local authentication is unavailable on this host"
-        )
+        deleteRecord(identifier)
     }
 
-    open func removeAllRights(completion handler: @escaping ((any Error)?) -> Void) {
-        handler(
-            LAError(
-                .biometryNotAvailable,
-                reason: "Local authentication is unavailable on this host"
-            )
+    open func removeAllRights(completion handler: @escaping @Sendable ((any Error)?) -> Void) {
+        deleteAllRecords()
+        laDeliver {
+            handler(nil)
+        }
+    }
+
+    private func saveRight(
+        _ right: LARight,
+        identifier: String,
+        secret: Data?
+    ) async throws -> LAPersistedRight {
+        let record = StoredRight(
+            requirementKind: right.requirement.kind,
+            secret: secret,
+            tag: right.tag
         )
+        storeRecord(identifier, record)
+        let persisted = makePersisted(identifier: identifier, record: record)
+        persisted.tag = right.tag
+        return persisted
+    }
+
+    private func makePersisted(identifier: String, record: StoredRight) -> LAPersistedRight {
+        let requirement: LAAuthenticationRequirement
+        switch record.requirementKind {
+        case .default:
+            requirement = .default
+        case .biometry:
+            requirement = .biometry
+        case .biometryCurrentSet:
+            requirement = .biometryCurrentSet
+        case .biometryWithFallback(let fallbackKind):
+            let fallback: LABiometryFallbackRequirement
+            switch fallbackKind {
+            case .default:
+                fallback = .default
+            case .devicePasscode:
+                fallback = .devicePasscode
+            }
+            requirement = LAAuthenticationRequirement.biometry(fallback: fallback)
+        }
+        let persisted = LAPersistedRight(
+            identifier: identifier,
+            requirement: requirement,
+            secret: record.secret
+        )
+        persisted.tag = record.tag
+        return persisted
     }
 }
 

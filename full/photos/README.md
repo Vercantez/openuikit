@@ -1,60 +1,61 @@
 # Photos
 
 Linux starting point for Apple's public `Photos` module, reconstructed from
-the pinned Xcode 26.1 iPhoneOS symbol graph, API digester, and the existing
-portable host runtime. This directory is not wired into the shared guest
-package. A passing isolated host gate is not integrated Linux success.
+the pinned Xcode 26.1 iPhoneOS symbol graph, API digester, and a real
+on-disk library under the process documents directory.
 
 ## What is real
 
 The public Swift surface compiles to `libPhotos.dylib` with Foundation only.
 
-The original portable runtime is preserved:
+On-disk library (`Documents/OpenUIKitPhotoLibrary`):
 
-- `PHPhotoLibrary.authorizationStatus(for:)` starts `.notDetermined` and
-  fail-closes `requestAuthorization(for:)` to `.denied` unless a host SPI
-  handler is installed.
-- `PHAsset.fetchAssets(with:options:)` returns host-installed assets only when
-  status is `.authorized` or `.limited`. Fetch limit is applied. Darwin still
-  honors `NSSortDescriptor(key: "creationDate")`; Linux uses
-  `@_spi(OpenUIKitHost) hostSortsByCreationDateAscending` because KVC
-  `NSSortDescriptor.key` is unavailable in swift-corelibs-foundation.
-- `PHImageManager` returns the host-installed `Data` / `UIImage` immediately
-  and issues monotonic request IDs. This is the existing Ice Cubes consumer
-  contract, not Apple PhotoKit callback timing.
+- `PHPhotoLibrary.shared()`, `authorizationStatus(for:)` starts `.notDetermined`.
+- Documented test hook `PHPhotoLibraryPortable._installAuthorizationHandler`
+  drives `.notDetermined` → `.authorized` / `.denied` / `.limited`. Without it,
+  `requestAuthorization(for:)` fail-closes to `.denied`. Already-determined
+  statuses short-circuit. The completion-handler overlay is delivered on the
+  serial queue `org.openuikit.Photos.host-callback`.
+- `performChanges` / `performChangesAndWait` apply
+  `PHAssetChangeRequest.creationRequestForAsset(from:)`,
+  `creationRequestForAssetFromImage(atFileURL:)` (nil if the file is missing),
+  `PHAssetCollectionChangeRequest`, `deleteAssets`, and property updates into
+  that directory. Unauthorized writes throw `PHPhotosError.accessUserDenied`.
+- Change observers receive `PHChange`. `PHFetchResultChangeDetails` computes
+  inserted / removed / changed indexes by `localIdentifier`.
+- `PHAsset.fetchAssets(with:options:)`, `fetchAssets(withLocalIdentifiers:)`,
+  `fetchAssets(in:)` honor `PHFetchOptions` `predicate` (documented keys via
+  `NSPredicate` over an `NSDictionary` on Darwin). Linux corelibs has no
+  `NSPredicate(format:)` / `NSSortDescriptor.key`; the isolated host uses the
+  documented SPI `hostPredicateEvaluates` and `hostSortsByCreationDateAscending`
+  instead. `fetchLimit` and `includeHiddenAssets` apply on both.
+- Smart-album subtypes exist. Membership that can be decided from stored
+  fields (Recents, Favorites, Videos, Hidden, Live Photos, Screenshots, …)
+  is live; subtypes that need unobserved Darwin classifiers stay empty.
+- `PHImageManager.requestImageDataAndOrientation` returns on-disk bytes and
+  the C-identifier info keys. `requestImage` decodes through UIKit/AppKit
+  `UIImage(data:)` when that module is imported; on the isolated Linux host
+  it fail-closes with `PHImageErrorKey` unless a host-installed `UIImage` is
+  present (Ice Cubes contract). Delivery is inline (same contract).
+- `PHAssetResource` / `PHAssetResourceManager.requestData` / `writeData` read
+  the stored payload. `PHLivePhoto` requests remain fail-closed.
+- PNG IHDR bytes 16..<24 of the embedded 1×1 probe are width=1, height=1.
 
-Also compiling on Linux:
-
-- Enums and option sets with macios-corroborated raw values
-  (`PHAuthorizationStatus`, `PHAccessLevel`, collection/resource types,
-  `PHPhotosError.Code`, and the rest of the declared integer surface).
-- In-memory collections, placeholders, change-request objects, adjustment
-  data, editing input/output shells, live-photo request options, caching
-  manager no-ops, cloud-identifier fail-closed maps, and an empty
-  `PHPersistentChangeFetchResult` sequence.
-
-`PHPhotosErrorDomain` is `"PHPhotosErrorDomain"`, matching the pinned
-dotnet/macios `[ErrorDomain]`. Info-dictionary keys are declared as their C
-identifiers until an Apple oracle records payloads.
+`PHPhotosErrorDomain` is `"PHPhotosErrorDomain"`. Info-dictionary keys are the
+C identifiers until an Apple oracle records payloads.
 
 ## Fail-closed boundaries
 
-Linux has no `photolibraryd`, TCC prompt, iCloud Photos, or UIKit image
-pipeline.
+Linux has no `photolibraryd`, TCC prompt, iCloud Photos, or ImageIO on the
+isolated host.
 
-- Unauthorized fetches are empty.
-- `performChanges` / `performChangesAndWait` throw `PHPhotosError.changeNotSupported`.
+- Unauthorized fetches are empty; unauthorized writes throw `.accessUserDenied`.
 - Cloud identifier maps return `.identifierNotFound`.
-- Persistent-change fetch throws `.persistentChangeDetailsUnavailable`.
-- Resource data completion reports `.missingResource`.
-- Live Photo request handlers return `nil` plus `PHImageErrorKey`.
-- Change observers can be registered; the library never posts Apple changes.
-
-On Darwin, `UIImage` and `CGImagePropertyOrientation` come from UIKit/ImageIO.
-On the isolated Linux host those names are module-local lookalikes so the
-existing `requestImage` / `requestImageDataAndOrientation` signatures still
-compile. They are not UIKit or ImageIO identity. Real dependency identity is
-the future EC2 probe in `tests/agent/PhotosDependencyIdentity.swift`.
+- Live Photo request handlers return `nil` plus `PHLivePhotoInfoErrorKey`.
+- `requestImage` without a host `UIImage` and without UIKit/AppKit decoding
+  returns `nil` plus `PHImageErrorKey`.
+- Smart albums whose Darwin classifier is unobserved (Recently Added,
+  Selfies, Long Exposure, RAW, Generic, Unable to Upload) are empty.
 
 ## Still deferred
 
@@ -64,7 +65,7 @@ are omitted from this compile. `PHPhotosError.invalid` has no established raw
 value in the pinned bindings.
 
 See `oracle-questions.tsv` for callback timing, TCC prompting, info-key
-payloads, and Darwin `performChanges` error mapping.
+payloads, and Recently Added membership.
 
 Run `bash tests/acceptance/test_host.sh` from this directory. Keep generated
 products out of the tree.

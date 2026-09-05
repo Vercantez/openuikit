@@ -279,14 +279,20 @@ selector work:
    (killed after 27 minutes; the same tests run in 5 ms when invoked
    directly). The script therefore does `swift build --build-tests` and runs
    the `OpenUIKitPackageTests.xctest` bundle itself.
-2. **The bundle hangs mid-run roughly one launch in five**, at a different
-   test each time, sleeping in `poll()` with a second thread in
-   `epoll_wait`. Measured over 10 launches each: `UIControlTests` 3/10 hung,
-   `GeometryTests`+`ColorTests` — *purely computational, no window, no
-   touches, no selectors* — 2/10 hung. So it is the Swift 6.2.4 Linux XCTest
-   runtime in this image, not the library. The script runs the bundle under
-   `timeout` and retries, and requires a real
-   "Executed N tests, with 0 failures" line before passing.
+2. **The bundle used to hang mid-run roughly one launch in five**, at a
+   different test each time, sleeping in `poll()` / `ppoll` with a second
+   thread in `epoll_wait` (swift-corelibs-xctest#504). MEASURED
+   2026-09-05 on uikit-linux Swift 6.2.4: the ink list hung 3/5 at
+   timeout 20 s; a 200 ms libdispatch timer on the *global* queue that
+   `dispatch_async`'d to main made 6/6 pass, and each fire printed
+   `MAIN-QUEUE-DRAINED` on tid==pid. corelibs XCTest wraps every async
+   setUp/tearDown in `Task { }` then `XCTWaiter` 0.1 s CFRunLoop slices
+   whose before-date never wakes. `CLinuxXCTestSupport` (constructor in
+   the test bundle) wakes `CFRunLoopGetMain()` from a 10 ms non-main
+   dispatch timer and drains `DispatchQueue.main` from a BeforeWaiting
+   observer. `linux_realapp_verify.sh` / `linux_selector_verify.sh` now
+   run each list once. `swift test` (the SPM harness) still needs the
+   direct bundle invoke.
 
 Neither reproduces on macOS, where the full 427-test suite runs green every
 time.

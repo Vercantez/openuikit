@@ -45,18 +45,35 @@ open class CKRecordZone: NSObject, NSCopying, NSSecureCoding, @unchecked Sendabl
     }
 
     public required init?(coder: NSCoder) {
-        _ = coder
-        return nil
+        guard let zoneID = coder.decodeObject(of: CKRecordZoneID.self, forKey: "ck.zone.zoneID") else {
+            return nil
+        }
+        self.zoneID = zoneID
+        self.capabilities = CKRecordZone.Capabilities(rawValue: UInt(coder.decodeInteger(forKey: "ck.zone.capabilities")))
+        let rawScope = coder.decodeInteger(forKey: "ck.zone.encryption")
+        self.encryptionScope = CKRecordZone.EncryptionScope(rawValue: rawScope) ?? .perRecord
+        super.init()
     }
 
     open func encode(with coder: NSCoder) {
-        _ = coder
+        coder.encode(zoneID, forKey: "ck.zone.zoneID")
+        coder.encode(Int(capabilities.rawValue), forKey: "ck.zone.capabilities")
+        coder.encode(encryptionScope.rawValue, forKey: "ck.zone.encryption")
     }
 
     open func copy(with zone: NSZone? = nil) -> Any {
+        ck_copyZone()
+    }
+
+    func ck_copyZone() -> CKRecordZone {
         let copied = CKRecordZone(zoneID: zoneID)
         copied.encryptionScope = encryptionScope
+        copied.ck_setCapabilities(capabilities)
         return copied
+    }
+
+    func ck_setCapabilities(_ capabilities: CKRecordZone.Capabilities) {
+        self.capabilities = capabilities
     }
 
     open override var hash: Int {
@@ -69,57 +86,66 @@ open class CKRecordZone: NSObject, NSCopying, NSSecureCoding, @unchecked Sendabl
     }
 }
 
-extension CKRecordZone {
-    open class ID: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
-        public static let defaultZoneName = CKRecordZoneDefaultName
-        public static let `default` = CKRecordZone.ID(
-            zoneName: CKRecordZone.ID.defaultZoneName,
-            ownerName: CKCurrentUserDefaultName
-        )
+open class CKRecordZoneID: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public static let defaultZoneName = CKRecordZoneDefaultName
+    public static let `default` = CKRecordZoneID(
+        zoneName: CKRecordZoneID.defaultZoneName,
+        ownerName: CKCurrentUserDefaultName
+    )
 
-        open private(set) var zoneName: String
-        open private(set) var ownerName: String
+    open private(set) var zoneName: String
+    open private(set) var ownerName: String
 
-        public static var supportsSecureCoding: Bool { true }
+    public static var supportsSecureCoding: Bool { true }
 
-        public convenience init(
-            zoneName: String = CKRecordZone.ID.defaultZoneName,
-            ownerName: String = CKCurrentUserDefaultName
-        ) {
-            self.init(_zoneName: zoneName, ownerName: ownerName)
-        }
+    public convenience init(
+        zoneName: String = CKRecordZoneID.defaultZoneName,
+        ownerName: String = CKCurrentUserDefaultName
+    ) {
+        self.init(_zoneName: zoneName, ownerName: ownerName)
+    }
 
-        init(_zoneName: String, ownerName: String) {
-            self.zoneName = _zoneName
-            self.ownerName = ownerName
-            super.init()
-        }
+    init(_zoneName: String, ownerName: String) {
+        self.zoneName = _zoneName
+        self.ownerName = ownerName
+        super.init()
+    }
 
-        public required init?(coder: NSCoder) {
-            _ = coder
+    public required init?(coder: NSCoder) {
+        guard let zoneName = coder.decodeObject(of: NSString.self, forKey: "ck.zoneName") as String?,
+              let ownerName = coder.decodeObject(of: NSString.self, forKey: "ck.ownerName") as String?
+        else {
             return nil
         }
-
-        open func encode(with coder: NSCoder) {
-            _ = coder
-        }
-
-        open func copy(with zone: NSZone? = nil) -> Any {
-            CKRecordZone.ID(_zoneName: zoneName, ownerName: ownerName)
-        }
-
-        open override var hash: Int {
-            var hasher = Hasher()
-            hasher.combine(zoneName)
-            hasher.combine(ownerName)
-            return hasher.finalize()
-        }
-
-        open override func isEqual(_ object: Any?) -> Bool {
-            guard let other = object as? CKRecordZone.ID else { return false }
-            return zoneName == other.zoneName && ownerName == other.ownerName
-        }
+        self.zoneName = zoneName
+        self.ownerName = ownerName
+        super.init()
     }
+
+    open func encode(with coder: NSCoder) {
+        coder.encode(zoneName as NSString, forKey: "ck.zoneName")
+        coder.encode(ownerName as NSString, forKey: "ck.ownerName")
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        CKRecordZoneID(_zoneName: zoneName, ownerName: ownerName)
+    }
+
+    open override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(zoneName)
+        hasher.combine(ownerName)
+        return hasher.finalize()
+    }
+
+    open override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? CKRecordZoneID else { return false }
+        return zoneName == other.zoneName && ownerName == other.ownerName
+    }
+}
+
+extension CKRecordZone {
+    public typealias ID = CKRecordZoneID
 }
 
 open class CKQuery: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
@@ -140,14 +166,16 @@ open class CKQuery: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
     }
 
     public required init(coder aDecoder: NSCoder) {
-        _ = aDecoder
-        self.recordType = ""
+        let recordType = aDecoder.decodeObject(of: NSString.self, forKey: "ck.query.recordType") as String? ?? ""
+        // Linux Foundation NSPredicate / NSSortDescriptor are not NSCoding.
+        self.recordType = recordType
         self.predicate = NSPredicate(value: false)
         super.init()
+        sortDescriptors = nil
     }
 
     open func encode(with coder: NSCoder) {
-        _ = coder
+        coder.encode(recordType as NSString, forKey: "ck.query.recordType")
     }
 
     open func copy(with zone: NSZone? = nil) -> Any {
@@ -160,20 +188,38 @@ open class CKQuery: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
 open class CKServerChangeToken: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
     public static var supportsSecureCoding: Bool { true }
 
-    public required init?(coder: NSCoder) {
-        _ = coder
-        return nil
-    }
+    private(set) var ck_sequence: UInt64
 
-    public override init() {
+    public required init?(coder: NSCoder) {
+        ck_sequence = UInt64(bitPattern: Int64(coder.decodeInt64(forKey: "ck.token.seq")))
         super.init()
     }
 
+    public override init() {
+        self.ck_sequence = 0
+        super.init()
+    }
+
+    static func ck_make(sequence: UInt64) -> CKServerChangeToken {
+        let token = CKServerChangeToken()
+        token.ck_sequence = sequence
+        return token
+    }
+
     open func encode(with coder: NSCoder) {
-        _ = coder
+        coder.encode(Int64(bitPattern: ck_sequence), forKey: "ck.token.seq")
     }
 
     open func copy(with zone: NSZone? = nil) -> Any {
-        CKServerChangeToken()
+        CKServerChangeToken.ck_make(sequence: ck_sequence)
+    }
+
+    open override var hash: Int {
+        Int(truncatingIfNeeded: ck_sequence)
+    }
+
+    open override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? CKServerChangeToken else { return false }
+        return ck_sequence == other.ck_sequence
     }
 }

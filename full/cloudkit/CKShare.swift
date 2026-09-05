@@ -24,11 +24,13 @@ public struct CKSharingParticipantPermissionOption: OptionSet, Sendable, Hashabl
     public static let any: CKSharingParticipantPermissionOption = [.readOnly, .readWrite]
 }
 
-open class CKAllowedSharingOptions: NSObject, @unchecked Sendable {
+open class CKAllowedSharingOptions: NSObject, NSSecureCoding, @unchecked Sendable {
     open var allowedParticipantAccessOptions: CKSharingParticipantAccessOption
     open var allowedParticipantPermissionOptions: CKSharingParticipantPermissionOption
     open var allowsAccessRequests: Bool = false
     open var allowsParticipantsToInviteOthers: Bool = false
+
+    public static var supportsSecureCoding: Bool { true }
 
     open class var standard: CKAllowedSharingOptions {
         CKAllowedSharingOptions(
@@ -44,6 +46,15 @@ open class CKAllowedSharingOptions: NSObject, @unchecked Sendable {
         self.allowedParticipantPermissionOptions = allowedParticipantPermissionOptions
         self.allowedParticipantAccessOptions = allowedParticipantAccessOptions
         super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        _ = coder
+        return nil
+    }
+
+    open func encode(with coder: NSCoder) {
+        _ = coder
     }
 }
 
@@ -283,5 +294,29 @@ open class CKShare: CKRecord, @unchecked Sendable {
                 acceptanceStatus: .unknown
             )
         }
+    }
+
+    func ck_copyShare() -> CKShare {
+        let dummy = CKRecord(
+            recordType: "CKShareCopyRoot",
+            recordID: CKRecord.ID(recordName: "ck-share-root", zoneID: recordID.zoneID)
+        )
+        let copied = CKShare(rootRecord: dummy, shareID: recordID)
+        copied.allowsAccessRequests = allowsAccessRequests
+        copied.publicPermission = publicPermission
+        copied.ck_replaceParticipants(participants)
+        copied.ck_setShareURL(url)
+        return copied
+    }
+
+    func ck_replaceParticipants(_ participants: [CKShare.Participant]) {
+        self.participants = participants
+        if let first = participants.first {
+            owner = first
+        }
+    }
+
+    func ck_setShareURL(_ url: URL?) {
+        self.url = url
     }
 }

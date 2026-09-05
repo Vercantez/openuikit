@@ -38,11 +38,11 @@ public struct StoreKitPortableError: Error, Equatable, Sendable,
 
 /// Errors published by StoreKit 2.
 ///
-/// The portable store remains deliberately fail-closed when no App Store
-/// service is connected, but applications must still be able to distinguish
-/// user cancellation and transport/system failures using Apple's public error
-/// surface.
-public enum StoreKitError: Error, Sendable {
+/// Apple: https://developer.apple.com/documentation/storekit/storekiterror
+/// `notAvailableInStorefront` — the function isn’t available on devices
+/// configured for this storefront. Linux has no App Store; the local testing
+/// store throws this when no `.storekit` configuration is loaded.
+public enum StoreKitError: Error, Sendable, LocalizedError {
     case unknown
     case userCancelled
     case networkError(URLError)
@@ -50,6 +50,11 @@ public enum StoreKitError: Error, Sendable {
     case notAvailableInStorefront
     case notEntitled
     case unsupported
+
+    public var errorDescription: String? { String(describing: self) }
+    public var failureReason: String? { errorDescription }
+    public var recoverySuggestion: String? { nil }
+    public var helpAnchor: String? { nil }
 }
 
 open class SKStoreReviewController: NSObject {
@@ -69,29 +74,78 @@ open class SKStoreReviewController: NSObject {
 }
 
 public enum AppStore {
+    public struct Environment: Hashable, Sendable, RawRepresentable {
+        public var rawValue: String
+        public init(rawValue: String) { self.rawValue = rawValue }
+        public static let production = Environment(rawValue: "Production")
+        public static let sandbox = Environment(rawValue: "Sandbox")
+        public static let xcode = Environment(rawValue: "Xcode")
+    }
+
+    public struct Platform: Hashable, Sendable, RawRepresentable {
+        public var rawValue: String
+        public init(rawValue: String) { self.rawValue = rawValue }
+        public static let iOS = Platform(rawValue: "iOS")
+        public static let macOS = Platform(rawValue: "macOS")
+        public static let tvOS = Platform(rawValue: "tvOS")
+        public static let watchOS = Platform(rawValue: "watchOS")
+        public static let visionOS = Platform(rawValue: "visionOS")
+    }
+
     public private(set) static var portableReviewRequestCount = 0
+
+    public static var canMakePayments: Bool {
+        LocalTestingStore.shared.canMakePayments
+    }
+
+    public static var deviceVerificationID: UUID? { nil }
 
     public static func requestReview(in scene: UIWindowScene) {
         portableReviewRequestCount += 1
+        _ = scene
     }
 
+    /// Apple: `AppStore.sync()` synchronizes transaction information with the
+    /// App Store. https://developer.apple.com/documentation/storekit/appstore/sync()
+    /// Without a loaded `.storekit` configuration this host has no storefront.
     public static func sync() async throws {
-        throw StoreKitPortableError(.serviceUnavailable)
+        guard LocalTestingStore.shared.isLoaded else {
+            throw StoreKitError.notAvailableInStorefront
+        }
     }
 
     public static func showManageSubscriptions(in scene: UIWindowScene) async throws {
-        throw StoreKitPortableError(.serviceUnavailable)
+        _ = scene
+        throw StoreKitError.notAvailableInStorefront
     }
 
     public static func showManageSubscriptions(
         in scene: UIWindowScene,
         subscriptionGroupID: String
     ) async throws {
-        throw StoreKitPortableError(.serviceUnavailable)
+        _ = scene
+        _ = subscriptionGroupID
+        throw StoreKitError.notAvailableInStorefront
+    }
+
+    @MainActor
+    public static func presentOfferCodeRedeemSheet(in scene: UIWindowScene) async throws {
+        _ = scene
+        throw StoreKitError.notAvailableInStorefront
+    }
+
+    @MainActor
+    public static func presentMerchandising(
+        _ kind: AppStoreMerchandisingKind,
+        from controller: UIViewController
+    ) async throws -> AppStoreMerchandisingKind.PresentationResult {
+        _ = kind
+        _ = controller
+        throw StoreKitError.notAvailableInStorefront
     }
 }
 
-public struct SKError: Error, Hashable, @unchecked Sendable, CustomStringConvertible {
+public struct SKError: Error, Hashable, @unchecked Sendable, CustomStringConvertible, LocalizedError {
     public enum Code: Int, Sendable, Hashable {
         case unknown = 0
         case clientInvalid = 1
@@ -150,6 +204,7 @@ public struct SKError: Error, Hashable, @unchecked Sendable, CustomStringConvert
     public var errorCode: Int { code.rawValue }
     public var errorUserInfo: [String: Any] { userInfo }
     public var description: String { "StoreKit error \(code.rawValue)" }
+    public var errorDescription: String? { description }
 
     public static func == (lhs: SKError, rhs: SKError) -> Bool {
         lhs.code == rhs.code
@@ -208,6 +263,12 @@ public protocol SKProductsRequestDelegate: SKRequestDelegate {
 
 public final class SKProductsRequest: SKRequest {
     public let productIdentifiers: Set<String>
+    public weak var productsDelegate: SKProductsRequestDelegate?
+
+    public override var delegate: SKRequestDelegate? {
+        get { productsDelegate }
+        set { productsDelegate = newValue as? SKProductsRequestDelegate }
+    }
 
     public init(productIdentifiers: Set<String>) {
         self.productIdentifiers = productIdentifiers
@@ -215,26 +276,104 @@ public final class SKProductsRequest: SKRequest {
     }
 
     public override func start() {
-        super.start()
+        guard !isCancelled else { return }
+        guard LocalTestingStore.shared.isLoaded else {
+            let error = SKError(.paymentNotAllowed)
+            productsDelegate?.request(self, didFailWithError: error)
+            return
+        }
+        let split = LocalTestingStore.shared.skProducts(for: productIdentifiers)
+        let response = SKProductsResponse(
+            products: split.valid,
+            invalidProductIdentifiers: split.invalid
+        )
+        productsDelegate?.productsRequest(self, didReceive: response)
+        productsDelegate?.requestDidFinish(self)
     }
 }
 
 public final class SKProduct {
+    public enum PeriodUnit: UInt, Sendable {
+        case day = 0
+        case week = 1
+        case month = 2
+        case year = 3
+
+        init(storeKitUnit: Product.SubscriptionPeriod.Unit) {
+            switch storeKitUnit {
+            case .day: self = .day
+            case .week: self = .week
+            case .month: self = .month
+            case .year: self = .year
+            }
+        }
+    }
+
     public let productIdentifier: String
     public let localizedTitle: String
     public let localizedDescription: String
-    public let price: Decimal
+    public let price: NSDecimalNumber
+    public let priceLocale: Locale
+    public let subscriptionPeriod: SKProductSubscriptionPeriod?
+    public let introductoryPrice: SKProductDiscount?
+    public let subscriptionGroupIdentifier: String?
+    public let discounts: [SKProductDiscount]
+    public let isDownloadable: Bool
+    public let downloadContentLengths: [NSNumber]
+    public let downloadContentVersion: String
+    public let contentVersion: String
+    public let isFamilyShareable: Bool
 
     public init(
         productIdentifier: String,
         localizedTitle: String = "",
         localizedDescription: String = "",
-        price: Decimal = 0
+        price: NSDecimalNumber = NSDecimalNumber(value: 0),
+        priceLocale: Locale = Locale(identifier: "en_US_POSIX"),
+        subscriptionGroupIdentifier: String? = nil,
+        subscriptionPeriod: SKProductSubscriptionPeriod? = nil,
+        introductoryPrice: SKProductDiscount? = nil,
+        discounts: [SKProductDiscount] = [],
+        isDownloadable: Bool = false,
+        downloadContentLengths: [NSNumber] = [],
+        downloadContentVersion: String = "",
+        isFamilyShareable: Bool = false
     ) {
         self.productIdentifier = productIdentifier
         self.localizedTitle = localizedTitle
         self.localizedDescription = localizedDescription
         self.price = price
+        self.priceLocale = priceLocale
+        self.subscriptionGroupIdentifier = subscriptionGroupIdentifier
+        self.subscriptionPeriod = subscriptionPeriod
+        self.introductoryPrice = introductoryPrice
+        self.discounts = discounts
+        self.isDownloadable = isDownloadable
+        self.downloadContentLengths = downloadContentLengths
+        self.downloadContentVersion = downloadContentVersion
+        self.contentVersion = downloadContentVersion
+        self.isFamilyShareable = isFamilyShareable
+    }
+
+    public convenience init(
+        productIdentifier: String,
+        localizedTitle: String = "",
+        localizedDescription: String = "",
+        price: Decimal
+    ) {
+        self.init(
+            productIdentifier: productIdentifier,
+            localizedTitle: localizedTitle,
+            localizedDescription: localizedDescription,
+            price: NSDecimalNumber(decimal: price)
+        )
+    }
+
+    public var formattedPrice: String? {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = priceLocale
+        return formatter.string(from: price)
     }
 }
 
@@ -246,20 +385,57 @@ public enum SKPaymentTransactionState: Int, Sendable {
     case deferred = 4
 }
 
-open class SKPayment {
-    public let productIdentifier: String
-    open var quantity: Int { 1 }
+open class SKPayment: NSObject {
+    var storedProductIdentifier: String
+    var storedQuantity: Int
+    var storedRequestData: Data?
+    var storedApplicationUsername: String?
+    var storedSimulatesAskToBuy: Bool
+    var storedPaymentDiscount: SKPaymentDiscount?
 
-    public init(product: SKProduct) {
-        productIdentifier = product.productIdentifier
+    open var productIdentifier: String { storedProductIdentifier }
+    open var quantity: Int { storedQuantity }
+    open var requestData: Data? { storedRequestData }
+    open var applicationUsername: String? { storedApplicationUsername }
+    open var simulatesAskToBuyInSandbox: Bool { storedSimulatesAskToBuy }
+    open var paymentDiscount: SKPaymentDiscount? { storedPaymentDiscount }
+
+    public convenience init(product: SKProduct) {
+        self.init(productIdentifier: product.productIdentifier)
+    }
+
+    public init(productIdentifier: String) {
+        storedProductIdentifier = productIdentifier
+        storedQuantity = 1
+        storedSimulatesAskToBuy = false
+        super.init()
     }
 }
 
 public final class SKMutablePayment: SKPayment {
-    private var storedQuantity = 1
+    public override var productIdentifier: String {
+        get { storedProductIdentifier }
+        set { storedProductIdentifier = newValue }
+    }
     public override var quantity: Int {
         get { storedQuantity }
         set { storedQuantity = max(1, newValue) }
+    }
+    public override var requestData: Data? {
+        get { storedRequestData }
+        set { storedRequestData = newValue }
+    }
+    public override var applicationUsername: String? {
+        get { storedApplicationUsername }
+        set { storedApplicationUsername = newValue }
+    }
+    public override var simulatesAskToBuyInSandbox: Bool {
+        get { storedSimulatesAskToBuy }
+        set { storedSimulatesAskToBuy = newValue }
+    }
+    public override var paymentDiscount: SKPaymentDiscount? {
+        get { storedPaymentDiscount }
+        set { storedPaymentDiscount = newValue }
     }
 }
 
@@ -268,17 +444,26 @@ public final class SKPaymentTransaction {
     public let transactionState: SKPaymentTransactionState
     public let error: Error?
     public let transactionIdentifier: String?
+    public let transactionDate: Date?
+    public let original: SKPaymentTransaction?
+    public let downloads: [SKDownload]
 
     public init(
         payment: SKPayment,
         transactionState: SKPaymentTransactionState,
         error: Error?,
-        transactionIdentifier: String? = nil
+        transactionIdentifier: String? = nil,
+        transactionDate: Date? = nil,
+        original: SKPaymentTransaction? = nil,
+        downloads: [SKDownload] = []
     ) {
         self.payment = payment
         self.transactionState = transactionState
         self.error = error
         self.transactionIdentifier = transactionIdentifier
+        self.transactionDate = transactionDate
+        self.original = original
+        self.downloads = downloads
     }
 }
 
@@ -292,6 +477,24 @@ public protocol SKPaymentTransactionObserver: NSObjectProtocol {
         _ queue: SKPaymentQueue,
         restoreCompletedTransactionsFailedWithError error: Error
     )
+    func paymentQueue(
+        _ queue: SKPaymentQueue,
+        removedTransactions transactions: [SKPaymentTransaction]
+    )
+    func paymentQueue(
+        _ queue: SKPaymentQueue,
+        updatedDownloads downloads: [SKDownload]
+    )
+    func paymentQueue(
+        _ queue: SKPaymentQueue,
+        shouldAddStorePayment payment: SKPayment,
+        for product: SKProduct
+    ) -> Bool
+    func paymentQueue(
+        _ queue: SKPaymentQueue,
+        didRevokeEntitlementsForProductIdentifiers productIdentifiers: [String]
+    )
+    func paymentQueueDidChangeStorefront(_ queue: SKPaymentQueue)
 }
 
 public extension SKPaymentTransactionObserver {
@@ -300,15 +503,54 @@ public extension SKPaymentTransactionObserver {
         _ queue: SKPaymentQueue,
         restoreCompletedTransactionsFailedWithError error: Error
     ) {}
+    func paymentQueue(
+        _ queue: SKPaymentQueue,
+        removedTransactions transactions: [SKPaymentTransaction]
+    ) {}
+    func paymentQueue(
+        _ queue: SKPaymentQueue,
+        updatedDownloads downloads: [SKDownload]
+    ) {}
+    func paymentQueue(
+        _ queue: SKPaymentQueue,
+        shouldAddStorePayment payment: SKPayment,
+        for product: SKProduct
+    ) -> Bool {
+        _ = queue
+        _ = payment
+        _ = product
+        return false
+    }
+    func paymentQueue(
+        _ queue: SKPaymentQueue,
+        didRevokeEntitlementsForProductIdentifiers productIdentifiers: [String]
+    ) {}
+    func paymentQueueDidChangeStorefront(_ queue: SKPaymentQueue) {}
 }
 
-public final class SKPaymentQueue {
+public final class SKPaymentQueue: NSObject {
     private static let shared = SKPaymentQueue()
     private var observers: [SKPaymentTransactionObserver] = []
+    public weak var delegate: SKPaymentQueueDelegate?
 
-    private init() {}
+    private override init() { super.init() }
     public static func `default`() -> SKPaymentQueue { shared }
-    public static func canMakePayments() -> Bool { false }
+
+    /// Apple: `canMakePayments` indicates whether the person can make purchases.
+    /// https://developer.apple.com/documentation/storekit/skpaymentqueue/canmakepayments()
+    /// `SKError.paymentNotAllowed` (raw 4) is used when they cannot.
+    /// https://developer.apple.com/documentation/storekit/skerror/code
+    public static func canMakePayments() -> Bool {
+        LocalTestingStore.shared.canMakePayments
+    }
+
+    public var transactionObservers: [any SKPaymentTransactionObserver] { observers }
+    public var transactions: [SKPaymentTransaction] {
+        LocalTestingStore.shared.pendingSKTransactions
+    }
+    public var storefront: SKStorefront? {
+        LocalTestingStore.shared.currentSKStorefront
+    }
 
     public func add(_ observer: SKPaymentTransactionObserver) {
         if !observers.contains(where: { $0 === observer }) {
@@ -321,25 +563,149 @@ public final class SKPaymentQueue {
     }
 
     public func add(_ payment: SKPayment) {
-        let failure = SKPaymentTransaction(
+        guard LocalTestingStore.shared.isLoaded else {
+            let failure = SKPaymentTransaction(
+                payment: payment,
+                transactionState: .failed,
+                error: SKError(.paymentNotAllowed),
+                transactionDate: Date()
+            )
+            notify([failure])
+            return
+        }
+        let purchasing = SKPaymentTransaction(
             payment: payment,
-            transactionState: .failed,
-            error: StoreKitPortableError(.paymentsUnavailable)
+            transactionState: .purchasing,
+            error: nil,
+            transactionDate: Date()
         )
-        for observer in observers {
-            observer.paymentQueue(self, updatedTransactions: [failure])
+        notify([purchasing])
+        guard let catalog = LocalTestingStore.shared.catalogProduct(id: payment.productIdentifier) else {
+            let failure = SKPaymentTransaction(
+                payment: payment,
+                transactionState: .failed,
+                error: SKError(.storeProductNotAvailable),
+                transactionDate: Date()
+            )
+            notify([failure])
+            return
+        }
+        let product = Product(
+            id: catalog.id,
+            displayName: catalog.displayName,
+            description: catalog.description,
+            price: catalog.price,
+            displayPrice: catalog.displayPrice,
+            type: catalog.type
+        )
+        do {
+            let result = try LocalTestingStore.shared.purchase(
+                product: product,
+                quantity: payment.quantity,
+                appAccountToken: nil
+            )
+            let purchased = SKPaymentTransaction(
+                payment: payment,
+                transactionState: .purchased,
+                error: nil,
+                transactionIdentifier: String(result.unsafePayloadValue.id),
+                transactionDate: result.unsafePayloadValue.purchaseDate
+            )
+            LocalTestingStore.shared.recordSKTransaction(purchased)
+            notify([purchased])
+        } catch {
+            let failure = SKPaymentTransaction(
+                payment: payment,
+                transactionState: .failed,
+                error: error,
+                transactionDate: Date()
+            )
+            notify([failure])
         }
     }
 
-    public func finishTransaction(_ transaction: SKPaymentTransaction) {}
+    public func finishTransaction(_ transaction: SKPaymentTransaction) {
+        if let identifier = transaction.transactionIdentifier, let value = UInt64(identifier) {
+            LocalTestingStore.shared.finish(id: value)
+        }
+        LocalTestingStore.shared.removeSKTransaction(transaction)
+        for observer in observers {
+            observer.paymentQueue(self, removedTransactions: [transaction])
+        }
+    }
 
     public func restoreCompletedTransactions() {
-        let error = StoreKitPortableError(.paymentsUnavailable)
-        for observer in observers {
-            observer.paymentQueue(
-                self,
-                restoreCompletedTransactionsFailedWithError: error
+        restoreCompletedTransactions(withApplicationUsername: nil)
+    }
+
+    public func restoreCompletedTransactions(withApplicationUsername username: String?) {
+        _ = username
+        guard LocalTestingStore.shared.isLoaded else {
+            let error = SKError(.paymentNotAllowed)
+            for observer in observers {
+                observer.paymentQueue(self, restoreCompletedTransactionsFailedWithError: error)
+            }
+            return
+        }
+        var restored: [SKPaymentTransaction] = []
+        for catalog in LocalTestingStore.shared.restoredNonConsumables() {
+            let payment = SKPayment(productIdentifier: catalog.id)
+            let original = SKPaymentTransaction(
+                payment: payment,
+                transactionState: .purchased,
+                error: nil,
+                transactionIdentifier: "orig-\(catalog.id)",
+                transactionDate: Date()
             )
+            let transaction = SKPaymentTransaction(
+                payment: payment,
+                transactionState: .restored,
+                error: nil,
+                transactionIdentifier: "rest-\(catalog.id)",
+                transactionDate: Date(),
+                original: original
+            )
+            restored.append(transaction)
+            LocalTestingStore.shared.recordSKTransaction(transaction)
+        }
+        if !restored.isEmpty {
+            notify(restored)
+        }
+        for observer in observers {
+            observer.paymentQueueRestoreCompletedTransactionsFinished(self)
+        }
+    }
+
+    public func start(_ downloads: [SKDownload]) {
+        for observer in observers {
+            observer.paymentQueue(self, updatedDownloads: downloads)
+        }
+    }
+
+    public func cancel(_ downloads: [SKDownload]) {
+        for observer in observers {
+            observer.paymentQueue(self, updatedDownloads: downloads)
+        }
+    }
+
+    public func pause(_ downloads: [SKDownload]) {
+        for observer in observers {
+            observer.paymentQueue(self, updatedDownloads: downloads)
+        }
+    }
+
+    public func resume(_ downloads: [SKDownload]) {
+        for observer in observers {
+            observer.paymentQueue(self, updatedDownloads: downloads)
+        }
+    }
+
+    public func presentCodeRedemptionSheet() {}
+    public func showPriceConsentIfNeeded() {}
+
+    private func notify(_ transactions: [SKPaymentTransaction]) {
+        for observer in observers {
+            observer.paymentQueue(self, updatedTransactions: transactions)
         }
     }
 }
@@ -458,295 +824,4 @@ open class SKAdImpression: NSObject {
         self.signature = signature
         self.version = version
     }
-}
-
-@frozen
-public enum VerificationResult<SignedType> {
-    public enum VerificationError: Error, Hashable, Sendable {
-        case invalidCertificateChain
-        case invalidEncoding
-        case invalidSignature
-        case missingRequiredProperties
-        case revokedCertificate
-    }
-
-    case verified(SignedType)
-    case unverified(SignedType, VerificationError)
-
-    public var unsafePayloadValue: SignedType {
-        switch self {
-        case .verified(let value), .unverified(let value, _):
-            return value
-        }
-    }
-
-    public var payloadValue: SignedType {
-        get throws {
-            switch self {
-            case .verified(let value):
-                return value
-            case .unverified(_, let error):
-                throw error
-            }
-        }
-    }
-}
-
-public struct Product: Identifiable, Hashable, Sendable {
-    public struct SubscriptionPeriod: Hashable, Sendable, CustomDebugStringConvertible {
-        public enum Unit: Int, Sendable, Hashable, Comparable, CustomDebugStringConvertible {
-            case day, week, month, year
-            public static func < (lhs: Unit, rhs: Unit) -> Bool { lhs.rawValue < rhs.rawValue }
-            public var debugDescription: String { String(describing: self) }
-            public var localizedDescription: String { debugDescription }
-        }
-
-        public let value: Int
-        public let unit: Unit
-        public init(value: Int, unit: Unit) { self.value = value; self.unit = unit }
-        public var debugDescription: String { "\(value) \(unit)" }
-        public static var weekly: SubscriptionPeriod { SubscriptionPeriod(value: 1, unit: .week) }
-        public static var monthly: SubscriptionPeriod { SubscriptionPeriod(value: 1, unit: .month) }
-        public static var yearly: SubscriptionPeriod { SubscriptionPeriod(value: 1, unit: .year) }
-        public static var everyTwoWeeks: SubscriptionPeriod { SubscriptionPeriod(value: 2, unit: .week) }
-        public static var everyTwoMonths: SubscriptionPeriod { SubscriptionPeriod(value: 2, unit: .month) }
-        public static var everyThreeDays: SubscriptionPeriod { SubscriptionPeriod(value: 3, unit: .day) }
-        public static var everyThreeMonths: SubscriptionPeriod { SubscriptionPeriod(value: 3, unit: .month) }
-        public static var everySixMonths: SubscriptionPeriod { SubscriptionPeriod(value: 6, unit: .month) }
-    }
-
-    public struct SubscriptionOffer: Hashable, Sendable, Identifiable {
-        public struct Signature: Hashable, Sendable {
-            public var keyID: String
-            public var nonce: UUID
-            public var timestamp: Int
-            public var signature: Data
-            public init(keyID: String, nonce: UUID, timestamp: Int, signature: Data) {
-                self.keyID = keyID
-                self.nonce = nonce
-                self.timestamp = timestamp
-                self.signature = signature
-            }
-        }
-
-        public let id: String
-        public init(id: String) { self.id = id }
-    }
-
-    public struct PurchaseOption: Hashable, Sendable, CustomDebugStringConvertible {
-        private enum Storage: Hashable, Sendable {
-            case quantity(Int)
-            case appAccountToken(UUID)
-            case other(String)
-        }
-
-        private var storage: Storage
-        public var debugDescription: String { String(describing: storage) }
-
-        public static func quantity(_ quantity: Int) -> PurchaseOption {
-            PurchaseOption(storage: .quantity(quantity))
-        }
-
-        public static func appAccountToken(_ token: UUID) -> PurchaseOption {
-            PurchaseOption(storage: .appAccountToken(token))
-        }
-
-        public static func simulatesAskToBuyInSandbox(_ simulateAskToBuy: Bool) -> PurchaseOption {
-            PurchaseOption(storage: .other("simulatesAskToBuyInSandbox:\(simulateAskToBuy)"))
-        }
-
-        public static func winBackOffer(_ offer: Product.SubscriptionOffer) -> PurchaseOption {
-            PurchaseOption(storage: .other("winBack:\(offer.id)"))
-        }
-
-        public static func promotionalOffer(
-            offerID: String,
-            keyID: String,
-            nonce: UUID,
-            signature: Data,
-            timestamp: Int
-        ) -> PurchaseOption {
-            _ = keyID
-            _ = nonce
-            _ = signature
-            _ = timestamp
-            return PurchaseOption(storage: .other("promo:\(offerID)"))
-        }
-
-        public static func promotionalOffer(
-            offerID: String,
-            signature: Product.SubscriptionOffer.Signature
-        ) -> PurchaseOption {
-            _ = signature
-            return PurchaseOption(storage: .other("promo:\(offerID)"))
-        }
-
-        public static func promotionalOffer(
-            _ offer: Product.SubscriptionOffer,
-            compactJWS: String
-        ) -> PurchaseOption {
-            _ = compactJWS
-            return PurchaseOption(storage: .other("promo:\(offer.id)"))
-        }
-
-        public static func onStorefrontChange(
-            shouldContinuePurchase: @escaping (Storefront) -> Bool
-        ) -> PurchaseOption {
-            _ = shouldContinuePurchase
-            return PurchaseOption(storage: .other("onStorefrontChange"))
-        }
-
-        public static func introductoryOfferEligibility(compactJWS: String) -> PurchaseOption {
-            PurchaseOption(storage: .other("intro:\(compactJWS)"))
-        }
-
-        public static func custom(key: String, value: Data) -> PurchaseOption {
-            PurchaseOption(storage: .other("custom:\(key):data"))
-        }
-
-        public static func custom(key: String, value: String) -> PurchaseOption {
-            PurchaseOption(storage: .other("custom:\(key):\(value)"))
-        }
-
-        public static func custom(key: String, value: Bool) -> PurchaseOption {
-            PurchaseOption(storage: .other("custom:\(key):\(value)"))
-        }
-
-        public static func custom(key: String, value: Double) -> PurchaseOption {
-            PurchaseOption(storage: .other("custom:\(key):\(value)"))
-        }
-    }
-
-    public enum PurchaseResult {
-        case success(VerificationResult<Transaction>)
-        case userCancelled
-        case pending
-    }
-
-    public struct SubscriptionInfo: Hashable, Sendable {
-        public let subscriptionGroupID: String
-        public init(subscriptionGroupID: String) {
-            self.subscriptionGroupID = subscriptionGroupID
-        }
-    }
-
-    public typealias ID = String
-    public struct ProductType: Hashable, Sendable, RawRepresentable {
-        public var rawValue: String
-        public init(rawValue: String) { self.rawValue = rawValue }
-        public static let consumable = ProductType(rawValue: "Consumable")
-        public static let nonConsumable = ProductType(rawValue: "NonConsumable")
-        public static let nonRenewable = ProductType(rawValue: "NonRenewable")
-        public static let autoRenewable = ProductType(rawValue: "AutoRenewable")
-    }
-
-    public let id: String
-    public let displayName: String
-    public let description: String
-    public let price: Decimal
-    public let displayPrice: String
-    public let subscription: SubscriptionInfo?
-    public let isFamilyShareable: Bool
-    public let type: ProductType
-    public var jsonRepresentation: Data { Data() }
-
-    public init(
-        id: String,
-        displayName: String = "",
-        description: String = "",
-        price: Decimal = 0,
-        displayPrice: String? = nil,
-        subscription: SubscriptionInfo? = nil,
-        isFamilyShareable: Bool = false,
-        type: ProductType = .consumable
-    ) {
-        self.id = id
-        self.displayName = displayName
-        self.description = description
-        self.price = price
-        // Real StoreKit products carry a storefront-localized string. The
-        // portable initializer accepts that authoritative value; a manually
-        // constructed test product falls back to the locale-independent
-        // Decimal spelling rather than inventing a currency.
-        self.displayPrice = displayPrice ?? price.description
-        self.subscription = subscription
-        self.isFamilyShareable = isFamilyShareable
-        self.type = type
-    }
-
-    public static func products<Identifiers>(
-        for identifiers: Identifiers
-    ) async throws -> [Product] where Identifiers: Collection, Identifiers.Element == String {
-        _ = identifiers
-        throw StoreKitPortableError(.productUnavailable)
-    }
-
-    public func purchase(
-        options: Set<PurchaseOption> = []
-    ) async throws -> PurchaseResult {
-        throw StoreKitPortableError(.paymentsUnavailable)
-    }
-
-    #if canImport(AppKit)
-    @available(macOS 15.2, *)
-    public func purchase(
-        confirmIn window: NSWindow,
-        options: Set<PurchaseOption> = []
-    ) async throws -> PurchaseResult {
-        _ = window
-        _ = options
-        throw StoreKitPortableError(.paymentsUnavailable)
-    }
-    #endif
-}
-
-public struct Transaction: Identifiable, Hashable, Sendable {
-    public let id: UInt64
-    public let productID: String
-    public let purchaseDate: Date
-    public let expirationDate: Date?
-    public let revocationDate: Date?
-
-    public init(
-        id: UInt64,
-        productID: String,
-        purchaseDate: Date,
-        expirationDate: Date? = nil,
-        revocationDate: Date? = nil
-    ) {
-        self.id = id
-        self.productID = productID
-        self.purchaseDate = purchaseDate
-        self.expirationDate = expirationDate
-        self.revocationDate = revocationDate
-    }
-
-    public static func latest(
-        for productID: String
-    ) async -> VerificationResult<Transaction>? { nil }
-
-    public static func currentEntitlement(
-        for productID: String
-    ) async -> VerificationResult<Transaction>? { nil }
-
-    public static var updates: AsyncStream<VerificationResult<Transaction>> {
-        AsyncStream { $0.finish() }
-    }
-
-    public static var currentEntitlements: AsyncStream<VerificationResult<Transaction>> {
-        AsyncStream { $0.finish() }
-    }
-
-    public func finish() async {}
-}
-
-public struct Storefront: Hashable, Sendable, Identifiable {
-    public typealias ID = String
-    public let id: String
-    public let countryCode: String
-    public init(id: String, countryCode: String) {
-        self.id = id
-        self.countryCode = countryCode
-    }
-    public static var current: Storefront? { get async { nil } }
 }

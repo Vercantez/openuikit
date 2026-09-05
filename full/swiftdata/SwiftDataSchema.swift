@@ -35,6 +35,17 @@ public final class Schema: Hashable, Codable, CustomDebugStringConvertible, @unc
         public static func < (lhs: Version, rhs: Version) -> Bool {
             (lhs.major, lhs.minor, lhs.patch) < (rhs.major, rhs.minor, rhs.patch)
         }
+
+        public static func == (lhs: Version, rhs: Version) -> Bool {
+            lhs.major == rhs.major && lhs.minor == rhs.minor && lhs.patch == rhs.patch
+        }
+
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(major)
+            hasher.combine(minor)
+            hasher.combine(patch)
+        }
+
     }
 
     public struct PropertyMetadata: @unchecked Sendable {
@@ -78,7 +89,17 @@ public final class Schema: Hashable, Codable, CustomDebugStringConvertible, @unc
                 self.name = name
                 self.transformerName = transformerName
             }
-        }
+
+            public static func == (lhs: Option, rhs: Option) -> Bool {
+                lhs.name == rhs.name && lhs.transformerName == rhs.transformerName
+            }
+
+            public func hash(into hasher: inout Hasher) {
+                hasher.combine(name)
+                hasher.combine(transformerName)
+            }
+
+            }
 
         public var name: String
         public var originalName: String
@@ -160,6 +181,7 @@ public final class Schema: Hashable, Codable, CustomDebugStringConvertible, @unc
             hasher.combine(hashModifier)
         }
 
+
         private enum CodingKeys: String, CodingKey {
             case name, originalName, options, valueType, hashModifier, isOptional
         }
@@ -203,6 +225,7 @@ public final class Schema: Hashable, Codable, CustomDebugStringConvertible, @unc
 
     public final class Relationship: SchemaProperty, @unchecked Sendable {
         public enum DeleteRule: String, Codable, Sendable {
+            public typealias RawValue = String
             case nullify
             case cascade
             case deny
@@ -214,7 +237,16 @@ public final class Schema: Hashable, Codable, CustomDebugStringConvertible, @unc
             public var debugDescription: String { name }
             public static var unique: Option { Option(name: "unique") }
             init(name: String) { self.name = name }
-        }
+
+            public static func == (lhs: Option, rhs: Option) -> Bool {
+                lhs.name == rhs.name
+            }
+
+            public func hash(into hasher: inout Hasher) {
+                hasher.combine(name)
+            }
+
+            }
 
         public var name: String
         public var originalName: String
@@ -301,6 +333,7 @@ public final class Schema: Hashable, Codable, CustomDebugStringConvertible, @unc
             hasher.combine(deleteRule)
             hasher.combine(destination)
         }
+
 
         private enum CodingKeys: String, CodingKey {
             case name, originalName, options, deleteRule, destination
@@ -412,6 +445,7 @@ public final class Schema: Hashable, Codable, CustomDebugStringConvertible, @unc
             hasher.combine(name)
         }
 
+
         private enum CodingKeys: String, CodingKey {
             case name, attributes, relationships, superentityName, indices, uniquenessConstraints
         }
@@ -420,7 +454,28 @@ public final class Schema: Hashable, Codable, CustomDebugStringConvertible, @unc
     public final class Index<T: PersistentModel>: SchemaProperty, @unchecked Sendable {
         public enum CodingKeys: String, CodingKey {
             case indices
-        }
+
+            public var stringValue: String { rawValue }
+            public var intValue: Int? { nil }
+
+            public init?(stringValue: String) {
+                self.init(rawValue: stringValue)
+            }
+
+            public init?(intValue: Int) {
+                _ = intValue
+                return nil
+            }
+
+            public static func == (lhs: CodingKeys, rhs: CodingKeys) -> Bool {
+                lhs.rawValue == rhs.rawValue
+            }
+
+            public func hash(into hasher: inout Hasher) {
+                hasher.combine(rawValue)
+            }
+
+            }
 
         public enum Types<P: PersistentModel> {
             case binary([PartialKeyPath<P>])
@@ -469,12 +524,34 @@ public final class Schema: Hashable, Codable, CustomDebugStringConvertible, @unc
         public func hash(into hasher: inout Hasher) {
             hasher.combine(name)
         }
+
     }
 
     public final class Unique<T: PersistentModel>: SchemaProperty, @unchecked Sendable {
         public enum CodingKeys: String, CodingKey {
             case constraints
-        }
+
+            public var stringValue: String { rawValue }
+            public var intValue: Int? { nil }
+
+            public init?(stringValue: String) {
+                self.init(rawValue: stringValue)
+            }
+
+            public init?(intValue: Int) {
+                _ = intValue
+                return nil
+            }
+
+            public static func == (lhs: CodingKeys, rhs: CodingKeys) -> Bool {
+                lhs.rawValue == rhs.rawValue
+            }
+
+            public func hash(into hasher: inout Hasher) {
+                hasher.combine(rawValue)
+            }
+
+            }
 
         public let constraints: [[PartialKeyPath<T>]]
         public var name: String
@@ -511,6 +588,7 @@ public final class Schema: Hashable, Codable, CustomDebugStringConvertible, @unc
         public func hash(into hasher: inout Hasher) {
             hasher.combine(name)
         }
+
     }
 
     public static let schemaEncodingVersion = Version(1, 0, 0)
@@ -602,6 +680,7 @@ public final class Schema: Hashable, Codable, CustomDebugStringConvertible, @unc
         hasher.combine(version)
         hasher.combine(entities.map(\.name))
     }
+
 
     private enum CodingKeys: String, CodingKey {
         case encodingVersion, version, entities

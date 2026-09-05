@@ -1522,6 +1522,31 @@ extension CLLocationManagerDelegate {
   }
 }
 
+#if !canImport(ObjectiveC)
+public typealias AnyClass = AnyObject.Type
+#endif
+
+/// Process-wide GNSS availability. Linux has no location daemon, so the
+/// default is false. `testManagerValueStoresAndAvailability` (isolated
+/// host) is the measurement: `_portableSetLocationServicesEnabled(true)`
+/// is the only grant; restoring false returns the class method to false.
+private enum CLPortableDeviceState {
+  static let lock = NSLock()
+  static var locationServicesEnabled = false
+
+  static func loadEnabled() -> Bool {
+    lock.lock()
+    defer { lock.unlock() }
+    return locationServicesEnabled
+  }
+
+  static func storeEnabled(_ value: Bool) {
+    lock.lock()
+    locationServicesEnabled = value
+    lock.unlock()
+  }
+}
+
 #if canImport(ObjectiveC)
 @objc(CLLocationManager)
 #endif
@@ -1537,6 +1562,7 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
   private var portableMonitoringSignificantChanges = false
   private var portableMonitoringVisits = false
   private var portableMonitoredRegions: Set<CLRegion> = []
+  private var portableRegionStates: [String: CLRegionState] = [:]
   private var portableRangedRegions: Set<CLRegion> = []
   private var portableRangedBeaconConstraints: Set<CLBeaconIdentityConstraint> = []
 
@@ -1637,11 +1663,18 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
   #if canImport(ObjectiveC)
   @objc
   #endif
-  open class func locationServicesEnabled() -> Bool { true }
+  open class func locationServicesEnabled() -> Bool {
+    // Isolated host: false unless `_portableSetLocationServicesEnabled(true)`
+    // (testManagerValueStoresAndAvailability).
+    CLPortableDeviceState.loadEnabled()
+  }
   #if canImport(ObjectiveC)
   @objc
   #endif
-  open class func headingAvailable() -> Bool { true }
+  open class func headingAvailable() -> Bool {
+    // Isolated host has no magnetometer (testHeadingFailClosedWithoutCompass).
+    false
+  }
   #if canImport(ObjectiveC)
   @objc
   #endif
@@ -1711,7 +1744,19 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
   open func startUpdatingLocation() {
     portableLock.lock()
     portableUpdatingLocation = true
+    let delegate = portableDelegate
+    let status = portableAuthorizationStatus
     portableLock.unlock()
+    // Unauthorized / services-off path: CLError.denied.
+    // Authorized path waits for `_portableInject(locations:)` rather than
+    // inventing a fix; requestLocation is the one-shot that reports
+    // locationUnknown with no cached sample
+    // (testHostInjectedLocationHeadingRegion, testAuthorizationFailClosed).
+    if !Self.locationServicesEnabled()
+      || (status != .authorizedAlways && status != .authorizedWhenInUse)
+    {
+      delegate?.locationManager(self, didFailWithError: CLError(.denied))
+    }
   }
 
   #if canImport(ObjectiveC)
@@ -1732,7 +1777,10 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
     let status = portableAuthorizationStatus
     let location = portableLocation
     portableLock.unlock()
-    guard status == .authorizedAlways || status == .authorizedWhenInUse else {
+    let services = Self.locationServicesEnabled()
+    guard services,
+      status == .authorizedAlways || status == .authorizedWhenInUse
+    else {
       delegate?.locationManager(self, didFailWithError: CLError(.denied))
       return
     }
@@ -1749,7 +1797,11 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
   open func startUpdatingHeading() {
     portableLock.lock()
     portableUpdatingHeading = true
+    let delegate = portableDelegate
     portableLock.unlock()
+    // No compass on Linux: headingFailure unless a later host inject
+    // supplies a CLHeading (testHeadingFailClosedWithoutCompass).
+    delegate?.locationManager(self, didFailWithError: CLError(.headingFailure))
   }
 
   #if canImport(ObjectiveC)
@@ -1815,9 +1867,22 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
   #endif
   open func startMonitoring(for region: CLRegion) {
     portableLock.lock()
-    portableMonitoredRegions.insert(region)
+    let status = portableAuthorizationStatus
     let delegate = portableDelegate
+    let services = Self.locationServicesEnabled()
+    let authorized = status == .authorizedAlways || status == .authorizedWhenInUse
+    if services && authorized {
+      portableMonitoredRegions.insert(region)
+    }
     portableLock.unlock()
+    guard services, authorized else {
+      delegate?.locationManager(
+        self,
+        monitoringDidFailFor: region,
+        withError: CLError(.regionMonitoringDenied)
+      )
+      return
+    }
     delegate?.locationManager(self, didStartMonitoringFor: region)
   }
 
@@ -1827,6 +1892,7 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
   open func stopMonitoring(for region: CLRegion) {
     portableLock.lock()
     portableMonitoredRegions.remove(region)
+    portableRegionStates.removeValue(forKey: region.identifier)
     portableLock.unlock()
   }
 
@@ -1969,6 +2035,11 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
   open func stopMonitoringLocationPushes() {}
 
   @_spi(OpenUIKitHost)
+  public static func _portableSetLocationServicesEnabled(_ enabled: Bool) {
+    CLPortableDeviceState.storeEnabled(enabled)
+  }
+
+  @_spi(OpenUIKitHost)
   public func _portableSetAuthorization(
     _ status: CLAuthorizationStatus,
     accuracy: CLAccuracyAuthorization = .fullAccuracy
@@ -1993,16 +2064,28 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
     let delegate = portableDelegate
     let authorized = portableAuthorizationStatus == .authorizedAlways
       || portableAuthorizationStatus == .authorizedWhenInUse
-    let deliver = authorized
+    let services = Self.locationServicesEnabled()
+    let deliver = services && authorized
       && (portableUpdatingLocation || portableMonitoringSignificantChanges)
     let regions = portableMonitoredRegions
-    portableLock.unlock()
-    guard deliver else { return }
-    delegate?.locationManager(self, didUpdateLocations: locations)
+    var transitions: [(CLRegion, CLRegionState, CLRegionState)] = []
     for region in regions {
       guard let circular = region as? CLCircularRegion else { continue }
       let state: CLRegionState = circular.contains(latest.coordinate) ? .inside : .outside
+      let previous = portableRegionStates[region.identifier] ?? .unknown
+      portableRegionStates[region.identifier] = state
+      transitions.append((region, previous, state))
+    }
+    portableLock.unlock()
+    guard deliver else { return }
+    delegate?.locationManager(self, didUpdateLocations: locations)
+    for (region, previous, state) in transitions {
       delegate?.locationManager(self, didDetermineState: state, for: region)
+      if state == .inside && previous != .inside && region.notifyOnEntry {
+        delegate?.locationManager(self, didEnterRegion: region)
+      } else if state == .outside && previous != .outside && region.notifyOnExit {
+        delegate?.locationManager(self, didExitRegion: region)
+      }
     }
   }
 
@@ -2024,6 +2107,36 @@ open class CLLocationManager: NSObject, @unchecked Sendable {
     let delegate = portableDelegate
     portableLock.unlock()
     delegate?.locationManager(self, didFailWithError: error)
+  }
+
+  @_spi(OpenUIKitHost)
+  public func _portableInject(visit: CLVisit) {
+    portableLock.lock()
+    let delegate = portableDelegate
+    let monitoring = portableMonitoringVisits
+    portableLock.unlock()
+    if monitoring {
+      delegate?.locationManager(self, didVisit: visit)
+    }
+  }
+
+  @_spi(OpenUIKitHost)
+  public func _portablePauseLocationUpdates() {
+    portableLock.lock()
+    let delegate = portableDelegate
+    let pauses = pausesLocationUpdatesAutomatically
+    portableLock.unlock()
+    if pauses {
+      delegate?.locationManagerDidPauseLocationUpdates(self)
+    }
+  }
+
+  @_spi(OpenUIKitHost)
+  public func _portableResumeLocationUpdates() {
+    portableLock.lock()
+    let delegate = portableDelegate
+    portableLock.unlock()
+    delegate?.locationManagerDidResumeLocationUpdates(self)
   }
 }
 

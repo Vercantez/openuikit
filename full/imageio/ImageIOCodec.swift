@@ -1,7 +1,8 @@
 import Foundation
 
-// Portable BMP (BI_RGB) and stored-block PNG codecs used when CQuartz is
-// unavailable. They never invent pixels for formats they cannot decode.
+// Portable BMP (BI_RGB), stored-block PNG, and baseline JPEG codecs used
+// when CQuartz is unavailable. They never invent pixels for formats they
+// cannot decode.
 
 let imageioTypePNG: CFString = "public.png"
 let imageioTypeJPEG: CFString = "public.jpeg"
@@ -13,12 +14,14 @@ func imageioSupportedSourceTypes() -> [CFString] {
 }
 
 func imageioSupportedDestinationTypes() -> [CFString] {
-    [imageioTypePNG, imageioTypeBMP]
+    [imageioTypePNG, imageioTypeJPEG, imageioTypeBMP]
 }
 
 func imageioDetectType(_ data: Data) -> CFString? {
     let bytes = Array(data.prefix(14))
-    if bytes.count >= 8,
+    // MEASURED 2026-09-05 Apple ImageIO: a PNG signature alone (8 bytes)
+    // stays untyped; type public.png appears at 10 bytes.
+    if bytes.count >= 10,
        bytes[0...7].elementsEqual([137, 80, 78, 71, 13, 10, 26, 10]) {
         return imageioTypePNG
     }
@@ -44,6 +47,9 @@ func imageioDecodePortable(_ data: Data, type: CFString) -> DecodedImageSet? {
     if type == imageioTypePNG {
         return imageioDecodePNG(data)
     }
+    if type == imageioTypeJPEG {
+        return imageioDecodeJPEG(data)
+    }
     return nil
 }
 
@@ -53,6 +59,9 @@ func imageioEncode(_ image: CGImage, type: CFString) -> Data? {
     }
     if type == imageioTypePNG {
         return imageioEncodePNG(image)
+    }
+    if type == imageioTypeJPEG {
+        return imageioEncodeJPEG(image)
     }
     return nil
 }

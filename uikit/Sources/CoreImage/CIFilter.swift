@@ -28,7 +28,29 @@ public class CIFilter: NSObject, @unchecked Sendable {
         }
     }
 
+    // Darwin NSObject has KVC; swift-corelibs NSObject does not
+    // (same gap as UIVisualEffect, measured 2026-09-04 in Docker;
+    // uikit-linux 6.2.4 `swift build --build-tests` after merging
+    // linux-xctest onto main's CoreImage: override does not match).
+#if canImport(ObjectiveC)
     public override func setValue(_ value: Any?, forKey key: String) {
+        applyValue(value, forKey: key)
+    }
+
+    public override func value(forKey key: String) -> Any? {
+        lookupValue(forKey: key)
+    }
+#else
+    public func setValue(_ value: Any?, forKey key: String) {
+        applyValue(value, forKey: key)
+    }
+
+    public func value(forKey key: String) -> Any? {
+        lookupValue(forKey: key)
+    }
+#endif
+
+    private func applyValue(_ value: Any?, forKey key: String) {
         if let value {
             inputs[key] = value
         } else {
@@ -36,7 +58,7 @@ public class CIFilter: NSObject, @unchecked Sendable {
         }
     }
 
-    public override func value(forKey key: String) -> Any? {
+    private func lookupValue(forKey key: String) -> Any? {
         if key == kCIOutputImageKey { return outputImage }
         return inputs[key]
     }
@@ -127,6 +149,9 @@ func ciRadius(_ value: Any?) -> CGFloat {
     if let value = value as? Double { return CGFloat(value) }
     if let value = value as? CGFloat { return value }
     if let value = value as? Int { return CGFloat(value) }
-    if let value = value as? NSNumber { return CGFloat(truncating: value) }
+    // Linux 6.2.4 CGFloat has no NSNumber truncating: (Darwin Foundation).
+    // MEASURED uikit-linux swift build --build-tests after merging
+    // linux-xctest onto main's CoreImage: same initializer miss as ImageIO.
+    if let value = value as? NSNumber { return CGFloat(value.doubleValue) }
     return 10
 }
