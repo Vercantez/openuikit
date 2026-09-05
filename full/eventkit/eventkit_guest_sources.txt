@@ -1,7 +1,9 @@
 full/eventkit/EKError.swift
 full/eventkit/EKEventStore.swift
+full/eventkit/EKLocalStore.swift
 full/eventkit/EKObjects.swift
 full/eventkit/EKRecurrence.swift
+full/eventkit/EKRecurrenceExpansion.swift
 full/eventkit/EKTypes.swift
 full/eventkit/EKVirtualConference.swift
 full/eventkit/EventKit.swift

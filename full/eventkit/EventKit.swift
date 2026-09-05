@@ -2,13 +2,12 @@
 import CoreFoundation
 import Dispatch
 
-/// Linux starting point for Apple's public `EventKit` module.
+/// Linux EventKit overlay: in-memory object model plus an on-disk local
+/// calendar/reminder store under Application Support `/OpenUIKit/EventKit`.
 ///
-/// The object model (events, reminders, calendars, alarms, recurrence, errors)
-/// is real and in-memory. Calendar privacy, the Apple Calendar/Reminders
-/// database, virtual-conference providers, and geofenced host delivery are
-/// fail-closed. `ABAddressBook` / `ABRecord` are the staged CoreFoundation
-/// `CFTypeRef` identity, not module-local stand-ins. See `README.md`.
+/// The store is not Calendar.app / TCC / CalDAV. Authorization starts
+/// `.notDetermined` and `requestFullAccessToEvents` / `requestFullAccessToReminders`
+/// / `requestAccess(to:)` grant this sandbox. See `README.md`.
 
 /// AddressBook opaque refs in the public overlay. These are CoreFoundation
 /// `CFTypeRef` values, not EventKit-local types.
