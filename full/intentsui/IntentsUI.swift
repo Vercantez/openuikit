@@ -4,8 +4,8 @@
 // host, no fake Siri account or fabricated success is reported.
 //
 // Isolated host compilation imports Foundation only. UIKit-owned superclasses
-// (`UIViewController`, `UIButton`) are not declared dependencies of this seed,
-// so the isolated types subclass `NSObject`. Intents-owned `INShortcut` and
+// (`UIViewController`, `UIButton`) are used when UIKit can be imported; the
+// isolated host subclasses `NSObject`. Intents-owned `INShortcut` and
 // `INVoiceShortcut` are module-local stand-ins when Intents cannot be imported.
 
 import Foundation
@@ -13,15 +13,20 @@ import Foundation
 #if canImport(Intents)
 @_spi(OpenIntentsHost) import Intents
 #endif
+#if canImport(UIKit)
+import UIKit
+#endif
 
 /// Host presentation mode. Linux has no Siri add/edit sheet, so the only
 /// supported path is a platform host driving `finish` / `cancel` / `delete`.
-public enum INUIVoiceShortcutPresentationCapability: Int, Sendable {
+public enum INUIVoiceShortcutPresentationCapability: Int, Hashable, Sendable {
     case unavailable = 0
     case hostDriven = 1
 }
 
-public enum INUIVoiceShortcutError: Error, Sendable {
+/// Portable host errors. Apple's Siri-sheet error domain and codes are
+/// unobserved; these cases are Linux fail-closed results, not NSError codes.
+public enum INUIVoiceShortcutError: Error, Equatable, Hashable, Sendable {
     case emptyInvocationPhrase
     case shortcutNotFound
 }
@@ -117,8 +122,13 @@ extension INUIHostedViewSiriProviding {
 @preconcurrency @MainActor
 public protocol INUIHostedViewControlling: NSObjectProtocol {}
 
+#if canImport(UIKit)
+@preconcurrency @MainActor
+open class INUIAddVoiceShortcutViewController: UIViewController {
+#else
 @preconcurrency @MainActor
 open class INUIAddVoiceShortcutViewController: NSObject {
+#endif
     public static let presentationCapability: INUIVoiceShortcutPresentationCapability = .hostDriven
 
     public let shortcut: INShortcut
@@ -126,8 +136,19 @@ open class INUIAddVoiceShortcutViewController: NSObject {
 
     public init(shortcut: INShortcut) {
         self.shortcut = shortcut
+        #if canImport(UIKit)
+        super.init(nibName: nil, bundle: nil)
+        #else
         super.init()
+        #endif
     }
+
+    #if canImport(UIKit)
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) {
+        return nil
+    }
+    #endif
 
     /// Host action corresponding to the system sheet's Add button.
     open func finish(invocationPhrase: String) {
@@ -153,8 +174,13 @@ open class INUIAddVoiceShortcutViewController: NSObject {
     }
 }
 
+#if canImport(UIKit)
+@preconcurrency @MainActor
+open class INUIEditVoiceShortcutViewController: UIViewController {
+#else
 @preconcurrency @MainActor
 open class INUIEditVoiceShortcutViewController: NSObject {
+#endif
     public static let presentationCapability: INUIVoiceShortcutPresentationCapability = .hostDriven
 
     public private(set) var voiceShortcut: INVoiceShortcut
@@ -162,8 +188,19 @@ open class INUIEditVoiceShortcutViewController: NSObject {
 
     public init(voiceShortcut: INVoiceShortcut) {
         self.voiceShortcut = voiceShortcut
+        #if canImport(UIKit)
+        super.init(nibName: nil, bundle: nil)
+        #else
         super.init()
+        #endif
     }
+
+    #if canImport(UIKit)
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) {
+        return nil
+    }
+    #endif
 
     /// Host action corresponding to Save in the system editor.
     open func finish(invocationPhrase: String) {
@@ -209,8 +246,13 @@ open class INUIEditVoiceShortcutViewController: NSObject {
 /// Add-to-Siri control. Isolated host subclasses `NSObject` because `UIButton`
 /// is UIKit-owned. Linux never draws the system button or talks to Siri; a
 /// host calls `presentAddVoiceShortcut()` / `presentEditVoiceShortcut(_:)`.
+#if canImport(UIKit)
+@preconcurrency @MainActor
+open class INUIAddVoiceShortcutButton: UIButton {
+#else
 @preconcurrency @MainActor
 open class INUIAddVoiceShortcutButton: NSObject {
+#endif
     public private(set) var style: INUIAddVoiceShortcutButtonStyle
     public weak var delegate: (any INUIAddVoiceShortcutButtonDelegate)?
     public var shortcut: INShortcut?
@@ -218,8 +260,19 @@ open class INUIAddVoiceShortcutButton: NSObject {
 
     public init(style: INUIAddVoiceShortcutButtonStyle) {
         self.style = style
+        #if canImport(UIKit)
+        super.init(frame: .zero)
+        #else
         super.init()
+        #endif
     }
+
+    #if canImport(UIKit)
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) {
+        return nil
+    }
+    #endif
 
     open func setStyle(_ style: INUIAddVoiceShortcutButtonStyle) {
         self.style = style
@@ -255,5 +308,9 @@ public enum IntentsUIHostControl {
         invocationPhrase: String
     ) -> INVoiceShortcut {
         IntentsUIHostVoiceShortcuts.install(shortcut, invocationPhrase: invocationPhrase)
+    }
+
+    public static func voiceShortcut(identifier: UUID) -> INVoiceShortcut? {
+        IntentsUIHostVoiceShortcuts.value(identifier: identifier)
     }
 }
