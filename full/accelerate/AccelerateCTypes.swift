@@ -409,13 +409,13 @@ public struct vImage_InterpolationMethod: RawRepresentable, Equatable, Hashable,
 }
 
 public enum vDSP_DCT_Type: Int32, Sendable {
-    case II
-    case III
-    case IV
+    case II = 2
+    case III = 3
+    case IV = 4
 }
 public enum vDSP_DFT_Direction: Int32, Sendable {
-    case FORWARD
-    case INVERSE
+    case FORWARD = 1
+    case INVERSE = -1
 }
 public enum vDSP_DFT_RealtoComplex: Int32, Sendable {
     case interleaved_ComplextoComplex
@@ -449,7 +449,25 @@ public struct DSPDoubleSplitComplex {
         self.imagp = UnsafeMutablePointer<Double>.allocate(capacity: 1)
         self.realp = UnsafeMutablePointer<Double>.allocate(capacity: 1)
     }
-    public init(fromInputArray inputArray: [Double], realParts: inout [Double], imaginaryParts: inout [Double]) { self.init(); _ = inputArray; _ = realParts; _ = imaginaryParts }
+    public init(realp: UnsafeMutablePointer<Double>, imagp: UnsafeMutablePointer<Double>) {
+        self.realp = realp
+        self.imagp = imagp
+    }
+    public init(fromInputArray inputArray: [Double], realParts: inout [Double], imaginaryParts: inout [Double]) {
+        let n = inputArray.count / 2
+        if realParts.count < n {
+            realParts = [Double](repeating: 0, count: n)
+        }
+        if imaginaryParts.count < n {
+            imaginaryParts = [Double](repeating: 0, count: n)
+        }
+        for i in 0..<n {
+            realParts[i] = inputArray[2 * i]
+            imaginaryParts[i] = inputArray[2 * i + 1]
+        }
+        self.realp = realParts.withUnsafeMutableBufferPointer { $0.baseAddress! }
+        self.imagp = imaginaryParts.withUnsafeMutableBufferPointer { $0.baseAddress! }
+    }
 }
 
 public struct DSPSplitComplex {
@@ -459,7 +477,25 @@ public struct DSPSplitComplex {
         self.imagp = UnsafeMutablePointer<Float>.allocate(capacity: 1)
         self.realp = UnsafeMutablePointer<Float>.allocate(capacity: 1)
     }
-    public init(fromInputArray inputArray: [Float], realParts: inout [Float], imaginaryParts: inout [Float]) { self.init(); _ = inputArray; _ = realParts; _ = imaginaryParts }
+    public init(realp: UnsafeMutablePointer<Float>, imagp: UnsafeMutablePointer<Float>) {
+        self.realp = realp
+        self.imagp = imagp
+    }
+    public init(fromInputArray inputArray: [Float], realParts: inout [Float], imaginaryParts: inout [Float]) {
+        let n = inputArray.count / 2
+        if realParts.count < n {
+            realParts = [Float](repeating: 0, count: n)
+        }
+        if imaginaryParts.count < n {
+            imaginaryParts = [Float](repeating: 0, count: n)
+        }
+        for i in 0..<n {
+            realParts[i] = inputArray[2 * i]
+            imaginaryParts[i] = inputArray[2 * i + 1]
+        }
+        self.realp = realParts.withUnsafeMutableBufferPointer { $0.baseAddress! }
+        self.imagp = imaginaryParts.withUnsafeMutableBufferPointer { $0.baseAddress! }
+    }
 }
 
 public struct vImageChannelDescription {
@@ -609,8 +645,24 @@ public struct vImage_Buffer {
         self.rowBytes = 0
         self.width = 0
     }
-    public init(size: CGSize, bitsPerPixel: UInt32) throws { self.init(); _ = size; _ = bitsPerPixel; throw AccelerateLinuxError.failClosed }
-    public init(width: Int, height: Int, bitsPerPixel: UInt32) throws { self.init(); _ = width; _ = height; _ = bitsPerPixel; throw AccelerateLinuxError.failClosed }
+    public init(size: CGSize, bitsPerPixel: UInt32) throws {
+        guard let width = Int(exactly: size.width), let height = Int(exactly: size.height), width >= 0, height >= 0 else {
+            throw vImage.Error.invalidParameter
+        }
+        try self.init(width: width, height: height, bitsPerPixel: bitsPerPixel)
+    }
+    public init(width: Int, height: Int, bitsPerPixel: UInt32) throws {
+        guard width >= 0, height >= 0 else { throw vImage.Error.invalidParameter }
+        let rowBytes = (width * Int(bitsPerPixel) + 7) / 8
+        let byteCount = rowBytes * height
+        if byteCount == 0 {
+            self.init(data: nil, height: vImagePixelCount(height), width: vImagePixelCount(width), rowBytes: rowBytes)
+            return
+        }
+        let ptr = UnsafeMutableRawPointer.allocate(byteCount: max(byteCount, 1), alignment: 16)
+        ptr.initializeMemory(as: UInt8.self, repeating: 0, count: byteCount)
+        self.init(data: ptr, height: vImagePixelCount(height), width: vImagePixelCount(width), rowBytes: rowBytes)
+    }
     public init(data: UnsafeMutableRawPointer!, height: vImagePixelCount, width: vImagePixelCount, rowBytes: Int) { self.init(); self.data = data; self.height = height; self.width = width; self.rowBytes = rowBytes }
 }
 
@@ -2655,16 +2707,16 @@ public var kvImage444CrYpCb8: vImageYpCbCrType { vImageYpCbCrType(rawValue: 11) 
 public var kvImageFullInterpolation: vImage_InterpolationMethod { vImage_InterpolationMethod(rawValue: 1) }
 public var kvImageHalfInterpolation: vImage_InterpolationMethod { vImage_InterpolationMethod(rawValue: 2) }
 public var kvImageNoInterpolation: vImage_InterpolationMethod { vImage_InterpolationMethod(rawValue: 0) }
-public var FFT_FORWARD: Int { 0 }
-public var FFT_INVERSE: Int { 1 }
-public var FFT_RADIX2: Int { 2 }
-public var FFT_RADIX3: Int { 3 }
-public var FFT_RADIX5: Int { 4 }
-public var kFFTDirection_Forward: Int { 5 }
-public var kFFTDirection_Inverse: Int { 6 }
-public var kFFTRadix2: Int { 7 }
-public var kFFTRadix3: Int { 8 }
-public var kFFTRadix5: Int { 9 }
+public var FFT_FORWARD: Int { 1 }
+public var FFT_INVERSE: Int { -1 }
+public var FFT_RADIX2: Int { 0 }
+public var FFT_RADIX3: Int { 1 }
+public var FFT_RADIX5: Int { 2 }
+public var kFFTDirection_Forward: Int { 1 }
+public var kFFTDirection_Inverse: Int { -1 }
+public var kFFTRadix2: Int { 0 }
+public var kFFTRadix3: Int { 1 }
+public var kFFTRadix5: Int { 2 }
 public var kRotate0DegreesClockwise: Int { 10 }
 public var kRotate0DegreesCounterClockwise: Int { 11 }
 public var kRotate180DegreesClockwise: Int { 12 }
@@ -2811,7 +2863,7 @@ public var LA_SCALAR_TYPE_DOUBLE: Int32 { 9 }
 public var LA_SCALAR_TYPE_FLOAT: Int32 { 10 }
 public var LA_SINGULAR_ERROR: Int32 { 11 }
 public var LA_SLICE_OUT_OF_BOUNDS_ERROR: Int32 { 12 }
-public var LA_SUCCESS: Int32 { 13 }
+public var LA_SUCCESS: Int32 { 0 }
 public var LA_WARNING_POORLY_CONDITIONED: Int32 { 14 }
 public var QUADRATURE_INTEGRATE_QAGS_WORKSPACE_PER_INTERVAL: Int32 { 15 }
 public var QUADRATURE_INTEGRATE_QAG_WORKSPACE_PER_INTERVAL: Int32 { 16 }

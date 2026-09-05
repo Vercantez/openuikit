@@ -750,11 +750,32 @@ public func ctrsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutableP
 @discardableResult
 public func dgbmv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ kl: UnsafeMutablePointer<Int32>!, _ ku: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
-public func dgemm_(_ transa: UnsafeMutablePointer<CChar>!, _ transb: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ c__: UnsafeMutablePointer<Double>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dgemm_(_ transa: UnsafeMutablePointer<CChar>!, _ transb: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ c__: UnsafeMutablePointer<Double>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let transa, let transb, let m, let n, let k, let alpha, let a, let lda, let b, let ldb, let beta, let c__, let ldc else { return -1 }
+    return _gemm(transA: transa.pointee, transB: transb.pointee, m: Int(m.pointee), n: Int(n.pointee), k: Int(k.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), b: b, ldb: Int(ldb.pointee), beta: beta.pointee, c: c__, ldc: Int(ldc.pointee))
+}
 @discardableResult
-public func dgemv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dgemv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let trans, let m, let n, let alpha, let a, let lda, let x, let incx, let beta, let y, let incy else { return -1 }
+    return _gemv(trans: trans.pointee, m: Int(m.pointee), n: Int(n.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee), beta: beta.pointee, y: y, incy: Int(incy.pointee))
+}
 @discardableResult
-public func dger_(_ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dger_(_ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let m, let n, let alpha, let x, let incx, let y, let incy, let a, let lda else { return -1 }
+    let rows = Int(m.pointee); let cols = Int(n.pointee); let al = alpha.pointee
+    let ix = Int(incx.pointee); let iy = Int(incy.pointee); let ld = Int(lda.pointee)
+    guard rows > 0, cols > 0, ld >= rows else { return 0 }
+    var xi = 0
+    for i in 0..<rows {
+        var yj = 0
+        for j in 0..<cols {
+            a[i + j * ld] += al * x[xi] * y[yj]
+            yj += iy
+        }
+        xi += ix
+    }
+    return 0
+}
 @discardableResult
 public func drot_(_ n: UnsafeMutablePointer<Int32>!, _ dx: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ dy: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!, _ c: UnsafeMutablePointer<Double>!, _ s: UnsafeMutablePointer<Double>!) -> Int32 { return 0 }
 @discardableResult
@@ -899,11 +920,32 @@ public func sdsdot_(_ n: UnsafeMutablePointer<Int32>!, _ sb: UnsafeMutablePointe
 @discardableResult
 public func sgbmv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ kl: UnsafeMutablePointer<Int32>!, _ ku: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
-public func sgemm_(_ transa: UnsafeMutablePointer<CChar>!, _ transb: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ c__: UnsafeMutablePointer<Float>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func sgemm_(_ transa: UnsafeMutablePointer<CChar>!, _ transb: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ c__: UnsafeMutablePointer<Float>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let transa, let transb, let m, let n, let k, let alpha, let a, let lda, let b, let ldb, let beta, let c__, let ldc else { return -1 }
+    return _gemm(transA: transa.pointee, transB: transb.pointee, m: Int(m.pointee), n: Int(n.pointee), k: Int(k.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), b: b, ldb: Int(ldb.pointee), beta: beta.pointee, c: c__, ldc: Int(ldc.pointee))
+}
 @discardableResult
-public func sgemv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func sgemv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let trans, let m, let n, let alpha, let a, let lda, let x, let incx, let beta, let y, let incy else { return -1 }
+    return _gemv(trans: trans.pointee, m: Int(m.pointee), n: Int(n.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee), beta: beta.pointee, y: y, incy: Int(incy.pointee))
+}
 @discardableResult
-public func sger_(_ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func sger_(_ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let m, let n, let alpha, let x, let incx, let y, let incy, let a, let lda else { return -1 }
+    let rows = Int(m.pointee); let cols = Int(n.pointee); let al = alpha.pointee
+    let ix = Int(incx.pointee); let iy = Int(incy.pointee); let ld = Int(lda.pointee)
+    guard rows > 0, cols > 0, ld >= rows else { return 0 }
+    var xi = 0
+    for i in 0..<rows {
+        var yj = 0
+        for j in 0..<cols {
+            a[i + j * ld] += al * x[xi] * y[yj]
+            yj += iy
+        }
+        xi += ix
+    }
+    return 0
+}
 @discardableResult
 public func sparse_commit(_ A: UnsafeMutableRawPointer!) -> sparse_status { return sparse_status(rawValue: 0) }
 @discardableResult
@@ -1153,13 +1195,49 @@ public func strsm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePo
 @discardableResult
 public func strsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
-public func vDSP_DFT_Interleaved_CreateSetup(_ Previous: vDSP_DFT_Interleaved_Setup?, _ Length: vDSP_Length, _ Direction: vDSP_DFT_Direction, _ RealtoComplex: vDSP_DFT_RealtoComplex) -> vDSP_DFT_Interleaved_Setup? { return nil }
+public func vDSP_DFT_Interleaved_CreateSetup(_ Previous: vDSP_DFT_Interleaved_Setup?, _ Length: vDSP_Length, _ Direction: vDSP_DFT_Direction, _ RealtoComplex: vDSP_DFT_RealtoComplex) -> vDSP_DFT_Interleaved_Setup? {
+    _ = Previous; _ = Direction
+    guard RealtoComplex == .interleaved_ComplextoComplex else { return nil }
+    let n = Int(Length)
+    guard n > 0, n & (n - 1) == 0, let box = _FFTSetupBox(log2n: n.trailingZeroBitCount) else { return nil }
+    return _fftRetain(box)
+}
 @discardableResult
-public func vDSP_DFT_Interleaved_CreateSetupD(_ Previous: vDSP_DFT_Interleaved_SetupD?, _ Length: vDSP_Length, _ Direction: vDSP_DFT_Direction, _ RealtoComplex: vDSP_DFT_RealtoComplex) -> vDSP_DFT_Interleaved_SetupD? { return nil }
-public func vDSP_DFT_Interleaved_DestroySetup(_ Setup: vDSP_DFT_Interleaved_Setup?) { }
-public func vDSP_DFT_Interleaved_DestroySetupD(_ Setup: vDSP_DFT_Interleaved_SetupD?) { }
-public func vDSP_DFT_Interleaved_Execute(_ Setup: vDSP_DFT_Interleaved_Setup, _ Iri: UnsafePointer<DSPComplex>, _ Ori: UnsafeMutablePointer<DSPComplex>) { }
-public func vDSP_DFT_Interleaved_ExecuteD(_ Setup: vDSP_DFT_Interleaved_SetupD, _ Iri: UnsafePointer<DSPDoubleComplex>, _ Ori: UnsafeMutablePointer<DSPDoubleComplex>) { }
+public func vDSP_DFT_Interleaved_CreateSetupD(_ Previous: vDSP_DFT_Interleaved_SetupD?, _ Length: vDSP_Length, _ Direction: vDSP_DFT_Direction, _ RealtoComplex: vDSP_DFT_RealtoComplex) -> vDSP_DFT_Interleaved_SetupD? {
+    _ = Previous; _ = Direction
+    guard RealtoComplex == .interleaved_ComplextoComplex else { return nil }
+    let n = Int(Length)
+    guard n > 0, n & (n - 1) == 0, let box = _FFTSetupBox(log2n: n.trailingZeroBitCount) else { return nil }
+    return _fftRetain(box)
+}
+public func vDSP_DFT_Interleaved_DestroySetup(_ Setup: vDSP_DFT_Interleaved_Setup?) { _fftRelease(Setup) }
+public func vDSP_DFT_Interleaved_DestroySetupD(_ Setup: vDSP_DFT_Interleaved_SetupD?) { _fftRelease(Setup) }
+public func vDSP_DFT_Interleaved_Execute(_ Setup: vDSP_DFT_Interleaved_Setup, _ Iri: UnsafePointer<DSPComplex>, _ Ori: UnsafeMutablePointer<DSPComplex>) {
+    guard let box = _fftBox(Setup) else { return }
+    let n = box.n
+    var real = [Float](repeating: 0, count: n)
+    var imag = [Float](repeating: 0, count: n)
+    for i in 0..<n { real[i] = Iri[i].real; imag[i] = Iri[i].imag }
+    real.withUnsafeMutableBufferPointer { rp in
+        imag.withUnsafeMutableBufferPointer { ip in
+            _radix2FFT(real: rp.baseAddress!, imag: ip.baseAddress!, n: n, inverse: false)
+        }
+    }
+    for i in 0..<n { Ori[i] = DSPComplex(real: real[i], imag: imag[i]) }
+}
+public func vDSP_DFT_Interleaved_ExecuteD(_ Setup: vDSP_DFT_Interleaved_SetupD, _ Iri: UnsafePointer<DSPDoubleComplex>, _ Ori: UnsafeMutablePointer<DSPDoubleComplex>) {
+    guard let box = _fftBox(Setup) else { return }
+    let n = box.n
+    var real = [Double](repeating: 0, count: n)
+    var imag = [Double](repeating: 0, count: n)
+    for i in 0..<n { real[i] = Iri[i].real; imag[i] = Iri[i].imag }
+    real.withUnsafeMutableBufferPointer { rp in
+        imag.withUnsafeMutableBufferPointer { ip in
+            _radix2FFT(real: rp.baseAddress!, imag: ip.baseAddress!, n: n, inverse: false)
+        }
+    }
+    for i in 0..<n { Ori[i] = DSPDoubleComplex(real: real[i], imag: imag[i]) }
+}
 @discardableResult
 public func vImageAffineWarpD_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform_Double>, _ backColor: UnsafePointer<UInt16>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -1197,7 +1275,7 @@ public func vImageAffineWarp_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest
 @discardableResult
 public func vImageAffineWarp_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform>, _ backColor: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageAlphaBlend_ARGB8888(_ srcTop: UnsafePointer<vImage_Buffer>, _ srcBottom: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageAlphaBlend_ARGB8888(_ srcTop: UnsafePointer<vImage_Buffer>, _ srcBottom: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageAlphaBlendARGB8888(srcTop, srcBottom, dest, flags: flags) }
 @discardableResult
 public func vImageAlphaBlend_ARGBFFFF(_ srcTop: UnsafePointer<vImage_Buffer>, _ srcBottom: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -1213,29 +1291,55 @@ public func vImageAlphaBlend_Planar8(_ srcTop: UnsafePointer<vImage_Buffer>, _ s
 @discardableResult
 public func vImageAlphaBlend_PlanarF(_ srcTop: UnsafePointer<vImage_Buffer>, _ srcTopAlpha: UnsafePointer<vImage_Buffer>, _ srcBottom: UnsafePointer<vImage_Buffer>, _ srcBottomAlpha: UnsafePointer<vImage_Buffer>, _ alpha: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageBoxConvolve_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ srcOffsetToROI_X: vImagePixelCount, _ srcOffsetToROI_Y: vImagePixelCount, _ kernel_height: UInt32, _ kernel_width: UInt32, _ backgroundColor: Pixel_8, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageBoxConvolve_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ srcOffsetToROI_X: vImagePixelCount, _ srcOffsetToROI_Y: vImagePixelCount, _ kernel_height: UInt32, _ kernel_width: UInt32, _ backgroundColor: Pixel_8, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; _ = srcOffsetToROI_X; _ = srcOffsetToROI_Y; _ = backgroundColor; return _vImageBoxConvolvePlanar8(src, dest, kernelWidth: kernel_width, kernelHeight: kernel_height, flags: flags) }
 @discardableResult
-public func vImageBufferFill_ARGB16F(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<UInt16>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageBufferFill_ARGB16F(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<UInt16>, _ flags: vImage_Flags) -> vImage_Error { return _vImageFill(dest, color: UnsafeRawPointer(color), bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageBufferFill_ARGB16S(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<Int16>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageBufferFill_ARGB16S(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<Int16>, _ flags: vImage_Flags) -> vImage_Error { return _vImageFill(dest, color: UnsafeRawPointer(color), bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageBufferFill_ARGB16U(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<UInt16>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageBufferFill_ARGB16U(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<UInt16>, _ flags: vImage_Flags) -> vImage_Error { return _vImageFill(dest, color: UnsafeRawPointer(color), bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageBufferFill_ARGB8888(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<UInt8>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageBufferFill_ARGB8888(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<UInt8>, _ flags: vImage_Flags) -> vImage_Error { return _vImageFill(dest, color: UnsafeRawPointer(color), bytesPerPixel: 4, flags: flags) }
 @discardableResult
-public func vImageBufferFill_ARGBFFFF(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<Float>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageBufferFill_ARGBFFFF(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<Float>, _ flags: vImage_Flags) -> vImage_Error { return _vImageFill(dest, color: UnsafeRawPointer(color), bytesPerPixel: 16, flags: flags) }
 @discardableResult
-public func vImageBufferFill_CbCr16S(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<Int16>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageBufferFill_CbCr16S(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<Int16>, _ flags: vImage_Flags) -> vImage_Error { return _vImageFill(dest, color: UnsafeRawPointer(color), bytesPerPixel: 4, flags: flags) }
 @discardableResult
-public func vImageBufferFill_CbCr16U(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<UInt16>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageBufferFill_CbCr16U(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<UInt16>, _ flags: vImage_Flags) -> vImage_Error { return _vImageFill(dest, color: UnsafeRawPointer(color), bytesPerPixel: 4, flags: flags) }
 @discardableResult
-public func vImageBufferFill_CbCr8(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<UInt8>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageBufferFill_CbCr8(_ dest: UnsafePointer<vImage_Buffer>, _ color: UnsafePointer<UInt8>, _ flags: vImage_Flags) -> vImage_Error { return _vImageFill(dest, color: UnsafeRawPointer(color), bytesPerPixel: 2, flags: flags) }
 @discardableResult
-public func vImageBuffer_GetSize(_ buf: UnsafePointer<vImage_Buffer>) -> CGSize { return CGSize() }
+public func vImageBuffer_GetSize(_ buf: UnsafePointer<vImage_Buffer>) -> CGSize { return CGSize(width: Double(buf.pointee.width), height: Double(buf.pointee.height)) }
 @discardableResult
-public func vImageBuffer_Init(_ buf: UnsafeMutablePointer<vImage_Buffer>, _ height: vImagePixelCount, _ width: vImagePixelCount, _ pixelBits: UInt32, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageBuffer_Init(_ buf: UnsafeMutablePointer<vImage_Buffer>, _ height: vImagePixelCount, _ width: vImagePixelCount, _ pixelBits: UInt32, _ flags: vImage_Flags) -> vImage_Error {
+    let w = Int(width); let h = Int(height)
+    guard w >= 0, h >= 0 else { return kvImageInvalidParameter }
+    let rowBytes = (w * Int(pixelBits) + 7) / 8
+    buf.pointee.width = width
+    buf.pointee.height = height
+    buf.pointee.rowBytes = rowBytes
+    if flags & vImage_Flags(kvImageNoAllocate) != 0 { return kvImageNoError }
+    let bytes = max(rowBytes * h, 1)
+    buf.pointee.data = UnsafeMutableRawPointer.allocate(byteCount: bytes, alignment: 16)
+    buf.pointee.data.initializeMemory(as: UInt8.self, repeating: 0, count: bytes)
+    return kvImageNoError
+}
 @discardableResult
-public func vImageByteSwap_Planar16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageByteSwap_Planar16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error {
+    _ = flags
+    let check = _vImageRequireBuffers(src, dest)
+    if check != kvImageNoError { return check }
+    let w = Int(src.pointee.width); let h = Int(src.pointee.height)
+    let s = src.pointee.data!.assumingMemoryBound(to: UInt16.self)
+    let d = dest.pointee.data!.assumingMemoryBound(to: UInt16.self)
+    for y in 0..<h {
+        for x in 0..<w {
+            let v = s[y * (src.pointee.rowBytes / 2) + x]
+            d[y * (dest.pointee.rowBytes / 2) + x] = v.byteSwapped
+        }
+    }
+    return kvImageNoError
+}
 @discardableResult
 public func vImageCVImageFormat_Copy(_ format: vImageConstCVImageFormat) -> Unmanaged<vImageCVImageFormat>! { return nil }
 @discardableResult
@@ -1427,7 +1531,7 @@ public func vImageConvert_ARGB8888toARGB1555_dithered(_ src: UnsafePointer<vImag
 @discardableResult
 public func vImageConvert_ARGB8888toPlanar16Q12(_ src: UnsafePointer<vImage_Buffer>, _ alpha: UnsafePointer<vImage_Buffer>, _ red: UnsafePointer<vImage_Buffer>, _ green: UnsafePointer<vImage_Buffer>, _ blue: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageConvert_ARGB8888toPlanar8(_ srcARGB: UnsafePointer<vImage_Buffer>, _ destA: UnsafePointer<vImage_Buffer>, _ destR: UnsafePointer<vImage_Buffer>, _ destG: UnsafePointer<vImage_Buffer>, _ destB: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageConvert_ARGB8888toPlanar8(_ srcARGB: UnsafePointer<vImage_Buffer>, _ destA: UnsafePointer<vImage_Buffer>, _ destR: UnsafePointer<vImage_Buffer>, _ destG: UnsafePointer<vImage_Buffer>, _ destB: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageConvertARGB8888toPlanar8(srcARGB, destA, destR, destG, destB, flags: flags) }
 @discardableResult
 public func vImageConvert_ARGB8888toPlanarF(_ src: UnsafePointer<vImage_Buffer>!, _ alpha: UnsafePointer<vImage_Buffer>!, _ red: UnsafePointer<vImage_Buffer>!, _ green: UnsafePointer<vImage_Buffer>!, _ blue: UnsafePointer<vImage_Buffer>!, _ maxFloat: UnsafePointer<Float>!, _ minFloat: UnsafePointer<Float>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -1521,7 +1625,7 @@ public func vImageConvert_Planar8ToXRGBFFFF(_ alpha: Pixel_F, _ red: UnsafePoint
 @discardableResult
 public func vImageConvert_Planar8toARGB1555(_ srcA: UnsafePointer<vImage_Buffer>, _ srcR: UnsafePointer<vImage_Buffer>, _ srcG: UnsafePointer<vImage_Buffer>, _ srcB: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageConvert_Planar8toARGB8888(_ srcA: UnsafePointer<vImage_Buffer>, _ srcR: UnsafePointer<vImage_Buffer>, _ srcG: UnsafePointer<vImage_Buffer>, _ srcB: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageConvert_Planar8toARGB8888(_ srcA: UnsafePointer<vImage_Buffer>, _ srcR: UnsafePointer<vImage_Buffer>, _ srcG: UnsafePointer<vImage_Buffer>, _ srcB: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageConvertPlanar8toARGB8888(srcA, srcR, srcG, srcB, dest, flags: flags) }
 @discardableResult
 public func vImageConvert_Planar8toIndexed1(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ colors: UnsafeMutablePointer<Pixel_8>, _ dither: Int32, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -1537,7 +1641,7 @@ public func vImageConvert_Planar8toPlanar2(_ src: UnsafePointer<vImage_Buffer>, 
 @discardableResult
 public func vImageConvert_Planar8toPlanar4(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ dither: Int32, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageConvert_Planar8toPlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ maxFloat: Pixel_F, _ minFloat: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageConvert_Planar8toPlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ maxFloat: Pixel_F, _ minFloat: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return _vImageConvertPlanar8toPlanarF(src, dest, maxFloat: maxFloat, minFloat: minFloat, flags: flags) }
 @discardableResult
 public func vImageConvert_Planar8toRGB565(_ srcR: UnsafePointer<vImage_Buffer>, _ srcG: UnsafePointer<vImage_Buffer>, _ srcB: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -1557,7 +1661,7 @@ public func vImageConvert_PlanarFtoARGBFFFF(_ srcA: UnsafePointer<vImage_Buffer>
 @discardableResult
 public func vImageConvert_PlanarFtoPlanar16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageConvert_PlanarFtoPlanar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ maxFloat: Pixel_F, _ minFloat: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageConvert_PlanarFtoPlanar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ maxFloat: Pixel_F, _ minFloat: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return _vImageConvertPlanarFtoPlanar8(src, dest, maxFloat: maxFloat, minFloat: minFloat, flags: flags) }
 @discardableResult
 public func vImageConvert_PlanarFtoPlanar8_dithered(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ maxFloat: Pixel_F, _ minFloat: Pixel_F, _ dither: Int32, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -1695,7 +1799,7 @@ public func vImageConvolve_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: 
 @discardableResult
 public func vImageConvolve_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ srcOffsetToROI_X: vImagePixelCount, _ srcOffsetToROI_Y: vImagePixelCount, _ kernel: UnsafePointer<Float>!, _ kernel_height: UInt32, _ kernel_width: UInt32, _ backgroundColor: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageCopyBuffer(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ pixelSize: Int, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageCopyBuffer(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ pixelSize: Int, _ flags: vImage_Flags) -> vImage_Error { return _vImageCopyBuffer(src, dest, pixelSize: pixelSize, flags: flags) }
 @discardableResult
 public func vImageCreateGammaFunction(_ gamma: Float, _ gamma_type: Int32, _ flags: vImage_Flags) -> GammaFunction! { return nil }
 public func vImageDestroyGammaFunction(_ f: GammaFunction!) { }
@@ -1791,7 +1895,7 @@ public func vImageHistogramCalculation_ARGB8888(_ src: UnsafePointer<vImage_Buff
 @discardableResult
 public func vImageHistogramCalculation_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ histogram: UnsafeMutablePointer<UnsafeMutablePointer<vImagePixelCount>?>, _ histogram_entries: UInt32, _ minVal: Pixel_F, _ maxVal: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageHistogramCalculation_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ histogram: UnsafeMutablePointer<vImagePixelCount>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageHistogramCalculation_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ histogram: UnsafeMutablePointer<vImagePixelCount>, _ flags: vImage_Flags) -> vImage_Error { return _vImageHistogramPlanar8(src, histogram: histogram, flags: flags) }
 @discardableResult
 public func vImageHistogramCalculation_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ histogram: UnsafeMutablePointer<vImagePixelCount>, _ histogram_entries: UInt32, _ minVal: Pixel_F, _ maxVal: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -1803,25 +1907,25 @@ public func vImageHistogramSpecification_Planar8(_ src: UnsafePointer<vImage_Buf
 @discardableResult
 public func vImageHistogramSpecification_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ desired_histogram: UnsafePointer<vImagePixelCount>, _ histogram_entries: UInt32, _ minVal: Pixel_F, _ maxVal: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageHorizontalReflect_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageHorizontalReflect_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectHorizontal(src, dest, bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageHorizontalReflect_ARGB16S(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageHorizontalReflect_ARGB16S(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectHorizontal(src, dest, bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageHorizontalReflect_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageHorizontalReflect_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectHorizontal(src, dest, bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageHorizontalReflect_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageHorizontalReflect_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectHorizontal(src, dest, bytesPerPixel: 4, flags: flags) }
 @discardableResult
-public func vImageHorizontalReflect_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageHorizontalReflect_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectHorizontal(src, dest, bytesPerPixel: 16, flags: flags) }
 @discardableResult
-public func vImageHorizontalReflect_CbCr16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageHorizontalReflect_CbCr16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectHorizontal(src, dest, bytesPerPixel: 4, flags: flags) }
 @discardableResult
-public func vImageHorizontalReflect_Planar16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageHorizontalReflect_Planar16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectHorizontal(src, dest, bytesPerPixel: 2, flags: flags) }
 @discardableResult
-public func vImageHorizontalReflect_Planar16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageHorizontalReflect_Planar16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectHorizontal(src, dest, bytesPerPixel: 2, flags: flags) }
 @discardableResult
-public func vImageHorizontalReflect_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageHorizontalReflect_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectHorizontal(src, dest, bytesPerPixel: 1, flags: flags) }
 @discardableResult
-public func vImageHorizontalReflect_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageHorizontalReflect_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectHorizontal(src, dest, bytesPerPixel: 4, flags: flags) }
 @discardableResult
 public func vImageHorizontalShearD_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ srcOffsetToROI_X: vImagePixelCount, _ srcOffsetToROI_Y: vImagePixelCount, _ xTranslate: Double, _ shearSlope: Double, _ filter: ResamplingFilter!, _ backColor: UnsafePointer<UInt16>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -2051,7 +2155,7 @@ public func vImagePremultiplyData_ARGB16Q12(_ src: UnsafePointer<vImage_Buffer>,
 @discardableResult
 public func vImagePremultiplyData_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImagePremultiplyData_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImagePremultiplyData_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImagePremultiplyARGB8888(src, dest, flags: flags) }
 @discardableResult
 public func vImagePremultiplyData_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -2077,25 +2181,25 @@ public func vImageRichardsonLucyDeConvolve_Planar8(_ src: UnsafePointer<vImage_B
 @discardableResult
 public func vImageRichardsonLucyDeConvolve_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ srcOffsetToROI_X: vImagePixelCount, _ srcOffsetToROI_Y: vImagePixelCount, _ kernel: UnsafePointer<Float>!, _ kernel2: UnsafePointer<Float>!, _ kernel_height: UInt32, _ kernel_width: UInt32, _ kernel_height2: UInt32, _ kernel_width2: UInt32, _ backgroundColor: Pixel_F, _ iterationCount: UInt32, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageRotate90_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: UnsafePointer<UInt16>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageRotate90_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: UnsafePointer<UInt16>!, _ flags: vImage_Flags) -> vImage_Error { return _vImageRotate90(src, dest, rotationConstant: rotationConstant, bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageRotate90_ARGB16S(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: UnsafePointer<Int16>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageRotate90_ARGB16S(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: UnsafePointer<Int16>, _ flags: vImage_Flags) -> vImage_Error { return _vImageRotate90(src, dest, rotationConstant: rotationConstant, bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageRotate90_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: UnsafePointer<UInt16>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageRotate90_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: UnsafePointer<UInt16>, _ flags: vImage_Flags) -> vImage_Error { return _vImageRotate90(src, dest, rotationConstant: rotationConstant, bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageRotate90_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: UnsafePointer<UInt8>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageRotate90_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: UnsafePointer<UInt8>, _ flags: vImage_Flags) -> vImage_Error { return _vImageRotate90(src, dest, rotationConstant: rotationConstant, bytesPerPixel: 4, flags: flags) }
 @discardableResult
-public func vImageRotate90_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: UnsafePointer<Float>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageRotate90_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: UnsafePointer<Float>, _ flags: vImage_Flags) -> vImage_Error { return _vImageRotate90(src, dest, rotationConstant: rotationConstant, bytesPerPixel: 16, flags: flags) }
 @discardableResult
-public func vImageRotate90_CbCr16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: UnsafePointer<UInt16>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageRotate90_CbCr16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: UnsafePointer<UInt16>!, _ flags: vImage_Flags) -> vImage_Error { return _vImageRotate90(src, dest, rotationConstant: rotationConstant, bytesPerPixel: 4, flags: flags) }
 @discardableResult
-public func vImageRotate90_Planar16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: Pixel_16F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageRotate90_Planar16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: Pixel_16F, _ flags: vImage_Flags) -> vImage_Error { return _vImageRotate90(src, dest, rotationConstant: rotationConstant, bytesPerPixel: 2, flags: flags) }
 @discardableResult
-public func vImageRotate90_Planar16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: Pixel_16U, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageRotate90_Planar16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: Pixel_16U, _ flags: vImage_Flags) -> vImage_Error { return _vImageRotate90(src, dest, rotationConstant: rotationConstant, bytesPerPixel: 2, flags: flags) }
 @discardableResult
-public func vImageRotate90_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: Pixel_8, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageRotate90_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: Pixel_8, _ flags: vImage_Flags) -> vImage_Error { return _vImageRotate90(src, dest, rotationConstant: rotationConstant, bytesPerPixel: 1, flags: flags) }
 @discardableResult
-public func vImageRotate90_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageRotate90_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ rotationConstant: UInt8, _ backColor: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return _vImageRotate90(src, dest, rotationConstant: rotationConstant, bytesPerPixel: 4, flags: flags) }
 @discardableResult
 public func vImageRotate_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ angleInRadians: Float, _ backColor: UnsafePointer<UInt16>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -2115,33 +2219,33 @@ public func vImageRotate_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: Un
 @discardableResult
 public func vImageRotate_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ angleInRadians: Float, _ backColor: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageScale_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageScale_ARGB16S(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_ARGB16S(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageScale_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageScale_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 4, flags: flags) }
 @discardableResult
-public func vImageScale_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 16, flags: flags) }
 @discardableResult
-public func vImageScale_CbCr16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_CbCr16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 4, flags: flags) }
 @discardableResult
-public func vImageScale_CbCr16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_CbCr16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 4, flags: flags) }
 @discardableResult
-public func vImageScale_CbCr8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_CbCr8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 2, flags: flags) }
 @discardableResult
-public func vImageScale_Planar16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_Planar16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 2, flags: flags) }
 @discardableResult
-public func vImageScale_Planar16S(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_Planar16S(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 2, flags: flags) }
 @discardableResult
-public func vImageScale_Planar16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_Planar16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 2, flags: flags) }
 @discardableResult
-public func vImageScale_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 1, flags: flags) }
 @discardableResult
-public func vImageScale_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 4, flags: flags) }
 @discardableResult
-public func vImageScale_XRGB2101010W(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageScale_XRGB2101010W(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 4, flags: flags) }
 @discardableResult
 public func vImageSelectChannels_ARGB8888(_ newSrc: UnsafePointer<vImage_Buffer>, _ origSrc: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ copyMask: UInt8, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -2177,7 +2281,7 @@ public func vImageUnpremultiplyData_ARGB16Q12(_ src: UnsafePointer<vImage_Buffer
 @discardableResult
 public func vImageUnpremultiplyData_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageUnpremultiplyData_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageUnpremultiplyData_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageUnpremultiplyARGB8888(src, dest, flags: flags) }
 @discardableResult
 public func vImageUnpremultiplyData_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -2195,25 +2299,25 @@ public func vImageUnpremultiplyData_RGBA8888(_ src: UnsafePointer<vImage_Buffer>
 @discardableResult
 public func vImageUnpremultiplyData_RGBAFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageVerticalReflect_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageVerticalReflect_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectVertical(src, dest, bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageVerticalReflect_ARGB16S(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageVerticalReflect_ARGB16S(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectVertical(src, dest, bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageVerticalReflect_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageVerticalReflect_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectVertical(src, dest, bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageVerticalReflect_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageVerticalReflect_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectVertical(src, dest, bytesPerPixel: 4, flags: flags) }
 @discardableResult
-public func vImageVerticalReflect_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageVerticalReflect_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectVertical(src, dest, bytesPerPixel: 16, flags: flags) }
 @discardableResult
-public func vImageVerticalReflect_CbCr16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageVerticalReflect_CbCr16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectVertical(src, dest, bytesPerPixel: 4, flags: flags) }
 @discardableResult
-public func vImageVerticalReflect_Planar16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageVerticalReflect_Planar16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectVertical(src, dest, bytesPerPixel: 2, flags: flags) }
 @discardableResult
-public func vImageVerticalReflect_Planar16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageVerticalReflect_Planar16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectVertical(src, dest, bytesPerPixel: 2, flags: flags) }
 @discardableResult
-public func vImageVerticalReflect_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageVerticalReflect_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectVertical(src, dest, bytesPerPixel: 1, flags: flags) }
 @discardableResult
-public func vImageVerticalReflect_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageVerticalReflect_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return _vImageReflectVertical(src, dest, bytesPerPixel: 4, flags: flags) }
 @discardableResult
 public func vImageVerticalShearD_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ srcOffsetToROI_X: vImagePixelCount, _ srcOffsetToROI_Y: vImagePixelCount, _ yTranslate: Double, _ shearSlope: Double, _ filter: ResamplingFilter!, _ backColor: UnsafePointer<UInt16>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -2356,90 +2460,90 @@ public func vtanhf(_: vFloat) -> vFloat { return vFloat() }
 public func vtanpif(_: vFloat) -> vFloat { return vFloat() }
 @discardableResult
 public func vtruncf(_: vFloat) -> vFloat { return vFloat() }
-public func vvacos(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvacosf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvacosh(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvacoshf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvasin(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvasinf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvasinh(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvasinhf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvatan(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvatan2(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvatan2f(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvatanf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvatanh(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvatanhf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvcbrt(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvcbrtf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvceil(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvceilf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvcopysign(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvcopysignf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvcos(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvcosf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvcosh(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvcoshf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
+public func vvacos(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.acos(x[i]) } }
+public func vvacosf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.acos(x[i]) } }
+public func vvacosh(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.acosh(x[i]) } }
+public func vvacoshf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.acosh(x[i]) } }
+public func vvasin(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.asin(x[i]) } }
+public func vvasinf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.asin(x[i]) } }
+public func vvasinh(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.asinh(x[i]) } }
+public func vvasinhf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.asinh(x[i]) } }
+public func vvatan(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.atan(x[i]) } }
+public func vvatan2(_ z: UnsafeMutablePointer<Double>, _ y: UnsafePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = Foundation.atan2(y[i], x[i]) } }
+public func vvatan2f(_ z: UnsafeMutablePointer<Float>, _ y: UnsafePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = Foundation.atan2(y[i], x[i]) } }
+public func vvatanf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.atan(x[i]) } }
+public func vvatanh(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.atanh(x[i]) } }
+public func vvatanhf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.atanh(x[i]) } }
+public func vvcbrt(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.cbrt(x[i]) } }
+public func vvcbrtf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.cbrt(x[i]) } }
+public func vvceil(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.ceil(x[i]) } }
+public func vvceilf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.ceil(x[i]) } }
+public func vvcopysign(_ z: UnsafeMutablePointer<Double>, _ mag: UnsafePointer<Double>, _ sign: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = Foundation.copysign(mag[i], sign[i]) } }
+public func vvcopysignf(_ z: UnsafeMutablePointer<Float>, _ mag: UnsafePointer<Float>, _ sign: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = Foundation.copysign(mag[i], sign[i]) } }
+public func vvcos(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.cos(x[i]) } }
+public func vvcosf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.cos(x[i]) } }
+public func vvcosh(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.cosh(x[i]) } }
+public func vvcoshf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.cosh(x[i]) } }
 public func vvcosisin(_: OpaquePointer, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
 public func vvcosisinf(_: OpaquePointer, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvcospi(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvcospif(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvdiv(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvdivf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvexp(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvexp2(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvexp2f(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvexpf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvexpm1(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvexpm1f(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvfabs(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvfabsf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvfloor(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvfloorf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvfmod(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvfmodf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvint(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvintf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvlog(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvlog10(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvlog10f(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvlog1p(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvlog1pf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvlog2(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvlog2f(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvlogb(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvlogbf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvlogf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvnextafter(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvnextafterf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvnint(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvnintf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvpow(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvpowf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvpows(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvpowsf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvrec(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvrecf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvremainder(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvremainderf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvrsqrt(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvrsqrtf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvsin(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvsincos(_: UnsafeMutablePointer<Double>, _: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvsincosf(_: UnsafeMutablePointer<Float>, _: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvsinf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvsinh(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvsinhf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvsinpi(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvsinpif(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvsqrt(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvsqrtf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvtan(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvtanf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvtanh(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvtanhf(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
-public func vvtanpi(_: UnsafeMutablePointer<Double>, _: UnsafePointer<Double>, _: UnsafePointer<Int32>) { }
-public func vvtanpif(_: UnsafeMutablePointer<Float>, _: UnsafePointer<Float>, _: UnsafePointer<Int32>) { }
+public func vvcospi(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.cos(x[i] * .pi) } }
+public func vvcospif(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.cos(x[i] * .pi) } }
+public func vvdiv(_ z: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ y: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = x[i] / y[i] } }
+public func vvdivf(_ z: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ y: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = x[i] / y[i] } }
+public func vvexp(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.exp(x[i]) } }
+public func vvexp2(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.exp2(x[i]) } }
+public func vvexp2f(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.exp2(x[i]) } }
+public func vvexpf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.exp(x[i]) } }
+public func vvexpm1(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.expm1(x[i]) } }
+public func vvexpm1f(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.expm1(x[i]) } }
+public func vvfabs(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = (x[i] < 0 ? -x[i] : x[i]) } }
+public func vvfabsf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = (x[i] < 0 ? -x[i] : x[i]) } }
+public func vvfloor(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.floor(x[i]) } }
+public func vvfloorf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.floor(x[i]) } }
+public func vvfmod(_ z: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ y: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = x[i].truncatingRemainder(dividingBy: y[i]) } }
+public func vvfmodf(_ z: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ y: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = x[i].truncatingRemainder(dividingBy: y[i]) } }
+public func vvint(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.trunc(x[i]) } }
+public func vvintf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.trunc(x[i]) } }
+public func vvlog(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.log(x[i]) } }
+public func vvlog10(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.log10(x[i]) } }
+public func vvlog10f(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.log10(x[i]) } }
+public func vvlog1p(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.log1p(x[i]) } }
+public func vvlog1pf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.log1p(x[i]) } }
+public func vvlog2(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.log2(x[i]) } }
+public func vvlog2f(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.log2(x[i]) } }
+public func vvlogb(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.logb(x[i]) } }
+public func vvlogbf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.logb(x[i]) } }
+public func vvlogf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.log(x[i]) } }
+public func vvnextafter(_ z: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ y: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = x[i] < y[i] ? x[i].nextUp : (x[i] > y[i] ? x[i].nextDown : x[i]) } }
+public func vvnextafterf(_ z: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ y: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = x[i] < y[i] ? x[i].nextUp : (x[i] > y[i] ? x[i].nextDown : x[i]) } }
+public func vvnint(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = x[i].rounded(.toNearestOrEven) } }
+public func vvnintf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = x[i].rounded(.toNearestOrEven) } }
+public func vvpow(_ z: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ y: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = Foundation.pow(x[i], y[i]) } }
+public func vvpowf(_ z: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ y: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = Foundation.pow(x[i], y[i]) } }
+public func vvpows(_ z: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ y: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = Foundation.pow(x[i], y[i]) } }
+public func vvpowsf(_ z: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ y: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = Foundation.pow(x[i], y[i]) } }
+public func vvrec(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = 1 / x[i] } }
+public func vvrecf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = 1 / x[i] } }
+public func vvremainder(_ z: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ y: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = Foundation.remainder(x[i], y[i]) } }
+public func vvremainderf(_ z: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ y: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { z[i] = Foundation.remainder(x[i], y[i]) } }
+public func vvrsqrt(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = 1 / Foundation.sqrt(x[i]) } }
+public func vvrsqrtf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = 1 / Foundation.sqrt(x[i]) } }
+public func vvsin(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.sin(x[i]) } }
+public func vvsincos(_ sinOut: UnsafeMutablePointer<Double>, _ cosOut: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { sinOut[i] = Foundation.sin(x[i]); cosOut[i] = Foundation.cos(x[i]) } }
+public func vvsincosf(_ sinOut: UnsafeMutablePointer<Float>, _ cosOut: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { sinOut[i] = Foundation.sin(x[i]); cosOut[i] = Foundation.cos(x[i]) } }
+public func vvsinf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.sin(x[i]) } }
+public func vvsinh(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.sinh(x[i]) } }
+public func vvsinhf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.sinh(x[i]) } }
+public func vvsinpi(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.sin(x[i] * .pi) } }
+public func vvsinpif(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.sin(x[i] * .pi) } }
+public func vvsqrt(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.sqrt(x[i]) } }
+public func vvsqrtf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.sqrt(x[i]) } }
+public func vvtan(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.tan(x[i]) } }
+public func vvtanf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.tan(x[i]) } }
+public func vvtanh(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.tanh(x[i]) } }
+public func vvtanhf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.tanh(x[i]) } }
+public func vvtanpi(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.tan(x[i] * .pi) } }
+public func vvtanpif(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.tan(x[i] * .pi) } }
 @discardableResult
 public func xerbla_(_ srname: UnsafeMutablePointer<CChar>!, _ info: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
