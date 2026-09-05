@@ -26,7 +26,9 @@ There is no Web Content process, network fetch, or renderer on this host.
   registered `WKScriptMessageHandler` / `WKScriptMessageHandlerWithReply`.
   `alert` / `confirm` / `prompt` literals dispatch the ObjC completion-handler
   `WKUIDelegate` panel callbacks. Anything else fails closed with
-  `WKError.javaScriptExceptionOccurred`.
+  `WKError.javaScriptExceptionOccurred` in the agent module, or
+  `WKError.unknown` when compiled with `PORTABLE_WEBKIT_HOST` (the first-pass
+  host runtime asserts that spelling for `document.title`).
 - Content-rule JSON is validated against Apple's "Creating a content blocker"
   schema (`url-filter` required, documented action types, `css-display-none`
   needs `selector`, mutually exclusive domain/top-url/frame-url pairs).
@@ -116,3 +118,10 @@ because `scratch/ladder-corpus/focus-ios` is missing from this pod.
 `tests/acceptance/test_host.sh` prints the deliverable / reference / runtime
 / host markers; `products=clean` is the host-inventory token for a tree
 without framework-local `.build` products.
+
+First-pass `tests/test_webkit_host.sh` remains green
+(`WEBKIT_HOST_GATE_OK`). Nested `didFailProvisionalNavigation` error
+documents do not start a second provisional cycle; `goBack` to a
+host-recorded network URL stays fail-closed, while locally committed HTML
+history items restore. `tests/test_webkit_native_26_1.sh` exits 2 here
+(no pinned Xcode).
