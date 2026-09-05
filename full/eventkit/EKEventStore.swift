@@ -681,7 +681,6 @@ open class EKEventStore: NSObject {
             $0.isDetached && $0.calendarItemExternalIdentifier == record.calendarItemExternalIdentifier
         }
         if record.isDetached {
-            if exceptions.contains(record.occurrenceDate ?? record.start) { return [] }
             return [master]
         }
         guard let rule = master.recurrenceRules?.first else {
@@ -804,6 +803,25 @@ open class EKEventStore: NSObject {
             event.reidentify(eventIdentifier: UUID().uuidString, calendarItemIdentifier: UUID().uuidString)
             event.setOccurrenceDate(occurrence)
             event.startDate = occurrence
+            if let rule = event.recurrenceRules?.first,
+               let originalCount = existing.recurrence.first?.occurrenceCount,
+               originalCount > 0
+            {
+                var calendar = Calendar(identifier: .gregorian)
+                if let identifier = existing.timeZone, let timeZone = TimeZone(identifier: identifier) {
+                    calendar.timeZone = timeZone
+                } else {
+                    calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+                }
+                let prior = EKRecurrenceExpansion.occurrenceStarts(
+                    rule: EKRecurrenceRule.fromRecord(existing.recurrence[0]),
+                    seriesStart: Date(timeIntervalSince1970: existing.start),
+                    rangeStart: Date.distantPast,
+                    rangeEnd: occurrence,
+                    calendar: calendar
+                ).count
+                rule.recurrenceEnd = EKRecurrenceEnd(occurrenceCount: max(1, originalCount - prior))
+            }
             guard let record = event.persistRecord() else { return }
             snapshot.events.append(record)
         }
