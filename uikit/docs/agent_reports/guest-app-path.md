@@ -1,0 +1,195 @@
+# Guest app path: core-guest Foundation / SwiftUI / Combine
+
+## What was measured
+
+`full/scripts/build_full.sh` compiled RealAppProbe from
+
+```
+Sources/RealAppProbe/*.swift
+Sources/RealAppProbe/Vendored/*.swift
+```
+
+against a 49-line Foundation identity module (`full/appshim/Foundation.swift`:
+NSCoder + Bundle aliases). Focus/Hackers sat behind
+`#if canImport(Onboarding)` / `#if canImport(Domain)`, so the guest `realapp`
+path emitted **10** Pocket Casts screens. SwiftPM (macOS + Linux corelibs)
+already compiled the stub modules and the `Focus/` / `Hackers/` /
+`Vendored/{Focus,Hackers}/` trees, so those routes already rendered **12**.
+
+The 38-file facade (`full/foundation/foundation_guest_sources.txt`) and the
+widget-gate Combine/SwiftUI sources already existed. This branch makes the
+guest app compile consume them **without** putting a module named Foundation
+on OpenUIKit's or UIKit's include path (the umbrella-shadows-reexport hazard
+in `full/appshim/Foundation.swift`: 33 `canImport(Foundation)` guards).
+
+## Rule
+
+1. Keep the tiny APPINC Foundation for DeveloperToolsSupport; compile UIKit
+   without `-I APPINC` (unchanged; `test_core_guest_package.py` /
+   `test_true_ios_full_build.py` / `test_notification_guest_aliases.py`).
+2. After that boundary, emit Combine / OpenCombine / Symbols / SwiftUI
+   (Foundation **hidden**, widget-gate order) and Dispatch / CoreFoundation /
+   FoundationInternationalization into `appmods/`, then **overwrite**
+   `APPINC/Foundation.swiftmodule` with the 38-file FoundationGuest facade.
+3. Compile each `Sources/RealAppProbe/{Focus,Hackers}Modules/<M>/` as module
+   `<M>` in import-dependency order, then the harness from
+   `*.swift` + `Vendored/*.swift` + `Vendored/*/*.swift` + `Focus/` +
+   `Hackers/` with those modules and Foundation/SwiftUI/Combine on `-I`.
+4. Link the objects and the FI / OpenCombine / Dispatch / C-bridge dylibs
+   into `render_full`.
+
+## Before / after (guest `realapp`)
+
+| route | screens before | screens after |
+|---|---|---|
+| guest `render_full realapp` (this branch) | 10 Pocket Casts | **12** (Pocket Casts + Focus Settings + Hackers feed) |
+| SwiftPM macOS / Linux corelibs | 12 | 12 (canImport guards removed; no-op) |
+
+Pixel floors unchanged: 99.137 / 98.535 / 98.548 / 99.469 / 98.639 / 98.133 /
+97.516 / 99.511 / 82.192 / 99.760 / 99.689 / 84.582.
+
+## Module map
+
+Which `import` resolves to which module on each route.
+
+### Library compile (OpenUIKit, OpenCoreGraphics, UIKit shim)
+
+Unchanged. Search path is `$OUT` + FoundationEssentials (`FEMODULES`).
+**No** APPINC. `import Foundation` is false (`canImport(Foundation)` stays
+off). `import FoundationEssentials` is the production FE module.
+
+### DTS (standalone)
+
+Sees the tiny APPINC Foundation (`typealias Bundle = OpenUIKit.Bundle`) so
+`DeveloperToolsSupport` names OpenUIKit's exact bundle identity.
+
+### App modules (APPINC + APPMODS, after the overwrite)
+
+| import | guest (`render_full`) | SwiftPM macOS | SwiftPM Linux corelibs |
+|---|---|---|---|
+| `Foundation` | `FoundationGuest` 38-file facade (`APPINC`, overwrites the DTS shim) | Apple Foundation | corelibs-foundation |
+| `FoundationEssentials` | production FE (`FEMODULES`) re-exported by the facade | Apple (re-export) | corelibs |
+| `FoundationInternationalization` | pinned FI + ICU (`appmods`, core-guest builder) | Apple | corelibs |
+| `Combine` | `full/oracle-opencombine/Combine.swift` → OpenCombine | Apple Combine | `OpenCombine` target (Package.swift) |
+| `Dispatch` | `full/dispatch/Dispatch.swift` | Apple | corelibs |
+| `SwiftUI` | `Sources/SwiftUI` (Foundation-hidden, widget-gate sources) | first-party `Sources/SwiftUI` | same |
+| `Observation` | Darwin SDK overlay + host `ObservationMacros` plugin | toolchain Observation | toolchain Observation |
+| `OpenUIKit` | Foundation-hidden OpenUIKit (`$OUT`) | OpenUIKit | OpenUIKit |
+| `UIKit` | `Sources/UIKitShim/UIKit.swift` (`UIKITINC`, Foundation-hidden re-export) | UIKitShim | UIKitShim |
+| `Onboarding` / `Glean` / `Intents` / `IntentsUI` / `Licenses` | `FocusModules/<M>` | same SPM targets | same |
+| `Domain` / `Shared` / `DesignSystem` | `HackersModules/<M>` (Hackers `DesignSystem` also satisfies Focus's `import DesignSystem`) | same | same |
+
+`Intents` / `IntentsUI` on APPINC are the **Focus stubs**, not the core-guest
+production Intents modules (those would collide).
+
+### What stays Foundation-hidden
+
+OpenUIKit, OpenCoreGraphics, the **first** UIKit shim (`UIKITINC`), SwiftUI
+(widget-gate compile: `UIHostingController` is not behind
+`canImport(Foundation)`). A module named Foundation on those invocations' `-I`
+is the measured hazard. After the Foundation facade overwrite, a **second**
+UIKit compile into APPINC takes `@_exported import Foundation` so unchanged
+`import UIKit` app files see UserDefaults / DispatchQueue.
+
+## Verify attempts
+
+Recorded as this branch is pushed and `queue_box.sh` is graded by the
+script's own lines (`build_full rc=0`, `TBD_CHECK_OK`, `difftest rc=0`,
+`GATE_B_PASS`, plus `GUEST_REALAPP_SCREENS=12`), then the x86 cycle
+(`RUNG_SCOREBOARD a=PASS b=PASS c=PASS`).
+
+Attempt 1: `13db41e08f27875872e84e204a32772872a295c1`.
+`TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=2`:
+`OpenUIKit in-repo tree cb130cad… expected f2b69151… (git rev-parse HEAD:uikit)` —
+agent uikit/ edits (RealAppProbe Focus/Hackers) change HEAD:uikit; the pin
+advances after merge. `GATE_B_FAIL rc=2` (widget guest asserts the same pin).
+`guest_realapp` SIGTRAP on a stale `render_full`.
+
+Attempt 2: `2c2958924b90ccfea8cdcb3124ff11677e978278`.
+`TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=2`:
+`ObservationMacros plugin missing (Shared @Observable)` after
+`FOUNDATION_INTERNATIONALIZATION_BUILD_OK swift=61 icu-cpp=474 icu-headers=205`.
+Pin override worked. `GATE_B_FAIL rc=2` (nested build_full same miss).
+`GUEST_REALAPP_SCREENS=0` skipped.
+
+Attempt 3: `6080bbc1c7d4c06ee460b645c700cebfbfd79ac6`.
+`TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=1` (not `die`'s 2) after
+FI OK — likely `-load-plugin-library` of a toolchain plugin without its
+SwiftSyntax host libs. Log grep missed the swiftc line (`tail -8` of OK).
+
+Attempt 4: `d2efe432e962cebabf7d0084c02b0ad13548e6bd`.
+`TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=1`. Log tail was not in
+`ops_extract_result_lines` (only `^build_full:` / `build_full rc=`).
+
+Attempt 5: `5486bdde3e2fd7361674fbcdbbbab96eb7ddebf2`.
+`TBD_CHECK_OK`, `difftest rc=0`. `build_full rc=1`. Log prefix worked.
+ObservationMacros staged. Then `redefinition of module 'CPortableIO'`
+(also CSTBTrueType, CHostClock, CQuartz): `compile_app_module` passed both
+`CINC` and `APPMODS_CINC`. `GATE_B_FAIL rc=1`. `guest_realapp skipped`.
+
+Attempt 6: `c9d5114d9bd46edfe3a36f607de7e4691d9cf65f`.
+`TBD_CHECK_OK`, `difftest rc=0`. Stub modules Glean…DesignSystem compiled.
+`build_full rc=1` at RealAppProbe: `SettingsViewController.swift:221` cannot
+find `DispatchQueue`; `:564` cannot find `UserDefaults`. File's only
+framework import that would supply those is `import UIKit`; guest UIKit
+was still the Foundation-hidden UIKITINC artifact (`canImport(Foundation)`
+false → FoundationEssentials re-export, no Dispatch). `GATE_B_FAIL rc=1`.
+`guest_realapp skipped`.
+
+Attempt 7: `f600fd104a3b6aca9c58a9b9310ecfd87e695b31`.
+`TBD_CHECK_OK`, `difftest rc=0`. App-facing UIKit compiled (Preview macro
+warning only). All stub modules and RealAppProbe compiled. Renderer failed:
+`missing required module 'COpenCombineHelpers'` — renderer still used `CINC`
+(library C maps) and not `APPMODS_CINC`. `build_full rc=1`, `GATE_B_FAIL rc=1`.
+`guest_realapp skipped`.
+
+Attempt 8: `f5074c6c0ad3cd4c9b19459409faa983c44d63b9`.
+`TBD_CHECK_OK`, `difftest rc=0`, **`build_full rc=0`**, **`GATE_B_PASS`**.
+`render_full` 26523184 bytes. `GUEST_REALAPP_SCREENS` was dropped by
+`ops_extract_result_lines`; this commit adds `GUEST_REALAPP` to the
+extractor and prefixes the guest realapp log.
+
+Attempt 9: `687e9138ac67d34b0dbdf20510fdce77081431b2`.
+`TBD_CHECK_OK`, `difftest rc=0`, `build_full rc=0`, `GATE_B_PASS`.
+Guest realapp: `machorun: cannot find dylib '@rpath/libFoundationEssentials.dylib'`
+required by `./libFoundationInternationalization.dylib`. The FE dylib is
+built into APPMODS for the FI builder but was not copied to `$OUT`
+(build/full, the machorun cwd).
+
+Attempt 10: `c8faae90b56fc179c44aa7876c4565f41a301714`.
+`TBD_CHECK_OK`, `difftest rc=0`, `build_full rc=0`, `GATE_B_PASS`.
+`GUEST_REALAPP_RC=73` `GUEST_REALAPP_SCREENS=3`. Then
+`undefined symbol '_glibc_openui_dispatch_host_v1_create_queue'` wanted by
+`libOpenDispatch.dylib`. Staged `scratch/mrroot_full/host` helper is older
+than `OpenDispatchBridge.c`. Rebuild via `build_host_bridge.sh` into
+`$OUT/host` (widget-guest recipe); do not overwrite ROOTDIR/host.
+
+Attempt 11: `fe3b61e80dcc0b294eed3e49a4f95ded34a44c27`.
+`TBD_CHECK_OK`, `difftest rc=0`, `build_full rc=0`, `GATE_B_PASS`.
+Host SO = `build/full/host`. `GUEST_REALAPP_RC=133` `GUEST_REALAPP_SCREENS=3`.
+Swift `_assertionFailure` in render_full. Screen 4 is storage, first
+nib-loaded variant; `configureNibs` used cwd-relative `fixtures/realapp/nibs`
+while machorun cwd is `build/full`. `UINib` `fatalError`s when the archive
+is missing. Derive nibs as the sibling of the absolute assets argv.
+
+Attempt 12: `8e2b15da82cb88249d4b82a541be1d7caa84e352`.
+`TBD_CHECK_OK`, `difftest rc=0`, `build_full rc=0`, `GATE_B_PASS`.
+`GUEST_REALAPP_RC=0` `GUEST_REALAPP_SCREENS=12`.
+`[render_full] realapp rendered=12 failed=0` including
+`realapp_focus_settings_light` and `realapp_hackers_feed_light`.
+objc duplicate-class warnings for FoundationEssentials plist types (not
+fatal). `docker swift:6.2-noble` `swift build -c release --product openrender`
+green (209.47s).
+
+x86 cycle 1: `96ceedede0e70f2e79134fe77f0a945abd7f175d`.
+`RUNG_SCOREBOARD a=PASS b=CANNOT/onboarding guest failed c=CANNOT/scene guest failed`.
+Reminder object-links `$OUT/foundation.o` without OpenCombine / URL /
+relative-time (ld undefined Demand / `_openui_url_transport_v1_*`). Keep
+the DTS shim as `foundation.o`, facade as `foundation_guest.o`. Onboarding
+asserts `EXPECTED_INREPO_UIKIT_TREE` (exit 2); same HEAD:uikit override as
+the widget guest.
+
+x86 cycle 2: `5cda44776f4c73e6611ce3131db345a042d4162e`.
+`RUNG_SCOREBOARD a=PASS b=PASS c=PASS`
+(`a=PASS/smoke 14/14`; `b=PASS/widget+onboarding under X86_64 loader`;
+`c=PASS/windows=1 turns=3 paced=true`).

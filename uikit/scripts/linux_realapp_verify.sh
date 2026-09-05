@@ -8,7 +8,7 @@
 #      Sources/RealAppProbe, which is UNMODIFIED source from
 #      Automattic/pocket-casts-ios. A build failure here would mean the app
 #      source only compiles on Darwin;
-#   2. renders the three headless configurations (`openrender realapp`);
+#   2. renders the twelve headless screens (`openrender realapp`);
 #   3. replays scripts/realapp_interaction.json against the live screen
 #      (`openhost --app pocketcasts --script`, SDL dummy driver);
 #   4. diffs both sets against this machine's macOS run, byte for byte.
@@ -153,6 +153,8 @@ else
 fi
 OPENUIKIT_BACKEND=quartz \
   ./.build/release/openrender realapp "$OUT/linux_out"
+n=$(ls "$OUT/linux_out"/*.png | wc -l | tr -d ' ')
+[ "$n" -eq 12 ] || { echo "expected 12 realapp screens, got $n"; ls "$OUT/linux_out"; exit 1; }
 echo "==> scripted live replay"
 replay=0
 for attempt in 1 2 3 4; do

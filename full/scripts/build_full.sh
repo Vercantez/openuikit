@@ -210,7 +210,15 @@ fi
 # mattered once already: a guest root staged before machorun's heap-below-2^47
 # fix (9659e73) reproduced a bug that had been fixed upstream hours earlier.
 MACHORUN=${MACHORUN:-$W/machorun}
-assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_INREPO_UIKIT_TREE" OpenUIKit
+# Agent branches that edit uikit/ (this task: RealAppProbe Focus/Hackers) have
+# a different HEAD:uikit than scripts/vendor_pins.sh. The operator advances
+# the pin after merge. Attest the in-repo tree we actually compile; a dirty
+# uikit/ is still refused. External UIKIT checkouts keep the pin.
+EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE
+if vendor_is_inrepo "$W" uikit "$UIKIT"; then
+    EXPECTED_UIKIT_TREE=$(git -C "$W" rev-parse --verify HEAD:uikit)
+fi
+assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
 assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
 SWIFT_CORE_RUNTIME_SOURCE=${SWIFT_CORE_RUNTIME_SOURCE:-$MACHORUN/darwin/usr/lib/swift/libswiftCore.dylib}
 SWIFT_CORE_RUNTIME_EXPECTED_SHA256=${SWIFT_CORE_RUNTIME_EXPECTED_SHA256:-}
@@ -916,19 +924,486 @@ echo "== Foundation/UIKit notification identity compile proof"
     "$W/full/foundation/notification_foundation_extension_probe.swift" \
     "$W/full/foundation/notification_uikit_consumer_probe.swift" \
     "$W/full/foundation/notification_direct_import_probe.swift"
-"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" \
+
+# ---- app-facing Combine / SwiftUI / Foundation (APPINC only) --------------
+# MEASURED: a module named Foundation on the LIBRARY search path flips
+# OpenUIKit's 33 canImport(Foundation) guards (full/appshim/Foundation.swift).
+# UIKit and OpenUIKit invocations above keep their include roots. Everything
+# below is emitted into APPINC / APPMODS, which those invocations never saw.
+#
+# Combine + SwiftUI match the widget-gate sources (full/oracle-opencombine,
+# Sources/SwiftUI). Foundation is the core-guest 38-file facade
+# (full/foundation/foundation_guest_sources.txt), compiled after Combine,
+# Dispatch and FoundationInternationalization exist — the same order as
+# full/frameworks/build_core_guest_package.sh after it calls this script.
+APPMODS=$OUT/appmods
+OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-20260828-r2}
+OPENCOMBINE_ARTIFACTS=${OPENCOMBINE_ARTIFACTS:-$OPENCOMBINE_ROOT/export${FULL_OUT_SUFFIX}/artifacts}
+OPENCOMBINE_SOURCE=$OPENCOMBINE_ROOT/source
+OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
+SWIFT_FOUNDATION_ICU=${SWIFT_FOUNDATION_ICU:-$W/scratch/swift-foundation-icu}
+FOUNDATION_INTERNATIONALIZATION_BUILDER=$W/full/foundationinternationalization/build_foundation_internationalization.sh
+FOUNDATION_GUEST_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
+COREFOUNDATION_GUEST_MANIFEST=$W/full/foundation/corefoundation_guest_sources.txt
+EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=19
+EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS=2
+EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
+mkdir -p "$APPMODS/include/CPortableIO" "$APPMODS/include/CSTBTrueType" \
+    "$APPMODS/include/CHostClock" "$APPMODS/include/COpenCombineHelpers" \
+    "$APPMODS/include/COpenDispatch" "$APPMODS/include/COpenRelativeTime" \
+    "$APPMODS/include/COpenURLTransport" "$APPMODS/include/CQuartz" \
+    "$APPMODS/include/CoreFoundation" "$APPMODS/include/COpenFoundationCore"
+cp -a "$OUT/inc/CPortableIO/." "$APPMODS/include/CPortableIO/"
+cp -a "$OUT/inc/CSTBTrueType/." "$APPMODS/include/CSTBTrueType/"
+cp -a "$W/full/hostclock/include/." "$APPMODS/include/CHostClock/"
+cp -a "$UIKIT/Sources/CQuartz/include/." "$APPMODS/include/CQuartz/"
+cp -a "$W/full/foundation/include/COpenFoundationCore/." \
+    "$APPMODS/include/COpenFoundationCore/"
+cp "$OPENCOMBINE_HELPERS/include/COpenCombineHelpers.h" \
+    "$OPENCOMBINE_HELPERS/include/module.modulemap" \
+    "$APPMODS/include/COpenCombineHelpers/"
+cp -a "$W/full/dispatch/include/." "$APPMODS/include/COpenDispatch/"
+cp -a "$W/full/relativetime/include/." "$APPMODS/include/COpenRelativeTime/"
+cp -a "$W/full/urltransport/include/." "$APPMODS/include/COpenURLTransport/"
+cp "$W/full/foundation/include/CoreFoundation/CoreFoundation.h" \
+    "$APPMODS/include/CoreFoundation/CoreFoundation.h"
+cp "$W/full/foundation/include/CoreFoundation/module.modulemap" \
+    "$APPMODS/include/CoreFoundation/module.modulemap"
+[ -f "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" ] && \
+    [ -f "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" ] \
+    || die "OpenCombine artifacts missing under $OPENCOMBINE_ARTIFACTS"
+cp "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" "$APPMODS/"
+[ -f "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftdoc" ] && \
+    cp "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftdoc" "$APPMODS/"
+for module in OpenUIKit OpenCoreGraphics; do
+    for suffix in swiftmodule swiftdoc swiftsourceinfo abi.json; do
+        [ -e "$OUT/$module.$suffix" ] && cp "$OUT/$module.$suffix" "$APPMODS/"
+    done
+done
+APPMODS_CINC=(
+    -Xcc -I"$APPMODS/include/CPortableIO"
+    -Xcc -I"$APPMODS/include/CSTBTrueType"
+    -Xcc -I"$APPMODS/include/CHostClock"
+    -Xcc -fmodule-map-file="$APPMODS/include/COpenCombineHelpers/module.modulemap"
+    -Xcc -I"$APPMODS/include/COpenCombineHelpers"
+    -Xcc -fmodule-map-file="$APPMODS/include/COpenDispatch/module.modulemap"
+    -Xcc -I"$APPMODS/include/COpenDispatch"
+    -Xcc -I"$APPMODS/include/CQuartz"
+    -Xcc -fmodule-map-file="$APPMODS/include/COpenFoundationCore/module.modulemap"
+    -Xcc -I"$APPMODS/include/COpenFoundationCore"
+    -Xcc -fmodule-map-file="$APPMODS/include/CoreFoundation/module.modulemap"
+    -Xcc -I"$APPMODS/include/CoreFoundation"
+    -Xcc -fmodule-map-file="$APPMODS/include/COpenURLTransport/module.modulemap"
+    -Xcc -I"$APPMODS/include/COpenURLTransport"
+    -Xcc -fmodule-map-file="$APPMODS/include/COpenRelativeTime/module.modulemap"
+    -Xcc -I"$APPMODS/include/COpenRelativeTime"
+)
+
+echo "== package source-built OpenCombine and literal Combine (app include path)"
+cp "$OPENCOMBINE_HELPERS/COpenCombineHelpers.cpp" "$OUT/COpenCombineHelpers.cpp"
+patch --batch --forward --fuzz=0 "$OUT/COpenCombineHelpers.cpp" \
+    "$W/full/oracle-opencombine/patches/COpenCombineHelpers-pthread-recursive.patch"
+clang++-18 -target "$TARGET" -isysroot "$SYS" -stdlib=libc++ -std=c++17 -O2 \
+    -I "$APPMODS/include/COpenCombineHelpers" \
+    -c "$OUT/COpenCombineHelpers.cpp" -o "$OUT/copencombinehelpers.o"
+"${LD[@]}" -dylib -install_name @rpath/libOpenCombine.dylib \
+    -rpath @loader_path -ignore_auto_link -dead_strip \
+    -o "$APPMODS/libOpenCombine.dylib" \
+    "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" "$OUT/copencombinehelpers.o" \
+    "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$ROOTDIR/darwin/usr/lib/libc++abi.dylib" \
+    "$SYS/usr/lib/libSystem.tbd" "$ROOTDIR/darwin/usr/lib/libSystem.real.dylib" \
+    "$SYS/usr/lib/libobjc.tbd"
+"${SWIFTC[@]}" -parse-as-library "${APPMODS_CINC[@]}" "${FEMODULES[@]}" \
+    -I "$APPMODS" \
+    -module-name Combine -emit-module -emit-module-path "$APPMODS/Combine.swiftmodule" \
+    -emit-object -o "$OUT/combine.o" \
+    "$W/full/oracle-opencombine/Combine.swift"
+"${LD[@]}" -dylib -install_name @rpath/libCombine.dylib \
+    -rpath @loader_path -ignore_auto_link -dead_strip \
+    -reexport_library "$APPMODS/libOpenCombine.dylib" \
+    -o "$APPMODS/libCombine.dylib" "$OUT/combine.o" \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" "$SYS/usr/lib/libSystem.tbd"
+cp "$APPMODS/Combine.swiftmodule" "$APPINC/"
+cp "$APPMODS/OpenCombine.swiftmodule" "$APPINC/"
+cp "$APPMODS/libCombine.dylib" "$APPMODS/libOpenCombine.dylib" "$OUT/"
+
+echo "== compile the first-party Symbols value model while Foundation is the DTS shim"
+mapfile -d '' -t SYMBOLS_SOURCES < <(
+    find "$UIKIT/Sources/Symbols" -maxdepth 1 -type f -name '*.swift' \
+        -print0 | LC_ALL=C sort -z
+)
+"${SWIFTC[@]}" -parse-as-library -I "$APPMODS" \
+    -module-name Symbols \
+    -emit-module -emit-module-path "$APPMODS/Symbols.swiftmodule" \
+    -emit-object -o "$OUT/symbols.o" \
+    "${SYMBOLS_SOURCES[@]}"
+cp "$APPMODS/Symbols.swiftmodule" "$APPINC/"
+
+echo "== compile SwiftUI without APPINC (Foundation still the DTS identity shim)"
+# Widget-gate order: SwiftUI is compiled while the app-facing Foundation
+# facade does not sit on this invocation's search path. Hosting.swift's
+# UIHostingController is not behind canImport(Foundation); the later
+# overwrite of APPINC must not flip this compile.
+mapfile -d '' -t SWIFTUI_SOURCES < <(
+    find "$UIKIT/Sources/SwiftUI" -maxdepth 1 -type f -name '*.swift' \
+        -print0 | LC_ALL=C sort -z
+)
+[ "${#SWIFTUI_SOURCES[@]}" -gt 0 ] \
+    || die "SwiftUI source inventory is empty"
+"${SWIFTC[@]}" -parse-as-library "${APPMODS_CINC[@]}" "${FEMODULES[@]}" \
+    -I "$OUT" -I "$APPMODS" \
+    -module-name SwiftUI -emit-module -emit-module-path "$APPMODS/SwiftUI.swiftmodule" \
+    -emit-object -o "$OUT/swiftui.o" \
+    "${SWIFTUI_SOURCES[@]}"
+cp "$APPMODS/SwiftUI.swiftmodule" "$APPINC/"
+
+echo "== Mach-O bridges for Dispatch, URL transport, relative time"
+clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$APPMODS/include/COpenDispatch" \
+    -c "$W/full/dispatch/OpenDispatchBridge.c" \
+    -o "$OUT/open-dispatch-bridge.o"
+"${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+    -install_name /usr/lib/libOpenDispatch.dylib \
+    -o "$ROOTDIR/darwin/usr/lib/libOpenDispatch.dylib" \
+    "$OUT/open-dispatch-bridge.o"
+clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$APPMODS/include/COpenURLTransport" \
+    -c "$W/full/urltransport/OpenURLTransportBridge.c" \
+    -o "$OUT/open-url-transport-bridge.o"
+"${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+    -install_name /usr/lib/libOpenURLTransport.dylib \
+    -o "$ROOTDIR/darwin/usr/lib/libOpenURLTransport.dylib" \
+    "$OUT/open-url-transport-bridge.o"
+clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$APPMODS/include/COpenRelativeTime" \
+    -c "$W/full/relativetime/OpenRelativeTimeBridge.c" \
+    -o "$OUT/open-relative-time-bridge.o"
+"${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+    -install_name /usr/lib/libOpenRelativeTime.dylib \
+    -o "$ROOTDIR/darwin/usr/lib/libOpenRelativeTime.dylib" \
+    "$OUT/open-relative-time-bridge.o"
+
+# The Darwin OpenDispatchBridge imports _glibc_openui_dispatch_host_v1_create_queue
+# (attempt 10, c8faae90: GUEST_REALAPP_SCREENS=3 then undefined symbol). The
+# staged scratch/mrroot_full/host copy is older and lacks that export. Rebuild
+# into $OUT/host the same way build_focus_widget_guest.sh does, and keep the
+# other staged host helpers beside it so one LD_PRELOAD directory covers the
+# app-path Darwin bridges. Do not overwrite ROOTDIR/host (manifest hashes the
+# staged BASE copy).
+echo "== build Linux Dispatch host bridge (app-path realapp)"
+HOST_BRIDGE_DIR=$OUT/host
+mkdir -p "$HOST_BRIDGE_DIR" "$OUT/host-work"
+host_bridge_args=(
+    --repo "$W"
+    --host-dir "$HOST_BRIDGE_DIR"
+    --work-dir "$OUT/host-work"
+    --ledger-style core
+    --refuse-prefix 'build_full: '
+)
+if [ "$(uname -m)" = aarch64 ] || [ "$(uname -m)" = arm64 ]; then
+    host_bridge_args+=(--host-abi ELF64-AArch64)
+else
+    host_bridge_args+=(--skip-runtime-pin --host-abi "ELF64-$(uname -m)")
+fi
+bash "$W/full/dispatch/build_host_bridge.sh" "${host_bridge_args[@]}"
+[ -f "$HOST_BRIDGE_DIR/libOpenDispatchHost.so" ] \
+    || die "Linux Dispatch host helper missing: $HOST_BRIDGE_DIR/libOpenDispatchHost.so"
+for host_helper in libOpenFoundationInternationalizationHost.so \
+    libOpenURLTransportHost.so libOpenRelativeTimeHost.so; do
+    [ -f "$ROOTDIR/host/$host_helper" ] \
+        || die "staged host helper missing: $ROOTDIR/host/$host_helper"
+    cp "$ROOTDIR/host/$host_helper" "$HOST_BRIDGE_DIR/$host_helper"
+done
+
+echo "== compile the project Dispatch module before the Foundation umbrella"
+"${SWIFTC[@]}" -parse-as-library "${APPMODS_CINC[@]}" \
+    -I "$APPMODS" \
+    -module-name Dispatch -emit-module \
+    -emit-module-path "$APPMODS/Dispatch.swiftmodule" \
+    -emit-object -o "$OUT/dispatch.o" "$W/full/dispatch/Dispatch.swift"
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
+    -install_name @rpath/libDispatch.dylib -rpath @loader_path \
+    -o "$APPMODS/libDispatch.dylib" \
+    "$OUT/dispatch.o" "$ROOTDIR/darwin/usr/lib/libOpenDispatch.dylib" \
+    -L"$APPMODS" -lOpenCombine \
+    -L"$ROOTDIR/darwin/usr/lib" -L/usr/lib/swift \
+    -lswiftCore \
+    "$SYS/usr/lib/swift/libswiftSynchronization.tbd" \
+    "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
+    "$ROOTDIR/darwin/usr/lib/libswiftcompat.dylib" \
+    -L/usr/lib -lSystem "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib"
+cp "$APPMODS/Dispatch.swiftmodule" "$APPINC/"
+cp "$APPMODS/libDispatch.dylib" "$OUT/"
+
+echo "== compile first-party CoreFoundation before the Foundation umbrella"
+mapfile -t COREFOUNDATION_GUEST_RELATIVE_SOURCES < "$COREFOUNDATION_GUEST_MANIFEST"
+COREFOUNDATION_GUEST_SOURCES=()
+for relative in "${COREFOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
+    COREFOUNDATION_GUEST_SOURCES+=("$W/$relative")
+done
+"${SWIFTC[@]}" -parse-as-library "${APPMODS_CINC[@]}" "${FEMODULES[@]}" \
+    -I "$APPMODS" -module-name CoreFoundation \
+    -emit-module -emit-module-path "$APPMODS/CoreFoundation.swiftmodule" \
+    -emit-object -o "$OUT/corefoundation.o" \
+    "${COREFOUNDATION_GUEST_SOURCES[@]}"
+cp "$APPMODS/CoreFoundation.swiftmodule" "$APPINC/"
+
+echo "== build pinned FoundationInternationalization (core-guest ICU closure)"
+[ -f "$FOUNDATION_INTERNATIONALIZATION_BUILDER" ] \
+    || die "FoundationInternationalization builder missing"
+"${LD[@]}" -dylib -dead_strip \
+    -install_name @rpath/libFoundationEssentials.dylib -rpath @loader_path \
+    -L"$ROOTDIR/darwin/usr/lib" \
+    -L/usr/lib/swift -lswiftCore "$ROOTDIR/darwin/usr/lib/libswiftcompat.dylib" \
+    -L/usr/lib -lSystem "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" \
+    -o "$APPMODS/libFoundationEssentials.dylib" \
+    "${FE_OBJECTS[@]}" "$OUT/swiftcorepatch.o"
+cp "$APPMODS/libFoundationEssentials.dylib" "$OUT/"
+for fe_artifact in FoundationEssentials.swiftmodule FoundationEssentials.swiftdoc; do
+    [ -f "$FE_OUT/$fe_artifact" ] || die "missing $FE_OUT/$fe_artifact"
+    cp "$FE_OUT/$fe_artifact" "$APPMODS/$fe_artifact"
+done
+FINTL_STAGE=$OUT/fi-stage
+FINTL_WORK=$OUT/fi-work
+rm -rf -- "$FINTL_STAGE" "$FINTL_WORK"
+mkdir -p "$FINTL_STAGE/guest-root/host" \
+    "$FINTL_STAGE/guest-root/darwin/usr/lib" \
+    "$FINTL_STAGE/include" \
+    "$FINTL_STAGE/attestation" \
+    "$FINTL_WORK"
+ln -sfn "$SYS" "$FINTL_STAGE/sdk"
+ln -sfn "$APPMODS" "$FINTL_STAGE/lib"
+ln -sfn "$APPMODS" "$FINTL_STAGE/modules"
+mkdir -p "$FINTL_STAGE/include/_FoundationCShims"
+cp -a "$SF/Sources/_FoundationCShims/include/." \
+    "$FINTL_STAGE/include/_FoundationCShims/"
+for fi_runtime in libc++.1.dylib libc++.real.dylib libc++abi.dylib \
+    libSystem.B.dylib libSystem.real.dylib libswiftcompat.dylib; do
+    [ -e "$ROOTDIR/darwin/usr/lib/$fi_runtime" ] \
+        || die "FI runtime dylib missing: $ROOTDIR/darwin/usr/lib/$fi_runtime"
+    ln -s "$ROOTDIR/darwin/usr/lib/$fi_runtime" \
+        "$FINTL_STAGE/guest-root/darwin/usr/lib/$fi_runtime"
+done
+: > "$FINTL_STAGE/guest-root/.manifest"
+env SUPPORT_ROOT="$W" SWIFT_FOUNDATION="$SF" \
+    SWIFT_FOUNDATION_ICU="$SWIFT_FOUNDATION_ICU" STAGE="$FINTL_STAGE" \
+    WORK="$FINTL_WORK" TARGET="$TARGET" MIN_OS="$MINOS" \
+    COLLECTIONS="$FE_COLLECTIONS" OSMOD="$FE_OS" CSHIMS="$FE_CSHIMS" \
+    FOUNDATION_ICU_JOBS="${FOUNDATION_ICU_JOBS:-8}" \
+    bash "$FOUNDATION_INTERNATIONALIZATION_BUILDER"
+[ -f "$APPMODS/FoundationInternationalization.swiftmodule" ] \
+    || die "FoundationInternationalization.swiftmodule missing after FI build"
+cp "$APPMODS/FoundationInternationalization.swiftmodule" "$APPINC/"
+cp "$APPMODS/libFoundationInternationalization.dylib" \
+    "$APPMODS/lib_FoundationICU.dylib" "$OUT/"
+clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$W/full/foundationinternationalization/include" \
+    -c "$W/full/foundationinternationalization/OpenFoundationInternationalizationBridge.c" \
+    -o "$OUT/open-foundation-internationalization-bridge.o"
+"${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+    -install_name /usr/lib/libOpenFoundationInternationalization.dylib \
+    -o "$ROOTDIR/darwin/usr/lib/libOpenFoundationInternationalization.dylib" \
+    "$OUT/open-foundation-internationalization-bridge.o"
+APPMODS_CINC+=(
+    -Xcc -fmodule-map-file="$FINTL_STAGE/include/FoundationICU/_foundation_unicode/module.modulemap"
+    -Xcc -I"$FINTL_STAGE/include/FoundationICU"
+)
+
+echo "== compile the ordered app-facing Foundation facade into APPINC"
+# Overwrites the DTS identity shim's swiftmodule. DTS.o is already compiled.
+# Library/UIKit invocations above never had APPINC, so they stay Foundation-hidden.
+mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES < "$FOUNDATION_GUEST_MANIFEST"
+[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 38 ] \
+    || die "Foundation guest source manifest must contain exactly 38 lines"
+FOUNDATION_GUEST_SOURCES=()
+for relative in "${FOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
+    FOUNDATION_GUEST_SOURCES+=("$W/$relative")
+done
+"${SWIFTC[@]}" -parse-as-library "${APPMODS_CINC[@]}" "${FEMODULES[@]}" \
+    -I "$OUT" -I "$APPMODS" \
+    -module-name Foundation -emit-module \
+    -emit-module-path "$APPINC/Foundation.swiftmodule" \
+    -emit-object -o "$OUT/foundation_guest.o" \
+    "${FOUNDATION_GUEST_SOURCES[@]}"
+# Keep $OUT/foundation.o as the DTS identity object. Reminder-scene object-links
+# it (build_and_run_reminder_scene_guest.sh) and cannot see OpenCombine /
+# OpenURLTransport (x86 cycle 96ceeded: undefined Demand / _openui_url_transport_v1_*).
+llvm-nm-18 -u -j "$OUT/foundation_guest.o" | LC_ALL=C sort -u \
+    > "$OUT/foundation-undefined-symbols.txt"
+foundation_string_processing_undefineds=$(awk \
+    'index($0, "17_StringProcessing") { count++ } END { print count + 0 }' \
+    "$OUT/foundation-undefined-symbols.txt")
+foundation_synchronization_undefineds=$(awk \
+    'index($0, "15Synchronization") { count++ } END { print count + 0 }' \
+    "$OUT/foundation-undefined-symbols.txt")
+foundation_regex_parser_undefineds=$(awk \
+    'index($0, "12_RegexParser") { count++ } END { print count + 0 }' \
+    "$OUT/foundation-undefined-symbols.txt")
+[ "$foundation_string_processing_undefineds" -eq \
+    "$EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS" ] \
+    || die "Foundation StringProcessing undefined count $foundation_string_processing_undefineds, expected $EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS"
+[ "$foundation_synchronization_undefineds" -eq \
+    "$EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS" ] \
+    || die "Foundation Synchronization undefined count $foundation_synchronization_undefineds, expected $EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS"
+    [ "$foundation_regex_parser_undefineds" -eq \
+    "$EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS" ] \
+    || die "Foundation RegexParser undefined count $foundation_regex_parser_undefineds, expected $EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS"
+
+# Same split as build_focus_package_guest.sh: the UIKITINC artifact stays the
+# Foundation-hidden identity/legacy-renderer probe (first `-module-name UIKit`
+# has no APPINC; test_notification_guest_aliases.py). This second compile is
+# what unchanged app files consume. UIKit.swift then takes
+# `@_exported import Foundation`; FoundationGuest re-exports Dispatch, so
+# `import UIKit` names UserDefaults and DispatchQueue (attempt 6, c9d5114d,
+# SettingsViewController.swift:564 / :221).
+echo "== compile final app-facing UIKit after Foundation facade"
+"${SWIFTC[@]}" -parse-as-library "${APPMODS_CINC[@]}" "${FEMODULES[@]}" \
     "${PREVIEW_SWIFT_FLAGS[@]}" \
-    -I "$OUT" -I "$UIKITINC" -I "$APPINC" -default-isolation MainActor \
+    -I "$OUT" -I "$APPINC" -I "$APPMODS" \
+    -module-name UIKit -emit-module -emit-module-path "$APPINC/UIKit.swiftmodule" \
+    -emit-object -o "$OUT/uikitshim_app.o" \
+    "$UIKIT/Sources/UIKitShim/UIKit.swift"
+cp "$APPINC/UIKit.swiftmodule" "$APPMODS/"
+
+echo "== RealAppProbe stub modules (FocusModules / HackersModules, dependency order)"
+# Package.swift target graph: Glean, Intents, Onboarding have no deps;
+# IntentsUI → Intents+OpenUIKit; Licenses → SwiftUI; Domain → Foundation;
+# Shared → Domain+UIKit+SwiftUI+Combine; DesignSystem → Domain+Shared+SwiftUI.
+# Shared and FeedViewModel use @Observable; the Darwin SDK's Observation
+# module names ObservationMacros, which live in the host toolchain plugin
+# (full/frameworks/build_core_guest_package.sh OBSERVATION_MACRO_PLUGIN).
+swiftc_bin=$(command -v swiftc || true)
+swift_usr=
+if [ -n "$swiftc_bin" ]; then
+    swift_usr=$(CDPATH= cd -- "$(dirname -- "$swiftc_bin")/.." && pwd -P)
+fi
+if [ -z "${OBSERVATION_MACRO_PLUGIN:-}" ]; then
+    for cand in \
+        ${swift_usr:+"$swift_usr/lib/swift/host/plugins/libObservationMacros.so"} \
+        ${swift_usr:+"$swift_usr/lib/swift/host/compilerPlugins/libObservationMacros.so"} \
+        /opt/swift624/usr/lib/swift/host/plugins/libObservationMacros.so \
+        /opt/swift624/usr/lib/swift/host/compilerPlugins/libObservationMacros.so \
+        /opt/swift/usr/lib/swift/host/plugins/libObservationMacros.so \
+        /usr/lib/swift/host/plugins/libObservationMacros.so \
+        /usr/lib/swift/host/compilerPlugins/libObservationMacros.so; do
+        if [ -f "$cand" ]; then
+            OBSERVATION_MACRO_PLUGIN=$cand
+            break
+        fi
+    done
+    if [ -z "${OBSERVATION_MACRO_PLUGIN:-}" ] && [ -n "$swift_usr" ]; then
+        OBSERVATION_MACRO_PLUGIN=$(find "$swift_usr/lib" \
+            \( -name 'libObservationMacros.so' -o -name 'libObservationMacros.dylib' \) \
+            -print -quit 2>/dev/null || true)
+    fi
+fi
+if [ ! -f "${OBSERVATION_MACRO_PLUGIN:-}" ]; then
+    echo "build_full: ObservationMacros not at the known host-plugin paths" >&2
+    echo "   swiftc=$(command -v swiftc || echo missing) swift_usr=$swift_usr" >&2
+    for dir in \
+        ${swift_usr:+"$swift_usr/lib/swift/host/plugins"} \
+        ${swift_usr:+"$swift_usr/lib/swift/host/compilerPlugins"} \
+        /opt/swift624/usr/lib/swift/host/plugins \
+        /usr/lib/swift/host/plugins; do
+        echo "   ls $dir:" >&2
+        ls -la "$dir" 2>&1 | head -20 >&2 || true
+    done
+    die "ObservationMacros plugin missing (Shared @Observable)"
+fi
+# Stage the plugin next to its SwiftSyntax host libs, matching
+# build_core_guest_package.sh. -load-plugin-library of a toolchain plugin can
+# fail when the syntax .so files are not on the loader path (attempt 3 rc=1).
+PLUGIN_STAGE=$OUT/host-tools/swift/host
+mkdir -p "$PLUGIN_STAGE/plugins"
+cp "$OBSERVATION_MACRO_PLUGIN" "$PLUGIN_STAGE/plugins/libObservationMacros.so"
+plugin_host=$(CDPATH= cd -- "$(dirname -- "$OBSERVATION_MACRO_PLUGIN")/.." && pwd -P)
+for lib in libSwiftSyntaxMacros.so libSwiftSyntaxBuilder.so \
+    libSwiftParserDiagnostics.so libSwiftBasicFormat.so libSwiftParser.so \
+    libSwiftDiagnostics.so libSwiftSyntax.so; do
+    if [ -f "$plugin_host/$lib" ]; then
+        cp "$plugin_host/$lib" "$PLUGIN_STAGE/$lib"
+    elif [ -n "$swift_usr" ] && [ -f "$swift_usr/lib/swift/host/$lib" ]; then
+        cp "$swift_usr/lib/swift/host/$lib" "$PLUGIN_STAGE/$lib"
+    fi
+done
+OBSERVATION_MACRO_PLUGIN=$PLUGIN_STAGE/plugins/libObservationMacros.so
+echo "== ObservationMacros $OBSERVATION_MACRO_PLUGIN"
+OBSERVATION_PLUGIN_FLAGS=(
+    -plugin-path "$PLUGIN_STAGE/plugins"
+    -load-plugin-library "$OBSERVATION_MACRO_PLUGIN"
+)
+compile_app_module() {
+    local name=$1 outfile=$2; shift 2
+    echo "   module $name"
+    # APPMODS_CINC already has CPortableIO / CSTBTrueType / CHostClock / CQuartz
+    # (copies under appmods/include). Passing CINC as well redefines those four
+    # maps (attempt 5, 5486bdde, arm64 verify): APPMODS/include/CPortableIO vs
+    # $OUT/inc/CPortableIO, likewise CSTBTrueType, CHostClock, CQuartz.
+    "${SWIFTC[@]}" -parse-as-library "${FEMODULES[@]}" \
+        "${PREVIEW_SWIFT_FLAGS[@]}" "${APPMODS_CINC[@]}" \
+        -I "$OUT" -I "$APPINC" -I "$APPMODS" \
+        -disable-availability-checking \
+        "${OBSERVATION_PLUGIN_FLAGS[@]}" \
+        -module-name "$name" \
+        -emit-module -emit-module-path "$APPINC/$name.swiftmodule" \
+        -emit-object -o "$outfile" \
+        "$@"
+}
+compile_app_module Glean "$OUT/glean.o" \
+    "$UIKIT"/Sources/RealAppProbe/FocusModules/Glean/*.swift
+compile_app_module Intents "$OUT/intents_stub.o" \
+    "$UIKIT"/Sources/RealAppProbe/FocusModules/Intents/*.swift
+compile_app_module Onboarding "$OUT/onboarding_stub.o" \
+    "$UIKIT"/Sources/RealAppProbe/FocusModules/Onboarding/*.swift
+compile_app_module Domain "$OUT/domain.o" \
+    "$UIKIT"/Sources/RealAppProbe/HackersModules/Domain/*.swift
+compile_app_module IntentsUI "$OUT/intentsui_stub.o" \
+    "$UIKIT"/Sources/RealAppProbe/FocusModules/IntentsUI/*.swift
+compile_app_module Licenses "$OUT/licenses.o" \
+    "$UIKIT"/Sources/RealAppProbe/FocusModules/Licenses/*.swift
+compile_app_module Shared "$OUT/shared.o" \
+    "$UIKIT"/Sources/RealAppProbe/HackersModules/Shared/*.swift
+compile_app_module DesignSystem "$OUT/designsystem.o" \
+    "$UIKIT"/Sources/RealAppProbe/HackersModules/DesignSystem/*.swift
+
+echo "== RealAppProbe (top-level + Vendored + Vendored/* + Focus/ + Hackers/)"
+# Measured glob that SwiftPM already compiles. The previous guest path
+# only globbed RealAppProbe/*.swift + Vendored/*.swift, so canImport(Onboarding)
+# / canImport(Domain) were false and the table stopped at 10 Pocket Casts
+# screens. APPINC now has Onboarding, Domain, SwiftUI, Combine, Foundation.
+APP_PROBE_SOURCES=(
+    "$UIKIT"/Sources/RealAppProbe/*.swift
+    "$UIKIT"/Sources/RealAppProbe/Vendored/*.swift
+    "$UIKIT"/Sources/RealAppProbe/Vendored/*/*.swift
+    "$UIKIT"/Sources/RealAppProbe/Focus/*.swift
+    "$UIKIT"/Sources/RealAppProbe/Hackers/*.swift
+)
+"${SWIFTC[@]}" -parse-as-library "${FEMODULES[@]}" \
+    "${PREVIEW_SWIFT_FLAGS[@]}" "${APPMODS_CINC[@]}" \
+    -I "$OUT" -I "$APPINC" -I "$APPMODS" \
+    -default-isolation MainActor -disable-availability-checking \
+    -enable-upcoming-feature IsolatedDefaultValues \
+    "${OBSERVATION_PLUGIN_FLAGS[@]}" \
     -module-name RealAppProbe -emit-module -emit-module-path "$OUT/RealAppProbe.swiftmodule" \
     -emit-object -o "$OUT/realappprobe.o" \
-    "$UIKIT"/Sources/RealAppProbe/*.swift "$UIKIT"/Sources/RealAppProbe/Vendored/*.swift
+    "${APP_PROBE_SOURCES[@]}"
 
 # The renderer sees both app include roots: RealApp.swift imports RealAppProbe,
 # whose interface transitively names UIKit, Foundation, and FoundationEssentials.
 echo "== renderer (SceneBuilder.swift + RealApp.swift verbatim + full/driver/main.swift)"
-"${SWIFTC[@]}" "${CINC[@]}" "${FEMODULES[@]}" \
-    "${PREVIEW_SWIFT_FLAGS[@]}" \
-    -I "$OUT" -I "$UIKITINC" -I "$APPINC" -module-name render_full \
+# APPMODS_CINC, not CINC: RealAppProbe.swiftmodule imports Combine, which
+# needs COpenCombineHelpers. Passing both CINC and APPMODS_CINC redefines
+# CPortableIO (attempt 5). Attempt 7 (f600fd10) failed here with
+# `missing required module 'COpenCombineHelpers'`.
+"${SWIFTC[@]}" "${FEMODULES[@]}" \
+    "${PREVIEW_SWIFT_FLAGS[@]}" "${APPMODS_CINC[@]}" \
+    -I "$OUT" -I "$APPINC" -I "$APPMODS" -module-name render_full \
     -emit-object -o "$OUT/render_full.o" \
     "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift" \
     "$W/full/driver/RunLoop.swift" "$W/full/driver/RunLoopTest.swift" \
@@ -948,19 +1423,40 @@ echo "== link"
 # (rather than via -lSystem) because the SDK .tbd does not advertise
 # pthread_main_np, which the APP path needs and the render path does not.
 COMMON_LINK_OBJECTS=(
-    "$OUT/uikitshim.o" "$OUT/openuikit.o" "$OUT/opencoregraphics.o"
+    "$OUT/openuikit.o" "$OUT/opencoregraphics.o"
     "$OUT/cportableio.o" "$OUT/cstbtruetype.o" "$OUT/hostclock.o"
     "$OUT/swiftcorepatch.o"
     "${FE_OBJECTS[@]}"
     "${PREVIEW_LINK_OBJECTS[@]}"
 )
+# Combine/OpenCombine/Dispatch are dylibs (widget/onboarding measured path).
+# Their .o files are inside those dylibs — do not object-link them as well.
+# render_full links the Foundation-visible UIKit object; the IndexPath probe
+# keeps the hidden UIKITINC object it was compiled against.
+APP_LINK_OBJECTS=(
+    "$OUT/uikitshim_app.o"
+    "$OUT/symbols.o" "$OUT/swiftui.o" "$OUT/corefoundation.o"
+    "$OUT/glean.o" "$OUT/intents_stub.o" "$OUT/onboarding_stub.o"
+    "$OUT/domain.o" "$OUT/intentsui_stub.o" "$OUT/licenses.o"
+    "$OUT/shared.o" "$OUT/designsystem.o"
+)
 "${LD[@]}" -dead_strip -exported_symbol __mh_execute_header -rpath @loader_path \
-    -L"$ROOTDIR/darwin/usr/lib" \
-    -L/usr/lib/swift -lswiftCore "$SWIFTCOMPAT" \
+    -L"$ROOTDIR/darwin/usr/lib" -L"$OUT" -L"$APPMODS" \
+    -L/usr/lib/swift -lswiftCore -lswift_StringProcessing -lswiftSynchronization \
+    "$SWIFTCOMPAT" \
     -L/usr/lib -lSystem -lobjc "$QUARTZLIB" \
     "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" \
+    "$ROOTDIR/darwin/usr/lib/libc++.1.dylib" \
+    "$ROOTDIR/darwin/usr/lib/libOpenDispatch.dylib" \
+    "$ROOTDIR/darwin/usr/lib/libOpenURLTransport.dylib" \
+    "$ROOTDIR/darwin/usr/lib/libOpenRelativeTime.dylib" \
+    "$OUT/libCombine.dylib" "$OUT/libOpenCombine.dylib" \
+    "$OUT/libDispatch.dylib" \
+    "$OUT/libFoundationInternationalization.dylib" \
+    "$OUT/lib_FoundationICU.dylib" \
     -o "$OUT/render_full" \
-    "$OUT/render_full.o" "$OUT/realappprobe.o" "$OUT/foundation.o" \
+    "$OUT/render_full.o" "$OUT/realappprobe.o" "$OUT/foundation_guest.o" \
+    "${APP_LINK_OBJECTS[@]}" \
     "${COMMON_LINK_OBJECTS[@]}"
 
 "${LD[@]}" -dead_strip -exported_symbol __mh_execute_header -rpath @loader_path \
@@ -969,7 +1465,8 @@ COMMON_LINK_OBJECTS=(
     -L/usr/lib -lSystem -lobjc "$QUARTZLIB" \
     "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" \
     -o "$OUT/indexpath_identity_probe" \
-    "$OUT/literal_uikit_indexpath_probe.o" "${COMMON_LINK_OBJECTS[@]}"
+    "$OUT/literal_uikit_indexpath_probe.o" "$OUT/uikitshim.o" \
+    "${COMMON_LINK_OBJECTS[@]}"
 
 # ---- bundle fixtures -------------------------------------------------------
 # Built here rather than committed, so they cannot drift from what the test
@@ -985,6 +1482,13 @@ echo "== bundle fixtures (Probe.app, NoKeys.app, Empty.app)"
 rm -rf "$OUT/Probe.app" "$OUT/NoKeys.app" "$OUT/Empty.app"
 mkdir -p "$OUT/Probe.app" "$OUT/NoKeys.app" "$OUT/Empty.app"
 cp "$OUT/render_full" "$OUT/Probe.app/probe"
+# @rpath dylibs the full app-facing Foundation pulls in. Probe.app runs the
+# same binary from a sibling directory, so @loader_path must find them here.
+for app_rpath in libCombine.dylib libOpenCombine.dylib libDispatch.dylib \
+    libFoundationEssentials.dylib \
+    libFoundationInternationalization.dylib lib_FoundationICU.dylib; do
+    [ -f "$OUT/$app_rpath" ] && cp "$OUT/$app_rpath" "$OUT/Probe.app/"
+done
 printf 'hello from the bundle\n' >"$OUT/Probe.app/hello.txt"
 cat >"$OUT/Probe.app/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>

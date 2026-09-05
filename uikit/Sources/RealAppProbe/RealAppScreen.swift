@@ -138,6 +138,10 @@ public enum RealAppScreen {
         }
     }
 
+    // Twelve screens on every route. Before this branch the guest builder
+    // only globbed RealAppProbe/*.swift + Vendored/*.swift, so
+    // canImport(Onboarding)/canImport(Domain) were false and the table
+    // stopped at 10 Pocket Casts screens (docs/agent_reports/guest-app-path.md).
     public static let screens: [Screen] = [
         Screen(name: "realapp_history_light", variant: .listeningHistory,
                theme: .light, style: .light, contentSizeCategory: .large,
@@ -177,37 +181,7 @@ public enum RealAppScreen {
         Screen(name: "realapp_storage_light_ipad", variant: .storage,
                theme: .light, style: .light, contentSizeCategory: .large,
                presentsSheet: false, idiom: .pad),
-    ] + focusScreens + hackersScreens
-
-    /// Firefox Focus's screen joins the table only where its stub modules
-    /// (Onboarding, Glean, Licenses, DesignSystem, Intents) exist — the
-    /// SwiftPM routes on macOS and Linux corelibs. The Linux-hosted guest
-    /// builder (full/scripts/build_full.sh) compiles this harness from the
-    /// top-level files against the port's own Foundation and has no
-    /// SwiftUI, Combine or stub modules yet, so there the table stops at the
-    /// Pocket Casts screens and Focus/ is not compiled. Both authorities
-    /// went red on f6912fa1 ("no such module 'Onboarding'") when the screen
-    /// sat in this file. See Focus/FocusScreens.swift.
-    static var focusScreens: [Screen] {
-        #if canImport(Onboarding)
-        return focusScreenTable
-        #else
-        return []
-        #endif
-    }
-
-    /// Hackers' screen joins the table only where its stub modules (Domain,
-    /// Shared, DesignSystem) exist — the SwiftPM routes on macOS and Linux
-    /// corelibs. The Linux-hosted guest builder compiles this harness from
-    /// the top-level files and has no those modules, so there the table
-    /// stops at Pocket Casts + Focus. See Hackers/HackersScreens.swift.
-    static var hackersScreens: [Screen] {
-        #if canImport(Domain)
-        return hackersScreenTable
-        #else
-        return []
-        #endif
-    }
+    ] + focusScreenTable + hackersScreenTable
 
     static func makeListeningHistoryPicker(theme: Theme.ThemeType) -> OptionsPicker {
         Theme.sharedTheme.activeTheme = theme
@@ -288,17 +262,9 @@ public enum RealAppScreen {
         case .settings:         picker = makeSettingsPicker(theme: theme)
         case .storage:          return makeStorageScreen(theme: theme)
         case .focusSettings:
-            #if canImport(Onboarding)
             return makeFocusSettingsScreen()
-            #else
-            fatalError("realapp_focus_settings_light is not in this build (no Focus stub modules)")
-            #endif
         case .hackersFeed:
-            #if canImport(Domain)
             return makeHackersFeedScreen()
-            #else
-            fatalError("realapp_hackers_feed_light is not in this build (no Hackers stub modules)")
-            #endif
         }
         let host = BackdropViewController(theme: theme)
         host.pendingPicker = picker
