@@ -61,8 +61,10 @@
 // 18×18 circle, host 119.667×36 at y 4. Search/settings are two isolated
 // 44×44 platters.
 //
-// Catalyst keeps the flat fills. Dark iOS chrome is a separate measured
-// flat (19,19,19) / (25,25,25) and is not this material.
+// Pad popovers are two further light mixes (content 252/215, action-sheet
+// 246/178; MEASURED `/tmp/ipad-open-cap`, iPad A16 2x). Dark bar glass is
+// not a kind: `_usesIOSDarkBarGlass` on `.platter` (19 over black / 84
+// over white).
 
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
@@ -112,7 +114,7 @@ enum _UIGlassMaterial {
     /// below the title):
     ///   black  (  0,  0,  0) → (19, 19, 19)
     ///   gray33 (51, 51, 51) → (32, 32, 32)
-    ///   white  (255,255,255) → (84, 83, 83)
+    ///   white (255,255,255) → (84, 83, 83)
     ///   red    (255, 56, 60) → (157, 13, 16)  chroma residual, not fitted
     /// Gray samples fit out = (65/255)·B + 19, i.e. α = 190/255,
     /// α·T = 19/255, T = 19/190. Same σ as light. Red |res| R=73
@@ -125,6 +127,30 @@ enum _UIGlassMaterial {
     /// glass_tabbar_dark_black 19→53: 34/236. gray33 pred 64.1 vs 65.
     /// White residual pred 108.6 vs 115 reported not fitted.
     static let darkBarCapsuleOverlayAlpha: CGFloat = 34.0 / 236.0
+
+    /// Pad action-sheet popover glass. MEASURED `/tmp/ipad-open-cap`
+    /// popover_actionsheet_{white,black,red,grad}, iPad (A16) 820×1180 @2x
+    /// / iOS 26.1, one process per CASE: interiors white **246**, black
+    /// **178**, red (255, 175, 176). Two-unknown
+    /// `out = (1−α)·B + α·T`: black ⇒ α·T = 178; white 246 − 178 = 68 ⇒
+    /// 1−α = 68/255, α = **187/255**, T = **178/187**. Grad-left predicted
+    /// 223 vs measured 221. σ is not identified from the interiors; the
+    /// platter kernel (2.25) is reused. This mix is NOT the content-popover
+    /// 252/215 mix and NOT the platter 253/220 mix.
+    static let padActionSheetMixAlpha: CGFloat = 187.0 / 255.0
+    static let padActionSheetTintGray: CGFloat = 178.0 / 187.0
+    /// Ring over black: edge 233 vs interior 178 ⇒ 55/77.
+    static let padActionSheetRingAlpha: CGFloat = 55.0 / 77.0
+
+    /// Pad bar-button content popover glass. MEASURED `/tmp/ipad-open-cap`
+    /// popover_{white,black,red,grad}, iPad (A16) 820×1180 @2x / iOS 26.1:
+    /// interiors white **252**, black **215**, red (255, 216, 218).
+    /// `out = (1−α)·B + α·T`: 252 − 215 = 37 ⇒ 1−α = 37/255, α = **218/255**,
+    /// T = **215/218**. Ring over black 240/230/215 matches the platter
+    /// ring (240/233/220) within 3 counts — reused. Dump has no
+    /// `_UIRoundedRectShadowView`; the 11-count halo is not this mix.
+    static let padContentPopoverMixAlpha: CGFloat = 218.0 / 255.0
+    static let padContentPopoverTintGray: CGFloat = 215.0 / 218.0
 
     static var configuration: CanvasBackdropFilterConfiguration {
         configuration(dark: false)
@@ -155,8 +181,46 @@ enum _UIGlassMaterial {
             intensity: 1)
     }
 
+    static func configuration(for view: UIView) -> CanvasBackdropFilterConfiguration {
+        switch view._iosGlassKind {
+        case .padActionSheetPopover:
+            return CanvasBackdropFilterConfiguration(
+                blurRadius: blurSigma,
+                saturation: 1,
+                tintColor: CGColor(red: padActionSheetTintGray,
+                                   green: padActionSheetTintGray,
+                                   blue: padActionSheetTintGray,
+                                   alpha: padActionSheetMixAlpha),
+                intensity: 1)
+        case .padContentPopover:
+            return CanvasBackdropFilterConfiguration(
+                blurRadius: blurSigma,
+                saturation: 1,
+                tintColor: CGColor(red: padContentPopoverTintGray,
+                                   green: padContentPopoverTintGray,
+                                   blue: padContentPopoverTintGray,
+                                   alpha: padContentPopoverMixAlpha),
+                intensity: 1)
+        case .platter:
+            // Dark bar is a flag on `.platter`, not a kind: the same view
+            // is light platter (253/220) and dark-bar (19/84). MEASURED
+            // /tmp/glass-dark-out, SE 2x.
+            let dark = view.traitCollection.userInterfaceStyle == .dark
+            return configuration(dark: dark, bar: view._usesIOSDarkBarGlass)
+        }
+    }
+
     static var ringColor: CGColor {
         CGColor(red: 1, green: 1, blue: 1, alpha: ringAlpha)
+    }
+
+    static func ringColor(for view: UIView) -> CGColor {
+        switch view._iosGlassKind {
+        case .padActionSheetPopover:
+            return CGColor(red: 1, green: 1, blue: 1, alpha: padActionSheetRingAlpha)
+        case .padContentPopover, .platter:
+            return ringColor
+        }
     }
 
     static func shouldApply(_ view: UIView) -> Bool {
@@ -173,13 +237,25 @@ enum _UIGlassMaterial {
     /// (Modal t1200.dark interior is a flat 57 cluster; a white ring would
     /// be a new unmatched edge).
     static func apply(in canvas: Canvas, path: Path, bounds: CGRect,
-                      dark: Bool = false, bar: Bool = false) {
+                      dark: Bool = false, view: UIView) {
         canvas.save()
         canvas.clip(to: path)
-        canvas.applyBackdropFilter(configuration(dark: dark, bar: bar), in: bounds)
+        canvas.applyBackdropFilter(configuration(for: view), in: bounds)
         if !dark {
-            canvas.stroke(path, color: ringColor, lineWidth: ringWidth * 2)
+            canvas.stroke(path, color: ringColor(for: view),
+                          lineWidth: ringWidth * 2)
         }
         canvas.restore()
     }
+}
+
+/// Measured iOS 26 glass mixes. `.platter` is the bar / floating-sheet
+/// material. Pad popovers are two other mixes (action-sheet vs content);
+/// they do not share α with the platter or each other. Dark bar glass
+/// stays `_usesIOSDarkBarGlass` on `.platter` (light 253/220, dark 19/84)
+/// rather than a `.darkBar` case — the chrome is the same view.
+enum _UIGlassKind: Equatable {
+    case platter
+    case padActionSheetPopover
+    case padContentPopover
 }

@@ -260,8 +260,18 @@ open class UITableView: UIScrollView {
     /// SwitchCell content view 741 wide with the 63 pt switch at x 741
     /// (`820 − 16 − 63`). Phone 393 stays 20. Inset-grouped card x stays 20
     /// (ipadprobe / realapp_settings_light_ipad) — that uses `iOSMargin`,
-    /// not this cell value.
+    /// not this cell value. Inset-grouped *inner* text is 20, not this 16
+    /// — see `iOSPadInsetGroupedInnerInset`.
     static let iOSPadCellMargin: CGFloat = 16
+    /// Inset-grouped cell text / header label x inside the card on pad.
+    /// MEASURED `/tmp/ipad-open-cap` table_inset + table_inset_nav, iPad
+    /// (A16) 820×1180 @2x / iOS 26.1: `UITableViewCell.layoutMargins`
+    /// `[15, 20, 15, 20]`, `UITableViewLabel.frame.x` **20**, header
+    /// `_UITableViewHeaderFooterViewLabel.frame.x` **20**. Nav case card x
+    /// 20 → label abs **40** (NavFlow-ipad); bare table card x 16 → abs 36.
+    /// Grouped / plain cells on the same device stay 16 (`table_grouped` /
+    /// `table_plain` / `iOSPadCellMargin`). First ink 1 pt into the label.
+    static let iOSPadInsetGroupedInnerInset: CGFloat = 20
     /// This table's margin (window width; its own width without a window).
     var iOSMargin: CGFloat { UITableView.iOSSystemMargin(width: window?.bounds.width ?? bounds.width) }
     /// Plain cells' text inset (Catalyst 16; iOS: the system margin) and
@@ -311,14 +321,26 @@ open class UITableView: UIScrollView {
         // The iOS margin above depends on the window's width.
         if UITableView.isIOSChrome, _insetGroupedSideInsetOverride == nil { setNeedsMetrics() }
     }
+    /// Classic-cell text inset for non-plain styles. Phone and Catalyst
+    /// keep 16 (`UITableViewCell.labelX`). Pad inset-grouped is 20.
+    var groupedTextInset: CGFloat {
+        if style == .insetGrouped, UITableView.isPadChrome {
+            return UITableView.iOSPadInsetGroupedInnerInset
+        }
+        return UITableViewCell.labelX
+    }
     var groupedHeaderLabelX: CGFloat {
         // MEASURED Forms t200, iPhone SE 2x, iOS 26.1: a `.grouped` table
         // (no card — cells are full-bleed 375) puts the section header
         // label at x = 16, the window's system margin. `insetGroupedSideInset
         // + 16` is the insetGrouped reading (card at 16, header at 32) and
-        // stays the rule for `.insetGrouped` / Catalyst.
+        // stays the rule for `.insetGrouped` / Catalyst, except pad
+        // inset-grouped which adds 20 (table_inset_nav header abs 40 =
+        // card 20 + 20).
         if style == .grouped, UITableView.isIOSChrome { return iOSMargin }
-        return insetGroupedSideInset + 16
+        let inner = (style == .insetGrouped && UITableView.isPadChrome)
+            ? UITableView.iOSPadInsetGroupedInnerInset : 16
+        return insetGroupedSideInset + inner
     }
 
     // MARK: Public configuration
@@ -1726,12 +1748,12 @@ open class UITableView: UIScrollView {
             if let existing = visibleCellsByPath[path] {
                 cell = existing
                 cell.frame = rectForRow(at: path)
-                cell._textInset = style == .plain ? plainTextInset : UITableViewCell.labelX
+                cell._textInset = style == .plain ? plainTextInset : groupedTextInset
             } else {
                 guard let ds = dataSource else { break }
                 cell = ds.tableView(self, cellForRowAt: path)
                 cell.tableView = self
-                cell._textInset = style == .plain ? plainTextInset : UITableViewCell.labelX
+                cell._textInset = style == .plain ? plainTextInset : groupedTextInset
                 cell._leadingPadding = valueCellPadding(path)
                 cell.frame = rectForRow(at: path)
                 if style == .insetGrouped {
@@ -1819,9 +1841,18 @@ open class UITableView: UIScrollView {
         switch style {
         case .plain:
             defaults = plainSeparatorInsets
-        case .grouped, .insetGrouped:
+        case .grouped:
             defaults = (UITableView.separatorLeftInset,
                         UITableView.groupedSeparatorRightInset)
+        case .insetGrouped:
+            // MEASURED `/tmp/ipad-open-cap` table_inset_nav, iPad (A16)
+            // 820×1180 @2x / iOS 26.1: NavFlow-ipad mid-row separators
+            // start at abs x **40** = card 20 + inner 20. Phone / Catalyst
+            // inset-grouped keep `separatorLeftInset` 16.
+            let left = UITableView.isPadChrome
+                ? UITableView.iOSPadInsetGroupedInnerInset
+                : UITableView.separatorLeftInset
+            defaults = (left, UITableView.groupedSeparatorRightInset)
         }
         // A table-wide inset displaces the style default. `fromCellEdges`
         // replaces it outright; `fromAutomaticInsets` adds to it.
