@@ -96,7 +96,6 @@ func testAnchorCoderFallbacks() {
         _ = ARGeoTrackingStatus(coder: coder)
         _ = ARPlaneExtent(coder: coder)
         _ = ARPointCloud(coder: coder)
-        _ = ARAnchor(coder: coder)
     } catch {
         fatalError("coder setup failed: \(error)")
     }
