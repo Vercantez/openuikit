@@ -43,3 +43,24 @@ func _securityFailClosedError() -> NSError {
         userInfo: [NSLocalizedDescriptionKey: "Security API is unimplemented on this Linux host"]
     )
 }
+
+func _securityError(_ status: OSStatus, _ message: String) -> NSError {
+    NSError(
+        domain: "Security",
+        code: Int(status),
+        userInfo: [NSLocalizedDescriptionKey: message]
+    )
+}
+
+// Isolated host has no Dispatch module. These spellings match the imported
+// Security overlay (dispatch_queue_t / dispatch_data_t). They are host
+// lookalikes, not a second libdispatch. The later EC2 integration build
+// uses real Dispatch types from the platform sysroot.
+public final class dispatch_queue_s: NSObject, @unchecked Sendable {}
+public typealias dispatch_queue_t = dispatch_queue_s
+public typealias dispatch_data_t = Data
+
+public final class _SecCFArrayObject: NSObject, @unchecked Sendable {
+    let values: [Any]
+    init(_ values: [Any]) { self.values = values }
+}
