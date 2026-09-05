@@ -16,18 +16,19 @@ and scroll interaction fail closed.
 
 - `Plottable` on the numeric types plus `String` and `Date`, with
   `primitivePlottable` identity round-trips.
-- `PlottableValue.value` stores the authored label and value.
-- `RectangleMark`, `LineMark`, `AreaMark`, and `RuleMark` convert
-  plottable X/Y values to `Double` scalars (`Date` via
-  `timeIntervalSinceReferenceDate`).
-- `ChartProxy.position(forX:)` is fail-closed unless a host installs an
-  `@_spi(OpenUIKitHost)` x-position mapping.
+- `PlottableValue.value` stores the authored label and value, including
+  categorical `String`s.
+- Marks convert plottable X/Y values to scalars (`Date` via
+  `timeIntervalSinceReferenceDate`) and emit `ChartPlotRecord`s.
+- `ChartScale` resolves `.linear` / `.log` / `.date` / `.category` and
+  `ChartProxy` maps values through that geometry when scales are installed.
 - `lineStyle` and `interpolationMethod` retain the authored
-  `StrokeStyle` / `InterpolationMethod` on the returned wrapper.
+  `StrokeStyle` / `InterpolationMethod` on the returned wrapper, and
+  interpolation methods produce sampled paths.
 - `PlotDimensionScaleRange`, `AxisMarkPosition`, `BasicChartSymbolShape`
   (circle through triangle), `NumberBins`, `DateBins`, and `Chart3DPose`
   catalogs are constructible.
-- `Chart` data and `@ChartContentBuilder` inits compile.
+- `Chart` data and `@ChartContentBuilder` inits compile and collect marks.
 
 The isolated Linux host gate compiles these sources with `swiftc` and
 Foundation only. SwiftUI and CoreGraphics are not present as modules
@@ -59,6 +60,94 @@ bash full/charts/tests/test_charts_host.sh
 ```
 
 It is unchanged and is not the wave-6 Linux deliverable gate.
+
+## Depth pass 2026-09
+
+This pass implements the DATA→GEOMETRY layer and a software raster path
+for Swift Charts on Linux. The isolated host gate still compiles with
+Foundation only, so Charts programs against lookalike `View` /
+`ViewBuilder` / `Shape` / `Path` / `Canvas` / `GraphicsContext` types
+that match the port's SwiftUI/OpenCoreGraphics contracts. Those real
+modules are not imported here and were not edited.
+
+### Public surface that is now real
+
+- `Chart { }` with `ChartContentBuilder` (including `buildPartialBlock`)
+  collects `ChartPlotRecord`s from `BarMark`, `LineMark`, `PointMark`,
+  `AreaMark`, `RuleMark`, `RectangleMark`, and `SectorMark`.
+- `PlottableValue` for `Int`, `Double`, `Date`, `String` / categorical
+  values, with `chartEncode` / `chartDecode`.
+- `ChartScale` for `.linear`, `.log`, `.date`, and `.category`. Linear
+  nice ticks use the 1-2-5×10^n rule: domain `0...10` →
+  `0, 2, 4, 6, 8, 10`; domain `0...100` → `0, 20, 40, 60, 80, 100`.
+  Log ticks are powers of ten.
+- `chartXScale` / `chartYScale` / `chartXAxis` / `chartYAxis` /
+  `chartLegend` / `chartForegroundStyleScale` store domain, range, type,
+  visibility, and default axis positions (x → `.bottom`, y → `.leading`).
+- `ChartProxy.position(forX:)` / `position(forY:)` / `value(atX:)` /
+  `plotAreaRect` invert the resolved scales exactly. A default proxy
+  stays fail-closed (`nil` / `.zero`) until a host or `Chart.resolvedProxy`
+  installs scales.
+- Stacking arithmetic for `.standard`, `.normalized`, and `.center`
+  (plus `.unstacked`).
+- Interpolation sampling for `.linear`, `.stepStart`, `.stepCenter`,
+  `.stepEnd`, `.monotone` (Fritsch–Carlson), and `.catmullRom` /
+  `.cardinal`. Sample points are numerically tested.
+- Symbol paths (`circle`/`square`/`triangle`) and annotation offsets
+  (`.top` / `.bottom` / `.leading` / `.trailing` / `.overlay`, default
+  spacing 4).
+- `AxisMarks` / `AxisValueLabel` / `AxisGridLine` / `AxisTick` retain
+  position, values, and formats.
+- Raster of bars/lines/points through lookalike `GraphicsContext` into
+  a `ChartBitmap`. The 3-bar fixture (categories A/B/C, values 1/2/3,
+  90×60) matches a hand-computed RGBA raster.
+
+Coverage ledger (honest evidence, after the merge-refusal repair):
+
+| status | refused `a7f28027` | after repair |
+| --- | ---: | ---: |
+| implemented | 3652 | 341 |
+| declared | 4678 | 7996 |
+| deferred | 680 | 673 |
+| not-applicable | 464 | 464 |
+
+The refused revision cited `testSymbolShapePaths` from 1670 of 3652
+implemented rows (45.7%). Those rows were SwiftUI overlay witnesses on
+`AnyChartSymbolShape` / `BasicChartSymbolShape`, not symbol `path(in:)`
+checks. Implemented rows now cite a real `test*` that constructs or
+calls that identifier. Enum / option-set catalogs may share one
+table-driven test; no other test exceeds 40% of implemented rows.
+
+Top-5 implemented evidence after repair:
+
+| rows | share | test |
+| ---: | ---: | --- |
+| 38 | 11.1% | `ChartsTests.swift#testPrimitivePlottable` |
+| 26 | 7.6% | `ChartsTests.swift#testBinsAndRanges` |
+| 14 | 4.1% | `ChartsTests.swift#testChart3DPoseCatalog` |
+| 14 | 4.1% | `ChartsDepthTests.swift#testPlottableValueLocalizedFactories` |
+| 12 | 3.5% | `ChartsTests.swift#testRectangleMarkScalars` |
+
+Chart / marks / `PlottableValue` / scales / axes / `ChartProxy` /
+stacking / interpolation families stay nondeferred except 3D-only
+synthesized `Chart3DContent` members on marks (`metalness` /
+`roughness` / `symbolRotation`). The 464 `not-applicable` rows are
+unchanged.
+
+### SwiftUI port gaps (listed, not edited)
+
+`uikit/Sources/SwiftUI` exposes `_OpenView` rather than Apple's `View`,
+and has no `Canvas` / `GraphicsContext`. `uikit/Sources/OpenCoreGraphics`
+has `Path` and `Canvas` (bitmap), not SwiftUI `GraphicsContext.fill`.
+The isolated Charts gate cannot import those modules, so lookalikes
+mirror the needed signatures. A later integration build should replace
+the lookalikes with the real SwiftUI/OpenCoreGraphics types.
+
+### Fail-closed (unchanged)
+
+Selection, scroll, gestures, 3D/RealityKit, and live SwiftUI layout
+timing remain fail-closed. `ChartProxy` without installed scales still
+returns `nil` positions.
 
 ## Wave-6 deliverable gate
 
