@@ -15,6 +15,7 @@ let _: StoreKit.SKPaymentQueue.Type = SKPaymentQueue.self
 let _: StoreKit.SKError.Type = SKError.self
 
 precondition(SKErrorDomain == "SKErrorDomain")
+StoreKitTesting.reset()
 precondition(SKPaymentQueue.canMakePayments() == false)
 precondition(AppStore.canMakePayments == false)
 precondition(SKError.Code(rawValue: 2) == .paymentCancelled)
