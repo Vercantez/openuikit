@@ -145,14 +145,17 @@ open class UISegmentedControl: UIControl {
 
     /// Segment rect in bounds coordinates. Boundaries are integer-floored,
     /// exactly like the oracle's dumps (280 / 3 -> 93, 93, 94).
+    /// RTL (MEASURED Forms t200.rtl, iPhone SE 2x / iOS 26.1): "Small"
+    /// (index 0) abs.x 284.5, "Large" 56 — segments pack leading-to-trailing.
     public func segmentRect(at index: Int) -> CGRect {
         let n = titles.count
         guard n > 0, titles.indices.contains(index) else { return .zero }
         let w = bounds.width
-        let x0 = (CGFloat(index) * w / CGFloat(n)).rounded(.down)
-        let x1 = (CGFloat(index + 1) * w / CGFloat(n)).rounded(.down)
+        let visual = _layoutIsRTL ? n - 1 - index : index
+        let x0 = (CGFloat(visual) * w / CGFloat(n)).rounded(.down)
+        let x1 = (CGFloat(visual + 1) * w / CGFloat(n)).rounded(.down)
         return CGRect(x: bounds.minX + x0, y: bounds.minY,
-                      width: (index == n - 1 ? w : x1) - x0, height: bounds.height)
+                      width: (visual == n - 1 ? w : x1) - x0, height: bounds.height)
     }
 
     private func updateLabels() {

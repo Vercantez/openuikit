@@ -8,7 +8,9 @@
 //   - Floating platter: height 62 pt, 10 pt bottom margin, width
 //     n·85.75 + 16.75 for n items (274 pt at n = 3), centered. iOS-cut
 //     light uses `_UIGlassMaterial` (σ=2.25, α=222/255 over the content).
-//     Catalyst and dark iOS keep the measured flats (249 light / 19 dark).
+//     Dark iOS uses the bar mix (σ=2.25, α=190/255, T=19/190; MEASURED
+//     /tmp/glass-dark-out). Catalyst keeps the measured flats (249 light /
+//     19 dark).
 //   - Selected item: #EBEBEC capsule (height 53.5, item pitch + 7.75 wide,
 //     4.25 pt vertical inset in the platter) behind icon + title, both
 //     drawn in the bar's tint (measured default tint (52, 124, 238) — NOT
@@ -22,8 +24,8 @@
 // color (selected tint / unselected near-black), like UIKit's
 // .alwaysTemplate rendering in a tab bar.
 //
-// KNOWN GAP: light-mode platter/capsule constants only (the M10 tab bar
-// goldens are light); dark-mode glass material is not yet measured.
+// KNOWN GAP: dark-mode red chroma of the bar mix is outside the
+// two-unknown gray fit (probe (157, 13, 16) vs pred (84, 33, 34)).
 
 // M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
 // defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
@@ -125,6 +127,23 @@ final class _UITabBarItemView: UIControl {
         // label is "Library" `[84, 623, 36, 12]`, not "Search"
         // `[84.5, 623, 35, 12]`. Re-read every pass.
         titleLabel.text = item.title
+        if UITabBar.isPad {
+            // MEASURED Tabs-ipad t200, iPad (A16) 820×1180 @2x / iOS 26.1:
+            // `_UIFloatingTabBar` items are title-only 36 pt pills (no
+            // 18 pt SF Symbol), 17 pt body labels height 20.5 at local y 8.
+            iconView.isHidden = true
+            titleLabel.font = .systemFont(ofSize: 17, weight: .regular)
+            let t = titleLabel.intrinsicContentSize
+            titleLabel.frame = CGRect(
+                x: UITabBar.padItemTitleInset,
+                y: (bounds.height - t.height) / 2,
+                width: t.width, height: t.height)
+            layoutBadge()
+            return
+        }
+        iconView.isHidden = false
+        titleLabel.font = .systemFont(ofSize: UITabBar.titleFontSize,
+                                      weight: .semibold)
         let size = iconView.image?.size ?? .zero
         iconView.frame = CGRect(x: (bounds.width - size.width) / 2,
                                 y: UITabBar.iconCenterY - size.height / 2,
@@ -150,6 +169,21 @@ final class _UITabBarItemView: UIControl {
         }
         badgeView.isHidden = false
         badgeLabel.text = value
+        if UITabBar.isPad {
+            // MEASURED Tabs-ipad t200: badge `[436.5, 34, 18.5, 18.5]` on
+            // the Tools cell `[378.5, 36, 73.5, 36]` — 18.5 square, origin
+            // at the title's trailing edge, 2 pt above the cell (bar y 34
+            // vs cell y 36). Digit 13 pt regular, same as the phone badge.
+            let size = UITabBar.padBadgeSize
+            badgeLabel.font = .systemFont(ofSize: UITabBar.badgeFontSizeIOS, weight: .regular)
+            badgeView.backgroundColor = UITabBar.badgeColor
+            badgeView.layer.cornerRadius = size / 2
+            badgeView.frame = CGRect(x: titleLabel.frame.maxX, y: -2,
+                                     width: size, height: size)
+            badgeLabel.textAlignment = .center
+            badgeLabel.frame = CGRect(x: 4, y: 2, width: 10.5, height: 14.5)
+            return
+        }
         let size = UITabBar.isIOS ? UITabBar.badgeSizeIOS : UITabBar.badgeHeight
         let fontSize = UITabBar.isIOS ? UITabBar.badgeFontSizeIOS : UITabBar.badgeFontSize
         badgeLabel.font = .systemFont(ofSize: fontSize, weight: .regular)
@@ -197,7 +231,31 @@ public final class UITabBar: UIView {
     // (249, 249, 249), capsule (230, 230, 230), unselected (25, 25, 25),
     // selected icon (0, 124, 243).
     static var isIOS: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
-    public static var barHeight: CGFloat { isIOS ? 83 : 72 }
+    /// iOS cut AND pad idiom. Guard for the iPad (A16) top tab bar
+    /// (Tabs-ipad t200, 820×1180 @2x). Phone goldens stay on the 83 pt
+    /// bottom bar.
+    static var isPad: Bool {
+        isIOS && (UITraitCollection.current.userInterfaceIdiom == .pad
+                  || UIDevice.current.userInterfaceIdiom == .pad)
+    }
+    public static var barHeight: CGFloat {
+        if isPad { return 44 }
+        return isIOS ? 83 : 72
+    }
+    /// Gap below the 44 pt top bar for a child that is not inside a
+    /// UINavigationController. MEASURED Tabs-ipad t1000 / t2000: Tools
+    /// toolbar and Scroll view sit at y **96** = SA.top 32 + bar 44 + **20**.
+    static let padContentGapBelowBar: CGFloat = 20
+    /// Pad item pill height inside the 44 pt bar. MEASURED Tabs-ipad t200:
+    /// `_UIFloatingTabBarItemCell [291.5, 36, 87, 36]` (bar-local y 4).
+    static let padItemHeight: CGFloat = 36
+    static let padItemYInBar: CGFloat = 4
+    /// Horizontal title inset inside a pad item. MEASURED Tabs-ipad t200:
+    /// Tools cell `[378.5, 36, 73.5, 36]`, title `[394.5, 44, 41.5, 20.5]`
+    /// → inset **16**.
+    static let padItemTitleInset: CGFloat = 16
+    /// Pad badge. MEASURED Tabs-ipad t200: `_UIBarBadgeView [436.5, 34, 18.5, 18.5]`.
+    static let padBadgeSize: CGFloat = 18.5
     static let platterHeight: CGFloat = 62
     static var platterBottomMargin: CGFloat { isIOS ? 21 : 10 }
     /// Horizontal pitch between item centers.
@@ -244,9 +302,11 @@ public final class UITabBar: UIView {
     static var capsuleColor: UIColor {
         UIColor(dynamicProvider: { traits in
             if isIOS, traits.userInterfaceStyle == .dark {
-                // tabbar_dark, SE 2x, 2026-09-04:
-                // selected button background clusters at (53,53,53).
-                return UIColor(red: 53 / 255, green: 53 / 255, blue: 53 / 255, alpha: 1)
+                // MEASURED /tmp/glass-dark-out glass_tabbar_dark_black, SE 2x:
+                // selected 19→53 is white-over-glass 34/236. Opaque 53 is
+                // the same over black and the Catalyst/test fallback when
+                // bar glass does not run.
+                return UIColor(white: 1, alpha: _UIGlassMaterial.darkBarCapsuleOverlayAlpha)
             }
             if isIOS {
                 // Black overlay on `_UIGlassMaterial`. MEASURED
@@ -320,6 +380,7 @@ public final class UITabBar: UIView {
         isOpaque = false
         platter.isOpaque = false
         platter._usesIOSGlass = true
+        platter._usesIOSDarkBarGlass = true
         platter.backgroundColor = UITabBar.platterColor.resolvedColor(with: traitCollection)
         platter.layer.cornerRadius = UITabBar.platterHeight / 2
         platter.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
@@ -374,6 +435,10 @@ public final class UITabBar: UIView {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
+        if UITabBar.isPad {
+            layoutPadItems()
+            return
+        }
         let n = CGFloat(max(itemViews.count, 1))
         let width = min(n * UITabBar.itemPitch + 2 * UITabBar.platterSidePadding,
                         bounds.width - 16)
@@ -396,6 +461,39 @@ public final class UITabBar: UIView {
             platter.insertSubview(capsule, at: 0)
         } else {
             capsule.isHidden = true
+        }
+    }
+
+    /// MEASURED Tabs-ipad t200, iPad (A16) 820×1180 @2x / iOS 26.1:
+    /// `_UIFloatingTabBar [0, 32, 820, 44]`. Items are title-only 36 pt
+    /// pills packed by intrinsic width + 16 pt insets (Library 87 / Tools
+    /// 73.5 / Scroll 76.5) and centred: x0 = (820 − 237) / 2 = **291.5**.
+    func layoutPadItems() {
+        // MEASURED Tabs-ipad t200: `_UIFloatingTabBarSelectionContainerView`
+        // is **245×44** around the packed titles, not a full-width fill.
+        // A full-width platter would paint over the trailing 240×44 search
+        // field that lives in the nav bar underneath (same y = SA.top).
+        platter.frame = bounds
+        platter.backgroundColor = .clear
+        platter._usesIOSGlass = false
+        platter.layer.cornerRadius = 0
+        platter.layer.shadowOpacity = 0
+        capsule.isHidden = true
+        var widths: [CGFloat] = []
+        var total: CGFloat = 0
+        for v in itemViews {
+            v.titleLabel.text = v.item.title
+            v.titleLabel.font = .systemFont(ofSize: 17, weight: .regular)
+            let t = v.titleLabel.intrinsicContentSize
+            let w = t.width + 2 * UITabBar.padItemTitleInset
+            widths.append(w)
+            total += w
+        }
+        var x = (bounds.width - total) / 2
+        for (i, v) in itemViews.enumerated() {
+            v.frame = CGRect(x: x, y: UITabBar.padItemYInBar,
+                             width: widths[i], height: UITabBar.padItemHeight)
+            x += widths[i]
         }
     }
 

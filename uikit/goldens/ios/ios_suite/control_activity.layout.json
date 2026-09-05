@@ -1,0 +1,332 @@
+{
+  "name" : "control_activity",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        260,
+        160
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        260,
+        160
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        20,
+        20
+      ],
+      "class" : "UIActivityIndicatorView",
+      "frame" : [
+        20,
+        20,
+        20,
+        20
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        20,
+        20
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        20,
+        20
+      ],
+      "intrinsic" : [
+        20,
+        20
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        60,
+        12,
+        37,
+        37
+      ],
+      "class" : "UIActivityIndicatorView",
+      "frame" : [
+        60,
+        12,
+        37,
+        37
+      ],
+      "path" : "2"
+    },
+    {
+      "absFrame" : [
+        60,
+        12,
+        37,
+        37
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        37,
+        37
+      ],
+      "intrinsic" : [
+        37,
+        37
+      ],
+      "path" : "2.0"
+    },
+    {
+      "absFrame" : [
+        120,
+        20,
+        20,
+        20
+      ],
+      "class" : "UIActivityIndicatorView",
+      "frame" : [
+        120,
+        20,
+        20,
+        20
+      ],
+      "path" : "3"
+    },
+    {
+      "absFrame" : [
+        120,
+        20,
+        20,
+        20
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        20,
+        20
+      ],
+      "intrinsic" : [
+        20,
+        20
+      ],
+      "path" : "3.0"
+    },
+    {
+      "absFrame" : [
+        160,
+        12,
+        37,
+        37
+      ],
+      "class" : "UIActivityIndicatorView",
+      "frame" : [
+        160,
+        12,
+        37,
+        37
+      ],
+      "path" : "4"
+    },
+    {
+      "absFrame" : [
+        160,
+        12,
+        37,
+        37
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        37,
+        37
+      ],
+      "intrinsic" : [
+        37,
+        37
+      ],
+      "path" : "4.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        70,
+        60,
+        60
+      ],
+      "class" : "UIActivityIndicatorView",
+      "frame" : [
+        20,
+        70,
+        60,
+        60
+      ],
+      "path" : "5"
+    },
+    {
+      "absFrame" : [
+        31,
+        81,
+        37,
+        37
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        11,
+        11,
+        37,
+        37
+      ],
+      "intrinsic" : [
+        37,
+        37
+      ],
+      "path" : "5.0"
+    },
+    {
+      "absFrame" : [
+        100,
+        70,
+        40,
+        40
+      ],
+      "class" : "UIActivityIndicatorView",
+      "frame" : [
+        100,
+        70,
+        40,
+        40
+      ],
+      "path" : "6"
+    },
+    {
+      "absFrame" : [
+        110,
+        80,
+        20,
+        20
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        10,
+        10,
+        20,
+        20
+      ],
+      "intrinsic" : [
+        20,
+        20
+      ],
+      "path" : "6.0"
+    },
+    {
+      "absFrame" : [
+        160,
+        70,
+        20,
+        20
+      ],
+      "class" : "UIActivityIndicatorView",
+      "frame" : [
+        160,
+        70,
+        20,
+        20
+      ],
+      "hidden" : true,
+      "path" : "7"
+    },
+    {
+      "absFrame" : [
+        160,
+        70,
+        20,
+        20
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        20,
+        20
+      ],
+      "intrinsic" : [
+        20,
+        20
+      ],
+      "path" : "7.0"
+    },
+    {
+      "absFrame" : [
+        200,
+        70,
+        20,
+        20
+      ],
+      "class" : "UIActivityIndicatorView",
+      "frame" : [
+        200,
+        70,
+        20,
+        20
+      ],
+      "path" : "8"
+    },
+    {
+      "absFrame" : [
+        200,
+        70,
+        20,
+        20
+      ],
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        20,
+        20
+      ],
+      "intrinsic" : [
+        20,
+        20
+      ],
+      "path" : "8.0"
+    }
+  ]
+}

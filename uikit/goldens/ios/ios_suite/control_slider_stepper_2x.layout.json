@@ -1,0 +1,248 @@
+{
+  "name" : "control_slider_stepper_2x",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        375,
+        180
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        375,
+        180
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        20,
+        24,
+        280,
+        34
+      ],
+      "class" : "UISlider",
+      "frame" : [
+        20,
+        24,
+        280,
+        34
+      ],
+      "intrinsic" : [
+        -1,
+        34
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        20,
+        24,
+        280,
+        34
+      ],
+      "class" : "_UISliderGlassVisualElement",
+      "frame" : [
+        0,
+        0,
+        280,
+        34
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        38,
+        280,
+        6
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        14,
+        280,
+        6
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        38,
+        280,
+        6
+      ],
+      "bg" : [
+        0,
+        0,
+        0,
+        0.10000000000000001
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        280,
+        6
+      ],
+      "path" : "1.0.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        38,
+        103.55,
+        6
+      ],
+      "bg" : [
+        1,
+        0.17599999999999999,
+        0.33300000000000002,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 3,
+      "frame" : [
+        0,
+        0,
+        103.55,
+        6
+      ],
+      "path" : "1.0.0.1"
+    },
+    {
+      "absFrame" : [
+        105,
+        29,
+        37,
+        24
+      ],
+      "class" : "_UILiquidLensView",
+      "cornerRadius" : -1,
+      "frame" : [
+        85,
+        5,
+        37,
+        24
+      ],
+      "path" : "1.0.1"
+    },
+    {
+      "absFrame" : [
+        105,
+        29,
+        37,
+        24
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.1.0"
+    },
+    {
+      "absFrame" : [
+        105,
+        29,
+        37,
+        24
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : -1,
+      "frame" : [
+        0,
+        0,
+        37,
+        24
+      ],
+      "path" : "1.0.1.0.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        88,
+        94,
+        32
+      ],
+      "class" : "UIStepper",
+      "frame" : [
+        20,
+        88,
+        94,
+        32
+      ],
+      "path" : "2"
+    },
+    {
+      "absFrame" : [
+        20,
+        88,
+        94,
+        32
+      ],
+      "class" : "UIStepperDesignLibraryVisualElement",
+      "frame" : [
+        0,
+        0,
+        94,
+        32
+      ],
+      "path" : "2.0"
+    },
+    {
+      "absFrame" : [
+        20,
+        88,
+        94,
+        32
+      ],
+      "class" : "UICoreHostingView<DesignLibraryStepper>",
+      "extraSublayers" : [
+
+      ],
+      "frame" : [
+        0,
+        0,
+        94,
+        32
+      ],
+      "path" : "2.0.0"
+    }
+  ]
+}

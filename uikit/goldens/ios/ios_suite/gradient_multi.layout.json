@@ -1,0 +1,97 @@
+{
+  "name" : "gradient_multi",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        320,
+        160
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        160
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        20,
+        20,
+        80,
+        120
+      ],
+      "class" : "UIGradientView",
+      "frame" : [
+        20,
+        20,
+        80,
+        120
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        120,
+        20,
+        80,
+        120
+      ],
+      "class" : "UIGradientView",
+      "frame" : [
+        120,
+        20,
+        80,
+        120
+      ],
+      "path" : "2"
+    },
+    {
+      "absFrame" : [
+        220,
+        20,
+        80,
+        120
+      ],
+      "class" : "UIGradientView",
+      "frame" : [
+        220,
+        20,
+        80,
+        120
+      ],
+      "path" : "3"
+    }
+  ]
+}

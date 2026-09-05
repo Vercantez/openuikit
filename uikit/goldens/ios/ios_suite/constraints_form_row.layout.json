@@ -1,0 +1,128 @@
+{
+  "name" : "constraints_form_row",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        320,
+        56
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        56
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        16,
+        16,
+        24,
+        24
+      ],
+      "class" : "UIImageView",
+      "cornerRadius" : 5,
+      "frame" : [
+        16,
+        16,
+        24,
+        24
+      ],
+      "intrinsic" : [
+        24,
+        24
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        52,
+        18,
+        160,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        52,
+        18,
+        160,
+        20.5
+      ],
+      "intrinsic" : [
+        40.5,
+        20.5
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        40.5,
+        20.5
+      ],
+      "text" : "Wi-Fi"
+    },
+    {
+      "absFrame" : [
+        220,
+        18,
+        84,
+        20.5
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        220,
+        18,
+        84,
+        20.5
+      ],
+      "intrinsic" : [
+        84,
+        20.5
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        84,
+        20.5
+      ],
+      "text" : "Connected"
+    },
+    {
+      "absFrame" : [
+        16,
+        55,
+        304,
+        0.5
+      ],
+      "bg" : [
+        0.23499999999999999,
+        0.23499999999999999,
+        0.26300000000000001,
+        0.12
+      ],
+      "class" : "UIView",
+      "frame" : [
+        16,
+        55,
+        304,
+        0.5
+      ],
+      "path" : "3"
+    }
+  ]
+}

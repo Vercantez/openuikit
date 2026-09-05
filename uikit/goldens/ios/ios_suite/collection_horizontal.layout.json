@@ -1,0 +1,563 @@
+{
+  "name" : "collection_horizontal",
+  "views" : [
+    {
+      "absFrame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "absFrame" : [
+        0,
+        0,
+        375,
+        300
+      ],
+      "bg" : [
+        0.81999999999999995,
+        0.81999999999999995,
+        0.83899999999999997,
+        1
+      ],
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        375,
+        300
+      ],
+      "path" : "0"
+    },
+    {
+      "absFrame" : [
+        0,
+        30,
+        375,
+        240
+      ],
+      "bg" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UICollectionView",
+      "frame" : [
+        0,
+        30,
+        375,
+        240
+      ],
+      "path" : "1"
+    },
+    {
+      "absFrame" : [
+        58,
+        40,
+        96,
+        72
+      ],
+      "class" : "SceneCollectionCell",
+      "frame" : [
+        58,
+        10,
+        96,
+        72
+      ],
+      "path" : "1.0"
+    },
+    {
+      "absFrame" : [
+        58,
+        40,
+        96,
+        72
+      ],
+      "bg" : [
+        0,
+        0.53300000000000003,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 10,
+      "frame" : [
+        0,
+        0,
+        96,
+        72
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "absFrame" : [
+        58,
+        40,
+        96,
+        72
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        0,
+        0,
+        96,
+        72
+      ],
+      "intrinsic" : [
+        7.5,
+        20.5
+      ],
+      "path" : "1.0.0.0",
+      "sizeThatFits200" : [
+        7.5,
+        20.5
+      ],
+      "text" : "1"
+    },
+    {
+      "absFrame" : [
+        58,
+        188,
+        96,
+        72
+      ],
+      "class" : "SceneCollectionCell",
+      "frame" : [
+        58,
+        158,
+        96,
+        72
+      ],
+      "path" : "1.1"
+    },
+    {
+      "absFrame" : [
+        58,
+        188,
+        96,
+        72
+      ],
+      "bg" : [
+        0,
+        0.53300000000000003,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 10,
+      "frame" : [
+        0,
+        0,
+        96,
+        72
+      ],
+      "path" : "1.1.0"
+    },
+    {
+      "absFrame" : [
+        58,
+        188,
+        96,
+        72
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        0,
+        0,
+        96,
+        72
+      ],
+      "intrinsic" : [
+        10,
+        20.5
+      ],
+      "path" : "1.1.0.0",
+      "sizeThatFits200" : [
+        10,
+        20.5
+      ],
+      "text" : "2"
+    },
+    {
+      "absFrame" : [
+        166,
+        40,
+        96,
+        72
+      ],
+      "class" : "SceneCollectionCell",
+      "frame" : [
+        166,
+        10,
+        96,
+        72
+      ],
+      "path" : "1.2"
+    },
+    {
+      "absFrame" : [
+        166,
+        40,
+        96,
+        72
+      ],
+      "bg" : [
+        0,
+        0.76500000000000001,
+        0.81599999999999995,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 10,
+      "frame" : [
+        0,
+        0,
+        96,
+        72
+      ],
+      "path" : "1.2.0"
+    },
+    {
+      "absFrame" : [
+        166,
+        40,
+        96,
+        72
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        0,
+        0,
+        96,
+        72
+      ],
+      "intrinsic" : [
+        10.5,
+        20.5
+      ],
+      "path" : "1.2.0.0",
+      "sizeThatFits200" : [
+        10.5,
+        20.5
+      ],
+      "text" : "3"
+    },
+    {
+      "absFrame" : [
+        166,
+        188,
+        96,
+        72
+      ],
+      "class" : "SceneCollectionCell",
+      "frame" : [
+        166,
+        158,
+        96,
+        72
+      ],
+      "path" : "1.3"
+    },
+    {
+      "absFrame" : [
+        166,
+        188,
+        96,
+        72
+      ],
+      "bg" : [
+        0,
+        0.76500000000000001,
+        0.81599999999999995,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 10,
+      "frame" : [
+        0,
+        0,
+        96,
+        72
+      ],
+      "path" : "1.3.0"
+    },
+    {
+      "absFrame" : [
+        166,
+        188,
+        96,
+        72
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        0,
+        0,
+        96,
+        72
+      ],
+      "intrinsic" : [
+        11,
+        20.5
+      ],
+      "path" : "1.3.0.0",
+      "sizeThatFits200" : [
+        11,
+        20.5
+      ],
+      "text" : "4"
+    },
+    {
+      "absFrame" : [
+        334,
+        40,
+        96,
+        72
+      ],
+      "class" : "SceneCollectionCell",
+      "frame" : [
+        334,
+        10,
+        96,
+        72
+      ],
+      "path" : "1.4"
+    },
+    {
+      "absFrame" : [
+        334,
+        40,
+        96,
+        72
+      ],
+      "bg" : [
+        1,
+        0.55300000000000005,
+        0.157,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 10,
+      "frame" : [
+        0,
+        0,
+        96,
+        72
+      ],
+      "path" : "1.4.0"
+    },
+    {
+      "absFrame" : [
+        334,
+        40,
+        96,
+        72
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        0,
+        0,
+        96,
+        72
+      ],
+      "intrinsic" : [
+        10.5,
+        20.5
+      ],
+      "path" : "1.4.0.0",
+      "sizeThatFits200" : [
+        10.5,
+        20.5
+      ],
+      "text" : "5"
+    },
+    {
+      "absFrame" : [
+        334,
+        188,
+        96,
+        72
+      ],
+      "class" : "SceneCollectionCell",
+      "frame" : [
+        334,
+        158,
+        96,
+        72
+      ],
+      "path" : "1.5"
+    },
+    {
+      "absFrame" : [
+        334,
+        188,
+        96,
+        72
+      ],
+      "bg" : [
+        1,
+        0.17599999999999999,
+        0.33300000000000002,
+        1
+      ],
+      "class" : "UIView",
+      "cornerRadius" : 10,
+      "frame" : [
+        0,
+        0,
+        96,
+        72
+      ],
+      "path" : "1.5.0"
+    },
+    {
+      "absFrame" : [
+        334,
+        188,
+        96,
+        72
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Regular",
+        17
+      ],
+      "frame" : [
+        0,
+        0,
+        96,
+        72
+      ],
+      "intrinsic" : [
+        10.5,
+        20.5
+      ],
+      "path" : "1.5.0.0",
+      "sizeThatFits200" : [
+        10.5,
+        20.5
+      ],
+      "text" : "6"
+    },
+    {
+      "absFrame" : [
+        0,
+        30,
+        44,
+        240
+      ],
+      "class" : "SceneCollectionSupplementary",
+      "frame" : [
+        0,
+        0,
+        44,
+        240
+      ],
+      "path" : "1.6"
+    },
+    {
+      "absFrame" : [
+        16,
+        30,
+        12,
+        240
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Semibold",
+        13
+      ],
+      "frame" : [
+        16,
+        0,
+        12,
+        240
+      ],
+      "intrinsic" : [
+        9.5,
+        16
+      ],
+      "path" : "1.6.0",
+      "sizeThatFits200" : [
+        9.5,
+        16
+      ],
+      "text" : "A"
+    },
+    {
+      "absFrame" : [
+        276,
+        30,
+        44,
+        240
+      ],
+      "class" : "SceneCollectionSupplementary",
+      "frame" : [
+        276,
+        0,
+        44,
+        240
+      ],
+      "path" : "1.7"
+    },
+    {
+      "absFrame" : [
+        292,
+        30,
+        12,
+        240
+      ],
+      "class" : "UILabel",
+      "font" : [
+        ".SFUI-Semibold",
+        13
+      ],
+      "frame" : [
+        16,
+        0,
+        12,
+        240
+      ],
+      "intrinsic" : [
+        9,
+        16
+      ],
+      "path" : "1.7.0",
+      "sizeThatFits200" : [
+        9,
+        16
+      ],
+      "text" : "B"
+    }
+  ]
+}

@@ -347,10 +347,24 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
 
     private var sections: [SectionCache] = []
     private var contentSize: CGSize = .zero
+    /// Cross-axis size `prepare()` last used. The collection view's bounds
+    /// setter asks `shouldInvalidateLayout` AFTER applying the new size, so
+    /// comparing to `cv.bounds` is always false (same trap flow layout
+    /// avoids with `preparedCrossExtent`).
+    private var preparedBoundsSize: CGSize = CGSize(width: -1, height: -1)
 
     open override var collectionViewContentSize: CGSize { contentSize }
 
     open override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+        // MEASURED Feed-ipad t200, iPad (A16) 820×1180 @2x / iOS 26.1:
+        // collection view abs `[0, 138, 820, 1180]` both sides, cards
+        // golden `[16, 298, 788, 533.5]` vs ours `[16, 298, 358, 291.5]`.
+        // 358 = 390 − 32 (section insets); 390 is UIViewController.loadView
+        // default. Phone / Catalyst keep the previous cv.bounds compare
+        // (phone Feed already prepares at 375).
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            return newBounds.size != preparedBoundsSize
+        }
         guard let cv = collectionView else { return false }
         return newBounds.size != cv.bounds.size
     }
@@ -382,6 +396,7 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
         contentSize = .zero
         guard let cv = collectionView else { return }
 
+        preparedBoundsSize = cv.bounds.size
         let container = NSCollectionLayoutContainer(contentSize: cv.bounds.size,
                                                       contentInsets: .zero)
         let env = NSCollectionLayoutEnvironment(container: container,
