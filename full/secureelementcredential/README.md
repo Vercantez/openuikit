@@ -73,13 +73,21 @@ enum type). The remaining implemented rows are spread across focused
 value-type tests and stay under the 40% bulk-relabel bound.
 
 The sealed host gate was run as
-`bash full/secureelementcredential/tests/acceptance/test_host.sh`.
+`bash full/secureelementcredential/tests/acceptance/test_host.sh` and ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=SecureElementCredential lane=medium-full symbols=155
+FRAMEWORK_FANOUT_REFERENCE_OK
+SECUREELEMENTCREDENTIAL_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=SecureElementCredential dylib=libSecureElementCredential.dylib
+```
+
 The campaign inventory stamp
 `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
 is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this
 snapshot fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`;
 Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift
-6.2.4 / linux and the sealed gate compiles with a clean product tree
+6.2.4 / linux and the sealed gate compiled with a clean product tree
 (`products=clean`). Starting commit
 `cbb368eeea236bbc0479fefa599190972ac8cfca` matched.
