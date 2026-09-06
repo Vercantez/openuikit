@@ -843,3 +843,100 @@ func testExtAudioFilePacketTableInfoOverrideAlias() {
     let overrideValue: ExtAudioFilePacketTableInfoOverride = kExtAudioFilePacketTableInfoOverride_UseFileValue
     atW6Expect(overrideValue == -1, "use file")
 }
+
+func testAudioComponentCopyNameAndCanDo() {
+    var desc = atW6MixerDescription()
+    let found = AudioComponentFindNext(nil, &desc)
+    atW6Expect(found != nil, "mixer component")
+#if canImport(CoreFoundation)
+    var copied: Unmanaged<CFString>?
+    atW6Expect(AudioComponentCopyName(found, &copied) == 0, "copy name")
+    let nameLength: CFIndex
+    if let cfName = copied?.takeRetainedValue() {
+        nameLength = CFStringGetLength(cfName)
+    } else {
+        nameLength = 0
+    }
+    atW6Expect(nameLength == 17, "MultiChannelMixer")
+    atW6Expect(AudioComponentCopyName(nil, nil) == kAudioComponentErr_InstanceInvalidated, "nil component")
+#endif
+    var instance: AudioComponentInstance?
+    atW6Expect(AudioComponentInstanceNew(found, &instance) == 0, "new instance")
+    atW6Expect(AudioComponentInstanceCanDo(instance, 0) == true, "software can do")
+    atW6Expect(AudioComponentInstanceCanDo(nil, 0) == false, "nil cannot")
+    _ = AudioComponentInstanceDispose(instance)
+}
+
+func testAudioComponentRegisterAndValidateFailClosed() {
+    var desc = atW6MixerDescription()
+    let found = AudioComponentFindNext(nil, &desc)
+    var countBefore = 0
+    var cursor = found
+    while cursor != nil {
+        countBefore += 1
+        cursor = AudioComponentFindNext(cursor, &desc)
+    }
+#if canImport(CoreFoundation)
+    let name = atW6CFString("LinuxMixerPlugin")
+    atW6Expect(AudioComponentRegister(&desc, name, 1, nil) == nil, "register does not publish")
+    var after = AudioComponentFindNext(nil, &desc)
+    var countAfter = 0
+    while after != nil {
+        countAfter += 1
+        after = AudioComponentFindNext(after, &desc)
+    }
+    atW6Expect(countAfter == countBefore, "catalog unchanged")
+    var result = AudioComponentValidationResult.unknown
+    atW6Expect(
+        AudioComponentValidate(found, nil, &result) == kAudioComponentErr_NotPermitted,
+        "validate fail-closed"
+    )
+    atW6Expect(result == .failed, "failed result")
+#endif
+}
+
+func testMIDIChannelMessageOverlay() {
+    var message = MIDIChannelMessage()
+    atW6Expect(message.status == 0 && message.data1 == 0 && message.data2 == 0, "empty")
+    atW6Expect(message.reserved == 0, "reserved")
+    message = MIDIChannelMessage(status: 0x90, data1: 60, data2: 100, reserved: 1)
+    atW6Expect(message.status == 0x90 && message.data1 == 60, "note on")
+    atW6Expect(message.data2 == 100 && message.reserved == 1, "vel reserved")
+    atW6Expect(message != MIDIChannelMessage(), "inequality")
+}
+
+func testSoundBankCopyFailClosed() {
+#if canImport(CoreFoundation)
+    let path = "/tmp/openuikit-missing-soundbank.sf2"
+    let url = path.withCString { cstr in
+        CFURLCreateFromFileSystemRepresentation(
+            kCFAllocatorDefault,
+            UnsafeRawPointer(cstr).assumingMemoryBound(to: UInt8.self),
+            path.utf8.count,
+            false
+        )
+    }
+    atW6Expect(url != nil, "url")
+    var name: Unmanaged<CFString>?
+    atW6Expect(CopyNameFromSoundBank(url, &name) == kAudioFileUnsupportedFileTypeError, "name unsupported")
+    atW6Expect(name == nil, "no name")
+    var info: Unmanaged<CFArray>?
+    atW6Expect(
+        CopyInstrumentInfoFromSoundBank(url, &info) == kAudioFileUnsupportedFileTypeError,
+        "info unsupported"
+    )
+    atW6Expect(info == nil, "no info")
+    atW6Expect(CopyNameFromSoundBank(nil, nil) != 0, "nil url")
+#endif
+}
+
+func testInstrumentAndValidationStringKeys() {
+    atW6Expect(kInstrumentInfoKey_Name == "name", "name")
+    atW6Expect(kInstrumentInfoKey_Program == "program", "program")
+    atW6Expect(kInstrumentInfoKey_LSB == "LSB", "lsb")
+    atW6Expect(kInstrumentInfoKey_MSB == "MSB", "msb")
+    atW6Expect(kAudioComponentConfigurationInfo_ValidationResult == "ValidationResult", "validation result")
+    atW6Expect(kAudioComponentValidationParameter_ForceValidation == "ForceValidation", "force")
+    atW6Expect(kAudioComponentValidationParameter_LoadOutOfProcess == "LoadOutOfProcess", "oop")
+    atW6Expect(kAudioComponentValidationParameter_TimeOut == "TimeOut", "timeout")
+}

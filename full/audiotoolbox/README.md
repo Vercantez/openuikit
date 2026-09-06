@@ -257,9 +257,9 @@ Fifth SDK-depth pass on the wave-10 tree (keep existing tests green; do not rewr
 
 | status | after wave 10 | after wave 11 |
 | --- | ---: | ---: |
-| implemented | 2619 | 2906 |
-| declared | 90 | 63 |
-| deferred | 524 | 264 |
+| implemented | 2619 | 2927 |
+| declared | 90 | 44 |
+| deferred | 524 | 262 |
 | unavailable | 1 | 1 |
 | not-applicable | 0 | 0 |
 
@@ -267,9 +267,9 @@ No SwiftUI cross-import overlay IDs (`s:7SwiftUI4View…`) appear in this census
 
 ### Top-5 implemented evidence distribution (after)
 
-1. `testEnumHashableInequalityCatalog` — 200 rows (6.9%) — table-driven enum `!=` / `hash(into:)` / `init(rawValue:)`
-2. `testOptionSetAlgebraAudioUnitAndQueue` — 200 (6.9%) — table-driven OptionSet algebra
-3. `testOptionSetAlgebraNewMixerFlags` — 168 (5.8%) — mixer/transport/slice flags
+1. `testEnumHashableInequalityCatalog` — 200 rows (6.8%) — table-driven enum `!=` / `hash(into:)` / `init(rawValue:)`
+2. `testOptionSetAlgebraAudioUnitAndQueue` — 200 (6.8%) — table-driven OptionSet algebra
+3. `testOptionSetAlgebraNewMixerFlags` — 168 (5.7%) — mixer/transport/slice flags
 4. `testOptionSetAlgebraAudioFileFamily` — 163 (5.6%) — AudioFile/CAF OptionSet algebra
 5. `testAudioToolboxConstantCatalog` — 146 (5.0%) — table-driven k…/err… payloads
 
@@ -279,7 +279,7 @@ No non-table test exceeds 40% of implemented rows. Wave-11 family tests each cit
 
 - **Parameter ID aliases.** `k3DMixerParam_BusEnable` / `*InDecibels` aliases of Enable/gain/reverb/occlusion; `kNewTimePitchParam_Smoothness` / `EnableSpectralCoherence` aliases plus `EnableTransientPreservation=7`; dynamic-range / program-target / sound-isolation constants.
 - **Overlays.** `AudioUnitParameterInfo` (52-byte name), `ScheduledAudioSlice` / `ScheduledAudioFileRegion`, `AUMIDIEvent` / `AUParameterEvent` / `AURenderEventHeader` / `AURenderEvent`, `AudioFileRegion` + `NextAudioFileRegion`, `AudioPanningInfo`, flattened `AudioUnitParameterEvent`, `HostCallbackInfo`, packet translations, queue meter/assignment/parameter events, node connections, ducking/start-at-time/MIDI callback structs, `ExtendedNoteOnEvent`.
-- **Runtime.** `AudioUnitScheduleParameters` applies immediate values and ramp end-values onto mixer parameters; `AudioQueueEnqueueBufferWithParameters` stores start/end trim and optional volume events; `AudioQueueOfflineRender` copies trimmed PCM sample-exactly (silence when the queue is empty).
+- **Runtime.** `AudioUnitScheduleParameters` applies immediate values and ramp end-values onto mixer parameters; `AudioQueueEnqueueBufferWithParameters` stores start/end trim and optional volume events; `AudioQueueOfflineRender` copies trimmed PCM sample-exactly (silence when the queue is empty). `AudioComponentCopyName` returns the built-in software-unit name (`MultiChannelMixer`, `GenericOutput`, `ScheduledSoundPlayer`, `RemoteIO`); `AudioComponentRegister` / `Validate` stay fail-closed and do not publish plugins. Sound-bank name/instrument copy returns `kAudioFileUnsupportedFileTypeError`.
 - **AUAudioUnit v3.** `AUAudioUnitStatus`, `registerSubclass` (stored, does not publish plugins), `presetState(for:)` fail-closed, `AUAudioUnitV2Bridge` wrapping a v2 software instance. RemoteIO still fail-closes. MIDI CI / `MIDIEventList` / `AVAudioFormat` remain deferred or unavailable.
 
 ### Fail-closed boundaries (wave 11)
@@ -293,7 +293,16 @@ No non-table test exceeds 40% of implemented rows. Wave-11 family tests each cit
 ### Tests and gate
 
 - Agent tests: previous waves plus `AudioToolboxWave6Tests.swift`.
-- Only host script under `tests/`: `bash full/audiotoolbox/tests/acceptance/test_host.sh`. Marker output is filled after the sealed run.
+- Only host script under `tests/`: `bash full/audiotoolbox/tests/acceptance/test_host.sh`. Exact sealed-gate stdout:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AudioToolbox lane=large-partitioned symbols=3234
+FRAMEWORK_FANOUT_REFERENCE_OK
+AUDIOTOOLBOX_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AudioToolbox dylib=libAudioToolbox.dylib
+```
+
+Swift `6.2.4` / `x86_64-unknown-linux-gnu` compiled `libAudioToolbox.dylib`. `.cursor/verify-cloud-environment.sh` still fails (`scratch/ladder-corpus/focus-ios` missing) and therefore does not print `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`. The sealed gate is the authority for this pass.
 
 ### Unresolved behavioral questions
 
