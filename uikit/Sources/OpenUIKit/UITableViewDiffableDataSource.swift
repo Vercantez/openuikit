@@ -146,18 +146,18 @@ where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable {
         reloadedItemSet.removeAll()
     }
 
-    fileprivate var hasReloadedIdentifiers: Bool {
+    var hasReloadedIdentifiers: Bool {
         !reloadedSectionSet.isEmpty || !reloadedItemSet.isEmpty
     }
 
-    fileprivate func itemIdentifier(at indexPath: IndexPath) -> ItemIdentifierType? {
+    func itemIdentifier(at indexPath: IndexPath) -> ItemIdentifierType? {
         guard sections.indices.contains(indexPath.section) else { return nil }
         let items = itemsBySection[sections[indexPath.section]] ?? []
         guard items.indices.contains(indexPath.row) else { return nil }
         return items[indexPath.row]
     }
 
-    fileprivate func clearingReloadMarkers()
+    func clearingReloadMarkers()
         -> NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType> {
         var copy = self
         copy.reloadedSectionSet.removeAll()
