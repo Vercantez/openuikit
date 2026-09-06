@@ -1,0 +1,24 @@
+precise	kind	title	path	declaration
+c:objc(cs)THClient	swift.class	THClient	THClient	class THClient
+c:objc(cs)THClient(im)checkPreferredNetworkForActiveOperationalDataset:completion:	swift.method	checkPreferredNetwork(forActiveOperationalDataset:completion:)	THClient.checkPreferredNetwork(forActiveOperationalDataset:completion:)	func checkPreferredNetwork(forActiveOperationalDataset activeOperationalDataSet: Data, completion: @escaping (Bool) -> Void)
+c:objc(cs)THClient(im)deleteCredentialsForBorderAgent:completion:	swift.method	deleteCredentials(forBorderAgent:)	THClient.deleteCredentials(forBorderAgent:)	func deleteCredentials(forBorderAgent borderAgentID: Data) async throws
+c:objc(cs)THClient(im)init	swift.init	init()	THClient.init()	init()
+c:objc(cs)THClient(im)isPreferredNetworkAvailableWithCompletion:	swift.method	isPreferredAvailable()	THClient.isPreferredAvailable()	func isPreferredAvailable() async -> Bool
+c:objc(cs)THClient(im)retrieveAllActiveCredentials:	swift.method	allActiveCredentials()	THClient.allActiveCredentials()	func allActiveCredentials() async throws -> Set<THCredentials>
+c:objc(cs)THClient(im)retrieveAllCredentials:	swift.method	allCredentials()	THClient.allCredentials()	func allCredentials() async throws -> Set<THCredentials>
+c:objc(cs)THClient(im)retrieveCredentialsForBorderAgent:completion:	swift.method	credentials(forBorderAgentID:)	THClient.credentials(forBorderAgentID:)	func credentials(forBorderAgentID borderAgentID: Data) async throws -> THCredentials
+c:objc(cs)THClient(im)retrieveCredentialsForExtendedPANID:completion:	swift.method	credentials(forExtendedPANID:)	THClient.credentials(forExtendedPANID:)	func credentials(forExtendedPANID extendedPANID: Data) async throws -> THCredentials
+c:objc(cs)THClient(im)retrievePreferredCredentials:	swift.method	preferredCredentials()	THClient.preferredCredentials()	func preferredCredentials() async throws -> THCredentials
+c:objc(cs)THClient(im)storeCredentialsForBorderAgent:activeOperationalDataSet:completion:	swift.method	storeCredentials(forBorderAgent:activeOperationalDataSet:)	THClient.storeCredentials(forBorderAgent:activeOperationalDataSet:)	func storeCredentials(forBorderAgent borderAgentID: Data, activeOperationalDataSet: Data) async throws
+c:objc(cs)THCredentials	swift.class	THCredentials	THCredentials	class THCredentials
+c:objc(cs)THCredentials(py)PSKC	swift.property	pskc	THCredentials.pskc	var pskc: Data? { get }
+c:objc(cs)THCredentials(py)activeOperationalDataSet	swift.property	activeOperationalDataSet	THCredentials.activeOperationalDataSet	var activeOperationalDataSet: Data? { get }
+c:objc(cs)THCredentials(py)borderAgentID	swift.property	borderAgentID	THCredentials.borderAgentID	var borderAgentID: Data? { get }
+c:objc(cs)THCredentials(py)channel	swift.property	channel	THCredentials.channel	var channel: UInt8 { get set }
+c:objc(cs)THCredentials(py)creationDate	swift.property	creationDate	THCredentials.creationDate	var creationDate: Date? { get }
+c:objc(cs)THCredentials(py)extendedPANID	swift.property	extendedPANID	THCredentials.extendedPANID	var extendedPANID: Data? { get }
+c:objc(cs)THCredentials(py)lastModificationDate	swift.property	lastModificationDate	THCredentials.lastModificationDate	var lastModificationDate: Date? { get }
+c:objc(cs)THCredentials(py)networkKey	swift.property	networkKey	THCredentials.networkKey	var networkKey: Data? { get }
+c:objc(cs)THCredentials(py)networkName	swift.property	networkName	THCredentials.networkName	var networkName: String? { get }
+c:objc(cs)THCredentials(py)panID	swift.property	panID	THCredentials.panID	var panID: Data? { get }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)THCredentials	swift.init	init(coder:)	THCredentials.init(coder:)	init?(coder: NSCoder)

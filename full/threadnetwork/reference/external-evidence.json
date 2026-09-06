@@ -1,0 +1,49 @@
+{
+  "lock": {
+    "path": "full/framework-fanout/external-evidence-sources.json",
+    "sha256": "a0b7ebf22affede443bc79ae75fb8ac7b9f450a407f666147efa3ba93878b752"
+  },
+  "module": "ThreadNetwork",
+  "policy": {
+    "behaviorAuthority": [
+      "apple-runtime-oracle",
+      "focused-linux-implementation-tests",
+      "explicitly-deferred-or-unavailable"
+    ],
+    "conflictRule": "Apple SDK-derived evidence wins; unresolved conflicts become oracle questions, never guesses.",
+    "copyRule": "Use external bindings as read-only corroboration. Do not copy their implementation into a framework port.",
+    "declarationPrecedence": [
+      "xcode-26.1-symbol-graph-and-api-digester",
+      "xcode-26.1-sdk-input-hashes-and-tbd-exports",
+      "pinned-independent-bindings",
+      "linux-policy"
+    ],
+    "runtimeRule": "Static binding metadata is not evidence for defaults, callback timing, retention, queues, hardware, services, or successful runtime behavior."
+  },
+  "schema": 1,
+  "sources": [
+    {
+      "capabilities": [
+        "async-annotations",
+        "availability",
+        "dependency-type-identity",
+        "enum-case-order-and-explicit-raw-values",
+        "error-domain-constant-identity",
+        "nullability-and-parameter-shape",
+        "objc-base-types-and-protocols",
+        "objc-selectors"
+      ],
+      "commit": "cd62487311dcc20a7ac183c8baa6293373b20e79",
+      "environmentVariable": "OPENUIKIT_MACIOS_ROOT",
+      "id": "dotnet-macios",
+      "licensePath": "LICENSE",
+      "licenseSHA256": "2ad5be3c5907b028a63e6ac9983dc88349c9a7dcabc6f531389a555b5c8628e6",
+      "licenseSummary": "Xamarin SDK sources are MIT licensed; the repository LICENSE also preserves third-party notices.",
+      "repository": "https://github.com/dotnet/macios.git",
+      "suggestedSourcePaths": [
+        "src/ThreadNetwork/",
+        "src/threadnetwork.cs"
+      ]
+    }
+  ]
+}

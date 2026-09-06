@@ -1,0 +1,31 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave9-repair-3",
+    "maxActive": 24,
+    "maxRuns": 1
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "deviceactivity": {
+      "agentId": "bc-3bdb0716-c0ae-56c4-8ed3-2ff674a733a4",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T00:01:52Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/171",
+      "expectedPriorHead": "1fb3e2ca8096c5fc0781a1713f27a37a37ed1e0a",
+      "idempotencyKey": "1ff8f877-5cfb-549a-b11d-56d86372c20a",
+      "launchStatus": "SENT",
+      "module": "DeviceActivity",
+      "promptBytes": 1448,
+      "promptSha256": "74001c31e0ee1b4543e158a52e5b41adaf001e51f30aaff8e63ba6abca61c082",
+      "runId": "run-65765fbb-192b-4e8b-b2b2-86583070c707",
+      "runStatus": "running",
+      "slug": "deviceactivity"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

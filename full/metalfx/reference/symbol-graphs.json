@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/MetalFX.symbols.json",
+      "relationshipCount": 286,
+      "sha256": "4978582246f3ca622ba387865bea2564bf6dc6979100b8b07fde6773fbbc87e9",
+      "symbolCount": 239
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "MetalFX",
+  "relationshipCount": 286,
+  "relationshipMultisetSHA256": "aba0cf62458dd2ebbe5c344ae69f2e4c3ef21dd9dd3424e01d55e6d2f59fbfbd",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 239,
+  "symbolMultisetSHA256": "10b538fb129d2a8fab0ee725c5608b3865b542f9e370d7d3ee3c17fd71d0defc",
+  "target": "arm64-apple-ios26.0"
+}

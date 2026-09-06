@@ -1,0 +1,2619 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEAssetRegistry",
+        "printedName": "PHASE.PHASEAssetRegistry"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEDefinition",
+        "printedName": "PHASE.PHASEDefinition"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEDirectivityModel",
+        "printedName": "PHASE.PHASEDirectivityModel"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEDistanceModel",
+        "printedName": "PHASE.PHASEDistanceModel"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEDucker",
+        "printedName": "PHASE.PHASEDucker"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEEngine",
+        "printedName": "PHASE.PHASEEngine"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEEnvelope",
+        "printedName": "PHASE.PHASEEnvelope"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEGroup",
+        "printedName": "PHASE.PHASEGroup"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEGroupPreset",
+        "printedName": "PHASE.PHASEGroupPreset"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEListener",
+        "printedName": "PHASE.PHASEListener"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEMaterial",
+        "printedName": "PHASE.PHASEMaterial"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEMedium",
+        "printedName": "PHASE.PHASEMedium"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEMetaParameter",
+        "printedName": "PHASE.PHASEMetaParameter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEMixer",
+        "printedName": "PHASE.PHASEMixer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEObject",
+        "printedName": "PHASE.PHASEObject"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEOccluder",
+        "printedName": "PHASE.PHASEOccluder"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASEShape",
+        "printedName": "PHASE.PHASEShape"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASESoundEvent",
+        "printedName": "PHASE.PHASESoundEvent"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASESoundEventNodes",
+        "printedName": "PHASE.PHASESoundEventNodes"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASESource",
+        "printedName": "PHASE.PHASESource"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASESpatialPipeline",
+        "printedName": "PHASE.PHASESpatialPipeline"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PHASE",
+        "name": "PHASE.PHASETypes",
+        "printedName": "PHASE.PHASETypes"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC15PHASEAssetErrorLeV03_nsB0So7NSErrorCvg",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC15PHASEAssetErrorLeV03_nsB0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC15PHASEAssetErrorLeV03_nsB0So7NSErrorCvp",
+            "moduleName": "PHASE",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC15PHASEAssetErrorLeV03_nsB0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHASEAssetError",
+                "printedName": "PHASE.PHASEAssetError",
+                "usr": "c:@E@PHASEAssetError"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC15PHASEAssetErrorLeV03_nsB0ABSo7NSErrorC_tcfc",
+            "moduleName": "PHASE",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC15PHASEAssetErrorLeV03_nsB0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC15PHASEAssetErrorLeV11errorDomainSSvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC15PHASEAssetErrorLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC15PHASEAssetErrorLeV11errorDomainSSvpZ",
+            "moduleName": "PHASE",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC15PHASEAssetErrorLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASEAssetError.Code",
+                        "usr": "c:@E@PHASEAssetError"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "PHASE.PHASEAssetError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo15PHASEAssetErrorV8rawValueABSgSi_tcfc",
+                "moduleName": "PHASE",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So15PHASEAssetErrorV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo15PHASEAssetErrorV8rawValueSivg",
+                    "moduleName": "PHASE",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So15PHASEAssetErrorV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo15PHASEAssetErrorV8rawValueSivp",
+                "moduleName": "PHASE",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So15PHASEAssetErrorV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo15PHASEAssetErrorV8RawValuea",
+                "moduleName": "PHASE",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So15PHASEAssetErrorV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHASEAssetError",
+                    "printedName": "PHASE.PHASEAssetError",
+                    "usr": "c:@E@PHASEAssetError"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "PHASE",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@PHASEAssetError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASEAssetError.Code",
+                        "usr": "c:@E@PHASEAssetError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASEAssetError.Code",
+                            "usr": "c:@E@PHASEAssetError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASEAssetError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASEAssetError.Code.Type) -> PHASE.PHASEAssetError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "failedToLoad",
+                "printedName": "failedToLoad",
+                "usr": "c:@E@PHASEAssetError@PHASEAssetErrorFailedToLoad"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASEAssetError.Code",
+                        "usr": "c:@E@PHASEAssetError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASEAssetError.Code",
+                            "usr": "c:@E@PHASEAssetError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASEAssetError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASEAssetError.Code.Type) -> PHASE.PHASEAssetError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "invalidEngineInstance",
+                "printedName": "invalidEngineInstance",
+                "usr": "c:@E@PHASEAssetError@PHASEAssetErrorInvalidEngineInstance"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASEAssetError.Code",
+                        "usr": "c:@E@PHASEAssetError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASEAssetError.Code",
+                            "usr": "c:@E@PHASEAssetError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASEAssetError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASEAssetError.Code.Type) -> PHASE.PHASEAssetError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "badParameters",
+                "printedName": "badParameters",
+                "usr": "c:@E@PHASEAssetError@PHASEAssetErrorBadParameters"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASEAssetError.Code",
+                        "usr": "c:@E@PHASEAssetError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASEAssetError.Code",
+                            "usr": "c:@E@PHASEAssetError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASEAssetError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASEAssetError.Code.Type) -> PHASE.PHASEAssetError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "alreadyExists",
+                "printedName": "alreadyExists",
+                "usr": "c:@E@PHASEAssetError@PHASEAssetErrorAlreadyExists"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASEAssetError.Code",
+                        "usr": "c:@E@PHASEAssetError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASEAssetError.Code",
+                            "usr": "c:@E@PHASEAssetError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASEAssetError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASEAssetError.Code.Type) -> PHASE.PHASEAssetError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "generalError",
+                "printedName": "generalError",
+                "usr": "c:@E@PHASEAssetError@PHASEAssetErrorGeneralError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASEAssetError.Code",
+                        "usr": "c:@E@PHASEAssetError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASEAssetError.Code",
+                            "usr": "c:@E@PHASEAssetError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASEAssetError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASEAssetError.Code.Type) -> PHASE.PHASEAssetError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "memoryAllocation",
+                "printedName": "memoryAllocation",
+                "usr": "c:@E@PHASEAssetError@PHASEAssetErrorMemoryAllocation"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "PHASE.PHASEAssetError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "kind": "TypeDecl",
+            "moduleName": "PHASE",
+            "name": "Code",
+            "objc_name": "PHASEAssetError",
+            "printedName": "Code",
+            "usr": "c:@E@PHASEAssetError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASEAssetError.Code",
+                    "usr": "c:@E@PHASEAssetError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC15PHASEAssetErrorLeV12failedToLoadSoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC15PHASEAssetErrorLeV12failedToLoadSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASEAssetError.Code",
+                "usr": "c:@E@PHASEAssetError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "failedToLoad",
+            "printedName": "failedToLoad",
+            "static": true,
+            "usr": "c:@E@PHASEAssetError@PHASEAssetErrorFailedToLoad"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASEAssetError.Code",
+                    "usr": "c:@E@PHASEAssetError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC15PHASEAssetErrorLeV21invalidEngineInstanceSoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC15PHASEAssetErrorLeV21invalidEngineInstanceSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASEAssetError.Code",
+                "usr": "c:@E@PHASEAssetError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "invalidEngineInstance",
+            "printedName": "invalidEngineInstance",
+            "static": true,
+            "usr": "c:@E@PHASEAssetError@PHASEAssetErrorInvalidEngineInstance"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASEAssetError.Code",
+                    "usr": "c:@E@PHASEAssetError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC15PHASEAssetErrorLeV13badParametersSoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC15PHASEAssetErrorLeV13badParametersSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASEAssetError.Code",
+                "usr": "c:@E@PHASEAssetError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "badParameters",
+            "printedName": "badParameters",
+            "static": true,
+            "usr": "c:@E@PHASEAssetError@PHASEAssetErrorBadParameters"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASEAssetError.Code",
+                    "usr": "c:@E@PHASEAssetError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC15PHASEAssetErrorLeV13alreadyExistsSoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC15PHASEAssetErrorLeV13alreadyExistsSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASEAssetError.Code",
+                "usr": "c:@E@PHASEAssetError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "alreadyExists",
+            "printedName": "alreadyExists",
+            "static": true,
+            "usr": "c:@E@PHASEAssetError@PHASEAssetErrorAlreadyExists"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASEAssetError.Code",
+                    "usr": "c:@E@PHASEAssetError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC15PHASEAssetErrorLeV07generalB0SoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC15PHASEAssetErrorLeV07generalB0SoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASEAssetError.Code",
+                "usr": "c:@E@PHASEAssetError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "generalError",
+            "printedName": "generalError",
+            "static": true,
+            "usr": "c:@E@PHASEAssetError@PHASEAssetErrorGeneralError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASEAssetError.Code",
+                    "usr": "c:@E@PHASEAssetError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC15PHASEAssetErrorLeV16memoryAllocationSoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC15PHASEAssetErrorLeV16memoryAllocationSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASEAssetError.Code",
+                "usr": "c:@E@PHASEAssetError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "memoryAllocation",
+            "printedName": "memoryAllocation",
+            "static": true,
+            "usr": "c:@E@PHASEAssetError@PHASEAssetErrorMemoryAllocation"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "kind": "TypeDecl",
+        "moduleName": "PHASE",
+        "name": "PHASEAssetError",
+        "printedName": "PHASEAssetError",
+        "usr": "c:@E@PHASEAssetError"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC10PHASEErrorLeV8_nsErrorSo7NSErrorCvg",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC10PHASEErrorLeV8_nsErrorSo7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC10PHASEErrorLeV8_nsErrorSo7NSErrorCvp",
+            "moduleName": "PHASE",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC10PHASEErrorLeV8_nsErrorSo7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHASEError",
+                "printedName": "PHASE.PHASEError",
+                "usr": "c:@E@PHASEError"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC10PHASEErrorLeV8_nsErrorABSo7NSErrorC_tcfc",
+            "moduleName": "PHASE",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC10PHASEErrorLeV8_nsErrorABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC10PHASEErrorLeV11errorDomainSSvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC10PHASEErrorLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC10PHASEErrorLeV11errorDomainSSvpZ",
+            "moduleName": "PHASE",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC10PHASEErrorLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASEError.Code",
+                        "usr": "c:@E@PHASEError"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "PHASE.PHASEError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo10PHASEErrorV8rawValueABSgSi_tcfc",
+                "moduleName": "PHASE",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So10PHASEErrorV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo10PHASEErrorV8rawValueSivg",
+                    "moduleName": "PHASE",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So10PHASEErrorV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo10PHASEErrorV8rawValueSivp",
+                "moduleName": "PHASE",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So10PHASEErrorV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo10PHASEErrorV8RawValuea",
+                "moduleName": "PHASE",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So10PHASEErrorV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHASEError",
+                    "printedName": "PHASE.PHASEError",
+                    "usr": "c:@E@PHASEError"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "PHASE",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@PHASEError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASEError.Code",
+                        "usr": "c:@E@PHASEError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASEError.Code",
+                            "usr": "c:@E@PHASEError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASEError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASEError.Code.Type) -> PHASE.PHASEError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "initializeFailed",
+                "printedName": "initializeFailed",
+                "usr": "c:@E@PHASEError@PHASEErrorInitializeFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASEError.Code",
+                        "usr": "c:@E@PHASEError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASEError.Code",
+                            "usr": "c:@E@PHASEError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASEError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASEError.Code.Type) -> PHASE.PHASEError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "invalidObject",
+                "printedName": "invalidObject",
+                "usr": "c:@E@PHASEError@PHASEErrorInvalidObject"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "PHASE.PHASEError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "kind": "TypeDecl",
+            "moduleName": "PHASE",
+            "name": "Code",
+            "objc_name": "PHASEError",
+            "printedName": "Code",
+            "usr": "c:@E@PHASEError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASEError.Code",
+                    "usr": "c:@E@PHASEError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC10PHASEErrorLeV16initializeFailedSoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC10PHASEErrorLeV16initializeFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASEError.Code",
+                "usr": "c:@E@PHASEError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "initializeFailed",
+            "printedName": "initializeFailed",
+            "static": true,
+            "usr": "c:@E@PHASEError@PHASEErrorInitializeFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASEError.Code",
+                    "usr": "c:@E@PHASEError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC10PHASEErrorLeV13invalidObjectSoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC10PHASEErrorLeV13invalidObjectSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASEError.Code",
+                "usr": "c:@E@PHASEError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "invalidObject",
+            "printedName": "invalidObject",
+            "static": true,
+            "usr": "c:@E@PHASEError@PHASEErrorInvalidObject"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "kind": "TypeDecl",
+        "moduleName": "PHASE",
+        "name": "PHASEError",
+        "printedName": "PHASEError",
+        "usr": "c:@E@PHASEError"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC20PHASESoundEventErrorLeV03_nsC0So7NSErrorCvg",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC20PHASESoundEventErrorLeV03_nsC0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC20PHASESoundEventErrorLeV03_nsC0So7NSErrorCvp",
+            "moduleName": "PHASE",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC20PHASESoundEventErrorLeV03_nsC0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PHASESoundEventError",
+                "printedName": "PHASE.PHASESoundEventError",
+                "usr": "c:@E@PHASESoundEventError"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC20PHASESoundEventErrorLeV03_nsC0ABSo7NSErrorC_tcfc",
+            "moduleName": "PHASE",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC20PHASESoundEventErrorLeV03_nsC0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC20PHASESoundEventErrorLeV11errorDomainSSvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PHASESoundEventErrorLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC20PHASESoundEventErrorLeV11errorDomainSSvpZ",
+            "moduleName": "PHASE",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC20PHASESoundEventErrorLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASESoundEventError.Code",
+                        "usr": "c:@E@PHASESoundEventError"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "PHASE.PHASESoundEventError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo20PHASESoundEventErrorV8rawValueABSgSi_tcfc",
+                "moduleName": "PHASE",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So20PHASESoundEventErrorV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo20PHASESoundEventErrorV8rawValueSivg",
+                    "moduleName": "PHASE",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So20PHASESoundEventErrorV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo20PHASESoundEventErrorV8rawValueSivp",
+                "moduleName": "PHASE",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So20PHASESoundEventErrorV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo20PHASESoundEventErrorV8RawValuea",
+                "moduleName": "PHASE",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So20PHASESoundEventErrorV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PHASESoundEventError",
+                    "printedName": "PHASE.PHASESoundEventError",
+                    "usr": "c:@E@PHASESoundEventError"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "PHASE",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@PHASESoundEventError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASESoundEventError.Code",
+                        "usr": "c:@E@PHASESoundEventError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASESoundEventError.Code",
+                            "usr": "c:@E@PHASESoundEventError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASESoundEventError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASESoundEventError.Code.Type) -> PHASE.PHASESoundEventError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "notFound",
+                "printedName": "notFound",
+                "usr": "c:@E@PHASESoundEventError@PHASESoundEventErrorNotFound"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASESoundEventError.Code",
+                        "usr": "c:@E@PHASESoundEventError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASESoundEventError.Code",
+                            "usr": "c:@E@PHASESoundEventError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASESoundEventError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASESoundEventError.Code.Type) -> PHASE.PHASESoundEventError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "badData",
+                "printedName": "badData",
+                "usr": "c:@E@PHASESoundEventError@PHASESoundEventErrorBadData"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASESoundEventError.Code",
+                        "usr": "c:@E@PHASESoundEventError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASESoundEventError.Code",
+                            "usr": "c:@E@PHASESoundEventError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASESoundEventError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASESoundEventError.Code.Type) -> PHASE.PHASESoundEventError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "invalidInstance",
+                "printedName": "invalidInstance",
+                "usr": "c:@E@PHASESoundEventError@PHASESoundEventErrorInvalidInstance"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASESoundEventError.Code",
+                        "usr": "c:@E@PHASESoundEventError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASESoundEventError.Code",
+                            "usr": "c:@E@PHASESoundEventError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASESoundEventError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASESoundEventError.Code.Type) -> PHASE.PHASESoundEventError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "apiMisuse",
+                "printedName": "apiMisuse",
+                "usr": "c:@E@PHASESoundEventError@PHASESoundEventErrorAPIMisuse"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASESoundEventError.Code",
+                        "usr": "c:@E@PHASESoundEventError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASESoundEventError.Code",
+                            "usr": "c:@E@PHASESoundEventError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASESoundEventError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASESoundEventError.Code.Type) -> PHASE.PHASESoundEventError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "systemNotInitialized",
+                "printedName": "systemNotInitialized",
+                "usr": "c:@E@PHASESoundEventError@PHASESoundEventErrorSystemNotInitialized"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "PHASE.PHASESoundEventError.Code",
+                        "usr": "c:@E@PHASESoundEventError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "PHASE.PHASESoundEventError.Code",
+                            "usr": "c:@E@PHASESoundEventError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PHASE.PHASESoundEventError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PHASE.PHASESoundEventError.Code.Type) -> PHASE.PHASESoundEventError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "PHASE",
+                "name": "outOfMemory",
+                "printedName": "outOfMemory",
+                "usr": "c:@E@PHASESoundEventError@PHASESoundEventErrorOutOfMemory"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "PHASE.PHASESoundEventError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "kind": "TypeDecl",
+            "moduleName": "PHASE",
+            "name": "Code",
+            "objc_name": "PHASESoundEventError",
+            "printedName": "Code",
+            "usr": "c:@E@PHASESoundEventError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASESoundEventError.Code",
+                    "usr": "c:@E@PHASESoundEventError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20PHASESoundEventErrorLeV8notFoundSoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PHASESoundEventErrorLeV8notFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASESoundEventError.Code",
+                "usr": "c:@E@PHASESoundEventError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "notFound",
+            "printedName": "notFound",
+            "static": true,
+            "usr": "c:@E@PHASESoundEventError@PHASESoundEventErrorNotFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASESoundEventError.Code",
+                    "usr": "c:@E@PHASESoundEventError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20PHASESoundEventErrorLeV7badDataSoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PHASESoundEventErrorLeV7badDataSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASESoundEventError.Code",
+                "usr": "c:@E@PHASESoundEventError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "badData",
+            "printedName": "badData",
+            "static": true,
+            "usr": "c:@E@PHASESoundEventError@PHASESoundEventErrorBadData"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASESoundEventError.Code",
+                    "usr": "c:@E@PHASESoundEventError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20PHASESoundEventErrorLeV15invalidInstanceSoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PHASESoundEventErrorLeV15invalidInstanceSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASESoundEventError.Code",
+                "usr": "c:@E@PHASESoundEventError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "invalidInstance",
+            "printedName": "invalidInstance",
+            "static": true,
+            "usr": "c:@E@PHASESoundEventError@PHASESoundEventErrorInvalidInstance"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASESoundEventError.Code",
+                    "usr": "c:@E@PHASESoundEventError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20PHASESoundEventErrorLeV9apiMisuseSoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PHASESoundEventErrorLeV9apiMisuseSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASESoundEventError.Code",
+                "usr": "c:@E@PHASESoundEventError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "apiMisuse",
+            "printedName": "apiMisuse",
+            "static": true,
+            "usr": "c:@E@PHASESoundEventError@PHASESoundEventErrorAPIMisuse"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASESoundEventError.Code",
+                    "usr": "c:@E@PHASESoundEventError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20PHASESoundEventErrorLeV20systemNotInitializedSoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PHASESoundEventErrorLeV20systemNotInitializedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASESoundEventError.Code",
+                "usr": "c:@E@PHASESoundEventError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "systemNotInitialized",
+            "printedName": "systemNotInitialized",
+            "static": true,
+            "usr": "c:@E@PHASESoundEventError@PHASESoundEventErrorSystemNotInitialized"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "PHASE.PHASESoundEventError.Code",
+                    "usr": "c:@E@PHASESoundEventError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20PHASESoundEventErrorLeV11outOfMemorySoAAVvgZ",
+                "moduleName": "PHASE",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20PHASESoundEventErrorLeV11outOfMemorySoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "PHASE.PHASESoundEventError.Code",
+                "usr": "c:@E@PHASESoundEventError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "PHASE",
+            "name": "outOfMemory",
+            "printedName": "outOfMemory",
+            "static": true,
+            "usr": "c:@E@PHASESoundEventError@PHASESoundEventErrorOutOfMemory"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "kind": "TypeDecl",
+        "moduleName": "PHASE",
+        "name": "PHASESoundEventError",
+        "printedName": "PHASESoundEventError",
+        "usr": "c:@E@PHASESoundEventError"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "PHASE",
+    "printedName": "PHASE"
+  }
+}

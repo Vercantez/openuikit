@@ -1,0 +1,240 @@
+precise	kind	title	path	declaration
+c:@E@MTLFXSpatialScalerColorProcessingMode	swift.enum	MTLFXSpatialScalerColorProcessingMode	MTLFXSpatialScalerColorProcessingMode	enum MTLFXSpatialScalerColorProcessingMode
+c:@E@MTLFXSpatialScalerColorProcessingMode@MTLFXSpatialScalerColorProcessingModeHDR	swift.enum.case	MTLFXSpatialScalerColorProcessingMode.hdr	MTLFXSpatialScalerColorProcessingMode.hdr	case hdr
+c:@E@MTLFXSpatialScalerColorProcessingMode@MTLFXSpatialScalerColorProcessingModeLinear	swift.enum.case	MTLFXSpatialScalerColorProcessingMode.linear	MTLFXSpatialScalerColorProcessingMode.linear	case linear
+c:@E@MTLFXSpatialScalerColorProcessingMode@MTLFXSpatialScalerColorProcessingModePerceptual	swift.enum.case	MTLFXSpatialScalerColorProcessingMode.perceptual	MTLFXSpatialScalerColorProcessingMode.perceptual	case perceptual
+c:objc(cs)MTLFXFrameInterpolatorDescriptor	swift.class	MTLFXFrameInterpolatorDescriptor	MTLFXFrameInterpolatorDescriptor	class MTLFXFrameInterpolatorDescriptor
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(cm)supportsDevice:	swift.type.method	supportsDevice(_:)	MTLFXFrameInterpolatorDescriptor.supportsDevice(_:)	class func supportsDevice(_ device: any MTLDevice) -> Bool
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(cm)supportsMetal4FX:	swift.type.method	supportsMetal4FX(_:)	MTLFXFrameInterpolatorDescriptor.supportsMetal4FX(_:)	class func supportsMetal4FX(_ device: any MTLDevice) -> Bool
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(im)newFrameInterpolatorWithDevice:	swift.method	makeFrameInterpolator(device:)	MTLFXFrameInterpolatorDescriptor.makeFrameInterpolator(device:)	func makeFrameInterpolator(device: any MTLDevice) -> (any MTLFXFrameInterpolator)?
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(im)newFrameInterpolatorWithDevice:compiler:	swift.method	makeFrameInterpolator(device:compiler:)	MTLFXFrameInterpolatorDescriptor.makeFrameInterpolator(device:compiler:)	func makeFrameInterpolator(device: any MTLDevice, compiler: any MTL4Compiler) -> (any MTL4FXFrameInterpolator)?
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(py)colorTextureFormat	swift.property	colorTextureFormat	MTLFXFrameInterpolatorDescriptor.colorTextureFormat	var colorTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(py)depthTextureFormat	swift.property	depthTextureFormat	MTLFXFrameInterpolatorDescriptor.depthTextureFormat	var depthTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(py)inputHeight	swift.property	inputHeight	MTLFXFrameInterpolatorDescriptor.inputHeight	var inputHeight: UInt { get set }
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(py)inputWidth	swift.property	inputWidth	MTLFXFrameInterpolatorDescriptor.inputWidth	var inputWidth: UInt { get set }
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(py)motionTextureFormat	swift.property	motionTextureFormat	MTLFXFrameInterpolatorDescriptor.motionTextureFormat	var motionTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(py)outputHeight	swift.property	outputHeight	MTLFXFrameInterpolatorDescriptor.outputHeight	var outputHeight: UInt { get set }
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(py)outputTextureFormat	swift.property	outputTextureFormat	MTLFXFrameInterpolatorDescriptor.outputTextureFormat	var outputTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(py)outputWidth	swift.property	outputWidth	MTLFXFrameInterpolatorDescriptor.outputWidth	var outputWidth: UInt { get set }
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(py)scaler	swift.property	scaler	MTLFXFrameInterpolatorDescriptor.scaler	var scaler: (any MTLFXFrameInterpolatableScaler)? { get set }
+c:objc(cs)MTLFXFrameInterpolatorDescriptor(py)uiTextureFormat	swift.property	uiTextureFormat	MTLFXFrameInterpolatorDescriptor.uiTextureFormat	var uiTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXSpatialScalerDescriptor	swift.class	MTLFXSpatialScalerDescriptor	MTLFXSpatialScalerDescriptor	class MTLFXSpatialScalerDescriptor
+c:objc(cs)MTLFXSpatialScalerDescriptor(cm)supportsDevice:	swift.type.method	supportsDevice(_:)	MTLFXSpatialScalerDescriptor.supportsDevice(_:)	class func supportsDevice(_ device: any MTLDevice) -> Bool
+c:objc(cs)MTLFXSpatialScalerDescriptor(cm)supportsMetal4FX:	swift.type.method	supportsMetal4FX(_:)	MTLFXSpatialScalerDescriptor.supportsMetal4FX(_:)	class func supportsMetal4FX(_ device: any MTLDevice) -> Bool
+c:objc(cs)MTLFXSpatialScalerDescriptor(im)newSpatialScalerWithDevice:	swift.method	makeSpatialScaler(device:)	MTLFXSpatialScalerDescriptor.makeSpatialScaler(device:)	func makeSpatialScaler(device: any MTLDevice) -> (any MTLFXSpatialScaler)?
+c:objc(cs)MTLFXSpatialScalerDescriptor(im)newSpatialScalerWithDevice:compiler:	swift.method	makeSpatialScaler(device:compiler:)	MTLFXSpatialScalerDescriptor.makeSpatialScaler(device:compiler:)	func makeSpatialScaler(device: any MTLDevice, compiler: any MTL4Compiler) -> (any MTL4FXSpatialScaler)?
+c:objc(cs)MTLFXSpatialScalerDescriptor(py)colorProcessingMode	swift.property	colorProcessingMode	MTLFXSpatialScalerDescriptor.colorProcessingMode	var colorProcessingMode: MTLFXSpatialScalerColorProcessingMode { get set }
+c:objc(cs)MTLFXSpatialScalerDescriptor(py)colorTextureFormat	swift.property	colorTextureFormat	MTLFXSpatialScalerDescriptor.colorTextureFormat	var colorTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXSpatialScalerDescriptor(py)inputHeight	swift.property	inputHeight	MTLFXSpatialScalerDescriptor.inputHeight	var inputHeight: UInt { get set }
+c:objc(cs)MTLFXSpatialScalerDescriptor(py)inputWidth	swift.property	inputWidth	MTLFXSpatialScalerDescriptor.inputWidth	var inputWidth: UInt { get set }
+c:objc(cs)MTLFXSpatialScalerDescriptor(py)outputHeight	swift.property	outputHeight	MTLFXSpatialScalerDescriptor.outputHeight	var outputHeight: UInt { get set }
+c:objc(cs)MTLFXSpatialScalerDescriptor(py)outputTextureFormat	swift.property	outputTextureFormat	MTLFXSpatialScalerDescriptor.outputTextureFormat	var outputTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXSpatialScalerDescriptor(py)outputWidth	swift.property	outputWidth	MTLFXSpatialScalerDescriptor.outputWidth	var outputWidth: UInt { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor	swift.class	MTLFXTemporalDenoisedScalerDescriptor	MTLFXTemporalDenoisedScalerDescriptor	class MTLFXTemporalDenoisedScalerDescriptor
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(cm)supportedInputContentMaxScaleForDevice:	swift.type.method	supportedInputContentMaxScale(device:)	MTLFXTemporalDenoisedScalerDescriptor.supportedInputContentMaxScale(device:)	class func supportedInputContentMaxScale(device: any MTLDevice) -> Float
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(cm)supportedInputContentMinScaleForDevice:	swift.type.method	supportedInputContentMinScale(device:)	MTLFXTemporalDenoisedScalerDescriptor.supportedInputContentMinScale(device:)	class func supportedInputContentMinScale(device: any MTLDevice) -> Float
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(cm)supportsDevice:	swift.type.method	supportsDevice(_:)	MTLFXTemporalDenoisedScalerDescriptor.supportsDevice(_:)	class func supportsDevice(_ device: any MTLDevice) -> Bool
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(cm)supportsMetal4FX:	swift.type.method	supportsMetal4FX(_:)	MTLFXTemporalDenoisedScalerDescriptor.supportsMetal4FX(_:)	class func supportsMetal4FX(_ device: any MTLDevice) -> Bool
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(im)newTemporalDenoisedScalerWithDevice:	swift.method	makeTemporalDenoisedScaler(device:)	MTLFXTemporalDenoisedScalerDescriptor.makeTemporalDenoisedScaler(device:)	func makeTemporalDenoisedScaler(device: any MTLDevice) -> (any MTLFXTemporalDenoisedScaler)?
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(im)newTemporalDenoisedScalerWithDevice:compiler:	swift.method	makeTemporalDenoisedScaler(device:compiler:)	MTLFXTemporalDenoisedScalerDescriptor.makeTemporalDenoisedScaler(device:compiler:)	func makeTemporalDenoisedScaler(device: any MTLDevice, compiler: any MTL4Compiler) -> (any MTL4FXTemporalDenoisedScaler)?
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)autoExposureEnabled	swift.property	isAutoExposureEnabled	MTLFXTemporalDenoisedScalerDescriptor.isAutoExposureEnabled	var isAutoExposureEnabled: Bool { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)colorTextureFormat	swift.property	colorTextureFormat	MTLFXTemporalDenoisedScalerDescriptor.colorTextureFormat	var colorTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)denoiseStrengthMaskTextureEnabled	swift.property	isDenoiseStrengthMaskTextureEnabled	MTLFXTemporalDenoisedScalerDescriptor.isDenoiseStrengthMaskTextureEnabled	var isDenoiseStrengthMaskTextureEnabled: Bool { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)denoiseStrengthMaskTextureFormat	swift.property	denoiseStrengthMaskTextureFormat	MTLFXTemporalDenoisedScalerDescriptor.denoiseStrengthMaskTextureFormat	var denoiseStrengthMaskTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)depthTextureFormat	swift.property	depthTextureFormat	MTLFXTemporalDenoisedScalerDescriptor.depthTextureFormat	var depthTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)diffuseAlbedoTextureFormat	swift.property	diffuseAlbedoTextureFormat	MTLFXTemporalDenoisedScalerDescriptor.diffuseAlbedoTextureFormat	var diffuseAlbedoTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)inputHeight	swift.property	inputHeight	MTLFXTemporalDenoisedScalerDescriptor.inputHeight	var inputHeight: UInt { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)inputWidth	swift.property	inputWidth	MTLFXTemporalDenoisedScalerDescriptor.inputWidth	var inputWidth: UInt { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)motionTextureFormat	swift.property	motionTextureFormat	MTLFXTemporalDenoisedScalerDescriptor.motionTextureFormat	var motionTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)normalTextureFormat	swift.property	normalTextureFormat	MTLFXTemporalDenoisedScalerDescriptor.normalTextureFormat	var normalTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)outputHeight	swift.property	outputHeight	MTLFXTemporalDenoisedScalerDescriptor.outputHeight	var outputHeight: UInt { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)outputTextureFormat	swift.property	outputTextureFormat	MTLFXTemporalDenoisedScalerDescriptor.outputTextureFormat	var outputTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)outputWidth	swift.property	outputWidth	MTLFXTemporalDenoisedScalerDescriptor.outputWidth	var outputWidth: UInt { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)reactiveMaskTextureEnabled	swift.property	isReactiveMaskTextureEnabled	MTLFXTemporalDenoisedScalerDescriptor.isReactiveMaskTextureEnabled	var isReactiveMaskTextureEnabled: Bool { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)reactiveMaskTextureFormat	swift.property	reactiveMaskTextureFormat	MTLFXTemporalDenoisedScalerDescriptor.reactiveMaskTextureFormat	var reactiveMaskTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)requiresSynchronousInitialization	swift.property	requiresSynchronousInitialization	MTLFXTemporalDenoisedScalerDescriptor.requiresSynchronousInitialization	var requiresSynchronousInitialization: Bool { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)roughnessTextureFormat	swift.property	roughnessTextureFormat	MTLFXTemporalDenoisedScalerDescriptor.roughnessTextureFormat	var roughnessTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)specularAlbedoTextureFormat	swift.property	specularAlbedoTextureFormat	MTLFXTemporalDenoisedScalerDescriptor.specularAlbedoTextureFormat	var specularAlbedoTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)specularHitDistanceTextureEnabled	swift.property	isSpecularHitDistanceTextureEnabled	MTLFXTemporalDenoisedScalerDescriptor.isSpecularHitDistanceTextureEnabled	var isSpecularHitDistanceTextureEnabled: Bool { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)specularHitDistanceTextureFormat	swift.property	specularHitDistanceTextureFormat	MTLFXTemporalDenoisedScalerDescriptor.specularHitDistanceTextureFormat	var specularHitDistanceTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)transparencyOverlayTextureEnabled	swift.property	isTransparencyOverlayTextureEnabled	MTLFXTemporalDenoisedScalerDescriptor.isTransparencyOverlayTextureEnabled	var isTransparencyOverlayTextureEnabled: Bool { get set }
+c:objc(cs)MTLFXTemporalDenoisedScalerDescriptor(py)transparencyOverlayTextureFormat	swift.property	transparencyOverlayTextureFormat	MTLFXTemporalDenoisedScalerDescriptor.transparencyOverlayTextureFormat	var transparencyOverlayTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor	swift.class	MTLFXTemporalScalerDescriptor	MTLFXTemporalScalerDescriptor	class MTLFXTemporalScalerDescriptor
+c:objc(cs)MTLFXTemporalScalerDescriptor(cm)supportedInputContentMaxScaleForDevice:	swift.type.method	supportedInputContentMaxScale(device:)	MTLFXTemporalScalerDescriptor.supportedInputContentMaxScale(device:)	class func supportedInputContentMaxScale(device: any MTLDevice) -> Float
+c:objc(cs)MTLFXTemporalScalerDescriptor(cm)supportedInputContentMinScaleForDevice:	swift.type.method	supportedInputContentMinScale(device:)	MTLFXTemporalScalerDescriptor.supportedInputContentMinScale(device:)	class func supportedInputContentMinScale(device: any MTLDevice) -> Float
+c:objc(cs)MTLFXTemporalScalerDescriptor(cm)supportsDevice:	swift.type.method	supportsDevice(_:)	MTLFXTemporalScalerDescriptor.supportsDevice(_:)	class func supportsDevice(_ device: any MTLDevice) -> Bool
+c:objc(cs)MTLFXTemporalScalerDescriptor(cm)supportsMetal4FX:	swift.type.method	supportsMetal4FX(_:)	MTLFXTemporalScalerDescriptor.supportsMetal4FX(_:)	class func supportsMetal4FX(_ device: any MTLDevice) -> Bool
+c:objc(cs)MTLFXTemporalScalerDescriptor(im)newTemporalScalerWithDevice:	swift.method	makeTemporalScaler(device:)	MTLFXTemporalScalerDescriptor.makeTemporalScaler(device:)	func makeTemporalScaler(device: any MTLDevice) -> (any MTLFXTemporalScaler)?
+c:objc(cs)MTLFXTemporalScalerDescriptor(im)newTemporalScalerWithDevice:compiler:	swift.method	makeTemporalScaler(device:compiler:)	MTLFXTemporalScalerDescriptor.makeTemporalScaler(device:compiler:)	func makeTemporalScaler(device: any MTLDevice, compiler: any MTL4Compiler) -> (any MTL4FXTemporalScaler)?
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)autoExposureEnabled	swift.property	isAutoExposureEnabled	MTLFXTemporalScalerDescriptor.isAutoExposureEnabled	var isAutoExposureEnabled: Bool { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)colorTextureFormat	swift.property	colorTextureFormat	MTLFXTemporalScalerDescriptor.colorTextureFormat	var colorTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)depthTextureFormat	swift.property	depthTextureFormat	MTLFXTemporalScalerDescriptor.depthTextureFormat	var depthTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)inputContentMaxScale	swift.property	inputContentMaxScale	MTLFXTemporalScalerDescriptor.inputContentMaxScale	var inputContentMaxScale: Float { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)inputContentMinScale	swift.property	inputContentMinScale	MTLFXTemporalScalerDescriptor.inputContentMinScale	var inputContentMinScale: Float { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)inputContentPropertiesEnabled	swift.property	isInputContentPropertiesEnabled	MTLFXTemporalScalerDescriptor.isInputContentPropertiesEnabled	var isInputContentPropertiesEnabled: Bool { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)inputHeight	swift.property	inputHeight	MTLFXTemporalScalerDescriptor.inputHeight	var inputHeight: UInt { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)inputWidth	swift.property	inputWidth	MTLFXTemporalScalerDescriptor.inputWidth	var inputWidth: UInt { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)motionTextureFormat	swift.property	motionTextureFormat	MTLFXTemporalScalerDescriptor.motionTextureFormat	var motionTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)outputHeight	swift.property	outputHeight	MTLFXTemporalScalerDescriptor.outputHeight	var outputHeight: UInt { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)outputTextureFormat	swift.property	outputTextureFormat	MTLFXTemporalScalerDescriptor.outputTextureFormat	var outputTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)outputWidth	swift.property	outputWidth	MTLFXTemporalScalerDescriptor.outputWidth	var outputWidth: UInt { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)reactiveMaskTextureEnabled	swift.property	isReactiveMaskTextureEnabled	MTLFXTemporalScalerDescriptor.isReactiveMaskTextureEnabled	var isReactiveMaskTextureEnabled: Bool { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)reactiveMaskTextureFormat	swift.property	reactiveMaskTextureFormat	MTLFXTemporalScalerDescriptor.reactiveMaskTextureFormat	var reactiveMaskTextureFormat: MTLPixelFormat { get set }
+c:objc(cs)MTLFXTemporalScalerDescriptor(py)requiresSynchronousInitialization	swift.property	requiresSynchronousInitialization	MTLFXTemporalScalerDescriptor.requiresSynchronousInitialization	var requiresSynchronousInitialization: Bool { get set }
+c:objc(pl)MTL4FXFrameInterpolator	swift.protocol	MTL4FXFrameInterpolator	MTL4FXFrameInterpolator	protocol MTL4FXFrameInterpolator : MTLFXFrameInterpolatorBase
+c:objc(pl)MTL4FXFrameInterpolator(im)encodeToCommandBuffer:	swift.method	encode(commandBuffer:)	MTL4FXFrameInterpolator.encode(commandBuffer:)	func encode(commandBuffer: any MTL4CommandBuffer)
+c:objc(pl)MTL4FXSpatialScaler	swift.protocol	MTL4FXSpatialScaler	MTL4FXSpatialScaler	protocol MTL4FXSpatialScaler : MTLFXSpatialScalerBase
+c:objc(pl)MTL4FXSpatialScaler(im)encodeToCommandBuffer:	swift.method	encode(commandBuffer:)	MTL4FXSpatialScaler.encode(commandBuffer:)	func encode(commandBuffer: any MTL4CommandBuffer)
+c:objc(pl)MTL4FXTemporalDenoisedScaler	swift.protocol	MTL4FXTemporalDenoisedScaler	MTL4FXTemporalDenoisedScaler	protocol MTL4FXTemporalDenoisedScaler : MTLFXTemporalDenoisedScalerBase
+c:objc(pl)MTL4FXTemporalDenoisedScaler(im)encodeToCommandBuffer:	swift.method	encode(commandBuffer:)	MTL4FXTemporalDenoisedScaler.encode(commandBuffer:)	func encode(commandBuffer: any MTL4CommandBuffer)
+c:objc(pl)MTL4FXTemporalScaler	swift.protocol	MTL4FXTemporalScaler	MTL4FXTemporalScaler	protocol MTL4FXTemporalScaler : MTLFXTemporalScalerBase
+c:objc(pl)MTL4FXTemporalScaler(im)encodeToCommandBuffer:	swift.method	encode(commandBuffer:)	MTL4FXTemporalScaler.encode(commandBuffer:)	func encode(commandBuffer: any MTL4CommandBuffer)
+c:objc(pl)MTLFXFrameInterpolatableScaler	swift.protocol	MTLFXFrameInterpolatableScaler	MTLFXFrameInterpolatableScaler	protocol MTLFXFrameInterpolatableScaler : NSObjectProtocol
+c:objc(pl)MTLFXFrameInterpolator	swift.protocol	MTLFXFrameInterpolator	MTLFXFrameInterpolator	protocol MTLFXFrameInterpolator : MTLFXFrameInterpolatorBase
+c:objc(pl)MTLFXFrameInterpolator(im)encodeToCommandBuffer:	swift.method	encode(commandBuffer:)	MTLFXFrameInterpolator.encode(commandBuffer:)	func encode(commandBuffer: any MTLCommandBuffer)
+c:objc(pl)MTLFXFrameInterpolatorBase	swift.protocol	MTLFXFrameInterpolatorBase	MTLFXFrameInterpolatorBase	protocol MTLFXFrameInterpolatorBase : NSObjectProtocol
+c:objc(pl)MTLFXFrameInterpolatorBase(py)aspectRatio	swift.property	aspectRatio	MTLFXFrameInterpolatorBase.aspectRatio	var aspectRatio: Float { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)colorTexture	swift.property	colorTexture	MTLFXFrameInterpolatorBase.colorTexture	var colorTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)colorTextureFormat	swift.property	colorTextureFormat	MTLFXFrameInterpolatorBase.colorTextureFormat	var colorTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)colorTextureUsage	swift.property	colorTextureUsage	MTLFXFrameInterpolatorBase.colorTextureUsage	var colorTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)deltaTime	swift.property	deltaTime	MTLFXFrameInterpolatorBase.deltaTime	var deltaTime: Float { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)depthReversed	swift.property	isDepthReversed	MTLFXFrameInterpolatorBase.isDepthReversed	var isDepthReversed: Bool { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)depthTexture	swift.property	depthTexture	MTLFXFrameInterpolatorBase.depthTexture	var depthTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)depthTextureFormat	swift.property	depthTextureFormat	MTLFXFrameInterpolatorBase.depthTextureFormat	var depthTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)depthTextureUsage	swift.property	depthTextureUsage	MTLFXFrameInterpolatorBase.depthTextureUsage	var depthTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)farPlane	swift.property	farPlane	MTLFXFrameInterpolatorBase.farPlane	var farPlane: Float { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)fence	swift.property	fence	MTLFXFrameInterpolatorBase.fence	var fence: (any MTLFence)? { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)fieldOfView	swift.property	fieldOfView	MTLFXFrameInterpolatorBase.fieldOfView	var fieldOfView: Float { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)inputHeight	swift.property	inputHeight	MTLFXFrameInterpolatorBase.inputHeight	var inputHeight: UInt { get }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)inputWidth	swift.property	inputWidth	MTLFXFrameInterpolatorBase.inputWidth	var inputWidth: UInt { get }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)jitterOffsetX	swift.property	jitterOffsetX	MTLFXFrameInterpolatorBase.jitterOffsetX	var jitterOffsetX: Float { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)jitterOffsetY	swift.property	jitterOffsetY	MTLFXFrameInterpolatorBase.jitterOffsetY	var jitterOffsetY: Float { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)motionTexture	swift.property	motionTexture	MTLFXFrameInterpolatorBase.motionTexture	var motionTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)motionTextureFormat	swift.property	motionTextureFormat	MTLFXFrameInterpolatorBase.motionTextureFormat	var motionTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)motionTextureUsage	swift.property	motionTextureUsage	MTLFXFrameInterpolatorBase.motionTextureUsage	var motionTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)motionVectorScaleX	swift.property	motionVectorScaleX	MTLFXFrameInterpolatorBase.motionVectorScaleX	var motionVectorScaleX: Float { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)motionVectorScaleY	swift.property	motionVectorScaleY	MTLFXFrameInterpolatorBase.motionVectorScaleY	var motionVectorScaleY: Float { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)nearPlane	swift.property	nearPlane	MTLFXFrameInterpolatorBase.nearPlane	var nearPlane: Float { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)outputHeight	swift.property	outputHeight	MTLFXFrameInterpolatorBase.outputHeight	var outputHeight: UInt { get }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)outputTexture	swift.property	outputTexture	MTLFXFrameInterpolatorBase.outputTexture	var outputTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)outputTextureFormat	swift.property	outputTextureFormat	MTLFXFrameInterpolatorBase.outputTextureFormat	var outputTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)outputTextureUsage	swift.property	outputTextureUsage	MTLFXFrameInterpolatorBase.outputTextureUsage	var outputTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)outputWidth	swift.property	outputWidth	MTLFXFrameInterpolatorBase.outputWidth	var outputWidth: UInt { get }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)prevColorTexture	swift.property	prevColorTexture	MTLFXFrameInterpolatorBase.prevColorTexture	var prevColorTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)shouldResetHistory	swift.property	shouldResetHistory	MTLFXFrameInterpolatorBase.shouldResetHistory	var shouldResetHistory: Bool { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)uiTexture	swift.property	uiTexture	MTLFXFrameInterpolatorBase.uiTexture	var uiTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)uiTextureComposited	swift.property	isUITextureComposited	MTLFXFrameInterpolatorBase.isUITextureComposited	var isUITextureComposited: Bool { get set }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)uiTextureFormat	swift.property	uiTextureFormat	MTLFXFrameInterpolatorBase.uiTextureFormat	var uiTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXFrameInterpolatorBase(py)uiTextureUsage	swift.property	uiTextureUsage	MTLFXFrameInterpolatorBase.uiTextureUsage	var uiTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXSpatialScaler	swift.protocol	MTLFXSpatialScaler	MTLFXSpatialScaler	protocol MTLFXSpatialScaler : MTLFXSpatialScalerBase
+c:objc(pl)MTLFXSpatialScaler(im)encodeToCommandBuffer:	swift.method	encode(commandBuffer:)	MTLFXSpatialScaler.encode(commandBuffer:)	func encode(commandBuffer: any MTLCommandBuffer)
+c:objc(pl)MTLFXSpatialScalerBase	swift.protocol	MTLFXSpatialScalerBase	MTLFXSpatialScalerBase	protocol MTLFXSpatialScalerBase : NSObjectProtocol
+c:objc(pl)MTLFXSpatialScalerBase(py)colorProcessingMode	swift.property	colorProcessingMode	MTLFXSpatialScalerBase.colorProcessingMode	var colorProcessingMode: MTLFXSpatialScalerColorProcessingMode { get }
+c:objc(pl)MTLFXSpatialScalerBase(py)colorTexture	swift.property	colorTexture	MTLFXSpatialScalerBase.colorTexture	var colorTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXSpatialScalerBase(py)colorTextureFormat	swift.property	colorTextureFormat	MTLFXSpatialScalerBase.colorTextureFormat	var colorTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXSpatialScalerBase(py)colorTextureUsage	swift.property	colorTextureUsage	MTLFXSpatialScalerBase.colorTextureUsage	var colorTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXSpatialScalerBase(py)fence	swift.property	fence	MTLFXSpatialScalerBase.fence	var fence: (any MTLFence)? { get set }
+c:objc(pl)MTLFXSpatialScalerBase(py)inputContentHeight	swift.property	inputContentHeight	MTLFXSpatialScalerBase.inputContentHeight	var inputContentHeight: UInt { get set }
+c:objc(pl)MTLFXSpatialScalerBase(py)inputContentWidth	swift.property	inputContentWidth	MTLFXSpatialScalerBase.inputContentWidth	var inputContentWidth: UInt { get set }
+c:objc(pl)MTLFXSpatialScalerBase(py)inputHeight	swift.property	inputHeight	MTLFXSpatialScalerBase.inputHeight	var inputHeight: UInt { get }
+c:objc(pl)MTLFXSpatialScalerBase(py)inputWidth	swift.property	inputWidth	MTLFXSpatialScalerBase.inputWidth	var inputWidth: UInt { get }
+c:objc(pl)MTLFXSpatialScalerBase(py)outputHeight	swift.property	outputHeight	MTLFXSpatialScalerBase.outputHeight	var outputHeight: UInt { get }
+c:objc(pl)MTLFXSpatialScalerBase(py)outputTexture	swift.property	outputTexture	MTLFXSpatialScalerBase.outputTexture	var outputTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXSpatialScalerBase(py)outputTextureFormat	swift.property	outputTextureFormat	MTLFXSpatialScalerBase.outputTextureFormat	var outputTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXSpatialScalerBase(py)outputTextureUsage	swift.property	outputTextureUsage	MTLFXSpatialScalerBase.outputTextureUsage	var outputTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXSpatialScalerBase(py)outputWidth	swift.property	outputWidth	MTLFXSpatialScalerBase.outputWidth	var outputWidth: UInt { get }
+c:objc(pl)MTLFXTemporalDenoisedScaler	swift.protocol	MTLFXTemporalDenoisedScaler	MTLFXTemporalDenoisedScaler	protocol MTLFXTemporalDenoisedScaler : MTLFXTemporalDenoisedScalerBase
+c:objc(pl)MTLFXTemporalDenoisedScaler(im)encodeToCommandBuffer:	swift.method	encode(commandBuffer:)	MTLFXTemporalDenoisedScaler.encode(commandBuffer:)	func encode(commandBuffer: any MTLCommandBuffer)
+c:objc(pl)MTLFXTemporalDenoisedScalerBase	swift.protocol	MTLFXTemporalDenoisedScalerBase	MTLFXTemporalDenoisedScalerBase	protocol MTLFXTemporalDenoisedScalerBase : MTLFXFrameInterpolatableScaler
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)colorTexture	swift.property	colorTexture	MTLFXTemporalDenoisedScalerBase.colorTexture	var colorTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)colorTextureFormat	swift.property	colorTextureFormat	MTLFXTemporalDenoisedScalerBase.colorTextureFormat	var colorTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)colorTextureUsage	swift.property	colorTextureUsage	MTLFXTemporalDenoisedScalerBase.colorTextureUsage	var colorTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)denoiseStrengthMaskTexture	swift.property	denoiseStrengthMaskTexture	MTLFXTemporalDenoisedScalerBase.denoiseStrengthMaskTexture	var denoiseStrengthMaskTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)denoiseStrengthMaskTextureFormat	swift.property	denoiseStrengthMaskTextureFormat	MTLFXTemporalDenoisedScalerBase.denoiseStrengthMaskTextureFormat	var denoiseStrengthMaskTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)denoiseStrengthMaskTextureUsage	swift.property	denoiseStrengthMaskTextureUsage	MTLFXTemporalDenoisedScalerBase.denoiseStrengthMaskTextureUsage	var denoiseStrengthMaskTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)depthReversed	swift.property	isDepthReversed	MTLFXTemporalDenoisedScalerBase.isDepthReversed	var isDepthReversed: Bool { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)depthTexture	swift.property	depthTexture	MTLFXTemporalDenoisedScalerBase.depthTexture	var depthTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)depthTextureFormat	swift.property	depthTextureFormat	MTLFXTemporalDenoisedScalerBase.depthTextureFormat	var depthTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)depthTextureUsage	swift.property	depthTextureUsage	MTLFXTemporalDenoisedScalerBase.depthTextureUsage	var depthTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)diffuseAlbedoTexture	swift.property	diffuseAlbedoTexture	MTLFXTemporalDenoisedScalerBase.diffuseAlbedoTexture	var diffuseAlbedoTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)diffuseAlbedoTextureFormat	swift.property	diffuseAlbedoTextureFormat	MTLFXTemporalDenoisedScalerBase.diffuseAlbedoTextureFormat	var diffuseAlbedoTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)diffuseAlbedoTextureUsage	swift.property	diffuseAlbedoTextureUsage	MTLFXTemporalDenoisedScalerBase.diffuseAlbedoTextureUsage	var diffuseAlbedoTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)exposureTexture	swift.property	exposureTexture	MTLFXTemporalDenoisedScalerBase.exposureTexture	var exposureTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)fence	swift.property	fence	MTLFXTemporalDenoisedScalerBase.fence	var fence: (any MTLFence)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)inputContentMaxScale	swift.property	inputContentMaxScale	MTLFXTemporalDenoisedScalerBase.inputContentMaxScale	var inputContentMaxScale: Float { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)inputContentMinScale	swift.property	inputContentMinScale	MTLFXTemporalDenoisedScalerBase.inputContentMinScale	var inputContentMinScale: Float { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)inputHeight	swift.property	inputHeight	MTLFXTemporalDenoisedScalerBase.inputHeight	var inputHeight: UInt { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)inputWidth	swift.property	inputWidth	MTLFXTemporalDenoisedScalerBase.inputWidth	var inputWidth: UInt { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)jitterOffsetX	swift.property	jitterOffsetX	MTLFXTemporalDenoisedScalerBase.jitterOffsetX	var jitterOffsetX: Float { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)jitterOffsetY	swift.property	jitterOffsetY	MTLFXTemporalDenoisedScalerBase.jitterOffsetY	var jitterOffsetY: Float { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)motionTexture	swift.property	motionTexture	MTLFXTemporalDenoisedScalerBase.motionTexture	var motionTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)motionTextureFormat	swift.property	motionTextureFormat	MTLFXTemporalDenoisedScalerBase.motionTextureFormat	var motionTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)motionTextureUsage	swift.property	motionTextureUsage	MTLFXTemporalDenoisedScalerBase.motionTextureUsage	var motionTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)motionVectorScaleX	swift.property	motionVectorScaleX	MTLFXTemporalDenoisedScalerBase.motionVectorScaleX	var motionVectorScaleX: Float { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)motionVectorScaleY	swift.property	motionVectorScaleY	MTLFXTemporalDenoisedScalerBase.motionVectorScaleY	var motionVectorScaleY: Float { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)normalTexture	swift.property	normalTexture	MTLFXTemporalDenoisedScalerBase.normalTexture	var normalTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)normalTextureFormat	swift.property	normalTextureFormat	MTLFXTemporalDenoisedScalerBase.normalTextureFormat	var normalTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)normalTextureUsage	swift.property	normalTextureUsage	MTLFXTemporalDenoisedScalerBase.normalTextureUsage	var normalTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)outputHeight	swift.property	outputHeight	MTLFXTemporalDenoisedScalerBase.outputHeight	var outputHeight: UInt { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)outputTexture	swift.property	outputTexture	MTLFXTemporalDenoisedScalerBase.outputTexture	var outputTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)outputTextureFormat	swift.property	outputTextureFormat	MTLFXTemporalDenoisedScalerBase.outputTextureFormat	var outputTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)outputTextureUsage	swift.property	outputTextureUsage	MTLFXTemporalDenoisedScalerBase.outputTextureUsage	var outputTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)outputWidth	swift.property	outputWidth	MTLFXTemporalDenoisedScalerBase.outputWidth	var outputWidth: UInt { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)preExposure	swift.property	preExposure	MTLFXTemporalDenoisedScalerBase.preExposure	var preExposure: Float { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)reactiveMaskTexture	swift.property	reactiveMaskTexture	MTLFXTemporalDenoisedScalerBase.reactiveMaskTexture	var reactiveMaskTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)reactiveMaskTextureFormat	swift.property	reactiveMaskTextureFormat	MTLFXTemporalDenoisedScalerBase.reactiveMaskTextureFormat	var reactiveMaskTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)reactiveTextureUsage	swift.property	reactiveTextureUsage	MTLFXTemporalDenoisedScalerBase.reactiveTextureUsage	var reactiveTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)roughnessTexture	swift.property	roughnessTexture	MTLFXTemporalDenoisedScalerBase.roughnessTexture	var roughnessTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)roughnessTextureFormat	swift.property	roughnessTextureFormat	MTLFXTemporalDenoisedScalerBase.roughnessTextureFormat	var roughnessTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)roughnessTextureUsage	swift.property	roughnessTextureUsage	MTLFXTemporalDenoisedScalerBase.roughnessTextureUsage	var roughnessTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)shouldResetHistory	swift.property	shouldResetHistory	MTLFXTemporalDenoisedScalerBase.shouldResetHistory	var shouldResetHistory: Bool { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)specularAlbedoTexture	swift.property	specularAlbedoTexture	MTLFXTemporalDenoisedScalerBase.specularAlbedoTexture	var specularAlbedoTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)specularAlbedoTextureFormat	swift.property	specularAlbedoTextureFormat	MTLFXTemporalDenoisedScalerBase.specularAlbedoTextureFormat	var specularAlbedoTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)specularAlbedoTextureUsage	swift.property	specularAlbedoTextureUsage	MTLFXTemporalDenoisedScalerBase.specularAlbedoTextureUsage	var specularAlbedoTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)specularHitDistanceTexture	swift.property	specularHitDistanceTexture	MTLFXTemporalDenoisedScalerBase.specularHitDistanceTexture	var specularHitDistanceTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)specularHitDistanceTextureFormat	swift.property	specularHitDistanceTextureFormat	MTLFXTemporalDenoisedScalerBase.specularHitDistanceTextureFormat	var specularHitDistanceTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)specularHitDistanceTextureUsage	swift.property	specularHitDistanceTextureUsage	MTLFXTemporalDenoisedScalerBase.specularHitDistanceTextureUsage	var specularHitDistanceTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)transparencyOverlayTexture	swift.property	transparencyOverlayTexture	MTLFXTemporalDenoisedScalerBase.transparencyOverlayTexture	var transparencyOverlayTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)transparencyOverlayTextureFormat	swift.property	transparencyOverlayTextureFormat	MTLFXTemporalDenoisedScalerBase.transparencyOverlayTextureFormat	var transparencyOverlayTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)transparencyOverlayTextureUsage	swift.property	transparencyOverlayTextureUsage	MTLFXTemporalDenoisedScalerBase.transparencyOverlayTextureUsage	var transparencyOverlayTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)viewToClipMatrix	swift.property	viewToClipMatrix	MTLFXTemporalDenoisedScalerBase.viewToClipMatrix	var viewToClipMatrix: simd_float4x4 { get set }
+c:objc(pl)MTLFXTemporalDenoisedScalerBase(py)worldToViewMatrix	swift.property	worldToViewMatrix	MTLFXTemporalDenoisedScalerBase.worldToViewMatrix	var worldToViewMatrix: simd_float4x4 { get set }
+c:objc(pl)MTLFXTemporalScaler	swift.protocol	MTLFXTemporalScaler	MTLFXTemporalScaler	protocol MTLFXTemporalScaler : MTLFXTemporalScalerBase
+c:objc(pl)MTLFXTemporalScaler(im)encodeToCommandBuffer:	swift.method	encode(commandBuffer:)	MTLFXTemporalScaler.encode(commandBuffer:)	func encode(commandBuffer: any MTLCommandBuffer)
+c:objc(pl)MTLFXTemporalScalerBase	swift.protocol	MTLFXTemporalScalerBase	MTLFXTemporalScalerBase	protocol MTLFXTemporalScalerBase : MTLFXFrameInterpolatableScaler
+c:objc(pl)MTLFXTemporalScalerBase(py)colorTexture	swift.property	colorTexture	MTLFXTemporalScalerBase.colorTexture	var colorTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)colorTextureFormat	swift.property	colorTextureFormat	MTLFXTemporalScalerBase.colorTextureFormat	var colorTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)colorTextureUsage	swift.property	colorTextureUsage	MTLFXTemporalScalerBase.colorTextureUsage	var colorTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)depthReversed	swift.property	isDepthReversed	MTLFXTemporalScalerBase.isDepthReversed	var isDepthReversed: Bool { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)depthTexture	swift.property	depthTexture	MTLFXTemporalScalerBase.depthTexture	var depthTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)depthTextureFormat	swift.property	depthTextureFormat	MTLFXTemporalScalerBase.depthTextureFormat	var depthTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)depthTextureUsage	swift.property	depthTextureUsage	MTLFXTemporalScalerBase.depthTextureUsage	var depthTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)exposureTexture	swift.property	exposureTexture	MTLFXTemporalScalerBase.exposureTexture	var exposureTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)fence	swift.property	fence	MTLFXTemporalScalerBase.fence	var fence: (any MTLFence)? { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)inputContentHeight	swift.property	inputContentHeight	MTLFXTemporalScalerBase.inputContentHeight	var inputContentHeight: UInt { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)inputContentMaxScale	swift.property	inputContentMaxScale	MTLFXTemporalScalerBase.inputContentMaxScale	var inputContentMaxScale: Float { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)inputContentMinScale	swift.property	inputContentMinScale	MTLFXTemporalScalerBase.inputContentMinScale	var inputContentMinScale: Float { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)inputContentWidth	swift.property	inputContentWidth	MTLFXTemporalScalerBase.inputContentWidth	var inputContentWidth: UInt { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)inputHeight	swift.property	inputHeight	MTLFXTemporalScalerBase.inputHeight	var inputHeight: UInt { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)inputWidth	swift.property	inputWidth	MTLFXTemporalScalerBase.inputWidth	var inputWidth: UInt { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)jitterOffsetX	swift.property	jitterOffsetX	MTLFXTemporalScalerBase.jitterOffsetX	var jitterOffsetX: Float { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)jitterOffsetY	swift.property	jitterOffsetY	MTLFXTemporalScalerBase.jitterOffsetY	var jitterOffsetY: Float { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)motionTexture	swift.property	motionTexture	MTLFXTemporalScalerBase.motionTexture	var motionTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)motionTextureFormat	swift.property	motionTextureFormat	MTLFXTemporalScalerBase.motionTextureFormat	var motionTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)motionTextureUsage	swift.property	motionTextureUsage	MTLFXTemporalScalerBase.motionTextureUsage	var motionTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)motionVectorScaleX	swift.property	motionVectorScaleX	MTLFXTemporalScalerBase.motionVectorScaleX	var motionVectorScaleX: Float { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)motionVectorScaleY	swift.property	motionVectorScaleY	MTLFXTemporalScalerBase.motionVectorScaleY	var motionVectorScaleY: Float { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)outputHeight	swift.property	outputHeight	MTLFXTemporalScalerBase.outputHeight	var outputHeight: UInt { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)outputTexture	swift.property	outputTexture	MTLFXTemporalScalerBase.outputTexture	var outputTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)outputTextureFormat	swift.property	outputTextureFormat	MTLFXTemporalScalerBase.outputTextureFormat	var outputTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)outputTextureUsage	swift.property	outputTextureUsage	MTLFXTemporalScalerBase.outputTextureUsage	var outputTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)outputWidth	swift.property	outputWidth	MTLFXTemporalScalerBase.outputWidth	var outputWidth: UInt { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)preExposure	swift.property	preExposure	MTLFXTemporalScalerBase.preExposure	var preExposure: Float { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)reactiveMaskTexture	swift.property	reactiveMaskTexture	MTLFXTemporalScalerBase.reactiveMaskTexture	var reactiveMaskTexture: (any MTLTexture)? { get set }
+c:objc(pl)MTLFXTemporalScalerBase(py)reactiveMaskTextureFormat	swift.property	reactiveMaskTextureFormat	MTLFXTemporalScalerBase.reactiveMaskTextureFormat	var reactiveMaskTextureFormat: MTLPixelFormat { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)reactiveTextureUsage	swift.property	reactiveTextureUsage	MTLFXTemporalScalerBase.reactiveTextureUsage	var reactiveTextureUsage: MTLTextureUsage { get }
+c:objc(pl)MTLFXTemporalScalerBase(py)reset	swift.property	reset	MTLFXTemporalScalerBase.reset	var reset: Bool { get set }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLFXSpatialScalerColorProcessingMode	swift.func.op	!=(_:_:)	MTLFXSpatialScalerColorProcessingMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MTLFXSpatialScalerColorProcessingMode	swift.property	hashValue	MTLFXSpatialScalerColorProcessingMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MTLFXSpatialScalerColorProcessingMode	swift.method	hash(into:)	MTLFXSpatialScalerColorProcessingMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:So37MTLFXSpatialScalerColorProcessingModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MTLFXSpatialScalerColorProcessingMode.init(rawValue:)	init?(rawValue: Int)

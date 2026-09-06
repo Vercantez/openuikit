@@ -1,0 +1,4121 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSAccountApplicationProvider",
+        "printedName": "VideoSubscriberAccount.VSAccountApplicationProvider"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSAccountManager",
+        "printedName": "VideoSubscriberAccount.VSAccountManager"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSAccountManagerResult",
+        "printedName": "VideoSubscriberAccount.VSAccountManagerResult"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSAccountMetadata",
+        "printedName": "VideoSubscriberAccount.VSAccountMetadata"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSAccountMetadataRequest",
+        "printedName": "VideoSubscriberAccount.VSAccountMetadataRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSAccountProviderResponse",
+        "printedName": "VideoSubscriberAccount.VSAccountProviderResponse"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSAppleSubscription",
+        "printedName": "VideoSubscriberAccount.VSAppleSubscription"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSAutoSignInAuthorization",
+        "printedName": "VideoSubscriberAccount.VSAutoSignInAuthorization"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSAutoSignInToken",
+        "printedName": "VideoSubscriberAccount.VSAutoSignInToken"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSAutoSignInTokenUpdateContext",
+        "printedName": "VideoSubscriberAccount.VSAutoSignInTokenUpdateContext"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSSubscription",
+        "printedName": "VideoSubscriberAccount.VSSubscription"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSSubscriptionRegistrationCenter",
+        "printedName": "VideoSubscriberAccount.VSSubscriptionRegistrationCenter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSUserAccount",
+        "printedName": "VideoSubscriberAccount.VSUserAccount"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VSUserAccountManager",
+        "printedName": "VideoSubscriberAccount.VSUserAccountManager"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VideoSubscriberAccountDefines",
+        "printedName": "VideoSubscriberAccount.VideoSubscriberAccountDefines"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount.VideoSubscriberAccountErrors",
+        "printedName": "VideoSubscriberAccount.VideoSubscriberAccountErrors"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11VSErrorCodeLeV8_nsErrorSo7NSErrorCvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC11VSErrorCodeLeV8_nsErrorSo7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC11VSErrorCodeLeV8_nsErrorSo7NSErrorCvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC11VSErrorCodeLeV8_nsErrorSo7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "VSError",
+                "printedName": "VideoSubscriberAccount.VSError",
+                "usr": "c:@E@VSErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC11VSErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC11VSErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11VSErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11VSErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC11VSErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC11VSErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "VideoSubscriberAccount.VSError.Code",
+                        "usr": "c:@E@VSErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "VideoSubscriberAccount.VSError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo11VSErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So11VSErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11VSErrorCodeV8rawValueSivg",
+                    "moduleName": "VideoSubscriberAccount",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11VSErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo11VSErrorCodeV8rawValueSivp",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So11VSErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11VSErrorCodeV8RawValuea",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So11VSErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "VSError",
+                    "printedName": "VideoSubscriberAccount.VSError",
+                    "usr": "c:@E@VSErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@VSErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "VideoSubscriberAccount.VSError.Code",
+                        "usr": "c:@E@VSErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "VideoSubscriberAccount.VSError.Code",
+                            "usr": "c:@E@VSErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSError.Code.Type) -> VideoSubscriberAccount.VSError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "accessNotGranted",
+                "printedName": "accessNotGranted",
+                "usr": "c:@E@VSErrorCode@VSErrorCodeAccessNotGranted"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "VideoSubscriberAccount.VSError.Code",
+                        "usr": "c:@E@VSErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "VideoSubscriberAccount.VSError.Code",
+                            "usr": "c:@E@VSErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSError.Code.Type) -> VideoSubscriberAccount.VSError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "unsupportedProvider",
+                "printedName": "unsupportedProvider",
+                "usr": "c:@E@VSErrorCode@VSErrorCodeUnsupportedProvider"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "VideoSubscriberAccount.VSError.Code",
+                        "usr": "c:@E@VSErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "VideoSubscriberAccount.VSError.Code",
+                            "usr": "c:@E@VSErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSError.Code.Type) -> VideoSubscriberAccount.VSError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "userCancelled",
+                "printedName": "userCancelled",
+                "usr": "c:@E@VSErrorCode@VSErrorCodeUserCancelled"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "VideoSubscriberAccount.VSError.Code",
+                        "usr": "c:@E@VSErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "VideoSubscriberAccount.VSError.Code",
+                            "usr": "c:@E@VSErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSError.Code.Type) -> VideoSubscriberAccount.VSError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "serviceTemporarilyUnavailable",
+                "printedName": "serviceTemporarilyUnavailable",
+                "usr": "c:@E@VSErrorCode@VSErrorCodeServiceTemporarilyUnavailable"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "VideoSubscriberAccount.VSError.Code",
+                        "usr": "c:@E@VSErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "VideoSubscriberAccount.VSError.Code",
+                            "usr": "c:@E@VSErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSError.Code.Type) -> VideoSubscriberAccount.VSError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "providerRejected",
+                "printedName": "providerRejected",
+                "usr": "c:@E@VSErrorCode@VSErrorCodeProviderRejected"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "VideoSubscriberAccount.VSError.Code",
+                        "usr": "c:@E@VSErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "VideoSubscriberAccount.VSError.Code",
+                            "usr": "c:@E@VSErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSError.Code.Type) -> VideoSubscriberAccount.VSError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "invalidVerificationToken",
+                "printedName": "invalidVerificationToken",
+                "usr": "c:@E@VSErrorCode@VSErrorCodeInvalidVerificationToken"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "VideoSubscriberAccount.VSError.Code",
+                        "usr": "c:@E@VSErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "VideoSubscriberAccount.VSError.Code",
+                            "usr": "c:@E@VSErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSError.Code.Type) -> VideoSubscriberAccount.VSError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "rejected",
+                "printedName": "rejected",
+                "usr": "c:@E@VSErrorCode@VSErrorCodeRejected"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "VideoSubscriberAccount.VSError.Code",
+                        "usr": "c:@E@VSErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "VideoSubscriberAccount.VSError.Code",
+                            "usr": "c:@E@VSErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSError.Code.Type) -> VideoSubscriberAccount.VSError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "unsupported",
+                "printedName": "unsupported",
+                "usr": "c:@E@VSErrorCode@VSErrorCodeUnsupported"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "VideoSubscriberAccount.VSError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "10.0",
+            "kind": "TypeDecl",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "Code",
+            "objc_name": "VSErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@VSErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "VideoSubscriberAccount.VSError.Code",
+                    "usr": "c:@E@VSErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11VSErrorCodeLeV16accessNotGrantedSoAAVvgZ",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11VSErrorCodeLeV16accessNotGrantedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "VideoSubscriberAccount.VSError.Code",
+                "usr": "c:@E@VSErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "accessNotGranted",
+            "printedName": "accessNotGranted",
+            "static": true,
+            "usr": "c:@E@VSErrorCode@VSErrorCodeAccessNotGranted"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "VideoSubscriberAccount.VSError.Code",
+                    "usr": "c:@E@VSErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11VSErrorCodeLeV19unsupportedProviderSoAAVvgZ",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11VSErrorCodeLeV19unsupportedProviderSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "VideoSubscriberAccount.VSError.Code",
+                "usr": "c:@E@VSErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "unsupportedProvider",
+            "printedName": "unsupportedProvider",
+            "static": true,
+            "usr": "c:@E@VSErrorCode@VSErrorCodeUnsupportedProvider"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "VideoSubscriberAccount.VSError.Code",
+                    "usr": "c:@E@VSErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11VSErrorCodeLeV13userCancelledSoAAVvgZ",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11VSErrorCodeLeV13userCancelledSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "VideoSubscriberAccount.VSError.Code",
+                "usr": "c:@E@VSErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "userCancelled",
+            "printedName": "userCancelled",
+            "static": true,
+            "usr": "c:@E@VSErrorCode@VSErrorCodeUserCancelled"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "VideoSubscriberAccount.VSError.Code",
+                    "usr": "c:@E@VSErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11VSErrorCodeLeV29serviceTemporarilyUnavailableSoAAVvgZ",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11VSErrorCodeLeV29serviceTemporarilyUnavailableSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "VideoSubscriberAccount.VSError.Code",
+                "usr": "c:@E@VSErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "serviceTemporarilyUnavailable",
+            "printedName": "serviceTemporarilyUnavailable",
+            "static": true,
+            "usr": "c:@E@VSErrorCode@VSErrorCodeServiceTemporarilyUnavailable"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "VideoSubscriberAccount.VSError.Code",
+                    "usr": "c:@E@VSErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11VSErrorCodeLeV16providerRejectedSoAAVvgZ",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11VSErrorCodeLeV16providerRejectedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "VideoSubscriberAccount.VSError.Code",
+                "usr": "c:@E@VSErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "providerRejected",
+            "printedName": "providerRejected",
+            "static": true,
+            "usr": "c:@E@VSErrorCode@VSErrorCodeProviderRejected"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "VideoSubscriberAccount.VSError.Code",
+                    "usr": "c:@E@VSErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11VSErrorCodeLeV24invalidVerificationTokenSoAAVvgZ",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11VSErrorCodeLeV24invalidVerificationTokenSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "VideoSubscriberAccount.VSError.Code",
+                "usr": "c:@E@VSErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "invalidVerificationToken",
+            "printedName": "invalidVerificationToken",
+            "static": true,
+            "usr": "c:@E@VSErrorCode@VSErrorCodeInvalidVerificationToken"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "VideoSubscriberAccount.VSError.Code",
+                    "usr": "c:@E@VSErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11VSErrorCodeLeV8rejectedSoAAVvgZ",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11VSErrorCodeLeV8rejectedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "VideoSubscriberAccount.VSError.Code",
+                "usr": "c:@E@VSErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "rejected",
+            "printedName": "rejected",
+            "static": true,
+            "usr": "c:@E@VSErrorCode@VSErrorCodeRejected"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "VideoSubscriberAccount.VSError.Code",
+                    "usr": "c:@E@VSErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11VSErrorCodeLeV11unsupportedSoAAVvgZ",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11VSErrorCodeLeV11unsupportedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "VideoSubscriberAccount.VSError.Code",
+                "usr": "c:@E@VSErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "unsupported",
+            "printedName": "unsupported",
+            "static": true,
+            "usr": "c:@E@VSErrorCode@VSErrorCodeUnsupported"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "10.0",
+        "kind": "TypeDecl",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VSError",
+        "printedName": "VSError",
+        "usr": "c:@E@VSErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "DeveloperToolsSupport",
+        "printedName": "DeveloperToolsSupport"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VideoSubscriberAccount",
+        "printedName": "VideoSubscriberAccount"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "VSAppleSubscription",
+                "printedName": "VideoSubscriberAccount.VSAppleSubscription",
+                "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.String]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s22VideoSubscriberAccount19VSAppleSubscriptionV10customerID12productCodesACSS_SaySSGtcfc",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "init",
+            "printedName": "init(customerID:productCodes:)",
+            "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV10customerID12productCodesACSS_SaySSGtcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount19VSAppleSubscriptionV10customerIDSSvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV10customerIDSSvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount19VSAppleSubscriptionV10customerIDSSvs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV10customerIDSSvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount19VSAppleSubscriptionV10customerIDSSvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "customerID",
+            "printedName": "customerID",
+            "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV10customerIDSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.String]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount19VSAppleSubscriptionV12productCodesSaySSGvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV12productCodesSaySSGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.String]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount19VSAppleSubscriptionV12productCodesSaySSGvs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV12productCodesSaySSGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.String]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount19VSAppleSubscriptionV12productCodesSaySSGvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "productCodes",
+            "printedName": "productCodes",
+            "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV12productCodesSaySSGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "VSAppleSubscription",
+                "printedName": "VideoSubscriberAccount.VSAppleSubscription",
+                "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "VSAppleSubscription",
+                "printedName": "VideoSubscriberAccount.VSAppleSubscription",
+                "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s22VideoSubscriberAccount19VSAppleSubscriptionV2eeoiySbAC_ACtFZ",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s22VideoSubscriberAccount19VSAppleSubscriptionV4hash4intoys6HasherVz_tF",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount19VSAppleSubscriptionV9hashValueSivg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount19VSAppleSubscriptionV9hashValueSivp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "14.4",
+        "intro_iOS": "17.4",
+        "intro_tvOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s22VideoSubscriberAccount19VSAppleSubscriptionV",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VSAppleSubscription",
+        "printedName": "VSAppleSubscription",
+        "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URL",
+                        "printedName": "Foundation.URL",
+                        "usr": "s:10Foundation3URLV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.URL?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V9updateURL10Foundation0F0VSgvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V9updateURL10Foundation0F0VSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URL",
+                        "printedName": "Foundation.URL",
+                        "usr": "s:10Foundation3URLV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.URL?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V9updateURL10Foundation0F0VSgvs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V9updateURL10Foundation0F0VSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.URL?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V9updateURL10Foundation0F0VSgvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "updateURL",
+            "printedName": "updateURL",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V9updateURL10Foundation0F0VSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V19requiresSystemTrustSbvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V19requiresSystemTrustSbvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V19requiresSystemTrustSbvs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V19requiresSystemTrustSbvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V19requiresSystemTrustSbvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "requiresSystemTrust",
+            "printedName": "requiresSystemTrust",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V19requiresSystemTrustSbvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V25accountProviderIdentifierSSSgvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V25accountProviderIdentifierSSSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V25accountProviderIdentifierSSSgvs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V25accountProviderIdentifierSSSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V25accountProviderIdentifierSSSgvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "accountProviderIdentifier",
+            "printedName": "accountProviderIdentifier",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V25accountProviderIdentifierSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V10identifierSSSgvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V10identifierSSSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V10identifierSSSgvs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V10identifierSSSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V10identifierSSSgvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "identifier",
+            "printedName": "identifier",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V10identifierSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AccountType",
+                    "printedName": "VideoSubscriberAccount.VSUserAccount.AccountType",
+                    "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V11accountTypeAC0cF0Ovg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V11accountTypeAC0cF0Ovg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AccountType",
+                    "printedName": "VideoSubscriberAccount.VSUserAccount.AccountType",
+                    "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V11accountTypeAC0cF0Ovs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V11accountTypeAC0cF0Ovs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AccountType",
+                "printedName": "VideoSubscriberAccount.VSUserAccount.AccountType",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V11accountTypeAC0cF0Ovp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "accountType",
+            "printedName": "accountType",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V11accountTypeAC0cF0Ovp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V11isSignedOutSbvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V11isSignedOutSbvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V11isSignedOutSbvs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V11isSignedOutSbvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V11isSignedOutSbvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "isSignedOut",
+            "printedName": "isSignedOut",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V11isSignedOutSbvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Date",
+                        "printedName": "Foundation.Date",
+                        "usr": "s:10Foundation4DateV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Date?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V31subscriptionBillingCycleEndDate10Foundation0I0VSgvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V31subscriptionBillingCycleEndDate10Foundation0I0VSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Date",
+                        "printedName": "Foundation.Date",
+                        "usr": "s:10Foundation4DateV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Date?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V31subscriptionBillingCycleEndDate10Foundation0I0VSgvs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V31subscriptionBillingCycleEndDate10Foundation0I0VSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Date",
+                    "printedName": "Foundation.Date",
+                    "usr": "s:10Foundation4DateV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Date?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V31subscriptionBillingCycleEndDate10Foundation0I0VSgvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "subscriptionBillingCycleEndDate",
+            "printedName": "subscriptionBillingCycleEndDate",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V31subscriptionBillingCycleEndDate10Foundation0I0VSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[Swift.String]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "[Swift.String]?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V15tierIdentifiersSaySSGSgvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V15tierIdentifiersSaySSGSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[Swift.String]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "[Swift.String]?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V15tierIdentifiersSaySSGSgvs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V15tierIdentifiersSaySSGSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.String]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "[Swift.String]?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V15tierIdentifiersSaySSGSgvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "tierIdentifiers",
+            "printedName": "tierIdentifiers",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V15tierIdentifiersSaySSGSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V17billingIdentifierSSSgvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V17billingIdentifierSSSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V17billingIdentifierSSSgvs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V17billingIdentifierSSSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V17billingIdentifierSSSgvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "billingIdentifier",
+            "printedName": "billingIdentifier",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V17billingIdentifierSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V18authenticationDataSSSgvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V18authenticationDataSSSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V18authenticationDataSSSgvs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V18authenticationDataSSSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V18authenticationDataSSSgvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "authenticationData",
+            "printedName": "authenticationData",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V18authenticationDataSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "VSAppleSubscription",
+                        "printedName": "VideoSubscriberAccount.VSAppleSubscription",
+                        "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "VideoSubscriberAccount.VSAppleSubscription?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V17appleSubscriptionAA07VSAppleF0VSgvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V17appleSubscriptionAA07VSAppleF0VSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "VSAppleSubscription",
+                        "printedName": "VideoSubscriberAccount.VSAppleSubscription",
+                        "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "VideoSubscriberAccount.VSAppleSubscription?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V17appleSubscriptionAA07VSAppleF0VSgvs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V17appleSubscriptionAA07VSAppleF0VSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "VSAppleSubscription",
+                    "printedName": "VideoSubscriberAccount.VSAppleSubscription",
+                    "usr": "s:22VideoSubscriberAccount19VSAppleSubscriptionV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "VideoSubscriberAccount.VSAppleSubscription?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_Macosx": "14.4",
+            "intro_iOS": "17.4",
+            "intro_tvOS": "17.4",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V17appleSubscriptionAA07VSAppleF0VSgvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "appleSubscription",
+            "printedName": "appleSubscription",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V17appleSubscriptionAA07VSAppleF0VSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V19isFromCurrentDeviceSbvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V19isFromCurrentDeviceSbvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V19isFromCurrentDeviceSbvs",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V19isFromCurrentDeviceSbvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V19isFromCurrentDeviceSbvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "isFromCurrentDevice",
+            "printedName": "isFromCurrentDevice",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V19isFromCurrentDeviceSbvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OriginatingDeviceCategory",
+                    "printedName": "VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory",
+                    "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V14deviceCategoryAC017OriginatingDeviceF0Ovg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V14deviceCategoryAC017OriginatingDeviceF0Ovg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OriginatingDeviceCategory",
+                "printedName": "VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V14deviceCategoryAC017OriginatingDeviceF0Ovp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "deviceCategory",
+            "printedName": "deviceCategory",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V14deviceCategoryAC017OriginatingDeviceF0Ovp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "VSUserAccount",
+                "printedName": "VideoSubscriberAccount.VSUserAccount",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "AccountType",
+                "printedName": "VideoSubscriberAccount.VSUserAccount.AccountType",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.URL?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V11accountType9updateURLA2C0cF0O_10Foundation0H0VSgtcfc",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "init",
+            "printedName": "init(accountType:updateURL:)",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V11accountType9updateURLA2C0cF0O_10Foundation0H0VSgtcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "VSUserAccount",
+                "printedName": "VideoSubscriberAccount.VSUserAccount",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "VSUserAccount",
+                "printedName": "VideoSubscriberAccount.VSUserAccount",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V2eeoiySbAC_ACtFZ",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V4hash4intoys6HasherVz_tF",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V9hashValueSivg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V9hashValueSivp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V9hashValueSivp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AccountType",
+                        "printedName": "VideoSubscriberAccount.VSUserAccount.AccountType",
+                        "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AccountType",
+                            "printedName": "VideoSubscriberAccount.VSUserAccount.AccountType",
+                            "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSUserAccount.AccountType.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSUserAccount.AccountType.Type) -> VideoSubscriberAccount.VSUserAccount.AccountType"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V0C4TypeO4freeyA2EmF",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "free",
+                "printedName": "free",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO4freeyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AccountType",
+                        "printedName": "VideoSubscriberAccount.VSUserAccount.AccountType",
+                        "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AccountType",
+                            "printedName": "VideoSubscriberAccount.VSUserAccount.AccountType",
+                            "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSUserAccount.AccountType.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSUserAccount.AccountType.Type) -> VideoSubscriberAccount.VSUserAccount.AccountType"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V0C4TypeO4paidyA2EmF",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "paid",
+                "printedName": "paid",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO4paidyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AccountType",
+                        "printedName": "VideoSubscriberAccount.VSUserAccount.AccountType",
+                        "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "VideoSubscriberAccount.VSUserAccount.AccountType?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V0C4TypeO8rawValueAESgSi_tcfc",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO8rawValueAESgSi_tcfc"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "13.3",
+                "intro_iOS": "16.4",
+                "intro_tvOS": "16.4",
+                "kind": "TypeAlias",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V0C4TypeO8RawValuea",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO8RawValuea"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s22VideoSubscriberAccount06VSUserC0V0C4TypeO8rawValueSivg",
+                    "moduleName": "VideoSubscriberAccount",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V0C4TypeO8rawValueSivp",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO8rawValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "VideoSubscriberAccount.VSUserAccount.AccountType.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              }
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V0C4TypeO",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "AccountType",
+            "printedName": "AccountType",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V0C4TypeO"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OriginatingDeviceCategory",
+                        "printedName": "VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory",
+                        "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "OriginatingDeviceCategory",
+                            "printedName": "VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory",
+                            "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory.Type) -> VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO6mobileyA2EmF",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "mobile",
+                "printedName": "mobile",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO6mobileyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OriginatingDeviceCategory",
+                        "printedName": "VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory",
+                        "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "OriginatingDeviceCategory",
+                            "printedName": "VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory",
+                            "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory.Type) -> VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO5otheryA2EmF",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "other",
+                "printedName": "other",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO5otheryA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OriginatingDeviceCategory",
+                        "printedName": "VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory",
+                        "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO8rawValueAESgSi_tcfc",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO8rawValueAESgSi_tcfc"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "13.3",
+                "intro_iOS": "16.4",
+                "intro_tvOS": "16.4",
+                "kind": "TypeAlias",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO8RawValuea",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO8RawValuea"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO8rawValueSivg",
+                    "moduleName": "VideoSubscriberAccount",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO8rawValueSivp",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO8rawValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "VideoSubscriberAccount.VSUserAccount.OriginatingDeviceCategory.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              }
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "OriginatingDeviceCategory",
+            "printedName": "OriginatingDeviceCategory",
+            "usr": "s:22VideoSubscriberAccount06VSUserC0V25OriginatingDeviceCategoryO"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "13.3",
+        "intro_iOS": "16.4",
+        "intro_tvOS": "16.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s22VideoSubscriberAccount06VSUserC0V",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VSUserAccount",
+        "printedName": "VSUserAccount",
+        "usr": "s:22VideoSubscriberAccount06VSUserC0V"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AutoSignInAuthorization",
+                        "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization",
+                        "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E28AutoSignInTokenUpdateContextV13authorizationAbCE0fgH13AuthorizationOvg",
+                    "moduleName": "VideoSubscriberAccount",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E28AutoSignInTokenUpdateContextV13authorizationAbCE0fgH13AuthorizationOvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AutoSignInAuthorization",
+                    "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization",
+                    "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E28AutoSignInTokenUpdateContextV13authorizationAbCE0fgH13AuthorizationOvp",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "authorization",
+                "printedName": "authorization",
+                "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E28AutoSignInTokenUpdateContextV13authorizationAbCE0fgH13AuthorizationOvp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Struct",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "26.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E28AutoSignInTokenUpdateContextV",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "AutoSignInTokenUpdateContext",
+            "printedName": "AutoSignInTokenUpdateContext",
+            "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E28AutoSignInTokenUpdateContextV"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AutoSignInAuthorization",
+                        "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization",
+                        "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E15AutoSignInTokenV13authorizationAbCE0fgH13AuthorizationOvg",
+                    "moduleName": "VideoSubscriberAccount",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E15AutoSignInTokenV13authorizationAbCE0fgH13AuthorizationOvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AutoSignInAuthorization",
+                    "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization",
+                    "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E15AutoSignInTokenV13authorizationAbCE0fgH13AuthorizationOvp",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "authorization",
+                "printedName": "authorization",
+                "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E15AutoSignInTokenV13authorizationAbCE0fgH13AuthorizationOvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Swift.String?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E15AutoSignInTokenV5valueSSSgvg",
+                    "moduleName": "VideoSubscriberAccount",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E15AutoSignInTokenV5valueSSSgvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E15AutoSignInTokenV5valueSSSgvp",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "value",
+                "printedName": "value",
+                "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E15AutoSignInTokenV5valueSSSgvp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Struct",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "26.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E15AutoSignInTokenV",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "AutoSignInToken",
+            "printedName": "AutoSignInToken",
+            "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E15AutoSignInTokenV"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "VSUserAccount",
+                "printedName": "VideoSubscriberAccount.VSUserAccount",
+                "usr": "s:22VideoSubscriberAccount06VSUserC0V"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E6updateyyAC0aB0VYaKF",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "update",
+            "printedName": "update(_:)",
+            "throwing": true,
+            "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E6updateyyAC0aB0VYaKF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "VSUserAccount",
+                    "printedName": "VideoSubscriberAccount.VSUserAccount",
+                    "usr": "s:22VideoSubscriberAccount06VSUserC0V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[VideoSubscriberAccount.VSUserAccount]",
+                "usr": "s:Sa"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "QueryOptions",
+                "printedName": "VideoSubscriberAccount.VSUserAccountManager.QueryOptions",
+                "usr": "c:@E@VSUserAccountQueryOptions"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E12userAccounts7optionsSayAC0aB0VGSo0aB12QueryOptionsV_tYaKF",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "userAccounts",
+            "printedName": "userAccounts(options:)",
+            "throwing": true,
+            "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E12userAccounts7optionsSayAC0aB0VGSo0aB12QueryOptionsV_tYaKF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AutoSignInToken",
+                    "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInToken",
+                    "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E15AutoSignInTokenV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E15autoSignInTokenAbCE04AutoghI0Vvg",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "Get",
+                "printedName": "Get()",
+                "throwing": true,
+                "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E15autoSignInTokenAbCE04AutoghI0Vvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AutoSignInToken",
+                "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInToken",
+                "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E15AutoSignInTokenV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "26.0",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E15autoSignInTokenAbCE04AutoghI0Vvp",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "autoSignInToken",
+            "printedName": "autoSignInToken",
+            "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E15autoSignInTokenAbCE04AutoghI0Vvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AutoSignInTokenUpdateContext",
+                "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInTokenUpdateContext",
+                "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E28AutoSignInTokenUpdateContextV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "26.0",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E30requestAutoSignInAuthorizationAbCE0ghI18TokenUpdateContextVyYaKF",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "requestAutoSignInAuthorization",
+            "printedName": "requestAutoSignInAuthorization()",
+            "throwing": true,
+            "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E30requestAutoSignInAuthorizationAbCE0ghI18TokenUpdateContextVyYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AutoSignInTokenUpdateContext",
+                "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInTokenUpdateContext",
+                "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E28AutoSignInTokenUpdateContextV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "26.0",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E21updateAutoSignInToken_0F7ContextySS_AbCE0ghij6UpdateK0VtYaKF",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "updateAutoSignInToken",
+            "printedName": "updateAutoSignInToken(_:updateContext:)",
+            "throwing": true,
+            "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E21updateAutoSignInToken_0F7ContextySS_AbCE0ghij6UpdateK0VtYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "26.0",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E21deleteAutoSignInTokenyyYaKF",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "deleteAutoSignInToken",
+            "printedName": "deleteAutoSignInToken()",
+            "throwing": true,
+            "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E21deleteAutoSignInTokenyyYaKF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AutoSignInAuthorization",
+                        "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization",
+                        "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AutoSignInAuthorization",
+                            "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization",
+                            "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization.Type) -> VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO13notDeterminedyA2EmF",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "notDetermined",
+                "printedName": "notDetermined",
+                "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO13notDeterminedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AutoSignInAuthorization",
+                        "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization",
+                        "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AutoSignInAuthorization",
+                            "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization",
+                            "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization.Type) -> VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO7grantedyA2EmF",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "granted",
+                "printedName": "granted",
+                "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO7grantedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AutoSignInAuthorization",
+                        "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization",
+                        "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AutoSignInAuthorization",
+                            "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization",
+                            "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization.Type) -> VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO6deniedyA2EmF",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "denied",
+                "printedName": "denied",
+                "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO6deniedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AutoSignInAuthorization",
+                    "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization",
+                    "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AutoSignInAuthorization",
+                    "printedName": "VideoSubscriberAccount.VSUserAccountManager.AutoSignInAuthorization",
+                    "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO2eeoiySbAE_AEtFZ",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO4hash4intoys6HasherVz_tF",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO9hashValueSivg",
+                    "moduleName": "VideoSubscriberAccount",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO9hashValueSivp",
+                "moduleName": "VideoSubscriberAccount",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Enum",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "26.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO",
+            "moduleName": "VideoSubscriberAccount",
+            "name": "AutoSignInAuthorization",
+            "printedName": "AutoSignInAuthorization",
+            "usr": "s:So20VSUserAccountManagerC015VideoSubscriberB0E23AutoSignInAuthorizationO"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "16.4",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "VideoSubscriberAccount",
+        "name": "VSUserAccountManager",
+        "objc_name": "VSUserAccountManager",
+        "printedName": "VSUserAccountManager",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)VSUserAccountManager"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "VideoSubscriberAccount",
+    "printedName": "VideoSubscriberAccount"
+  }
+}

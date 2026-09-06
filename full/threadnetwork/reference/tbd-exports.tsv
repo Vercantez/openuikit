@@ -1,0 +1,8 @@
+symbol	sourceSDKRelativePath
+/System/Library/Frameworks/ThreadNetwork.framework/ThreadNetwork (for architecture arm64):	System/Library/Frameworks/ThreadNetwork.framework/ThreadNetwork.tbd
+_OBJC_CLASS_$_THClient	System/Library/Frameworks/ThreadNetwork.framework/ThreadNetwork.tbd
+_OBJC_CLASS_$_THCredentials	System/Library/Frameworks/ThreadNetwork.framework/ThreadNetwork.tbd
+_OBJC_CLASS_$_THPreferredNetworkEntry	System/Library/Frameworks/ThreadNetwork.framework/ThreadNetwork.tbd
+_OBJC_METACLASS_$_THClient	System/Library/Frameworks/ThreadNetwork.framework/ThreadNetwork.tbd
+_OBJC_METACLASS_$_THCredentials	System/Library/Frameworks/ThreadNetwork.framework/ThreadNetwork.tbd
+_OBJC_METACLASS_$_THPreferredNetworkEntry	System/Library/Frameworks/ThreadNetwork.framework/ThreadNetwork.tbd

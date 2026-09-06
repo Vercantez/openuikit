@@ -1,0 +1,83 @@
+precise	kind	title	path	declaration
+c:@T@SWCollaborationIdentifier	swift.struct	SWCollaborationIdentifier	SWCollaborationIdentifier	struct SWCollaborationIdentifier
+c:@T@SWLocalCollaborationIdentifier	swift.struct	SWLocalCollaborationIdentifier	SWLocalCollaborationIdentifier	struct SWLocalCollaborationIdentifier
+c:@UTCollaborationOptionsTypeIdentifier	swift.var	UTCollaborationOptionsTypeIdentifier	UTCollaborationOptionsTypeIdentifier	let UTCollaborationOptionsTypeIdentifier: String
+c:objc(cs)SWAction	swift.class	SWAction	SWAction	class SWAction
+c:objc(cs)SWAction(im)fail	swift.method	fail()	SWAction.fail()	func fail()
+c:objc(cs)SWAction(im)fulfill	swift.method	fulfill()	SWAction.fulfill()	func fulfill()
+c:objc(cs)SWAction(py)complete	swift.property	isComplete	SWAction.isComplete	var isComplete: Bool { get }
+c:objc(cs)SWAction(py)uuid	swift.property	uuid	SWAction.uuid	var uuid: UUID { get }
+c:objc(cs)SWCollaborationCoordinator	swift.class	SWCollaborationCoordinator	SWCollaborationCoordinator	class SWCollaborationCoordinator
+c:objc(cs)SWCollaborationCoordinator(cpy)sharedCoordinator	swift.type.property	shared	SWCollaborationCoordinator.shared	class var shared: SWCollaborationCoordinator { get }
+c:objc(cs)SWCollaborationCoordinator(py)actionHandler	swift.property	actionHandler	SWCollaborationCoordinator.actionHandler	weak var actionHandler: (any SWCollaborationActionHandler)? { get set }
+c:objc(cs)SWCollaborationMetadata	swift.class	SWCollaborationMetadata	SWCollaborationMetadata	class SWCollaborationMetadata
+c:objc(cs)SWCollaborationMetadata(im)initWithCollaborationIdentifier:	swift.init	init(collaborationIdentifier:)	SWCollaborationMetadata.init(collaborationIdentifier:)	init(collaborationIdentifier: SWCollaborationIdentifier)
+c:objc(cs)SWCollaborationMetadata(im)initWithLocalIdentifier:	swift.init	init(localIdentifier:)	SWCollaborationMetadata.init(localIdentifier:)	init(localIdentifier: SWLocalCollaborationIdentifier)
+c:objc(cs)SWCollaborationMetadata(py)collaborationIdentifier	swift.property	collaborationIdentifier	SWCollaborationMetadata.collaborationIdentifier	var collaborationIdentifier: SWCollaborationIdentifier { get }
+c:objc(cs)SWCollaborationMetadata(py)defaultShareOptions	swift.property	defaultShareOptions	SWCollaborationMetadata.defaultShareOptions	@NSCopying var defaultShareOptions: SWCollaborationShareOptions? { get set }
+c:objc(cs)SWCollaborationMetadata(py)initiatorHandle	swift.property	initiatorHandle	SWCollaborationMetadata.initiatorHandle	var initiatorHandle: String? { get set }
+c:objc(cs)SWCollaborationMetadata(py)initiatorNameComponents	swift.property	initiatorNameComponents	SWCollaborationMetadata.initiatorNameComponents	var initiatorNameComponents: PersonNameComponents? { get set }
+c:objc(cs)SWCollaborationMetadata(py)localIdentifier	swift.property	localIdentifier	SWCollaborationMetadata.localIdentifier	var localIdentifier: SWLocalCollaborationIdentifier { get }
+c:objc(cs)SWCollaborationMetadata(py)title	swift.property	title	SWCollaborationMetadata.title	var title: String? { get set }
+c:objc(cs)SWCollaborationMetadata(py)userSelectedShareOptions	swift.property	userSelectedShareOptions	SWCollaborationMetadata.userSelectedShareOptions	@NSCopying var userSelectedShareOptions: SWCollaborationShareOptions? { get set }
+c:objc(cs)SWCollaborationOption	swift.class	SWCollaborationOption	SWCollaborationOption	class SWCollaborationOption
+c:objc(cs)SWCollaborationOption(cm)optionWithTitle:identifier:	swift.init	init(title:identifier:)	SWCollaborationOption.init(title:identifier:)	init(title: String, identifier: String)
+c:objc(cs)SWCollaborationOption(py)identifier	swift.property	identifier	SWCollaborationOption.identifier	var identifier: String { get }
+c:objc(cs)SWCollaborationOption(py)requiredOptionsIdentifiers	swift.property	requiredOptionsIdentifiers	SWCollaborationOption.requiredOptionsIdentifiers	var requiredOptionsIdentifiers: [String] { get set }
+c:objc(cs)SWCollaborationOption(py)selected	swift.property	isSelected	SWCollaborationOption.isSelected	var isSelected: Bool { get set }
+c:objc(cs)SWCollaborationOption(py)subtitle	swift.property	subtitle	SWCollaborationOption.subtitle	var subtitle: String { get set }
+c:objc(cs)SWCollaborationOption(py)title	swift.property	title	SWCollaborationOption.title	var title: String { get set }
+c:objc(cs)SWCollaborationOptionsGroup	swift.class	SWCollaborationOptionsGroup	SWCollaborationOptionsGroup	class SWCollaborationOptionsGroup
+c:objc(cs)SWCollaborationOptionsGroup(im)initWithIdentifier:options:	swift.init	init(identifier:options:)	SWCollaborationOptionsGroup.init(identifier:options:)	init(identifier: String, options: [SWCollaborationOption])
+c:objc(cs)SWCollaborationOptionsGroup(py)footer	swift.property	footer	SWCollaborationOptionsGroup.footer	var footer: String { get set }
+c:objc(cs)SWCollaborationOptionsGroup(py)identifier	swift.property	identifier	SWCollaborationOptionsGroup.identifier	var identifier: String { get }
+c:objc(cs)SWCollaborationOptionsGroup(py)options	swift.property	options	SWCollaborationOptionsGroup.options	var options: [SWCollaborationOption] { get set }
+c:objc(cs)SWCollaborationOptionsGroup(py)title	swift.property	title	SWCollaborationOptionsGroup.title	var title: String { get set }
+c:objc(cs)SWCollaborationOptionsPickerGroup	swift.class	SWCollaborationOptionsPickerGroup	SWCollaborationOptionsPickerGroup	class SWCollaborationOptionsPickerGroup
+c:objc(cs)SWCollaborationOptionsPickerGroup(py)selectedOptionIdentifier	swift.property	selectedOptionIdentifier	SWCollaborationOptionsPickerGroup.selectedOptionIdentifier	var selectedOptionIdentifier: String { get set }
+c:objc(cs)SWCollaborationShareOptions	swift.class	SWCollaborationShareOptions	SWCollaborationShareOptions	class SWCollaborationShareOptions
+c:objc(cs)SWCollaborationShareOptions(im)initWithCoder:	swift.init	init(coder:)	SWCollaborationShareOptions.init(coder:)	init(coder: NSCoder)
+c:objc(cs)SWCollaborationShareOptions(im)initWithOptionsGroups:	swift.init	init(optionsGroups:)	SWCollaborationShareOptions.init(optionsGroups:)	convenience init(optionsGroups: [SWCollaborationOptionsGroup])
+c:objc(cs)SWCollaborationShareOptions(im)initWithOptionsGroups:summary:	swift.init	init(optionsGroups:summary:)	SWCollaborationShareOptions.init(optionsGroups:summary:)	init(optionsGroups: [SWCollaborationOptionsGroup], summary: String)
+c:objc(cs)SWCollaborationShareOptions(py)optionsGroups	swift.property	optionsGroups	SWCollaborationShareOptions.optionsGroups	var optionsGroups: [SWCollaborationOptionsGroup] { get set }
+c:objc(cs)SWCollaborationShareOptions(py)summary	swift.property	summary	SWCollaborationShareOptions.summary	var summary: String { get set }
+c:objc(cs)SWPerson	swift.class	SWPerson	SWPerson	class SWPerson
+c:objc(cs)SWPerson(im)initWithHandle:identity:displayName:thumbnailImageData:	swift.init	init(handle:identity:displayName:thumbnailImageData:)	SWPerson.init(handle:identity:displayName:thumbnailImageData:)	init(handle: String?, identity: SWPerson.Identity?, displayName: String, thumbnailImageData: Data?)
+c:objc(cs)SWPersonIdentity	swift.class	SWPerson.Identity	SWPerson.Identity	class Identity
+c:objc(cs)SWPersonIdentity(im)initWithRootHash:	swift.init	init(rootHash:)	SWPerson.Identity.init(rootHash:)	init(rootHash: Data)
+c:objc(cs)SWPersonIdentity(py)rootHash	swift.property	rootHash	SWPerson.Identity.rootHash	var rootHash: Data { get }
+c:objc(cs)SWPersonIdentityProof	swift.class	SWPerson.IdentityProof	SWPerson.IdentityProof	class IdentityProof
+c:objc(cs)SWPersonIdentityProof(py)inclusionHashes	swift.property	inclusionHashes	SWPerson.IdentityProof.inclusionHashes	var inclusionHashes: [Data] { get }
+c:objc(cs)SWPersonIdentityProof(py)publicKey	swift.property	publicKey	SWPerson.IdentityProof.publicKey	var publicKey: Data { get }
+c:objc(cs)SWPersonIdentityProof(py)publicKeyIndex	swift.property	publicKeyIndex	SWPerson.IdentityProof.publicKeyIndex	var publicKeyIndex: Int { get }
+c:objc(cs)SWSignedPersonIdentityProof	swift.class	SWPerson.SignedIdentityProof	SWPerson.SignedIdentityProof	class SignedIdentityProof
+c:objc(cs)SWSignedPersonIdentityProof(im)initWithPersonIdentityProof:signatureData:	swift.init	init(personIdentityProof:signatureData:)	SWPerson.SignedIdentityProof.init(personIdentityProof:signatureData:)	init(personIdentityProof: SWPerson.IdentityProof, signatureData data: Data)
+c:objc(cs)SWSignedPersonIdentityProof(py)signatureData	swift.property	signatureData	SWPerson.SignedIdentityProof.signatureData	var signatureData: Data { get }
+c:objc(cs)SWStartCollaborationAction	swift.class	SWStartCollaborationAction	SWStartCollaborationAction	class SWStartCollaborationAction
+c:objc(cs)SWStartCollaborationAction(im)fulfillUsingURL:collaborationIdentifier:	swift.method	fulfill(using:collaborationIdentifier:)	SWStartCollaborationAction.fulfill(using:collaborationIdentifier:)	func fulfill(using url: URL, collaborationIdentifier: SWCollaborationIdentifier)
+c:objc(cs)SWStartCollaborationAction(py)collaborationMetadata	swift.property	collaborationMetadata	SWStartCollaborationAction.collaborationMetadata	var collaborationMetadata: SWCollaborationMetadata { get }
+c:objc(cs)SWUpdateCollaborationParticipantsAction	swift.class	SWUpdateCollaborationParticipantsAction	SWUpdateCollaborationParticipantsAction	class SWUpdateCollaborationParticipantsAction
+c:objc(cs)SWUpdateCollaborationParticipantsAction(py)addedIdentities	swift.property	addedIdentities	SWUpdateCollaborationParticipantsAction.addedIdentities	var addedIdentities: [SWPerson.Identity] { get }
+c:objc(cs)SWUpdateCollaborationParticipantsAction(py)collaborationMetadata	swift.property	collaborationMetadata	SWUpdateCollaborationParticipantsAction.collaborationMetadata	var collaborationMetadata: SWCollaborationMetadata { get }
+c:objc(cs)SWUpdateCollaborationParticipantsAction(py)removedIdentities	swift.property	removedIdentities	SWUpdateCollaborationParticipantsAction.removedIdentities	var removedIdentities: [SWPerson.Identity] { get }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWAction	swift.init	init(coder:)	SWAction.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	swift.init	init(coder:)	SWCollaborationMetadata.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWCollaborationOption	swift.init	init(coder:)	SWCollaborationOption.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWCollaborationOptionsGroup	swift.init	init(coder:)	SWCollaborationOptionsGroup.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWPerson	swift.init	init(coder:)	SWPerson.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWPersonIdentity	swift.init	init(coder:)	SWPerson.Identity.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWPersonIdentityProof	swift.init	init(coder:)	SWPerson.IdentityProof.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)SWCollaborationActionHandler	swift.protocol	SWCollaborationActionHandler	SWCollaborationActionHandler	protocol SWCollaborationActionHandler : NSObjectProtocol
+c:objc(pl)SWCollaborationActionHandler(im)collaborationCoordinator:handleStartCollaborationAction:	swift.method	collaborationCoordinator(_:handle:)	SWCollaborationActionHandler.collaborationCoordinator(_:handle:)	func collaborationCoordinator(_ coordinator: SWCollaborationCoordinator, handle action: SWStartCollaborationAction)
+c:objc(pl)SWCollaborationActionHandler(im)collaborationCoordinator:handleUpdateCollaborationParticipantsAction:	swift.method	collaborationCoordinator(_:handle:)	SWCollaborationActionHandler.collaborationCoordinator(_:handle:)	func collaborationCoordinator(_ coordinator: SWCollaborationCoordinator, handle action: SWUpdateCollaborationParticipantsAction)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SWCollaborationIdentifier	swift.func.op	!=(_:_:)	SWCollaborationIdentifier.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@SWLocalCollaborationIdentifier	swift.func.op	!=(_:_:)	SWLocalCollaborationIdentifier.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:So21SWCollaborationOptionC17SharedWithYouCoreE5title10identifier8subtitle8selected26requiredOptionsIdentifiersABSS_S2SSbSaySSGtcfc	swift.init	init(title:identifier:subtitle:selected:requiredOptionsIdentifiers:)	SWCollaborationOption.init(title:identifier:subtitle:selected:requiredOptionsIdentifiers:)	convenience init(title: String, identifier: String, subtitle: String = "", selected: Bool = false, requiredOptionsIdentifiers: [String] = [])
+s:So25SWCollaborationIdentifiera8rawValueABSS_tcfc	swift.init	init(rawValue:)	SWCollaborationIdentifier.init(rawValue:)	init(rawValue: String)
+s:So25SWCollaborationIdentifierayABSScfc	swift.init	init(_:)	SWCollaborationIdentifier.init(_:)	init(_ rawValue: String)
+s:So30SWLocalCollaborationIdentifiera8rawValueABSS_tcfc	swift.init	init(rawValue:)	SWLocalCollaborationIdentifier.init(rawValue:)	init(rawValue: String)
+s:So30SWLocalCollaborationIdentifierayABSScfc	swift.init	init(_:)	SWLocalCollaborationIdentifier.init(_:)	init(_ rawValue: String)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@SWCollaborationIdentifier	swift.property	hashValue	SWCollaborationIdentifier.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@SWLocalCollaborationIdentifier	swift.property	hashValue	SWLocalCollaborationIdentifier.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SWCollaborationIdentifier	swift.method	hash(into:)	SWCollaborationIdentifier.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SWLocalCollaborationIdentifier	swift.method	hash(into:)	SWLocalCollaborationIdentifier.hash(into:)	func hash(into hasher: inout Hasher)

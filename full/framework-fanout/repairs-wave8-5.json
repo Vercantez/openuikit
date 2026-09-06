@@ -1,0 +1,31 @@
+{
+  "schema": "openuikit.cursor-framework-repair-manifest.v1",
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave8-repair-5",
+    "maxActive": 24,
+    "maxRuns": 2
+  },
+  "model": {
+    "id": "grok-4.6",
+    "effort": "high",
+    "fast": false
+  },
+  "repairs": [
+    {
+      "module": "Network",
+      "slug": "network",
+      "agentId": "bc-e93f4a76-7415-5abb-8aa2-2bdeba2eb73c",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/158",
+      "expectedPriorHead": "439384b4cbb6398619e8d5bfc7c93a02f9fc3e91",
+      "prompt": "Continue repairing Network in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at 439384b4cbb6:\nFW_MERGE REFUSED: no depth gain \u2014 implemented rows 1182 -> 968; reclassifying SwiftUI-overlay rows to not-applicable is bookkeeping, the depth task (real behaviour with per-identifier tests) is unaddressed\n\nFix the coverage ledger, not just the code: every `implemented` row in full/network/coverage.tsv must cite evidence of the exact form `test:full/network/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/network/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/network/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    },
+    {
+      "module": "ContactsUI",
+      "slug": "contactsui",
+      "agentId": "bc-9992df72-cd8f-5750-8c6e-5552dbaa5aeb",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/153",
+      "expectedPriorHead": "8a9b09d0425a0d1add252e0871213123511ea6bf",
+      "prompt": "Continue repairing ContactsUI in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at 8a9b09d0425a:\nFW_MERGE REFUSED: no depth gain \u2014 implemented rows 58 -> 58; reclassifying SwiftUI-overlay rows to not-applicable is bookkeeping, the depth task (real behaviour with per-identifier tests) is unaddressed\n\nFix the coverage ledger, not just the code: every `implemented` row in full/contactsui/coverage.tsv must cite evidence of the exact form `test:full/contactsui/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/contactsui/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/contactsui/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    }
+  ]
+}

@@ -1,0 +1,556 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SensitiveContentAnalysis",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SensitiveContentAnalysis",
+        "name": "SensitiveContentAnalysis.SCSensitivityAnalyzer",
+        "printedName": "SensitiveContentAnalysis.SCSensitivityAnalyzer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SensitiveContentAnalysis",
+        "name": "SensitiveContentAnalysis.SCVideoStreamAnalyzer",
+        "printedName": "SensitiveContentAnalysis.SCVideoStreamAnalyzer"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SensitiveContentAnalysis",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SensitiveContentAnalysis",
+        "name": "SensitiveContentAnalysis",
+        "printedName": "SensitiveContentAnalysis"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SensitiveContentAnalysis",
+        "name": "SwiftData",
+        "printedName": "SwiftData"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SensitiveContentAnalysis",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SensitiveContentAnalysis",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SensitiveContentAnalysis",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Progress",
+                        "printedName": "Foundation.Progress",
+                        "usr": "c:objc(cs)NSProgress"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Final"
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC8progressSo10NSProgressCvg",
+                    "moduleName": "SensitiveContentAnalysis",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC8progressSo10NSProgressCvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Progress",
+                        "printedName": "Foundation.Progress",
+                        "usr": "c:objc(cs)NSProgress"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Final"
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC8progressSo10NSProgressCvs",
+                    "moduleName": "SensitiveContentAnalysis",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:So21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC8progressSo10NSProgressCvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Progress",
+                    "printedName": "Foundation.Progress",
+                    "usr": "c:objc(cs)NSProgress"
+                  }
+                ],
+                "declAttributes": [
+                  "Final",
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$sSo21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC8progressSo10NSProgressCvp",
+                "moduleName": "SensitiveContentAnalysis",
+                "name": "progress",
+                "printedName": "progress",
+                "usr": "s:So21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC8progressSo10NSProgressCvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SCSensitivityAnalysis",
+                    "printedName": "SensitiveContentAnalysis.SCSensitivityAnalysis",
+                    "usr": "c:objc(cs)SCSensitivityAnalysis"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$sSo21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC03hascD0So0aE0CyYaKF",
+                "moduleName": "SensitiveContentAnalysis",
+                "name": "hasSensitiveContent",
+                "printedName": "hasSensitiveContent()",
+                "throwing": true,
+                "usr": "s:So21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC03hascD0So0aE0CyYaKF"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Class",
+            "hasMissingDesignatedInitializers": true,
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$sSo21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC",
+            "moduleName": "SensitiveContentAnalysis",
+            "name": "VideoAnalysisHandler",
+            "printedName": "VideoAnalysisHandler",
+            "usr": "s:So21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "VideoAnalysisHandler",
+                "printedName": "SensitiveContentAnalysis.SCSensitivityAnalyzer.VideoAnalysisHandler",
+                "usr": "s:So21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05videoE09forFileAtAbCE05VideoE7HandlerC10Foundation3URLV_tF",
+            "moduleName": "SensitiveContentAnalysis",
+            "name": "videoAnalysis",
+            "printedName": "videoAnalysis(forFileAt:)",
+            "usr": "s:So21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05videoE09forFileAtAbCE05VideoE7HandlerC10Foundation3URLV_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "SynthesizedProtocol",
+          "NonSendable",
+          "Sendable",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "17.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "SensitiveContentAnalysis",
+        "name": "SCSensitivityAnalyzer",
+        "objc_name": "SCSensitivityAnalyzer",
+        "printedName": "SCSensitivityAnalyzer",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)SCSensitivityAnalyzer"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AsyncSequence",
+                        "printedName": "_Concurrency.AsyncSequence",
+                        "usr": "s:Sci"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some _Concurrency.AsyncSequence<SensitiveContentAnalysis.SCSensitivityAnalysis, any Swift.Error>"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo21SCVideoStreamAnalyzerC24SensitiveContentAnalysisE15analysisChangesQrvg",
+                "moduleName": "SensitiveContentAnalysis",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So21SCVideoStreamAnalyzerC24SensitiveContentAnalysisE15analysisChangesQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AsyncSequence",
+                    "printedName": "_Concurrency.AsyncSequence",
+                    "usr": "s:Sci"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some _Concurrency.AsyncSequence<SensitiveContentAnalysis.SCSensitivityAnalysis, any Swift.Error>"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo21SCVideoStreamAnalyzerC24SensitiveContentAnalysisE15analysisChangesQrvp",
+            "moduleName": "SensitiveContentAnalysis",
+            "name": "analysisChanges",
+            "printedName": "analysisChanges",
+            "usr": "s:So21SCVideoStreamAnalyzerC24SensitiveContentAnalysisE15analysisChangesQrvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "26.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "SensitiveContentAnalysis",
+        "name": "SCVideoStreamAnalyzer",
+        "objc_name": "SCVideoStreamAnalyzer",
+        "printedName": "SCVideoStreamAnalyzer",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)SCVideoStreamAnalyzer"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "SensitiveContentAnalysis",
+    "printedName": "SensitiveContentAnalysis"
+  }
+}

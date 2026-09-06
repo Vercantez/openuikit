@@ -1,0 +1,43 @@
+{
+  "module": "IOSurface",
+  "moduleRecord": {
+    "app_coverage_count": 1,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS SDK/system-module runtime-port allowlist",
+    "file_count": 2,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 114,
+    "iphoneos_runtime_focus_launch_build_rank": 118,
+    "module": "IOSurface",
+    "occurrence_count": 2,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "a09d178c5004d5f66f71fa31ad03a4b6292734beae1d41845f73386b1328cb98",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "submodules/MetalEngine/Sources/MetalEngine.swift",
+          "submodules/TelegramUI/Components/DCTMultiAnimationRendererImpl/Sources/DCTMultiAnimationRendererImpl.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 114,
+    "byFocusLaunchBuildRelevance": 118
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}
