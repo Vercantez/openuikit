@@ -298,6 +298,11 @@ open class SKReceiptRefreshRequest: SKRequest {
         self.receiptProperties = receiptProperties
         super.init()
     }
+
+    public override func start() {
+        guard !isCancelled else { return }
+        delegate?.request(self, didFailWithError: SKError(.unsupportedPlatform))
+    }
 }
 
 open class SKStorefront: NSObject {
@@ -322,17 +327,39 @@ open class SKOverlay: NSObject {
     open class AppConfiguration: Configuration {
         public var appIdentifier: String
         public var position: Position
+        public var campaignToken: String?
+        public var providerToken: String?
+        public var customProductPageIdentifier: String?
+        public var latestReleaseID: String?
+        public var userDismissible = true
+        var additional: [String: Any] = [:]
         public init(appIdentifier: String, position: Position) {
             self.appIdentifier = appIdentifier
             self.position = position
             super.init()
         }
+        public func additionalValue(forKey key: String) -> Any? { additional[key] }
+        public func setAdditionalValue(_ value: Any?, forKey key: String) {
+            additional[key] = value
+        }
+        public func setAdImpression(_ impression: SKAdImpression?) {
+            additional["adImpression"] = impression
+        }
     }
     open class AppClipConfiguration: Configuration {
         public var position: Position
+        public var campaignToken: String?
+        public var providerToken: String?
+        public var customProductPageIdentifier: String?
+        public var latestReleaseID: String?
+        var additional: [String: Any] = [:]
         public init(position: Position) {
             self.position = position
             super.init()
+        }
+        public func additionalValue(forKey key: String) -> Any? { additional[key] }
+        public func setAdditionalValue(_ value: Any?, forKey key: String) {
+            additional[key] = value
         }
     }
     public enum Position: Int, Sendable {
@@ -340,19 +367,32 @@ open class SKOverlay: NSObject {
         case bottomRaised = 1
     }
     public final class TransitionContext: NSObject {
+        public var startFrame: CGRect = .zero
+        public var endFrame: CGRect = .zero
         public override init() { super.init() }
+        public func addAnimationBlock(_ animation: @escaping () -> Void) { animation() }
         public func add(_ animation: @escaping () -> Void) { animation() }
     }
     public var configuration: Configuration
     public weak var delegate: SKOverlayDelegate?
+    public private(set) var portablePresentCount = 0
     public init(configuration: Configuration) {
         self.configuration = configuration
         super.init()
     }
-    @MainActor
-    public func present(in scene: UIWindowScene) { _ = scene }
-    @MainActor
-    public func dismiss(from scene: UIWindowScene) { _ = scene }
+    public func present(in scene: UIWindowScene) {
+        _ = scene
+        portablePresentCount += 1
+    }
+    public func dismiss(from scene: UIWindowScene) {
+        _ = scene
+        portablePresentCount += 1
+    }
+    /// Apple class method `dismissOverlayInScene:`. Linux records the call
+    /// and does not present or dismiss UI.
+    public class func dismiss(in scene: UIWindowScene) {
+        _ = scene
+    }
 }
 
 public protocol SKOverlayDelegate: NSObjectProtocol {
@@ -371,12 +411,22 @@ public extension SKOverlayDelegate {
 
 open class SKStoreProductViewController: UIViewController {
     public weak var delegate: SKStoreProductViewControllerDelegate?
+    public private(set) var portableLoadCount = 0
     public func loadProduct(
         withParameters parameters: [String: Any],
         completionBlock: ((Bool, (any Error)?) -> Void)? = nil
     ) {
         _ = parameters
+        portableLoadCount += 1
         completionBlock?(false, StoreKitPortableError(.serviceUnavailable))
+    }
+    public func loadProduct(
+        withParameters parameters: [String: Any],
+        impression: SKAdImpression,
+        completionBlock: ((Bool, (any Error)?) -> Void)? = nil
+    ) {
+        _ = impression
+        loadProduct(withParameters: parameters, completionBlock: completionBlock)
     }
 }
 
@@ -449,17 +499,25 @@ public struct AppTransaction: Hashable, Sendable, CustomDebugStringConvertible {
         bundleID = Bundle.main.bundleIdentifier ?? ""
     }
 
+    public static func currentForTesting() throws -> VerificationResult<AppTransaction> {
+        guard LocalTestingStore.shared.isLoaded else {
+            throw StoreKitError.notAvailableInStorefront
+        }
+        let value = AppTransaction()
+        if LocalTestingStore.shared.treatsTransactionsAsVerified {
+            return .verified(value)
+        }
+        return .unverified(value, .invalidSignature)
+    }
+
     public static var shared: VerificationResult<AppTransaction> {
         get async throws {
-            guard LocalTestingStore.shared.isLoaded else {
-                throw StoreKitError.notAvailableInStorefront
-            }
-            return .unverified(AppTransaction(), .invalidSignature)
+            try currentForTesting()
         }
     }
 
     public static func refresh() async throws -> VerificationResult<AppTransaction> {
-        try await shared
+        try currentForTesting()
     }
 }
 
