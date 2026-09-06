@@ -35,8 +35,9 @@ This directory is a clean-room Linux implementation of Apple's public
   path supplies bytes). Audio `AudioStreamBasicDescription` bridging is
   compiled only when `CoreAudioTypes` is imported
   (`CMDependencyBridges.swift`); the isolated host does not claim it.
-- `CMMemoryPool` wrapping `kCFAllocatorDefault` (AgeOutPeriod stored,
-  no slab cache). `CMPackingType` / `CMProjectionType` FourCCs and
+- `CMMemoryPool` wrapping `CFAllocatorGetDefault()` (AgeOutPeriod stored,
+  no slab cache; `kCFAllocatorDefault` is NULL on this CoreFoundation).
+  `CMPackingType` / `CMProjectionType` FourCCs and
   stereo-view option sets.
 - `CMSimpleQueue` and `CMBufferQueue` (unsorted and PTS-sorted sample
   buffers, duration/size/PTS getters, end-of-data, validation, and

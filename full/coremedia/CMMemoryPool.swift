@@ -1,12 +1,13 @@
 import CoreFoundation
 import Foundation
 
-/// Linux `CMMemoryPool` is a thin wrapper around `kCFAllocatorDefault`.
-/// Blocks are not cached: `Flush` is a documented no-op on this port because
-/// there is no aged-out slab to recycle. `AgeOutPeriod` is stored and readable
-/// through the options dictionary used at create time, but does not change
-/// allocation. After `Invalidate`, `GetAllocator` still returns the process
-/// default allocator; callers must not assume Apple's unique-pool allocator.
+/// Linux `CMMemoryPool` is a thin wrapper around `CFAllocatorGetDefault()`.
+/// `kCFAllocatorDefault` is a NULL synonym on this CoreFoundation and cannot
+/// be returned as a non-optional `CFAllocator`. Blocks are not cached: `Flush`
+/// is a documented no-op because there is no aged-out slab to recycle.
+/// `AgeOutPeriod` is stored at create time but does not change allocation.
+/// After `Invalidate`, `GetAllocator` still returns the process default
+/// allocator; callers must not assume Apple's unique-pool allocator.
 
 public final class CMMemoryPool: Hashable, @unchecked Sendable {
     private static let processTypeID: CFTypeID = 0x434D_4D50
@@ -51,7 +52,13 @@ public func CMMemoryPoolCreate(options: CFDictionary?) -> CMMemoryPool {
 
 public func CMMemoryPoolGetAllocator(_ pool: CMMemoryPool) -> CFAllocator {
     _ = pool
-    return kCFAllocatorDefault
+    if let allocator = kCFAllocatorDefault {
+        return allocator
+    }
+    if let allocator = kCFAllocatorSystemDefault {
+        return allocator
+    }
+    return CFAllocatorGetDefault()!.takeUnretainedValue()
 }
 
 public func CMMemoryPoolFlush(_ pool: CMMemoryPool) {

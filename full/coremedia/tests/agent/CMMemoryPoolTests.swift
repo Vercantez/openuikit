@@ -17,10 +17,11 @@ func testCMMemoryPoolCreateFlushInvalidate() {
     precondition(CMMemoryPoolGetTypeID() == CMMemoryPool.typeID)
     precondition(CMMemoryPoolGetTypeID() != 0)
     let allocator = CMMemoryPoolGetAllocator(pool)
-    precondition(allocator === kCFAllocatorDefault)
+    var probe: Double = 0
+    precondition(CFNumberCreate(allocator, .doubleType, &probe) != nil)
     CMMemoryPoolFlush(pool)
     CMMemoryPoolInvalidate(pool)
-    precondition(CMMemoryPoolGetAllocator(pool) === kCFAllocatorDefault)
+    precondition(CMMemoryPoolGetAllocator(pool) === allocator)
     precondition(kCMMemoryPoolError_AllocationFailed == -12780)
     precondition(kCMMemoryPoolError_InvalidParameter == -12781)
     precondition(CFEqual(kCMMemoryPoolOption_AgeOutPeriod, cmMemoryPoolAgeOutKey()))
