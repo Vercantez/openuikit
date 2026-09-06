@@ -18,6 +18,20 @@ passed in as files:
   dep-classes-*.json   per-app rollup of the 30 externally-cloned dependencies,
                        each pushed through ladder_census.py itself (dep_class.py)
 
+FW AND MOD CONSUME COVERAGE LEDGERS AS SUPPLY (2026-09-14). The 08-27
+baseline counted every imported Apple framework as a wall. Each
+`full/<slug>/coverage.tsv` is now a supply ledger: a framework row counts
+as supplied ONLY for identifiers whose status is `implemented` (`declared` /
+`deferred` / `unavailable` / `not-applicable` are not supply). At MODULE
+granularity (which is what FW/MOD see — they have no per-identifier demand
+for WebKit/AVFoundation/…), a module is supplied iff it has ≥1 implemented
+identifier, OR it is an OpenUIKit package product (Combine, os,
+SafariServices, MessageUI, LinkPresentation, StoreKit, CoreImage, ImageIO).
+UIKit and Foundation stay in the MOD denominator so the 08-27 shape is
+comparable; they were already the port. SwiftUI is a Focus-widget slice
+and is NOT subtracted from MOD — the UI=3 gate still fires.
+See ledger_supply.py.
+
 THE DEP COLUMN IS A DEMAND ROW, NOT A BUILD NOTE. A dependency must itself
 compile against this stack before its app builds at all, so an app whose own
 code is perfectly UIKit-shaped is still bounded by its worst LOAD-BEARING
@@ -27,8 +41,11 @@ load-bearing deps' -- measured, this moves eidolon from 8 to 165.
 `DEP` is `?` for an app none of whose external dependencies were among the 30
 measured. `?` scores 0, so those apps' totals are FLOORS, not clean sheets.
 """
-import json, sys
+import json, os, sys
 from collections import defaultdict
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from ledger_supply import load_ledgers, is_module_supplied
 
 HEAVY = {"WebKit","CoreData","AVFoundation","AVKit","MapKit","Photos","PhotosUI","CoreLocation",
          "StoreKit","Metal","MetalKit","SceneKit","SpriteKit","ARKit","Vision","CoreML","HealthKit",
@@ -70,6 +87,11 @@ def main():
         a, ib, sw = line.split()
         nib[a] = (int(ib), int(sw))
     deprol = json.load(open(sys.argv[4]))["per_app"] if len(sys.argv) > 5 else {}
+    full_root = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+    ledgers = load_ledgers(full_root)
+    print(f"ledger supply: {len(ledgers['supplied_modules'])} modules with "
+          f"≥1 implemented / {ledgers['n_ledgers']} coverage.tsv",
+          file=sys.stderr)
 
     rows = []
     for a, v in census.items():
@@ -86,8 +108,19 @@ def main():
         nib_pct = 100.0 * ibf / swf if swf else 0.0
 
         imp = imports[a]
-        heavy = sum(1 for h in HEAVY if imp.get(h, 0))
-        mods = len(imp)
+        # Demand (08-27 shape) kept in `raw` so a movement can be attributed
+        # to supply rather than to a quieter import list.
+        heavy_demand = sum(1 for h in HEAVY if imp.get(h, 0))
+        heavy_unsupplied = sum(
+            1 for h in HEAVY if imp.get(h, 0) and not is_module_supplied(h, ledgers)
+        )
+        apple_supplied = [m for m in imp if is_module_supplied(m, ledgers)
+                           and m not in ("UIKit", "Foundation", "OpenUIKit",
+                                         "SwiftUI", "DeveloperToolsSupport",
+                                         "OpenCoreGraphics", "Symbols")]
+        mods_demand = len(imp)
+        mods = len(imp) - len(apple_supplied)
+        heavy = heavy_unsupplied
         netlib_files = sum(imp.get(n, 0) for n in NETLIBS)
         netuses = m["families"].get("networking", 0)
         sel = s.get("selector_sites", 0)
@@ -131,7 +164,9 @@ def main():
                     "nib_files": ibf, "nib_pct": round(nib_pct, 1),
                     "uikit_uses": u["uses"], "uikit_gap_uses": gap, "uikit_gap_types": gapT,
                     "uikit_eff_pct": round(100.0 * (u["uses"] - gap) / u["uses"], 1) if u["uses"] else 0,
-                    "modules": mods, "heavy_frameworks": heavy,
+                    "modules": mods, "modules_demand": mods_demand,
+                    "modules_supplied": apple_supplied,
+                    "heavy_frameworks": heavy, "heavy_demand": heavy_demand,
                     "model_uses": m["uses"], "net_uses": netuses, "netlib_files": netlib_files,
                     "selector_sites": sel, "selector_wiring": s.get("selector_wiring", 0),
                     "selector_deep": s.get("selector_deep", 0),
@@ -184,4 +219,5 @@ def main():
               + f"{r['verdict_b']:<24}{r['verdict_a']}")
 
 
-main()
+if __name__ == "__main__":
+    main()

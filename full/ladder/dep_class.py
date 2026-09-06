@@ -14,7 +14,13 @@ Classes, assigned by rule, in this order (first match wins):
                         in >=10% of its files
   UIKit-bound           imports UIKit in >=10% of its files (needs OpenUIKit,
                         not just Foundation -- a different, larger surface)
-  networking-bound      references the URLSession family (all ABSENT here)
+  networking-bound      references the URLSession family AND the family is
+                        still unsupplied. Guest Foundation now declares
+                        URLSession / URLRequest / URLResponse / HTTPURLResponse
+                        / URLSessionConfiguration (foundation_guest_sources.txt);
+                        URLSessionDataTask and URLComponents are still absent.
+                        A dep that only needs the guest-present names is no
+                        longer networking-bound.
   Foundation-heavy      >=1 model-layer reference per 2 files, no networking
   pure-Swift portable   none of the above
 
@@ -35,13 +41,22 @@ NET = {"URLSession", "URLSessionTask", "URLSessionDataTask", "URLSessionDownload
        "NSURLResponse", "NSHTTPURLResponse", "NSURLComponents", "NSURLConnection",
        "URLProtocol", "NSURLProtocol", "URLError"}
 
+# Guest Foundation (foundation_guest_sources.txt) supplies these networking
+# names as of the 2026-09-14 re-measure. A dep is networking-bound only on the
+# UNSUPPLIED remainder. URLSessionDataTask / URLComponents are still absent.
+GUEST_NET = {"URLSession", "URLSessionDelegate", "URLSessionTaskDelegate",
+             "URLSessionConfiguration", "URLRequest", "URLResponse",
+             "HTTPURLResponse", "URLCache", "URLProtocol", "URLError"}
+
 
 def classify(d):
     s, m = d["swiftui"], d["model"]
     files = max(1, s.get("files", 0))
     mlines = d["languages"]["lines"].get(".m", 0) + d["languages"]["lines"].get(".mm", 0)
     objc_pct = 100.0 * mlines / max(1, mlines + d["swift_lines"])
-    net = m["families"].get("networking", 0)
+    net_all = m["families"].get("networking", 0)
+    unsupplied_net = sum(c for name, c in m.get("all", {}).items()
+                         if name in NET and name not in GUEST_NET)
     # Thresholds, and why they are not "> 0". A FIRST PASS used `if net:` and
     # `if view_bearing_files:` and got two libraries wrong in a way that looked
     # authoritative: SwiftSoup (an HTML parser, ONE incidental URL-family
@@ -49,19 +64,22 @@ def classify(d):
     # "SwiftUI-bound" off a demo app and a documentation folder. The demo
     # folders are now excluded from the walk; these thresholds are the second
     # guard, so a single incidental reference cannot rename a library.
+    #
+    # Combine is now an OpenUIKit package product (Sources/Combine, 2026-09-05).
+    # import Combine no longer makes a dep SwiftUI/Combine-bound. SwiftUI
+    # still does: the product is a Focus-widget slice, not the framework.
     if objc_pct >= 30:
-        return "ObjC", objc_pct, net
+        return "ObjC", objc_pct, net_all
     if (s.get("view_bearing_files", 0) >= 3
-            or s.get("import_swiftui", 0) >= 0.05 * files
-            or s.get("import_combine", 0) >= 0.10 * files):
-        return "SwiftUI/Combine-bound", objc_pct, net
+            or s.get("import_swiftui", 0) >= 0.05 * files):
+        return "SwiftUI/Combine-bound", objc_pct, net_all
     if s.get("import_uikit", 0) >= 0.10 * files:
-        return "UIKit-bound", objc_pct, net
-    if net >= 25 and net >= files / 4:
-        return "networking-bound", objc_pct, net
+        return "UIKit-bound", objc_pct, net_all
+    if unsupplied_net >= 25 and unsupplied_net >= files / 4:
+        return "networking-bound", objc_pct, net_all
     if m["uses"] >= files / 2:
-        return "Foundation-heavy", objc_pct, net
-    return "pure-Swift portable", objc_pct, net
+        return "Foundation-heavy", objc_pct, net_all
+    return "pure-Swift portable", objc_pct, net_all
 
 
 def main():
