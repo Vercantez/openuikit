@@ -1,0 +1,31 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave15-repair-3",
+    "maxActive": 24,
+    "maxRuns": 1
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "spritekit": {
+      "agentId": "bc-117e29b9-fc18-51d1-8508-3a17c3f52995",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T07:35:00Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/267",
+      "expectedPriorHead": "831ba243b8093509b8c6b7cd62e390d8bbf39548",
+      "idempotencyKey": "7ff264e0-3a26-5c84-ab4b-ec6790f8aba7",
+      "launchStatus": "SENT",
+      "module": "SpriteKit",
+      "promptBytes": 1402,
+      "promptSha256": "62b4104a3a22292748c2d604157dedf38785a1504bdc85262ac1eb84907843c5",
+      "runId": "run-654f9fce-9134-4614-90f0-30c2b73ea3b0",
+      "runStatus": "running",
+      "slug": "spritekit"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}
