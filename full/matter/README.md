@@ -194,6 +194,81 @@ The Swift `async throws` overlay spelling of those ObjC selectors is still
 not awaitable on the sealed runner; Apple's empty-cache error (CHIP IM vs
 `invalidState`) remains an oracle question.
 
+## Depth pass 2026-09 (wave 18 / local evidence repair)
+
+Merged current `origin/main` (`c1973365`) into the Cursor cloud head
+`platform/cursor/port-matter-to-linux-e694` (`7220aac4`) on
+`agent/fw-matter-r`. Main already has the larger wave-10 cluster implementation
+and its repaired cache tests. Conflict resolution preserves that superset and
+all 22,588 implemented rows from main, plus the cloud AccessControl oracle
+question. Deduplicated the `MTRClustersWave10.swift` source-manifest entry
+introduced by the merge; the resulting manifest matches main.
+
+The supplied `/tmp/fw_merge_gate-matter.log` contained four success markers,
+including `FRAMEWORK_FANOUT_HOST_OK`, when inspected on this Mac; there were no
+`error:` or `REFUSING` lines to attribute an earlier rejection to. The cloud
+head has 21,953 implemented rows, below current main's 22,588, so replaying
+that ledger would lose depth.
+
+The cloud ledger also has 49 implemented claims that main correctly reduced
+to declared: their broad controller/factory/certificate tests do not exercise
+the cited identifiers (some methods do not exist in either source tree).
+This repair restores nine of those claims with direct behavioral evidence;
+the other 40 retain main's declared classification. No untested claim is
+promoted merely to preserve the cloud count.
+
+Six new synchronous, no-argument tests in `MatterParameterEvidenceTests.swift`
+exercise certificate-array assignment/clearing and instance isolation, OTA
+delegate assignment/clearing, operational flags and subscription limits,
+storage-configuration assignment/clearing, and abstract-parameter suspension.
+They use local values, make assertions after each mutation, and have no
+semaphore, run-loop, main-queue, network, or device waits. The existing
+startSuspended row now cites the focused suspension test as well. No product
+behavior or declaration changed; these are host storage checks, not evidence
+of Apple defaults, certificate validation, NSCopying, or service success.
+
+| Measurement | Current main | Repaired merge |
+| --- | ---: | ---: |
+| Implemented | 22,588 | 22,597 (+9) |
+| Declared | 809 | 800 |
+| Deferred | 5,025 | 5,025 |
+| Unavailable | 40 | 40 |
+| Not applicable | 0 | 0 |
+| Unique cited synchronous tests | 474 | 480 |
+| Main implemented rows lost | — | 0 |
+
+Top five implemented evidence counts (22,597 total):
+
+| Rows | Share | Test |
+| ---: | ---: | --- |
+| 3,788 | 16.76% | `MatterIDTests.swift#testIDRawValues` |
+| 3,212 | 14.21% | `MatterOptionSetTests.swift#testOptionSetAlgebra` |
+| 2,541 | 11.25% | `MatterEnumTests.swift#testEnumRawValues` |
+| 906 | 4.01% | `MatterOptionSetTests.swift#testOptionSetRawValues` |
+| 906 | 4.01% | `MatterEnumTests.swift#testEnumHashable` |
+
+The largest remaining test is
+`MatterThreadDiagnosticsClusterTests.swift#testThreadDiagnosticsFailClosed`
+(277 rows), well below the 40% non-table cap. All 480 cited anchors resolve
+to top-level synchronous no-argument functions. The immutable inputs and
+acceptance gate are unchanged; all changes relative to main are confined to
+`full/matter/`.
+
+**Local sealed gate: PASS (exit 0).** Ran the unmodified
+`timeout 3600 bash full/matter/tests/acceptance/test_host.sh` in the operator's
+`uikit-linux` container at `/gate-codex-matter`, using Swift 6.2.4 targeting
+`aarch64-unknown-linux-gnu`. Both library and runner compiled with
+`-warnings-as-errors`; the generated runner completed all 480 cited tests.
+All 151 local Swift/evidence/manifest/oracle-question files match the tested
+container snapshot byte-for-byte. Log: `/tmp/fw-matter-r-sealed-gate.log`.
+
+```text
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=Matter lane=large-partitioned symbols=28462
+FRAMEWORK_FANOUT_REFERENCE_OK
+MATTER_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Matter dylib=libMatter.dylib
+```
+
 ## Depth pass 2026-09 (wave 10 / evidence repair)
 
 Checked merge refused `4adf0f09` with **no depth gain** (implemented 19372 → 19372).
