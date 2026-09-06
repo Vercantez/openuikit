@@ -1,0 +1,46 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave17-repair-1",
+    "maxActive": 24,
+    "maxRuns": 2
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "matter": {
+      "agentId": "bc-eeacfda0-067f-5b33-bc42-ad6702ad1ac5",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T14:20:55Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/295",
+      "expectedPriorHead": "4adf0f0901394ba6034392efccaa9016afe965e3",
+      "idempotencyKey": "ea632a28-c194-5a49-ad9f-73eedca32363",
+      "launchStatus": "SENT",
+      "module": "Matter",
+      "promptBytes": 1391,
+      "promptSha256": "3f3cd03b0720867af100d5742e22a4fe81f67a4432166e43113524040bf0992d",
+      "runId": "run-4a891e8f-f239-4a17-bf06-037153f1aac8",
+      "runStatus": "running",
+      "slug": "matter"
+    },
+    "musickit": {
+      "agentId": "bc-4e548a96-4d30-52a2-ba77-52c5a935d46f",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T14:21:02Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/298",
+      "expectedPriorHead": "d959fd546b56e776beed9a9cb1c09e4519f35d6e",
+      "idempotencyKey": "38b897b3-aab8-55ba-ac31-8271e4c71147",
+      "launchStatus": "SENT",
+      "module": "MusicKit",
+      "promptBytes": 1403,
+      "promptSha256": "0d85b435c0a4bdc1b751788bfb750a34b02dba7d55ac9a12bc1644ad6bbda358",
+      "runId": "run-562d6be7-8bdd-472e-a106-62e425b18cb3",
+      "runStatus": "error",
+      "slug": "musickit"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

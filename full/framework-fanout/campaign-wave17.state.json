@@ -274,7 +274,7 @@
     "matter": {
       "agentId": "bc-eeacfda0-067f-5b33-bc42-ad6702ad1ac5",
       "agentName": "Port Matter to Linux",
-      "agentStatus": "IDLE",
+      "agentStatus": "ACTIVE",
       "agentUrl": "https://cursor.com/agents/bc-eeacfda0-067f-5b33-bc42-ad6702ad1ac5",
       "branches": [
         {
@@ -290,11 +290,11 @@
       "priority": 100,
       "resultBytes": 1516,
       "resultSha256": "4cbed364fa43c4451bdf8035d4e045d54aad57b5f772e422a479ea8004689416",
-      "runCreatedAt": "2026-09-06T11:58:26.162Z",
+      "runCreatedAt": "2026-09-06T14:20:57.143Z",
       "runDurationMs": 2858728,
-      "runId": "run-1037764e-ade1-4333-98f9-965eed3720d8",
-      "runStatus": "FINISHED",
-      "runUpdatedAt": "2026-09-06T12:46:05.431Z"
+      "runId": "run-4a891e8f-f239-4a17-bf06-037153f1aac8",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T14:20:58.365Z"
     },
     "metal": {
       "agentId": "bc-213463d8-dd0b-588d-9c18-4ee6f3400297",
@@ -363,13 +363,13 @@
       "launchStatus": "CREATED",
       "module": "MusicKit",
       "priority": 100,
-      "resultBytes": 178,
-      "resultSha256": "cb1de452726edde25f3416c7936ae834bcbdb7f0f0c9046ff91d0f890a0ff646",
-      "runCreatedAt": "2026-09-06T12:15:54.280Z",
-      "runDurationMs": 27088,
-      "runId": "run-a3076a56-74f9-48fb-bd86-14b49cf262f1",
+      "resultBytes": 1112,
+      "resultSha256": "d99c20517e5e80dc34e1ffb9675508f333119bc35bd1067ef545419f4198907d",
+      "runCreatedAt": "2026-09-06T14:21:03.510Z",
+      "runDurationMs": 769105,
+      "runId": "run-562d6be7-8bdd-472e-a106-62e425b18cb3",
       "runStatus": "FINISHED",
-      "runUpdatedAt": "2026-09-06T12:16:58.615Z"
+      "runUpdatedAt": "2026-09-06T14:33:53.432Z"
     },
     "vision": {
       "agentId": "bc-de7fb26d-8cda-535e-ab0e-62e2c68ab047",
@@ -432,5 +432,5 @@
     "url": "https://github.com/Vercantez/openuikit-linux-platform"
   },
   "schema": "openuikit.cursor-framework-campaign-state.v1",
-  "updatedAt": "2026-09-06T13:22:20Z"
+  "updatedAt": "2026-09-06T15:30:04Z"
 }
