@@ -145,12 +145,21 @@ final class UIDragDropTests: XCTestCase {
         XCTAssertEqual(spy.began, 0)
         window.tick(timestamp: 0.33)
         XCTAssertEqual(spy.began, 1)
-        XCTAssertNotNil(_UIDragDropCenter.active)
+        // Linux test class is @MainActor only off Linux (ActorIsolationTests.swift);
+        // XCTAssert's autoclosure is nonisolated and cannot read the isolated
+        // `_UIDragDropCenter.active`. MEASURED uikit-linux Swift 6.2.4:
+        // UIDragDropTests.swift:148/153 "main actor-isolated static property
+        // 'active' can not be referenced from a nonisolated autoclosure".
+        MainActor.assumeIsolated {
+            XCTAssertNotNil(_UIDragDropCenter.active)
+        }
         window.sendTouch(.moved, at: CGPoint(x: 80, y: 50), timestamp: 0.40)
         XCTAssertEqual(spy.moved, 1)
         window.sendTouch(.ended, at: CGPoint(x: 80, y: 50), timestamp: 0.45)
         XCTAssertEqual(spy.ended, 1)
-        XCTAssertNil(_UIDragDropCenter.active)
+        MainActor.assumeIsolated {
+            XCTAssertNil(_UIDragDropCenter.active)
+        }
     }
 
     func testDropInteractionReceivesSession() {
