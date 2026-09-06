@@ -62,7 +62,14 @@ open class UISearchController: UIViewController, UISearchBarDelegate {
         // raise the remote keyboard (golden still shows the tab bar).
         // Tabs focusSearch calls searchBar.becomeFirstResponder
         // explicitly. Do not become first responder from isActive.
-        if !isActive {
+        if isActive {
+            // MEASURED Notes t6000 / Tabs t6000, iPhone SE 2x / iOS 26.1:
+            // after cancel inside a tab-bar nav the inactive slot stays
+            // visible (bar 114 = 54+60, inset 124) until scroll hides it.
+            // First rest (t200) keeps height 0 — only a prior isActive
+            // reveals the slot. Ledger (no tab bar) restores 54.
+            _item?._bar?.searchSlotRevealed = true
+        } else {
             _ = searchBar.resignFirstResponder()
         }
         searchResultsUpdater?.updateSearchResults(for: self)

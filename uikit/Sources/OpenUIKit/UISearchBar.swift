@@ -411,6 +411,9 @@ open class UISearchBar: UIView {
     private var cancelButton: UIButton?
     /// Set by UINavigationBar when this bar is the active inline-nav search.
     var _navInlineActive = false
+    /// Set by UINavigationBar when this bar is the inactive slot below the
+    /// 54 pt content (Notes t6000 / Tabs t6000).
+    var _navInactiveSlot = false
     /// Set by UINavigationBar on pad: the field fills the 240/280 × 44
     /// trailing chrome (Tabs-ipad t200 / t4000: UISearchBarTextField
     /// frame equals the search bar).
@@ -549,6 +552,10 @@ open class UISearchBar: UIView {
             layoutNavInline()
             return
         }
+        if _navInactiveSlot {
+            layoutNavInactiveSlot()
+            return
+        }
         let fieldH = _UISearchFieldMetrics.scaledFieldHeight(compatibleWith: traitCollection)
         let y = (bounds.height - fieldH) / 2
         var right = bounds.width - UISearchBar.fieldSideInset
@@ -566,6 +573,19 @@ open class UISearchBar: UIView {
         searchTextField.frame = CGRect(x: UISearchBar.fieldSideInset, y: y,
                                        width: max(0, right - UISearchBar.fieldSideInset),
                                        height: fieldH)
+    }
+
+    /// MEASURED Notes t6000 / Tabs t6000, iPhone SE 2x / iOS 26.1:
+    /// inactive slot field `[16, 1, 343, 44]` in a 60 pt bar (16 = SE
+    /// system margin; landscape Notes t6000 `[20, 1, 627, 44]` in 667).
+    /// ax1 field `[16, 1, 343, 80]` in the 96 pt slot. No dismiss.
+    func layoutNavInactiveSlot() {
+        cancelButton?.isHidden = true
+        let fieldH = _UISearchFieldMetrics.scaledFieldHeight(compatibleWith: traitCollection)
+        let side = UITableView.iOSSystemMargin(width: bounds.width)
+        searchTextField.frame = CGRect(x: side, y: 1,
+                                         width: max(0, bounds.width - 2 * side),
+                                         height: fieldH)
     }
 
     func layoutNavInline() {

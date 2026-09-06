@@ -86,6 +86,40 @@ final class UISearchControllerTests: XCTestCase {
         XCTAssertEqual(bar.searchOverlayHeight, 0)
     }
 
+    /// MEASURED Notes t6000 / Tabs t6000, iPhone SE 2x / iOS 26.1:
+    /// after cancel inside a tab-bar nav the inactive slot stays 60 pt
+    /// below the 54 pt content (overlay 60, bar 114). A bare nav (Ledger)
+    /// keeps overlay 0 — `testSearchActiveExtraHeightMatchesTabsT4000`.
+    func testInactiveSearchSlotAfterCancelInTabBar() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        let savedIdiom = UIDevice.current.userInterfaceIdiom
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIDevice.current.userInterfaceIdiom = .phone
+        defer {
+            OpenUIKitRuntime.systemFontCut = saved
+            UIDevice.current.userInterfaceIdiom = savedIdiom
+        }
+        let list = UIViewController()
+        list.title = "Notes"
+        let sc = UISearchController(searchResultsController: nil)
+        list.navigationItem.searchController = sc
+        let nav = UINavigationController(rootViewController: list)
+        let tab = UITabBarController()
+        tab.viewControllers = [nav]
+        tab.view.frame = CGRect(x: 0, y: 0, width: 375, height: 667)
+        tab.view.layoutIfNeeded()
+        let bar = nav.navigationBar
+        XCTAssertEqual(bar.searchOverlayHeight, 0)
+        sc.isActive = true
+        XCTAssertEqual(bar.searchOverlayHeight, 6)
+        XCTAssertTrue(bar.searchSlotRevealed)
+        sc.isActive = false
+        XCTAssertEqual(bar.searchOverlayHeight, 60)
+        XCTAssertTrue(bar.showsInactiveSearchSlot)
+        XCTAssertEqual(bar.hideOnScrollContentBump(requestedY: 200), 0)
+        XCTAssertEqual(bar.searchInactiveSlotHeight(), 60)
+    }
+
     /// MEASURED /tmp/tabs-t2000-probe, iPhone SE 2x / iOS 26.1: assigning
     /// `title` overwrites `tabBarItem.title` (plain VC "Search" → "Library").
     func testTitleOverwritesTabBarItemTitle() {

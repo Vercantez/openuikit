@@ -63,7 +63,23 @@ final class UITableViewCellContentView: UIView {
     override var _defaultBaseLayoutMargins: UIEdgeInsets {
         guard let cell else { return super._defaultBaseLayoutMargins }
         var m = cell.layoutMargins
-        if cell.accessoryView != nil { m.right = super._defaultBaseLayoutMargins.right }
+        // MEASURED Notes t200 / t5000, iPhone SE 2x / iOS 26.1:
+        // disclosure `accessoryType` also eats the trailing edge —
+        // title label `[16, 15, 292.5, 20.5]` in a 316.5 pt content view
+        // (trailing 8, not the cell's 16). SwitchCell's `accessoryView`
+        // path is the same 8 pt (realapp_storage_light).
+        if cell.accessoryView != nil || cell.accessoryType != .none {
+            // Physical trailing (the accessory edge). MEASURED Notes
+            // t5000.rtl, iPhone SE 2x / iOS 26.1: labels `[8, 15, 292.5,
+            // 20.5]` in a 316.5 content view (accessory at cell x 16);
+            // LTR is `[16, 15, 292.5]` (trailing 8). RTL physical left is
+            // trailing.
+            if _layoutIsRTL {
+                m.left = super._defaultBaseLayoutMargins.left
+            } else {
+                m.right = super._defaultBaseLayoutMargins.right
+            }
+        }
         return m
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

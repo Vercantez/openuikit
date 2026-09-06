@@ -701,6 +701,45 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(nav.navigationBar.bounds.height, 54)
         XCTAssertEqual(nav.navigationBar.searchOverlayHeight, 0)
     }
+
+    // MARK: compact-height (landscape) tab bar
+
+    /// MEASURED Notes t200.landscape / Tabs t200.landscape, iPhone SE
+    /// 2x / iOS 26.1: compact VSC bar is 64 pt at y = H−64, platter 44,
+    /// items 36 pt at y 4 packed icon+title with 4 pt gaps.
+    func testCompactHeightTabBarIs64AndPacksIconTitle() {
+        UIDevice.current.userInterfaceIdiom = .phone
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            horizontalSizeClass: .compact, verticalSizeClass: .compact)
+        device(667, 375, scale: 2)
+
+        let tab = UITabBarController()
+        let notes = UIViewController()
+        notes.tabBarItem = UITabBarItem(title: "Notes", image: nil, tag: 0)
+        let settings = UIViewController()
+        settings.tabBarItem = UITabBarItem(title: "Settings", image: nil, tag: 1)
+        tab.viewControllers = [notes, settings]
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 667, height: 375))
+        window.rootViewController = tab
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(UITabBar.barHeight, 64)
+        XCTAssertEqual(tab.tabBar.frame,
+                       CGRect(x: 0, y: 311, width: 667, height: 64))
+        XCTAssertEqual(tab.tabBar.platter.frame.height, 44)
+        XCTAssertEqual(tab.tabBar.itemViews.count, 2)
+        XCTAssertEqual(tab.tabBar.itemViews[0].frame.minY, 4)
+        XCTAssertEqual(tab.tabBar.itemViews[0].frame.height, 36)
+        XCTAssertEqual(tab.tabBar.itemViews[0].frame.minX, 4, accuracy: 0.5)
+        XCTAssertEqual(
+            tab.tabBar.itemViews[1].frame.minX
+                - tab.tabBar.itemViews[0].frame.maxX,
+            4, accuracy: 0.5)
+        XCTAssertEqual(tab.tabBar.itemViews[0].titleLabel.font.pointSize, 12,
+                       accuracy: 1e-9)
+        XCTAssertEqual(tab.transitionView.safeAreaInsets.bottom, 64)
+    }
 }
 
 #if !os(Linux)
