@@ -2,12 +2,15 @@
 
 Codex Cloud tasks need an *environment*; the CLI can only run tasks inside one
 (`codex cloud exec --env <ENV_ID> --branch <branch> "<prompt>"`). Environments
-are created in the Codex web UI (chatgpt.com/codex → Environments). This file
+are created in the Codex web UI (chatgpt.com/codex → Environments) or, as this one
+was, with a POST to the same `/backend-api/wham/environments` endpoint the CLI reads
+(the CLI login in `~/.codex/auth.json` is enough). This file
 is the recipe; `.codex/setup.sh` is the script.
 
 | Field | Value |
 |---|---|
-| Repository | `Vercantez/openuikit-linux-platform` (the GitHub app must be granted this repo) |
+| Environment id | `6a9de055eaf081918405e62d8ea487f6` (created 2026-09-16; `codex cloud exec --env 6a9de055eaf081918405e62d8ea487f6 …`) |
+| Repository | `Vercantez/openuikit-linux-platform` (github-1353907498) |
 | Container image | universal (Ubuntu 24.04) |
 | Setup script | `bash .codex/setup.sh` |
 | Environment variables | `LANG=C.UTF-8`, `LC_ALL=C.UTF-8`, `OPENUIKIT_MACIOS_ROOT=/opt/openuikit-evidence/dotnet-macios` |
