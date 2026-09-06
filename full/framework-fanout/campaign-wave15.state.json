@@ -7,9 +7,16 @@
     "startingSha": "bff8535c68425cc39fb45cb00d447b0981b57242"
   },
   "createAttemptTimestamps": [
-    "2026-09-06T05:38:01Z",
-    "2026-09-06T05:38:04Z",
-    "2026-09-06T05:38:06Z"
+    "2026-09-06T05:53:43Z",
+    "2026-09-06T05:53:47Z",
+    "2026-09-06T05:53:50Z",
+    "2026-09-06T05:53:53Z",
+    "2026-09-06T05:53:56Z",
+    "2026-09-06T05:53:59Z",
+    "2026-09-06T05:54:02Z",
+    "2026-09-06T05:54:05Z",
+    "2026-09-06T05:54:07Z",
+    "2026-09-06T05:54:11Z"
   ],
   "createdAt": "2026-09-06T05:37:48Z",
   "frameworks": {
@@ -18,198 +25,316 @@
       "agentName": "Port Accelerate to Linux",
       "agentStatus": "ACTIVE",
       "agentUrl": "https://cursor.com/agents/bc-cb59117d-2bd3-56f9-a9a8-502b471da791",
-      "branches": [],
+      "branches": [
+        {
+          "branch": "cursor/port-accelerate-to-linux-4dc4",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "medium-full",
       "launchAttemptedAt": "2026-09-06T05:38:01Z",
       "launchStatus": "CREATED",
       "module": "Accelerate",
       "priority": 100,
+      "runCreatedAt": "2026-09-06T05:38:02.737Z",
       "runId": "run-d0c417e2-694e-4a0a-b99c-bc321a41520a",
-      "runStatus": "RUNNING"
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:38:03.388Z"
     },
     "appintents": {
       "agentId": "bc-ba85537f-0103-59fe-ade0-cff8e090425b",
       "agentName": "Port AppIntents to Linux",
       "agentStatus": "ACTIVE",
       "agentUrl": "https://cursor.com/agents/bc-ba85537f-0103-59fe-ade0-cff8e090425b",
-      "branches": [],
+      "branches": [
+        {
+          "branch": "cursor/port-appintents-to-linux-1b2c",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/259",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "medium-full",
       "launchAttemptedAt": "2026-09-06T05:38:04Z",
       "launchStatus": "CREATED",
       "module": "AppIntents",
       "priority": 100,
+      "runCreatedAt": "2026-09-06T05:38:05.603Z",
       "runId": "run-830103ec-4820-483e-a673-ee7308b4537b",
-      "runStatus": "RUNNING"
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:38:06.359Z"
     },
     "audiotoolbox": {
       "agentId": "bc-33bc2803-c476-5570-847c-f581f1b2d337",
       "agentName": "Port AudioToolbox to Linux",
-      "agentStatus": null,
-      "agentUrl": null,
-      "branches": [],
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-33bc2803-c476-5570-847c-f581f1b2d337",
+      "branches": [
+        {
+          "branch": "cursor/port-audiotoolbox-to-linux-c4c9",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "large-partitioned",
       "launchAttemptedAt": "2026-09-06T05:38:06Z",
-      "launchStatus": "CREATING",
+      "launchStatus": "CREATED",
       "module": "AudioToolbox",
       "priority": 100,
-      "runId": null,
-      "runStatus": null
+      "runCreatedAt": "2026-09-06T05:38:08.596Z",
+      "runId": "run-40473743-345b-4a5c-b6e6-bc865c44ea74",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:38:09.234Z"
     },
     "avfoundation": {
       "agentId": "bc-3da0c753-f613-50c6-a268-9db7f47079fd",
       "agentName": "Port AVFoundation to Linux",
-      "agentStatus": null,
-      "agentUrl": null,
-      "branches": [],
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-3da0c753-f613-50c6-a268-9db7f47079fd",
+      "branches": [
+        {
+          "branch": "cursor/port-avfoundation-to-linux-0d4e",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "medium-full",
-      "launchStatus": "PENDING",
+      "launchAttemptedAt": "2026-09-06T05:38:09Z",
+      "launchStatus": "CREATED",
       "module": "AVFoundation",
       "priority": 100,
-      "runId": null,
-      "runStatus": null
+      "runCreatedAt": "2026-09-06T05:38:11.489Z",
+      "runId": "run-a2093e23-7ab8-49b2-904b-a0bd8d5d816a",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:38:12.284Z"
     },
     "charts": {
       "agentId": "bc-980a9072-2adc-59f3-ae54-57d1f760b615",
       "agentName": "Port Charts to Linux",
-      "agentStatus": null,
-      "agentUrl": null,
-      "branches": [],
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-980a9072-2adc-59f3-ae54-57d1f760b615",
+      "branches": [
+        {
+          "branch": "cursor/port-charts-to-linux-c9ea",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "medium-full",
-      "launchStatus": "PENDING",
+      "launchAttemptedAt": "2026-09-06T05:38:12Z",
+      "launchStatus": "CREATED",
       "module": "Charts",
       "priority": 100,
-      "runId": null,
-      "runStatus": null
+      "runCreatedAt": "2026-09-06T05:38:14.433Z",
+      "runId": "run-c06a76a6-13f7-464b-b9f4-99402f7f2866",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:38:15.114Z"
     },
     "coredata": {
       "agentId": "bc-e320964f-f573-5163-99fa-a051e352e5cf",
       "agentName": "Port CoreData to Linux",
-      "agentStatus": null,
-      "agentUrl": null,
-      "branches": [],
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-e320964f-f573-5163-99fa-a051e352e5cf",
+      "branches": [
+        {
+          "branch": "cursor/port-coredata-to-linux-c39b",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "large-partitioned",
-      "launchStatus": "PENDING",
+      "launchAttemptedAt": "2026-09-06T05:38:15Z",
+      "launchStatus": "CREATED",
       "module": "CoreData",
       "priority": 100,
-      "runId": null,
-      "runStatus": null
+      "runCreatedAt": "2026-09-06T05:38:17.364Z",
+      "runId": "run-4c80f7d7-ba13-44d4-be5c-3dd56efbc0c7",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:38:18.100Z"
     },
     "coremedia": {
       "agentId": "bc-2839e8d0-fcf4-51e9-b8a6-34cf10f34e03",
       "agentName": "Port CoreMedia to Linux",
-      "agentStatus": null,
-      "agentUrl": null,
-      "branches": [],
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-2839e8d0-fcf4-51e9-b8a6-34cf10f34e03",
+      "branches": [
+        {
+          "branch": "cursor/port-coremedia-to-linux-4743",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "large-partitioned",
-      "launchStatus": "PENDING",
+      "launchAttemptedAt": "2026-09-06T05:53:43Z",
+      "launchStatus": "CREATED",
       "module": "CoreMedia",
       "priority": 100,
-      "runId": null,
-      "runStatus": null
+      "runCreatedAt": "2026-09-06T05:53:45.589Z",
+      "runId": "run-7ff72676-f5f6-4a26-96bb-fc4e8ff160d7",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:53:46.320Z"
     },
     "coretext": {
       "agentId": "bc-3451b69a-7918-5bd0-92b2-a65d26a045ea",
       "agentName": "Port CoreText to Linux",
-      "agentStatus": null,
-      "agentUrl": null,
-      "branches": [],
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-3451b69a-7918-5bd0-92b2-a65d26a045ea",
+      "branches": [
+        {
+          "branch": "cursor/port-coretext-to-linux-e025",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "medium-full",
-      "launchStatus": "PENDING",
+      "launchAttemptedAt": "2026-09-06T05:53:47Z",
+      "launchStatus": "CREATED",
       "module": "CoreText",
       "priority": 100,
-      "runId": null,
-      "runStatus": null
+      "runCreatedAt": "2026-09-06T05:53:48.624Z",
+      "runId": "run-f65debe7-0f06-46f7-8d31-86ae86567d36",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:53:49.304Z"
     },
     "intents": {
       "agentId": "bc-13c07dd4-2472-5795-b801-49c33b02ec74",
       "agentName": "Port Intents to Linux",
-      "agentStatus": null,
-      "agentUrl": null,
-      "branches": [],
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-13c07dd4-2472-5795-b801-49c33b02ec74",
+      "branches": [
+        {
+          "branch": "cursor/port-intents-to-linux-c2b1",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "medium-full",
-      "launchStatus": "PENDING",
+      "launchAttemptedAt": "2026-09-06T05:53:50Z",
+      "launchStatus": "CREATED",
       "module": "Intents",
       "priority": 100,
-      "runId": null,
-      "runStatus": null
+      "runCreatedAt": "2026-09-06T05:53:51.658Z",
+      "runId": "run-1531a0db-d1ca-4f37-b8a9-deda200fe8b6",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:53:52.285Z"
     },
     "metal": {
       "agentId": "bc-bcdf37cb-dd4e-51e3-9de6-628d1cfbd6a2",
       "agentName": "Port Metal to Linux",
-      "agentStatus": null,
-      "agentUrl": null,
-      "branches": [],
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-bcdf37cb-dd4e-51e3-9de6-628d1cfbd6a2",
+      "branches": [
+        {
+          "branch": "cursor/port-metal-to-linux-bfbf",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "large-partitioned",
-      "launchStatus": "PENDING",
+      "launchAttemptedAt": "2026-09-06T05:53:53Z",
+      "launchStatus": "CREATED",
       "module": "Metal",
       "priority": 100,
-      "runId": null,
-      "runStatus": null
+      "runCreatedAt": "2026-09-06T05:53:54.737Z",
+      "runId": "run-e254ecb3-f475-4fc9-ac83-e73927b18d88",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:53:55.391Z"
     },
     "metalperformanceshaders": {
       "agentId": "bc-27e18c94-df8e-5606-9cbc-f3de8f06b221",
       "agentName": "Port MetalPerformanceShaders to Linux",
-      "agentStatus": null,
-      "agentUrl": null,
-      "branches": [],
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-27e18c94-df8e-5606-9cbc-f3de8f06b221",
+      "branches": [
+        {
+          "branch": "cursor/port-metalperformanceshaders-to-linux-68c7",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "large-partitioned",
-      "launchStatus": "PENDING",
+      "launchAttemptedAt": "2026-09-06T05:53:56Z",
+      "launchStatus": "CREATED",
       "module": "MetalPerformanceShaders",
       "priority": 100,
-      "runId": null,
-      "runStatus": null
+      "runCreatedAt": "2026-09-06T05:53:57.832Z",
+      "runId": "run-69ceb42d-140f-440e-b114-bcc0735e1d28",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:53:58.494Z"
     },
     "network": {
       "agentId": "bc-876e72ed-3985-5ffc-91c3-7c02370cbae0",
       "agentName": "Port Network to Linux",
-      "agentStatus": null,
-      "agentUrl": null,
-      "branches": [],
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-876e72ed-3985-5ffc-91c3-7c02370cbae0",
+      "branches": [
+        {
+          "branch": "cursor/port-network-to-linux-701c",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "medium-full",
-      "launchStatus": "PENDING",
+      "launchAttemptedAt": "2026-09-06T05:53:59Z",
+      "launchStatus": "CREATED",
       "module": "Network",
       "priority": 100,
-      "runId": null,
-      "runStatus": null
+      "runCreatedAt": "2026-09-06T05:54:00.734Z",
+      "runId": "run-24e4784d-166f-4742-9ed6-86cf05f98b27",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:54:01.422Z"
     },
     "scenekit": {
       "agentId": "bc-588cef8e-c90f-58b1-89e9-d85fbbf64fc0",
       "agentName": "Port SceneKit to Linux",
-      "agentStatus": null,
-      "agentUrl": null,
-      "branches": [],
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-588cef8e-c90f-58b1-89e9-d85fbbf64fc0",
+      "branches": [
+        {
+          "branch": "cursor/port-scenekit-to-linux-4f63",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "large-partitioned",
-      "launchStatus": "PENDING",
+      "launchAttemptedAt": "2026-09-06T05:54:02Z",
+      "launchStatus": "CREATED",
       "module": "SceneKit",
       "priority": 100,
-      "runId": null,
-      "runStatus": null
+      "runCreatedAt": "2026-09-06T05:54:03.642Z",
+      "runId": "run-249ee70f-aa6b-4a33-878f-55d68211d577",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:54:04.407Z"
     },
     "spritekit": {
       "agentId": "bc-117e29b9-fc18-51d1-8508-3a17c3f52995",
       "agentName": "Port SpriteKit to Linux",
-      "agentStatus": null,
-      "agentUrl": null,
-      "branches": [],
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-117e29b9-fc18-51d1-8508-3a17c3f52995",
+      "branches": [
+        {
+          "branch": "cursor/port-spritekit-to-linux-1dc3",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "large-partitioned",
-      "launchStatus": "PENDING",
+      "launchAttemptedAt": "2026-09-06T05:54:05Z",
+      "launchStatus": "CREATED",
       "module": "SpriteKit",
       "priority": 100,
-      "runId": null,
-      "runStatus": null
+      "runCreatedAt": "2026-09-06T05:54:06.450Z",
+      "runId": "run-f981daee-5fa4-44ad-88ac-1671d275f352",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:54:07.137Z"
     },
     "storekit": {
       "agentId": "bc-ad305dba-a44e-5457-80b9-a6698f13275e",
       "agentName": "Port StoreKit to Linux",
-      "agentStatus": null,
-      "agentUrl": null,
-      "branches": [],
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-ad305dba-a44e-5457-80b9-a6698f13275e",
+      "branches": [
+        {
+          "branch": "cursor/port-storekit-to-linux-28d4",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
       "lane": "medium-full",
-      "launchStatus": "PENDING",
+      "launchAttemptedAt": "2026-09-06T05:54:07Z",
+      "launchStatus": "CREATED",
       "module": "StoreKit",
       "priority": 100,
-      "runId": null,
-      "runStatus": null
+      "runCreatedAt": "2026-09-06T05:54:09.876Z",
+      "runId": "run-9cff4740-6e5e-4ceb-9ad1-eeca57764067",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-06T05:54:10.906Z"
     },
     "vision": {
       "agentId": "bc-6d49db10-cbe9-5caf-9c99-849d44efc4a0",
@@ -218,6 +343,7 @@
       "agentUrl": null,
       "branches": [],
       "lane": "large-partitioned",
+      "launchAttemptedAt": "2026-09-06T05:54:11Z",
       "launchStatus": "PENDING",
       "module": "Vision",
       "priority": 100,
@@ -235,5 +361,5 @@
     "url": "https://github.com/Vercantez/openuikit-linux-platform"
   },
   "schema": "openuikit.cursor-framework-campaign-state.v1",
-  "updatedAt": "2026-09-06T05:38:06Z"
+  "updatedAt": "2026-09-06T05:55:25Z"
 }
