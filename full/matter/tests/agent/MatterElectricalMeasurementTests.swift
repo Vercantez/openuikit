@@ -2,7 +2,7 @@ import Foundation
 import Dispatch
 import Matter
 
-func testElectricalMeasurementFailClosed() {
+func testElectricalMeasurementReadFailClosed() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
@@ -11,12 +11,6 @@ func testElectricalMeasurementFailClosed() {
         mtrRequire(false, "MTRBaseClusterElectricalMeasurement init")
         return
     }
-    cluster.getProfileCommand(with: MTRElectricalMeasurementClusterGetMeasurementProfileCommandParams(), completion: { _ in })
-    cluster.getProfileCommand(with: MTRElectricalMeasurementClusterGetMeasurementProfileCommandParams(), completionHandler: { _ in })
-    cluster.getProfileInfoCommand(completion: { _ in })
-    cluster.getProfileInfoCommand(completionHandler: { _ in })
-    cluster.getProfileInfoCommand(with: MTRElectricalMeasurementClusterGetProfileInfoCommandParams(), completion: { _ in })
-    cluster.getProfileInfoCommand(with: MTRElectricalMeasurementClusterGetProfileInfoCommandParams(), completionHandler: { _ in })
     cluster.readAttributeAcActivePowerOverload(completion: { _, _ in })
     cluster.readAttributeAcActivePowerOverload(completionHandler: { _, _ in })
     cluster.readAttributeAcCurrentDivisor(completion: { _, _ in })
@@ -283,6 +277,17 @@ func testElectricalMeasurementFailClosed() {
     cluster.readAttributeTotalReactivePower(completionHandler: { _, _ in })
     cluster.readAttributeVoltageOverload(completion: { _, _ in })
     cluster.readAttributeVoltageOverload(completionHandler: { _, _ in })
+}
+
+func testElectricalMeasurementSubscribeFailClosed() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    guard let cluster = MTRBaseClusterElectricalMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRBaseClusterElectricalMeasurement init")
+        return
+    }
     cluster.subscribeAttributeAcActivePowerOverload(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, _ in })
     cluster.subscribeAttributeAcActivePowerOverload(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, _ in })
     cluster.subscribeAttributeAcCurrentDivisor(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, _ in })
@@ -549,6 +554,23 @@ func testElectricalMeasurementFailClosed() {
     cluster.subscribeAttributeTotalReactivePower(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, _ in })
     cluster.subscribeAttributeVoltageOverload(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, _ in })
     cluster.subscribeAttributeVoltageOverload(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, _ in })
+}
+
+func testElectricalMeasurementCommandFailClosed() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    guard let cluster = MTRBaseClusterElectricalMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRBaseClusterElectricalMeasurement init")
+        return
+    }
+    cluster.getProfileCommand(with: MTRElectricalMeasurementClusterGetMeasurementProfileCommandParams(), completion: { _ in })
+    cluster.getProfileCommand(with: MTRElectricalMeasurementClusterGetMeasurementProfileCommandParams(), completionHandler: { _ in })
+    cluster.getProfileInfoCommand(completion: { _ in })
+    cluster.getProfileInfoCommand(completionHandler: { _ in })
+    cluster.getProfileInfoCommand(with: MTRElectricalMeasurementClusterGetProfileInfoCommandParams(), completion: { _ in })
+    cluster.getProfileInfoCommand(with: MTRElectricalMeasurementClusterGetProfileInfoCommandParams(), completionHandler: { _ in })
 }
 
 func testClusterElectricalMeasurementCache() {

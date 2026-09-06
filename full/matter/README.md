@@ -123,9 +123,38 @@ largest unimplemented cluster families.
 | 906 | 5.8% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumHashable` |
 
 Largest new family tests: cluster Params/Response/Event/Struct value
-types (899 rows), `MTRBaseClusterElectricalMeasurement` fail-closed I/O
-(541), Thread Network Diagnostics, UnitTesting cache reads, Thermostat,
+types (split per family; see evidence repair below),
+`MTRBaseClusterElectricalMeasurement` fail-closed I/O (read/subscribe/command),
+Thread Network Diagnostics, UnitTesting cache reads, Thermostat,
 ColorControl, DoorLock.
+
+### Evidence repair (merge refusal at 08c2f15c)
+
+The checked merge refused `testClusterParamsInitCodingDescription` as
+evidence concentration (899 of 4659 remaining implemented rows). This
+repair keeps the same implemented count and splits that bulk citation:
+
+- Params/Response/Event/Struct rows now cite a **per-family** test
+  (`testColorControlParams`, `testDoorLockParamsGroup1`/`Group2`,
+  `testUnitTestingParamsGroup1`/`Group2`, …). Each test inits the type,
+  writes and reads every stored field, checks `description`, and calls
+  `init(responseValue:)` where the graph has it.
+- `MTRBaseClusterElectricalMeasurement` fail-closed I/O is split into
+  read / subscribe / command tests so it is no longer a 541-row blob.
+
+**Coverage after repair:** 15645 implemented / 854 declared / 11923 deferred / 40 unavailable / 0 not-applicable
+(implemented count unchanged; 16499 nondeferred).
+
+**Top remaining (non table-driven) evidence** — 4292 rows after excluding
+enum/option-set/C-constant table tests; largest share 6.5% (cap 40%):
+
+| rows | share | evidence |
+| ---: | ---: | --- |
+| 277 | 6.5% | `test:full/matter/tests/agent/MatterThreadDiagnosticsClusterTests.swift#testThreadDiagnosticsFailClosed` |
+| 266 | 6.2% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementReadFailClosed` |
+| 266 | 6.2% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementSubscribeFailClosed` |
+| 253 | 5.9% | `test:full/matter/tests/agent/MatterUnitTestingClusterTests.swift#testClusterUnitTestingCache` |
+| 245 | 5.7% | `test:full/matter/tests/agent/MatterThermostatClusterTests.swift#testThermostatFailClosed` |
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
