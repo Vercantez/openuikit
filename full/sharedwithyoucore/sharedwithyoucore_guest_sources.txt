@@ -1,0 +1,6 @@
+full/sharedwithyoucore/SWAction.swift
+full/sharedwithyoucore/SWCollaborationCoordinator.swift
+full/sharedwithyoucore/SWCollaborationMetadata.swift
+full/sharedwithyoucore/SWCollaborationOption.swift
+full/sharedwithyoucore/SWPerson.swift
+full/sharedwithyoucore/SharedWithYouCore.swift
