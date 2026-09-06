@@ -128,8 +128,12 @@ open class MPSImage: NSObject {
         descriptor.pixelFormat = imageDescriptor.pixelFormat
         descriptor.width = imageDescriptor.width
         descriptor.height = imageDescriptor.height
-        descriptor.arrayLength = max(imageDescriptor.numberOfImages, 1)
-        descriptor.textureType = imageDescriptor.numberOfImages > 1 ? .type2DArray : .type2D
+        // Five feature channels require two RGBA slices per image. The
+        // testMPSImageFeatureSlicesAndBatch probe uses 2x1x5, two images:
+        // 4 slices * 2 pixels * 4 bytes = 32 bytes (previously 16).
+        let slicesPerImage = max((imageDescriptor.featureChannels + 3) / 4, 1)
+        descriptor.arrayLength = max(imageDescriptor.numberOfImages, 1) * slicesPerImage
+        descriptor.textureType = descriptor.arrayLength > 1 ? .type2DArray : .type2D
         descriptor.usage = imageDescriptor.usage
         descriptor.cpuCacheMode = imageDescriptor.cpuCacheMode
         descriptor.storageMode = imageDescriptor.storageMode
@@ -155,7 +159,7 @@ open class MPSImage: NSObject {
             texture: texture,
             featureChannels: featureChannels,
             featureChannelFormat: mpsChannelFormat(for: texture.pixelFormat),
-            numberOfImages: max(texture.arrayLength, 1),
+            numberOfImages: max(texture.arrayLength / max((featureChannels + 3) / 4, 1), 1),
             parent: nil
         )
     }
@@ -296,11 +300,12 @@ open class MPSImage: NSObject {
         featureChannelInfo: MPSImageReadWriteParams,
         imageIndex: Int
     ) {
-        _ = (bytesPerImage, imageIndex)
         copyRegion(
             region,
             featureChannelInfo: featureChannelInfo,
             bytesPerRow: bytesPerRow,
+            bytesPerImage: bytesPerImage,
+            imageIndex: imageIndex,
             dataLayout: dataLayout,
             destination: dataBytes,
             writing: false
@@ -359,11 +364,12 @@ open class MPSImage: NSObject {
         featureChannelInfo: MPSImageReadWriteParams,
         imageIndex: Int
     ) {
-        _ = (bytesPerImage, imageIndex)
         copyRegion(
             region,
             featureChannelInfo: featureChannelInfo,
             bytesPerRow: bytesPerRow,
+            bytesPerImage: bytesPerImage,
+            imageIndex: imageIndex,
             dataLayout: dataLayout,
             destination: UnsafeMutableRawPointer(mutating: dataBytes),
             writing: true
@@ -396,61 +402,57 @@ open class MPSImage: NSObject {
         _ region: MTLRegion,
         featureChannelInfo: MPSImageReadWriteParams,
         bytesPerRow: Int,
+        bytesPerImage: Int,
+        imageIndex: Int,
         dataLayout: MPSDataLayout,
         destination: UnsafeMutableRawPointer,
         writing: Bool
     ) {
         let channelBytes = mpsHostBytesPerChannel(featureChannelFormat)
-        let channels = max(featureChannelInfo.numberOfFeatureChannelsToReadWrite, 1)
+        let channels = featureChannelInfo.numberOfFeatureChannelsToReadWrite
         let channelOffset = featureChannelInfo.featureChannelOffset
         let x0 = max(region.origin.x, 0)
         let y0 = max(region.origin.y, 0)
         let rw = min(region.size.width, width - x0)
         let rh = min(region.size.height, height - y0)
-        guard rw > 0, rh > 0 else { return }
+        guard rw > 0, rh > 0, channels > 0, channelOffset >= 0,
+              channelOffset <= featureChannels, channels <= featureChannels - channelOffset,
+              imageIndex >= 0, imageIndex < numberOfImages else { return }
+        let lanes = max(pixelSize / channelBytes, 1)
+        let slicesPerImage = (featureChannels + lanes - 1) / lanes
+        let sliceBytes = width * height * pixelSize
+        let planar = dataLayout == .featureChannelsxHeightxWidth
+        let rowBytes = max(bytesPerRow, rw * (planar ? 1 : channels) * channelBytes)
+        let planeBytes = max(bytesPerImage, rowBytes * rh)
+        // Host texture storage follows array-slice order. External HWC/CHW
+        // buffers remain tightly packed except for caller-specified strides.
+        // Read current texture bytes so image wrappers observe texture writes.
+        if let host = texture as? MPSHostTexture { hostStorage = host.bytes }
+        guard (imageIndex + 1) * slicesPerImage * sliceBytes <= hostStorage.count else { return }
         hostStorage.withUnsafeMutableBytes { buffer in
             guard let base = buffer.baseAddress else { return }
-            if dataLayout == .featureChannelsxHeightxWidth {
-                let rowBytes = max(bytesPerRow, rw * channelBytes)
-                let planeBytes = rowBytes * rh
-                for c in 0..<channels {
-                    let imageChannel = channelOffset + c
-                    for row in 0..<rh {
-                        for col in 0..<rw {
-                            let imageIndex = ((y0 + row) * width + (x0 + col)) * featureChannels + imageChannel
-                            let externalIndex = c * planeBytes + row * rowBytes + col * channelBytes
-                            let imagePtr = base.advanced(by: imageIndex * channelBytes)
-                            let externalPtr = destination.advanced(by: externalIndex)
-                            if writing {
-                                imagePtr.copyMemory(from: UnsafeRawPointer(externalPtr), byteCount: channelBytes)
-                            } else {
-                                externalPtr.copyMemory(from: UnsafeRawPointer(imagePtr), byteCount: channelBytes)
-                            }
+            for row in 0..<rh {
+                for col in 0..<rw {
+                    for channel in 0..<channels {
+                        let feature = channelOffset + channel
+                        let slice = imageIndex * slicesPerImage + feature / lanes
+                        let imageByte = slice * sliceBytes + ((y0 + row) * width + x0 + col) * pixelSize
+                            + (feature % lanes) * channelBytes
+                        let externalByte = planar
+                            ? channel * planeBytes + row * rowBytes + col * channelBytes
+                            : row * rowBytes + (col * channels + channel) * channelBytes
+                        let imagePointer = base.advanced(by: imageByte)
+                        let externalPointer = destination.advanced(by: externalByte)
+                        if writing {
+                            imagePointer.copyMemory(from: UnsafeRawPointer(externalPointer), byteCount: channelBytes)
+                        } else {
+                            externalPointer.copyMemory(from: UnsafeRawPointer(imagePointer), byteCount: channelBytes)
                         }
-                    }
-                }
-            } else {
-                for row in 0..<rh {
-                    let imageRow = (y0 + row) * width * featureChannels * channelBytes
-                        + x0 * featureChannels * channelBytes
-                        + channelOffset * channelBytes
-                    let externalRow = row * max(bytesPerRow, rw * channels * channelBytes)
-                    let length = rw * channels * channelBytes
-                    if writing {
-                        let src = UnsafeRawPointer(destination).advanced(by: externalRow)
-                        base.advanced(by: imageRow).copyMemory(from: src, byteCount: length)
-                    } else {
-                        destination.advanced(by: externalRow).copyMemory(
-                            from: UnsafeRawPointer(base.advanced(by: imageRow)),
-                            byteCount: length
-                        )
                     }
                 }
             }
         }
-        if writing, let host = texture as? MPSHostTexture {
-            host.bytes = hostStorage
-        }
+        if writing, let host = texture as? MPSHostTexture { host.bytes = hostStorage }
     }
 
     func mpsHostStorageCount() -> Int { hostStorage.count }

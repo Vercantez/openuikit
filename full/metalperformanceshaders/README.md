@@ -25,7 +25,11 @@ is a separate central review step.
   equalization LUT, arithmetic add/sub/mul/div. ClipRect writes only the
   destination region; offset is the source coordinate of `clipRect.origin`.
 - `MPSImage` packed `HeightxWidthxFeatureChannels` and
-  `featureChannelsxHeightxWidth` byte layouts.
+  `featureChannelsxHeightxWidth` byte layouts, including four-channel texture
+  slices, batch image indices, and padded row/plane transfers.
+- Contiguous host `MPSNDArrayIdentity` reshape views/copies and byte-preserving
+  `MPSNNReshape` for unorm8/float16/float32 images. Crop/resize configuration
+  owns its data; neural sampling and gradient-state generation stay fail-closed.
 - Host `float32` GEMM / GEMV with alpha/beta/transposes and exact row strides,
   plus `MPSMatrixSoftMax`, `MPSMatrixFindTopK`, and `MPSMatrixSum`.
 - CNN / NN-graph / RNN descriptors (`MPSCNNConvolutionDescriptor`,
@@ -166,6 +170,85 @@ fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`).
 `swiftc` is Swift 6.2.4 / linux and the sealed gate compiles with a clean
 product tree (`products=clean`). Starting commit
 `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b` matched.
+
+### Local continuation: `agent/fw-metalperformanceshaders-c`
+
+This continuation starts on the existing wave-9 tree at `3e9bada0` and keeps
+all earlier implementations and tests. Only `full/metalperformanceshaders/`
+is changed. No Apple simulator, network service or GPU result was used as an
+oracle; the measurements below are deterministic Linux CPU/byte-layout probes.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 2795 | 2821 |
+| declared | 2 | 2 |
+| deferred | 585 | 559 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: **26 exact identifiers**, split among `MPSNDArrayIdentity`
+(6), `MPSNNReshape` (7), `MPSNNCropAndResizeBilinear` (7), and
+`MPSNNResizeBilinear` (6). Every promoted row cites the synchronous focused test
+that exercises its identifier. The resize/crop classes provide validated,
+owned configuration data with fail-closed encode; their pixels are not claimed.
+No unavailable or not-applicable rows were added or reclassified.
+
+| measurement | before | after / evidence |
+| --- | --- | --- |
+| `MPSImage`, unorm8, width 2, height 1, 5 channels, 2 images | 2 slices, 16 allocated bytes (insufficient for 20 logical bytes) | 4 slices, 32 bytes; all 32 physical bytes checked against hand-computed RGBA slices in `MPSImageSliceTests.swift#testMPSImageFeatureSlicesAndBatch` |
+| Image batch/channel addressing | `imageIndex` ignored; channels addressed as an unpadded flat pixel stream | Independent image 0/1 payloads; C3/C4 transfers cross the slice boundary; row/plane padding remains unchanged in `testMPSImageFeatureSliceStrides` |
+| NDArray reshape | Family absent | Four reshape overloads exercised; six float32 bit patterns (including signed zero, infinities and a NaN payload) preserved exactly; chained views observe writes both ways; explicit destinations copy independently |
+| Packed image reshape | Family absent | 2x1x5 -> 1x5x2 preserves all 10/20/40 bytes for unorm8/float16/float32; both items in explicit and allocating batches checked |
+| Crop descriptor storage | Family absent | Two finite, nontrivial regions survive mutation/release of the caller buffer and release of the original kernel after copying |
+| Focused regression suite | 65/65 passing | 76/76 passing, including every earlier focused test |
+
+`MPSNDArrayIdentity` shares mutable storage for contiguous reshape views and
+copies bytes into an explicit destination when a host command buffer is
+provided. Shape products must agree, be positive and fit in `Int`; fractional
+NSNumber dimensions, incompatible destination shapes/types and non-nil compute
+encoders refuse before modifying output. Views do not allocate another payload.
+The existing general `arrayView`/strided NDArray APIs were not broadened.
+
+`MPSNNReshape` supports one complete image per object, unchanged scalar type,
+default offsets/clip and packed HWC order. It rejects unsupported parent images,
+embedded image batches, non-default channel offsets/clip, invalid dimensions and
+unsupported scalar formats. Explicit gradient-state overloads clear their output
+state and record refusal; they do not fabricate a gradient state. Allocating
+single-image refusal returns the unchanged source with the refusal marker;
+allocating batch refusal returns an empty array. Temporary read-count semantics,
+Apple alias/copy decisions and crop/resize sampling remain oracle questions.
+The pre-existing local Metal stand-ins remain the sealed gate's device layer;
+central integration with the separate Metal module is still outside this lane.
+
+Top-5 implemented evidence distribution after this continuation:
+
+| citations | share | evidence |
+| ---: | ---: | --- |
+| 377 | 13.4% | `MPSTypesTests.swift#testMPSOptionSetAlgebra` |
+| 343 | 12.2% | `MPSTypesTests.swift#testMPSEnumRawValues` |
+| 243 | 8.6% | `MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels` |
+| 135 | 4.8% | `MPSGeometryTests.swift#testMPSGeometryStructs` |
+| 104 | 3.7% | `MPSGeometryTests.swift#testMPSPackedAndRayStructs` |
+
+All 2,821 implemented citations resolve to actual top-level synchronous,
+no-argument functions in `tests/agent/*Tests.swift`. The largest non-table test
+remains the earlier 243-row test; no bulk relabel was performed.
+
+Validation in the operator's `uikit-linux` container, private checkout
+`/work-fw-metalperformanceshaders-c`, Swift **6.2.4**, aarch64 Linux:
+
+- Sealed `tests/acceptance/test_host.sh`: `FRAMEWORK_FANOUT_HOST_OK module=MetalPerformanceShaders`.
+- New `tests/test_agent.sh` compiles with warnings as errors and executes every
+  focused test: `MPS_FOCUSED_TESTS_OK count=76`. These are all shell tests present
+  under this framework; temporary build products are removed on exit.
+- `python3 -B full/framework-fanout/validate_seed.py --framework full/metalperformanceshaders --phase deliverable`:
+  `FRAMEWORK_FANOUT_DELIVERABLE_OK`, both in the container and the local worktree
+  (local invocation from `uikit/` uses `../full/` paths).
+- A separate baseline compilation substituted the unmodified `HEAD` version
+  of `MPSImage.swift` and safely queried allocation without oversized writes:
+  `MPS_IMAGE_BASELINE images=2 channels=5 slices=2 bytes=16`.
+- The sealed runtime now also exercises NDArray shared reshape and the
+  five-channel image reshape. Immutable inputs and the sealed gate are untouched.
 
 ## Depth pass 2026-09 (wave 9)
 
