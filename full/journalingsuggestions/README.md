@@ -76,14 +76,14 @@ Focused checks live in `tests/agent/*Tests.swift` as top-level `func test*()`.
 The sealed gate prints `JOURNALINGSUGGESTIONS_AGENT_RUNTIME_OK` after calling
 each cited test once.
 
-Environment: `git rev-parse HEAD` matched
-`343270ce44481a5ae11b87a6e0713e396ada1ef2`. `swiftc` reports Swift 6.2.4,
-target `x86_64-unknown-linux-gnu`. `.cursor/verify-cloud-environment.sh`
-did not emit `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
-because `scratch/ladder-corpus/focus-ios` is absent on this VM (observed
-Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs campaign
-`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). The sealed gate compiles
-with a clean product tree (`products=clean`).
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=JournalingSuggestions lane=leaf-full symbols=931
+FRAMEWORK_FANOUT_REFERENCE_OK
+JOURNALINGSUGGESTIONS_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=JournalingSuggestions dylib=libJournalingSuggestions.dylib
+```
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this snapshot fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 / linux and the sealed gate compiled with a clean product tree (`products=clean`). Starting commit `343270ce44481a5ae11b87a6e0713e396ada1ef2` matched.
 
 Run `bash full/journalingsuggestions/tests/acceptance/test_host.sh` from the
 repo root. Keep generated products out of the tree.
