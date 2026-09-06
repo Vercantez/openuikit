@@ -648,7 +648,10 @@ open class WKWebView: UIView {
     /// String-keypath KVO used by Focus. Typed `observe(\.url)` is delivered
     /// through Foundation's portable observation substrate; this path delivers
     /// the classic `addObserver` seam deterministically without an ObjC runtime.
-    #if canImport(Darwin)
+    // MEASURED focus-guest-linux, arm64-apple-macos15 guest: objc4's
+    // NSObject has no Foundation KVO methods to override (3 diagnostics).
+    // The guest uses the portable observer storage below.
+    #if canImport(Darwin) && !OPENUIKIT_GUEST
     open override func addObserver(
         _ observer: NSObject,
         forKeyPath keyPath: String,
@@ -1295,3 +1298,7 @@ private final class _WKPortableURLSchemeTask: NSObject, WKURLSchemeTask {
         stopped = true
     }
 }
+
+#if OPENUIKIT_GUEST
+@_spi(WebKitHost) extension UIViewController: WebKitHostKeyValueObserver {}
+#endif

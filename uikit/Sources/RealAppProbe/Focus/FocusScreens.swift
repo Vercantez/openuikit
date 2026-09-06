@@ -73,28 +73,15 @@ extension RealAppScreen {
         return home
     }
 
-    /// Last so a guest 2x miss / Linux corelibs omit cannot drop the 14.
-    /// Route (b) Darwin SwiftPM compiles the Blockzilla module; Linux
-    /// corelibs cannot (#selector). MEASURED focus-e2e.md: 147 #selector
-    /// diagnostics on native ELF.
+    /// The real AppDelegate launch is the fifteenth screen on routes that
+    /// compile Blockzilla (Darwin and the Linux-hosted Mach-O guest).
     static let focusBrowserTable: [Screen] = {
         #if canImport(Blockzilla)
-        // Guest / linux_realapp_verify stay 14 (SCALE=2 harvested masks).
-        // The 3x iOS-cut path and an explicit ONLY= emit the 15th so a
-        // 2x ink miss on BrowserViewController cannot drop the board.
-        // MEASURED linux_realapp_verify: expects 14 PNGs; default
-        // realAppScale is 2.
-        let env = ProcessInfo.processInfo.environment
-        let only = env["OPENUIKIT_REALAPP_ONLY"]
-        let scale = env["OPENUIKIT_REALAPP_SCALE"]
-        if only == "realapp_focus_browser_light" || scale == "3" {
-            return [
-                Screen(name: "realapp_focus_browser_light", variant: .focusBrowser,
-                       theme: .light, style: .light, contentSizeCategory: .large,
-                       presentsSheet: false),
-            ]
-        }
-        return []
+        return [
+            Screen(name: "realapp_focus_browser_light", variant: .focusBrowser,
+                   theme: .light, style: .light, contentSizeCategory: .large,
+                   presentsSheet: false),
+        ]
         #else
         return []
         #endif

@@ -152,9 +152,8 @@ public enum RealAppScreen {
     // Guest glob is RealAppProbe/*.swift (LedgerStore / List / Screens).
     // The 14th is Focus home last (focus-e2e): a guest 2x ink miss on home
     // must not drop the screens before it.
-    /// Fourteen screens plus Focus browser last (this branch). Guest
-    /// scale-2 / Linux corelibs omit the browser row (`canImport(Blockzilla)`
-    /// is false there) so a miss cannot drop the 14.
+    /// Fifteen screens on the full guest app path, with the real Focus
+    /// AppDelegate launch last. Native corelibs omits the Objective-C app.
     public static let screens: [Screen] = [
         Screen(name: "realapp_history_light", variant: .listeningHistory,
                theme: .light, style: .light, contentSizeCategory: .large,

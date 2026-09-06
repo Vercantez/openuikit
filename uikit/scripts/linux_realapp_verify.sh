@@ -22,6 +22,15 @@ WORK="${1:-/tmp/openuikit-realapp-verify}"
 IMAGE="${OPENUIKIT_LINUX_IMAGE:-openuikit-linux-agent}"
 REPO_ROOT=$(git rev-parse --show-toplevel)
 
+# Native ELF cannot execute Objective-C app source. A built full guest selects
+# the Mach-O route inside Linux; OPENUIKIT_REALAPP_MODE=native keeps the
+# separate corelibs portability check available.
+GUEST_SUPPORT=${OPENUIKIT_REALAPP_GUEST_SUPPORT:-$REPO_ROOT}
+if [ "$(uname -s)" = Linux ] && [ "${OPENUIKIT_REALAPP_MODE:-}" != native ] && \
+   [ -f "${OPENUIKIT_REALAPP_GUEST_BUILD:-$GUEST_SUPPORT/build/full}/render_full" ]; then
+  exec bash scripts/linux_guest_realapp_verify.sh "$WORK"
+fi
+
 rm -rf "$WORK"
 mkdir -p "$WORK"/{fonts,linux_out,mac_out,linux_host,mac_host}
 
@@ -208,14 +217,14 @@ for mac, lin, label in [("mac_out", "linux_out", "headless"),
         # sha256 compare. Count still requires the PNG to exist.
         if f == "realapp_focus_browser_light.png":
             # Darwin route (b) only. Linux corelibs does not compile Blockzilla.
-            same += 1
+            print("  Focus browser requires the full Mach-O guest verifier")
             continue
         if f == "realapp_ledger_light.png":
             b = f"{w}/{lin}/{f}"
             if not os.path.exists(b):
                 diff.append(f + " (missing)")
             else:
-                same += 1
+                print("  Ledger present; Darwin/corelibs formatter identity is not compared")
             continue
         b = f"{w}/{lin}/{f}"
         if not os.path.exists(b):

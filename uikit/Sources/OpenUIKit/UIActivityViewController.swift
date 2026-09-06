@@ -103,10 +103,15 @@ public extension UIActivityItemSource {
 }
 
 #if canImport(Foundation)
+public typealias _UIActivityProviderBase = Operation
+#else
+import class ObjectiveC.NSObject
+public typealias _UIActivityProviderBase = NSObject
+#endif
 /// A placeholder activity item that produces its payload on a background
 /// operation. OpenUIKit has no share sheet to run the operation; `item`
 /// returns the placeholder unless a subclass overrides it.
-open class UIActivityItemProvider: Operation, UIActivityItemSource, @unchecked Sendable {
+open class UIActivityItemProvider: _UIActivityProviderBase, UIActivityItemSource, @unchecked Sendable {
     public let placeholderItem: Any?
     open var activityType: UIActivity.ActivityType?
 
@@ -142,7 +147,6 @@ open class UIActivityItemProvider: Operation, UIActivityItemSource, @unchecked S
         return item
     }
 }
-#endif
 
 @preconcurrency @MainActor
 open class UIActivityViewController: UIViewController,

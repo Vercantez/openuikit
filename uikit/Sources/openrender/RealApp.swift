@@ -197,9 +197,21 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     realAppRetained.append(root)
     return SceneResult(name: variant.name,
                        pngs: [("\(variant.name).png", bmp.pngData())],
-                       layout: layout)
+                       layout: jsonFiniteLayout(layout))
 }
 
 /// Presentations are held by the presenter; the window and root are held here
 /// so nothing is torn down before the render completes.
 var realAppRetained: [AnyObject] = []
+
+// JSON has no Infinity/NaN. Match SceneIO's native serialization contract on
+// the Foundation-hidden guest too; retain invalid layout coordinates as null
+// without changing a view's frame or the rendered pixels.
+private func jsonFiniteLayout(_ value: JSONValue) -> JSONValue {
+    switch value {
+    case .number(let number): return number.isFinite ? value : .null
+    case .array(let values): return .array(values.map(jsonFiniteLayout))
+    case .object(let values): return .object(values.mapValues(jsonFiniteLayout))
+    default: return value
+    }
+}
