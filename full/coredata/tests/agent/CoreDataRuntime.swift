@@ -127,24 +127,93 @@ func makeAuthorNoteModel() -> NSManagedObjectModel {
     return model
 }
 
+func makeLoadedSQLiteContainer(
+    _ model: NSManagedObjectModel,
+    directory: URL,
+    name: String
+) throws -> NSPersistentContainer {
+    let container = NSPersistentContainer(name: name, managedObjectModel: model)
+    let url = directory.appendingPathComponent("\(name).sqlite")
+    let description = NSPersistentStoreDescription(url: url)
+    description.type = NSSQLiteStoreType
+    description.shouldAddStoreAsynchronously = false
+    description.setOption(false as NSNumber, forKey: NSReadOnlyPersistentStoreOption)
+    container.persistentStoreDescriptions = [description]
+    var loadError: (any Error)?
+    container.loadPersistentStores { _, error in
+        loadError = error
+    }
+    if let loadError {
+        throw ProbeFailure.message("SQLite loadPersistentStores failed: \(loadError)")
+    }
+    return container
+}
+
+func agentModelContentsXML() -> String {
+    """
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" userDefinedModelVersionIdentifier="notes-v1">
+        <entity name="Author" representedClassName="Author" syncable="YES">
+            <attribute name="name" optional="NO" attributeType="String"/>
+            <relationship name="notes" optional="YES" toMany="YES" ordered="YES" deletionRule="Cascade" destinationEntity="Note" inverseName="author" inverseEntity="Note"/>
+            <uniquenessConstraints>
+                <uniquenessConstraint>
+                    <constraint value="name"/>
+                </uniquenessConstraint>
+            </uniquenessConstraints>
+        </entity>
+        <entity name="Note" representedClassName="Note" syncable="YES">
+            <attribute name="title" optional="NO" attributeType="String"/>
+            <attribute name="count" optional="YES" attributeType="Integer 64" defaultValueString="0"/>
+            <attribute name="starred" optional="YES" attributeType="Boolean" defaultValueString="NO"/>
+            <attribute name="scratch" optional="YES" transient="YES" attributeType="String"/>
+            <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="notes" inverseEntity="Author"/>
+            <fetchedProperty name="allNotes" optional="YES">
+                <fetchRequest name="fetchedPropertyFetchRequest" entity="Note" predicateString="title != nil"/>
+            </fetchedProperty>
+        </entity>
+    </model>
+    """
+}
+
+func writeAgentXMLModelBundle(in directory: URL) throws -> URL {
+    let bundle = directory.appendingPathComponent("Notes.xcdatamodeld")
+    let current = bundle.appendingPathComponent("Notes.xcdatamodel")
+    try FileManager.default.createDirectory(at: current, withIntermediateDirectories: true)
+    let contents = current.appendingPathComponent("contents")
+    try agentModelContentsXML().write(to: contents, atomically: true, encoding: .utf8)
+    let marker = """
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+        <key>_XCCurrentVersionName</key>
+        <string>Notes.xcdatamodel</string>
+    </dict>
+    </plist>
+    """
+    try marker.write(to: bundle.appendingPathComponent(".xccurrentversion"), atomically: true, encoding: .utf8)
+    return bundle
+}
+
 func testInMemoryCRUDAndFailClosed() {
     do {
             let model = makeNoteModel()
             let container = try makeLoadedContainer(model)
 
             try withUniqueTempDirectory { directory in
-                let sqliteURL = directory.appendingPathComponent("should-not-open.sqlite")
-                let sqlite = NSPersistentStoreDescription(url: sqliteURL)
-                sqlite.type = NSSQLiteStoreType
-                var sqliteFailed = false
-                container.persistentStoreCoordinator.addPersistentStore(with: sqlite) { _, error in
-                    sqliteFailed = error != nil
+                let binaryURL = directory.appendingPathComponent("should-not-open.binary")
+                let binary = NSPersistentStoreDescription(url: binaryURL)
+                binary.type = NSBinaryStoreType
+                var binaryFailed = false
+                container.persistentStoreCoordinator.addPersistentStore(with: binary) { _, error in
+                    binaryFailed = error != nil
                 }
-                guard sqliteFailed else {
-                    throw ProbeFailure.message("SQLite addPersistentStore must fail closed on Linux")
+                guard binaryFailed else {
+                    throw ProbeFailure.message("binary addPersistentStore must fail closed on Linux")
                 }
-                guard !FileManager.default.fileExists(atPath: sqliteURL.path) else {
-                    throw ProbeFailure.message("fail-closed SQLite open must not create \(sqliteURL.path)")
+                guard !FileManager.default.fileExists(atPath: binaryURL.path) else {
+                    throw ProbeFailure.message("fail-closed binary open must not create \(binaryURL.path)")
                 }
             }
 
@@ -593,14 +662,14 @@ func testRegisteredStoreClass() {
             try withUniqueTempDirectory { directory in
                 do {
                     _ = try coordinator.addPersistentStore(
-                        ofType: NSSQLiteStoreType,
+                        ofType: NSBinaryStoreType,
                         configurationName: nil,
-                        at: directory.appendingPathComponent("unregistered.sqlite"),
+                        at: directory.appendingPathComponent("unregistered.binary"),
                         options: nil
                     )
-                    throw ProbeFailure.message("unregistered SQLite store type must stay unsupported")
+                    throw ProbeFailure.message("unregistered binary store type must stay unsupported")
                 } catch is ProbeFailure {
-                    throw ProbeFailure.message("unregistered SQLite store type must stay unsupported")
+                    throw ProbeFailure.message("unregistered binary store type must stay unsupported")
                 } catch {
                     // expected platform blocker
                 }
@@ -2234,6 +2303,484 @@ func testEnumOptionSetAndConstantValues() {
     }
 }
 
+func testXMLModelLoadFromContents() {
+    do {
+            try withUniqueTempDirectory { directory in
+                let contents = directory.appendingPathComponent("contents")
+                try agentModelContentsXML().write(to: contents, atomically: true, encoding: .utf8)
+                guard let model = NSManagedObjectModel(contentsOf: contents) else {
+                    throw ProbeFailure.message("contents XML must load into NSManagedObjectModel")
+                }
+                guard let note = model.entitiesByName["Note"],
+                      let title = note.attributesByName["title"],
+                      title.attributeType == .stringAttributeType,
+                      title.isOptional == false,
+                      let count = note.attributesByName["count"],
+                      count.attributeType == .integer64AttributeType,
+                      count.isOptional,
+                      (count.defaultValue as? Int == 0 || (count.defaultValue as? NSNumber)?.intValue == 0),
+                      let scratch = note.attributesByName["scratch"],
+                      scratch.isTransient,
+                      scratch.isOptional else {
+                    throw ProbeFailure.message("XML attribute types/optional/default/transient mismatch")
+                }
+                guard model.versionIdentifiers.contains("notes-v1") else {
+                    throw ProbeFailure.message("userDefinedModelVersionIdentifier must become versionIdentifiers")
+                }
+                guard NSManagedObjectModel(contentsOf: directory.appendingPathComponent("missing.mom")) == nil else {
+                    throw ProbeFailure.message("missing compiled .mom must still return nil")
+                }
+            }
+    } catch {
+        fatalError("testXMLModelLoadFromContents failed: \(error)")
+    }
+}
+
+func testXMLModelLoadXcdatamodeld() {
+    do {
+            try withUniqueTempDirectory { directory in
+                let bundle = try writeAgentXMLModelBundle(in: directory)
+                guard let model = NSManagedObjectModel(contentsOfURL: bundle) else {
+                    throw ProbeFailure.message(".xcdatamodeld bundle must load the current contents XML")
+                }
+                guard model.entitiesByName["Author"] != nil,
+                      model.entitiesByName["Note"] != nil else {
+                    throw ProbeFailure.message("xcdatamodeld must expose Author and Note")
+                }
+                let current = bundle.appendingPathComponent("Notes.xcdatamodel")
+                guard NSManagedObjectModel(contentsOf: current) != nil else {
+                    throw ProbeFailure.message(".xcdatamodel directory must load contents")
+                }
+            }
+    } catch {
+        fatalError("testXMLModelLoadXcdatamodeld failed: \(error)")
+    }
+}
+
+func testXMLModelRelationshipsFetchedPropertiesAndConstraints() {
+    do {
+            try withUniqueTempDirectory { directory in
+                let bundle = try writeAgentXMLModelBundle(in: directory)
+                guard let model = NSManagedObjectModel(contentsOf: bundle),
+                      let author = model.entitiesByName["Author"],
+                      let note = model.entitiesByName["Note"],
+                      let notesRel = author.relationshipsByName["notes"],
+                      let authorRel = note.relationshipsByName["author"] else {
+                    throw ProbeFailure.message("XML model missing relationship descriptions")
+                }
+                guard notesRel.isToMany,
+                      notesRel.isOrdered,
+                      notesRel.deleteRule == .cascadeDeleteRule,
+                      notesRel.destinationEntity === note,
+                      notesRel.inverseRelationship === authorRel,
+                      authorRel.maxCount == 1,
+                      authorRel.deleteRule == .nullifyDeleteRule,
+                      authorRel.destinationEntity === author,
+                      authorRel.inverseRelationship === notesRel else {
+                    throw ProbeFailure.message("XML relationship inverse/delete-rule/ordered mismatch")
+                }
+                guard let fetched = note.propertiesByName["allNotes"] as? NSFetchedPropertyDescription,
+                      fetched.fetchRequest?.entityName == "Note" else {
+                    throw ProbeFailure.message("XML fetched property must carry a fetch request")
+                }
+                guard let constraint = author.uniquenessConstraints.first,
+                      constraint.map({ String(describing: $0) }) == ["name"] else {
+                    throw ProbeFailure.message("XML uniqueness constraints must parse constraint values")
+                }
+                guard author.managedObjectClassName == "Author",
+                      note.relationships(forDestination: author).contains(where: { $0.name == "author" }) else {
+                    throw ProbeFailure.message("representedClassName / relationships(forDestination:) mismatch")
+                }
+            }
+    } catch {
+        fatalError("testXMLModelRelationshipsFetchedPropertiesAndConstraints failed: \(error)")
+    }
+}
+
+func testSQLiteCRUDAndFaulting() {
+    do {
+            try withUniqueTempDirectory { directory in
+                let model = makeNoteModel()
+                let container = try makeLoadedSQLiteContainer(model, directory: directory, name: "SQLiteCRUD")
+                let context = container.viewContext
+                guard NSPersistentStoreCoordinator.registeredStoreTypes[NSSQLiteStoreType] != nil else {
+                    throw ProbeFailure.message("NSSQLiteStoreType must be registered")
+                }
+                let note = NSEntityDescription.insertNewObject(forEntityName: "Note", into: context)
+                note.setValue("sqlite-hello", forKey: "title")
+                note.setValue(4, forKey: "count")
+                guard note.objectID.isTemporaryID else {
+                    throw ProbeFailure.message("inserted SQLite objectID must start temporary")
+                }
+                context.assign(note, to: container.persistentStoreCoordinator.persistentStores[0])
+                try context.obtainPermanentIDs(for: [note])
+                guard !note.objectID.isTemporaryID else {
+                    throw ProbeFailure.message("obtainPermanentIDs must promote a temporary SQLite objectID")
+                }
+                try context.save()
+                guard FileManager.default.fileExists(atPath: directory.appendingPathComponent("SQLiteCRUD.sqlite").path) else {
+                    throw ProbeFailure.message("SQLite save must create a store file")
+                }
+
+                let reopened = try makeLoadedSQLiteContainer(model, directory: directory, name: "SQLiteCRUD")
+                let request = NSFetchRequest<NSManagedObject>(entityName: "Note")
+                request.returnsObjectsAsFaults = true
+                let fetched = try reopened.viewContext.fetch(request)
+                guard fetched.count == 1 else {
+                    throw ProbeFailure.message("reopened SQLite store must fetch the saved row")
+                }
+                guard fetched[0].isFault else {
+                    throw ProbeFailure.message("returnsObjectsAsFaults must yield a fault from SQLite")
+                }
+                guard fetched[0].value(forKey: "title") as? String == "sqlite-hello",
+                      cdInt(fetched[0], "count") == 4 else {
+                    throw ProbeFailure.message("fault fulfillment must read SQLite attribute values")
+                }
+                fetched[0].setValue("sqlite-updated", forKey: "title")
+                try reopened.viewContext.save()
+                reopened.viewContext.delete(fetched[0])
+                try reopened.viewContext.save()
+                guard try reopened.viewContext.count(for: request) == 0 else {
+                    throw ProbeFailure.message("SQLite delete/save did not remove the row")
+                }
+            }
+    } catch {
+        fatalError("testSQLiteCRUDAndFaulting failed: \(error)")
+    }
+}
+
+func testSQLiteFetchLimitOffsetAndPredicate() {
+    do {
+            try withUniqueTempDirectory { directory in
+                let container = try makeLoadedSQLiteContainer(makeNoteModel(), directory: directory, name: "SQLitePage")
+                let context = container.viewContext
+                for title in ["c", "a", "b"] {
+                    let note = NSEntityDescription.insertNewObject(forEntityName: "Note", into: context)
+                    note.setValue(title, forKey: "title")
+                }
+                try context.save()
+                let request = NSFetchRequest<NSManagedObject>(entityName: "Note")
+                request.sortDescriptors = [cdSortDescriptor(key: "title", ascending: true)]
+                request.predicate = NSPredicate { object, _ in
+                    (object as? NSManagedObject)?.value(forKey: "title") as? String != "c"
+                }
+                request.fetchOffset = 1
+                request.fetchLimit = 1
+                let page = try context.fetch(request)
+                guard page.count == 1, page[0].value(forKey: "title") as? String == "b" else {
+                    throw ProbeFailure.message("SQLite predicate/sort/offset/limit mismatch")
+                }
+            }
+    } catch {
+        fatalError("testSQLiteFetchLimitOffsetAndPredicate failed: \(error)")
+    }
+}
+
+func testSQLiteIncompatibleSchemaAndMigrationFailClosed() {
+    do {
+            try withUniqueTempDirectory { directory in
+                let garbage = directory.appendingPathComponent("garbage.sqlite")
+                try "not-a-database".write(to: garbage, atomically: true, encoding: .utf8)
+                let coordinator = NSPersistentStoreCoordinator(managedObjectModel: makeNoteModel())
+                do {
+                    _ = try coordinator.addPersistentStore(
+                        ofType: NSSQLiteStoreType,
+                        configurationName: nil,
+                        at: garbage,
+                        options: nil
+                    )
+                    throw ProbeFailure.message("garbage SQLite bytes must not open as a store")
+                } catch is ProbeFailure {
+                    throw ProbeFailure.message("garbage SQLite bytes must not open as a store")
+                } catch {
+                    let ns = error as NSError
+                    guard ns.code == NSPersistentStoreIncompatibleSchemaError
+                            || ns.code == NSPersistentStoreOpenError
+                            || ns.code == NSSQLiteError else {
+                        throw ProbeFailure.message("garbage file should use schema/open/sqlite error, got \(ns.code)")
+                    }
+                }
+
+                let storeURL = directory.appendingPathComponent("version.sqlite")
+                _ = try coordinator.addPersistentStore(
+                    ofType: NSSQLiteStoreType,
+                    configurationName: nil,
+                    at: storeURL,
+                    options: nil
+                )
+                let otherModel = NSManagedObjectModel()
+                let entity = NSEntityDescription()
+                entity.name = "Other"
+                entity.managedObjectClassName = "NSManagedObject"
+                let attr = NSAttributeDescription()
+                attr.name = "value"
+                attr.attributeType = .stringAttributeType
+                entity.properties = [attr]
+                otherModel.entities = [entity]
+                let other = NSPersistentStoreCoordinator(managedObjectModel: otherModel)
+                do {
+                    _ = try other.addPersistentStore(
+                        ofType: NSSQLiteStoreType,
+                        configurationName: nil,
+                        at: storeURL,
+                        options: [
+                            NSMigratePersistentStoresAutomaticallyOption: true as NSNumber,
+                            NSInferMappingModelAutomaticallyOption: true as NSNumber
+                        ]
+                    )
+                    throw ProbeFailure.message("model hash mismatch must fail closed instead of migrating")
+                } catch is ProbeFailure {
+                    throw ProbeFailure.message("model hash mismatch must fail closed instead of migrating")
+                } catch {
+                    let ns = error as NSError
+                    guard ns.code == NSPersistentStoreIncompatibleVersionHashError
+                            || ns.code == NSMigrationError else {
+                        throw ProbeFailure.message("hash mismatch should be version-hash or migration error, got \(ns.code)")
+                    }
+                }
+            }
+    } catch {
+        fatalError("testSQLiteIncompatibleSchemaAndMigrationFailClosed failed: \(error)")
+    }
+}
+
+func testSQLiteDestroyAndMetadata() {
+    do {
+            try withUniqueTempDirectory { directory in
+                let url = directory.appendingPathComponent("meta.sqlite")
+                let coordinator = NSPersistentStoreCoordinator(managedObjectModel: makeNoteModel())
+                coordinator.name = "sqlite-meta"
+                _ = coordinator.managedObjectModel
+                _ = coordinator.tryLock()
+                coordinator.unlock()
+                coordinator.performAndWait {
+                    _ = coordinator.persistentStores
+                }
+                let store = try coordinator.addPersistentStore(
+                    ofType: NSSQLiteStoreType,
+                    configurationName: nil,
+                    at: url,
+                    options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"] as NSDictionary]
+                )
+                guard store.type == NSSQLiteStoreType,
+                      store.url == url,
+                      coordinator.url(for: store) == url,
+                      coordinator.persistentStores.contains(where: { $0 === store }) else {
+                    throw ProbeFailure.message("SQLite store identity/url mismatch")
+                }
+                let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
+                    ofType: NSSQLiteStoreType,
+                    at: url,
+                    options: nil
+                )
+                guard metadata[NSStoreTypeKey] as? String == NSSQLiteStoreType else {
+                    throw ProbeFailure.message("SQLite metadata must report NSSQLiteStoreType")
+                }
+                try NSPersistentStoreCoordinator.setMetadata(
+                    [NSStoreTypeKey: NSSQLiteStoreType, "extra": "1"],
+                    forPersistentStoreOfType: NSSQLiteStoreType,
+                    at: url,
+                    options: nil
+                )
+                try coordinator.destroyPersistentStore(at: url, ofType: NSSQLiteStoreType)
+                guard !FileManager.default.fileExists(atPath: url.path) else {
+                    throw ProbeFailure.message("destroyPersistentStore must remove the SQLite file")
+                }
+            }
+    } catch {
+        fatalError("testSQLiteDestroyAndMetadata failed: \(error)")
+    }
+}
+
+func testDidSaveAndObjectsDidChangeUserInfoKeys() {
+    do {
+            let container = try makeLoadedContainer(makeNoteModel(), name: "NotifyKeys")
+            let context = container.viewContext
+            final class Capture: @unchecked Sendable {
+                var change: [AnyHashable: Any]?
+                var save: [AnyHashable: Any]?
+            }
+            let capture = Capture()
+            let changeObs = NotificationCenter.default.addObserver(
+                forName: .NSManagedObjectContextObjectsDidChange,
+                object: context,
+                queue: nil
+            ) { note in
+                capture.change = note.userInfo
+            }
+            let saveObs = NotificationCenter.default.addObserver(
+                forName: .NSManagedObjectContextDidSave,
+                object: context,
+                queue: nil
+            ) { note in
+                capture.save = note.userInfo
+            }
+            defer {
+                NotificationCenter.default.removeObserver(changeObs)
+                NotificationCenter.default.removeObserver(saveObs)
+            }
+            let note = NSManagedObject(
+                entity: context.persistentStoreCoordinator!.managedObjectModel.entitiesByName["Note"]!,
+                insertInto: context
+            )
+            note.setValue("notify", forKey: "title")
+            context.processPendingChanges()
+            guard let change = capture.change else {
+                throw ProbeFailure.message("insert must post NSManagedObjectContextObjectsDidChange")
+            }
+            guard change[NSInsertedObjectsKey] is Set<NSManagedObject>,
+                  change[NSUpdatedObjectsKey] is Set<NSManagedObject>,
+                  change[NSDeletedObjectsKey] is Set<NSManagedObject>,
+                  change[NSRefreshedObjectsKey] is Set<NSManagedObject>,
+                  change[NSInvalidatedObjectsKey] is Set<NSManagedObject> else {
+                throw ProbeFailure.message("objects-did-change userInfo keys must be exact")
+            }
+            try context.save()
+            guard let save = capture.save else {
+                throw ProbeFailure.message("save must post NSManagedObjectContextDidSave")
+            }
+            guard save[NSInsertedObjectsKey] is Set<NSManagedObject>,
+                  save[NSUpdatedObjectsKey] is Set<NSManagedObject>,
+                  save[NSDeletedObjectsKey] is Set<NSManagedObject>,
+                  save[NSInsertedObjectIDsKey] is Set<NSManagedObjectID>,
+                  save[NSUpdatedObjectIDsKey] is Set<NSManagedObjectID>,
+                  save[NSDeletedObjectIDsKey] is Set<NSManagedObjectID> else {
+                throw ProbeFailure.message("did-save userInfo keys must be exact")
+            }
+            let registered = context.registeredObject(for: note.objectID)
+            guard registered === note else {
+                throw ProbeFailure.message("registeredObject(for:) must return the inserted instance")
+            }
+            _ = context.object(with: note.objectID)
+            context.detectConflicts(for: note)
+            _ = context.tryLock()
+            context.unlock()
+            context.reset()
+            guard context.registeredObjects.isEmpty else {
+                throw ProbeFailure.message("reset must drop registered objects")
+            }
+    } catch {
+        fatalError("testDidSaveAndObjectsDidChangeUserInfoKeys failed: \(error)")
+    }
+}
+
+func testPropertiesToGroupBy() {
+    do {
+            let container = try makeLoadedContainer(makeNoteModel(), name: "GroupBy")
+            let context = container.viewContext
+            for title in ["x", "x", "y"] {
+                let note = NSEntityDescription.insertNewObject(forEntityName: "Note", into: context)
+                note.setValue(title, forKey: "title")
+            }
+            try context.save()
+            let request = NSFetchRequest<any NSFetchRequestResult>(entityName: "Note")
+            request.resultType = .dictionaryResultType
+            request.propertiesToFetch = ["title"]
+            request.propertiesToGroupBy = ["title"]
+            request.havingPredicate = NSPredicate { object, _ in
+                ((object as? NSManagedObject)?.value(forKey: "title") as? String) != nil
+            }
+            let grouped = try context.fetch(request)
+            guard grouped.count == 2,
+                  grouped.allSatisfy({ $0 is NSDictionary }) else {
+                throw ProbeFailure.message("propertiesToGroupBy must collapse duplicate titles into two dictionaries")
+            }
+            let titles = Set(grouped.compactMap { ($0 as? NSDictionary)?["title"] as? String })
+            guard titles == ["x", "y"] else {
+                throw ProbeFailure.message("grouped titles mismatch: \(titles)")
+            }
+    } catch {
+        fatalError("testPropertiesToGroupBy failed: \(error)")
+    }
+}
+
+func testManagedObjectKVCAccessors() {
+    do {
+            let container = try makeLoadedContainer(makeAuthorNoteModel(), name: "KVC")
+            let context = container.viewContext
+            let entity = context.persistentStoreCoordinator!.managedObjectModel.entitiesByName["Note"]!
+            let note = NSManagedObject(entity: entity, insertIntoManagedObjectContext: context)
+            note.setPrimitiveValue("kvc", forKey: "title")
+            guard note.primitiveValue(forKey: "title") as? String == "kvc" else {
+                throw ProbeFailure.message("primitiveValue/setPrimitiveValue round-trip failed")
+            }
+            note.willAccessValue(forKey: "title")
+            note.didAccessValue(forKey: "title")
+            note.willChangeValue(forKey: "title")
+            note.setValue("kvc-2", forKey: "title")
+            note.didChangeValue(forKey: "title")
+            guard note.value(forKey: "title") as? String == "kvc-2" else {
+                throw ProbeFailure.message("value(forKey:)/setValue mismatch")
+            }
+            _ = note.changedValuesForCurrentEvent()
+            try note.validateForInsert()
+            try note.validateValue("kvc-2" as NSString, forKey: "title")
+            try context.save()
+            _ = note.hasFault(forRelationshipNamed: "author")
+            _ = note.objectIDs(forRelationshipNamed: "author")
+            context.refresh(note, mergeChanges: false)
+            guard note.isFault else {
+                throw ProbeFailure.message("refresh(mergeChanges: false) must turn the object into a fault")
+            }
+            let existing = try context.existingObject(with: note.objectID)
+            _ = existing
+            context.refreshAllObjects()
+            try note.validateForUpdate()
+            try note.validateForDelete()
+    } catch {
+        fatalError("testManagedObjectKVCAccessors failed: \(error)")
+    }
+}
+
+func testConstraintConflictOnSave() {
+    do {
+            let model = makeNoteModel()
+            model.entitiesByName["Note"]?.uniquenessConstraints = [["title"]]
+            let container = try makeLoadedContainer(model, name: "Constraint")
+            let context = container.viewContext
+            context.mergePolicy = NSMergePolicy.error
+            let first = NSEntityDescription.insertNewObject(forEntityName: "Note", into: context)
+            first.setValue("dup", forKey: "title")
+            let second = NSEntityDescription.insertNewObject(forEntityName: "Note", into: context)
+            second.setValue("dup", forKey: "title")
+            do {
+                try context.save()
+                throw ProbeFailure.message("duplicate uniqueness constraint must fail save")
+            } catch is ProbeFailure {
+                throw ProbeFailure.message("duplicate uniqueness constraint must fail save")
+            } catch {
+                let ns = error as NSError
+                guard ns.code == NSManagedObjectConstraintMergeError || ns.code == NSManagedObjectMergeError else {
+                    throw ProbeFailure.message("constraint save should use constraint/merge error, got \(ns.code)")
+                }
+                let conflicts = ns.userInfo[NSPersistentStoreSaveConflictsErrorKey] as? [NSConstraintConflict]
+                if let conflict = conflicts?.first {
+                    guard conflict.constraint == ["title"],
+                          !conflict.conflictingObjects.isEmpty,
+                          conflict.constraintValues["title"] as? String == "dup" else {
+                        throw ProbeFailure.message("NSConstraintConflict did not capture title uniqueness")
+                    }
+                    _ = conflict.databaseObject
+                    _ = conflict.databaseSnapshot
+                    _ = conflict.conflictingSnapshots
+                }
+            }
+            let constructed = NSConstraintConflict(
+                constraint: ["title"],
+                databaseObject: first,
+                databaseSnapshot: ["title": "dup"],
+                conflictingObjects: [first, second],
+                conflictingSnapshots: [["title": "dup"], ["title": "dup"]]
+            )
+            guard constructed.constraint == ["title"],
+                  constructed.conflictingObjects.count == 2 else {
+                throw ProbeFailure.message("NSConstraintConflict designated initializer mismatch")
+            }
+    } catch {
+        fatalError("testConstraintConflictOnSave failed: \(error)")
+    }
+}
+
 func runCoreDataRuntimeProbe() {
     testInMemoryCRUDAndFailClosed()
     testContextInsertSaveFetch()
@@ -2267,6 +2814,17 @@ func runCoreDataRuntimeProbe() {
     testValidationAndUndoDisabled()
     testFailClosedSurfaces()
     testEnumOptionSetAndConstantValues()
+    testXMLModelLoadFromContents()
+    testXMLModelLoadXcdatamodeld()
+    testXMLModelRelationshipsFetchedPropertiesAndConstraints()
+    testSQLiteCRUDAndFaulting()
+    testSQLiteFetchLimitOffsetAndPredicate()
+    testSQLiteIncompatibleSchemaAndMigrationFailClosed()
+    testSQLiteDestroyAndMetadata()
+    testDidSaveAndObjectsDidChangeUserInfoKeys()
+    testPropertiesToGroupBy()
+    testManagedObjectKVCAccessors()
+    testConstraintConflictOnSave()
     print("COREDATA_AGENT_RUNTIME_OK")
 }
 

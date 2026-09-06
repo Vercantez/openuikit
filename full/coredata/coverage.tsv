@@ -46,7 +46,7 @@ c:@E@NSFetchIndexElementType@NSFetchIndexElementTypeBinary	implemented	test:full
 c:@E@NSFetchIndexElementType@NSFetchIndexElementTypeRTree	implemented	test:full/coredata/tests/agent/CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues	table-driven enum/option-set/constant values
 c:@E@NSFetchRequestResultType	implemented	test:full/coredata/tests/agent/CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues	table-driven enum/option-set/constant values
 c:@E@NSFetchRequestResultType@NSCountResultType	implemented	test:full/coredata/tests/agent/CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues	table-driven enum/option-set/constant values
-c:@E@NSFetchRequestResultType@NSDictionaryResultType	declared	source:full/coredata/CoreData.swift#dictionaryResultType	compiles on the isolated Linux host; not the focused runtime observation
+c:@E@NSFetchRequestResultType@NSDictionaryResultType	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testPropertiesToGroupBy	focused Linux runtime evidence
 c:@E@NSFetchRequestResultType@NSManagedObjectIDResultType	implemented	test:full/coredata/tests/agent/CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues	table-driven enum/option-set/constant values
 c:@E@NSFetchRequestResultType@NSManagedObjectResultType	implemented	test:full/coredata/tests/agent/CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues	table-driven enum/option-set/constant values
 c:@E@NSFetchedResultsChangeType	implemented	test:full/coredata/tests/agent/CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues	table-driven enum/option-set/constant values
@@ -308,9 +308,9 @@ c:objc(cs)NSAtomicStoreCacheNode(py)propertyCache	declared	source:full/coredata/
 c:objc(cs)NSAttributeDescription	declared	source:full/coredata/NSManagedObjectModel.swift#NSAttributeDescription	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSAttributeDescription(py)allowsCloudEncryption	declared	source:full/coredata/NSManagedObjectModel.swift#allowsCloudEncryption	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSAttributeDescription(py)allowsExternalBinaryDataStorage	declared	source:full/coredata/NSManagedObjectModel.swift#allowsExternalBinaryDataStorage	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSAttributeDescription(py)attributeType	declared	source:full/coredata/NSManagedObjectModel.swift#attributeType	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSAttributeDescription(py)attributeType	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelLoadFromContents	focused Linux runtime evidence
 c:objc(cs)NSAttributeDescription(py)attributeValueClassName	declared	source:full/coredata/NSManagedObjectModel.swift#attributeValueClassName	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSAttributeDescription(py)defaultValue	declared	source:full/coredata/NSManagedObject.swift#defaultValue	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSAttributeDescription(py)defaultValue	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelLoadFromContents	focused Linux runtime evidence
 c:objc(cs)NSAttributeDescription(py)preservesValueInHistoryOnDeletion	declared	source:full/coredata/NSManagedObjectModel.swift#preservesValueInHistoryOnDeletion	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSAttributeDescription(py)valueTransformerName	declared	source:full/coredata/NSManagedObjectModel.swift#valueTransformerName	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSAttributeDescription(py)versionHash	declared	source:full/coredata/CoreDataFailClosed.swift#versionHash	compiles on the isolated Linux host; not the focused runtime observation
@@ -353,15 +353,15 @@ c:objc(cs)NSBatchUpdateResult(py)result	implemented	test:full/coredata/tests/age
 c:objc(cs)NSBatchUpdateResult(py)resultType	implemented	test:full/coredata/tests/agent/CoreDataBatchTests.swift#testBatchRequests	focused Linux runtime evidence
 c:objc(cs)NSCompositeAttributeDescription	implemented	test:full/coredata/tests/agent/CoreDataModelTests.swift#testModelMetadataAndStoreCoordinator	focused Linux runtime evidence
 c:objc(cs)NSCompositeAttributeDescription(py)elements	implemented	test:full/coredata/tests/agent/CoreDataModelTests.swift#testModelMetadataAndStoreCoordinator	focused Linux runtime evidence
-c:objc(cs)NSConstraintConflict	declared	source:full/coredata/NSMergePolicy.swift#NSConstraintConflict	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSConstraintConflict(im)initWithConstraint:databaseObject:databaseSnapshot:conflictingObjects:conflictingSnapshots:	declared	source:full/coredata/NSMergePolicy.swift#NSConstraintConflict	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSConstraintConflict(im)initWithConstraint:databaseObject:databaseSnapshot:conflictingObjects:conflictingSnapshots:::SYNTHESIZED::c:objc(cs)NSConstraintConflict	declared	source:full/coredata/NSMergePolicy.swift#NSConstraintConflict	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSConstraintConflict(py)conflictingObjects	declared	source:full/coredata/NSMergePolicy.swift#conflictingObjects	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSConstraintConflict(py)conflictingSnapshots	declared	source:full/coredata/NSMergePolicy.swift#conflictingSnapshots	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSConstraintConflict(py)constraint	declared	source:full/coredata/NSMergePolicy.swift#constraint	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSConstraintConflict(py)constraintValues	declared	source:full/coredata/NSMergePolicy.swift#constraintValues	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSConstraintConflict(py)databaseObject	declared	source:full/coredata/NSMergePolicy.swift#databaseObject	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSConstraintConflict(py)databaseSnapshot	declared	source:full/coredata/NSMergePolicy.swift#databaseSnapshot	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSConstraintConflict	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testConstraintConflictOnSave	focused Linux runtime evidence
+c:objc(cs)NSConstraintConflict(im)initWithConstraint:databaseObject:databaseSnapshot:conflictingObjects:conflictingSnapshots:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testConstraintConflictOnSave	focused Linux runtime evidence
+c:objc(cs)NSConstraintConflict(im)initWithConstraint:databaseObject:databaseSnapshot:conflictingObjects:conflictingSnapshots:::SYNTHESIZED::c:objc(cs)NSConstraintConflict	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testConstraintConflictOnSave	focused Linux runtime evidence
+c:objc(cs)NSConstraintConflict(py)conflictingObjects	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testConstraintConflictOnSave	focused Linux runtime evidence
+c:objc(cs)NSConstraintConflict(py)conflictingSnapshots	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testConstraintConflictOnSave	focused Linux runtime evidence
+c:objc(cs)NSConstraintConflict(py)constraint	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testConstraintConflictOnSave	focused Linux runtime evidence
+c:objc(cs)NSConstraintConflict(py)constraintValues	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testConstraintConflictOnSave	focused Linux runtime evidence
+c:objc(cs)NSConstraintConflict(py)databaseObject	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testConstraintConflictOnSave	focused Linux runtime evidence
+c:objc(cs)NSConstraintConflict(py)databaseSnapshot	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testConstraintConflictOnSave	focused Linux runtime evidence
 c:objc(cs)NSCoreDataCoreSpotlightDelegate	implemented	test:full/coredata/tests/agent/CoreDataFailClosedTests.swift#testFailClosedSurfaces	focused Linux runtime evidence
 c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)attributeSetForObject:	unavailable	unavailable on Linux — iCloud ubiquity or Core Spotlight types are not present	no Linux daemon, Apple identity, or CSSearchableIndex types
 c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)deleteSpotlightIndexWithCompletionHandler:	declared	source:full/coredata/CoreDataFailClosed.swift#deleteSpotlightIndex	compiles on the isolated Linux host; not the focused runtime observation
@@ -385,23 +385,23 @@ c:objc(cs)NSEntityDescription	implemented	test:full/coredata/tests/agent/CoreDat
 c:objc(cs)NSEntityDescription(cm)entityForName:inManagedObjectContext:	declared	source:full/coredata/CoreDataFailClosed.swift#entity	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSEntityDescription(cm)insertNewObjectForEntityForName:inManagedObjectContext:	implemented	test:full/coredata/tests/agent/CoreDataSnapshotTests.swift#testOldNilCommittedValues	focused Linux runtime evidence
 c:objc(cs)NSEntityDescription(im)isKindOfEntity:	declared	source:full/coredata/NSManagedObjectContext.swift#isKindOf	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSEntityDescription(im)relationshipsWithDestinationEntity:	declared	source:full/coredata/NSManagedObjectModel.swift#relationships	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSEntityDescription(im)relationshipsWithDestinationEntity:	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelRelationshipsFetchedPropertiesAndConstraints	focused Linux runtime evidence
 c:objc(cs)NSEntityDescription(py)abstract	declared	source:full/coredata/NSManagedObjectModel.swift#isAbstract	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSEntityDescription(py)attributesByName	declared	source:full/coredata/NSManagedObject.swift#attributesByName	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSEntityDescription(py)attributesByName	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelLoadFromContents	focused Linux runtime evidence
 c:objc(cs)NSEntityDescription(py)compoundIndexes	declared	source:full/coredata/NSManagedObjectModel.swift#compoundIndexes	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSEntityDescription(py)coreSpotlightDisplayNameExpression	deferred	deferred — Linux Foundation lacks NSExpression or UndoManager; omitted so warnings-as-errors builds	toolchain or signature cannot be declared honestly on Linux
 c:objc(cs)NSEntityDescription(py)indexes	declared	source:full/coredata/NSFetchRequest.swift#indexes	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSEntityDescription(py)managedObjectClassName	declared	source:full/coredata/NSManagedObject.swift#managedObjectClassName	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSEntityDescription(py)managedObjectClassName	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelRelationshipsFetchedPropertiesAndConstraints	focused Linux runtime evidence
 c:objc(cs)NSEntityDescription(py)managedObjectModel	declared	source:full/coredata/NSManagedObject.swift#managedObjectModel	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSEntityDescription(py)name	implemented	test:full/coredata/tests/agent/CoreDataFRCTests.swift#testFRCSectionsAndChangeNotifications	focused Linux runtime evidence
-c:objc(cs)NSEntityDescription(py)properties	declared	source:full/coredata/NSManagedObjectModel.swift#properties	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSEntityDescription(py)propertiesByName	declared	source:full/coredata/NSManagedObject.swift#propertiesByName	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSEntityDescription(py)properties	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelLoadFromContents	focused Linux runtime evidence
+c:objc(cs)NSEntityDescription(py)propertiesByName	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelLoadFromContents	focused Linux runtime evidence
 c:objc(cs)NSEntityDescription(py)relationshipsByName	implemented	test:full/coredata/tests/agent/CoreDataRelationshipTests.swift#testDeleteRules	focused Linux runtime evidence
 c:objc(cs)NSEntityDescription(py)renamingIdentifier	declared	source:full/coredata/NSManagedObjectModel.swift#renamingIdentifier	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSEntityDescription(py)subentities	declared	source:full/coredata/NSManagedObjectModel.swift#subentities	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSEntityDescription(py)subentitiesByName	declared	source:full/coredata/NSManagedObjectModel.swift#subentitiesByName	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSEntityDescription(py)superentity	declared	source:full/coredata/NSManagedObjectModel.swift#superentity	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSEntityDescription(py)uniquenessConstraints	declared	source:full/coredata/NSManagedObjectModel.swift#uniquenessConstraints	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSEntityDescription(py)uniquenessConstraints	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelRelationshipsFetchedPropertiesAndConstraints	focused Linux runtime evidence
 c:objc(cs)NSEntityDescription(py)userInfo	implemented	test:full/coredata/tests/agent/CoreDataValidationTests.swift#testValidationAndUndoDisabled	focused Linux runtime evidence
 c:objc(cs)NSEntityDescription(py)versionHash	declared	source:full/coredata/CoreDataFailClosed.swift#versionHash	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSEntityDescription(py)versionHashModifier	declared	source:full/coredata/NSManagedObjectModel.swift#versionHashModifier	compiles on the isolated Linux host; not the focused runtime observation
@@ -451,13 +451,13 @@ c:objc(cs)NSFetchRequest(py)entityName	declared	source:full/coredata/NSFetchRequ
 c:objc(cs)NSFetchRequest(py)fetchBatchSize	declared	source:full/coredata/NSFetchRequest.swift#fetchBatchSize	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSFetchRequest(py)fetchLimit	implemented	test:full/coredata/tests/agent/CoreDataFetchResultTests.swift#testSortLimitResultTypes	focused Linux runtime evidence
 c:objc(cs)NSFetchRequest(py)fetchOffset	implemented	test:full/coredata/tests/agent/CoreDataFetchResultTests.swift#testSortLimitResultTypes	focused Linux runtime evidence
-c:objc(cs)NSFetchRequest(py)havingPredicate	declared	source:full/coredata/NSFetchRequest.swift#havingPredicate	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSFetchRequest(py)havingPredicate	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testPropertiesToGroupBy	focused Linux runtime evidence
 c:objc(cs)NSFetchRequest(py)includesPendingChanges	declared	source:full/coredata/NSFetchRequest.swift#includesPendingChanges	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSFetchRequest(py)includesPropertyValues	declared	source:full/coredata/NSFetchRequest.swift#includesPropertyValues	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSFetchRequest(py)includesSubentities	declared	source:full/coredata/NSFetchRequest.swift#includesSubentities	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSFetchRequest(py)predicate	implemented	test:full/coredata/tests/agent/CoreDataPredicateTests.swift#testPredicatesByOperator	focused Linux runtime evidence
 c:objc(cs)NSFetchRequest(py)propertiesToFetch	implemented	test:full/coredata/tests/agent/CoreDataFetchResultTests.swift#testSortLimitResultTypes	focused Linux runtime evidence
-c:objc(cs)NSFetchRequest(py)propertiesToGroupBy	declared	source:full/coredata/NSFetchRequest.swift#propertiesToGroupBy	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSFetchRequest(py)propertiesToGroupBy	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testPropertiesToGroupBy	focused Linux runtime evidence
 c:objc(cs)NSFetchRequest(py)relationshipKeyPathsForPrefetching	declared	source:full/coredata/NSFetchRequest.swift#relationshipKeyPathsForPrefetching	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSFetchRequest(py)resultType	implemented	test:full/coredata/tests/agent/CoreDataFaultingTests.swift#testFaulting	focused Linux runtime evidence
 c:objc(cs)NSFetchRequest(py)returnsDistinctResults	declared	source:full/coredata/NSFetchRequest.swift#returnsDistinctResults	compiles on the isolated Linux host; not the focused runtime observation
@@ -509,36 +509,36 @@ c:objc(cs)NSLightweightMigrationStage(py)versionChecksums	declared	source:full/c
 c:objc(cs)NSManagedObject	implemented	test:full/coredata/tests/agent/CoreDataSnapshotTests.swift#testRollbackRestoresCommitted	focused Linux runtime evidence
 c:objc(cs)NSManagedObject(cm)entity	declared	source:full/coredata/CoreDataFailClosed.swift#entity	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObject(cpy)contextShouldIgnoreUnmodeledPropertyChanges	declared	source:full/coredata/NSManagedObject.swift#contextShouldIgnoreUnmodeledPropertyChanges	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)awakeFromFetch	declared	source:full/coredata/NSManagedObject.swift#awakeFromFetch	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)awakeFromInsert	declared	source:full/coredata/NSManagedObject.swift#awakeFromInsert	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObject(im)awakeFromFetch	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)awakeFromInsert	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
 c:objc(cs)NSManagedObject(im)awakeFromSnapshotEvents:	declared	source:full/coredata/NSManagedObject.swift#awake	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObject(im)changedValues	implemented	test:full/coredata/tests/agent/CoreDataSnapshotTests.swift#testOldNilCommittedValues	focused Linux runtime evidence
-c:objc(cs)NSManagedObject(im)changedValuesForCurrentEvent	declared	source:full/coredata/NSManagedObject.swift#changedValuesForCurrentEvent	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObject(im)changedValuesForCurrentEvent	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
 c:objc(cs)NSManagedObject(im)committedValuesForKeys:	implemented	test:full/coredata/tests/agent/CoreDataSnapshotTests.swift#testOldNilCommittedValues	focused Linux runtime evidence
-c:objc(cs)NSManagedObject(im)didAccessValueForKey:	declared	source:full/coredata/NSManagedObject.swift#didAccessValue	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObject(im)didAccessValueForKey:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
 c:objc(cs)NSManagedObject(im)didChangeValueForKey:	implemented	test:full/coredata/tests/agent/CoreDataValidationTests.swift#testValidationAndUndoDisabled	focused Linux runtime evidence
 c:objc(cs)NSManagedObject(im)didChangeValueForKey:withSetMutation:usingObjects:	implemented	test:full/coredata/tests/agent/CoreDataValidationTests.swift#testValidationAndUndoDisabled	focused Linux runtime evidence
-c:objc(cs)NSManagedObject(im)didSave	declared	source:full/coredata/NSManagedObject.swift#didSave	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)didTurnIntoFault	declared	source:full/coredata/NSManagedObject.swift#didTurnIntoFault	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)hasFaultForRelationshipNamed:	declared	source:full/coredata/NSManagedObject.swift#hasFault	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObject(im)didSave	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)didTurnIntoFault	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)hasFaultForRelationshipNamed:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
 c:objc(cs)NSManagedObject(im)initWithContext:	declared	source:full/coredata/NSManagedObject.swift#NSManagedObject	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)initWithEntity:insertIntoManagedObjectContext:	declared	source:full/coredata/NSManagedObject.swift#NSManagedObject	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)initWithEntity:insertIntoManagedObjectContext:::SYNTHESIZED::c:objc(cs)NSManagedObject	declared	source:full/coredata/NSManagedObject.swift#NSManagedObject	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)objectIDsForRelationshipNamed:	declared	source:full/coredata/CoreData.swift#objectIDs	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)prepareForDeletion	declared	source:full/coredata/NSManagedObject.swift#prepareForDeletion	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)primitiveValueForKey:	declared	source:full/coredata/CoreDataGraph.swift#primitiveValue	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)setPrimitiveValue:forKey:	declared	source:full/coredata/NSManagedObject.swift#setPrimitiveValue	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)setValue:forKey:	declared	source:full/coredata/CoreDataFailClosed.swift#setValue	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)validateForDelete:	declared	source:full/coredata/NSManagedObject.swift#validateForDelete	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)validateForInsert:	declared	source:full/coredata/NSManagedObject.swift#validateForInsert	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)validateForUpdate:	declared	source:full/coredata/NSManagedObject.swift#validateForUpdate	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)validateValue:forKey:error:	declared	source:full/coredata/NSManagedObject.swift#validateValue	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObject(im)initWithEntity:insertIntoManagedObjectContext:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testDidSaveAndObjectsDidChangeUserInfoKeys	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)initWithEntity:insertIntoManagedObjectContext:::SYNTHESIZED::c:objc(cs)NSManagedObject	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)objectIDsForRelationshipNamed:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)prepareForDeletion	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)primitiveValueForKey:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)setPrimitiveValue:forKey:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)setValue:forKey:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteCRUDAndFaulting	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)validateForDelete:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)validateForInsert:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)validateForUpdate:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)validateValue:forKey:error:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
 c:objc(cs)NSManagedObject(im)valueForKey:	implemented	test:full/coredata/tests/agent/CoreDataSnapshotTests.swift#testRollbackRestoresCommitted	focused Linux runtime evidence
-c:objc(cs)NSManagedObject(im)willAccessValueForKey:	declared	source:full/coredata/NSManagedObject.swift#willAccessValue	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObject(im)willAccessValueForKey:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
 c:objc(cs)NSManagedObject(im)willChangeValueForKey:	implemented	test:full/coredata/tests/agent/CoreDataValidationTests.swift#testValidationAndUndoDisabled	focused Linux runtime evidence
 c:objc(cs)NSManagedObject(im)willChangeValueForKey:withSetMutation:usingObjects:	implemented	test:full/coredata/tests/agent/CoreDataValidationTests.swift#testValidationAndUndoDisabled	focused Linux runtime evidence
-c:objc(cs)NSManagedObject(im)willSave	declared	source:full/coredata/NSManagedObject.swift#willSave	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObject(im)willTurnIntoFault	declared	source:full/coredata/NSManagedObject.swift#willTurnIntoFault	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObject(im)willSave	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
+c:objc(cs)NSManagedObject(im)willTurnIntoFault	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
 c:objc(cs)NSManagedObject(py)deleted	declared	source:full/coredata/NSManagedObject.swift#isDeleted	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObject(py)entity	declared	source:full/coredata/CoreDataFailClosed.swift#entity	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObject(py)fault	implemented	test:full/coredata/tests/agent/CoreDataFaultingTests.swift#testFaulting	focused Linux runtime evidence
@@ -552,47 +552,47 @@ c:objc(cs)NSManagedObject(py)updated	declared	source:full/coredata/NSManagedObje
 c:objc(cs)NSManagedObjectContext	implemented	test:full/coredata/tests/agent/CoreDataQueueTests.swift#testQueueReentrancy	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(cm)mergeChangesFromRemoteContextSave:intoContexts:	declared	source:full/coredata/NSManagedObjectContext.swift#mergeChanges	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObjectContext(cm)new	declared	source:full/coredata/NSManagedObjectContext.swift#new	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObjectContext(im)assignObject:toPersistentStore:	declared	source:full/coredata/NSManagedObjectContext.swift#assign	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObjectContext(im)assignObject:toPersistentStore:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteCRUDAndFaulting	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)countForFetchRequest:error:	implemented	test:full/coredata/tests/agent/CoreDataSnapshotTests.swift#testRollbackRestoresCommitted	focused Linux runtime evidence
-c:objc(cs)NSManagedObjectContext(im)deleteObject:	declared	source:full/coredata/CoreData.swift#delete	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObjectContext(im)detectConflictsForObject:	declared	source:full/coredata/NSManagedObjectContext.swift#detectConflicts	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObjectContext(im)deleteObject:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteCRUDAndFaulting	focused Linux runtime evidence
+c:objc(cs)NSManagedObjectContext(im)detectConflictsForObject:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testDidSaveAndObjectsDidChangeUserInfoKeys	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)executeRequest:error:	declared	source:full/coredata/CoreDataFailClosed.swift#execute	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObjectContext(im)existingObjectWithID:error:	implemented	test:full/coredata/tests/agent/CoreDataMergeTests.swift#testMergePolicies	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)init	implemented	test:full/coredata/tests/agent/CoreDataQueueTests.swift#testQueueReentrancy	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)initWithConcurrencyType:	implemented	test:full/coredata/tests/agent/CoreDataQueueTests.swift#testQueueReentrancy	focused Linux runtime evidence
-c:objc(cs)NSManagedObjectContext(im)insertObject:	declared	source:full/coredata/CoreData.swift#insert	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObjectContext(im)insertObject:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteCRUDAndFaulting	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)lock	implemented	test:full/coredata/tests/agent/CoreDataQueueTests.swift#testQueueSerialization	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)mergeChangesFromContextDidSaveNotification:	declared	source:full/coredata/NSManagedObjectContext.swift#mergeChanges	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObjectContext(im)objectRegisteredForID:	declared	source:full/coredata/NSManagedObjectContext.swift#registeredObject	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObjectContext(im)objectWithID:	declared	source:full/coredata/NSManagedObject.swift#object	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObjectContext(im)objectRegisteredForID:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testDidSaveAndObjectsDidChangeUserInfoKeys	focused Linux runtime evidence
+c:objc(cs)NSManagedObjectContext(im)objectWithID:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testDidSaveAndObjectsDidChangeUserInfoKeys	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)observeValueForKeyPath:ofObject:change:context:	declared	source:full/coredata/NSManagedObjectContext.swift#observeValue	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObjectContext(im)obtainPermanentIDsForObjects:error:	declared	source:full/coredata/CoreDataFailClosed.swift#obtainPermanentIDs	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObjectContext(im)obtainPermanentIDsForObjects:error:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteCRUDAndFaulting	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)performBlock:	declared	source:full/coredata/NSManagedObjectContext.swift#perform	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObjectContext(im)performBlockAndWait:	declared	source:full/coredata/NSManagedObjectContext.swift#performAndWait	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObjectContext(im)processPendingChanges	implemented	test:full/coredata/tests/agent/CoreDataValidationTests.swift#testValidationAndUndoDisabled	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)redo	implemented	test:full/coredata/tests/agent/CoreDataValidationTests.swift#testValidationAndUndoDisabled	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)refreshAllObjects	implemented	test:full/coredata/tests/agent/CoreDataValidationTests.swift#testValidationAndUndoDisabled	focused Linux runtime evidence
-c:objc(cs)NSManagedObjectContext(im)refreshObject:mergeChanges:	declared	source:full/coredata/CoreData.swift#refresh	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObjectContext(im)reset	declared	source:full/coredata/CoreDataFailClosed.swift#reset	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObjectContext(im)refreshObject:mergeChanges:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testManagedObjectKVCAccessors	focused Linux runtime evidence
+c:objc(cs)NSManagedObjectContext(im)reset	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testDidSaveAndObjectsDidChangeUserInfoKeys	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)rollback	implemented	test:full/coredata/tests/agent/CoreDataSnapshotTests.swift#testRollbackRestoresCommitted	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)save:	implemented	test:full/coredata/tests/agent/CoreDataSnapshotTests.swift#testOldNilCommittedValues	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)setQueryGenerationFromToken:error:	declared	source:full/coredata/NSManagedObjectContext.swift#setQueryGenerationFrom	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObjectContext(im)shouldHandleInaccessibleFault:forObjectID:triggeredByProperty:	declared	source:full/coredata/NSManagedObjectContext.swift#shouldHandleInaccessibleFault	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObjectContext(im)tryLock	declared	source:full/coredata/NSManagedObjectContext.swift#tryLock	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObjectContext(im)tryLock	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testDidSaveAndObjectsDidChangeUserInfoKeys	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)undo	implemented	test:full/coredata/tests/agent/CoreDataValidationTests.swift#testValidationAndUndoDisabled	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(im)unlock	implemented	test:full/coredata/tests/agent/CoreDataQueueTests.swift#testQueueSerialization	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(py)automaticallyMergesChangesFromParent	implemented	test:full/coredata/tests/agent/CoreDataMergeTests.swift#testMergePolicies	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(py)concurrencyType	declared	source:full/coredata/CoreDataFailClosed.swift#concurrencyType	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObjectContext(py)deletedObjects	declared	source:full/coredata/NSFetchRequest.swift#deletedObjects	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObjectContext(py)hasChanges	declared	source:full/coredata/NSManagedObject.swift#hasChanges	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObjectContext(py)insertedObjects	declared	source:full/coredata/NSFetchRequest.swift#insertedObjects	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObjectContext(py)hasChanges	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testDidSaveAndObjectsDidChangeUserInfoKeys	focused Linux runtime evidence
+c:objc(cs)NSManagedObjectContext(py)insertedObjects	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testDidSaveAndObjectsDidChangeUserInfoKeys	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(py)mergePolicy	implemented	test:full/coredata/tests/agent/CoreDataMergeTests.swift#testMergePolicies	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(py)name	implemented	test:full/coredata/tests/agent/CoreDataFailClosedTests.swift#testFailClosedSurfaces	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(py)parentContext	implemented	test:full/coredata/tests/agent/CoreDataMergeTests.swift#testMergePolicies	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(py)persistentStoreCoordinator	declared	source:full/coredata/NSPersistentStore.swift#persistentStoreCoordinator	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObjectContext(py)propagatesDeletesAtEndOfEvent	declared	source:full/coredata/NSManagedObjectContext.swift#propagatesDeletesAtEndOfEvent	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObjectContext(py)queryGenerationToken	declared	source:full/coredata/NSManagedObjectContext.swift#queryGenerationToken	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObjectContext(py)registeredObjects	declared	source:full/coredata/NSManagedObjectContext.swift#registeredObjects	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObjectContext(py)registeredObjects	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testDidSaveAndObjectsDidChangeUserInfoKeys	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectContext(py)retainsRegisteredObjects	declared	source:full/coredata/NSManagedObjectContext.swift#retainsRegisteredObjects	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObjectContext(py)shouldDeleteInaccessibleFaults	declared	source:full/coredata/NSManagedObjectContext.swift#shouldDeleteInaccessibleFaults	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObjectContext(py)stalenessInterval	declared	source:full/coredata/NSManagedObjectContext.swift#stalenessInterval	compiles on the isolated Linux host; not the focused runtime observation
@@ -604,7 +604,7 @@ c:objc(cs)NSManagedObjectID	implemented	test:full/coredata/tests/agent/CoreDataF
 c:objc(cs)NSManagedObjectID(im)URIRepresentation	implemented	test:full/coredata/tests/agent/CoreDataRelationshipTests.swift#testRelationshipsFaultingAndInverses	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectID(py)entity	declared	source:full/coredata/CoreDataFailClosed.swift#entity	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObjectID(py)persistentStore	declared	source:full/coredata/NSPersistentStore.swift#persistentStore	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSManagedObjectID(py)temporaryID	declared	source:full/coredata/NSManagedObject.swift#isTemporaryID	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObjectID(py)temporaryID	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteCRUDAndFaulting	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectModel	implemented	test:full/coredata/tests/agent/CoreDataModelTests.swift#testModelConstruction	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectModel(cm)mergedModelFromBundles:	implemented	test:full/coredata/tests/agent/CoreDataModelTests.swift#testModelConstruction	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectModel(cm)mergedModelFromBundles:forStoreMetadata:	declared	source:full/coredata/NSManagedObjectModel.swift#mergedModel	compiles on the isolated Linux host; not the focused runtime observation
@@ -617,7 +617,7 @@ c:objc(cs)NSManagedObjectModel(im)fetchRequestFromTemplateWithName:substitutionV
 c:objc(cs)NSManagedObjectModel(im)fetchRequestTemplateForName:	implemented	test:full/coredata/tests/agent/CoreDataModelTests.swift#testModelConstruction	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectModel(im)init	implemented	test:full/coredata/tests/agent/CoreDataModelTests.swift#testModelConstruction	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectModel(im)initWithContentsOfURL:	implemented	test:full/coredata/tests/agent/CoreDataModelTests.swift#testModelConstruction	focused Linux runtime evidence
-c:objc(cs)NSManagedObjectModel(im)initWithContentsOfURL:::SYNTHESIZED::c:objc(cs)NSManagedObjectModel	declared	source:full/coredata/NSManagedObjectModel.swift#NSManagedObjectModel	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSManagedObjectModel(im)initWithContentsOfURL:::SYNTHESIZED::c:objc(cs)NSManagedObjectModel	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelLoadFromContents	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectModel(im)isConfiguration:compatibleWithStoreMetadata:	implemented	test:full/coredata/tests/agent/CoreDataModelTests.swift#testModelConstruction	focused Linux runtime evidence
 c:objc(cs)NSManagedObjectModel(im)setEntities:forConfiguration:	declared	source:full/coredata/NSManagedObjectModel.swift#setEntities	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSManagedObjectModel(im)setFetchRequestTemplate:forName:	declared	source:full/coredata/NSManagedObjectModel.swift#setFetchRequestTemplate	compiles on the isolated Linux host; not the focused runtime observation
@@ -663,7 +663,7 @@ c:objc(cs)NSMergePolicy(cpy)rollbackMergePolicy	implemented	test:full/coredata/t
 c:objc(cs)NSMergePolicy(im)initWithMergeType:	implemented	test:full/coredata/tests/agent/CoreDataMergeTests.swift#testMergePolicyAndParentMerge	focused Linux runtime evidence
 c:objc(cs)NSMergePolicy(im)initWithMergeType:::SYNTHESIZED::c:objc(cs)NSMergePolicy	declared	source:full/coredata/NSMergePolicy.swift#NSMergePolicy	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSMergePolicy(im)resolveConflicts:error:	implemented	test:full/coredata/tests/agent/CoreDataMergeTests.swift#testMergePolicyAndParentMerge	focused Linux runtime evidence
-c:objc(cs)NSMergePolicy(im)resolveConstraintConflicts:error:	declared	source:full/coredata/NSMergePolicy.swift#resolve	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSMergePolicy(im)resolveConstraintConflicts:error:	implemented	test:full/coredata/tests/agent/CoreDataNotificationTests.swift#testConstraintConflictOnSave	focused Linux runtime evidence
 c:objc(cs)NSMergePolicy(im)resolveOptimisticLockingVersionConflicts:error:	declared	source:full/coredata/NSMergePolicy.swift#resolve	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSMergePolicy(py)mergeType	implemented	test:full/coredata/tests/agent/CoreDataMergeTests.swift#testMergePolicies	focused Linux runtime evidence
 c:objc(cs)NSMigrationManager	implemented	test:full/coredata/tests/agent/CoreDataFailClosedTests.swift#testFailClosedSurfaces	focused Linux runtime evidence
@@ -716,7 +716,7 @@ c:objc(cs)NSPersistentContainer	implemented	test:full/coredata/tests/agent/CoreD
 c:objc(cs)NSPersistentContainer(cm)defaultDirectoryURL	implemented	test:full/coredata/tests/agent/CoreDataDirectoryTests.swift#testDefaultDirectoryURLHasNoEagerFilesystemSideEffects	focused Linux runtime evidence
 c:objc(cs)NSPersistentContainer(im)initWithName:	implemented	test:full/coredata/tests/agent/CoreDataDirectoryTests.swift#testDefaultDirectoryURLHasNoEagerFilesystemSideEffects	focused Linux runtime evidence
 c:objc(cs)NSPersistentContainer(im)initWithName:managedObjectModel:	implemented	test:full/coredata/tests/agent/CoreDataDirectoryTests.swift#testDefaultDirectoryURLHasNoEagerFilesystemSideEffects	focused Linux runtime evidence
-c:objc(cs)NSPersistentContainer(im)loadPersistentStoresWithCompletionHandler:	declared	source:full/coredata/NSPersistentStore.swift#loadPersistentStores	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentContainer(im)loadPersistentStoresWithCompletionHandler:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteCRUDAndFaulting	focused Linux runtime evidence
 c:objc(cs)NSPersistentContainer(im)newBackgroundContext	implemented	test:full/coredata/tests/agent/CoreDataFaultingTests.swift#testFaulting	focused Linux runtime evidence
 c:objc(cs)NSPersistentContainer(im)performBackgroundTask:	declared	source:full/coredata/NSPersistentStore.swift#performBackgroundTask	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPersistentContainer(py)managedObjectModel	declared	source:full/coredata/NSManagedObject.swift#managedObjectModel	compiles on the isolated Linux host; not the focused runtime observation
@@ -766,21 +766,21 @@ c:objc(cs)NSPersistentHistoryTransaction(py)transactionNumber	declared	source:fu
 c:objc(cs)NSPersistentStore	implemented	test:full/coredata/tests/agent/CoreDataFailClosedTests.swift#testFailClosedSurfaces	focused Linux runtime evidence
 c:objc(cs)NSPersistentStore(cm)metadataForPersistentStoreWithURL:error:	implemented	test:full/coredata/tests/agent/CoreDataFailClosedTests.swift#testFailClosedSurfaces	focused Linux runtime evidence
 c:objc(cs)NSPersistentStore(cm)migrationManagerClass	declared	source:full/coredata/NSPersistentStore.swift#migrationManagerClass	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStore(cm)setMetadata:forPersistentStoreWithURL:error:	declared	source:full/coredata/NSPersistentStore.swift#setMetadata	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStore(im)didAddToPersistentStoreCoordinator:	declared	source:full/coredata/NSPersistentStore.swift#didAdd	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStore(cm)setMetadata:forPersistentStoreWithURL:error:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
+c:objc(cs)NSPersistentStore(im)didAddToPersistentStoreCoordinator:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
 c:objc(cs)NSPersistentStore(im)initWithPersistentStoreCoordinator:configurationName:URL:options:	declared	source:full/coredata/NSPersistentStore.swift#NSPersistentStore	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPersistentStore(im)initWithPersistentStoreCoordinator:configurationName:URL:options:::SYNTHESIZED::c:objc(cs)NSPersistentStore	declared	source:full/coredata/NSPersistentStore.swift#NSPersistentStore	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStore(im)loadMetadata:	declared	source:full/coredata/CoreDataFailClosed.swift#loadMetadata	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStore(im)willRemoveFromPersistentStoreCoordinator:	declared	source:full/coredata/NSPersistentStore.swift#willRemove	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStore(py)URL	declared	source:full/coredata/CoreDataFailClosed.swift#url	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStore(py)configurationName	declared	source:full/coredata/NSPersistentStore.swift#configurationName	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStore(im)loadMetadata:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
+c:objc(cs)NSPersistentStore(im)willRemoveFromPersistentStoreCoordinator:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
+c:objc(cs)NSPersistentStore(py)URL	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteCRUDAndFaulting	focused Linux runtime evidence
+c:objc(cs)NSPersistentStore(py)configurationName	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
 c:objc(cs)NSPersistentStore(py)coreSpotlightExporter	declared	source:full/coredata/NSPersistentStore.swift#coreSpotlightExporter	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStore(py)identifier	declared	source:full/coredata/CoreDataFailClosed.swift#identifier	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStore(py)metadata	declared	source:full/coredata/NSManagedObjectModel.swift#metadata	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStore(py)options	declared	source:full/coredata/CoreDataFailClosed.swift#options	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStore(py)persistentStoreCoordinator	declared	source:full/coredata/NSPersistentStore.swift#persistentStoreCoordinator	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStore(py)identifier	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
+c:objc(cs)NSPersistentStore(py)metadata	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
+c:objc(cs)NSPersistentStore(py)options	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
+c:objc(cs)NSPersistentStore(py)persistentStoreCoordinator	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
 c:objc(cs)NSPersistentStore(py)readOnly	declared	source:full/coredata/NSPersistentStore.swift#isReadOnly	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStore(py)type	declared	source:full/coredata/CoreDataFailClosed.swift#type	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStore(py)type	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteCRUDAndFaulting	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreAsynchronousResult	declared	source:full/coredata/NSFetchRequest.swift#NSPersistentStoreAsynchronousResult	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPersistentStoreAsynchronousResult(im)cancel	declared	source:full/coredata/NSFetchRequest.swift#cancel	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPersistentStoreAsynchronousResult(py)managedObjectContext	declared	source:full/coredata/NSManagedObject.swift#managedObjectContext	compiles on the isolated Linux host; not the focused runtime observation
@@ -791,14 +791,14 @@ c:objc(cs)NSPersistentStoreCoordinator(cm)metadataForPersistentStoreOfType:URL:e
 c:objc(cs)NSPersistentStoreCoordinator(cm)metadataForPersistentStoreOfType:URL:options:error:	implemented	test:full/coredata/tests/agent/CoreDataFailClosedTests.swift#testFailClosedSurfaces	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreCoordinator(cm)registerStoreClass:forStoreType:	declared	source:full/coredata/NSPersistentStore.swift#registerStoreClass	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPersistentStoreCoordinator(cm)removeUbiquitousContentAndPersistentStoreAtURL:options:error:	implemented	test:full/coredata/tests/agent/CoreDataFailClosedTests.swift#testFailClosedSurfaces	focused Linux runtime evidence
-c:objc(cs)NSPersistentStoreCoordinator(cm)setMetadata:forPersistentStoreOfType:URL:error:	declared	source:full/coredata/NSPersistentStore.swift#setMetadata	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStoreCoordinator(cm)setMetadata:forPersistentStoreOfType:URL:options:error:	declared	source:full/coredata/NSPersistentStore.swift#setMetadata	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStoreCoordinator(cm)setMetadata:forPersistentStoreOfType:URL:error:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
+c:objc(cs)NSPersistentStoreCoordinator(cm)setMetadata:forPersistentStoreOfType:URL:options:error:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreCoordinator(cpy)registeredStoreTypes	implemented	test:full/coredata/tests/agent/CoreDataStoreRegistryTests.swift#testRegisteredStoreClass	focused Linux runtime evidence
-c:objc(cs)NSPersistentStoreCoordinator(im)URLForPersistentStore:	declared	source:full/coredata/CoreDataFailClosed.swift#url	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStoreCoordinator(im)addPersistentStoreWithDescription:completionHandler:	declared	source:full/coredata/NSPersistentStore.swift#addPersistentStore	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStoreCoordinator(im)URLForPersistentStore:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
+c:objc(cs)NSPersistentStoreCoordinator(im)addPersistentStoreWithDescription:completionHandler:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteCRUDAndFaulting	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreCoordinator(im)addPersistentStoreWithType:configuration:URL:options:error:	implemented	test:full/coredata/tests/agent/CoreDataStoreRegistryTests.swift#testRegisteredStoreClass	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreCoordinator(im)currentPersistentHistoryTokenFromStores:	declared	source:full/coredata/NSPersistentStore.swift#currentPersistentHistoryToken	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStoreCoordinator(im)destroyPersistentStoreAtURL:withType:options:error:	declared	source:full/coredata/NSPersistentStore.swift#destroyPersistentStore	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStoreCoordinator(im)destroyPersistentStoreAtURL:withType:options:error:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreCoordinator(im)executeRequest:withContext:error:	declared	source:full/coredata/CoreDataFailClosed.swift#execute	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPersistentStoreCoordinator(im)finishDeferredLightweightMigration:	declared	source:full/coredata/NSPersistentStore.swift#finishDeferredLightweightMigration	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPersistentStoreCoordinator(im)finishDeferredLightweightMigrationTask:	declared	source:full/coredata/NSPersistentStore.swift#finishDeferredLightweightMigrationTask	compiles on the isolated Linux host; not the focused runtime observation
@@ -808,27 +808,27 @@ c:objc(cs)NSPersistentStoreCoordinator(im)managedObjectIDForURIRepresentation:	d
 c:objc(cs)NSPersistentStoreCoordinator(im)metadataForPersistentStore:	implemented	test:full/coredata/tests/agent/CoreDataModelTests.swift#testModelMetadataAndStoreCoordinator	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreCoordinator(im)migratePersistentStore:toURL:options:withType:error:	declared	source:full/coredata/NSPersistentStore.swift#migratePersistentStore	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPersistentStoreCoordinator(im)performBlock:	declared	source:full/coredata/NSManagedObjectContext.swift#perform	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStoreCoordinator(im)performBlockAndWait:	declared	source:full/coredata/NSManagedObjectContext.swift#performAndWait	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStoreCoordinator(im)performBlockAndWait:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreCoordinator(im)persistentStoreForURL:	implemented	test:full/coredata/tests/agent/CoreDataModelTests.swift#testModelMetadataAndStoreCoordinator	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreCoordinator(im)removePersistentStore:error:	declared	source:full/coredata/NSManagedObject.swift#remove	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPersistentStoreCoordinator(im)replacePersistentStoreAtURL:destinationOptions:withPersistentStoreFromURL:sourceOptions:storeType:error:	declared	source:full/coredata/NSPersistentStore.swift#replacePersistentStore	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPersistentStoreCoordinator(im)setMetadata:forPersistentStore:	declared	source:full/coredata/NSPersistentStore.swift#setMetadata	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPersistentStoreCoordinator(im)setURL:forPersistentStore:	declared	source:full/coredata/NSPersistentStore.swift#setURL	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStoreCoordinator(im)tryLock	declared	source:full/coredata/NSManagedObjectContext.swift#tryLock	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStoreCoordinator(im)tryLock	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreCoordinator(im)unlock	implemented	test:full/coredata/tests/agent/CoreDataQueueTests.swift#testQueueSerialization	focused Linux runtime evidence
-c:objc(cs)NSPersistentStoreCoordinator(py)managedObjectModel	declared	source:full/coredata/NSManagedObject.swift#managedObjectModel	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStoreCoordinator(py)managedObjectModel	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreCoordinator(py)name	implemented	test:full/coredata/tests/agent/CoreDataModelTests.swift#testModelMetadataAndStoreCoordinator	focused Linux runtime evidence
-c:objc(cs)NSPersistentStoreCoordinator(py)persistentStores	declared	source:full/coredata/NSPersistentStore.swift#persistentStores	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStoreCoordinator(py)persistentStores	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreDescription	implemented	test:full/coredata/tests/agent/CoreDataFailClosedTests.swift#testFailClosedSurfaces	focused Linux runtime evidence
-c:objc(cs)NSPersistentStoreDescription(cm)persistentStoreDescriptionWithURL:::SYNTHESIZED::c:objc(cs)NSPersistentStoreDescription	declared	source:full/coredata/NSPersistentStore.swift#NSPersistentStoreDescription	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStoreDescription(cm)persistentStoreDescriptionWithURL:::SYNTHESIZED::c:objc(cs)NSPersistentStoreDescription	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteCRUDAndFaulting	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreDescription(im)initWithURL:	implemented	test:full/coredata/tests/agent/CoreDataFailClosedTests.swift#testFailClosedSurfaces	focused Linux runtime evidence
-c:objc(cs)NSPersistentStoreDescription(im)initWithURL:::SYNTHESIZED::c:objc(cs)NSPersistentStoreDescription	declared	source:full/coredata/NSPersistentStore.swift#NSPersistentStoreDescription	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStoreDescription(im)setOption:forKey:	declared	source:full/coredata/NSPersistentStore.swift#setOption	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStoreDescription(im)initWithURL:::SYNTHESIZED::c:objc(cs)NSPersistentStoreDescription	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteCRUDAndFaulting	focused Linux runtime evidence
+c:objc(cs)NSPersistentStoreDescription(im)setOption:forKey:	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreDescription(im)setValue:forPragmaNamed:	declared	source:full/coredata/CoreDataFailClosed.swift#setValue	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStoreDescription(py)URL	declared	source:full/coredata/CoreDataFailClosed.swift#url	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStoreDescription(py)URL	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteCRUDAndFaulting	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreDescription(py)cloudKitContainerOptions	implemented	test:full/coredata/tests/agent/CoreDataFailClosedTests.swift#testFailClosedSurfaces	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreDescription(py)configuration	declared	source:full/coredata/NSManagedObjectModel.swift#configuration	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPersistentStoreDescription(py)options	declared	source:full/coredata/CoreDataFailClosed.swift#options	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPersistentStoreDescription(py)options	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
 c:objc(cs)NSPersistentStoreDescription(py)readOnly	declared	source:full/coredata/NSPersistentStore.swift#isReadOnly	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPersistentStoreDescription(py)shouldAddStoreAsynchronously	declared	source:full/coredata/NSPersistentStore.swift#shouldAddStoreAsynchronously	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPersistentStoreDescription(py)shouldInferMappingModelAutomatically	declared	source:full/coredata/NSPersistentStore.swift#shouldInferMappingModelAutomatically	compiles on the isolated Linux host; not the focused runtime observation
@@ -845,11 +845,11 @@ c:objc(cs)NSPropertyDescription(im)setValidationPredicates:withValidationWarning
 c:objc(cs)NSPropertyDescription(py)entity	declared	source:full/coredata/CoreDataFailClosed.swift#entity	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPropertyDescription(py)indexed	declared	source:full/coredata/NSManagedObjectModel.swift#isIndexed	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPropertyDescription(py)indexedBySpotlight	declared	source:full/coredata/NSManagedObjectModel.swift#isIndexedBySpotlight	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPropertyDescription(py)name	declared	source:full/coredata/CoreDataFailClosed.swift#name	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPropertyDescription(py)optional	declared	source:full/coredata/NSManagedObject.swift#isOptional	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPropertyDescription(py)name	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelLoadFromContents	focused Linux runtime evidence
+c:objc(cs)NSPropertyDescription(py)optional	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelLoadFromContents	focused Linux runtime evidence
 c:objc(cs)NSPropertyDescription(py)renamingIdentifier	declared	source:full/coredata/NSManagedObjectModel.swift#renamingIdentifier	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPropertyDescription(py)storedInExternalRecord	declared	source:full/coredata/NSManagedObjectModel.swift#isStoredInExternalRecord	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSPropertyDescription(py)transient	declared	source:full/coredata/NSManagedObject.swift#isTransient	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSPropertyDescription(py)transient	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelLoadFromContents	focused Linux runtime evidence
 c:objc(cs)NSPropertyDescription(py)userInfo	declared	source:full/coredata/CoreData.swift#userInfo	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPropertyDescription(py)validationPredicates	declared	source:full/coredata/NSManagedObject.swift#validationPredicates	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSPropertyDescription(py)validationWarnings	declared	source:full/coredata/NSManagedObjectModel.swift#validationWarnings	compiles on the isolated Linux host; not the focused runtime observation
@@ -866,8 +866,8 @@ c:objc(cs)NSRelationshipDescription(py)deleteRule	implemented	test:full/coredata
 c:objc(cs)NSRelationshipDescription(py)destinationEntity	implemented	test:full/coredata/tests/agent/CoreDataEntityTests.swift#testEntityAttributeRelationshipDescriptions	focused Linux runtime evidence
 c:objc(cs)NSRelationshipDescription(py)inverseRelationship	implemented	test:full/coredata/tests/agent/CoreDataEntityTests.swift#testEntityAttributeRelationshipDescriptions	focused Linux runtime evidence
 c:objc(cs)NSRelationshipDescription(py)maxCount	implemented	test:full/coredata/tests/agent/CoreDataEntityTests.swift#testEntityAttributeRelationshipDescriptions	focused Linux runtime evidence
-c:objc(cs)NSRelationshipDescription(py)minCount	declared	source:full/coredata/NSManagedObject.swift#minCount	compiles on the isolated Linux host; not the focused runtime observation
-c:objc(cs)NSRelationshipDescription(py)ordered	declared	source:full/coredata/NSManagedObjectModel.swift#isOrdered	compiles on the isolated Linux host; not the focused runtime observation
+c:objc(cs)NSRelationshipDescription(py)minCount	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelRelationshipsFetchedPropertiesAndConstraints	focused Linux runtime evidence
+c:objc(cs)NSRelationshipDescription(py)ordered	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelRelationshipsFetchedPropertiesAndConstraints	focused Linux runtime evidence
 c:objc(cs)NSRelationshipDescription(py)toMany	implemented	test:full/coredata/tests/agent/CoreDataEntityTests.swift#testEntityAttributeRelationshipDescriptions	focused Linux runtime evidence
 c:objc(cs)NSRelationshipDescription(py)versionHash	declared	source:full/coredata/CoreDataFailClosed.swift#versionHash	compiles on the isolated Linux host; not the focused runtime observation
 c:objc(cs)NSSaveChangesRequest	implemented	test:full/coredata/tests/agent/CoreDataCRUDTests.swift#testContextInsertSaveFetch	focused Linux runtime evidence
@@ -1181,7 +1181,7 @@ s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV9integer16AEvpZ	implement
 s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV9integer32AEvpZ	implemented	test:full/coredata/tests/agent/CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues	table-driven enum/option-set/constant values
 s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV9integer64AEvpZ	implemented	test:full/coredata/tests/agent/CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues	table-driven enum/option-set/constant values
 s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV9undefinedAEvpZ	implemented	test:full/coredata/tests/agent/CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues	table-driven enum/option-set/constant values
-s:So22NSAttributeDescriptionC8CoreDataE4typeAbCE13AttributeTypeVvp	declared	source:full/coredata/CoreDataFailClosed.swift#type	compiles on the isolated Linux host; not the focused runtime observation
+s:So22NSAttributeDescriptionC8CoreDataE4typeAbCE13AttributeTypeVvp	implemented	test:full/coredata/tests/agent/CoreDataXMLModelTests.swift#testXMLModelLoadFromContents	focused Linux runtime evidence
 s:So22NSCustomMigrationStageC8CoreDataE13migratingFrom2toABSo29NSManagedObjectModelReferenceC_AGtcfc	declared	source:full/coredata/CoreDataFailClosed.swift#NSCustomMigrationStage	compiles on the isolated Linux host; not the focused runtime observation
 s:So22NSCustomMigrationStageC8CoreDataE17didMigrateHandlerySo08NSStagedB7ManagerC_ABtKcSgvp	declared	source:full/coredata/CoreDataFailClosed.swift#didMigrateHandler	compiles on the isolated Linux host; not the focused runtime observation
 s:So22NSCustomMigrationStageC8CoreDataE18willMigrateHandlerySo08NSStagedB7ManagerC_ABtKcSgvp	declared	source:full/coredata/CoreDataFailClosed.swift#willMigrateHandler	compiles on the isolated Linux host; not the focused runtime observation
@@ -1234,10 +1234,10 @@ s:So28NSPersistentStoreCoordinatorC8CoreDataE013addPersistentB04type13configurat
 s:So28NSPersistentStoreCoordinatorC8CoreDataE017destroyPersistentB02at4type7optionsy10Foundation3URLV_So0aB0CACE0B4TypeVSDys11AnyHashableVypGSgtKF	implemented	test:full/coredata/tests/agent/CoreDataModelTests.swift#testModelMetadataAndStoreCoordinator	focused Linux runtime evidence
 s:So28NSPersistentStoreCoordinatorC8CoreDataE017migratePersistentB0_2to7options4typeSo0aB0CAI_10Foundation3URLVSDys11AnyHashableVypGSgAiCE0B4TypeVtKF	declared	source:full/coredata/NSPersistentStore.swift#migratePersistentStore	compiles on the isolated Linux host; not the focused runtime observation
 s:So28NSPersistentStoreCoordinatorC8CoreDataE017replacePersistentB02at18destinationOptions04withgB4From06sourceJ04typey10Foundation3URLV_SDys11AnyHashableVypGSgAlPSo0aB0CACE0B4TypeVtKF	declared	source:full/coredata/NSPersistentStore.swift#replacePersistentStore	compiles on the isolated Linux host; not the focused runtime observation
-s:So28NSPersistentStoreCoordinatorC8CoreDataE021metadataForPersistentB04type2at7optionsSDySSypGSo0aB0CACE0B4TypeV_10Foundation3URLVSDys11AnyHashableVypGSgtKFZ	declared	source:full/coredata/NSPersistentStore.swift#metadataForPersistentStore	compiles on the isolated Linux host; not the focused runtime observation
+s:So28NSPersistentStoreCoordinatorC8CoreDataE021metadataForPersistentB04type2at7optionsSDySSypGSo0aB0CACE0B4TypeV_10Foundation3URLVSDys11AnyHashableVypGSgtKFZ	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
 s:So28NSPersistentStoreCoordinatorC8CoreDataE08registerB5Class_4typeyyXlXpSg_So0aB0CACE0B4TypeVtFZ	declared	source:full/coredata/NSPersistentStore.swift#registerStoreClass	compiles on the isolated Linux host; not the focused runtime observation
-s:So28NSPersistentStoreCoordinatorC8CoreDataE11setMetadata_4type2at7optionsySDySSypGSg_So0aB0CACE0B4TypeV10Foundation3URLVSDys11AnyHashableVypGSgtKFZ	declared	source:full/coredata/NSPersistentStore.swift#setMetadata	compiles on the isolated Linux host; not the focused runtime observation
-s:So28NSPersistentStoreCoordinatorC8CoreDataE14performAndWaityxxyKXEKlF	declared	source:full/coredata/NSManagedObjectContext.swift#performAndWait	compiles on the isolated Linux host; not the focused runtime observation
+s:So28NSPersistentStoreCoordinatorC8CoreDataE11setMetadata_4type2at7optionsySDySSypGSg_So0aB0CACE0B4TypeV10Foundation3URLVSDys11AnyHashableVypGSgtKFZ	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
+s:So28NSPersistentStoreCoordinatorC8CoreDataE14performAndWaityxxyKXEKlF	implemented	test:full/coredata/tests/agent/CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata	focused Linux runtime evidence
 s:So28NSPersistentStoreCoordinatorC8CoreDataE15managedObjectID3forSo09NSManagedgH0CSgSS_tF	declared	source:full/coredata/NSManagedObject.swift#managedObjectID	compiles on the isolated Linux host; not the focused runtime observation
 s:So28NSPersistentStoreCoordinatorC8CoreDataE7performyxxyKcYaKlF	declared	source:full/coredata/NSManagedObjectContext.swift#perform	compiles on the isolated Linux host; not the focused runtime observation
 s:So28NSPersistentStoreRequestTypeV8rawValueABSgSu_tcfc	declared	source:full/coredata/CoreData.swift#NSPersistentStoreRequestType	compiles on the isolated Linux host; not the focused runtime observation

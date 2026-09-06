@@ -59,13 +59,11 @@ open class NSPersistentStore: NSObject {
     }
 
     open class func metadataForPersistentStore(with url: URL) throws -> [String: Any] {
-        _ = url
-        throw _CDUnsupportedStoreError(NSSQLiteStoreType)
+        try _CDReadSQLiteMetadata(at: url)
     }
 
     open class func setMetadata(_ metadata: [String: Any]?, forPersistentStoreAt url: URL) throws {
-        _ = (metadata, url)
-        throw _CDUnsupportedStoreError(NSSQLiteStoreType)
+        try _CDWriteSQLiteMetadata(metadata, at: url)
     }
 
     open class func migrationManagerClass() -> AnyClass { NSMigrationManager.self }
@@ -154,7 +152,8 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
     private let _lock = NSRecursiveLock()
     private static let _registryLock = NSLock()
     private nonisolated(unsafe) static var _registry: [String: AnyClass] = [
-        NSInMemoryStoreType: _CDInMemoryPersistentStore.self
+        NSInMemoryStoreType: _CDInMemoryPersistentStore.self,
+        NSSQLiteStoreType: _CDSQLitePersistentStore.self
     ]
 
     public init(managedObjectModel model: NSManagedObjectModel) {
@@ -171,11 +170,9 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
     }
 
     public func perform(_ block: @escaping () -> Void) {
-        DispatchQueue.global().async {
-            self.lock()
-            defer { self.unlock() }
-            block()
-        }
+        // Isolated Linux hosts have no run loop. Host drivers stay synchronous
+        // so the sealed gate cannot hang on an un-pumped queue.
+        performAndWait(block)
     }
 
     public func performAndWait(_ block: () -> Void) {
@@ -231,6 +228,9 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
         if storeType == NSInMemoryStoreType {
             return [NSStoreTypeKey: NSInMemoryStoreType]
         }
+        if storeType == NSSQLiteStoreType {
+            return try _CDReadSQLiteMetadata(at: url)
+        }
         throw _CDUnsupportedStoreError(storeType)
     }
 
@@ -256,10 +256,15 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
         at url: URL,
         options: [AnyHashable: Any]? = nil
     ) throws {
-        _ = (metadata, url, options)
-        if storeType != NSInMemoryStoreType {
-            throw _CDUnsupportedStoreError(storeType)
+        _ = options
+        if storeType == NSInMemoryStoreType {
+            return
         }
+        if storeType == NSSQLiteStoreType {
+            try _CDWriteSQLiteMetadata(metadata, at: url)
+            return
+        }
+        throw _CDUnsupportedStoreError(storeType)
     }
 
     open class func setMetadata(
@@ -301,6 +306,7 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
             at: url,
             options: options
         )
+        try store.loadMetadata()
         store.metadata[NSStoreModelVersionHashesKey] = managedObjectModel.entityVersionHashesByName
         persistentStores.append(store)
         store.didAdd(to: self)
@@ -421,11 +427,18 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
         options: [AnyHashable: Any]? = nil
     ) throws {
         _ = options
-        if storeType != NSInMemoryStoreType {
-            throw _CDUnsupportedStoreError(storeType)
-        }
         if let store = persistentStore(for: url) {
             try remove(store)
+        }
+        if storeType == NSSQLiteStoreType {
+            let fm = FileManager.default
+            try? fm.removeItem(at: url)
+            try? fm.removeItem(atPath: url.path + "-wal")
+            try? fm.removeItem(atPath: url.path + "-shm")
+            return
+        }
+        if storeType != NSInMemoryStoreType {
+            throw _CDUnsupportedStoreError(storeType)
         }
     }
 
@@ -492,22 +505,15 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
         var rows: [_CDStoredRow] = []
         let names = _entityNames(matching: entityName, includesSubentities: includesSubentities)
         for store in targetStores {
-            guard let memory = store as? _CDInMemoryPersistentStore else { continue }
-            memory.backing.lock.lock()
-            defer { memory.backing.lock.unlock() }
-            for row in memory.backing.rows.values where names.contains(row.entityName) {
-                rows.append(row)
-            }
+            guard let rowStore = store as? _CDRowStore else { continue }
+            rows.append(contentsOf: rowStore._cdAllRows(entityNames: names))
         }
         return rows
     }
 
     func _row(for objectID: NSManagedObjectID) -> _CDStoredRow? {
         for store in persistentStores {
-            guard let memory = store as? _CDInMemoryPersistentStore else { continue }
-            memory.backing.lock.lock()
-            defer { memory.backing.lock.unlock() }
-            if let row = memory.backing.rows[objectID.reference] {
+            if let rowStore = store as? _CDRowStore, let row = rowStore._cdRow(for: objectID.reference) {
                 return row
             }
         }
@@ -515,20 +521,53 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
     }
 
     func _save(inserted: [NSManagedObject], updated: [NSManagedObject], deleted: [NSManagedObject]) throws {
-        guard let store = persistentStores.first as? _CDInMemoryPersistentStore else {
-            throw _CDMakeError(NSPersistentStoreSaveError, "no in-memory store is attached")
+        guard let fallback = persistentStores.first else {
+            throw _CDMakeError(NSPersistentStoreSaveError, "no persistent store is attached")
         }
-        store.backing.lock.lock()
-        defer { store.backing.lock.unlock() }
+        var buckets: [ObjectIdentifier: (store: NSPersistentStore, inserted: [_CDStoredRow], updated: [_CDStoredRow], deleted: [String])] = [:]
+        func bucketID(for object: NSManagedObject) -> ObjectIdentifier {
+            let store = object.objectID.persistentStore ?? fallback
+            let id = ObjectIdentifier(store)
+            if buckets[id] == nil {
+                buckets[id] = (store, [], [], [])
+            }
+            return id
+        }
         for object in deleted {
-            store.backing.rows.removeValue(forKey: object.objectID.reference)
+            let id = bucketID(for: object)
+            var entry = buckets[id]!
+            entry.deleted.append(object.objectID.reference)
+            buckets[id] = entry
         }
-        for object in inserted + updated {
-            store.backing.rows[object.objectID.reference] = _CDStoredRow(
-                entityName: object.entity.name ?? "",
-                reference: object.objectID.reference,
-                values: object._snapshotValues()
+        for object in inserted {
+            let id = bucketID(for: object)
+            var entry = buckets[id]!
+            entry.inserted.append(
+                _CDStoredRow(
+                    entityName: object.entity.name ?? "",
+                    reference: object.objectID.reference,
+                    values: object._snapshotValues()
+                )
             )
+            buckets[id] = entry
+        }
+        for object in updated {
+            let id = bucketID(for: object)
+            var entry = buckets[id]!
+            entry.updated.append(
+                _CDStoredRow(
+                    entityName: object.entity.name ?? "",
+                    reference: object.objectID.reference,
+                    values: object._snapshotValues()
+                )
+            )
+            buckets[id] = entry
+        }
+        for entry in buckets.values {
+            guard let rowStore = entry.store as? _CDRowStore else {
+                throw _CDMakeError(NSPersistentStoreSaveError, "store type \(entry.store.type) cannot save rows")
+            }
+            try rowStore._cdApplySave(inserted: entry.inserted, updated: entry.updated, deleted: entry.deleted)
         }
     }
 
