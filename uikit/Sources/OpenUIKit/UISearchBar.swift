@@ -293,7 +293,7 @@ open class UISearchTextField: UITextField {
         let right = (text ?? "").isEmpty ? 0
             : _UISearchFieldMetrics.clearTrailingInset + _UISearchFieldMetrics.clearTextGap
         let left = _bottomFloating
-            ? UISearchBar.BottomDock.textLeftInset
+            ? UISearchBar.BottomDock.textLeftInset(compatibleWith: traitCollection)
             : UISearchTextField.textLeftInset
         return CGRect(x: bounds.minX + left, y: bounds.minY,
                       width: max(0, bounds.width - left - right),
@@ -443,7 +443,25 @@ open class UISearchBar: UIView {
         static var fieldHeight: CGFloat { isCompact ? 36 : 38 }
         static let dismissGap: CGFloat = 12
         static let iconX: CGFloat = 13
-        static let textLeftInset: CGFloat = 41.5
+        static let textLeftInsetLarge: CGFloat = 41.5
+        /// MEASURED Ledger t200, iPhone SE 2x / iOS 26.1: placeholder
+        /// `UISearchBarTextFieldLabel` `[41.5, 9, 48.5, 20.5]`. MEASURED
+        /// t200.ax1 / t200.xxxl: `[46.5, 6.5, 58.5, 25.5]` — 21 pt Medium
+        /// (body at extraExtraLarge, the same `iOSBarCapped` as bar
+        /// buttons) and a 5 pt extra leading inset (abs.x 79.5 = field
+        /// 33 + 46.5). Overlay search (Tabs t4000.ax1) stays uncapped 33.
+        static var textLeftInset: CGFloat {
+            textLeftInset(compatibleWith: .current)
+        }
+        static func textLeftInset(compatibleWith traits: UITraitCollection) -> CGFloat {
+            if OpenUIKitRuntime.systemFontCut == .iOS {
+                let cat = traits.preferredContentSizeCategory
+                if cat.isAccessibilityCategory || cat == .extraExtraExtraLarge {
+                    return 46.5
+                }
+            }
+            return textLeftInsetLarge
+        }
         static var iconY: CGFloat { fieldHeight / 2 - 10.5 }
         static var iconFrame: CGRect {
             CGRect(x: iconX, y: iconY, width: 20.5, height: 20)
@@ -561,10 +579,19 @@ open class UISearchBar: UIView {
     /// MEASURED Tabs t4000.ax1 / Notes t4000.ax1: placeholder
     /// `UISearchBarTextFieldLabel` is **33 pt Medium** = body preferred size
     /// at ax1, weight medium. `.large` stays 17 medium.
+    /// MEASURED Ledger t200.ax1 / t200.xxxl (bottom-docked, no tab bar):
+    /// the floating field is **21 pt Medium** = body at `iOSBarCapped`
+    /// extraExtraLarge, h=25.5, not 33. Overlay search stays uncapped.
     private func applyIOSDynamicTypeFieldFont() {
         guard OpenUIKitRuntime.systemFontCut == .iOS else { return }
+        var traits = traitCollection
+        if _bottomFloating {
+            traits = UITraitCollection(
+                preferredContentSizeCategory:
+                    traitCollection.preferredContentSizeCategory.iOSBarCapped)
+        }
         let size = UIFont.preferredFont(forTextStyle: .body,
-                                        compatibleWith: traitCollection).pointSize
+                                        compatibleWith: traits).pointSize
         searchTextField.font = .systemFont(ofSize: size, weight: .medium)
     }
 

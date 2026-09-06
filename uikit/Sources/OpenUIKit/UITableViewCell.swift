@@ -169,22 +169,37 @@ final class UITableCellAccessoryView: UIView {
             // apex right of center). RTL (MEASURED /tmp/rtlprobe, iPhone
             // SE 2x / iOS 26.1, disclosure abs.x = 16): the chevron points
             // toward trailing (left). ax1 / xxxl scale the same polyline
-            // into the measured 20×28.5 / 14×19.5 boxes (NavFlow t200.ax1
-            // / t200.xxxl).
+            // into the measured 20×28.5 / 14×19.5 boxes (NavFlow t200.ax1 /
+            // t200.xxxl, Ledger t200.ax1 / t200.xxxl, Notes t200.ax1 /
+            // t200.xxxl). Scale only when the box is taller than 15 so the
+            // 3x 10.333×14 box (realapp_storage / focus_settings) keeps the
+            // fitted 2 pt stroke (ledger-fidelity2).
             let color = UIColor.tertiaryLabel.resolvedCGColor(with: traitCollection)
-            let sx = bounds.width / 10.5
-            let sy = bounds.height / 14
-            let points: [CGPoint]
-            if _layoutIsRTL {
-                points = [CGPoint(x: 7.3 * sx, y: 1.1 * sy),
-                          CGPoint(x: 2.5 * sx, y: 5.85 * sy),
-                          CGPoint(x: 7.3 * sx, y: 10.6 * sy)]
+            if bounds.height > 15 {
+                let sx = bounds.width / 10.5
+                let sy = bounds.height / 14
+                let points: [CGPoint]
+                if _layoutIsRTL {
+                    points = [CGPoint(x: 7.3 * sx, y: 1.1 * sy),
+                              CGPoint(x: 2.5 * sx, y: 5.85 * sy),
+                              CGPoint(x: 7.3 * sx, y: 10.6 * sy)]
+                } else {
+                    points = [CGPoint(x: 3.2 * sx, y: 1.1 * sy),
+                              CGPoint(x: 8.0 * sx, y: 5.85 * sy),
+                              CGPoint(x: 3.2 * sx, y: 10.6 * sy)]
+                }
+                strokePolyline(points, width: 2 * sx, in: canvas, color: color)
+            } else if _layoutIsRTL {
+                strokePolyline([CGPoint(x: 7.3, y: 1.1),
+                                CGPoint(x: 2.5, y: 5.85),
+                                CGPoint(x: 7.3, y: 10.6)],
+                               width: 2, in: canvas, color: color)
             } else {
-                points = [CGPoint(x: 3.2 * sx, y: 1.1 * sy),
-                          CGPoint(x: 8.0 * sx, y: 5.85 * sy),
-                          CGPoint(x: 3.2 * sx, y: 10.6 * sy)]
+                strokePolyline([CGPoint(x: 3.2, y: 1.1),
+                                CGPoint(x: 8.0, y: 5.85),
+                                CGPoint(x: 3.2, y: 10.6)],
+                               width: 2, in: canvas, color: color)
             }
-            strokePolyline(points, width: 2 * sx, in: canvas, color: color)
         case .checkmark:
             // 19x18 box; tintColor stroke fitted to the golden checkmark.
             let color = tintColor.resolvedCGColor(with: traitCollection)
@@ -576,14 +591,19 @@ open class UITableViewCell: UIView, ReusableView {
     /// iOS: the chevron symbol is 10.333 wide at 3x and 10.5 at 2x — a
     /// width in (10, 10.333] rounded up to the device pixel; 14 tall on both.
     /// `.large` / unspecified. Dynamic Type uses ``effectiveDisclosureSize``.
+    /// MEASURED NavFlow / Ledger / Notes t200.ax1 / t200.xxxl, iPhone SE 2x /
+    /// iOS 26.1: `.large` accessory 10.5×14 (contentView 316.5); `.xxxl`
+    /// 14×19.5 (contentView 313); `.ax1` 20×28.5 (contentView 307). Trailing
+    /// margin stays 16 (343 − content − accessory).
     static var disclosureSize: CGSize {
         isIOSChrome ? CGSize(width: UITableView.iOSCeilToPixel(10.2), height: 14) : CGSize(width: 10.5, height: 14)
     }
     /// MEASURED NavFlow t200.ax1, iPhone SE 2x / iOS 26.1:
     /// `_UITableCellAccessoryButton [307, 2, 20, 28.5]` in the 44 pt
     /// inset-grouped cell (343 − 16 trailing − 20 = contentView 307).
-    /// MEASURED NavFlow t200.xxxl: `[313, 10, 14, 19.5]` (contentView 313).
-    /// `.large` t200 stays 10.5×14 (contentView 316.5).
+    /// MEASURED NavFlow t200.xxxl / Ledger t200.xxxl / Notes t200.xxxl:
+    /// `[313, 10, 14, 19.5]` (contentView 313). `.large` t200 stays 10.5×14
+    /// (contentView 316.5).
     static func disclosureSize(compatibleWith traits: UITraitCollection) -> CGSize {
         guard isIOSChrome else { return disclosureSize }
         let cat = traits.preferredContentSizeCategory
