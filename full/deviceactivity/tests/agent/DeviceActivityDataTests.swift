@@ -71,9 +71,91 @@ func testDeviceActivityDataDeviceAndUser() {
         user != DeviceActivityData.User(role: .child),
         "users unequal"
     )
+    var userHasher = Hasher()
+    user.hash(into: &userHasher)
+    deviceActivityRequire(user.hashValue == user.hashValue, "user hash")
 }
 
-func testDeviceActivityDataSegmentAndActivities() {
+func testDeviceActivityApplicationActivity() {
+    let application = DeviceActivityData.ApplicationActivity(
+        totalActivityDuration: 12,
+        numberOfPickups: 3,
+        numberOfNotifications: 4,
+        bundleIdentifier: "app"
+    )
+    deviceActivityRequire(application.totalActivityDuration == 12, "duration")
+    deviceActivityRequire(application.numberOfPickups == 3, "pickups")
+    deviceActivityRequire(application.numberOfNotifications == 4, "notifications")
+    let same = DeviceActivityData.ApplicationActivity(
+        totalActivityDuration: 12,
+        numberOfPickups: 3,
+        numberOfNotifications: 4,
+        bundleIdentifier: "app"
+    )
+    deviceActivityRequire(application == same, "equal")
+    deviceActivityRequire(
+        application != DeviceActivityData.ApplicationActivity(totalActivityDuration: 1),
+        "unequal"
+    )
+    var hasher = Hasher()
+    application.hash(into: &hasher)
+    deviceActivityRequire(application.hashValue == same.hashValue, "hashValue")
+}
+
+func testDeviceActivityWebDomainActivity() {
+    let web = DeviceActivityData.WebDomainActivity(
+        totalActivityDuration: 8,
+        domain: "example.com"
+    )
+    deviceActivityRequire(web.totalActivityDuration == 8, "duration")
+    let same = DeviceActivityData.WebDomainActivity(
+        totalActivityDuration: 8,
+        domain: "example.com"
+    )
+    deviceActivityRequire(web == same, "equal")
+    deviceActivityRequire(
+        web != DeviceActivityData.WebDomainActivity(totalActivityDuration: 1),
+        "unequal"
+    )
+    var hasher = Hasher()
+    web.hash(into: &hasher)
+    deviceActivityRequire(web.hashValue == same.hashValue, "hashValue")
+}
+
+func testDeviceActivityCategoryActivity() {
+    let application = DeviceActivityData.ApplicationActivity(
+        totalActivityDuration: 12,
+        numberOfPickups: 3,
+        numberOfNotifications: 4,
+        bundleIdentifier: "app"
+    )
+    let web = DeviceActivityData.WebDomainActivity(
+        totalActivityDuration: 8,
+        domain: "example.com"
+    )
+    let category = DeviceActivityData.CategoryActivity(
+        totalActivityDuration: 20,
+        applications: [application],
+        webDomains: [web]
+    )
+    deviceActivityRequire(category.totalActivityDuration == 20, "duration")
+    let appIterator = category.applications.makeAsyncIterator()
+    deviceActivityRequire(appIterator.nextSynchronously() == application, "apps")
+    deviceActivityRequire(appIterator.nextSynchronously() == nil, "apps exhausted")
+    let webIterator = category.webDomains.makeAsyncIterator()
+    deviceActivityRequire(webIterator.nextSynchronously() == web, "web")
+    let same = DeviceActivityData.CategoryActivity(
+        totalActivityDuration: 20,
+        applications: [application],
+        webDomains: [web]
+    )
+    deviceActivityRequire(category == same, "equal")
+    var hasher = Hasher()
+    category.hash(into: &hasher)
+    deviceActivityRequire(category.hashValue == same.hashValue, "hashValue")
+}
+
+func testDeviceActivityActivitySegment() {
     let interval = DateInterval(start: Date(timeIntervalSince1970: 0), duration: 3600)
     let application = DeviceActivityData.ApplicationActivity(
         totalActivityDuration: 12,
@@ -81,28 +163,15 @@ func testDeviceActivityDataSegmentAndActivities() {
         numberOfNotifications: 4,
         bundleIdentifier: "app"
     )
-    deviceActivityRequire(application.totalActivityDuration == 12, "app duration")
-    deviceActivityRequire(application.numberOfPickups == 3, "pickups")
-    deviceActivityRequire(application.numberOfNotifications == 4, "notifications")
-
     let web = DeviceActivityData.WebDomainActivity(
         totalActivityDuration: 8,
         domain: "example.com"
     )
-    deviceActivityRequire(web.totalActivityDuration == 8, "web duration")
-
     let category = DeviceActivityData.CategoryActivity(
         totalActivityDuration: 20,
         applications: [application],
         webDomains: [web]
     )
-    deviceActivityRequire(category.totalActivityDuration == 20, "category duration")
-    let appIterator = category.applications.makeAsyncIterator()
-    deviceActivityRequire(appIterator.nextSynchronously() == application, "apps")
-    deviceActivityRequire(appIterator.nextSynchronously() == nil, "apps exhausted")
-    let webIterator = category.webDomains.makeAsyncIterator()
-    deviceActivityRequire(webIterator.nextSynchronously() == web, "web")
-
     let segment = DeviceActivityData.ActivitySegment(
         dateInterval: interval,
         totalActivityDuration: 20,
@@ -111,14 +180,52 @@ func testDeviceActivityDataSegmentAndActivities() {
         firstPickup: Date(timeIntervalSince1970: 10),
         categories: [category]
     )
-    deviceActivityRequire(segment.dateInterval == interval, "segment interval")
-    deviceActivityRequire(segment.totalActivityDuration == 20, "segment duration")
+    deviceActivityRequire(segment.dateInterval == interval, "interval")
+    deviceActivityRequire(segment.totalActivityDuration == 20, "duration")
     deviceActivityRequire(segment.totalPickupsWithoutApplicationActivity == 1, "pickups")
     deviceActivityRequire(segment.longestActivity == interval, "longest")
     deviceActivityRequire(segment.firstPickup == Date(timeIntervalSince1970: 10), "first")
     let catIterator = segment.categories.makeAsyncIterator()
     deviceActivityRequire(catIterator.nextSynchronously() == category, "categories")
+    let same = DeviceActivityData.ActivitySegment(
+        dateInterval: interval,
+        totalActivityDuration: 20,
+        totalPickupsWithoutApplicationActivity: 1,
+        longestActivity: interval,
+        firstPickup: Date(timeIntervalSince1970: 10),
+        categories: [category]
+    )
+    deviceActivityRequire(segment == same, "equal")
+    var hasher = Hasher()
+    segment.hash(into: &hasher)
+    deviceActivityRequire(segment.hashValue == same.hashValue, "hashValue")
+}
 
+func testDeviceActivityDataRecord() {
+    let interval = DateInterval(start: Date(timeIntervalSince1970: 0), duration: 3600)
+    let application = DeviceActivityData.ApplicationActivity(
+        totalActivityDuration: 12,
+        numberOfPickups: 3,
+        numberOfNotifications: 4,
+        bundleIdentifier: "app"
+    )
+    let web = DeviceActivityData.WebDomainActivity(
+        totalActivityDuration: 8,
+        domain: "example.com"
+    )
+    let category = DeviceActivityData.CategoryActivity(
+        totalActivityDuration: 20,
+        applications: [application],
+        webDomains: [web]
+    )
+    let segment = DeviceActivityData.ActivitySegment(
+        dateInterval: interval,
+        totalActivityDuration: 20,
+        totalPickupsWithoutApplicationActivity: 1,
+        longestActivity: interval,
+        firstPickup: Date(timeIntervalSince1970: 10),
+        categories: [category]
+    )
     let device = DeviceActivityData.Device(name: "office", model: .mac)
     let data = DeviceActivityData(
         lastUpdatedDate: Date(timeIntervalSince1970: 50),
@@ -128,8 +235,9 @@ func testDeviceActivityDataSegmentAndActivities() {
         activitySegments: [segment]
     )
     deviceActivityRequire(data.lastUpdatedDate.timeIntervalSince1970 == 50, "updated")
-    deviceActivityRequire(data.user.role == .child, "data user")
-    deviceActivityRequire(data.device.model == .mac, "data device")
+    deviceActivityRequire(data.segmentInterval == .daily(during: interval), "segment")
+    deviceActivityRequire(data.user.role == .child, "user")
+    deviceActivityRequire(data.device.model == .mac, "device")
     let segIterator = data.activitySegments.makeAsyncIterator()
     deviceActivityRequire(segIterator.nextSynchronously() == segment, "segments")
     let same = DeviceActivityData(
@@ -139,6 +247,8 @@ func testDeviceActivityDataSegmentAndActivities() {
         device: device,
         activitySegments: [segment]
     )
-    deviceActivityRequire(data == same, "data equal")
-    deviceActivityRequire(data.hashValue == same.hashValue, "data hash")
+    deviceActivityRequire(data == same, "equal")
+    var hasher = Hasher()
+    data.hash(into: &hasher)
+    deviceActivityRequire(data.hashValue == same.hashValue, "hashValue")
 }

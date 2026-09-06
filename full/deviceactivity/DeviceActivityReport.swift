@@ -4,8 +4,8 @@ import Foundation
 ///
 /// Linux has no Screen Time report pipeline. Host tests may construct a
 /// sequence over in-memory elements; `next()` returns those elements in order
-/// then `nil`. Stdlib `AsyncSequence` operators that require `Element == UInt8`
-/// are not applicable.
+/// then `nil`. Foundation overlays constrained to `Element == UInt8`
+/// (`characters`, `lines`, `unicodeScalars`) are unavailable on report records.
 public struct DeviceActivityResults<Element>: AsyncSequence {
     public typealias AsyncIterator = Iterator<Element>
 
@@ -41,11 +41,12 @@ public struct DeviceActivityResults<Element>: AsyncSequence {
 
 extension DeviceActivityResults: Sendable where Element: Sendable {}
 
-/// SwiftUI overlay identifiers that DeviceActivityResults inherits from
-/// AsyncSequence. Isolated host tests do not await these operators.
+/// Identifier anchors for stdlib AsyncSequence operators inherited by
+/// DeviceActivityResults. Isolated host tests do not await these operators.
 ///
 /// map compactMap filter reduce drop prefix dropFirst first contains
-/// allSatisfy flatMap min max characters lines unicodeScalars
+/// allSatisfy flatMap min max. UInt8-only characters/lines/unicodeScalars stay
+/// unavailable rather than declared as callable APIs.
 enum DeviceActivityResultsAsyncSequenceAnchors {
     static let map = "map"
     static let compactMap = "compactMap"

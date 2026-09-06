@@ -24,21 +24,83 @@ func testDeviceActivityReportInitAndBody() {
 }
 
 func testDeviceActivityReportBuilderBuildBlock() {
-    let first = DeviceActivityReport.Context("a")
-    let second = DeviceActivityReport.Context("b")
+    let a = DeviceActivityReport.Context("a")
+    let b = DeviceActivityReport.Context("b")
+    deviceActivityRequire(DeviceActivityReportBuilder.buildBlock(a) == a, "1")
+    deviceActivityRequire(DeviceActivityReportBuilder.buildBlock(a, b) == a, "2")
+    deviceActivityRequire(DeviceActivityReportBuilder.buildBlock(a, b, a) == a, "3")
+    deviceActivityRequire(DeviceActivityReportBuilder.buildBlock(a, b, a, b) == a, "4")
+    deviceActivityRequire(DeviceActivityReportBuilder.buildBlock(a, b, a, b, a) == a, "5")
+    deviceActivityRequire(DeviceActivityReportBuilder.buildBlock(a, b, a, b, a, b) == a, "6")
     deviceActivityRequire(
-        DeviceActivityReportBuilder.buildBlock(first) == first,
-        "one scene"
+        DeviceActivityReportBuilder.buildBlock(a, b, a, b, a, b, a) == a,
+        "7"
     )
     deviceActivityRequire(
-        DeviceActivityReportBuilder.buildBlock(first, second) == first,
-        "two scenes keep first"
+        DeviceActivityReportBuilder.buildBlock(a, b, a, b, a, b, a, b) == a,
+        "8"
+    )
+    deviceActivityRequire(
+        DeviceActivityReportBuilder.buildBlock(a, b, a, b, a, b, a, b, a) == a,
+        "9"
+    )
+    deviceActivityRequire(
+        DeviceActivityReportBuilder.buildBlock(a, b, a, b, a, b, a, b, a, b) == a,
+        "10"
+    )
+    deviceActivityRequire(
+        DeviceActivityReportBuilder.buildBlock(a, b, a, b, a, b, a, b, a, b, a) == a,
+        "11"
+    )
+    deviceActivityRequire(
+        DeviceActivityReportBuilder.buildBlock(a, b, a, b, a, b, a, b, a, b, a, b) == a,
+        "12"
+    )
+    deviceActivityRequire(
+        DeviceActivityReportBuilder.buildBlock(a, b, a, b, a, b, a, b, a, b, a, b, a)
+            == a,
+        "13"
+    )
+    deviceActivityRequire(
+        DeviceActivityReportBuilder.buildBlock(a, b, a, b, a, b, a, b, a, b, a, b, a, b)
+            == a,
+        "14"
     )
     deviceActivityRequire(
         DeviceActivityReportBuilder.buildBlock(
-            first, second, first, second, first, second, first, second, first, second
-        ) == first,
-        "ten scenes keep first"
+            a, b, a, b, a, b, a, b, a, b, a, b, a, b, a
+        ) == a,
+        "15"
+    )
+    deviceActivityRequire(
+        DeviceActivityReportBuilder.buildBlock(
+            a, b, a, b, a, b, a, b, a, b, a, b, a, b, a, b
+        ) == a,
+        "16"
+    )
+    deviceActivityRequire(
+        DeviceActivityReportBuilder.buildBlock(
+            a, b, a, b, a, b, a, b, a, b, a, b, a, b, a, b, a
+        ) == a,
+        "17"
+    )
+    deviceActivityRequire(
+        DeviceActivityReportBuilder.buildBlock(
+            a, b, a, b, a, b, a, b, a, b, a, b, a, b, a, b, a, b
+        ) == a,
+        "18"
+    )
+    deviceActivityRequire(
+        DeviceActivityReportBuilder.buildBlock(
+            a, b, a, b, a, b, a, b, a, b, a, b, a, b, a, b, a, b, a
+        ) == a,
+        "19"
+    )
+    deviceActivityRequire(
+        DeviceActivityReportBuilder.buildBlock(
+            a, b, a, b, a, b, a, b, a, b, a, b, a, b, a, b, a, b, a, b
+        ) == a,
+        "20"
     )
 }
 
