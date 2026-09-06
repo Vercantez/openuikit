@@ -212,8 +212,19 @@ public enum _UIBarMetrics {
     /// (y 6.1 … 41.9 for a 48/24 capsule; a 44/22 one would give 1.5 … 42.5).
     public static let toolbarPlatterHeight: CGFloat = 48
     public static var platterRadius: CGFloat { platterHeight / 2 }
-    /// Leading / trailing margin from the bar's edge.
+    /// Leading / trailing margin from the bar's edge. Portrait / Catalyst:
+    /// 16. Compact-height iOS uses ``itemSideMargin`` (38).
     public static let sideMargin: CGFloat = 16
+    /// MEASURED NavFlow t200.landscape, iPhone SE 2x / iOS 26.1: Filter
+    /// `PlatterView [557.5, 0, 71.5, 44]` in a 667-wide bar → trailing
+    /// **38** (= 667 − 557.5 − 71.5). Portrait t200 stays 16
+    /// (375 − 279.5 − 79.5). TableEditor-landscape Edit abs.x **582.24**
+    /// vs 16-pt packing 604.5 is the same 22 pt (= 38 − 16).
+    public static let compactHeightSideMargin: CGFloat = 38
+    /// Nav-bar item packing. Toolbar keeps ``sideMargin`` 16.
+    public static var itemSideMargin: CGFloat {
+        UINavigationBar.isCompactHeight ? compactHeightSideMargin : sideMargin
+    }
     /// Gap between adjacent platters.
     public static let gap: CGFloat = 12
     /// Horizontal inset from the platter edge to the content.
