@@ -9,7 +9,7 @@ func testVideoStreamAnalyzerType() {
         participantUUID: "participant-type",
         streamDirection: .incoming
     )
-    scExpect(analyzer is NSObject, "SCVideoStreamAnalyzer subclasses NSObject")
+    scExpect((analyzer as Any) is NSObject, "SCVideoStreamAnalyzer subclasses NSObject")
     scExpect(type(of: analyzer) == SCVideoStreamAnalyzer.self, "dynamic type")
 }
 

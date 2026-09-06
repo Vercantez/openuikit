@@ -6,7 +6,7 @@ private func scExpect(_ condition: Bool, _ message: String) {
 
 func testSensitivityAnalysisHostSnapshot() {
     let analysis = SCSensitivityAnalysis.host_makeUnanalyzed()
-    scExpect(analysis is NSObject, "SCSensitivityAnalysis subclasses NSObject")
+    scExpect((analysis as Any) is NSObject, "SCSensitivityAnalysis subclasses NSObject")
     scExpect(type(of: analysis) == SCSensitivityAnalysis.self, "dynamic type")
 }
 

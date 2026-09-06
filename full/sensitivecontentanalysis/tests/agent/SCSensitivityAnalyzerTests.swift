@@ -7,7 +7,7 @@ private func scExpect(_ condition: Bool, _ message: String) {
 
 func testAnalyzerType() {
     let analyzer = SCSensitivityAnalyzer()
-    scExpect(analyzer is NSObject, "SCSensitivityAnalyzer subclasses NSObject")
+    scExpect((analyzer as Any) is NSObject, "SCSensitivityAnalyzer subclasses NSObject")
     scExpect(type(of: analyzer) == SCSensitivityAnalyzer.self, "dynamic type")
 }
 

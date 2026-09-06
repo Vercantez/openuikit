@@ -44,7 +44,7 @@ func testHasSensitiveContentFailsClosed() {
     _ = method
     let error = handler.host_prepareFailClosed()
     scExpect(error.errorCode == 1, "fail-closed code")
-    scExpect(error.errorDomain == SCLinuxUnavailableErrorDomain, "fail-closed domain")
+    scExpect(SCLinuxUnavailableError.errorDomain == SCLinuxUnavailableErrorDomain, "fail-closed domain")
     scExpect(handler.progress.isCancelled, "progress is cancelled on fail-closed")
     scExpect(error == SCLinuxUnavailableError(), "same sentinel error the async method throws")
 }
