@@ -17,8 +17,8 @@ full/audiotoolbox/AudioToolboxCABI.swift
 full/audiotoolbox/AudioToolboxCallbacks.swift
 full/audiotoolbox/AudioToolboxFlags.swift
 full/audiotoolbox/AudioToolboxOverlays.swift
-full/audiotoolbox/AudioToolboxParameters.swift
 full/audiotoolbox/AudioToolboxPCM.swift
+full/audiotoolbox/AudioToolboxParameters.swift
 full/audiotoolbox/AudioToolboxStatus.swift
 full/audiotoolbox/AudioToolboxSupport.swift
 full/audiotoolbox/AudioUnitConstants.swift
