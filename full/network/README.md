@@ -59,7 +59,8 @@ Linux has no Network.framework daemon, Apple TLS/QUIC stack, or mDNS responder.
 - Wi-Fi Aware, ethernet-channel hardware, and Security `sec_protocol_*`
   identity beyond opaque stand-ins need an Apple-oracle probe.
 - Stdlib integer protocol witnesses that the extractor attributed to Network
-  are `not-applicable`.
+  are `deferred` (they are not SwiftUI cross-import overlays, so they cannot
+  be `not-applicable`).
 - Dispatch queue identity and after-return timing on Apple are unobserved;
   Linux tags the supplied queue and invokes start-time handlers via `sync`
   (or inline when already on that queue) so a host test can observe the first
@@ -77,21 +78,36 @@ QUIC/TLS/mDNS fail-closed paths, viability/betterPath updates, and documented
 TCP/UDP/IP option defaults. New evidence lives in focused
 `tests/agent/*Tests.swift` files. First-pass tests remain.
 
-Coverage after this pass: **1215 implemented / 862 declared / 310 deferred /
-0 unavailable / 660 not-applicable** (2077 nondeferred).
+The 2026-09-05 merge check refused `9723f04bbedd` because those 660
+`not-applicable` rows are stdlib `Int`/`UInt` synthesized witnesses (for
+example `s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:s4Int8V`), not SwiftUI
+cross-import overlay IDs. This ledger repair reclassifies every non-SwiftUI
+`not-applicable` row to `deferred`, splits C API function evidence into
+`NetworkCAPITests.swift#testCAPIHostAndPathMonitorFunctions`, moves C
+`nw_*` typealiases that the smoke test never named to `declared`, and
+reclassifies implemented rows whose cited test did not exercise that
+identifier.
 
-Top-5 `implemented` evidence distribution (of 1215):
+Coverage before this ledger repair: **1215 implemented / 862 declared /
+310 deferred / 0 unavailable / 660 not-applicable** (2077 nondeferred).
 
-1. `NetworkTests.swift#testCEnumRawValuesFromMacios` — 191 rows (15.7%)
+Coverage after this ledger repair: **968 implemented / 1051 declared /
+1028 deferred / 0 unavailable / 0 not-applicable** (2019 nondeferred).
+
+Top-5 `implemented` evidence distribution (of 968):
+
+1. `NetworkTests.swift#testCEnumRawValuesFromMacios` — 191 rows (19.7%)
    (C `nw_*` / `k…` enum constants; table-driven raw values)
-2. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 110 (9.1%)
-3. `NetworkTests.swift#testNWParametersPresetsAndBuilders` — 94 (7.7%)
-4. `NetworkTests.swift#testCAPITypealiasesAndSmoke` — 92 (7.6%)
-5. `NetworkTests.swift#testTCPLoopbackRoundTrip` — 72 (5.9%)
+2. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 87 (9.0%)
+3. `NetworkTests.swift#testNWParametersPresetsAndBuilders` — 71 (7.3%)
+4. `NetworkTransportTests.swift#testBrowserDescriptorsFailClosedWithPOSIXError`
+   — 54 (5.6%)
+5. `NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions` — 53 (5.5%)
 
 No non-exempt test is cited by more than 40% of implemented rows (largest
-remaining family test: `testBrowserDescriptorsFailClosedWithPOSIXError` at
-54/1215 = 4.4%).
+remaining family test: `testNWInterfaceAndPathFromGetifaddrs` at 87/968 =
+9.0%). Enum/option-set members share family tests; C `nw_*` typealiases
+without a named test are `declared`.
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
