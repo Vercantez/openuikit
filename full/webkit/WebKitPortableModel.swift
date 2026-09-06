@@ -113,7 +113,19 @@ internal func WKPortableJavaScriptLiteral(_ source: String) -> WKPortableJSLiter
     if let number = WKPortableJSNumber(trimmed) {
         return .value(number)
     }
+    if let json = WKPortableJSONLiteral(trimmed) {
+        return .value(json)
+    }
     return .notLiteral
+}
+
+/// JSON object/array literals. Used by the documented evaluateJavaScript /
+/// callAsyncJavaScript evaluator; anything that is not a JSON value or a
+/// JS primitive literal fails closed.
+private func WKPortableJSONLiteral(_ trimmed: String) -> Any? {
+    guard let first = trimmed.first, first == "{" || first == "[" else { return nil }
+    guard let data = trimmed.data(using: .utf8) else { return nil }
+    return try? JSONSerialization.jsonObject(with: data, options: [])
 }
 
 private func WKPortableJSQuotedString(_ trimmed: String) -> String? {
