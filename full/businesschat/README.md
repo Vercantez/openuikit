@@ -74,8 +74,8 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
   `BusinessChatUnavailable.linuxHost(operation: "openTranscript")`.
   `didOpenTranscript()` is always `false`.
 - Isolated-host `BCChatButton` subclasses `NSObject`. A public `UIControl`
-  lookalike is forbidden. When guest UIKit is on the link line, the
-  superclass is `UIControl`.
+  lookalike is forbidden. Restoring the Darwin `UIControl` superclass is
+  an oracle question for a UIKit-linked guest build.
 - Darwin `@MainActor` on the button is omitted so the no-run-loop host
   gate can call it synchronously.
 

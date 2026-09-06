@@ -10,10 +10,6 @@
 
 import Foundation
 
-#if canImport(UIKit)
-import UIKit
-#endif
-
 // MARK: - Fail-closed host error
 
 /// Fail-closed error for Messages.app, Business Chat daemon, entitlement,
@@ -163,14 +159,10 @@ extension BCChatAction {
 ///
 /// Darwin subclasses `UIControl` and is `@MainActor`. Isolated host
 /// compilation has Foundation only, so the Linux type subclasses `NSObject`
-/// unless UIKit is on the link line. The sealed runner has no run loop, so
-/// `@MainActor` is omitted (see `oracle-questions.tsv`). Linux stores `style`
-/// and never presents Messages chrome.
-#if canImport(UIKit)
-open class BCChatButton: UIControl {
-#else
+/// rather than a public `UIControl` lookalike. The sealed runner has no run
+/// loop, so `@MainActor` is omitted (see `oracle-questions.tsv`). Linux
+/// stores `style` and never presents Messages chrome.
 open class BCChatButton: NSObject {
-#endif
     /// Bridged `NS_ENUM(NSInteger, BCChatButtonStyle)`.
     ///
     /// Raw values follow the pinned `dotnet/macios` `[Native]` case order
@@ -187,24 +179,13 @@ open class BCChatButton: NSObject {
     /// Business Chat artwork.
     public init(style: Style) {
         self.hostStyle = style
-#if canImport(UIKit)
-        super.init(frame: .zero)
-#else
         super.init()
-#endif
     }
 
     /// Nib/archive decoding. Linux has no Apple UI archive and always fails
     /// closed with `nil`.
-#if canImport(UIKit)
-    public required init?(coder: NSCoder) {
-        _ = coder
-        return nil
-    }
-#else
     public init?(coder: NSCoder) {
         _ = coder
         return nil
     }
-#endif
 }

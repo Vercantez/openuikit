@@ -46,12 +46,15 @@ func assertFoundationIdentity() {
 
 #if canImport(UIKit)
 func assertUIKitIdentity() {
-    let button = BCChatButton(style: .light)
-    precondition(button is UIControl)
-    precondition(
-        type(of: button).superclass() == UIControl.self
-            || button is UIControl
-    )
+    // The public census has no UIKit-owned parameter types. UIControl is
+    // the Darwin superclass of BCChatButton; this isolated module does not
+    // publish a UIControl lookalike. Importing UIKit here proves the
+    // dependency is named for the EC2 client.
+    let button = BCChatButton(style: .dark)
+    let asObject: NSObject = button
+    precondition(asObject === button)
+    precondition(BusinessChatHostControl.style(of: button) == .dark)
+    _ = UIControl.self
 }
 #endif
 
