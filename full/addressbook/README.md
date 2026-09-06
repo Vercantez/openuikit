@@ -66,26 +66,35 @@ Campaign `ios26.1-fwseed-r9`, lane `legacy-adapter`, framework `AddressBook`
 (225 IDs). Starting commit `a15391648a4fd5a92038c7465b26208c67eb87ed`.
 Branch `cursor/port-addressbook-to-linux-d448`.
 
+Coverage honesty repair (merge refused `b805b6bba3da` for
+`CFNumber?` → `NSNumber` coercion in `AddressBookConstantTests`, and for
+lumped runtime evidence rather than per-family `*Tests.swift#testName`):
+
 | | implemented | declared | deferred |
 |---|---:|---:|---:|
 | Seed | 0 | 0 | n/a (no coverage yet) |
-| Depth pass | **211** | **14** | **0** |
+| Before evidence repair (`b805b6bba3da`) | 211 | 14 | 0 |
+| After focused `*Tests.swift#testName` ledger | **211** | **14** | **0** |
 
 Nondeferred 225. Every `implemented` row cites
 `test:full/addressbook/tests/agent/<File>Tests.swift#testName` for a real
-top-level `func testName()`. Typealiases are `declared` with
-`source:full/addressbook/AddressBook.swift#Symbol`.
+top-level synchronous `func testName()` that exercises that identifier.
+Typealiases stay `declared` with `source:full/addressbook/AddressBook.swift#Symbol`.
+`kABPersonKindPerson` / `kABPersonKindOrganization` are read with
+`unsafeBitCast(..., to: NSNumber.self)` (Linux CFNumber is not `NSNumber`).
+`ABAddressBookErrorDomain` is cited by `testAuthorizationFailClosed`, not the
+shared constant catalog.
 
 Top-5 implemented evidence distribution (211 rows):
 
-1. `AddressBookConstantTests.swift#testConstantCatalog` — 130 (61.6%) — table-driven enums, integer `kAB*`/`err*` constants, labels (allowed shared value test)
-2. `AddressBookStoreTests.swift#testAddressBookStore` — 17 (8.1%)
-3. `AddressBookRecordTests.swift#testMultiValueLifecycle` — 15 (7.1%)
-4. `AddressBookConstantTests.swift#testHashableAndEquatable` — 10 (4.7%)
-5. `AddressBookPersonTests.swift#testGroupMembership` — 7 (3.3%)
+1. `AddressBookConstantTests.swift#testConstantCatalog` — 129 (61.1%) — table-driven enums, option-set members, C `kAB*`/`err*` constants (allowed shared value test)
+2. `AddressBookStoreTests.swift#testAddressBookCopyArrays` — 6 (2.8%)
+3. `AddressBookRecordTests.swift#testMultiValueCreateAndRead` — 6 (2.8%)
+4. `AddressBookRecordTests.swift#testMultiValueMutate` — 6 (2.8%)
+5. `AddressBookConstantTests.swift#testPersonImageFormatHashableAndEquatable` — 6 (2.8%)
 
-No non-enum test exceeds 40% of the remaining implemented rows (largest is
-store at 21% of the non-catalog remainder).
+No non-enum test exceeds 40% of the remaining implemented rows (82 after the
+catalog; largest is 6 rows / 7.3%).
 
 Public surface implemented for real on Linux:
 

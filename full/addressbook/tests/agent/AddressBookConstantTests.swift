@@ -133,7 +133,6 @@ func testConstantCatalog() {
     abRequire(kABSourceTypeProperty == 1, "source type prop")
 
     let strings: [(CFString?, String)] = [
-        (ABAddressBookErrorDomain, "ABAddressBookErrorDomain"),
         (kABHomeLabel, "_$!<Home>!$_"),
         (kABWorkLabel, "_$!<Work>!$_"),
         (kABOtherLabel, "_$!<Other>!$_"),
@@ -201,7 +200,7 @@ func testConstantCatalog() {
     abRequire(unsafeBitCast(kABPersonKindOrganization, to: NSNumber.self).intValue == 1, "kind org")
 }
 
-func testHashableAndEquatable() {
+func testAuthorizationStatusHashableAndEquatable() {
     abRequire(ABAuthorizationStatus.denied != .authorized, "auth !=")
     abRequire(ABAuthorizationStatus.denied == .denied, "auth ==")
     abRequire(ABAuthorizationStatus.denied.hashValue == ABAuthorizationStatus.denied.hashValue, "auth hashValue")
@@ -210,7 +209,9 @@ func testHashableAndEquatable() {
     _ = hasher.finalize()
     abRequire(ABAuthorizationStatus(rawValue: 2) == .denied, "auth raw 2")
     abRequire(ABAuthorizationStatus(rawValue: 99) == nil, "auth raw nil")
+}
 
+func testPersonImageFormatHashableAndEquatable() {
     let thumb = ABPersonImageFormat(rawValue: 0)
     let original = ABPersonImageFormat(2)
     abRequire(thumb != original, "format !=")

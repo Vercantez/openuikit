@@ -1,5 +1,5 @@
 precise	status	evidence	notes
-c:@ABAddressBookErrorDomain	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@ABAddressBookErrorDomain	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAuthorizationFailClosed	documented raw values / payloads
 c:@E@ABAuthorizationStatus	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
 c:@E@ABAuthorizationStatus@kABAuthorizationStatusAuthorized	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
 c:@E@ABAuthorizationStatus@kABAuthorizationStatusDenied	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
@@ -35,75 +35,75 @@ c:@Ea@kABSourceTypeLocal@kABSourceTypeExchangeGAL	implemented	test:full/addressb
 c:@Ea@kABSourceTypeLocal@kABSourceTypeLDAP	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
 c:@Ea@kABSourceTypeLocal@kABSourceTypeLocal	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
 c:@Ea@kABSourceTypeLocal@kABSourceTypeMobileMe	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
-c:@F@ABAddressBookAddRecord	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookCopyArrayOfAllGroups	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookCopyArrayOfAllGroupsInSource	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookCopyArrayOfAllPeople	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookCopyArrayOfAllPeopleInSource	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonCompareAndSort	focused Linux behavior
-c:@F@ABAddressBookCopyArrayOfAllSources	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookCopyDefaultSource	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookCopyLocalizedLabel	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testCreateWithOptionsAndLocalizedLabel	focused Linux behavior
+c:@F@ABAddressBookAddRecord	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookAddSaveRevertRemove	focused Linux behavior
+c:@F@ABAddressBookCopyArrayOfAllGroups	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookCopyArrays	focused Linux behavior
+c:@F@ABAddressBookCopyArrayOfAllGroupsInSource	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookCopyArrays	focused Linux behavior
+c:@F@ABAddressBookCopyArrayOfAllPeople	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookCopyArrays	focused Linux behavior
+c:@F@ABAddressBookCopyArrayOfAllPeopleInSource	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookCopyArrays	focused Linux behavior
+c:@F@ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPeopleInSourceSorted	focused Linux behavior
+c:@F@ABAddressBookCopyArrayOfAllSources	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookCopyArrays	focused Linux behavior
+c:@F@ABAddressBookCopyDefaultSource	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookCopyArrays	focused Linux behavior
+c:@F@ABAddressBookCopyLocalizedLabel	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testCopyLocalizedLabel	focused Linux behavior
 c:@F@ABAddressBookCopyPeopleWithName	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testPeopleSearch	focused Linux behavior
-c:@F@ABAddressBookCreate	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookCreateWithOptions	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testCreateWithOptionsAndLocalizedLabel	focused Linux behavior
+c:@F@ABAddressBookCreate	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookCreateAndCounts	focused Linux behavior
+c:@F@ABAddressBookCreateWithOptions	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testCreateWithOptions	focused Linux behavior
 c:@F@ABAddressBookGetAuthorizationStatus	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAuthorizationFailClosed	focused Linux behavior
-c:@F@ABAddressBookGetGroupCount	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookGetGroupWithRecordID	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookGetPersonCount	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookGetPersonWithRecordID	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookGetSourceWithRecordID	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookHasUnsavedChanges	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookGetGroupCount	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookCreateAndCounts	focused Linux behavior
+c:@F@ABAddressBookGetGroupWithRecordID	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookLookupByRecordID	focused Linux behavior
+c:@F@ABAddressBookGetPersonCount	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookCreateAndCounts	focused Linux behavior
+c:@F@ABAddressBookGetPersonWithRecordID	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookLookupByRecordID	focused Linux behavior
+c:@F@ABAddressBookGetSourceWithRecordID	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookLookupByRecordID	focused Linux behavior
+c:@F@ABAddressBookHasUnsavedChanges	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookAddSaveRevertRemove	focused Linux behavior
 c:@F@ABAddressBookRegisterExternalChangeCallback	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testExternalChangeCallback	focused Linux behavior
-c:@F@ABAddressBookRemoveRecord	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookRemoveRecord	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookAddSaveRevertRemove	focused Linux behavior
 c:@F@ABAddressBookRequestAccessWithCompletion	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAuthorizationFailClosed	focused Linux behavior
-c:@F@ABAddressBookRevert	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
-c:@F@ABAddressBookSave	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookRevert	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookAddSaveRevertRemove	focused Linux behavior
+c:@F@ABAddressBookSave	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookAddSaveRevertRemove	focused Linux behavior
 c:@F@ABAddressBookUnregisterExternalChangeCallback	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testExternalChangeCallback	focused Linux behavior
-c:@F@ABGroupAddMember	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
-c:@F@ABGroupCopyArrayOfAllMembers	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
-c:@F@ABGroupCopyArrayOfAllMembersWithSortOrdering	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
-c:@F@ABGroupCopySource	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
-c:@F@ABGroupCreate	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
-c:@F@ABGroupCreateInSource	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
-c:@F@ABGroupRemoveMember	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
-c:@F@ABMultiValueAddValueAndLabel	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueCopyArrayOfAllValues	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueCopyLabelAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueCopyValueAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueCreateMutable	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueCreateMutableCopy	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueGetCount	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueGetFirstIndexOfValue	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueGetIdentifierAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueGetIndexForIdentifier	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueGetPropertyType	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueInsertValueAndLabelAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueRemoveValueAndLabelAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueReplaceLabelAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABMultiValueReplaceValueAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
-c:@F@ABPersonComparePeopleByName	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonCompareAndSort	focused Linux behavior
-c:@F@ABPersonCopyArrayOfAllLinkedPeople	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testLinkedPeopleAndPropertyMetadata	focused Linux behavior
+c:@F@ABGroupAddMember	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembers	focused Linux behavior
+c:@F@ABGroupCopyArrayOfAllMembers	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembers	focused Linux behavior
+c:@F@ABGroupCopyArrayOfAllMembersWithSortOrdering	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembers	focused Linux behavior
+c:@F@ABGroupCopySource	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupCreate	focused Linux behavior
+c:@F@ABGroupCreate	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupCreate	focused Linux behavior
+c:@F@ABGroupCreateInSource	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupCreate	focused Linux behavior
+c:@F@ABGroupRemoveMember	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembers	focused Linux behavior
+c:@F@ABMultiValueAddValueAndLabel	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueMutate	focused Linux behavior
+c:@F@ABMultiValueCopyArrayOfAllValues	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueCreateAndRead	focused Linux behavior
+c:@F@ABMultiValueCopyLabelAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueCreateAndRead	focused Linux behavior
+c:@F@ABMultiValueCopyValueAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueCreateAndRead	focused Linux behavior
+c:@F@ABMultiValueCreateMutable	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueCreateAndRead	focused Linux behavior
+c:@F@ABMultiValueCreateMutableCopy	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueMutate	focused Linux behavior
+c:@F@ABMultiValueGetCount	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueCreateAndRead	focused Linux behavior
+c:@F@ABMultiValueGetFirstIndexOfValue	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueIdentifiers	focused Linux behavior
+c:@F@ABMultiValueGetIdentifierAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueIdentifiers	focused Linux behavior
+c:@F@ABMultiValueGetIndexForIdentifier	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueIdentifiers	focused Linux behavior
+c:@F@ABMultiValueGetPropertyType	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueCreateAndRead	focused Linux behavior
+c:@F@ABMultiValueInsertValueAndLabelAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueMutate	focused Linux behavior
+c:@F@ABMultiValueRemoveValueAndLabelAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueMutate	focused Linux behavior
+c:@F@ABMultiValueReplaceLabelAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueMutate	focused Linux behavior
+c:@F@ABMultiValueReplaceValueAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueMutate	focused Linux behavior
+c:@F@ABPersonComparePeopleByName	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonCompareByName	focused Linux behavior
+c:@F@ABPersonCopyArrayOfAllLinkedPeople	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testLinkedPeople	focused Linux behavior
 c:@F@ABPersonCopyCompositeNameDelimiterForRecord	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testCompositeName	focused Linux behavior
-c:@F@ABPersonCopyImageData	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
-c:@F@ABPersonCopyImageDataWithFormat	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
-c:@F@ABPersonCopyLocalizedPropertyName	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testLinkedPeopleAndPropertyMetadata	focused Linux behavior
-c:@F@ABPersonCopySource	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
-c:@F@ABPersonCreate	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
-c:@F@ABPersonCreateInSource	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
+c:@F@ABPersonCopyImageData	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageData	focused Linux behavior
+c:@F@ABPersonCopyImageDataWithFormat	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageData	focused Linux behavior
+c:@F@ABPersonCopyLocalizedPropertyName	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPropertyMetadata	focused Linux behavior
+c:@F@ABPersonCopySource	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonSource	focused Linux behavior
+c:@F@ABPersonCreate	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordIdentity	focused Linux behavior
+c:@F@ABPersonCreateInSource	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonSource	focused Linux behavior
 c:@F@ABPersonCreatePeopleInSourceWithVCardRepresentation	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testVCardRoundTrip	focused Linux behavior
 c:@F@ABPersonCreateVCardRepresentationWithPeople	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testVCardRoundTrip	focused Linux behavior
 c:@F@ABPersonGetCompositeNameFormat	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testCompositeName	focused Linux behavior
 c:@F@ABPersonGetCompositeNameFormatForRecord	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testCompositeName	focused Linux behavior
-c:@F@ABPersonGetSortOrdering	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonCompareAndSort	focused Linux behavior
-c:@F@ABPersonGetTypeOfProperty	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testLinkedPeopleAndPropertyMetadata	focused Linux behavior
-c:@F@ABPersonHasImageData	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
-c:@F@ABPersonRemoveImageData	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
-c:@F@ABPersonSetImageData	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
+c:@F@ABPersonGetSortOrdering	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonCompareByName	focused Linux behavior
+c:@F@ABPersonGetTypeOfProperty	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPropertyMetadata	focused Linux behavior
+c:@F@ABPersonHasImageData	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageData	focused Linux behavior
+c:@F@ABPersonRemoveImageData	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageData	focused Linux behavior
+c:@F@ABPersonSetImageData	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageData	focused Linux behavior
 c:@F@ABRecordCopyCompositeName	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testCompositeName	focused Linux behavior
 c:@F@ABRecordCopyValue	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
-c:@F@ABRecordGetRecordID	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
-c:@F@ABRecordGetRecordType	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
+c:@F@ABRecordGetRecordID	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordIdentity	focused Linux behavior
+c:@F@ABRecordGetRecordType	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordIdentity	focused Linux behavior
 c:@F@ABRecordRemoveValue	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
 c:@F@ABRecordSetValue	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
 c:@T@ABAddressBookRef	declared	source:full/addressbook/AddressBook.swift#ABAddressBook	CF typealias overlay
@@ -214,13 +214,13 @@ c:@macro@kABMultiValueMask	implemented	test:full/addressbook/tests/agent/Address
 c:@macro@kABPropertyInvalidID	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
 c:@macro@kABRecordInvalidID	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
 c:@macro@kABSourceTypeSearchableMask	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ABAuthorizationStatus	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@ABPersonImageFormat	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ABAuthorizationStatus	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@ABPersonImageFormat	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ABAuthorizationStatus	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@ABPersonImageFormat	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
-s:So19ABPersonImageFormata8rawValueABs6UInt32V_tcfc	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
-s:So19ABPersonImageFormata8rawValues6UInt32Vvp	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
-s:So19ABPersonImageFormatayABs6UInt32Vcfc	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
-s:So21ABAuthorizationStatusV8rawValueABSgSi_tcfc	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ABAuthorizationStatus	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testAuthorizationStatusHashableAndEquatable	synthesized Equatable/Hashable/init
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@ABPersonImageFormat	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testPersonImageFormatHashableAndEquatable	synthesized Equatable/Hashable/init
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ABAuthorizationStatus	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testAuthorizationStatusHashableAndEquatable	synthesized Equatable/Hashable/init
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@ABPersonImageFormat	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testPersonImageFormatHashableAndEquatable	synthesized Equatable/Hashable/init
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ABAuthorizationStatus	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testAuthorizationStatusHashableAndEquatable	synthesized Equatable/Hashable/init
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@ABPersonImageFormat	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testPersonImageFormatHashableAndEquatable	synthesized Equatable/Hashable/init
+s:So19ABPersonImageFormata8rawValueABs6UInt32V_tcfc	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testPersonImageFormatHashableAndEquatable	synthesized Equatable/Hashable/init
+s:So19ABPersonImageFormata8rawValues6UInt32Vvp	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testPersonImageFormatHashableAndEquatable	synthesized Equatable/Hashable/init
+s:So19ABPersonImageFormatayABs6UInt32Vcfc	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testPersonImageFormatHashableAndEquatable	synthesized Equatable/Hashable/init
+s:So21ABAuthorizationStatusV8rawValueABSgSi_tcfc	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testAuthorizationStatusHashableAndEquatable	synthesized Equatable/Hashable/init

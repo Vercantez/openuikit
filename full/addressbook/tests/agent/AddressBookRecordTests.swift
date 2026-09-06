@@ -2,7 +2,7 @@ import AddressBook
 import CoreFoundation
 import Foundation
 
-func testMultiValueLifecycle() {
+func testMultiValueCreateAndRead() {
     let multi = abTake(ABMultiValueCreateMutable(ABPropertyType(kABMultiStringPropertyType)))
     abRequire(ABMultiValueGetPropertyType(multi) == ABPropertyType(kABMultiStringPropertyType), "type")
     abRequire(ABMultiValueGetCount(multi) == 0, "empty count")
@@ -12,28 +12,36 @@ func testMultiValueLifecycle() {
         ABMultiValueAddValueAndLabel(multi, abCF("ada@example.com"), kABHomeLabel, &firstID),
         "add home"
     )
-    abRequire(firstID == 0, "first identifier")
     var workID = kABMultiValueInvalidIdentifier
     abRequire(
         ABMultiValueAddValueAndLabel(multi, abCF("ada@work.example"), kABWorkLabel, &workID),
         "add work"
     )
     abRequire(ABMultiValueGetCount(multi) == 2, "count 2")
-    abRequire(ABMultiValueGetIdentifierAtIndex(multi, 1) == workID, "id at 1")
-    abRequire(ABMultiValueGetIndexForIdentifier(multi, firstID) == 0, "index for first")
-    abRequire(ABMultiValueGetIndexForIdentifier(multi, 99) == -1, "missing identifier")
 
     let homeValue = abTake(ABMultiValueCopyValueAtIndex(multi, 0))
     abRequire(abAsString(homeValue) == "ada@example.com", "value 0")
     let homeLabel = abTake(ABMultiValueCopyLabelAtIndex(multi, 0))
     abRequire(abText(homeLabel) == "_$!<Home>!$_", "label 0")
+    abRequire(ABMultiValueCopyValueAtIndex(multi, 9) == nil, "oob value")
+    abRequire(ABMultiValueCopyLabelAtIndex(multi, 9) == nil, "oob label")
 
     let values = abNSArray(abTake(ABMultiValueCopyArrayOfAllValues(multi)))
     abRequire(values.count == 2, "all values")
+}
 
-    abRequire(ABMultiValueGetFirstIndexOfValue(multi, abCF("ada@work.example")) == 1, "first index")
-    abRequire(ABMultiValueGetFirstIndexOfValue(multi, abCF("missing")) == -1, "missing value")
-
+func testMultiValueMutate() {
+    let multi = abTake(ABMultiValueCreateMutable(ABPropertyType(kABMultiStringPropertyType)))
+    var firstID = kABMultiValueInvalidIdentifier
+    abRequire(
+        ABMultiValueAddValueAndLabel(multi, abCF("ada@example.com"), kABHomeLabel, &firstID),
+        "add home"
+    )
+    var workID = kABMultiValueInvalidIdentifier
+    abRequire(
+        ABMultiValueAddValueAndLabel(multi, abCF("ada@work.example"), kABWorkLabel, &workID),
+        "add work"
+    )
     var insertedID = kABMultiValueInvalidIdentifier
     abRequire(
         ABMultiValueInsertValueAndLabelAtIndex(
@@ -57,14 +65,36 @@ func testMultiValueLifecycle() {
     var copyID = kABMultiValueInvalidIdentifier
     abRequire(ABMultiValueAddValueAndLabel(copy, abCF("copy-only"), kABOtherLabel, &copyID), "copy mutate")
     abRequire(ABMultiValueGetCount(multi) == 2, "original unchanged")
-    abRequire(ABMultiValueCopyValueAtIndex(multi, 9) == nil, "oob value")
-    abRequire(ABMultiValueCopyLabelAtIndex(multi, 9) == nil, "oob label")
+}
+
+func testMultiValueIdentifiers() {
+    let multi = abTake(ABMultiValueCreateMutable(ABPropertyType(kABMultiStringPropertyType)))
+    var firstID = kABMultiValueInvalidIdentifier
+    abRequire(
+        ABMultiValueAddValueAndLabel(multi, abCF("ada@example.com"), kABHomeLabel, &firstID),
+        "add home"
+    )
+    var workID = kABMultiValueInvalidIdentifier
+    abRequire(
+        ABMultiValueAddValueAndLabel(multi, abCF("ada@work.example"), kABWorkLabel, &workID),
+        "add work"
+    )
+    abRequire(firstID == 0, "first identifier")
+    abRequire(ABMultiValueGetIdentifierAtIndex(multi, 1) == workID, "id at 1")
+    abRequire(ABMultiValueGetIndexForIdentifier(multi, firstID) == 0, "index for first")
+    abRequire(ABMultiValueGetIndexForIdentifier(multi, 99) == -1, "missing identifier")
+    abRequire(ABMultiValueGetFirstIndexOfValue(multi, abCF("ada@work.example")) == 1, "first index")
+    abRequire(ABMultiValueGetFirstIndexOfValue(multi, abCF("missing")) == -1, "missing value")
+}
+
+func testRecordIdentity() {
+    let person = abTake(ABPersonCreate())
+    abRequire(ABRecordGetRecordID(person) == kABRecordInvalidID, "unsaved id")
+    abRequire(ABRecordGetRecordType(person) == ABRecordType(kABPersonType), "person type")
 }
 
 func testRecordSetCopyRemove() {
     let person = abFreshPerson()
-    abRequire(ABRecordGetRecordID(person) == kABRecordInvalidID, "unsaved id")
-    abRequire(ABRecordGetRecordType(person) == ABRecordType(kABPersonType), "person type")
     abRequire(
         ABRecordSetValue(person, kABPersonFirstNameProperty, abCF("Ada"), nil),
         "set first"
