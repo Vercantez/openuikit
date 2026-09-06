@@ -1,0 +1,3 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/ManagedAppDistribution.framework/ManagedAppDistribution.tbd	172995	517d6933c4007809c55bd6ef0fa6643b7287191ff69156dc34422c6848289983
+swiftinterface	System/Library/Frameworks/ManagedAppDistribution.framework/Modules/ManagedAppDistribution.swiftmodule/arm64e-apple-ios.swiftinterface	13266	da6555f7bb318dd0527a919b050384abafee4f44d5c0c6696b42ef68217bd30e

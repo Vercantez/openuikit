@@ -1,0 +1,36 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 6,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/PermissionKit.symbols.json",
+      "relationshipCount": 145,
+      "sha256": "504dbd95e9cc858f02efa07ea68fa1f1f61a6e96e16aa2fbf70872d0753db820",
+      "symbolCount": 107
+    },
+    {
+      "path": "reference/symbol-graphs/_PermissionKit_SwiftUI@PermissionKit.symbols.json",
+      "relationshipCount": 775,
+      "sha256": "2fb36863da7aaa8bd57bb6b0b8821276cf41ab01a83d38bf7ddda572eba3a171",
+      "symbolCount": 773
+    },
+    {
+      "path": "reference/symbol-graphs/_PermissionKit_UIKit@PermissionKit.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "f3c5d76c3800574c3950dee0b6375326ae085913c6d2362e93553f417e842434",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "PermissionKit",
+  "relationshipCount": 921,
+  "relationshipMultisetSHA256": "e81ddb58ed1f7ffbca9ce58167b8d1b4da10a4c588e6a7eeb9b78b5290287183",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 881,
+  "symbolMultisetSHA256": "21cf9a5f3a59887ce483807d6279cf7c3aebca0c067fe37cab6aa94a7d41b884",
+  "target": "arm64-apple-ios26.0"
+}

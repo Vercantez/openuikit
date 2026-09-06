@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 34,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/TelephonyMessagingKit.symbols.json",
+      "relationshipCount": 1547,
+      "sha256": "380a35848b3a51d14978f0481b3b6d18615fa62b59e37971966557ae2d007f4d",
+      "symbolCount": 981
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "TelephonyMessagingKit",
+  "relationshipCount": 1547,
+  "relationshipMultisetSHA256": "5d7077e9a17bbc111e77f858b41bfea94c97f543652fc89220a5b5df71dff2b5",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 981,
+  "symbolMultisetSHA256": "7aeda58ef961d6b3530773bf891e5828505c275507d7726b448637af71b05e8d",
+  "target": "arm64-apple-ios26.0"
+}

@@ -1,0 +1,1029 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "StickerKit.STKDefines",
+        "printedName": "StickerKit.STKDefines"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "OSLog",
+        "printedName": "OSLog"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "CoreImage.CIFilterBuiltins",
+        "printedName": "CoreImage.CIFilterBuiltins"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "Combine",
+        "printedName": "Combine"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "CoreImage",
+        "printedName": "CoreImage"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "CoreMotion",
+        "printedName": "CoreMotion"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "CoreSpotlight",
+        "printedName": "CoreSpotlight"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "DeveloperToolsSupport",
+        "printedName": "DeveloperToolsSupport"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "Dispatch",
+        "printedName": "Dispatch"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "Messages",
+        "printedName": "Messages"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "Metal",
+        "printedName": "Metal"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "MetalKit",
+        "printedName": "MetalKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "MetalPerformanceShaders",
+        "printedName": "MetalPerformanceShaders"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "NaturalLanguage",
+        "printedName": "NaturalLanguage"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "OSLog",
+        "printedName": "OSLog"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "PhotosUI",
+        "printedName": "PhotosUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "QuartzCore",
+        "printedName": "QuartzCore"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "StickerKit",
+        "printedName": "StickerKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "UIKit.UIKeyConstants",
+        "printedName": "UIKit.UIKeyConstants"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "UIKit",
+        "printedName": "UIKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "UniformTypeIdentifiers",
+        "printedName": "UniformTypeIdentifiers"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "Vision",
+        "printedName": "Vision"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "_PhotosUI_SwiftUI",
+        "printedName": "_PhotosUI_SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "os.log",
+        "printedName": "os.log"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "StickerKit",
+        "name": "simd",
+        "printedName": "simd"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : StickerKit.AvatarEditorViewControllerDelegate>",
+            "kind": "Function",
+            "mangledName": "$s10StickerKit34AvatarEditorViewControllerDelegateP06avatard6RemoteeF13ShouldDismissyyF",
+            "moduleName": "StickerKit",
+            "name": "avatarEditorRemoteViewControllerShouldDismiss",
+            "printedName": "avatarEditorRemoteViewControllerShouldDismiss()",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:10StickerKit34AvatarEditorViewControllerDelegateP06avatard6RemoteeF13ShouldDismissyyF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          }
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ObjectiveC.NSObjectProtocol>",
+        "kind": "TypeDecl",
+        "mangledName": "$s10StickerKit34AvatarEditorViewControllerDelegateP",
+        "moduleName": "StickerKit",
+        "name": "AvatarEditorViewControllerDelegate",
+        "printedName": "AvatarEditorViewControllerDelegate",
+        "usr": "s:10StickerKit34AvatarEditorViewControllerDelegateP"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AvatarEditorViewControllerDelegate",
+                        "printedName": "any StickerKit.AvatarEditorViewControllerDelegate",
+                        "usr": "s:10StickerKit34AvatarEditorViewControllerDelegateP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any StickerKit.AvatarEditorViewControllerDelegate)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s10StickerKit26AvatarEditorViewControllerC8delegateAA0cdeF8Delegate_pSgvg",
+                "moduleName": "StickerKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:10StickerKit26AvatarEditorViewControllerC8delegateAA0cdeF8Delegate_pSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AvatarEditorViewControllerDelegate",
+                        "printedName": "any StickerKit.AvatarEditorViewControllerDelegate",
+                        "usr": "s:10StickerKit34AvatarEditorViewControllerDelegateP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any StickerKit.AvatarEditorViewControllerDelegate)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s10StickerKit26AvatarEditorViewControllerC8delegateAA0cdeF8Delegate_pSgvs",
+                "moduleName": "StickerKit",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:10StickerKit26AvatarEditorViewControllerC8delegateAA0cdeF8Delegate_pSgvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "WeakStorage",
+                "printedName": "(any StickerKit.AvatarEditorViewControllerDelegate)?"
+              }
+            ],
+            "declAttributes": [
+              "HasInitialValue",
+              "Preconcurrency",
+              "ReferenceOwnership",
+              "HasStorage",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s10StickerKit26AvatarEditorViewControllerC8delegateAA0cdeF8Delegate_pSgvp",
+            "moduleName": "StickerKit",
+            "name": "delegate",
+            "ownership": 1,
+            "printedName": "delegate",
+            "usr": "s:10StickerKit26AvatarEditorViewControllerC8delegateAA0cdeF8Delegate_pSgvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Preconcurrency",
+              "Override",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10StickerKit26AvatarEditorViewControllerC11viewDidLoadyyF",
+            "moduleName": "StickerKit",
+            "name": "viewDidLoad",
+            "objc_name": "viewDidLoad",
+            "overriding": true,
+            "printedName": "viewDidLoad()",
+            "usr": "c:@M@StickerKit@objc(cs)AvatarEditorViewController(im)viewDidLoad"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Preconcurrency",
+              "Override",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10StickerKit26AvatarEditorViewControllerC14viewWillAppearyySbF",
+            "moduleName": "StickerKit",
+            "name": "viewWillAppear",
+            "objc_name": "viewWillAppear:",
+            "overriding": true,
+            "printedName": "viewWillAppear(_:)",
+            "usr": "c:@M@StickerKit@objc(cs)AvatarEditorViewController(im)viewWillAppear:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AvatarEditorViewController",
+                "printedName": "StickerKit.AvatarEditorViewController",
+                "usr": "c:@M@StickerKit@objc(cs)AvatarEditorViewController"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bundle",
+                    "printedName": "Foundation.Bundle",
+                    "usr": "c:objc(cs)NSBundle"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Bundle?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Preconcurrency",
+              "Override",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s10StickerKit26AvatarEditorViewControllerC7nibName6bundleACSSSg_So8NSBundleCSgtcfc",
+            "moduleName": "StickerKit",
+            "name": "init",
+            "objc_name": "initWithNibName:bundle:",
+            "overriding": true,
+            "printedName": "init(nibName:bundle:)",
+            "usr": "c:@M@StickerKit@objc(cs)AvatarEditorViewController(im)initWithNibName:bundle:"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AvatarEditorViewController",
+                    "printedName": "StickerKit.AvatarEditorViewController",
+                    "usr": "c:@M@StickerKit@objc(cs)AvatarEditorViewController"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "StickerKit.AvatarEditorViewController?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSCoder",
+                "printedName": "Foundation.NSCoder",
+                "usr": "c:objc(cs)NSCoder"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Required",
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s10StickerKit26AvatarEditorViewControllerC5coderACSgSo7NSCoderC_tcfc",
+            "moduleName": "StickerKit",
+            "name": "init",
+            "objc_name": "initWithCoder:",
+            "overriding": true,
+            "printedName": "init(coder:)",
+            "usr": "c:@M@StickerKit@objc(cs)AvatarEditorViewController(im)initWithCoder:"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIAppearanceContainer",
+            "printedName": "UIAppearanceContainer",
+            "usr": "c:objc(pl)UIAppearanceContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UITraitEnvironment",
+            "printedName": "UITraitEnvironment",
+            "usr": "c:objc(pl)UITraitEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIContentContainer",
+            "printedName": "UIContentContainer",
+            "usr": "c:objc(pl)UIContentContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusEnvironment",
+            "printedName": "UIFocusEnvironment",
+            "usr": "c:objc(pl)UIFocusEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIResponderStandardEditActions",
+            "printedName": "UIResponderStandardEditActions",
+            "usr": "c:objc(pl)UIResponderStandardEditActions"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIActivityItemsConfigurationProviding",
+            "printedName": "UIActivityItemsConfigurationProviding",
+            "usr": "c:objc(pl)UIActivityItemsConfigurationProviding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIPasteConfigurationSupporting",
+            "printedName": "UIPasteConfigurationSupporting",
+            "usr": "c:objc(pl)UIPasteConfigurationSupporting"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIUserActivityRestoring",
+            "printedName": "UIUserActivityRestoring",
+            "usr": "c:objc(pl)UIUserActivityRestoring"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s5UIKit23UITraitChangeObservableP",
+            "name": "UITraitChangeObservable",
+            "printedName": "UITraitChangeObservable",
+            "usr": "s:5UIKit23UITraitChangeObservableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSExtensionRequestHandling",
+            "printedName": "NSExtensionRequestHandling",
+            "usr": "c:objc(pl)NSExtensionRequestHandling"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIStateRestoring",
+            "printedName": "UIStateRestoring",
+            "usr": "c:objc(pl)UIStateRestoring"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "ObjC",
+          "Custom"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s10StickerKit26AvatarEditorViewControllerC",
+        "moduleName": "StickerKit",
+        "name": "AvatarEditorViewController",
+        "printedName": "AvatarEditorViewController",
+        "superclassNames": [
+          "UIKit.UIViewController",
+          "UIKit.UIResponder",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)UIViewController",
+        "usr": "c:@M@StickerKit@objc(cs)AvatarEditorViewController"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CGSize",
+                    "printedName": "CoreFoundation.CGSize",
+                    "usr": "c:@S@CGSize"
+                  }
+                ],
+                "declAttributes": [
+                  "Dynamic",
+                  "ObjC",
+                  "Override"
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "isOpen": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo15PHLivePhotoViewC10StickerKitE20intrinsicContentSizeSo6CGSizeVvg",
+                "moduleName": "StickerKit",
+                "name": "Get",
+                "objc_name": "intrinsicContentSize",
+                "overriding": true,
+                "printedName": "Get()",
+                "usr": "c:@CM@StickerKit@@objc(cs)PHLivePhotoView(im)intrinsicContentSize"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CGSize",
+                "printedName": "CoreFoundation.CGSize",
+                "usr": "c:@S@CGSize"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Preconcurrency",
+              "Override",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "isOpen": true,
+            "kind": "Var",
+            "mangledName": "$sSo15PHLivePhotoViewC10StickerKitE20intrinsicContentSizeSo6CGSizeVvp",
+            "moduleName": "StickerKit",
+            "name": "intrinsicContentSize",
+            "objc_name": "intrinsicContentSize",
+            "overriding": true,
+            "printedName": "intrinsicContentSize",
+            "usr": "c:@CM@StickerKit@@objc(cs)PHLivePhotoView(py)intrinsicContentSize"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIAppearance",
+            "printedName": "UIAppearance",
+            "usr": "c:objc(pl)UIAppearance"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIAppearanceContainer",
+            "printedName": "UIAppearanceContainer",
+            "usr": "c:objc(pl)UIAppearanceContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIDynamicItem",
+            "printedName": "UIDynamicItem",
+            "usr": "c:objc(pl)UIDynamicItem"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UITraitEnvironment",
+            "printedName": "UITraitEnvironment",
+            "usr": "c:objc(pl)UITraitEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UICoordinateSpace",
+            "printedName": "UICoordinateSpace",
+            "usr": "c:objc(pl)UICoordinateSpace"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusItem",
+            "printedName": "UIFocusItem",
+            "usr": "c:objc(pl)UIFocusItem"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusEnvironment",
+            "printedName": "UIFocusEnvironment",
+            "usr": "c:objc(pl)UIFocusEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusItemContainer",
+            "printedName": "UIFocusItemContainer",
+            "usr": "c:objc(pl)UIFocusItemContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CALayerDelegate",
+            "printedName": "CALayerDelegate",
+            "usr": "c:objc(pl)CALayerDelegate"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIResponderStandardEditActions",
+            "printedName": "UIResponderStandardEditActions",
+            "usr": "c:objc(pl)UIResponderStandardEditActions"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIActivityItemsConfigurationProviding",
+            "printedName": "UIActivityItemsConfigurationProviding",
+            "usr": "c:objc(pl)UIActivityItemsConfigurationProviding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIPasteConfigurationSupporting",
+            "printedName": "UIPasteConfigurationSupporting",
+            "usr": "c:objc(pl)UIPasteConfigurationSupporting"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIUserActivityRestoring",
+            "printedName": "UIUserActivityRestoring",
+            "usr": "c:objc(pl)UIUserActivityRestoring"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s5UIKit23UITraitChangeObservableP",
+            "name": "UITraitChangeObservable",
+            "printedName": "UITraitChangeObservable",
+            "usr": "s:5UIKit23UITraitChangeObservableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIPopoverPresentationControllerSourceItem",
+            "printedName": "UIPopoverPresentationControllerSourceItem",
+            "usr": "c:objc(pl)UIPopoverPresentationControllerSourceItem"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UILargeContentViewerItem",
+            "printedName": "UILargeContentViewerItem",
+            "usr": "c:objc(pl)UILargeContentViewerItem"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIAccessibilityIdentification",
+            "printedName": "UIAccessibilityIdentification",
+            "usr": "c:objc(pl)UIAccessibilityIdentification"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "9.1",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "PhotosUI",
+        "name": "PHLivePhotoView",
+        "objc_name": "PHLivePhotoView",
+        "printedName": "PHLivePhotoView",
+        "superclassNames": [
+          "UIKit.UIView",
+          "UIKit.UIResponder",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)UIView",
+        "usr": "c:objc(cs)PHLivePhotoView"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "StickerKit",
+    "printedName": "StickerKit"
+  }
+}

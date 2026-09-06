@@ -1,0 +1,3502 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ContactProvider",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Double",
+            "printedName": "Swift.Double",
+            "usr": "s:Sd"
+          }
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "kind": "Var",
+        "moduleName": "ContactProvider",
+        "name": "ContactProviderVersionNumber",
+        "printedName": "ContactProviderVersionNumber",
+        "usr": "c:@ContactProviderVersionNumber"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Error",
+            "printedName": "<<error type>>"
+          }
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "isLet": true,
+        "kind": "Var",
+        "moduleName": "ContactProvider",
+        "name": "ContactProviderVersionString",
+        "printedName": "ContactProviderVersionString",
+        "usr": "c:@ContactProviderVersionString"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ContactProvider",
+        "name": "Combine",
+        "printedName": "Combine"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ContactProvider",
+        "name": "ContactProvider",
+        "printedName": "ContactProvider"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ContactProvider",
+        "name": "Contacts",
+        "printedName": "Contacts"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ContactProvider",
+        "name": "ExtensionFoundation",
+        "printedName": "ExtensionFoundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ContactProvider",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ContactProvider",
+        "name": "OSLog",
+        "printedName": "OSLog"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ContactProvider",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ContactProvider",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ContactProvider",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ContactProvider",
+        "name": "os.activity",
+        "printedName": "os.activity"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ContactProvider",
+        "name": "os.log",
+        "printedName": "os.log"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ContactProvider",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContactProviderDomain",
+                "printedName": "any ContactProvider.ContactProviderDomain",
+                "usr": "s:15ContactProvider0aB6DomainP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactProviderExtension>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0aB9ExtensionP9configure3foryAA0aB6Domain_p_tF",
+            "moduleName": "ContactProvider",
+            "name": "configure",
+            "printedName": "configure(for:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:15ContactProvider0aB9ExtensionP9configure3foryAA0aB6Domain_p_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactProviderExtension>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0aB9ExtensionP10invalidateyyYaKF",
+            "moduleName": "ContactProvider",
+            "name": "invalidate",
+            "printedName": "invalidate()",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "throwing": true,
+            "usr": "s:15ContactProvider0aB9ExtensionP10invalidateyyYaKF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AppExtensionConfiguration",
+                        "printedName": "ExtensionFoundation.AppExtensionConfiguration",
+                        "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some ExtensionFoundation.AppExtensionConfiguration"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : ContactProvider.ContactProviderExtension>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0aB9ExtensionPAAE13configurationQrvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider0aB9ExtensionPAAE13configurationQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionConfiguration",
+                    "printedName": "ExtensionFoundation.AppExtensionConfiguration",
+                    "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionFoundation.AppExtensionConfiguration"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB9ExtensionPAAE13configurationQrvp",
+            "moduleName": "ContactProvider",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:15ContactProvider0aB9ExtensionPAAE13configurationQrvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA0P",
+            "name": "AppExtension",
+            "printedName": "AppExtension",
+            "usr": "s:19ExtensionFoundation03AppA0P"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s15ContactProvider0A15ItemEnumeratingP",
+            "name": "ContactItemEnumerating",
+            "printedName": "ContactItemEnumerating",
+            "usr": "s:15ContactProvider0A15ItemEnumeratingP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ContactProvider.ContactItemEnumerating, Self : ExtensionFoundation.AppExtension>",
+        "intro_iOS": "18",
+        "kind": "TypeDecl",
+        "mangledName": "$s15ContactProvider0aB9ExtensionP",
+        "moduleName": "ContactProvider",
+        "name": "ContactProviderExtension",
+        "printedName": "ContactProviderExtension",
+        "usr": "s:15ContactProvider0aB9ExtensionP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemEnumerator",
+                "printedName": "any ContactProvider.ContactItemEnumerator",
+                "usr": "s:15ContactProvider0A14ItemEnumeratorP"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Identifier",
+                "printedName": "ContactProvider.ContactItem.Identifier",
+                "usr": "s:15ContactProvider0A4ItemO10IdentifierV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactItemEnumerating>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A15ItemEnumeratingP10enumerator3forAA0aC10Enumerator_pAA0aC0O10IdentifierV_tF",
+            "moduleName": "ContactProvider",
+            "name": "enumerator",
+            "printedName": "enumerator(for:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:15ContactProvider0A15ItemEnumeratingP10enumerator3forAA0aC10Enumerator_pAA0aC0O10IdentifierV_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "intro_iOS": "18",
+        "kind": "TypeDecl",
+        "mangledName": "$s15ContactProvider0A15ItemEnumeratingP",
+        "moduleName": "ContactProvider",
+        "name": "ContactItemEnumerating",
+        "printedName": "ContactItemEnumerating",
+        "usr": "s:15ContactProvider0A15ItemEnumeratingP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemPage",
+                "printedName": "ContactProvider.ContactItemPage",
+                "usr": "s:15ContactProvider0A8ItemPageV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemContentObserver",
+                "printedName": "any ContactProvider.ContactItemContentObserver",
+                "usr": "s:15ContactProvider0A19ItemContentObserverP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactItemEnumerator>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A14ItemEnumeratorP16enumerateContent2in3foryAA0aC4PageV_AA0acF8Observer_ptYaF",
+            "moduleName": "ContactProvider",
+            "name": "enumerateContent",
+            "printedName": "enumerateContent(in:for:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:15ContactProvider0A14ItemEnumeratorP16enumerateContent2in3foryAA0aC4PageV_AA0acF8Observer_ptYaF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemSyncAnchor",
+                "printedName": "ContactProvider.ContactItemSyncAnchor",
+                "usr": "s:15ContactProvider0A14ItemSyncAnchorV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemChangeObserver",
+                "printedName": "any ContactProvider.ContactItemChangeObserver",
+                "usr": "s:15ContactProvider0A18ItemChangeObserverP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactItemEnumerator>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A14ItemEnumeratorP16enumerateChanges10startingAt3foryAA0aC10SyncAnchorV_AA0aC14ChangeObserver_ptYaF",
+            "moduleName": "ContactProvider",
+            "name": "enumerateChanges",
+            "printedName": "enumerateChanges(startingAt:for:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:15ContactProvider0A14ItemEnumeratorP16enumerateChanges10startingAt3foryAA0aC10SyncAnchorV_AA0aC14ChangeObserver_ptYaF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactItemEnumerator>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A14ItemEnumeratorP10invalidateyyYaF",
+            "moduleName": "ContactProvider",
+            "name": "invalidate",
+            "printedName": "invalidate()",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:15ContactProvider0A14ItemEnumeratorP10invalidateyyYaF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "intro_iOS": "18",
+        "kind": "TypeDecl",
+        "mangledName": "$s15ContactProvider0A14ItemEnumeratorP",
+        "moduleName": "ContactProvider",
+        "name": "ContactItemEnumerator",
+        "printedName": "ContactItemEnumerator",
+        "usr": "s:15ContactProvider0A14ItemEnumeratorP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactItem",
+                    "printedName": "ContactProvider.ContactItem",
+                    "usr": "s:15ContactProvider0A4ItemO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[ContactProvider.ContactItem]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactItemContentObserver>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A19ItemContentObserverP12didEnumerateyySayAA0aC0OGF",
+            "moduleName": "ContactProvider",
+            "name": "didEnumerate",
+            "printedName": "didEnumerate(_:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:15ContactProvider0A19ItemContentObserverP12didEnumerateyySayAA0aC0OGF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemPage",
+                "printedName": "ContactProvider.ContactItemPage",
+                "usr": "s:15ContactProvider0A8ItemPageV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactItemContentObserver>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A19ItemContentObserverP24didFinishEnumeratingPage4upToyAA0acI0V_tF",
+            "moduleName": "ContactProvider",
+            "name": "didFinishEnumeratingPage",
+            "printedName": "didFinishEnumeratingPage(upTo:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:15ContactProvider0A19ItemContentObserverP24didFinishEnumeratingPage4upToyAA0acI0V_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactItemContentObserver>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A19ItemContentObserverP020didFinishEnumeratingD04upToy10Foundation4DataV_tF",
+            "moduleName": "ContactProvider",
+            "name": "didFinishEnumeratingContent",
+            "printedName": "didFinishEnumeratingContent(upTo:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:15ContactProvider0A19ItemContentObserverP020didFinishEnumeratingD04upToy10Foundation4DataV_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Error",
+                "printedName": "any Swift.Error",
+                "usr": "s:s5ErrorP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactItemContentObserver>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A19ItemContentObserverP020didFinishEnumeratingD9WithErroryys0J0_pF",
+            "moduleName": "ContactProvider",
+            "name": "didFinishEnumeratingContentWithError",
+            "printedName": "didFinishEnumeratingContentWithError(_:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:15ContactProvider0A19ItemContentObserverP020didFinishEnumeratingD9WithErroryys0J0_pF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : ContactProvider.ContactItemContentObserver>",
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0A19ItemContentObserverP17suggestedPageSizeSivg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:15ContactProvider0A19ItemContentObserverP17suggestedPageSizeSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0A19ItemContentObserverP17suggestedPageSizeSivp",
+            "moduleName": "ContactProvider",
+            "name": "suggestedPageSize",
+            "printedName": "suggestedPageSize",
+            "protocolReq": true,
+            "usr": "s:15ContactProvider0A19ItemContentObserverP17suggestedPageSizeSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "intro_iOS": "18",
+        "kind": "TypeDecl",
+        "mangledName": "$s15ContactProvider0A19ItemContentObserverP",
+        "moduleName": "ContactProvider",
+        "name": "ContactItemContentObserver",
+        "printedName": "ContactItemContentObserver",
+        "usr": "s:15ContactProvider0A19ItemContentObserverP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactItem",
+                    "printedName": "ContactProvider.ContactItem",
+                    "usr": "s:15ContactProvider0A4ItemO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[ContactProvider.ContactItem]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactItemChangeObserver>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A18ItemChangeObserverP9didUpdateyySayAA0aC0OGF",
+            "moduleName": "ContactProvider",
+            "name": "didUpdate",
+            "printedName": "didUpdate(_:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:15ContactProvider0A18ItemChangeObserverP9didUpdateyySayAA0aC0OGF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Identifier",
+                    "printedName": "ContactProvider.ContactItem.Identifier",
+                    "usr": "s:15ContactProvider0A4ItemO10IdentifierV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[ContactProvider.ContactItem.Identifier]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactItemChangeObserver>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A18ItemChangeObserverP9didDeleteyySayAA0aC0O10IdentifierVGF",
+            "moduleName": "ContactProvider",
+            "name": "didDelete",
+            "printedName": "didDelete(_:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:15ContactProvider0A18ItemChangeObserverP9didDeleteyySayAA0aC0O10IdentifierVGF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemSyncAnchor",
+                "printedName": "ContactProvider.ContactItemSyncAnchor",
+                "usr": "s:15ContactProvider0A14ItemSyncAnchorV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactItemChangeObserver>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A18ItemChangeObserverP27didFinishEnumeratingChanges4upTo10moreComingyAA0aC10SyncAnchorV_SbtF",
+            "moduleName": "ContactProvider",
+            "name": "didFinishEnumeratingChanges",
+            "printedName": "didFinishEnumeratingChanges(upTo:moreComing:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:15ContactProvider0A18ItemChangeObserverP27didFinishEnumeratingChanges4upTo10moreComingyAA0aC10SyncAnchorV_SbtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Error",
+                "printedName": "any Swift.Error",
+                "usr": "s:s5ErrorP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : ContactProvider.ContactItemChangeObserver>",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A18ItemChangeObserverP36didFinishEnumeratingChangesWithErroryys0K0_pF",
+            "moduleName": "ContactProvider",
+            "name": "didFinishEnumeratingChangesWithError",
+            "printedName": "didFinishEnumeratingChangesWithError(_:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:15ContactProvider0A18ItemChangeObserverP36didFinishEnumeratingChangesWithErroryys0K0_pF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : ContactProvider.ContactItemChangeObserver>",
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0A18ItemChangeObserverP18suggestedBatchSizeSivg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:15ContactProvider0A18ItemChangeObserverP18suggestedBatchSizeSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0A18ItemChangeObserverP18suggestedBatchSizeSivp",
+            "moduleName": "ContactProvider",
+            "name": "suggestedBatchSize",
+            "printedName": "suggestedBatchSize",
+            "protocolReq": true,
+            "usr": "s:15ContactProvider0A18ItemChangeObserverP18suggestedBatchSizeSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "intro_iOS": "18",
+        "kind": "TypeDecl",
+        "mangledName": "$s15ContactProvider0A18ItemChangeObserverP",
+        "moduleName": "ContactProvider",
+        "name": "ContactItemChangeObserver",
+        "printedName": "ContactItemChangeObserver",
+        "usr": "s:15ContactProvider0A18ItemChangeObserverP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ContactProviderManager",
+                "printedName": "ContactProvider.ContactProviderManager",
+                "usr": "s:15ContactProvider0aB7ManagerC"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s15ContactProvider0aB7ManagerC16domainIdentifierACSS_tKcfc",
+            "moduleName": "ContactProvider",
+            "name": "init",
+            "printedName": "init(domainIdentifier:)",
+            "throwing": true,
+            "usr": "s:15ContactProvider0aB7ManagerC16domainIdentifierACSS_tKcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactProviderDomain",
+                    "printedName": "any ContactProvider.ContactProviderDomain",
+                    "usr": "s:15ContactProvider0aB6DomainP"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0aB7ManagerC6domainAA0aB6Domain_pvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider0aB7ManagerC6domainAA0aB6Domain_pvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ContactProviderDomain",
+                "printedName": "any ContactProvider.ContactProviderDomain",
+                "usr": "s:15ContactProvider0aB6DomainP"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB7ManagerC6domainAA0aB6Domain_pvp",
+            "moduleName": "ContactProvider",
+            "name": "domain",
+            "printedName": "domain",
+            "usr": "s:15ContactProvider0aB7ManagerC6domainAA0aB6Domain_pvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0aB7ManagerC9isEnabledSbvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider0aB7ManagerC9isEnabledSbvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB7ManagerC9isEnabledSbvp",
+            "moduleName": "ContactProvider",
+            "name": "isEnabled",
+            "printedName": "isEnabled",
+            "usr": "s:15ContactProvider0aB7ManagerC9isEnabledSbvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0aB7ManagerC6enableyyYaKF",
+            "moduleName": "ContactProvider",
+            "name": "enable",
+            "printedName": "enable()",
+            "throwing": true,
+            "usr": "s:15ContactProvider0aB7ManagerC6enableyyYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0aB7ManagerC7disableyyYaKF",
+            "moduleName": "ContactProvider",
+            "name": "disable",
+            "printedName": "disable()",
+            "throwing": true,
+            "usr": "s:15ContactProvider0aB7ManagerC7disableyyYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Identifier",
+                "printedName": "ContactProvider.ContactItem.Identifier",
+                "usr": "s:15ContactProvider0A4ItemO10IdentifierV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0aB7ManagerC16signalEnumerator3foryAA0A4ItemO10IdentifierV_tYaKF",
+            "moduleName": "ContactProvider",
+            "name": "signalEnumerator",
+            "printedName": "signalEnumerator(for:)",
+            "throwing": true,
+            "usr": "s:15ContactProvider0aB7ManagerC16signalEnumerator3foryAA0A4ItemO10IdentifierV_tYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0aB7ManagerC10invalidateyyYaKF",
+            "moduleName": "ContactProvider",
+            "name": "invalidate",
+            "printedName": "invalidate()",
+            "throwing": true,
+            "usr": "s:15ContactProvider0aB7ManagerC10invalidateyyYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0aB7ManagerC5resetyyYaKF",
+            "moduleName": "ContactProvider",
+            "name": "reset",
+            "printedName": "reset()",
+            "throwing": true,
+            "usr": "s:15ContactProvider0aB7ManagerC5resetyyYaKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "intro_iOS": "18",
+        "kind": "TypeDecl",
+        "mangledName": "$s15ContactProvider0aB7ManagerC",
+        "moduleName": "ContactProvider",
+        "name": "ContactProviderManager",
+        "printedName": "ContactProviderManager",
+        "usr": "s:15ContactProvider0aB7ManagerC"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemPage",
+                "printedName": "ContactProvider.ContactItemPage",
+                "usr": "s:15ContactProvider0A8ItemPageV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s15ContactProvider0A8ItemPageV16generationMarker6offsetAC10Foundation4DataV_Sitcfc",
+            "moduleName": "ContactProvider",
+            "name": "init",
+            "printedName": "init(generationMarker:offset:)",
+            "usr": "s:15ContactProvider0A8ItemPageV16generationMarker6offsetAC10Foundation4DataV_Sitcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0A8ItemPageV16generationMarker10Foundation4DataVvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider0A8ItemPageV16generationMarker10Foundation4DataVvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0A8ItemPageV16generationMarker10Foundation4DataVvs",
+                "moduleName": "ContactProvider",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:15ContactProvider0A8ItemPageV16generationMarker10Foundation4DataVvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0A8ItemPageV16generationMarker10Foundation4DataVvp",
+            "moduleName": "ContactProvider",
+            "name": "generationMarker",
+            "printedName": "generationMarker",
+            "usr": "s:15ContactProvider0A8ItemPageV16generationMarker10Foundation4DataVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0A8ItemPageV6offsetSivg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider0A8ItemPageV6offsetSivg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0A8ItemPageV6offsetSivs",
+                "moduleName": "ContactProvider",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:15ContactProvider0A8ItemPageV6offsetSivs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0A8ItemPageV6offsetSivp",
+            "moduleName": "ContactProvider",
+            "name": "offset",
+            "printedName": "offset",
+            "usr": "s:15ContactProvider0A8ItemPageV6offsetSivp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemPage",
+                "printedName": "ContactProvider.ContactItemPage",
+                "usr": "s:15ContactProvider0A8ItemPageV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemPage",
+                "printedName": "ContactProvider.ContactItemPage",
+                "usr": "s:15ContactProvider0A8ItemPageV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A8ItemPageV2eeoiySbAC_ACtFZ",
+            "moduleName": "ContactProvider",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:15ContactProvider0A8ItemPageV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A8ItemPageV6encode2toys7Encoder_p_tKF",
+            "moduleName": "ContactProvider",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:15ContactProvider0A8ItemPageV6encode2toys7Encoder_p_tKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemPage",
+                "printedName": "ContactProvider.ContactItemPage",
+                "usr": "s:15ContactProvider0A8ItemPageV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s15ContactProvider0A8ItemPageV4fromACs7Decoder_p_tKcfc",
+            "moduleName": "ContactProvider",
+            "name": "init",
+            "printedName": "init(from:)",
+            "throwing": true,
+            "usr": "s:15ContactProvider0A8ItemPageV4fromACs7Decoder_p_tKcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactItemPage",
+                    "printedName": "ContactProvider.ContactItemPage",
+                    "usr": "s:15ContactProvider0A8ItemPageV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0A8ItemPageV07initialD0ACvgZ",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:15ContactProvider0A8ItemPageV07initialD0ACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemPage",
+                "printedName": "ContactProvider.ContactItemPage",
+                "usr": "s:15ContactProvider0A8ItemPageV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isFromExtension": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0A8ItemPageV07initialD0ACvpZ",
+            "moduleName": "ContactProvider",
+            "name": "initialPage",
+            "printedName": "initialPage",
+            "static": true,
+            "usr": "s:15ContactProvider0A8ItemPageV07initialD0ACvpZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "18",
+        "kind": "TypeDecl",
+        "mangledName": "$s15ContactProvider0A8ItemPageV",
+        "moduleName": "ContactProvider",
+        "name": "ContactItemPage",
+        "printedName": "ContactItemPage",
+        "usr": "s:15ContactProvider0A8ItemPageV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContactItem",
+                        "printedName": "ContactProvider.ContactItem",
+                        "usr": "s:15ContactProvider0A4ItemO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "CNMutableContact",
+                            "printedName": "Contacts.CNMutableContact",
+                            "usr": "c:objc(cs)CNMutableContact"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Identifier",
+                            "printedName": "ContactProvider.ContactItem.Identifier",
+                            "usr": "s:15ContactProvider0A4ItemO10IdentifierV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Tuple",
+                        "printedName": "(Contacts.CNMutableContact, ContactProvider.ContactItem.Identifier)"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Contacts.CNMutableContact, ContactProvider.ContactItem.Identifier) -> ContactProvider.ContactItem"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContactItem",
+                        "printedName": "ContactProvider.ContactItem",
+                        "usr": "s:15ContactProvider0A4ItemO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ContactProvider.ContactItem.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ContactProvider.ContactItem.Type) -> (Contacts.CNMutableContact, ContactProvider.ContactItem.Identifier) -> ContactProvider.ContactItem"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0A4ItemO7contactyACSo09CNMutableA0C_AC10IdentifierVtcACmF",
+            "moduleName": "ContactProvider",
+            "name": "contact",
+            "printedName": "contact",
+            "usr": "s:15ContactProvider0A4ItemO7contactyACSo09CNMutableA0C_AC10IdentifierVtcACmF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItem",
+                "printedName": "ContactProvider.ContactItem",
+                "usr": "s:15ContactProvider0A4ItemO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItem",
+                "printedName": "ContactProvider.ContactItem",
+                "usr": "s:15ContactProvider0A4ItemO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A4ItemO2eeoiySbAC_ACtFZ",
+            "moduleName": "ContactProvider",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:15ContactProvider0A4ItemO2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A4ItemO4hash4intoys6HasherVz_tF",
+            "moduleName": "ContactProvider",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:15ContactProvider0A4ItemO4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0A4ItemO9hashValueSivg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider0A4ItemO9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0A4ItemO9hashValueSivp",
+            "moduleName": "ContactProvider",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:15ContactProvider0A4ItemO9hashValueSivp"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s15ContactProvider0A4ItemO10IdentifierV5valueSSvg",
+                    "moduleName": "ContactProvider",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:15ContactProvider0A4ItemO10IdentifierV5valueSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s15ContactProvider0A4ItemO10IdentifierV5valueSSvp",
+                "moduleName": "ContactProvider",
+                "name": "value",
+                "printedName": "value",
+                "usr": "s:15ContactProvider0A4ItemO10IdentifierV5valueSSvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Identifier",
+                    "printedName": "ContactProvider.ContactItem.Identifier",
+                    "usr": "s:15ContactProvider0A4ItemO10IdentifierV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s15ContactProvider0A4ItemO10IdentifierVyAESScfc",
+                "moduleName": "ContactProvider",
+                "name": "init",
+                "printedName": "init(_:)",
+                "usr": "s:15ContactProvider0A4ItemO10IdentifierVyAESScfc"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Identifier",
+                    "printedName": "ContactProvider.ContactItem.Identifier",
+                    "usr": "s:15ContactProvider0A4ItemO10IdentifierV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Identifier",
+                    "printedName": "ContactProvider.ContactItem.Identifier",
+                    "usr": "s:15ContactProvider0A4ItemO10IdentifierV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s15ContactProvider0A4ItemO10IdentifierV2eeoiySbAE_AEtFZ",
+                "moduleName": "ContactProvider",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:15ContactProvider0A4ItemO10IdentifierV2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s15ContactProvider0A4ItemO10IdentifierV4hash4intoys6HasherVz_tF",
+                "moduleName": "ContactProvider",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:15ContactProvider0A4ItemO10IdentifierV4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s15ContactProvider0A4ItemO10IdentifierV9hashValueSivg",
+                    "moduleName": "ContactProvider",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:15ContactProvider0A4ItemO10IdentifierV9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s15ContactProvider0A4ItemO10IdentifierV9hashValueSivp",
+                "moduleName": "ContactProvider",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:15ContactProvider0A4ItemO10IdentifierV9hashValueSivp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Identifier",
+                        "printedName": "ContactProvider.ContactItem.Identifier",
+                        "usr": "s:15ContactProvider0A4ItemO10IdentifierV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "isFromExtension": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s15ContactProvider0A4ItemO10IdentifierV13rootContainerAEvgZ",
+                    "moduleName": "ContactProvider",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:15ContactProvider0A4ItemO10IdentifierV13rootContainerAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Identifier",
+                    "printedName": "ContactProvider.ContactItem.Identifier",
+                    "usr": "s:15ContactProvider0A4ItemO10IdentifierV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isFromExtension": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s15ContactProvider0A4ItemO10IdentifierV13rootContainerAEvpZ",
+                "moduleName": "ContactProvider",
+                "name": "rootContainer",
+                "printedName": "rootContainer",
+                "static": true,
+                "usr": "s:15ContactProvider0A4ItemO10IdentifierV13rootContainerAEvpZ"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Struct",
+            "intro_iOS": "18",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s15ContactProvider0A4ItemO10IdentifierV",
+            "moduleName": "ContactProvider",
+            "name": "Identifier",
+            "printedName": "Identifier",
+            "usr": "s:15ContactProvider0A4ItemO10IdentifierV"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_iOS": "18",
+        "kind": "TypeDecl",
+        "mangledName": "$s15ContactProvider0A4ItemO",
+        "moduleName": "ContactProvider",
+        "name": "ContactItem",
+        "printedName": "ContactItem",
+        "usr": "s:15ContactProvider0A4ItemO"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemSyncAnchor",
+                "printedName": "ContactProvider.ContactItemSyncAnchor",
+                "usr": "s:15ContactProvider0A14ItemSyncAnchorV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s15ContactProvider0A14ItemSyncAnchorV16generationMarker6offsetAC10Foundation4DataV_Sitcfc",
+            "moduleName": "ContactProvider",
+            "name": "init",
+            "printedName": "init(generationMarker:offset:)",
+            "usr": "s:15ContactProvider0A14ItemSyncAnchorV16generationMarker6offsetAC10Foundation4DataV_Sitcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0A14ItemSyncAnchorV16generationMarker10Foundation4DataVvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider0A14ItemSyncAnchorV16generationMarker10Foundation4DataVvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0A14ItemSyncAnchorV16generationMarker10Foundation4DataVvs",
+                "moduleName": "ContactProvider",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:15ContactProvider0A14ItemSyncAnchorV16generationMarker10Foundation4DataVvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0A14ItemSyncAnchorV16generationMarker10Foundation4DataVvp",
+            "moduleName": "ContactProvider",
+            "name": "generationMarker",
+            "printedName": "generationMarker",
+            "usr": "s:15ContactProvider0A14ItemSyncAnchorV16generationMarker10Foundation4DataVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0A14ItemSyncAnchorV6offsetSivg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider0A14ItemSyncAnchorV6offsetSivg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0A14ItemSyncAnchorV6offsetSivs",
+                "moduleName": "ContactProvider",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:15ContactProvider0A14ItemSyncAnchorV6offsetSivs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0A14ItemSyncAnchorV6offsetSivp",
+            "moduleName": "ContactProvider",
+            "name": "offset",
+            "printedName": "offset",
+            "usr": "s:15ContactProvider0A14ItemSyncAnchorV6offsetSivp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemSyncAnchor",
+                "printedName": "ContactProvider.ContactItemSyncAnchor",
+                "usr": "s:15ContactProvider0A14ItemSyncAnchorV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemSyncAnchor",
+                "printedName": "ContactProvider.ContactItemSyncAnchor",
+                "usr": "s:15ContactProvider0A14ItemSyncAnchorV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A14ItemSyncAnchorV2eeoiySbAC_ACtFZ",
+            "moduleName": "ContactProvider",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:15ContactProvider0A14ItemSyncAnchorV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0A14ItemSyncAnchorV6encode2toys7Encoder_p_tKF",
+            "moduleName": "ContactProvider",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:15ContactProvider0A14ItemSyncAnchorV6encode2toys7Encoder_p_tKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ContactItemSyncAnchor",
+                "printedName": "ContactProvider.ContactItemSyncAnchor",
+                "usr": "s:15ContactProvider0A14ItemSyncAnchorV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s15ContactProvider0A14ItemSyncAnchorV4fromACs7Decoder_p_tKcfc",
+            "moduleName": "ContactProvider",
+            "name": "init",
+            "printedName": "init(from:)",
+            "throwing": true,
+            "usr": "s:15ContactProvider0A14ItemSyncAnchorV4fromACs7Decoder_p_tKcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "18",
+        "kind": "TypeDecl",
+        "mangledName": "$s15ContactProvider0A14ItemSyncAnchorV",
+        "moduleName": "ContactProvider",
+        "name": "ContactItemSyncAnchor",
+        "printedName": "ContactItemSyncAnchor",
+        "usr": "s:15ContactProvider0A14ItemSyncAnchorV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactProviderError",
+                    "printedName": "ContactProvider.ContactProviderError",
+                    "usr": "s:15ContactProvider0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContactProviderError",
+                        "printedName": "ContactProvider.ContactProviderError",
+                        "usr": "s:15ContactProvider0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ContactProvider.ContactProviderError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ContactProvider.ContactProviderError.Type) -> ContactProvider.ContactProviderError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO17extensionNotFoundyA2CmF",
+            "moduleName": "ContactProvider",
+            "name": "extensionNotFound",
+            "printedName": "extensionNotFound",
+            "usr": "s:15ContactProvider0aB5ErrorO17extensionNotFoundyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactProviderError",
+                    "printedName": "ContactProvider.ContactProviderError",
+                    "usr": "s:15ContactProvider0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContactProviderError",
+                        "printedName": "ContactProvider.ContactProviderError",
+                        "usr": "s:15ContactProvider0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ContactProvider.ContactProviderError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ContactProvider.ContactProviderError.Type) -> ContactProvider.ContactProviderError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO17itemsLimitReachedyA2CmF",
+            "moduleName": "ContactProvider",
+            "name": "itemsLimitReached",
+            "printedName": "itemsLimitReached",
+            "usr": "s:15ContactProvider0aB5ErrorO17itemsLimitReachedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactProviderError",
+                    "printedName": "ContactProvider.ContactProviderError",
+                    "usr": "s:15ContactProvider0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContactProviderError",
+                        "printedName": "ContactProvider.ContactProviderError",
+                        "usr": "s:15ContactProvider0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ContactProvider.ContactProviderError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ContactProvider.ContactProviderError.Type) -> ContactProvider.ContactProviderError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO15cannotEnumerateyA2CmF",
+            "moduleName": "ContactProvider",
+            "name": "cannotEnumerate",
+            "printedName": "cannotEnumerate",
+            "usr": "s:15ContactProvider0aB5ErrorO15cannotEnumerateyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactProviderError",
+                    "printedName": "ContactProvider.ContactProviderError",
+                    "usr": "s:15ContactProvider0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContactProviderError",
+                        "printedName": "ContactProvider.ContactProviderError",
+                        "usr": "s:15ContactProvider0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ContactProvider.ContactProviderError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ContactProvider.ContactProviderError.Type) -> ContactProvider.ContactProviderError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO11pageExpiredyA2CmF",
+            "moduleName": "ContactProvider",
+            "name": "pageExpired",
+            "printedName": "pageExpired",
+            "usr": "s:15ContactProvider0aB5ErrorO11pageExpiredyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactProviderError",
+                    "printedName": "ContactProvider.ContactProviderError",
+                    "usr": "s:15ContactProvider0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContactProviderError",
+                        "printedName": "ContactProvider.ContactProviderError",
+                        "usr": "s:15ContactProvider0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ContactProvider.ContactProviderError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ContactProvider.ContactProviderError.Type) -> ContactProvider.ContactProviderError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO19changeAnchorExpiredyA2CmF",
+            "moduleName": "ContactProvider",
+            "name": "changeAnchorExpired",
+            "printedName": "changeAnchorExpired",
+            "usr": "s:15ContactProvider0aB5ErrorO19changeAnchorExpiredyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactProviderError",
+                    "printedName": "ContactProvider.ContactProviderError",
+                    "usr": "s:15ContactProvider0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContactProviderError",
+                        "printedName": "ContactProvider.ContactProviderError",
+                        "usr": "s:15ContactProvider0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ContactProvider.ContactProviderError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ContactProvider.ContactProviderError.Type) -> ContactProvider.ContactProviderError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO19featureNotAvailableyA2CmF",
+            "moduleName": "ContactProvider",
+            "name": "featureNotAvailable",
+            "printedName": "featureNotAvailable",
+            "usr": "s:15ContactProvider0aB5ErrorO19featureNotAvailableyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactProviderError",
+                    "printedName": "ContactProvider.ContactProviderError",
+                    "usr": "s:15ContactProvider0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContactProviderError",
+                        "printedName": "ContactProvider.ContactProviderError",
+                        "usr": "s:15ContactProvider0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ContactProvider.ContactProviderError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ContactProvider.ContactProviderError.Type) -> ContactProvider.ContactProviderError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO12deniedByUseryA2CmF",
+            "moduleName": "ContactProvider",
+            "name": "deniedByUser",
+            "printedName": "deniedByUser",
+            "usr": "s:15ContactProvider0aB5ErrorO12deniedByUseryA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactProviderError",
+                    "printedName": "ContactProvider.ContactProviderError",
+                    "usr": "s:15ContactProvider0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContactProviderError",
+                        "printedName": "ContactProvider.ContactProviderError",
+                        "usr": "s:15ContactProvider0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ContactProvider.ContactProviderError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ContactProvider.ContactProviderError.Type) -> ContactProvider.ContactProviderError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO18enumerationTimeoutyA2CmF",
+            "moduleName": "ContactProvider",
+            "name": "enumerationTimeout",
+            "printedName": "enumerationTimeout",
+            "usr": "s:15ContactProvider0aB5ErrorO18enumerationTimeoutyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactProviderError",
+                    "printedName": "ContactProvider.ContactProviderError",
+                    "usr": "s:15ContactProvider0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContactProviderError",
+                        "printedName": "ContactProvider.ContactProviderError",
+                        "usr": "s:15ContactProvider0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ContactProvider.ContactProviderError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ContactProvider.ContactProviderError.Type) -> ContactProvider.ContactProviderError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO20extensionInvalidatedyA2CmF",
+            "moduleName": "ContactProvider",
+            "name": "extensionInvalidated",
+            "printedName": "extensionInvalidated",
+            "usr": "s:15ContactProvider0aB5ErrorO20extensionInvalidatedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactProviderError",
+                    "printedName": "ContactProvider.ContactProviderError",
+                    "usr": "s:15ContactProvider0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContactProviderError",
+                        "printedName": "ContactProvider.ContactProviderError",
+                        "usr": "s:15ContactProvider0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ContactProvider.ContactProviderError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ContactProvider.ContactProviderError.Type) -> ContactProvider.ContactProviderError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO26extensionInvalidateTimeoutyA2CmF",
+            "moduleName": "ContactProvider",
+            "name": "extensionInvalidateTimeout",
+            "printedName": "extensionInvalidateTimeout",
+            "usr": "s:15ContactProvider0aB5ErrorO26extensionInvalidateTimeoutyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContactProviderError",
+                    "printedName": "ContactProvider.ContactProviderError",
+                    "usr": "s:15ContactProvider0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContactProviderError",
+                        "printedName": "ContactProvider.ContactProviderError",
+                        "usr": "s:15ContactProvider0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ContactProvider.ContactProviderError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ContactProvider.ContactProviderError.Type) -> ContactProvider.ContactProviderError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO19domainNotRegisteredyA2CmF",
+            "moduleName": "ContactProvider",
+            "name": "domainNotRegistered",
+            "printedName": "domainNotRegistered",
+            "usr": "s:15ContactProvider0aB5ErrorO19domainNotRegisteredyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s15ContactProvider0aB5ErrorO4hash4intoys6HasherVz_tF",
+            "moduleName": "ContactProvider",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:15ContactProvider0aB5ErrorO4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0aB5ErrorO9hashValueSivg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider0aB5ErrorO9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO9hashValueSivp",
+            "moduleName": "ContactProvider",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:15ContactProvider0aB5ErrorO9hashValueSivp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0aB5ErrorO16errorDescriptionSSSgvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider0aB5ErrorO16errorDescriptionSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO16errorDescriptionSSSgvp",
+            "moduleName": "ContactProvider",
+            "name": "errorDescription",
+            "printedName": "errorDescription",
+            "usr": "s:15ContactProvider0aB5ErrorO16errorDescriptionSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0aB5ErrorO13failureReasonSSSgvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider0aB5ErrorO13failureReasonSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO13failureReasonSSSgvp",
+            "moduleName": "ContactProvider",
+            "name": "failureReason",
+            "printedName": "failureReason",
+            "usr": "s:15ContactProvider0aB5ErrorO13failureReasonSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProtocolComposition",
+                        "printedName": "Any"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Any]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0aB5ErrorO13errorUserInfoSDySSypGvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider0aB5ErrorO13errorUserInfoSDySSypGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProtocolComposition",
+                    "printedName": "Any"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Swift.String : Any]",
+                "usr": "s:SD"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO13errorUserInfoSDySSypGvp",
+            "moduleName": "ContactProvider",
+            "name": "errorUserInfo",
+            "printedName": "errorUserInfo",
+            "usr": "s:15ContactProvider0aB5ErrorO13errorUserInfoSDySSypGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0aB5ErrorO9errorCodeSivg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider0aB5ErrorO9errorCodeSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB5ErrorO9errorCodeSivp",
+            "moduleName": "ContactProvider",
+            "name": "errorCode",
+            "printedName": "errorCode",
+            "usr": "s:15ContactProvider0aB5ErrorO9errorCodeSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation14LocalizedErrorP",
+            "name": "LocalizedError",
+            "printedName": "LocalizedError",
+            "usr": "s:10Foundation14LocalizedErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_iOS": "18",
+        "kind": "TypeDecl",
+        "mangledName": "$s15ContactProvider0aB5ErrorO",
+        "moduleName": "ContactProvider",
+        "name": "ContactProviderError",
+        "printedName": "ContactProviderError",
+        "usr": "s:15ContactProvider0aB5ErrorO"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : ContactProvider.ContactProviderDomain>",
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0aB6DomainP10identifierSSvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:15ContactProvider0aB6DomainP10identifierSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB6DomainP10identifierSSvp",
+            "moduleName": "ContactProvider",
+            "name": "identifier",
+            "printedName": "identifier",
+            "protocolReq": true,
+            "usr": "s:15ContactProvider0aB6DomainP10identifierSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : ContactProvider.ContactProviderDomain>",
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0aB6DomainP11displayNameSSvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:15ContactProvider0aB6DomainP11displayNameSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB6DomainP11displayNameSSvp",
+            "moduleName": "ContactProvider",
+            "name": "displayName",
+            "printedName": "displayName",
+            "protocolReq": true,
+            "usr": "s:15ContactProvider0aB6DomainP11displayNameSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProtocolComposition",
+                        "printedName": "Any"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Any]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : ContactProvider.ContactProviderDomain>",
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider0aB6DomainP8userInfoSDySSypGvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:15ContactProvider0aB6DomainP8userInfoSDySSypGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProtocolComposition",
+                    "printedName": "Any"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Swift.String : Any]",
+                "usr": "s:SD"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider0aB6DomainP8userInfoSDySSypGvp",
+            "moduleName": "ContactProvider",
+            "name": "userInfo",
+            "printedName": "userInfo",
+            "protocolReq": true,
+            "usr": "s:15ContactProvider0aB6DomainP8userInfoSDySSypGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "intro_iOS": "18",
+        "kind": "TypeDecl",
+        "mangledName": "$s15ContactProvider0aB6DomainP",
+        "moduleName": "ContactProvider",
+        "name": "ContactProviderDomain",
+        "printedName": "ContactProviderDomain",
+        "usr": "s:15ContactProvider0aB6DomainP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DefaultContactProviderDomain",
+                "printedName": "ContactProvider.DefaultContactProviderDomain",
+                "usr": "s:15ContactProvider07DefaultaB6DomainV"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s15ContactProvider07DefaultaB6DomainVACycfc",
+            "moduleName": "ContactProvider",
+            "name": "init",
+            "printedName": "init()",
+            "usr": "s:15ContactProvider07DefaultaB6DomainVACycfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider07DefaultaB6DomainV10identifierSSvgZ",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:15ContactProvider07DefaultaB6DomainV10identifierSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider07DefaultaB6DomainV10identifierSSvpZ",
+            "moduleName": "ContactProvider",
+            "name": "identifier",
+            "printedName": "identifier",
+            "static": true,
+            "usr": "s:15ContactProvider07DefaultaB6DomainV10identifierSSvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider07DefaultaB6DomainV10identifierSSvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider07DefaultaB6DomainV10identifierSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider07DefaultaB6DomainV10identifierSSvp",
+            "moduleName": "ContactProvider",
+            "name": "identifier",
+            "printedName": "identifier",
+            "usr": "s:15ContactProvider07DefaultaB6DomainV10identifierSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider07DefaultaB6DomainV11displayNameSSvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider07DefaultaB6DomainV11displayNameSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider07DefaultaB6DomainV11displayNameSSvp",
+            "moduleName": "ContactProvider",
+            "name": "displayName",
+            "printedName": "displayName",
+            "usr": "s:15ContactProvider07DefaultaB6DomainV11displayNameSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProtocolComposition",
+                        "printedName": "Any"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Any]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s15ContactProvider07DefaultaB6DomainV8userInfoSDySSypGvg",
+                "moduleName": "ContactProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:15ContactProvider07DefaultaB6DomainV8userInfoSDySSypGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProtocolComposition",
+                    "printedName": "Any"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Swift.String : Any]",
+                "usr": "s:SD"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s15ContactProvider07DefaultaB6DomainV8userInfoSDySSypGvp",
+            "moduleName": "ContactProvider",
+            "name": "userInfo",
+            "printedName": "userInfo",
+            "usr": "s:15ContactProvider07DefaultaB6DomainV8userInfoSDySSypGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s15ContactProvider0aB6DomainP",
+            "name": "ContactProviderDomain",
+            "printedName": "ContactProviderDomain",
+            "usr": "s:15ContactProvider0aB6DomainP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "18",
+        "kind": "TypeDecl",
+        "mangledName": "$s15ContactProvider07DefaultaB6DomainV",
+        "moduleName": "ContactProvider",
+        "name": "DefaultContactProviderDomain",
+        "printedName": "DefaultContactProviderDomain",
+        "usr": "s:15ContactProvider07DefaultaB6DomainV"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "ContactProvider",
+    "printedName": "ContactProvider"
+  }
+}

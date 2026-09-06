@@ -1,0 +1,10 @@
+precise	kind	title	path	declaration
+c:@CM@StickerKit@@objc(cs)PHLivePhotoView(py)intrinsicContentSize	swift.property	intrinsicContentSize	PHLivePhotoView.intrinsicContentSize	@MainActor @preconcurrency override dynamic var intrinsicContentSize: CGSize { get }
+c:@M@StickerKit@objc(cs)AvatarEditorViewController	swift.class	AvatarEditorViewController	AvatarEditorViewController	@MainActor @objc @preconcurrency class AvatarEditorViewController
+c:@M@StickerKit@objc(cs)AvatarEditorViewController(im)initWithCoder:	swift.init	init(coder:)	AvatarEditorViewController.init(coder:)	@MainActor @preconcurrency required dynamic init?(coder: NSCoder)
+c:@M@StickerKit@objc(cs)AvatarEditorViewController(im)initWithNibName:bundle:	swift.init	init(nibName:bundle:)	AvatarEditorViewController.init(nibName:bundle:)	@MainActor @preconcurrency override dynamic init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
+c:@M@StickerKit@objc(cs)AvatarEditorViewController(im)viewDidLoad	swift.method	viewDidLoad()	AvatarEditorViewController.viewDidLoad()	@MainActor @preconcurrency override dynamic func viewDidLoad()
+c:@M@StickerKit@objc(cs)AvatarEditorViewController(im)viewWillAppear:	swift.method	viewWillAppear(_:)	AvatarEditorViewController.viewWillAppear(_:)	@MainActor @preconcurrency override dynamic func viewWillAppear(_ animated: Bool)
+s:10StickerKit26AvatarEditorViewControllerC8delegateAA0cdeF8Delegate_pSgvp	swift.property	delegate	AvatarEditorViewController.delegate	@MainActor @preconcurrency weak var delegate: (any AvatarEditorViewControllerDelegate)?
+s:10StickerKit34AvatarEditorViewControllerDelegateP	swift.protocol	AvatarEditorViewControllerDelegate	AvatarEditorViewControllerDelegate	protocol AvatarEditorViewControllerDelegate : NSObjectProtocol
+s:10StickerKit34AvatarEditorViewControllerDelegateP06avatard6RemoteeF13ShouldDismissyyF	swift.method	avatarEditorRemoteViewControllerShouldDismiss()	AvatarEditorViewControllerDelegate.avatarEditorRemoteViewControllerShouldDismiss()	func avatarEditorRemoteViewControllerShouldDismiss()

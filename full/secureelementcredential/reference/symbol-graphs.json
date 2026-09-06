@@ -1,0 +1,48 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 7,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/SecureElementCredential.symbols.json",
+      "relationshipCount": 176,
+      "sha256": "3b85e2f1567f479885da62f78383748492f4c96cdfb79f4f52fc8314ac77602d",
+      "symbolCount": 126
+    },
+    {
+      "path": "reference/symbol-graphs/_SecureElementCredential_SwiftUI@SecureElementCredential.symbols.json",
+      "relationshipCount": 9,
+      "sha256": "83a3be0b8326271c89b4fa06bdb3a8f952661330395e1e5eefcef785b7c252a6",
+      "symbolCount": 11
+    },
+    {
+      "path": "reference/symbol-graphs/_SecureElementCredential_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "5a92a018b47a20d2b82dc599455c2238e294bc1d31d937b6395550bb4d5b3806",
+      "symbolCount": 1
+    },
+    {
+      "path": "reference/symbol-graphs/_SecureElementCredential_UIKit@SecureElementCredential.symbols.json",
+      "relationshipCount": 19,
+      "sha256": "98cca81d05c27b04bde5103cd7190369cb1c479732c7fdf6a1e0d8754fbf97f7",
+      "symbolCount": 16
+    },
+    {
+      "path": "reference/symbol-graphs/_SecureElementCredential_UIKit@UIKit.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "0d608ecac5090098defe2ea44971c1983ed2505068950c70dff805bc0f38788f",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "SecureElementCredential",
+  "relationshipCount": 206,
+  "relationshipMultisetSHA256": "b0b10089f74ae42a18d30aa0f58687d86e91172e7c16b789d81b67a1d8a1e2e6",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 155,
+  "symbolMultisetSHA256": "efb9ffa113963bc0fa420e8ec2b53f1d14add25456211aaeee235159640ef941",
+  "target": "arm64-apple-ios26.0"
+}

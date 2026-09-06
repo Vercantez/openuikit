@@ -1,0 +1,16 @@
+module	slug	lane	priority	risks	dependencies
+Assignables	assignables	medium-full	100	education,persistence,fail-closed	Foundation
+BrowserEngineKit	browserenginekit	medium-full	100	extension,process,fail-closed	Foundation
+ContactProvider	contactprovider	leaf-full	100	extension,contacts,fail-closed	Foundation
+DeclaredAgeRange	declaredagerange	leaf-full	100	privacy,fail-closed	Foundation
+DeviceDiscoveryExtension	devicediscoveryextension	leaf-full	100	extension,network,fail-closed	Foundation
+ExtensionFoundation	extensionfoundation	leaf-full	100	extension,process,fail-closed	Foundation
+IdentityDocumentServices	identitydocumentservices	medium-full	100	privacy,security,fail-closed	Foundation
+ManagedApp	managedapp	leaf-full	100	mdm,os-service,fail-closed	Foundation
+ManagedAppDistribution	managedappdistribution	leaf-full	100	mdm,os-service,fail-closed	Foundation
+PaperKit	paperkit	medium-full	100	ui,drawing,fail-closed	Foundation,PencilKit,UIKit
+PermissionKit	permissionkit	leaf-full	100	privacy,messaging,fail-closed	Foundation
+RelevanceKit	relevancekit	leaf-full	100	widgets,fail-closed	Foundation
+SecureElementCredential	secureelementcredential	medium-full	100	payments,security,fail-closed	Foundation
+StickerKit	stickerkit	leaf-full	100	ui,messaging,fail-closed	Foundation
+TelephonyMessagingKit	telephonymessagingkit	leaf-full	100	telephony,os-service,fail-closed	Foundation

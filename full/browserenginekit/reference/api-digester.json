@@ -1,0 +1,3715 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineCore",
+        "printedName": "BrowserEngineCore"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BELayerHierarchy",
+        "printedName": "BrowserEngineKit.BELayerHierarchy"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BELayerHierarchyHandle",
+        "printedName": "BrowserEngineKit.BELayerHierarchyHandle"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BELayerHierarchyHostingTransactionCoordinator",
+        "printedName": "BrowserEngineKit.BELayerHierarchyHostingTransactionCoordinator"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BELayerHierarchyHostingView",
+        "printedName": "BrowserEngineKit.BELayerHierarchyHostingView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEMacros",
+        "printedName": "BrowserEngineKit.BEMacros"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEContextMenuConfiguration",
+        "printedName": "BrowserEngineKit.BEContextMenuConfiguration"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEDragInteraction",
+        "printedName": "BrowserEngineKit.BEDragInteraction"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEScrollView",
+        "printedName": "BrowserEngineKit.BEScrollView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEExtensionProcess",
+        "printedName": "BrowserEngineKit.BEExtensionProcess"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEWebContentProcess",
+        "printedName": "BrowserEngineKit.BEWebContentProcess"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BENetworkingProcess",
+        "printedName": "BrowserEngineKit.BENetworkingProcess"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BERenderingProcess",
+        "printedName": "BrowserEngineKit.BERenderingProcess"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BETextInput",
+        "printedName": "BrowserEngineKit.BETextInput"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BETextInputDelegate",
+        "printedName": "BrowserEngineKit.BETextInputDelegate"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BETextSelectionTypes",
+        "printedName": "BrowserEngineKit.BETextSelectionTypes"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BETextAlternatives",
+        "printedName": "BrowserEngineKit.BETextAlternatives"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BETextSuggestion",
+        "printedName": "BrowserEngineKit.BETextSuggestion"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEAutoFillTextSuggestion",
+        "printedName": "BrowserEngineKit.BEAutoFillTextSuggestion"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BETextInteraction",
+        "printedName": "BrowserEngineKit.BETextInteraction"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BETextInteractionDelegate",
+        "printedName": "BrowserEngineKit.BETextInteractionDelegate"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEKeyEntry",
+        "printedName": "BrowserEngineKit.BEKeyEntry"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEKeyEntryContext",
+        "printedName": "BrowserEngineKit.BEKeyEntryContext"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BETextDocumentRequest",
+        "printedName": "BrowserEngineKit.BETextDocumentRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BETextDocumentContext",
+        "printedName": "BrowserEngineKit.BETextDocumentContext"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BECapability",
+        "printedName": "BrowserEngineKit.BECapability"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEWebAppManifest",
+        "printedName": "BrowserEngineKit.BEWebAppManifest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEAccessibility",
+        "printedName": "BrowserEngineKit.BEAccessibility"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEAccessibilityTextMarker",
+        "printedName": "BrowserEngineKit.BEAccessibilityTextMarker"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEAccessibilityConstants",
+        "printedName": "BrowserEngineKit.BEAccessibilityConstants"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEAccessibilityRemoteElement",
+        "printedName": "BrowserEngineKit.BEAccessibilityRemoteElement"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit.BEDownloads",
+        "printedName": "BrowserEngineKit.BEDownloads"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "AVFoundation",
+        "printedName": "AVFoundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineCore",
+        "printedName": "BrowserEngineCore"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "BrowserEngineKit",
+        "printedName": "BrowserEngineKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "ExtensionFoundation",
+        "printedName": "ExtensionFoundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "UIKit.UIInteraction",
+        "printedName": "UIKit.UIInteraction"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "UIKit",
+        "printedName": "UIKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "UniformTypeIdentifiers",
+        "printedName": "UniformTypeIdentifiers"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "XPC",
+        "printedName": "XPC"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "BrowserEngineKit",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OS_xpc_object",
+                        "printedName": "any XPC.OS_xpc_object",
+                        "usr": "c:objc(pl)OS_xpc_object"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "xpc_object_t",
+                    "printedName": "XPC.xpc_object_t"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "xpc_connection_t",
+                "printedName": "XPC.xpc_connection_t"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BrowserEngineKit.WebContentExtension>",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit19WebContentExtensionP6handle13xpcConnectionySo03OS_H7_object_p_tF",
+            "moduleName": "BrowserEngineKit",
+            "name": "handle",
+            "printedName": "handle(xpcConnection:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:16BrowserEngineKit19WebContentExtensionP6handle13xpcConnectionySo03OS_H7_object_p_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "WebContentExtensionConfiguration",
+                    "printedName": "BrowserEngineKit.WebContentExtensionConfiguration",
+                    "usr": "s:16BrowserEngineKit32WebContentExtensionConfigurationV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : BrowserEngineKit.WebContentExtension>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BrowserEngineKit19WebContentExtensionPAAE13configurationAA0deF13ConfigurationVvg",
+                "moduleName": "BrowserEngineKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BrowserEngineKit19WebContentExtensionPAAE13configurationAA0deF13ConfigurationVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "WebContentExtensionConfiguration",
+                "printedName": "BrowserEngineKit.WebContentExtensionConfiguration",
+                "usr": "s:16BrowserEngineKit32WebContentExtensionConfigurationV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit19WebContentExtensionPAAE13configurationAA0deF13ConfigurationVvp",
+            "moduleName": "BrowserEngineKit",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:16BrowserEngineKit19WebContentExtensionPAAE13configurationAA0deF13ConfigurationVvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA0P",
+            "name": "AppExtension",
+            "printedName": "AppExtension",
+            "usr": "s:19ExtensionFoundation03AppA0P"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s16BrowserEngineKit26RestrictedSandboxAppliableP",
+            "name": "RestrictedSandboxAppliable",
+            "printedName": "RestrictedSandboxAppliable",
+            "usr": "s:16BrowserEngineKit26RestrictedSandboxAppliableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : BrowserEngineKit.RestrictedSandboxAppliable, Self : ExtensionFoundation.AppExtension>",
+        "intro_Macosx": "14.3",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit19WebContentExtensionP",
+        "moduleName": "BrowserEngineKit",
+        "name": "WebContentExtension",
+        "printedName": "WebContentExtension",
+        "usr": "s:16BrowserEngineKit19WebContentExtensionP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSXPCConnection",
+                "printedName": "Foundation.NSXPCConnection",
+                "usr": "c:objc(cs)NSXPCConnection"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit32WebContentExtensionConfigurationV6accept10connectionSbSo15NSXPCConnectionC_tF",
+            "moduleName": "BrowserEngineKit",
+            "name": "accept",
+            "printedName": "accept(connection:)",
+            "usr": "s:16BrowserEngineKit32WebContentExtensionConfigurationV6accept10connectionSbSo15NSXPCConnectionC_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA13ConfigurationP",
+            "name": "AppExtensionConfiguration",
+            "printedName": "AppExtensionConfiguration",
+            "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "14.3",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit32WebContentExtensionConfigurationV",
+        "moduleName": "BrowserEngineKit",
+        "name": "WebContentExtensionConfiguration",
+        "printedName": "WebContentExtensionConfiguration",
+        "usr": "s:16BrowserEngineKit32WebContentExtensionConfigurationV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URL",
+                        "printedName": "Foundation.URL",
+                        "usr": "s:10Foundation3URLV"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Final",
+                      "ObjC"
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC8LocationC3url10Foundation3URLVvg",
+                    "moduleName": "BrowserEngineKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16BrowserEngineKit17BEDownloadMonitorC8LocationC3url10Foundation3URLVvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "declAttributes": [
+                  "Final",
+                  "ObjC",
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC8LocationC3url10Foundation3URLVvp",
+                "moduleName": "BrowserEngineKit",
+                "name": "url",
+                "printedName": "url",
+                "usr": "s:16BrowserEngineKit17BEDownloadMonitorC8LocationC3url10Foundation3URLVvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Final",
+                      "ObjC"
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC8LocationC12bookmarkData10Foundation0H0Vvg",
+                    "moduleName": "BrowserEngineKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16BrowserEngineKit17BEDownloadMonitorC8LocationC12bookmarkData10Foundation0H0Vvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declAttributes": [
+                  "Final",
+                  "ObjC",
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC8LocationC12bookmarkData10Foundation0H0Vvp",
+                "moduleName": "BrowserEngineKit",
+                "name": "bookmarkData",
+                "printedName": "bookmarkData",
+                "usr": "s:16BrowserEngineKit17BEDownloadMonitorC8LocationC12bookmarkData10Foundation0H0Vvp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "NSObjectProtocol",
+                "printedName": "NSObjectProtocol",
+                "usr": "c:objc(pl)NSObject"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss7CVarArgP",
+                "name": "CVarArg",
+                "printedName": "CVarArg",
+                "usr": "s:s7CVarArgP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss23CustomStringConvertibleP",
+                "name": "CustomStringConvertible",
+                "printedName": "CustomStringConvertible",
+                "usr": "s:s23CustomStringConvertibleP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss28CustomDebugStringConvertibleP",
+                "name": "CustomDebugStringConvertible",
+                "printedName": "CustomDebugStringConvertible",
+                "usr": "s:s28CustomDebugStringConvertibleP"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Class",
+            "hasMissingDesignatedInitializers": true,
+            "intro_iOS": "18.2",
+            "kind": "TypeDecl",
+            "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC8LocationC",
+            "moduleName": "BrowserEngineKit",
+            "name": "Location",
+            "objc_name": "BEDownloadMonitorLocation",
+            "printedName": "Location",
+            "superclassNames": [
+              "ObjectiveC.NSObject"
+            ],
+            "superclassUsr": "c:objc(cs)NSObject",
+            "usr": "s:16BrowserEngineKit17BEDownloadMonitorC8LocationC"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "BEDownloadMonitor",
+                "printedName": "BrowserEngineKit.BEDownloadMonitor",
+                "usr": "c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Progress",
+                "printedName": "Foundation.Progress",
+                "usr": "c:objc(cs)NSProgress"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declAttributes": [
+              "ObjC"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC9sourceURL011destinationG016observedProgress23liveActivityAccessTokenAC10Foundation0G0V_AJSo10NSProgressCAH4DataVtcfc",
+            "moduleName": "BrowserEngineKit",
+            "name": "init",
+            "objc_name": "initWithSourceURL:destinationURL:observedProgress:liveActivityAccessToken:",
+            "printedName": "init(sourceURL:destinationURL:observedProgress:liveActivityAccessToken:)",
+            "usr": "c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(im)initWithSourceURL:destinationURL:observedProgress:liveActivityAccessToken:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UTType",
+                    "printedName": "UniformTypeIdentifiers.UTType",
+                    "usr": "s:22UniformTypeIdentifiers6UTTypeV"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "UniformTypeIdentifiers.UTType?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Location",
+                        "printedName": "BrowserEngineKit.BEDownloadMonitor.Location",
+                        "usr": "s:16BrowserEngineKit17BEDownloadMonitorC8LocationC"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "BrowserEngineKit.BEDownloadMonitor.Location?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(BrowserEngineKit.BEDownloadMonitor.Location?) -> Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "ObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC18useDownloadsFolder15placeholderType23finalFileCreatedHandlery07UniformJ11Identifiers6UTTypeVSg_yAC8LocationCSgYbctF",
+            "moduleName": "BrowserEngineKit",
+            "name": "useDownloadsFolder",
+            "objc_name": "useDownloadsFolderWithPlaceholderType:finalFileCreatedHandler:",
+            "printedName": "useDownloadsFolder(placeholderType:finalFileCreatedHandler:)",
+            "usr": "c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(im)useDownloadsFolderWithPlaceholderType:finalFileCreatedHandler:"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Location",
+                    "printedName": "BrowserEngineKit.BEDownloadMonitor.Location",
+                    "usr": "s:16BrowserEngineKit17BEDownloadMonitorC8LocationC"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "BrowserEngineKit.BEDownloadMonitor.Location?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "ObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC15beginMonitoringAC8LocationCSgyYaKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "beginMonitoring",
+            "objc_name": "beginMonitoring:",
+            "printedName": "beginMonitoring()",
+            "throwing": true,
+            "usr": "c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(im)beginMonitoring:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declAttributes": [
+              "ObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC16resumeMonitoring14placeholderURLy10Foundation0I0V_tYaKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "resumeMonitoring",
+            "objc_name": "resumeMonitoring:completionHandler:",
+            "printedName": "resumeMonitoring(placeholderURL:)",
+            "throwing": true,
+            "usr": "c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(im)resumeMonitoring:completionHandler:"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Data?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "ObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC17createAccessToken10Foundation4DataVSgyFZ",
+            "moduleName": "BrowserEngineKit",
+            "name": "createAccessToken",
+            "objc_name": "createAccessToken",
+            "printedName": "createAccessToken()",
+            "static": true,
+            "usr": "c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(cm)createAccessToken"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UUID",
+                    "printedName": "Foundation.UUID",
+                    "usr": "s:10Foundation4UUIDV"
+                  }
+                ],
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC2id10Foundation4UUIDVvg",
+                "moduleName": "BrowserEngineKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(im)identifier"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UUID",
+                "printedName": "Foundation.UUID",
+                "usr": "s:10Foundation4UUIDV"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "ObjC",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC2id10Foundation4UUIDVvp",
+            "moduleName": "BrowserEngineKit",
+            "name": "id",
+            "objc_name": "identifier",
+            "printedName": "id",
+            "usr": "c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(py)identifier"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC9sourceURL10Foundation0G0Vvg",
+                "moduleName": "BrowserEngineKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(im)sourceURL"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "ObjC",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC9sourceURL10Foundation0G0Vvp",
+            "moduleName": "BrowserEngineKit",
+            "name": "sourceURL",
+            "printedName": "sourceURL",
+            "usr": "c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(py)sourceURL"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC14destinationURL10Foundation0G0Vvg",
+                "moduleName": "BrowserEngineKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(im)destinationURL"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "ObjC",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC14destinationURL10Foundation0G0Vvp",
+            "moduleName": "BrowserEngineKit",
+            "name": "destinationURL",
+            "printedName": "destinationURL",
+            "usr": "c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(py)destinationURL"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UUID",
+                "printedName": "Foundation.UUID",
+                "usr": "s:10Foundation4UUIDV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_iOS": "18.2",
+            "kind": "TypeAlias",
+            "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC2IDa",
+            "moduleName": "BrowserEngineKit",
+            "name": "ID",
+            "printedName": "ID",
+            "usr": "s:16BrowserEngineKit17BEDownloadMonitorC2IDa"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UUID",
+                        "printedName": "Foundation.UUID",
+                        "usr": "s:10Foundation4UUIDV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ID",
+                    "printedName": "BrowserEngineKit.BEDownloadMonitor.ID"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "ID",
+                "printedName": "ID"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss12IdentifiableP",
+            "name": "Identifiable",
+            "printedName": "Identifiable",
+            "usr": "s:s12IdentifiableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "ObjC",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "intro_iOS": "18.2",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit17BEDownloadMonitorC",
+        "moduleName": "BrowserEngineKit",
+        "name": "BEDownloadMonitor",
+        "objc_name": "BEDownloadMonitor",
+        "printedName": "BEDownloadMonitor",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OS_xpc_object",
+                        "printedName": "any XPC.OS_xpc_object",
+                        "usr": "c:objc(pl)OS_xpc_object"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "xpc_object_t",
+                    "printedName": "XPC.xpc_object_t"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "xpc_connection_t",
+                "printedName": "XPC.xpc_connection_t"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BrowserEngineKit.RenderingExtension>",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit18RenderingExtensionP6handle13xpcConnectionySo03OS_G7_object_p_tF",
+            "moduleName": "BrowserEngineKit",
+            "name": "handle",
+            "printedName": "handle(xpcConnection:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:16BrowserEngineKit18RenderingExtensionP6handle13xpcConnectionySo03OS_G7_object_p_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RenderingExtensionConfiguration",
+                    "printedName": "BrowserEngineKit.RenderingExtensionConfiguration",
+                    "usr": "s:16BrowserEngineKit31RenderingExtensionConfigurationV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : BrowserEngineKit.RenderingExtension>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BrowserEngineKit18RenderingExtensionPAAE13configurationAA0dE13ConfigurationVvg",
+                "moduleName": "BrowserEngineKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BrowserEngineKit18RenderingExtensionPAAE13configurationAA0dE13ConfigurationVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RenderingExtensionConfiguration",
+                "printedName": "BrowserEngineKit.RenderingExtensionConfiguration",
+                "usr": "s:16BrowserEngineKit31RenderingExtensionConfigurationV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit18RenderingExtensionPAAE13configurationAA0dE13ConfigurationVvp",
+            "moduleName": "BrowserEngineKit",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:16BrowserEngineKit18RenderingExtensionPAAE13configurationAA0dE13ConfigurationVvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA0P",
+            "name": "AppExtension",
+            "printedName": "AppExtension",
+            "usr": "s:19ExtensionFoundation03AppA0P"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s16BrowserEngineKit26RestrictedSandboxAppliableP",
+            "name": "RestrictedSandboxAppliable",
+            "printedName": "RestrictedSandboxAppliable",
+            "usr": "s:16BrowserEngineKit26RestrictedSandboxAppliableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : BrowserEngineKit.RestrictedSandboxAppliable, Self : ExtensionFoundation.AppExtension>",
+        "intro_Macosx": "14.3",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit18RenderingExtensionP",
+        "moduleName": "BrowserEngineKit",
+        "name": "RenderingExtension",
+        "printedName": "RenderingExtension",
+        "usr": "s:16BrowserEngineKit18RenderingExtensionP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSXPCConnection",
+                "printedName": "Foundation.NSXPCConnection",
+                "usr": "c:objc(cs)NSXPCConnection"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit31RenderingExtensionConfigurationV6accept10connectionSbSo15NSXPCConnectionC_tF",
+            "moduleName": "BrowserEngineKit",
+            "name": "accept",
+            "printedName": "accept(connection:)",
+            "usr": "s:16BrowserEngineKit31RenderingExtensionConfigurationV6accept10connectionSbSo15NSXPCConnectionC_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA13ConfigurationP",
+            "name": "AppExtensionConfiguration",
+            "printedName": "AppExtensionConfiguration",
+            "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "14.3",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit31RenderingExtensionConfigurationV",
+        "moduleName": "BrowserEngineKit",
+        "name": "RenderingExtensionConfiguration",
+        "printedName": "RenderingExtensionConfiguration",
+        "usr": "s:16BrowserEngineKit31RenderingExtensionConfigurationV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NetworkingProcess",
+                "printedName": "BrowserEngineKit.NetworkingProcess",
+                "usr": "s:16BrowserEngineKit17NetworkingProcessV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> Swift.Void"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s16BrowserEngineKit17NetworkingProcessV16bundleIdentifier14onInterruptionACSSSg_yyctYaKcfc",
+            "moduleName": "BrowserEngineKit",
+            "name": "init",
+            "printedName": "init(bundleIdentifier:onInterruption:)",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit17NetworkingProcessV16bundleIdentifier14onInterruptionACSSSg_yyctYaKcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OS_xpc_object",
+                        "printedName": "any XPC.OS_xpc_object",
+                        "usr": "c:objc(pl)OS_xpc_object"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "xpc_object_t",
+                    "printedName": "XPC.xpc_object_t"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "xpc_connection_t",
+                "printedName": "XPC.xpc_connection_t"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit17NetworkingProcessV20makeLibXPCConnectionSo13OS_xpc_object_pyKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "makeLibXPCConnection",
+            "printedName": "makeLibXPCConnection()",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit17NetworkingProcessV20makeLibXPCConnectionSo13OS_xpc_object_pyKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit17NetworkingProcessV10invalidateyyF",
+            "moduleName": "BrowserEngineKit",
+            "name": "invalidate",
+            "printedName": "invalidate()",
+            "usr": "s:16BrowserEngineKit17NetworkingProcessV10invalidateyyF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Grant",
+                "printedName": "BrowserEngineKit.ProcessCapability.Grant",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO5GrantV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ProcessCapability",
+                "printedName": "BrowserEngineKit.ProcessCapability",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit17NetworkingProcessV15grantCapabilityyAA0eG0O5GrantVAFKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "grantCapability",
+            "printedName": "grantCapability(_:)",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit17NetworkingProcessV15grantCapabilityyAA0eG0O5GrantVAFKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Grant",
+                "printedName": "BrowserEngineKit.ProcessCapability.Grant",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO5GrantV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ProcessCapability",
+                "printedName": "BrowserEngineKit.ProcessCapability",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "17.6",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit17NetworkingProcessV15grantCapability_19invalidationHandlerAA0eG0O5GrantVAG_yyctKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "grantCapability",
+            "printedName": "grantCapability(_:invalidationHandler:)",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit17NetworkingProcessV15grantCapability_19invalidationHandlerAA0eG0O5GrantVAG_yyctKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "14.3",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit17NetworkingProcessV",
+        "moduleName": "BrowserEngineKit",
+        "name": "NetworkingProcess",
+        "printedName": "NetworkingProcess",
+        "usr": "s:16BrowserEngineKit17NetworkingProcessV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "WebContentProcess",
+                "printedName": "BrowserEngineKit.WebContentProcess",
+                "usr": "s:16BrowserEngineKit17WebContentProcessV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> Swift.Void"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s16BrowserEngineKit17WebContentProcessV16bundleIdentifier14onInterruptionACSSSg_yyctYaKcfc",
+            "moduleName": "BrowserEngineKit",
+            "name": "init",
+            "printedName": "init(bundleIdentifier:onInterruption:)",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit17WebContentProcessV16bundleIdentifier14onInterruptionACSSSg_yyctYaKcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OS_xpc_object",
+                        "printedName": "any XPC.OS_xpc_object",
+                        "usr": "c:objc(pl)OS_xpc_object"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "xpc_object_t",
+                    "printedName": "XPC.xpc_object_t"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "xpc_connection_t",
+                "printedName": "XPC.xpc_connection_t"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit17WebContentProcessV20makeLibXPCConnectionSo13OS_xpc_object_pyKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "makeLibXPCConnection",
+            "printedName": "makeLibXPCConnection()",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit17WebContentProcessV20makeLibXPCConnectionSo13OS_xpc_object_pyKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UIInteraction",
+                "printedName": "any UIKit.UIInteraction",
+                "usr": "c:objc(pl)UIInteraction"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit17WebContentProcessV38createVisibilityPropagationInteractionSo13UIInteraction_pyF",
+            "moduleName": "BrowserEngineKit",
+            "name": "createVisibilityPropagationInteraction",
+            "printedName": "createVisibilityPropagationInteraction()",
+            "usr": "s:16BrowserEngineKit17WebContentProcessV38createVisibilityPropagationInteractionSo13UIInteraction_pyF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit17WebContentProcessV10invalidateyyF",
+            "moduleName": "BrowserEngineKit",
+            "name": "invalidate",
+            "printedName": "invalidate()",
+            "usr": "s:16BrowserEngineKit17WebContentProcessV10invalidateyyF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Grant",
+                "printedName": "BrowserEngineKit.ProcessCapability.Grant",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO5GrantV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ProcessCapability",
+                "printedName": "BrowserEngineKit.ProcessCapability",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit17WebContentProcessV15grantCapabilityyAA0fH0O5GrantVAFKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "grantCapability",
+            "printedName": "grantCapability(_:)",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit17WebContentProcessV15grantCapabilityyAA0fH0O5GrantVAFKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Grant",
+                "printedName": "BrowserEngineKit.ProcessCapability.Grant",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO5GrantV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ProcessCapability",
+                "printedName": "BrowserEngineKit.ProcessCapability",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "17.6",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit17WebContentProcessV15grantCapability_19invalidationHandlerAA0fH0O5GrantVAG_yyctKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "grantCapability",
+            "printedName": "grantCapability(_:invalidationHandler:)",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit17WebContentProcessV15grantCapability_19invalidationHandlerAA0fH0O5GrantVAG_yyctKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "14.3",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit17WebContentProcessV",
+        "moduleName": "BrowserEngineKit",
+        "name": "WebContentProcess",
+        "printedName": "WebContentProcess",
+        "usr": "s:16BrowserEngineKit17WebContentProcessV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RenderingProcess",
+                "printedName": "BrowserEngineKit.RenderingProcess",
+                "usr": "s:16BrowserEngineKit16RenderingProcessV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> Swift.Void"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s16BrowserEngineKit16RenderingProcessV16bundleIdentifier14onInterruptionACSSSg_yyctYaKcfc",
+            "moduleName": "BrowserEngineKit",
+            "name": "init",
+            "printedName": "init(bundleIdentifier:onInterruption:)",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit16RenderingProcessV16bundleIdentifier14onInterruptionACSSSg_yyctYaKcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OS_xpc_object",
+                        "printedName": "any XPC.OS_xpc_object",
+                        "usr": "c:objc(pl)OS_xpc_object"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "xpc_object_t",
+                    "printedName": "XPC.xpc_object_t"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "xpc_connection_t",
+                "printedName": "XPC.xpc_connection_t"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit16RenderingProcessV20makeLibXPCConnectionSo13OS_xpc_object_pyKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "makeLibXPCConnection",
+            "printedName": "makeLibXPCConnection()",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit16RenderingProcessV20makeLibXPCConnectionSo13OS_xpc_object_pyKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UIInteraction",
+                "printedName": "any UIKit.UIInteraction",
+                "usr": "c:objc(pl)UIInteraction"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit16RenderingProcessV38createVisibilityPropagationInteractionSo13UIInteraction_pyF",
+            "moduleName": "BrowserEngineKit",
+            "name": "createVisibilityPropagationInteraction",
+            "printedName": "createVisibilityPropagationInteraction()",
+            "usr": "s:16BrowserEngineKit16RenderingProcessV38createVisibilityPropagationInteractionSo13UIInteraction_pyF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit16RenderingProcessV10invalidateyyF",
+            "moduleName": "BrowserEngineKit",
+            "name": "invalidate",
+            "printedName": "invalidate()",
+            "usr": "s:16BrowserEngineKit16RenderingProcessV10invalidateyyF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Grant",
+                "printedName": "BrowserEngineKit.ProcessCapability.Grant",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO5GrantV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ProcessCapability",
+                "printedName": "BrowserEngineKit.ProcessCapability",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit16RenderingProcessV15grantCapabilityyAA0eG0O5GrantVAFKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "grantCapability",
+            "printedName": "grantCapability(_:)",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit16RenderingProcessV15grantCapabilityyAA0eG0O5GrantVAFKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Grant",
+                "printedName": "BrowserEngineKit.ProcessCapability.Grant",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO5GrantV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ProcessCapability",
+                "printedName": "BrowserEngineKit.ProcessCapability",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "17.6",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit16RenderingProcessV15grantCapability_19invalidationHandlerAA0eG0O5GrantVAG_yyctKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "grantCapability",
+            "printedName": "grantCapability(_:invalidationHandler:)",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit16RenderingProcessV15grantCapability_19invalidationHandlerAA0eG0O5GrantVAG_yyctKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "14.3",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit16RenderingProcessV",
+        "moduleName": "BrowserEngineKit",
+        "name": "RenderingProcess",
+        "printedName": "RenderingProcess",
+        "usr": "s:16BrowserEngineKit16RenderingProcessV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "RestrictedSandboxRevision",
+                        "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                        "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[BrowserEngineKit.RestrictedSandboxRevision]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s16BrowserEngineKit25RestrictedSandboxRevisionO8allCasesSayACGvgZ",
+                "moduleName": "BrowserEngineKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO8allCasesSayACGvgZ"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RestrictedSandboxRevision",
+                    "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                    "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[BrowserEngineKit.RestrictedSandboxRevision]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit25RestrictedSandboxRevisionO8allCasesSayACGvpZ",
+            "moduleName": "BrowserEngineKit",
+            "name": "allCases",
+            "printedName": "allCases",
+            "static": true,
+            "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO8allCasesSayACGvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RestrictedSandboxRevision",
+                    "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                    "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "RestrictedSandboxRevision",
+                        "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                        "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "BrowserEngineKit.RestrictedSandboxRevision.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(BrowserEngineKit.RestrictedSandboxRevision.Type) -> BrowserEngineKit.RestrictedSandboxRevision"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit25RestrictedSandboxRevisionO9revision1yA2CmF",
+            "moduleName": "BrowserEngineKit",
+            "name": "revision1",
+            "printedName": "revision1",
+            "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO9revision1yA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RestrictedSandboxRevision",
+                    "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                    "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "RestrictedSandboxRevision",
+                        "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                        "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "BrowserEngineKit.RestrictedSandboxRevision.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(BrowserEngineKit.RestrictedSandboxRevision.Type) -> BrowserEngineKit.RestrictedSandboxRevision"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "EnumElement",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit25RestrictedSandboxRevisionO9revision2yA2CmF",
+            "moduleName": "BrowserEngineKit",
+            "name": "revision2",
+            "printedName": "revision2",
+            "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO9revision2yA2CmF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "RestrictedSandboxRevision",
+                "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "RestrictedSandboxRevision",
+                "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit25RestrictedSandboxRevisionO1loiySbAC_ACtFZ",
+            "moduleName": "BrowserEngineKit",
+            "name": "<",
+            "printedName": "<(_:_:)",
+            "static": true,
+            "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO1loiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "RestrictedSandboxRevision",
+                "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "RestrictedSandboxRevision",
+                "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit25RestrictedSandboxRevisionO2eeoiySbAC_ACtFZ",
+            "moduleName": "BrowserEngineKit",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RestrictedSandboxRevision",
+                    "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                    "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[BrowserEngineKit.RestrictedSandboxRevision]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "14.3",
+            "intro_iOS": "17.4",
+            "kind": "TypeAlias",
+            "mangledName": "$s16BrowserEngineKit25RestrictedSandboxRevisionO8AllCasesa",
+            "moduleName": "BrowserEngineKit",
+            "name": "AllCases",
+            "printedName": "AllCases",
+            "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO8AllCasesa"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit25RestrictedSandboxRevisionO4hash4intoys6HasherVz_tF",
+            "moduleName": "BrowserEngineKit",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s16BrowserEngineKit25RestrictedSandboxRevisionO9hashValueSivg",
+                "moduleName": "BrowserEngineKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit25RestrictedSandboxRevisionO9hashValueSivp",
+            "moduleName": "BrowserEngineKit",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "RestrictedSandboxRevision",
+                            "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                            "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[BrowserEngineKit.RestrictedSandboxRevision]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "AllCases",
+                    "printedName": "BrowserEngineKit.RestrictedSandboxRevision.AllCases"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "AllCases",
+                "printedName": "AllCases"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss12CaseIterableP",
+            "name": "CaseIterable",
+            "printedName": "CaseIterable",
+            "usr": "s:s12CaseIterableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSL",
+            "name": "Comparable",
+            "printedName": "Comparable",
+            "usr": "s:SL"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_Macosx": "14.3",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit25RestrictedSandboxRevisionO",
+        "moduleName": "BrowserEngineKit",
+        "name": "RestrictedSandboxRevision",
+        "printedName": "RestrictedSandboxRevision",
+        "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "RestrictedSandboxRevision",
+                "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BrowserEngineKit.RestrictedSandboxAppliable>",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit26RestrictedSandboxAppliableP05applydE08revisionyAA0dE8RevisionO_tF",
+            "moduleName": "BrowserEngineKit",
+            "name": "applyRestrictedSandbox",
+            "printedName": "applyRestrictedSandbox(revision:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:16BrowserEngineKit26RestrictedSandboxAppliableP05applydE08revisionyAA0dE8RevisionO_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "RestrictedSandboxRevision",
+                "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BrowserEngineKit.RestrictedSandboxAppliable>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit26RestrictedSandboxAppliablePAAE05applydE08revisionyAA0dE8RevisionO_tF",
+            "moduleName": "BrowserEngineKit",
+            "name": "applyRestrictedSandbox",
+            "printedName": "applyRestrictedSandbox(revision:)",
+            "usr": "s:16BrowserEngineKit26RestrictedSandboxAppliablePAAE05applydE08revisionyAA0dE8RevisionO_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "RestrictedSandboxRevision",
+                "printedName": "BrowserEngineKit.RestrictedSandboxRevision",
+                "usr": "s:16BrowserEngineKit25RestrictedSandboxRevisionO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BrowserEngineKit.WebContentExtension>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit26RestrictedSandboxAppliablePA2A19WebContentExtensionRzrlE05applydE08revisionyAA0dE8RevisionO_tF",
+            "moduleName": "BrowserEngineKit",
+            "name": "applyRestrictedSandbox",
+            "printedName": "applyRestrictedSandbox(revision:)",
+            "usr": "s:16BrowserEngineKit26RestrictedSandboxAppliablePA2A19WebContentExtensionRzrlE05applydE08revisionyAA0dE8RevisionO_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "intro_Macosx": "14.3",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit26RestrictedSandboxAppliableP",
+        "moduleName": "BrowserEngineKit",
+        "name": "RestrictedSandboxAppliable",
+        "printedName": "RestrictedSandboxAppliable",
+        "usr": "s:16BrowserEngineKit26RestrictedSandboxAppliableP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProcessCapability",
+                    "printedName": "BrowserEngineKit.ProcessCapability",
+                    "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProcessCapability",
+                        "printedName": "BrowserEngineKit.ProcessCapability",
+                        "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "BrowserEngineKit.ProcessCapability.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(BrowserEngineKit.ProcessCapability.Type) -> BrowserEngineKit.ProcessCapability"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit17ProcessCapabilityO10backgroundyA2CmF",
+            "moduleName": "BrowserEngineKit",
+            "name": "background",
+            "printedName": "background",
+            "usr": "s:16BrowserEngineKit17ProcessCapabilityO10backgroundyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProcessCapability",
+                    "printedName": "BrowserEngineKit.ProcessCapability",
+                    "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProcessCapability",
+                        "printedName": "BrowserEngineKit.ProcessCapability",
+                        "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "BrowserEngineKit.ProcessCapability.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(BrowserEngineKit.ProcessCapability.Type) -> BrowserEngineKit.ProcessCapability"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit17ProcessCapabilityO10foregroundyA2CmF",
+            "moduleName": "BrowserEngineKit",
+            "name": "foreground",
+            "printedName": "foreground",
+            "usr": "s:16BrowserEngineKit17ProcessCapabilityO10foregroundyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProcessCapability",
+                    "printedName": "BrowserEngineKit.ProcessCapability",
+                    "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProcessCapability",
+                        "printedName": "BrowserEngineKit.ProcessCapability",
+                        "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "BrowserEngineKit.ProcessCapability.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(BrowserEngineKit.ProcessCapability.Type) -> BrowserEngineKit.ProcessCapability"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit17ProcessCapabilityO9suspendedyA2CmF",
+            "moduleName": "BrowserEngineKit",
+            "name": "suspended",
+            "printedName": "suspended",
+            "usr": "s:16BrowserEngineKit17ProcessCapabilityO9suspendedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProcessCapability",
+                        "printedName": "BrowserEngineKit.ProcessCapability",
+                        "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "MediaEnvironment",
+                            "printedName": "BrowserEngineKit.MediaEnvironment",
+                            "usr": "s:16BrowserEngineKit16MediaEnvironmentV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Tuple",
+                        "printedName": "(environment: BrowserEngineKit.MediaEnvironment)"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(BrowserEngineKit.MediaEnvironment) -> BrowserEngineKit.ProcessCapability"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProcessCapability",
+                        "printedName": "BrowserEngineKit.ProcessCapability",
+                        "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "BrowserEngineKit.ProcessCapability.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(BrowserEngineKit.ProcessCapability.Type) -> (BrowserEngineKit.MediaEnvironment) -> BrowserEngineKit.ProcessCapability"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit17ProcessCapabilityO23mediaPlaybackAndCaptureyAcA16MediaEnvironmentV_tcACmF",
+            "moduleName": "BrowserEngineKit",
+            "name": "mediaPlaybackAndCapture",
+            "printedName": "mediaPlaybackAndCapture",
+            "usr": "s:16BrowserEngineKit17ProcessCapabilityO23mediaPlaybackAndCaptureyAcA16MediaEnvironmentV_tcACmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16BrowserEngineKit17ProcessCapabilityO5GrantV10invalidateyyF",
+                "moduleName": "BrowserEngineKit",
+                "name": "invalidate",
+                "printedName": "invalidate()",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO5GrantV10invalidateyyF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s16BrowserEngineKit17ProcessCapabilityO5GrantV7isValidSbvg",
+                    "moduleName": "BrowserEngineKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16BrowserEngineKit17ProcessCapabilityO5GrantV7isValidSbvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s16BrowserEngineKit17ProcessCapabilityO5GrantV7isValidSbvp",
+                "moduleName": "BrowserEngineKit",
+                "name": "isValid",
+                "printedName": "isValid",
+                "usr": "s:16BrowserEngineKit17ProcessCapabilityO5GrantV7isValidSbvp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "kind": "TypeDecl",
+            "mangledName": "$s16BrowserEngineKit17ProcessCapabilityO5GrantV",
+            "moduleName": "BrowserEngineKit",
+            "name": "Grant",
+            "printedName": "Grant",
+            "usr": "s:16BrowserEngineKit17ProcessCapabilityO5GrantV"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_Macosx": "14.3",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit17ProcessCapabilityO",
+        "moduleName": "BrowserEngineKit",
+        "name": "ProcessCapability",
+        "printedName": "ProcessCapability",
+        "usr": "s:16BrowserEngineKit17ProcessCapabilityO"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MediaEnvironment",
+                "printedName": "BrowserEngineKit.MediaEnvironment",
+                "usr": "s:16BrowserEngineKit16MediaEnvironmentV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s16BrowserEngineKit16MediaEnvironmentV7webPageAC10Foundation3URLV_tcfc",
+            "moduleName": "BrowserEngineKit",
+            "name": "init",
+            "printedName": "init(webPage:)",
+            "usr": "s:16BrowserEngineKit16MediaEnvironmentV7webPageAC10Foundation3URLV_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MediaEnvironment",
+                "printedName": "BrowserEngineKit.MediaEnvironment",
+                "usr": "s:16BrowserEngineKit16MediaEnvironmentV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OS_xpc_object",
+                    "printedName": "any XPC.OS_xpc_object",
+                    "usr": "c:objc(pl)OS_xpc_object"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "xpc_object_t",
+                "printedName": "XPC.xpc_object_t"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s16BrowserEngineKit16MediaEnvironmentV17xpcRepresentationACSo03OS_F7_object_p_tKcfc",
+            "moduleName": "BrowserEngineKit",
+            "name": "init",
+            "printedName": "init(xpcRepresentation:)",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit16MediaEnvironmentV17xpcRepresentationACSo03OS_F7_object_p_tKcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OS_xpc_object",
+                    "printedName": "any XPC.OS_xpc_object",
+                    "usr": "c:objc(pl)OS_xpc_object"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "xpc_object_t",
+                "printedName": "XPC.xpc_object_t"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit16MediaEnvironmentV23createXPCRepresentationSo13OS_xpc_object_pyF",
+            "moduleName": "BrowserEngineKit",
+            "name": "createXPCRepresentation",
+            "printedName": "createXPCRepresentation()",
+            "usr": "s:16BrowserEngineKit16MediaEnvironmentV23createXPCRepresentationSo13OS_xpc_object_pyF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit16MediaEnvironmentV8activateyyKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "activate",
+            "printedName": "activate()",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit16MediaEnvironmentV8activateyyKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit16MediaEnvironmentV7suspendyyKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "suspend",
+            "printedName": "suspend()",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit16MediaEnvironmentV7suspendyyKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AVCaptureSession",
+                "printedName": "AVFoundation.AVCaptureSession",
+                "usr": "c:objc(cs)AVCaptureSession"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit16MediaEnvironmentV18makeCaptureSessionSo09AVCaptureH0CyKF",
+            "moduleName": "BrowserEngineKit",
+            "name": "makeCaptureSession",
+            "printedName": "makeCaptureSession()",
+            "throwing": true,
+            "usr": "s:16BrowserEngineKit16MediaEnvironmentV18makeCaptureSessionSo09AVCaptureH0CyKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit16MediaEnvironmentV",
+        "moduleName": "BrowserEngineKit",
+        "name": "MediaEnvironment",
+        "printedName": "MediaEnvironment",
+        "usr": "s:16BrowserEngineKit16MediaEnvironmentV"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "ObjC",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit18BEMediaEnvironmentC",
+        "moduleName": "BrowserEngineKit",
+        "name": "BEMediaEnvironment",
+        "objc_name": "BEMediaEnvironment",
+        "printedName": "BEMediaEnvironment",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:@M@BrowserEngineKit@objc(cs)BEMediaEnvironment"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "ObjC",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "inheritsConvenienceInitializers": true,
+        "intro_Macosx": "14.3",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit19BEProcessCapabilityC",
+        "moduleName": "BrowserEngineKit",
+        "name": "BEProcessCapability",
+        "objc_name": "BEProcessCapability",
+        "printedName": "BEProcessCapability",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:@M@BrowserEngineKit@objc(cs)BEProcessCapability"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OS_xpc_object",
+                        "printedName": "any XPC.OS_xpc_object",
+                        "usr": "c:objc(pl)OS_xpc_object"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "xpc_object_t",
+                    "printedName": "XPC.xpc_object_t"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "xpc_connection_t",
+                "printedName": "XPC.xpc_connection_t"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : BrowserEngineKit.NetworkingExtension>",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit19NetworkingExtensionP6handle13xpcConnectionySo03OS_G7_object_p_tF",
+            "moduleName": "BrowserEngineKit",
+            "name": "handle",
+            "printedName": "handle(xpcConnection:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:16BrowserEngineKit19NetworkingExtensionP6handle13xpcConnectionySo03OS_G7_object_p_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NetworkingExtensionConfiguration",
+                    "printedName": "BrowserEngineKit.NetworkingExtensionConfiguration",
+                    "usr": "s:16BrowserEngineKit32NetworkingExtensionConfigurationV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : BrowserEngineKit.NetworkingExtension>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s16BrowserEngineKit19NetworkingExtensionPAAE13configurationAA0dE13ConfigurationVvg",
+                "moduleName": "BrowserEngineKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16BrowserEngineKit19NetworkingExtensionPAAE13configurationAA0dE13ConfigurationVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NetworkingExtensionConfiguration",
+                "printedName": "BrowserEngineKit.NetworkingExtensionConfiguration",
+                "usr": "s:16BrowserEngineKit32NetworkingExtensionConfigurationV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s16BrowserEngineKit19NetworkingExtensionPAAE13configurationAA0dE13ConfigurationVvp",
+            "moduleName": "BrowserEngineKit",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:16BrowserEngineKit19NetworkingExtensionPAAE13configurationAA0dE13ConfigurationVvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA0P",
+            "name": "AppExtension",
+            "printedName": "AppExtension",
+            "usr": "s:19ExtensionFoundation03AppA0P"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s16BrowserEngineKit26RestrictedSandboxAppliableP",
+            "name": "RestrictedSandboxAppliable",
+            "printedName": "RestrictedSandboxAppliable",
+            "usr": "s:16BrowserEngineKit26RestrictedSandboxAppliableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : BrowserEngineKit.RestrictedSandboxAppliable, Self : ExtensionFoundation.AppExtension>",
+        "intro_Macosx": "14.3",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit19NetworkingExtensionP",
+        "moduleName": "BrowserEngineKit",
+        "name": "NetworkingExtension",
+        "printedName": "NetworkingExtension",
+        "usr": "s:16BrowserEngineKit19NetworkingExtensionP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSXPCConnection",
+                "printedName": "Foundation.NSXPCConnection",
+                "usr": "c:objc(cs)NSXPCConnection"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16BrowserEngineKit32NetworkingExtensionConfigurationV6accept10connectionSbSo15NSXPCConnectionC_tF",
+            "moduleName": "BrowserEngineKit",
+            "name": "accept",
+            "printedName": "accept(connection:)",
+            "usr": "s:16BrowserEngineKit32NetworkingExtensionConfigurationV6accept10connectionSbSo15NSXPCConnectionC_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA13ConfigurationP",
+            "name": "AppExtensionConfiguration",
+            "printedName": "AppExtensionConfiguration",
+            "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "14.3",
+        "intro_iOS": "17.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s16BrowserEngineKit32NetworkingExtensionConfigurationV",
+        "moduleName": "BrowserEngineKit",
+        "name": "NetworkingExtensionConfiguration",
+        "printedName": "NetworkingExtensionConfiguration",
+        "usr": "s:16BrowserEngineKit32NetworkingExtensionConfigurationV"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "BrowserEngineKit",
+    "printedName": "BrowserEngineKit"
+  }
+}

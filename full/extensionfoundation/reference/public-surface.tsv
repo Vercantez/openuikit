@@ -1,0 +1,82 @@
+precise	kind	title	path	declaration
+s:19ExtensionFoundation03AppA0P	swift.protocol	AppExtension	AppExtension	protocol AppExtension
+s:19ExtensionFoundation03AppA0P13ConfigurationQa	swift.associatedtype	Configuration	AppExtension.Configuration	associatedtype Configuration : AppExtensionConfiguration
+s:19ExtensionFoundation03AppA0P13configuration13ConfigurationQzvp	swift.property	configuration	AppExtension.configuration	@MainActor @preconcurrency var configuration: Self.Configuration { get }
+s:19ExtensionFoundation03AppA0PAAE4mainyyKFZ	swift.type.method	main()	AppExtension.main()	@MainActor @preconcurrency static func main() throws
+s:19ExtensionFoundation03AppA0Pxycfc	swift.init	init()	AppExtension.init()	@MainActor @preconcurrency init()
+s:19ExtensionFoundation03AppA13ConfigurationP	swift.protocol	AppExtensionConfiguration	AppExtensionConfiguration	@MainActor @preconcurrency protocol AppExtensionConfiguration : Sendable
+s:19ExtensionFoundation03AppA13ConfigurationP6accept10connectionSbSo15NSXPCConnectionC_tF	swift.method	accept(connection:)	AppExtensionConfiguration.accept(connection:)	nonisolated func accept(connection: NSXPCConnection) -> Bool
+s:19ExtensionFoundation03AppA5PointV	swift.struct	AppExtensionPoint	AppExtensionPoint	struct AppExtensionPoint
+s:19ExtensionFoundation03AppA5PointV10DefinitionV	swift.struct	AppExtensionPoint.Definition	AppExtensionPoint.Definition	@resultBuilder struct Definition
+s:19ExtensionFoundation03AppA5PointV10DefinitionV10buildBlockyA2C4NameV_xxQptRvzAC9AttributeRzlFZ	swift.type.method	buildBlock(_:_:)	AppExtensionPoint.Definition.buildBlock(_:_:)	static func buildBlock<each T>(_ name: AppExtensionPoint.Name, _ attributes: repeat each T) -> AppExtensionPoint where repeat each T : AppExtensionPoint.Attribute
+s:19ExtensionFoundation03AppA5PointV10IdentifierV	swift.struct	AppExtensionPoint.Identifier	AppExtensionPoint.Identifier	struct Identifier
+s:19ExtensionFoundation03AppA5PointV10IdentifierV4host4nameAEs12StaticStringV_AItcfc	swift.init	init(host:name:)	AppExtensionPoint.Identifier.init(host:name:)	init(host bundleIdentifier: StaticString, name: StaticString)
+s:19ExtensionFoundation03AppA5PointV10IdentifierVyAEs12StaticStringVcfc	swift.init	init(_:)	AppExtensionPoint.Identifier.init(_:)	init(_ value: StaticString)
+s:19ExtensionFoundation03AppA5PointV10identifierACs12StaticStringV_tKcfc	swift.init	init(identifier:)	AppExtensionPoint.init(identifier:)	init(identifier: StaticString) throws
+s:19ExtensionFoundation03AppA5PointV13UserInterfaceV	swift.struct	AppExtensionPoint.UserInterface	AppExtensionPoint.UserInterface	struct UserInterface
+s:19ExtensionFoundation03AppA5PointV13UserInterfaceV5valueSbvp	swift.property	value	AppExtensionPoint.UserInterface.value	let value: Bool
+s:19ExtensionFoundation03AppA5PointV13UserInterfaceVyAESbcfc	swift.init	init(_:)	AppExtensionPoint.UserInterface.init(_:)	init(_ value: Bool = true)
+s:19ExtensionFoundation03AppA5PointV16EnhancedSecurityV	swift.struct	AppExtensionPoint.EnhancedSecurity	AppExtensionPoint.EnhancedSecurity	struct EnhancedSecurity
+s:19ExtensionFoundation03AppA5PointV16EnhancedSecurityVyAESbcfc	swift.init	init(_:)	AppExtensionPoint.EnhancedSecurity.init(_:)	init(_ value: Bool = true)
+s:19ExtensionFoundation03AppA5PointV2IDa	swift.typealias	AppExtensionPoint.ID	AppExtensionPoint.ID	typealias ID = String
+s:19ExtensionFoundation03AppA5PointV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	AppExtensionPoint.==(_:_:)	static func == (lhs: AppExtensionPoint, rhs: AppExtensionPoint) -> Bool
+s:19ExtensionFoundation03AppA5PointV2idSSvp	swift.property	id	AppExtensionPoint.id	var id: String { get }
+s:19ExtensionFoundation03AppA5PointV4BindV	swift.struct	AppExtensionPoint.Bind	AppExtensionPoint.Bind	@resultBuilder struct Bind
+s:19ExtensionFoundation03AppA5PointV4BindV10buildBlockyA2C10IdentifierVFZ	swift.type.method	buildBlock(_:)	AppExtensionPoint.Bind.buildBlock(_:)	static func buildBlock(_ identifier: AppExtensionPoint.Identifier) -> AppExtensionPoint
+s:19ExtensionFoundation03AppA5PointV4NameV	swift.struct	AppExtensionPoint.Name	AppExtensionPoint.Name	struct Name
+s:19ExtensionFoundation03AppA5PointV4NameVyAEs12StaticStringVcfc	swift.init	init(_:)	AppExtensionPoint.Name.init(_:)	init(_ value: StaticString)
+s:19ExtensionFoundation03AppA5PointV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	AppExtensionPoint.hash(into:)	func hash(into hasher: inout Hasher)
+s:19ExtensionFoundation03AppA5PointV5ErrorO	swift.enum	AppExtensionPoint.Error	AppExtensionPoint.Error	enum Error
+s:19ExtensionFoundation03AppA5PointV5ErrorO011unspecifiedcaD4NameyA2EmF	swift.enum.case	AppExtensionPoint.Error.unspecifiedAppExtensionPointName	AppExtensionPoint.Error.unspecifiedAppExtensionPointName	case unspecifiedAppExtensionPointName
+s:19ExtensionFoundation03AppA5PointV5ErrorO014hostMustDefinecaD0yAESScAEmF	swift.enum.case	AppExtensionPoint.Error.hostMustDefineAppExtensionPoint(_:)	AppExtensionPoint.Error.hostMustDefineAppExtensionPoint(_:)	case hostMustDefineAppExtensionPoint(String)
+s:19ExtensionFoundation03AppA5PointV5ErrorO023hostMustBeApplicationOrcA0yA2EmF	swift.enum.case	AppExtensionPoint.Error.hostMustBeApplicationOrAppExtension	AppExtensionPoint.Error.hostMustBeApplicationOrAppExtension	case hostMustBeApplicationOrAppExtension
+s:19ExtensionFoundation03AppA5PointV5ErrorO07invalidcaD0yA2EmF	swift.enum.case	AppExtensionPoint.Error.invalidAppExtensionPoint	AppExtensionPoint.Error.invalidAppExtensionPoint	case invalidAppExtensionPoint
+s:19ExtensionFoundation03AppA5PointV5ErrorO28hostMustHaveBundleIdentifieryA2EmF	swift.enum.case	AppExtensionPoint.Error.hostMustHaveBundleIdentifier	AppExtensionPoint.Error.hostMustHaveBundleIdentifier	case hostMustHaveBundleIdentifier
+s:19ExtensionFoundation03AppA5PointV5ScopeV	swift.struct	AppExtensionPoint.Scope	AppExtensionPoint.Scope	struct Scope
+s:19ExtensionFoundation03AppA5PointV5ScopeV11RestrictionO	swift.enum	AppExtensionPoint.Scope.Restriction	AppExtensionPoint.Scope.Restriction	enum Restriction
+s:19ExtensionFoundation03AppA5PointV5ScopeV11RestrictionO11applicationyA2GmF	swift.enum.case	AppExtensionPoint.Scope.Restriction.application	AppExtensionPoint.Scope.Restriction.application	case application
+s:19ExtensionFoundation03AppA5PointV5ScopeV11RestrictionO4noneyA2GmF	swift.enum.case	AppExtensionPoint.Scope.Restriction.none	AppExtensionPoint.Scope.Restriction.none	case none
+s:19ExtensionFoundation03AppA5PointV5ScopeV11restrictionA2E11RestrictionO_tcfc	swift.init	init(restriction:)	AppExtensionPoint.Scope.init(restriction:)	init(restriction: AppExtensionPoint.Scope.Restriction = .application)
+s:19ExtensionFoundation03AppA5PointV7MonitorC	swift.class	AppExtensionPoint.Monitor	AppExtensionPoint.Monitor	final class Monitor
+s:19ExtensionFoundation03AppA5PointV7MonitorC03addcaD0yyACYaKF	swift.method	addAppExtensionPoint(_:)	AppExtensionPoint.Monitor.addAppExtensionPoint(_:)	final func addAppExtensionPoint(_ appExtensionPoint: AppExtensionPoint) async throws
+s:19ExtensionFoundation03AppA5PointV7MonitorC03appaD0AeC_tYaKcfc	swift.init	init(appExtensionPoint:)	AppExtensionPoint.Monitor.init(appExtensionPoint:)	convenience init(appExtensionPoint: AppExtensionPoint) async throws
+s:19ExtensionFoundation03AppA5PointV7MonitorC06removecaD0yyACYaKF	swift.method	removeAppExtensionPoint(_:)	AppExtensionPoint.Monitor.removeAppExtensionPoint(_:)	final func removeAppExtensionPoint(_ appExtensionPoint: AppExtensionPoint) async throws
+s:19ExtensionFoundation03AppA5PointV7MonitorC10identitiesSayAA0cA8IdentityVGvp	swift.property	identities	AppExtensionPoint.Monitor.identities	final var identities: [AppExtensionIdentity] { get }
+s:19ExtensionFoundation03AppA5PointV7MonitorC5StateV	swift.struct	AppExtensionPoint.Monitor.State	AppExtensionPoint.Monitor.State	struct State
+s:19ExtensionFoundation03AppA5PointV7MonitorC5StateV10identitiesSayAA0cA8IdentityVGvp	swift.property	identities	AppExtensionPoint.Monitor.State.identities	var identities: [AppExtensionIdentity] { get }
+s:19ExtensionFoundation03AppA5PointV7MonitorC5StateV13disabledCountSivp	swift.property	disabledCount	AppExtensionPoint.Monitor.State.disabledCount	var disabledCount: Int { get }
+s:19ExtensionFoundation03AppA5PointV7MonitorC5StateV15unapprovedCountSivp	swift.property	unapprovedCount	AppExtensionPoint.Monitor.State.unapprovedCount	var unapprovedCount: Int { get }
+s:19ExtensionFoundation03AppA5PointV7MonitorC5StateV2eeoiySbAG_AGtFZ	swift.func.op	==(_:_:)	AppExtensionPoint.Monitor.State.==(_:_:)	static func == (a: AppExtensionPoint.Monitor.State, b: AppExtensionPoint.Monitor.State) -> Bool
+s:19ExtensionFoundation03AppA5PointV7MonitorC5stateAE5StateVvp	swift.property	state	AppExtensionPoint.Monitor.state	final var state: AppExtensionPoint.Monitor.State { get }
+s:19ExtensionFoundation03AppA5PointV7MonitorCAEycfc	swift.init	init()	AppExtensionPoint.Monitor.init()	init()
+s:19ExtensionFoundation03AppA5PointV9AttributeP	swift.protocol	AppExtensionPoint.Attribute	AppExtensionPoint.Attribute	protocol Attribute
+s:19ExtensionFoundation03AppA5PointV9hashValueSivp	swift.property	hashValue	AppExtensionPoint.hashValue	var hashValue: Int { get }
+s:19ExtensionFoundation03AppA7ProcessV	swift.struct	AppExtensionProcess	AppExtensionProcess	struct AppExtensionProcess
+s:19ExtensionFoundation03AppA7ProcessV10invalidateyyF	swift.method	invalidate()	AppExtensionProcess.invalidate()	func invalidate()
+s:19ExtensionFoundation03AppA7ProcessV13ConfigurationV	swift.struct	AppExtensionProcess.Configuration	AppExtensionProcess.Configuration	struct Configuration
+s:19ExtensionFoundation03AppA7ProcessV13ConfigurationV03appA8Identity14onInterruptionAeA0caG0V_yyctcfc	swift.init	init(appExtensionIdentity:onInterruption:)	AppExtensionProcess.Configuration.init(appExtensionIdentity:onInterruption:)	init(appExtensionIdentity: AppExtensionIdentity, onInterruption: @escaping () -> Void = {})
+s:19ExtensionFoundation03AppA7ProcessV13ConfigurationV03appA8IdentityAA0caG0Vvp	swift.property	appExtensionIdentity	AppExtensionProcess.Configuration.appExtensionIdentity	var appExtensionIdentity: AppExtensionIdentity
+s:19ExtensionFoundation03AppA7ProcessV13ConfigurationV14onInterruptionyycvp	swift.property	onInterruption	AppExtensionProcess.Configuration.onInterruption	var onInterruption: () -> Void
+s:19ExtensionFoundation03AppA7ProcessV13configurationA2C13ConfigurationV_tKcfc	swift.init	init(configuration:)	AppExtensionProcess.init(configuration:)	init(configuration: AppExtensionProcess.Configuration) throws
+s:19ExtensionFoundation03AppA7ProcessV13configurationA2C13ConfigurationV_tYaKcfc	swift.init	init(configuration:)	AppExtensionProcess.init(configuration:)	init(configuration: AppExtensionProcess.Configuration) async throws
+s:19ExtensionFoundation03AppA7ProcessV14makeXPCSession3XPC0F0CyKF	swift.method	makeXPCSession()	AppExtensionProcess.makeXPCSession()	func makeXPCSession() throws -> XPCSession
+s:19ExtensionFoundation03AppA7ProcessV17makeXPCConnectionSo15NSXPCConnectionCyKF	swift.method	makeXPCConnection()	AppExtensionProcess.makeXPCConnection()	func makeXPCConnection() throws -> NSXPCConnection
+s:19ExtensionFoundation03AppA8IdentityV	swift.struct	AppExtensionIdentity	AppExtensionIdentity	struct AppExtensionIdentity
+s:19ExtensionFoundation03AppA8IdentityV13localizedNameSSvp	swift.property	localizedName	AppExtensionIdentity.localizedName	var localizedName: String { get }
+s:19ExtensionFoundation03AppA8IdentityV16bundleIdentifierSSvp	swift.property	bundleIdentifier	AppExtensionIdentity.bundleIdentifier	var bundleIdentifier: String { get }
+s:19ExtensionFoundation03AppA8IdentityV24extensionPointIdentifierSSvp	swift.property	extensionPointIdentifier	AppExtensionIdentity.extensionPointIdentifier	var extensionPointIdentifier: String { get }
+s:19ExtensionFoundation03AppA8IdentityV2IDa	swift.typealias	AppExtensionIdentity.ID	AppExtensionIdentity.ID	typealias ID = String
+s:19ExtensionFoundation03AppA8IdentityV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	AppExtensionIdentity.==(_:_:)	static func == (lhs: AppExtensionIdentity, rhs: AppExtensionIdentity) -> Bool
+s:19ExtensionFoundation03AppA8IdentityV2idSSvp	swift.property	id	AppExtensionIdentity.id	var id: String { get }
+s:19ExtensionFoundation03AppA8IdentityV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	AppExtensionIdentity.hash(into:)	func hash(into hasher: inout Hasher)
+s:19ExtensionFoundation03AppA8IdentityV9hashValueSivp	swift.property	hashValue	AppExtensionIdentity.hashValue	var hashValue: Int { get }
+s:19ExtensionFoundation0A13PointDefiningP	swift.protocol	ExtensionPointDefining	ExtensionPointDefining	protocol ExtensionPointDefining
+s:19ExtensionFoundation17ConnectionHandlerV	swift.struct	ConnectionHandler	ConnectionHandler	@MainActor @preconcurrency struct ConnectionHandler
+s:19ExtensionFoundation17ConnectionHandlerV02onC0ACSbSo15NSXPCConnectionCc_tcfc	swift.init	init(onConnection:)	ConnectionHandler.init(onConnection:)	@MainActor @preconcurrency init(onConnection connectionHandler: @escaping (NSXPCConnection) -> Bool)
+s:19ExtensionFoundation17ConnectionHandlerV16onSessionRequestAC3XPC11XPCListenerC08IncomingfG0C8DecisionVAIc_tcfc	swift.init	init(onSessionRequest:)	ConnectionHandler.init(onSessionRequest:)	@MainActor @preconcurrency init(onSessionRequest requestHandler: @escaping (XPCListener.IncomingSessionRequest) -> XPCListener.IncomingSessionRequest.Decision)
+s:19ExtensionFoundation17ConnectionHandlerV6accept10connectionSbSo15NSXPCConnectionC_tF	swift.method	accept(connection:)	ConnectionHandler.accept(connection:)	nonisolated func accept(connection: NSXPCConnection) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:19ExtensionFoundation03AppA5PointV	swift.func.op	!=(_:_:)	AppExtensionPoint.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:19ExtensionFoundation03AppA5PointV5ScopeV11RestrictionO	swift.func.op	!=(_:_:)	AppExtensionPoint.Scope.Restriction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:19ExtensionFoundation03AppA5PointV7MonitorC5StateV	swift.func.op	!=(_:_:)	AppExtensionPoint.Monitor.State.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:19ExtensionFoundation03AppA8IdentityV	swift.func.op	!=(_:_:)	AppExtensionIdentity.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:19ExtensionFoundation03AppA5PointV5ErrorO	swift.property	localizedDescription	AppExtensionPoint.Error.localizedDescription	var localizedDescription: String { get }

@@ -1,0 +1,174 @@
+precise	kind	title	path	declaration
+c:@DDDeviceProtocolStringDIAL	swift.type.property	dial	DDDeviceProtocolString.dial	static let dial: DDDeviceProtocolString
+c:@DDDeviceProtocolStringInvalid	swift.type.property	invalid	DDDeviceProtocolString.invalid	static let invalid: DDDeviceProtocolString
+c:@DDErrorDomain	swift.var	DDErrorDomain	DDErrorDomain	let DDErrorDomain: String
+c:@E@DDDeviceCategory	swift.enum	DDDevice.Category	DDDevice.Category	enum Category
+c:@E@DDDeviceCategory@DDDeviceCategoryAccessorySetup	swift.enum.case	DDDevice.Category.accessorySetup	DDDevice.Category.accessorySetup	case accessorySetup
+c:@E@DDDeviceCategory@DDDeviceCategoryDesktopComputer	swift.enum.case	DDDevice.Category.desktopComputer	DDDevice.Category.desktopComputer	case desktopComputer
+c:@E@DDDeviceCategory@DDDeviceCategoryHiFiSpeaker	swift.enum.case	DDDevice.Category.hifiSpeaker	DDDevice.Category.hifiSpeaker	case hifiSpeaker
+c:@E@DDDeviceCategory@DDDeviceCategoryHiFiSpeakerMultiple	swift.enum.case	DDDevice.Category.hifiSpeakerMultiple	DDDevice.Category.hifiSpeakerMultiple	case hifiSpeakerMultiple
+c:@E@DDDeviceCategory@DDDeviceCategoryLaptopComputer	swift.enum.case	DDDevice.Category.laptopComputer	DDDevice.Category.laptopComputer	case laptopComputer
+c:@E@DDDeviceCategory@DDDeviceCategoryTV	swift.enum.case	DDDevice.Category.tv	DDDevice.Category.tv	case tv
+c:@E@DDDeviceCategory@DDDeviceCategoryTVWithMediaBox	swift.enum.case	DDDevice.Category.tvWithMediaBox	DDDevice.Category.tvWithMediaBox	case tvWithMediaBox
+c:@E@DDDeviceMediaPlaybackState	swift.enum	DDDevice.MediaPlaybackState	DDDevice.MediaPlaybackState	enum MediaPlaybackState
+c:@E@DDDeviceMediaPlaybackState@DDDeviceMediaPlaybackStateNoContent	swift.enum.case	DDDevice.MediaPlaybackState.noContent	DDDevice.MediaPlaybackState.noContent	case noContent
+c:@E@DDDeviceMediaPlaybackState@DDDeviceMediaPlaybackStatePaused	swift.enum.case	DDDevice.MediaPlaybackState.paused	DDDevice.MediaPlaybackState.paused	case paused
+c:@E@DDDeviceMediaPlaybackState@DDDeviceMediaPlaybackStatePlaying	swift.enum.case	DDDevice.MediaPlaybackState.playing	DDDevice.MediaPlaybackState.playing	case playing
+c:@E@DDDeviceProtocol	swift.enum	DDDevice.Protocol	DDDevice.Protocol	enum `Protocol`
+c:@E@DDDeviceProtocol@DDDeviceProtocolDIAL	swift.enum.case	DDDevice.Protocol.dial	DDDevice.Protocol.dial	case dial
+c:@E@DDDeviceProtocol@DDDeviceProtocolInvalid	swift.enum.case	DDDevice.Protocol.invalid	DDDevice.Protocol.invalid	case invalid
+c:@E@DDDeviceState	swift.enum	DDDeviceState	DDDeviceState	enum DDDeviceState
+c:@E@DDDeviceState@DDDeviceStateActivated	swift.enum.case	DDDeviceState.activated	DDDeviceState.activated	case activated
+c:@E@DDDeviceState@DDDeviceStateActivating	swift.enum.case	DDDeviceState.activating	DDDeviceState.activating	case activating
+c:@E@DDDeviceState@DDDeviceStateAuthorized	swift.enum.case	DDDeviceState.authorized	DDDeviceState.authorized	case authorized
+c:@E@DDDeviceState@DDDeviceStateInvalid	swift.enum.case	DDDeviceState.invalid	DDDeviceState.invalid	case invalid
+c:@E@DDDeviceState@DDDeviceStateInvalidating	swift.enum.case	DDDeviceState.invalidating	DDDeviceState.invalidating	case invalidating
+c:@E@DDDeviceSupports	swift.struct	DDDeviceSupports	DDDeviceSupports	struct DDDeviceSupports
+c:@E@DDDeviceSupports@DDDeviceSupportsBluetoothHID	swift.type.property	bluetoothHID	DDDeviceSupports.bluetoothHID	static var bluetoothHID: DDDeviceSupports { get }
+c:@E@DDDeviceSupports@DDDeviceSupportsBluetoothPairingLE	swift.type.property	bluetoothPairingLE	DDDeviceSupports.bluetoothPairingLE	static var bluetoothPairingLE: DDDeviceSupports { get }
+c:@E@DDDeviceSupports@DDDeviceSupportsBluetoothTransportBridging	swift.type.property	bluetoothTransportBridging	DDDeviceSupports.bluetoothTransportBridging	static var bluetoothTransportBridging: DDDeviceSupports { get }
+c:@E@DDDeviceWiFiAwareServiceRole	swift.enum	DDDevice.WiFiAwareServiceRole	DDDevice.WiFiAwareServiceRole	enum WiFiAwareServiceRole
+c:@E@DDDeviceWiFiAwareServiceRole@DDDeviceWiFiAwareServiceRolePublisher	swift.enum.case	DDDevice.WiFiAwareServiceRole.publisher	DDDevice.WiFiAwareServiceRole.publisher	case publisher
+c:@E@DDDeviceWiFiAwareServiceRole@DDDeviceWiFiAwareServiceRoleSubscriber	swift.enum.case	DDDevice.WiFiAwareServiceRole.subscriber	DDDevice.WiFiAwareServiceRole.subscriber	case subscriber
+c:@E@DDErrorCode	swift.enum	DDError.Code	DDError.Code	enum Code
+c:@E@DDErrorCode@DDErrorCodeBadParameter	swift.enum.case	DDError.Code.badParameter	DDError.Code.badParameter	case badParameter
+c:@E@DDErrorCode@DDErrorCodeInternal	swift.enum.case	DDError.Code.internal	DDError.Code.internal	case `internal`
+c:@E@DDErrorCode@DDErrorCodeMissingEntitlement	swift.enum.case	DDError.Code.missingEntitlement	DDError.Code.missingEntitlement	case missingEntitlement
+c:@E@DDErrorCode@DDErrorCodeNext	swift.enum.case	DDError.Code.next	DDError.Code.next	case next
+c:@E@DDErrorCode@DDErrorCodePermission	swift.enum.case	DDError.Code.permission	DDError.Code.permission	case permission
+c:@E@DDErrorCode@DDErrorCodeSuccess	swift.enum.case	DDError.Code.success	DDError.Code.success	case success
+c:@E@DDErrorCode@DDErrorCodeTimeout	swift.enum.case	DDError.Code.timeout	DDError.Code.timeout	case timeout
+c:@E@DDErrorCode@DDErrorCodeUnknown	swift.enum.case	DDError.Code.unknown	DDError.Code.unknown	case unknown
+c:@E@DDErrorCode@DDErrorCodeUnsupported	swift.enum.case	DDError.Code.unsupported	DDError.Code.unsupported	case unsupported
+c:@E@DDEventType	swift.enum	DDDeviceEvent.EventType	DDDeviceEvent.EventType	enum EventType
+c:@E@DDEventType@DDEventTypeDeviceChanged	swift.enum.case	DDDeviceEvent.EventType.deviceChanged	DDDeviceEvent.EventType.deviceChanged	case deviceChanged
+c:@E@DDEventType@DDEventTypeDeviceFound	swift.enum.case	DDDeviceEvent.EventType.deviceFound	DDDeviceEvent.EventType.deviceFound	case deviceFound
+c:@E@DDEventType@DDEventTypeDeviceLost	swift.enum.case	DDDeviceEvent.EventType.deviceLost	DDDeviceEvent.EventType.deviceLost	case deviceLost
+c:@E@DDEventType@DDEventTypeUnknown	swift.enum.case	DDDeviceEvent.EventType.unknown	DDDeviceEvent.EventType.unknown	case unknown
+c:@F@DDDeviceCategoryToString	swift.func	DDDeviceCategoryToString(_:)	DDDeviceCategoryToString(_:)	func DDDeviceCategoryToString(_ inValue: DDDevice.Category) -> String
+c:@F@DDDeviceMediaPlaybackStateToString	swift.func	DDDeviceMediaPlaybackStateToString(_:)	DDDeviceMediaPlaybackStateToString(_:)	func DDDeviceMediaPlaybackStateToString(_ inValue: DDDevice.MediaPlaybackState) -> String
+c:@F@DDDeviceProtocolToString	swift.func	DDDeviceProtocolToString(_:)	DDDeviceProtocolToString(_:)	func DDDeviceProtocolToString(_ inValue: DDDevice.Protocol) -> String
+c:@F@DDDeviceStateToString	swift.func	DDDeviceStateToString(_:)	DDDeviceStateToString(_:)	func DDDeviceStateToString(_ inValue: DDDeviceState) -> String
+c:@F@DDEventTypeToString	swift.func	DDEventTypeToString(_:)	DDEventTypeToString(_:)	func DDEventTypeToString(_ inValue: DDDeviceEvent.EventType) -> String
+c:@T@DDDeviceProtocolString	swift.struct	DDDeviceProtocolString	DDDeviceProtocolString	struct DDDeviceProtocolString
+c:@T@DDErrorHandler	swift.typealias	DDErrorHandler	DDErrorHandler	typealias DDErrorHandler = ((any Error)?) -> Void
+c:@T@DDErrorOutType	swift.typealias	DDErrorOutType	DDErrorOutType	typealias DDErrorOutType = AutoreleasingUnsafeMutablePointer<NSError?>
+c:@T@DDEventHandler	swift.typealias	DDEventHandler	DDEventHandler	typealias DDEventHandler = (DDDeviceEvent) -> Void
+c:objc(cs)DDDevice	swift.class	DDDevice	DDDevice	class DDDevice
+c:objc(cs)DDDevice(im)initWithDisplayName:category:protocolType:identifier:	swift.init	init(displayName:category:protocolType:identifier:)	DDDevice.init(displayName:category:protocolType:identifier:)	init(displayName: String, category: DDDevice.Category, protocolType: UTType, identifier: String)
+c:objc(cs)DDDevice(py)SSID	swift.property	ssid	DDDevice.ssid	var ssid: String? { get set }
+c:objc(cs)DDDevice(py)bluetoothIdentifier	swift.property	bluetoothIdentifier	DDDevice.bluetoothIdentifier	var bluetoothIdentifier: UUID? { get set }
+c:objc(cs)DDDevice(py)category	swift.property	category	DDDevice.category	var category: DDDevice.Category { get set }
+c:objc(cs)DDDevice(py)deviceSupports	swift.property	deviceSupports	DDDevice.deviceSupports	var deviceSupports: DDDeviceSupports { get set }
+c:objc(cs)DDDevice(py)displayImageName	swift.property	displayImageName	DDDevice.displayImageName	var displayImageName: String? { get set }
+c:objc(cs)DDDevice(py)displayName	swift.property	displayName	DDDevice.displayName	var displayName: String { get set }
+c:objc(cs)DDDevice(py)identifier	swift.property	identifier	DDDevice.identifier	var identifier: String { get set }
+c:objc(cs)DDDevice(py)mediaContentSubtitle	swift.property	mediaContentSubtitle	DDDevice.mediaContentSubtitle	var mediaContentSubtitle: String? { get set }
+c:objc(cs)DDDevice(py)mediaContentTitle	swift.property	mediaContentTitle	DDDevice.mediaContentTitle	var mediaContentTitle: String? { get set }
+c:objc(cs)DDDevice(py)mediaPlaybackState	swift.property	mediaPlaybackState	DDDevice.mediaPlaybackState	var mediaPlaybackState: DDDevice.MediaPlaybackState { get set }
+c:objc(cs)DDDevice(py)protocol	swift.property	protocol	DDDevice.protocol	var `protocol`: DDDevice.Protocol { get set }
+c:objc(cs)DDDevice(py)protocolType	swift.property	protocolType	DDDevice.protocolType	var protocolType: UTType { get set }
+c:objc(cs)DDDevice(py)state	swift.property	state	DDDevice.state	var state: DDDeviceState { get set }
+c:objc(cs)DDDevice(py)supportsGrouping	swift.property	supportsGrouping	DDDevice.supportsGrouping	var supportsGrouping: Bool { get set }
+c:objc(cs)DDDevice(py)url	swift.property	url	DDDevice.url	var url: URL { get set }
+c:objc(cs)DDDevice(py)wifiAwareModelName	swift.property	wifiAwareModelName	DDDevice.wifiAwareModelName	var wifiAwareModelName: String? { get set }
+c:objc(cs)DDDevice(py)wifiAwareServiceName	swift.property	wifiAwareServiceName	DDDevice.wifiAwareServiceName	var wifiAwareServiceName: String? { get set }
+c:objc(cs)DDDevice(py)wifiAwareServiceRole	swift.property	wifiAwareServiceRole	DDDevice.wifiAwareServiceRole	var wifiAwareServiceRole: DDDevice.WiFiAwareServiceRole { get set }
+c:objc(cs)DDDevice(py)wifiAwareVendorName	swift.property	wifiAwareVendorName	DDDevice.wifiAwareVendorName	var wifiAwareVendorName: String? { get set }
+c:objc(cs)DDDeviceEvent	swift.class	DDDeviceEvent	DDDeviceEvent	class DDDeviceEvent
+c:objc(cs)DDDeviceEvent(im)initWithEventType:device:	swift.init	init(eventType:device:)	DDDeviceEvent.init(eventType:device:)	init(eventType type: DDDeviceEvent.EventType, device: DDDevice)
+c:objc(cs)DDDeviceEvent(py)device	swift.property	device	DDDeviceEvent.device	var device: DDDevice { get }
+c:objc(cs)DDDeviceEvent(py)eventType	swift.property	eventType	DDDeviceEvent.eventType	var eventType: DDDeviceEvent.EventType { get }
+c:objc(cs)DDDiscoverySession	swift.class	DDDiscoverySession	DDDiscoverySession	class DDDiscoverySession
+c:objc(cs)DDDiscoverySession(im)reportEvent:	swift.method	report(_:)	DDDiscoverySession.report(_:)	func report(_ inEvent: DDDeviceEvent)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@DDErrorCode	swift.type.property	errorDomain	DDError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@DDErrorCode	swift.property	errorUserInfo	DDError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@DDErrorCode	swift.property	errorCode	DDError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@DDErrorCode	swift.func.op	~=(_:_:)	DDError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@DDErrorCode	swift.property	errorUserInfo	DDError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@DDErrorCode	swift.func.op	==(_:_:)	DDError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@DDErrorCode	swift.property	code	DDError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@DDErrorCode	swift.method	hash(into:)	DDError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@DDErrorCode	swift.property	userInfo	DDError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@DDErrorCode	swift.property	errorCode	DDError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@DDErrorCode	swift.property	hashValue	DDError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@DDErrorCode	swift.init	init(_:userInfo:)	DDError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:24DeviceDiscoveryExtension011DDDiscoveryC0P	swift.protocol	DDDiscoveryExtension	DDDiscoveryExtension	protocol DDDiscoveryExtension : AppExtension
+s:24DeviceDiscoveryExtension011DDDiscoveryC0P04stopB07sessionySo0D7SessionC_tF	swift.method	stopDiscovery(session:)	DDDiscoveryExtension.stopDiscovery(session:)	func stopDiscovery(session: DDDiscoverySession)
+s:24DeviceDiscoveryExtension011DDDiscoveryC0P05startB07sessionySo0D7SessionC_tF	swift.method	startDiscovery(session:)	DDDiscoveryExtension.startDiscovery(session:)	func startDiscovery(session: DDDiscoverySession)
+s:24DeviceDiscoveryExtension011DDDiscoveryC0P15didReceiveEventyySo08DDDeviceG0CF	swift.method	didReceiveEvent(_:)	DDDiscoveryExtension.didReceiveEvent(_:)	func didReceiveEvent(_ event: DDDeviceEvent)
+s:24DeviceDiscoveryExtension011DDDiscoveryC0PAAE13configurationQrvp	swift.property	configuration	DDDiscoveryExtension.configuration	var configuration: some DDDiscoveryExtensionConfigurationProtocol { get }
+s:24DeviceDiscoveryExtension011DDDiscoveryC0PAAE15didReceiveEventyySo08DDDeviceG0CF	swift.method	didReceiveEvent(_:)	DDDiscoveryExtension.didReceiveEvent(_:)	func didReceiveEvent(_ event: DDDeviceEvent)
+s:24DeviceDiscoveryExtension011DDDiscoveryC13ConfigurationC	swift.class	DDDiscoveryExtensionConfiguration	DDDiscoveryExtensionConfiguration	@MainActor @preconcurrency class DDDiscoveryExtensionConfiguration<T> where T : DDDiscoveryExtension
+s:24DeviceDiscoveryExtension011DDDiscoveryC13ConfigurationC09discoveryC0ACyxGx_tcfc	swift.init	init(discoveryExtension:)	DDDiscoveryExtensionConfiguration.init(discoveryExtension:)	@MainActor @preconcurrency init(discoveryExtension: T)
+s:24DeviceDiscoveryExtension011DDDiscoveryC13ConfigurationC6accept10connectionSbSo15NSXPCConnectionC_tF	swift.method	accept(connection:)	DDDiscoveryExtensionConfiguration.accept(connection:)	nonisolated func accept(connection inCnx: NSXPCConnection) -> Bool
+s:24DeviceDiscoveryExtension011DDDiscoveryC21ConfigurationProtocolP	swift.protocol	DDDiscoveryExtensionConfigurationProtocol	DDDiscoveryExtensionConfigurationProtocol	protocol DDDiscoveryExtensionConfigurationProtocol : AppExtensionConfiguration
+s:SC11DDErrorCodeLeV	swift.struct	DDError	DDError	struct DDError
+s:SC11DDErrorCodeLeV10permissionSoAAVvpZ	swift.type.property	permission	DDError.permission	static var permission: DDError.Code { get }
+s:SC11DDErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	DDError.errorDomain	static var errorDomain: String { get }
+s:SC11DDErrorCodeLeV11unsupportedSoAAVvpZ	swift.type.property	unsupported	DDError.unsupported	static var unsupported: DDError.Code { get }
+s:SC11DDErrorCodeLeV12badParameterSoAAVvpZ	swift.type.property	badParameter	DDError.badParameter	static var badParameter: DDError.Code { get }
+s:SC11DDErrorCodeLeV18missingEntitlementSoAAVvpZ	swift.type.property	missingEntitlement	DDError.missingEntitlement	static var missingEntitlement: DDError.Code { get }
+s:SC11DDErrorCodeLeV4nextSoAAVvpZ	swift.type.property	next	DDError.next	static var next: DDError.Code { get }
+s:SC11DDErrorCodeLeV7successSoAAVvpZ	swift.type.property	success	DDError.success	static var success: DDError.Code { get }
+s:SC11DDErrorCodeLeV7timeoutSoAAVvpZ	swift.type.property	timeout	DDError.timeout	static var timeout: DDError.Code { get }
+s:SC11DDErrorCodeLeV7unknownSoAAVvpZ	swift.type.property	unknown	DDError.unknown	static var unknown: DDError.Code { get }
+s:SC11DDErrorCodeLeV8internalSoAAVvpZ	swift.type.property	internal	DDError.internal	static var `internal`: DDError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@DDDeviceCategory	swift.func.op	!=(_:_:)	DDDevice.Category.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@DDDeviceMediaPlaybackState	swift.func.op	!=(_:_:)	DDDevice.MediaPlaybackState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@DDDeviceProtocol	swift.func.op	!=(_:_:)	DDDevice.Protocol.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@DDDeviceState	swift.func.op	!=(_:_:)	DDDeviceState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@DDDeviceSupports	swift.func.op	!=(_:_:)	DDDeviceSupports.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@DDDeviceWiFiAwareServiceRole	swift.func.op	!=(_:_:)	DDDevice.WiFiAwareServiceRole.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@DDErrorCode	swift.func.op	!=(_:_:)	DDError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@DDEventType	swift.func.op	!=(_:_:)	DDDeviceEvent.EventType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@DDDeviceProtocolString	swift.func.op	!=(_:_:)	DDDeviceProtocolString.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@DDDeviceCategory	swift.property	hashValue	DDDevice.Category.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@DDDeviceMediaPlaybackState	swift.property	hashValue	DDDevice.MediaPlaybackState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@DDDeviceProtocol	swift.property	hashValue	DDDevice.Protocol.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@DDDeviceState	swift.property	hashValue	DDDeviceState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@DDDeviceWiFiAwareServiceRole	swift.property	hashValue	DDDevice.WiFiAwareServiceRole.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@DDErrorCode	swift.property	hashValue	DDError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@DDEventType	swift.property	hashValue	DDDeviceEvent.EventType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@DDDeviceCategory	swift.method	hash(into:)	DDDevice.Category.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@DDDeviceMediaPlaybackState	swift.method	hash(into:)	DDDevice.MediaPlaybackState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@DDDeviceProtocol	swift.method	hash(into:)	DDDevice.Protocol.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@DDDeviceState	swift.method	hash(into:)	DDDeviceState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@DDDeviceWiFiAwareServiceRole	swift.method	hash(into:)	DDDevice.WiFiAwareServiceRole.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@DDErrorCode	swift.method	hash(into:)	DDError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@DDEventType	swift.method	hash(into:)	DDDeviceEvent.EventType.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11DDErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	DDError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So11DDEventTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	DDDeviceEvent.EventType.init(rawValue:)	init?(rawValue: Int)
+s:So13DDDeviceStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	DDDeviceState.init(rawValue:)	init?(rawValue: Int)
+s:So16DDDeviceCategoryV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	DDDevice.Category.init(rawValue:)	init?(rawValue: Int)
+s:So16DDDeviceProtocolV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	DDDevice.Protocol.init(rawValue:)	init?(rawValue: Int)
+s:So16DDDeviceSupportsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	DDDeviceSupports.init(rawValue:)	init(rawValue: UInt)
+s:So22DDDeviceProtocolStringa8rawValueABSS_tcfc	swift.init	init(rawValue:)	DDDeviceProtocolString.init(rawValue:)	init(rawValue: String)
+s:So26DDDeviceMediaPlaybackStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	DDDevice.MediaPlaybackState.init(rawValue:)	init?(rawValue: Int)
+s:So28DDDeviceWiFiAwareServiceRoleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	DDDevice.WiFiAwareServiceRole.init(rawValue:)	init?(rawValue: Int)
+s:So8DDDeviceC24DeviceDiscoveryExtensionE15networkEndpoint7Network10NWEndpointOSgvp	swift.property	networkEndpoint	DDDevice.networkEndpoint	var networkEndpoint: NWEndpoint? { get set }
+s:So8DDDeviceC24DeviceDiscoveryExtensionE9txtRecord7Network11NWTXTRecordVSgvp	swift.property	txtRecord	DDDevice.txtRecord	var txtRecord: NWTXTRecord? { get set }
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@DDDeviceSupports	swift.init	init(arrayLiteral:)	DDDeviceSupports.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	isDisjoint(with:)	DDDeviceSupports.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	isSuperset(of:)	DDDeviceSupports.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	subtracting(_:)	DDDeviceSupports.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	isStrictSubset(of:)	DDDeviceSupports.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	isStrictSuperset(of:)	DDDeviceSupports.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@DDDeviceSupports	swift.property	isEmpty	DDDeviceSupports.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	isSubset(of:)	DDDeviceSupports.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	subtract(_:)	DDDeviceSupports.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@DDDeviceSupports	swift.init	init(_:)	DDDeviceSupports.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@DDDeviceProtocolString	swift.property	hashValue	DDDeviceProtocolString.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@DDDeviceProtocolString	swift.method	hash(into:)	DDDeviceProtocolString.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@DDErrorCode	swift.property	localizedDescription	DDError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	insert(_:)	DDDeviceSupports.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	remove(_:)	DDDeviceSupports.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	update(with:)	DDDeviceSupports.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	contains(_:)	DDDeviceSupports.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	intersection(_:)	DDDeviceSupports.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	symmetricDifference(_:)	DDDeviceSupports.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	union(_:)	DDDeviceSupports.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	formIntersection(_:)	DDDeviceSupports.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	formSymmetricDifference(_:)	DDDeviceSupports.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@DDDeviceSupports	swift.method	formUnion(_:)	DDDeviceSupports.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@DDDeviceSupports	swift.init	init()	DDDeviceSupports.init()	init()

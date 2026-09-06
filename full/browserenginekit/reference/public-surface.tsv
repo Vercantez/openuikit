@@ -1,0 +1,512 @@
+precise	kind	title	path	declaration
+c:@BEAccessibilitySelectionChangedNotification	swift.type.property	selectionChangedNotification	BEAccessibility.selectionChangedNotification	static var selectionChangedNotification: UIAccessibility.Notification
+c:@BEAccessibilityTraitMenuItem	swift.type.property	menuItem	BEAccessibility.menuItem	static var menuItem: UIAccessibilityTraits
+c:@BEAccessibilityTraitPopUpButton	swift.type.property	popUpButton	BEAccessibility.popUpButton	static var popUpButton: UIAccessibilityTraits
+c:@BEAccessibilityTraitRadioButton	swift.type.property	radioButton	BEAccessibility.radioButton	static var radioButton: UIAccessibilityTraits
+c:@BEAccessibilityTraitReadOnly	swift.type.property	readOnly	BEAccessibility.readOnly	static var readOnly: UIAccessibilityTraits
+c:@BEAccessibilityTraitVisited	swift.type.property	visited	BEAccessibility.visited	static var visited: UIAccessibilityTraits
+c:@BEAccessibilityValueChangedNotification	swift.type.property	valueChangedNotification	BEAccessibility.valueChangedNotification	static var valueChangedNotification: UIAccessibility.Notification
+c:@E@BEAccessibilityContainerType	swift.struct	BEAccessibilityContainerType	BEAccessibilityContainerType	struct BEAccessibilityContainerType
+c:@E@BEAccessibilityContainerType@BEAccessibilityContainerTypeAlert	swift.type.property	alert	BEAccessibilityContainerType.alert	static var alert: BEAccessibilityContainerType { get }
+c:@E@BEAccessibilityContainerType@BEAccessibilityContainerTypeArticle	swift.type.property	article	BEAccessibilityContainerType.article	static var article: BEAccessibilityContainerType { get }
+c:@E@BEAccessibilityContainerType@BEAccessibilityContainerTypeDescriptionList	swift.type.property	descriptionList	BEAccessibilityContainerType.descriptionList	static var descriptionList: BEAccessibilityContainerType { get }
+c:@E@BEAccessibilityContainerType@BEAccessibilityContainerTypeDialog	swift.type.property	dialog	BEAccessibilityContainerType.dialog	static var dialog: BEAccessibilityContainerType { get }
+c:@E@BEAccessibilityContainerType@BEAccessibilityContainerTypeFieldset	swift.type.property	fieldset	BEAccessibilityContainerType.fieldset	static var fieldset: BEAccessibilityContainerType { get }
+c:@E@BEAccessibilityContainerType@BEAccessibilityContainerTypeFrame	swift.type.property	frame	BEAccessibilityContainerType.frame	static var frame: BEAccessibilityContainerType { get }
+c:@E@BEAccessibilityContainerType@BEAccessibilityContainerTypeLandmark	swift.type.property	landmark	BEAccessibilityContainerType.landmark	static var landmark: BEAccessibilityContainerType { get }
+c:@E@BEAccessibilityContainerType@BEAccessibilityContainerTypeList	swift.type.property	list	BEAccessibilityContainerType.list	static var list: BEAccessibilityContainerType { get }
+c:@E@BEAccessibilityContainerType@BEAccessibilityContainerTypeScrollArea	swift.type.property	scrollArea	BEAccessibilityContainerType.scrollArea	static var scrollArea: BEAccessibilityContainerType { get }
+c:@E@BEAccessibilityContainerType@BEAccessibilityContainerTypeSemanticGroup	swift.type.property	semanticGroup	BEAccessibilityContainerType.semanticGroup	static var semanticGroup: BEAccessibilityContainerType { get }
+c:@E@BEAccessibilityContainerType@BEAccessibilityContainerTypeTable	swift.type.property	table	BEAccessibilityContainerType.table	static var table: BEAccessibilityContainerType { get }
+c:@E@BEAccessibilityContainerType@BEAccessibilityContainerTypeTree	swift.type.property	tree	BEAccessibilityContainerType.tree	static var tree: BEAccessibilityContainerType { get }
+c:@E@BEAccessibilityPressedState	swift.enum	BEAccessibilityPressedState	BEAccessibilityPressedState	enum BEAccessibilityPressedState
+c:@E@BEAccessibilityPressedState@BEAccessibilityPressedStateFalse	swift.enum.case	BEAccessibilityPressedState.false	BEAccessibilityPressedState.false	case `false`
+c:@E@BEAccessibilityPressedState@BEAccessibilityPressedStateMixed	swift.enum.case	BEAccessibilityPressedState.mixed	BEAccessibilityPressedState.mixed	case mixed
+c:@E@BEAccessibilityPressedState@BEAccessibilityPressedStateTrue	swift.enum.case	BEAccessibilityPressedState.true	BEAccessibilityPressedState.true	case `true`
+c:@E@BEAccessibilityPressedState@BEAccessibilityPressedStateUndefined	swift.enum.case	BEAccessibilityPressedState.undefined	BEAccessibilityPressedState.undefined	case undefined
+c:@E@BEGestureType	swift.enum	BEGestureType	BEGestureType	enum BEGestureType
+c:@E@BEGestureType@BEGestureTypeDoubleTap	swift.enum.case	BEGestureType.doubleTap	BEGestureType.doubleTap	case doubleTap
+c:@E@BEGestureType@BEGestureTypeDoubleTapAndHold	swift.enum.case	BEGestureType.doubleTapAndHold	BEGestureType.doubleTapAndHold	case doubleTapAndHold
+c:@E@BEGestureType@BEGestureTypeForceTouch	swift.enum.case	BEGestureType.forceTouch	BEGestureType.forceTouch	case forceTouch
+c:@E@BEGestureType@BEGestureTypeIMPhraseBoundaryDrag	swift.enum.case	BEGestureType.imPhraseBoundaryDrag	BEGestureType.imPhraseBoundaryDrag	case imPhraseBoundaryDrag
+c:@E@BEGestureType@BEGestureTypeLoupe	swift.enum.case	BEGestureType.loupe	BEGestureType.loupe	case loupe
+c:@E@BEGestureType@BEGestureTypeOneFingerDoubleTap	swift.enum.case	BEGestureType.oneFingerDoubleTap	BEGestureType.oneFingerDoubleTap	case oneFingerDoubleTap
+c:@E@BEGestureType@BEGestureTypeOneFingerTap	swift.enum.case	BEGestureType.oneFingerTap	BEGestureType.oneFingerTap	case oneFingerTap
+c:@E@BEGestureType@BEGestureTypeOneFingerTripleTap	swift.enum.case	BEGestureType.oneFingerTripleTap	BEGestureType.oneFingerTripleTap	case oneFingerTripleTap
+c:@E@BEGestureType@BEGestureTypeTwoFingerRangedSelectGesture	swift.enum.case	BEGestureType.twoFingerRangedSelectGesture	BEGestureType.twoFingerRangedSelectGesture	case twoFingerRangedSelectGesture
+c:@E@BEGestureType@BEGestureTypeTwoFingerSingleTap	swift.enum.case	BEGestureType.twoFingerSingleTap	BEGestureType.twoFingerSingleTap	case twoFingerSingleTap
+c:@E@BEKeyModifierFlags	swift.enum	BEKeyModifierFlags	BEKeyModifierFlags	enum BEKeyModifierFlags
+c:@E@BEKeyModifierFlags@BEKeyModifierFlagCapsLock	swift.enum.case	BEKeyModifierFlags.capsLock	BEKeyModifierFlags.capsLock	case capsLock
+c:@E@BEKeyModifierFlags@BEKeyModifierFlagNone	swift.enum.case	BEKeyModifierFlags.none	BEKeyModifierFlags.none	case none
+c:@E@BEKeyModifierFlags@BEKeyModifierFlagShift	swift.enum.case	BEKeyModifierFlags.shift	BEKeyModifierFlags.shift	case shift
+c:@E@BEKeyPressState	swift.enum	BEKeyEntry.KeyPressState	BEKeyEntry.KeyPressState	enum KeyPressState
+c:@E@BEKeyPressState@BEKeyPressStateDown	swift.enum.case	BEKeyEntry.KeyPressState.down	BEKeyEntry.KeyPressState.down	case down
+c:@E@BEKeyPressState@BEKeyPressStateUp	swift.enum.case	BEKeyEntry.KeyPressState.up	BEKeyEntry.KeyPressState.up	case up
+c:@E@BEScrollViewScrollUpdatePhase	swift.enum	BEScrollViewScrollUpdate.Phase	BEScrollViewScrollUpdate.Phase	enum Phase
+c:@E@BEScrollViewScrollUpdatePhase@BEScrollViewScrollUpdatePhaseBegan	swift.enum.case	BEScrollViewScrollUpdate.Phase.began	BEScrollViewScrollUpdate.Phase.began	case began
+c:@E@BEScrollViewScrollUpdatePhase@BEScrollViewScrollUpdatePhaseCancelled	swift.enum.case	BEScrollViewScrollUpdate.Phase.cancelled	BEScrollViewScrollUpdate.Phase.cancelled	case cancelled
+c:@E@BEScrollViewScrollUpdatePhase@BEScrollViewScrollUpdatePhaseChanged	swift.enum.case	BEScrollViewScrollUpdate.Phase.changed	BEScrollViewScrollUpdate.Phase.changed	case changed
+c:@E@BEScrollViewScrollUpdatePhase@BEScrollViewScrollUpdatePhaseEnded	swift.enum.case	BEScrollViewScrollUpdate.Phase.ended	BEScrollViewScrollUpdate.Phase.ended	case ended
+c:@E@BESelectionFlags	swift.struct	BESelectionFlags	BESelectionFlags	struct BESelectionFlags
+c:@E@BESelectionFlags@BEPhraseBoundaryChanged	swift.type.property	phraseBoundaryChanged	BESelectionFlags.phraseBoundaryChanged	static var phraseBoundaryChanged: BESelectionFlags { get }
+c:@E@BESelectionFlags@BESelectionFlipped	swift.type.property	selectionFlipped	BESelectionFlags.selectionFlipped	static var selectionFlipped: BESelectionFlags { get }
+c:@E@BESelectionFlags@BEWordIsNearTap	swift.type.property	wordIsNearTap	BESelectionFlags.wordIsNearTap	static var wordIsNearTap: BESelectionFlags { get }
+c:@E@BESelectionTouchPhase	swift.enum	BESelectionTouchPhase	BESelectionTouchPhase	enum BESelectionTouchPhase
+c:@E@BESelectionTouchPhase@BESelectionTouchPhaseEnded	swift.enum.case	BESelectionTouchPhase.ended	BESelectionTouchPhase.ended	case ended
+c:@E@BESelectionTouchPhase@BESelectionTouchPhaseEndedMovingBackward	swift.enum.case	BESelectionTouchPhase.endedMovingBackward	BESelectionTouchPhase.endedMovingBackward	case endedMovingBackward
+c:@E@BESelectionTouchPhase@BESelectionTouchPhaseEndedMovingForward	swift.enum.case	BESelectionTouchPhase.endedMovingForward	BESelectionTouchPhase.endedMovingForward	case endedMovingForward
+c:@E@BESelectionTouchPhase@BESelectionTouchPhaseEndedNotMoving	swift.enum.case	BESelectionTouchPhase.endedNotMoving	BESelectionTouchPhase.endedNotMoving	case endedNotMoving
+c:@E@BESelectionTouchPhase@BESelectionTouchPhaseMoved	swift.enum.case	BESelectionTouchPhase.moved	BESelectionTouchPhase.moved	case moved
+c:@E@BESelectionTouchPhase@BESelectionTouchPhaseStarted	swift.enum.case	BESelectionTouchPhase.started	BESelectionTouchPhase.started	case started
+c:@E@BETextDocumentRequestOptions	swift.struct	BETextDocumentRequest.Options	BETextDocumentRequest.Options	struct Options
+c:@E@BETextDocumentRequestOptions@BETextDocumentOptionAttributedText	swift.type.property	attributedText	BETextDocumentRequest.Options.attributedText	static var attributedText: BETextDocumentRequest.Options { get }
+c:@E@BETextDocumentRequestOptions@BETextDocumentOptionAutocorrectedRanges	swift.type.property	autocorrectedRanges	BETextDocumentRequest.Options.autocorrectedRanges	static var autocorrectedRanges: BETextDocumentRequest.Options { get }
+c:@E@BETextDocumentRequestOptions@BETextDocumentOptionMarkedTextRects	swift.type.property	markedTextRects	BETextDocumentRequest.Options.markedTextRects	static var markedTextRects: BETextDocumentRequest.Options { get }
+c:@E@BETextDocumentRequestOptions@BETextDocumentOptionText	swift.type.property	text	BETextDocumentRequest.Options.text	static var text: BETextDocumentRequest.Options { get }
+c:@E@BETextDocumentRequestOptions@BETextDocumentOptionTextRects	swift.type.property	textRects	BETextDocumentRequest.Options.textRects	static var textRects: BETextDocumentRequest.Options { get }
+c:@E@BETextReplacementOptions	swift.struct	BETextReplacementOptions	BETextReplacementOptions	struct BETextReplacementOptions
+c:@E@BETextReplacementOptions@BETextReplacementOptionsAddUnderline	swift.type.property	addUnderline	BETextReplacementOptions.addUnderline	static var addUnderline: BETextReplacementOptions { get }
+c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor	swift.class	BEDownloadMonitor	BEDownloadMonitor	@objc(BEDownloadMonitor) class BEDownloadMonitor
+c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(cm)createAccessToken	swift.type.method	createAccessToken()	BEDownloadMonitor.createAccessToken()	@objc(createAccessToken) static func createAccessToken() -> Data?
+c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(im)beginMonitoring:	swift.method	beginMonitoring()	BEDownloadMonitor.beginMonitoring()	@objc(beginMonitoring:) func beginMonitoring() async throws -> BEDownloadMonitor.Location?
+c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(im)initWithSourceURL:destinationURL:observedProgress:liveActivityAccessToken:	swift.init	init(sourceURL:destinationURL:observedProgress:liveActivityAccessToken:)	BEDownloadMonitor.init(sourceURL:destinationURL:observedProgress:liveActivityAccessToken:)	@objc(initWithSourceURL:destinationURL:observedProgress:liveActivityAccessToken:) init(sourceURL: URL, destinationURL: URL, observedProgress: Progress, liveActivityAccessToken: Data)
+c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(im)resumeMonitoring:completionHandler:	swift.method	resumeMonitoring(placeholderURL:)	BEDownloadMonitor.resumeMonitoring(placeholderURL:)	@objc(resumeMonitoring:completionHandler:) func resumeMonitoring(placeholderURL: URL) async throws
+c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(im)useDownloadsFolderWithPlaceholderType:finalFileCreatedHandler:	swift.method	useDownloadsFolder(placeholderType:finalFileCreatedHandler:)	BEDownloadMonitor.useDownloadsFolder(placeholderType:finalFileCreatedHandler:)	@objc(useDownloadsFolderWithPlaceholderType:finalFileCreatedHandler:) func useDownloadsFolder(placeholderType: UTType? = nil, finalFileCreatedHandler: @escaping (BEDownloadMonitor.Location?) -> Void)
+c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(py)destinationURL	swift.property	destinationURL	BEDownloadMonitor.destinationURL	@objc final let destinationURL: URL
+c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(py)identifier	swift.property	id	BEDownloadMonitor.id	@objc(identifier) final let id: UUID
+c:@M@BrowserEngineKit@objc(cs)BEDownloadMonitor(py)sourceURL	swift.property	sourceURL	BEDownloadMonitor.sourceURL	@objc final let sourceURL: URL
+c:@M@BrowserEngineKit@objc(cs)BEMediaEnvironment	swift.class	BEMediaEnvironment	BEMediaEnvironment	@objc(BEMediaEnvironment) class BEMediaEnvironment
+c:@M@BrowserEngineKit@objc(cs)BEProcessCapability	swift.class	BEProcessCapability	BEProcessCapability	@objc(BEProcessCapability) class BEProcessCapability
+c:@S@BEAccessibility	swift.struct	BEAccessibility	BEAccessibility	struct BEAccessibility
+c:@SA@BEDirectionalTextRange	swift.struct	BEDirectionalTextRange	BEDirectionalTextRange	struct BEDirectionalTextRange
+c:@SA@BEDirectionalTextRange@FI@length	swift.property	length	BEDirectionalTextRange.length	var length: Int
+c:@SA@BEDirectionalTextRange@FI@offset	swift.property	offset	BEDirectionalTextRange.offset	var offset: Int
+c:objc(cs)BEAccessibilityRemoteElement	swift.class	BEAccessibilityRemoteElement	BEAccessibilityRemoteElement	class BEAccessibilityRemoteElement
+c:objc(cs)BEAccessibilityRemoteElement(im)initWithIdentifier:hostPid:	swift.init	init(identifier:hostPid:)	BEAccessibilityRemoteElement.init(identifier:hostPid:)	init(identifier: String, hostPid: pid_t)
+c:objc(cs)BEAccessibilityRemoteHostElement	swift.class	BEAccessibilityRemoteHostElement	BEAccessibilityRemoteHostElement	class BEAccessibilityRemoteHostElement
+c:objc(cs)BEAccessibilityRemoteHostElement(im)initWithIdentifier:remotePid:	swift.init	init(identifier:remotePid:)	BEAccessibilityRemoteHostElement.init(identifier:remotePid:)	init(identifier: String, remotePid: pid_t)
+c:objc(cs)BEAccessibilityRemoteHostElement(py)accessibilityContainer	swift.property	accessibilityContainer	BEAccessibilityRemoteHostElement.accessibilityContainer	weak var accessibilityContainer: AnyObject? { get set }
+c:objc(cs)BEAccessibilityTextMarker	swift.class	BEAccessibilityTextMarker	BEAccessibilityTextMarker	class BEAccessibilityTextMarker
+c:objc(cs)BEAccessibilityTextMarkerRange	swift.class	BEAccessibilityTextMarker.Range	BEAccessibilityTextMarker.Range	class Range
+c:objc(cs)BEAccessibilityTextMarkerRange(py)endMarker	swift.property	endMarker	BEAccessibilityTextMarker.Range.endMarker	var endMarker: BEAccessibilityTextMarker { get set }
+c:objc(cs)BEAccessibilityTextMarkerRange(py)startMarker	swift.property	startMarker	BEAccessibilityTextMarker.Range.startMarker	var startMarker: BEAccessibilityTextMarker { get set }
+c:objc(cs)BEAutoFillTextSuggestion	swift.class	BEAutoFillTextSuggestion	BEAutoFillTextSuggestion	class BEAutoFillTextSuggestion
+c:objc(cs)BEAutoFillTextSuggestion(py)contents	swift.property	contents	BEAutoFillTextSuggestion.contents	var contents: [UITextContentType : String] { get }
+c:objc(cs)BEContextMenuConfiguration	swift.class	BEContextMenuConfiguration	BEContextMenuConfiguration	@MainActor class BEContextMenuConfiguration
+c:objc(cs)BEContextMenuConfiguration(im)fulfillUsingConfiguration:	swift.method	fulfill(using:)	BEContextMenuConfiguration.fulfill(using:)	@MainActor func fulfill(using configuration: UIContextMenuConfiguration?) -> Bool
+c:objc(cs)BEContextMenuConfiguration(im)init	swift.init	init()	BEContextMenuConfiguration.init()	@MainActor init()
+c:objc(cs)BEDragInteraction	swift.class	BEDragInteraction	BEDragInteraction	@MainActor class BEDragInteraction
+c:objc(cs)BEDragInteraction(im)initWithDelegate:	swift.init	init(delegate:)	BEDragInteraction.init(delegate:)	@MainActor init(delegate: any BEDragInteractionDelegate)
+c:objc(cs)BEDragInteraction(py)delegate	swift.property	delegate	BEDragInteraction.delegate	@MainActor weak var delegate: (any BEDragInteractionDelegate)? { get }
+c:objc(cs)BEKeyEntry	swift.class	BEKeyEntry	BEKeyEntry	class BEKeyEntry
+c:objc(cs)BEKeyEntry(py)key	swift.property	key	BEKeyEntry.key	var key: UIKey { get }
+c:objc(cs)BEKeyEntry(py)keyRepeating	swift.property	isKeyRepeating	BEKeyEntry.isKeyRepeating	var isKeyRepeating: Bool { get }
+c:objc(cs)BEKeyEntry(py)state	swift.property	state	BEKeyEntry.state	var state: BEKeyEntry.KeyPressState { get }
+c:objc(cs)BEKeyEntry(py)timestamp	swift.property	timestamp	BEKeyEntry.timestamp	var timestamp: TimeInterval { get }
+c:objc(cs)BEKeyEntryContext	swift.class	BEKeyEntryContext	BEKeyEntryContext	class BEKeyEntryContext
+c:objc(cs)BEKeyEntryContext(im)initWithKeyEntry:	swift.init	init(keyEntry:)	BEKeyEntryContext.init(keyEntry:)	init(keyEntry: BEKeyEntry)
+c:objc(cs)BEKeyEntryContext(py)documentEditable	swift.property	isDocumentEditable	BEKeyEntryContext.isDocumentEditable	var isDocumentEditable: Bool { get set }
+c:objc(cs)BEKeyEntryContext(py)keyEntry	swift.property	keyEntry	BEKeyEntryContext.keyEntry	var keyEntry: BEKeyEntry { get }
+c:objc(cs)BEKeyEntryContext(py)shouldEvaluateForInputSystemHandling	swift.property	shouldEvaluateForInputSystemHandling	BEKeyEntryContext.shouldEvaluateForInputSystemHandling	var shouldEvaluateForInputSystemHandling: Bool { get set }
+c:objc(cs)BEKeyEntryContext(py)shouldInsertCharacter	swift.property	shouldInsertCharacter	BEKeyEntryContext.shouldInsertCharacter	var shouldInsertCharacter: Bool { get set }
+c:objc(cs)BELayerHierarchy	swift.class	LayerHierarchy	LayerHierarchy	@MainActor class LayerHierarchy
+c:objc(cs)BELayerHierarchy(cm)layerHierarchyWithError:	swift.init	init()	LayerHierarchy.init()	@MainActor init() throws
+c:objc(cs)BELayerHierarchy(im)invalidate	swift.method	invalidate()	LayerHierarchy.invalidate()	@MainActor func invalidate()
+c:objc(cs)BELayerHierarchy(py)handle	swift.property	handle	LayerHierarchy.handle	@MainActor var handle: LayerHierarchyHandle { get }
+c:objc(cs)BELayerHierarchy(py)layer	swift.property	layer	LayerHierarchy.layer	@MainActor var layer: CALayer? { get set }
+c:objc(cs)BELayerHierarchyHandle	swift.class	LayerHierarchyHandle	LayerHierarchyHandle	class LayerHierarchyHandle
+c:objc(cs)BELayerHierarchyHandle(cm)handleWithPort:data:error:	swift.init	init(port:data:)	LayerHierarchyHandle.init(port:data:)	init(port: mach_port_t, data: Data) throws
+c:objc(cs)BELayerHierarchyHandle(cm)handleWithXPCRepresentation:error:	swift.init	init(xpcRepresentation:)	LayerHierarchyHandle.init(xpcRepresentation:)	init(xpcRepresentation: xpc_object_t?) throws
+c:objc(cs)BELayerHierarchyHandle(im)createXPCRepresentation	swift.method	createXPCRepresentation()	LayerHierarchyHandle.createXPCRepresentation()	func createXPCRepresentation() -> xpc_object_t
+c:objc(cs)BELayerHierarchyHandle(im)encodeWithBlock:	swift.method	encode(_:)	LayerHierarchyHandle.encode(_:)	func encode(_ block: (mach_port_t, Data) -> Void)
+c:objc(cs)BELayerHierarchyHostingTransactionCoordinator	swift.class	LayerHierarchyHostingTransactionCoordinator	LayerHierarchyHostingTransactionCoordinator	class LayerHierarchyHostingTransactionCoordinator
+c:objc(cs)BELayerHierarchyHostingTransactionCoordinator(cm)coordinatorWithError:	swift.init	init()	LayerHierarchyHostingTransactionCoordinator.init()	init() throws
+c:objc(cs)BELayerHierarchyHostingTransactionCoordinator(cm)coordinatorWithPort:data:error:	swift.init	init(port:data:)	LayerHierarchyHostingTransactionCoordinator.init(port:data:)	init(port: mach_port_t, data: Data) throws
+c:objc(cs)BELayerHierarchyHostingTransactionCoordinator(cm)coordinatorWithXPCRepresentation:error:	swift.init	init(xpcRepresentation:)	LayerHierarchyHostingTransactionCoordinator.init(xpcRepresentation:)	init(xpcRepresentation: xpc_object_t?) throws
+c:objc(cs)BELayerHierarchyHostingTransactionCoordinator(im)addLayerHierarchy:	swift.method	add(_:)	LayerHierarchyHostingTransactionCoordinator.add(_:)	@MainActor func add(_ layerHierarchy: LayerHierarchy)
+c:objc(cs)BELayerHierarchyHostingTransactionCoordinator(im)addLayerHierarchyHostingView:	swift.method	add(_:)	LayerHierarchyHostingTransactionCoordinator.add(_:)	@MainActor func add(_ hostingView: LayerHierarchyHostingView)
+c:objc(cs)BELayerHierarchyHostingTransactionCoordinator(im)commit	swift.method	commit()	LayerHierarchyHostingTransactionCoordinator.commit()	@MainActor func commit()
+c:objc(cs)BELayerHierarchyHostingTransactionCoordinator(im)createXPCRepresentation	swift.method	createXPCRepresentation()	LayerHierarchyHostingTransactionCoordinator.createXPCRepresentation()	func createXPCRepresentation() -> xpc_object_t
+c:objc(cs)BELayerHierarchyHostingTransactionCoordinator(im)encodeWithBlock:	swift.method	encode(_:)	LayerHierarchyHostingTransactionCoordinator.encode(_:)	func encode(_ block: (mach_port_t, Data) -> Void)
+c:objc(cs)BELayerHierarchyHostingView	swift.class	LayerHierarchyHostingView	LayerHierarchyHostingView	@MainActor class LayerHierarchyHostingView
+c:objc(cs)BELayerHierarchyHostingView(py)handle	swift.property	handle	LayerHierarchyHostingView.handle	@MainActor var handle: LayerHierarchyHandle? { get set }
+c:objc(cs)BEScrollView	swift.class	BEScrollView	BEScrollView	@MainActor class BEScrollView
+c:objc(cs)BEScrollView(py)delegate	swift.property	delegate	BEScrollView.delegate	@MainActor weak var delegate: (any BEScrollViewDelegate)? { get set }
+c:objc(cs)BEScrollViewScrollUpdate	swift.class	BEScrollViewScrollUpdate	BEScrollViewScrollUpdate	@MainActor class BEScrollViewScrollUpdate
+c:objc(cs)BEScrollViewScrollUpdate(im)locationInView:	swift.method	location(in:)	BEScrollViewScrollUpdate.location(in:)	@MainActor func location(in view: UIView?) -> CGPoint
+c:objc(cs)BEScrollViewScrollUpdate(im)translationInView:	swift.method	translation(in:)	BEScrollViewScrollUpdate.translation(in:)	@MainActor func translation(in view: UIView?) -> CGPoint
+c:objc(cs)BEScrollViewScrollUpdate(py)phase	swift.property	phase	BEScrollViewScrollUpdate.phase	@MainActor var phase: BEScrollViewScrollUpdate.Phase { get }
+c:objc(cs)BEScrollViewScrollUpdate(py)timestamp	swift.property	timestamp	BEScrollViewScrollUpdate.timestamp	@MainActor var timestamp: TimeInterval { get }
+c:objc(cs)BETextAlternatives	swift.class	BETextAlternatives	BETextAlternatives	class BETextAlternatives
+c:objc(cs)BETextAlternatives(py)alternativeStrings	swift.property	alternativeStrings	BETextAlternatives.alternativeStrings	var alternativeStrings: [String] { get }
+c:objc(cs)BETextAlternatives(py)primaryString	swift.property	primaryString	BETextAlternatives.primaryString	var primaryString: String { get }
+c:objc(cs)BETextDocumentContext	swift.class	BETextDocumentContext	BETextDocumentContext	class BETextDocumentContext
+c:objc(cs)BETextDocumentContext(im)addTextRect:forCharacterRange:	swift.method	addTextRect(_:forCharacterRange:)	BETextDocumentContext.addTextRect(_:forCharacterRange:)	func addTextRect(_ rect: CGRect, forCharacterRange range: NSRange)
+c:objc(cs)BETextDocumentContext(im)initWithAttributedSelectedText:contextBefore:contextAfter:markedText:selectedRangeInMarkedText:	swift.init	init(attributedSelectedText:contextBefore:contextAfter:markedText:selectedRangeInMarkedText:)	BETextDocumentContext.init(attributedSelectedText:contextBefore:contextAfter:markedText:selectedRangeInMarkedText:)	init(attributedSelectedText selectedText: NSAttributedString?, contextBefore: NSAttributedString?, contextAfter: NSAttributedString?, markedText: NSAttributedString?, selectedRangeInMarkedText: NSRange)
+c:objc(cs)BETextDocumentContext(im)initWithSelectedText:contextBefore:contextAfter:markedText:selectedRangeInMarkedText:	swift.init	init(selectedText:contextBefore:contextAfter:markedText:selectedRangeInMarkedText:)	BETextDocumentContext.init(selectedText:contextBefore:contextAfter:markedText:selectedRangeInMarkedText:)	init(selectedText: String?, contextBefore: String?, contextAfter: String?, markedText: String?, selectedRangeInMarkedText: NSRange)
+c:objc(cs)BETextDocumentContext(py)autocorrectedRanges	swift.property	autocorrectedRanges	BETextDocumentContext.autocorrectedRanges	var autocorrectedRanges: [NSValue] { get set }
+c:objc(cs)BETextDocumentRequest	swift.class	BETextDocumentRequest	BETextDocumentRequest	class BETextDocumentRequest
+c:objc(cs)BETextDocumentRequest(py)granularityCount	swift.property	granularityCount	BETextDocumentRequest.granularityCount	var granularityCount: Int { get set }
+c:objc(cs)BETextDocumentRequest(py)options	swift.property	options	BETextDocumentRequest.options	var options: BETextDocumentRequest.Options { get set }
+c:objc(cs)BETextDocumentRequest(py)surroundingGranularity	swift.property	surroundingGranularity	BETextDocumentRequest.surroundingGranularity	var surroundingGranularity: UITextGranularity { get set }
+c:objc(cs)BETextInteraction	swift.class	BETextInteraction	BETextInteraction	@MainActor class BETextInteraction
+c:objc(cs)BETextInteraction(im)addShortcutForText:fromRect:	swift.method	addShortcut(forText:from:)	BETextInteraction.addShortcut(forText:from:)	@MainActor func addShortcut(forText text: String, from presentationRect: CGRect)
+c:objc(cs)BETextInteraction(im)dismissEditMenuForSelection	swift.method	dismissEditMenuForSelection()	BETextInteraction.dismissEditMenuForSelection()	@MainActor func dismissEditMenuForSelection()
+c:objc(cs)BETextInteraction(im)editabilityChanged	swift.method	editabilityChanged()	BETextInteraction.editabilityChanged()	@MainActor func editabilityChanged()
+c:objc(cs)BETextInteraction(im)presentEditMenuForSelection	swift.method	presentEditMenuForSelection()	BETextInteraction.presentEditMenuForSelection()	@MainActor func presentEditMenuForSelection()
+c:objc(cs)BETextInteraction(im)refreshKeyboardUI	swift.method	refreshKeyboardUI()	BETextInteraction.refreshKeyboardUI()	@MainActor func refreshKeyboardUI()
+c:objc(cs)BETextInteraction(im)selectionBoundaryAdjustedToPoint:touchPhase:flags:	swift.method	selectionBoundaryAdjusted(to:touchPhase:flags:)	BETextInteraction.selectionBoundaryAdjusted(to:touchPhase:flags:)	@MainActor func selectionBoundaryAdjusted(to point: CGPoint, touchPhase touch: BESelectionTouchPhase, flags: BESelectionFlags)
+c:objc(cs)BETextInteraction(im)selectionChangedWithGestureAtPoint:gesture:state:flags:	swift.method	selectionChangedWithGesture(at:gesture:state:flags:)	BETextInteraction.selectionChangedWithGesture(at:gesture:state:flags:)	@MainActor func selectionChangedWithGesture(at point: CGPoint, gesture gestureType: BEGestureType, state gestureState: UIGestureRecognizer.State, flags: BESelectionFlags)
+c:objc(cs)BETextInteraction(im)shareText:fromRect:	swift.method	share(text:from:)	BETextInteraction.share(text:from:)	@MainActor func share(text: String, from presentationRect: CGRect)
+c:objc(cs)BETextInteraction(im)showDictionaryForTextInContext:definingTextInRange:fromRect:	swift.method	showDictionary(forTextInContext:definingTextInRange:from:)	BETextInteraction.showDictionary(forTextInContext:definingTextInRange:from:)	@MainActor func showDictionary(forTextInContext textWithContext: String, definingTextInRange range: NSRange, from presentationRect: CGRect)
+c:objc(cs)BETextInteraction(im)showReplacementsForText:	swift.method	showReplacements(forText:)	BETextInteraction.showReplacements(forText:)	@MainActor func showReplacements(forText text: String)
+c:objc(cs)BETextInteraction(im)translateText:fromRect:	swift.method	translate(text:from:)	BETextInteraction.translate(text:from:)	@MainActor func translate(text: String, from presentationRect: CGRect)
+c:objc(cs)BETextInteraction(im)transliterateChineseForText:	swift.method	transliterateChinese(forText:)	BETextInteraction.transliterateChinese(forText:)	@MainActor func transliterateChinese(forText text: String)
+c:objc(cs)BETextInteraction(py)contextMenuInteraction	swift.property	contextMenuInteraction	BETextInteraction.contextMenuInteraction	@MainActor var contextMenuInteraction: UIContextMenuInteraction { get }
+c:objc(cs)BETextInteraction(py)contextMenuInteractionDelegate	swift.property	contextMenuInteractionDelegate	BETextInteraction.contextMenuInteractionDelegate	@MainActor weak var contextMenuInteractionDelegate: (any UIContextMenuInteractionDelegate)? { get set }
+c:objc(cs)BETextInteraction(py)delegate	swift.property	delegate	BETextInteraction.delegate	@MainActor weak var delegate: (any BETextInteractionDelegate)? { get set }
+c:objc(cs)BETextInteraction(py)textSelectionDisplayInteraction	swift.property	textSelectionDisplayInteraction	BETextInteraction.textSelectionDisplayInteraction	@MainActor var textSelectionDisplayInteraction: UITextSelectionDisplayInteraction { get }
+c:objc(cs)BETextSuggestion	swift.class	BETextSuggestion	BETextSuggestion	class BETextSuggestion
+c:objc(cs)BETextSuggestion(im)initWithInputText:	swift.init	init(inputText:)	BETextSuggestion.init(inputText:)	init(inputText: String)
+c:objc(cs)BETextSuggestion(py)inputText	swift.property	inputText	BETextSuggestion.inputText	var inputText: String { get }
+c:objc(cs)BEWebAppManifest	swift.class	BEWebAppManifest	BEWebAppManifest	class BEWebAppManifest
+c:objc(cs)BEWebAppManifest(im)initWithJSONData:manifestURL:	swift.init	init(jsonData:manifestURL:)	BEWebAppManifest.init(jsonData:manifestURL:)	init?(jsonData: Data, manifestURL: URL)
+c:objc(cs)BEWebAppManifest(im)initWithJSONData:manifestURL:::SYNTHESIZED::c:objc(cs)BEWebAppManifest	swift.init	init(JSONData:manifestURL:)	BEWebAppManifest.init(JSONData:manifestURL:)	init?(JSONData jsonData: Data, manifestURL: URL)
+c:objc(cs)BEWebAppManifest(py)jsonData	swift.property	jsonData	BEWebAppManifest.jsonData	var jsonData: Data { get }
+c:objc(cs)BEWebAppManifest(py)manifestURL	swift.property	manifestURL	BEWebAppManifest.manifestURL	var manifestURL: URL { get }
+c:objc(cs)NSObject(im)accessibilityLineEndPositionFromCurrentSelection	swift.method	accessibilityLineEndPositionFromCurrentSelection()	NSObject.accessibilityLineEndPositionFromCurrentSelection()	func accessibilityLineEndPositionFromCurrentSelection() -> Int
+c:objc(cs)NSObject(im)accessibilityLineRangeForPosition:	swift.method	accessibilityLineRange(forPosition:)	NSObject.accessibilityLineRange(forPosition:)	func accessibilityLineRange(forPosition position: Int) -> NSRange
+c:objc(cs)NSObject(im)accessibilityLineStartPositionFromCurrentSelection	swift.method	accessibilityLineStartPositionFromCurrentSelection()	NSObject.accessibilityLineStartPositionFromCurrentSelection()	func accessibilityLineStartPositionFromCurrentSelection() -> Int
+c:objc(cs)NSObject(im)browserAccessibilityAttributedValueInRange:	swift.method	browserAccessibilityAttributedValue(in:)	NSObject.browserAccessibilityAttributedValue(in:)	func browserAccessibilityAttributedValue(in range: NSRange) -> NSAttributedString
+c:objc(cs)NSObject(im)browserAccessibilityDeleteTextAtCursor:	swift.method	browserAccessibilityDeleteTextAtCursor(numberOfCharacters:)	NSObject.browserAccessibilityDeleteTextAtCursor(numberOfCharacters:)	func browserAccessibilityDeleteTextAtCursor(numberOfCharacters: Int)
+c:objc(cs)NSObject(im)browserAccessibilityInsertTextAtCursor:	swift.method	browserAccessibilityInsertTextAtCursor(text:)	NSObject.browserAccessibilityInsertTextAtCursor(text:)	func browserAccessibilityInsertTextAtCursor(text: String)
+c:objc(cs)NSObject(im)browserAccessibilitySelectedTextRange	swift.method	browserAccessibilitySelectedTextRange()	NSObject.browserAccessibilitySelectedTextRange()	func browserAccessibilitySelectedTextRange() -> NSRange
+c:objc(cs)NSObject(im)browserAccessibilitySetSelectedTextRange:	swift.method	browserAccessibilitySetSelectedTextRange(_:)	NSObject.browserAccessibilitySetSelectedTextRange(_:)	func browserAccessibilitySetSelectedTextRange(_ range: NSRange)
+c:objc(cs)NSObject(im)browserAccessibilityValueInRange:	swift.method	browserAccessibilityValue(in:)	NSObject.browserAccessibilityValue(in:)	func browserAccessibilityValue(in range: NSRange) -> String
+c:objc(cs)NSObject(py)browserAccessibilityContainerType	swift.property	browserAccessibilityContainerType	NSObject.browserAccessibilityContainerType	var browserAccessibilityContainerType: BEAccessibilityContainerType { get set }
+c:objc(cs)NSObject(py)browserAccessibilityCurrentStatus	swift.property	browserAccessibilityCurrentStatus	NSObject.browserAccessibilityCurrentStatus	var browserAccessibilityCurrentStatus: String? { get set }
+c:objc(cs)NSObject(py)browserAccessibilityHasDOMFocus	swift.property	browserAccessibilityHasDOMFocus	NSObject.browserAccessibilityHasDOMFocus	var browserAccessibilityHasDOMFocus: Bool { get set }
+c:objc(cs)NSObject(py)browserAccessibilityIsRequired	swift.property	browserAccessibilityIsRequired	NSObject.browserAccessibilityIsRequired	var browserAccessibilityIsRequired: Bool { get set }
+c:objc(cs)NSObject(py)browserAccessibilityPressedState	swift.property	browserAccessibilityPressedState	NSObject.browserAccessibilityPressedState	var browserAccessibilityPressedState: BEAccessibilityPressedState { get set }
+c:objc(cs)NSObject(py)browserAccessibilityRoleDescription	swift.property	browserAccessibilityRoleDescription	NSObject.browserAccessibilityRoleDescription	var browserAccessibilityRoleDescription: String? { get set }
+c:objc(cs)NSObject(py)browserAccessibilitySortDirection	swift.property	browserAccessibilitySortDirection	NSObject.browserAccessibilitySortDirection	var browserAccessibilitySortDirection: String? { get set }
+c:objc(pl)BEAccessibilityTextMarkerSupport	swift.protocol	BEAccessibilityTextMarkerSupport	BEAccessibilityTextMarkerSupport	protocol BEAccessibilityTextMarkerSupport : NSObjectProtocol
+c:objc(pl)BEAccessibilityTextMarkerSupport(im)accessibilityBoundsForTextMarkerRange:	swift.method	accessibilityBounds(for:)	BEAccessibilityTextMarkerSupport.accessibilityBounds(for:)	func accessibilityBounds(for range: BEAccessibilityTextMarker.Range) -> CGRect
+c:objc(pl)BEAccessibilityTextMarkerSupport(im)accessibilityContentForTextMarkerRange:	swift.method	accessibilityContent(for:)	BEAccessibilityTextMarkerSupport.accessibilityContent(for:)	func accessibilityContent(for range: BEAccessibilityTextMarker.Range) -> String?
+c:objc(pl)BEAccessibilityTextMarkerSupport(im)accessibilityLineEndMarkerForMarker:	swift.method	accessibilityLineEndMarker(for:)	BEAccessibilityTextMarkerSupport.accessibilityLineEndMarker(for:)	func accessibilityLineEndMarker(for marker: BEAccessibilityTextMarker) -> BEAccessibilityTextMarker?
+c:objc(pl)BEAccessibilityTextMarkerSupport(im)accessibilityLineStartMarkerForMarker:	swift.method	accessibilityLineStartMarker(for:)	BEAccessibilityTextMarkerSupport.accessibilityLineStartMarker(for:)	func accessibilityLineStartMarker(for marker: BEAccessibilityTextMarker) -> BEAccessibilityTextMarker?
+c:objc(pl)BEAccessibilityTextMarkerSupport(im)accessibilityMarkerForPoint:	swift.method	accessibilityMarker(for:)	BEAccessibilityTextMarkerSupport.accessibilityMarker(for:)	func accessibilityMarker(for point: CGPoint) -> BEAccessibilityTextMarker?
+c:objc(pl)BEAccessibilityTextMarkerSupport(im)accessibilityNextTextMarker:	swift.method	accessibilityNextTextMarker(_:)	BEAccessibilityTextMarkerSupport.accessibilityNextTextMarker(_:)	func accessibilityNextTextMarker(_ marker: BEAccessibilityTextMarker) -> BEAccessibilityTextMarker?
+c:objc(pl)BEAccessibilityTextMarkerSupport(im)accessibilityPreviousTextMarker:	swift.method	accessibilityPreviousTextMarker(_:)	BEAccessibilityTextMarkerSupport.accessibilityPreviousTextMarker(_:)	func accessibilityPreviousTextMarker(_ marker: BEAccessibilityTextMarker) -> BEAccessibilityTextMarker?
+c:objc(pl)BEAccessibilityTextMarkerSupport(im)accessibilityRangeForTextMarkerRange:	swift.method	accessibilityRange(for:)	BEAccessibilityTextMarkerSupport.accessibilityRange(for:)	func accessibilityRange(for range: BEAccessibilityTextMarker.Range) -> NSRange
+c:objc(pl)BEAccessibilityTextMarkerSupport(im)accessibilityTextMarkerForPosition:	swift.method	accessibilityTextMarker(forPosition:)	BEAccessibilityTextMarkerSupport.accessibilityTextMarker(forPosition:)	func accessibilityTextMarker(forPosition position: Int) -> BEAccessibilityTextMarker?
+c:objc(pl)BEAccessibilityTextMarkerSupport(im)accessibilityTextMarkerRange	swift.method	accessibilityTextMarkerRange()	BEAccessibilityTextMarkerSupport.accessibilityTextMarkerRange()	func accessibilityTextMarkerRange() -> BEAccessibilityTextMarker.Range
+c:objc(pl)BEAccessibilityTextMarkerSupport(im)accessibilityTextMarkerRangeForCurrentSelection	swift.method	accessibilityTextMarkerRangeForCurrentSelection()	BEAccessibilityTextMarkerSupport.accessibilityTextMarkerRangeForCurrentSelection()	func accessibilityTextMarkerRangeForCurrentSelection() -> BEAccessibilityTextMarker.Range?
+c:objc(pl)BEAccessibilityTextMarkerSupport(im)accessibilityTextMarkerRangeForRange:	swift.method	accessibilityTextMarkerRange(for:)	BEAccessibilityTextMarkerSupport.accessibilityTextMarkerRange(for:)	func accessibilityTextMarkerRange(for range: NSRange) -> BEAccessibilityTextMarker.Range?
+c:objc(pl)BEDragInteractionDelegate	swift.protocol	BEDragInteractionDelegate	BEDragInteractionDelegate	@MainActor protocol BEDragInteractionDelegate : UIDragInteractionDelegate
+c:objc(pl)BEDragInteractionDelegate(im)dragInteraction:itemsForAddingToSession:forTouchAtPoint:completion:	swift.method	dragInteraction(_:itemsForAddingTo:forTouchAt:completion:)	BEDragInteractionDelegate.dragInteraction(_:itemsForAddingTo:forTouchAt:completion:)	@MainActor optional func dragInteraction(_ dragInteraction: BEDragInteraction, itemsForAddingTo session: any UIDragSession, forTouchAt point: CGPoint, completion: @escaping ([UIDragItem]) -> Bool)
+c:objc(pl)BEDragInteractionDelegate(im)dragInteraction:prepareDragSession:completion:	swift.method	dragInteraction(_:prepare:completion:)	BEDragInteractionDelegate.dragInteraction(_:prepare:completion:)	@MainActor optional func dragInteraction(_ dragInteraction: BEDragInteraction, prepare session: any UIDragSession, completion: @escaping () -> Bool)
+c:objc(pl)BEExtendedTextInputTraits	swift.protocol	BEExtendedTextInputTraits	BEExtendedTextInputTraits	protocol BEExtendedTextInputTraits : UITextInputTraits
+c:objc(pl)BEExtendedTextInputTraits(py)insertionPointColor	swift.property	insertionPointColor	BEExtendedTextInputTraits.insertionPointColor	optional var insertionPointColor: UIColor? { get }
+c:objc(pl)BEExtendedTextInputTraits(py)selectionHandleColor	swift.property	selectionHandleColor	BEExtendedTextInputTraits.selectionHandleColor	optional var selectionHandleColor: UIColor? { get }
+c:objc(pl)BEExtendedTextInputTraits(py)selectionHighlightColor	swift.property	selectionHighlightColor	BEExtendedTextInputTraits.selectionHighlightColor	optional var selectionHighlightColor: UIColor? { get }
+c:objc(pl)BEExtendedTextInputTraits(py)singleLineDocument	swift.property	isSingleLineDocument	BEExtendedTextInputTraits.isSingleLineDocument	optional var isSingleLineDocument: Bool { get }
+c:objc(pl)BEExtendedTextInputTraits(py)typingAdaptationEnabled	swift.property	isTypingAdaptationEnabled	BEExtendedTextInputTraits.isTypingAdaptationEnabled	optional var isTypingAdaptationEnabled: Bool { get }
+c:objc(pl)BEExtensionProcess	swift.protocol	BEExtensionProcess	BEExtensionProcess	protocol BEExtensionProcess : NSObjectProtocol
+c:objc(pl)BEExtensionProcess(im)invalidate	swift.method	invalidate()	BEExtensionProcess.invalidate()	func invalidate()
+c:objc(pl)BEExtensionProcess(im)makeLibXPCConnectionError:	swift.method	makeLibXPCConnectionError()	BEExtensionProcess.makeLibXPCConnectionError()	func makeLibXPCConnectionError() throws -> xpc_connection_t
+c:objc(pl)BEResponderEditActions	swift.protocol	BEResponderEditActions	BEResponderEditActions	protocol BEResponderEditActions : UIResponderStandardEditActions
+c:objc(pl)BEResponderEditActions(im)addShortcut:	swift.method	addShortcut(_:)	BEResponderEditActions.addShortcut(_:)	optional func addShortcut(_ sender: Any?)
+c:objc(pl)BEResponderEditActions(im)findSelected:	swift.method	findSelected(_:)	BEResponderEditActions.findSelected(_:)	optional func findSelected(_ sender: Any?)
+c:objc(pl)BEResponderEditActions(im)lookup:	swift.method	lookup(_:)	BEResponderEditActions.lookup(_:)	optional func lookup(_ sender: Any?)
+c:objc(pl)BEResponderEditActions(im)promptForReplace:	swift.method	promptForReplace(_:)	BEResponderEditActions.promptForReplace(_:)	optional func promptForReplace(_ sender: Any?)
+c:objc(pl)BEResponderEditActions(im)replace:	swift.method	replace(_:)	BEResponderEditActions.replace(_:)	optional func replace(_ sender: Any?)
+c:objc(pl)BEResponderEditActions(im)share:	swift.method	share(_:)	BEResponderEditActions.share(_:)	optional func share(_ sender: Any?)
+c:objc(pl)BEResponderEditActions(im)translate:	swift.method	translate(_:)	BEResponderEditActions.translate(_:)	optional func translate(_ sender: Any?)
+c:objc(pl)BEResponderEditActions(im)transliterateChinese:	swift.method	transliterateChinese(_:)	BEResponderEditActions.transliterateChinese(_:)	optional func transliterateChinese(_ sender: Any?)
+c:objc(pl)BEScrollViewDelegate	swift.protocol	BEScrollViewDelegate	BEScrollViewDelegate	@MainActor protocol BEScrollViewDelegate : UIScrollViewDelegate
+c:objc(pl)BEScrollViewDelegate(im)parentScrollViewForScrollView:	swift.method	parentScrollView(for:)	BEScrollViewDelegate.parentScrollView(for:)	@MainActor optional func parentScrollView(for scrollView: BEScrollView) -> BEScrollView?
+c:objc(pl)BEScrollViewDelegate(im)scrollView:handleScrollUpdate:completion:	swift.method	scrollView(_:handle:)	BEScrollViewDelegate.scrollView(_:handle:)	@MainActor optional func scrollView(_ scrollView: BEScrollView, handle scrollUpdate: BEScrollViewScrollUpdate) async -> Bool
+c:objc(pl)BETextInput	swift.protocol	BETextInput	BETextInput	protocol BETextInput : BEResponderEditActions, BETextSelectionDirectionNavigation, UIKeyInput
+c:objc(pl)BETextInput(im)addTextAlternatives:	swift.method	add(_:)	BETextInput.add(_:)	func add(_ alternatives: BETextAlternatives)
+c:objc(pl)BETextInput(im)adjustSelectionBoundaryToPoint:touchPhase:baseIsStart:flags:	swift.method	adjustSelectionBoundary(to:touchPhase:baseIsStart:flags:)	BETextInput.adjustSelectionBoundary(to:touchPhase:baseIsStart:flags:)	func adjustSelectionBoundary(to point: CGPoint, touchPhase touch: BESelectionTouchPhase, baseIsStart boundaryIsStart: Bool, flags: BESelectionFlags)
+c:objc(pl)BETextInput(im)adjustSelectionByRange:completionHandler:	swift.method	adjustSelection(by:)	BETextInput.adjustSelection(by:)	func adjustSelection(by range: BEDirectionalTextRange) async
+c:objc(pl)BETextInput(im)alternativesForSelectedText	swift.method	alternativesForSelectedText()	BETextInput.alternativesForSelectedText()	func alternativesForSelectedText() -> [BETextAlternatives]?
+c:objc(pl)BETextInput(im)autoscrollToPoint:	swift.method	autoscroll(to:)	BETextInput.autoscroll(to:)	func autoscroll(to point: CGPoint)
+c:objc(pl)BETextInput(im)canPerformAction:withSender:	swift.method	canPerformAction(_:withSender:)	BETextInput.canPerformAction(_:withSender:)	func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool
+c:objc(pl)BETextInput(im)cancelAutoscroll	swift.method	cancelAutoscroll()	BETextInput.cancelAutoscroll()	func cancelAutoscroll()
+c:objc(pl)BETextInput(im)caretRectForPosition:	swift.method	caretRect(for:)	BETextInput.caretRect(for:)	func caretRect(for position: UITextPosition) -> CGRect
+c:objc(pl)BETextInput(im)deleteInDirection:toGranularity:	swift.method	delete(in:to:)	BETextInput.delete(in:to:)	func delete(in direction: UITextStorageDirection, to granularity: UITextGranularity)
+c:objc(pl)BETextInput(im)didInsertFinalDictationResult	swift.method	didInsertFinalDictationResult()	BETextInput.didInsertFinalDictationResult()	func didInsertFinalDictationResult()
+c:objc(pl)BETextInput(im)handleKeyEntry:withCompletionHandler:	swift.method	handleKeyEntry(_:)	BETextInput.handleKeyEntry(_:)	func handleKeyEntry(_ entry: BEKeyEntry) async -> (BEKeyEntry, Bool)
+c:objc(pl)BETextInput(im)insertTextAlternatives:	swift.method	insert(_:)	BETextInput.insert(_:)	func insert(_ alternatives: BETextAlternatives)
+c:objc(pl)BETextInput(im)insertTextPlaceholderWithSize:completionHandler:	swift.method	insertTextPlaceholder(size:)	BETextInput.insertTextPlaceholder(size:)	func insertTextPlaceholder(size: CGSize) async -> UITextPlaceholder
+c:objc(pl)BETextInput(im)insertTextSuggestion:	swift.method	insert(_:)	BETextInput.insert(_:)	func insert(_ textSuggestion: BETextSuggestion)
+c:objc(pl)BETextInput(im)isPointNearMarkedText:	swift.method	isPointNearMarkedText(_:)	BETextInput.isPointNearMarkedText(_:)	func isPointNearMarkedText(_ point: CGPoint) -> Bool
+c:objc(pl)BETextInput(im)keyboardWillDismiss	swift.method	keyboardWillDismiss()	BETextInput.keyboardWillDismiss()	optional func keyboardWillDismiss()
+c:objc(pl)BETextInput(im)moveByOffset:	swift.method	move(byOffset:)	BETextInput.move(byOffset:)	func move(byOffset offset: Int)
+c:objc(pl)BETextInput(im)moveSelectionAtBoundary:inStorageDirection:completionHandler:	swift.method	moveSelection(atBoundary:in:)	BETextInput.moveSelection(atBoundary:in:)	func moveSelection(atBoundary granularity: UITextGranularity, in direction: UITextStorageDirection) async
+c:objc(pl)BETextInput(im)offsetFromPosition:toPosition:	swift.method	offset(from:to:)	BETextInput.offset(from:to:)	func offset(from: UITextPosition, to toPosition: UITextPosition) -> Int
+c:objc(pl)BETextInput(im)removeTextAlternatives	swift.method	removeTextAlternatives()	BETextInput.removeTextAlternatives()	optional func removeTextAlternatives()
+c:objc(pl)BETextInput(im)removeTextPlaceholder:willInsertText:completionHandler:	swift.method	remove(_:willInsertText:)	BETextInput.remove(_:willInsertText:)	func remove(_ placeholder: UITextPlaceholder, willInsertText: Bool) async
+c:objc(pl)BETextInput(im)replaceDictatedText:withText:	swift.method	replaceDictatedText(_:withText:)	BETextInput.replaceDictatedText(_:withText:)	func replaceDictatedText(_ oldText: String, withText newText: String)
+c:objc(pl)BETextInput(im)replaceSelectedText:withText:	swift.method	replaceSelectedText(_:withText:)	BETextInput.replaceSelectedText(_:withText:)	func replaceSelectedText(_ text: String, withText replacementText: String)
+c:objc(pl)BETextInput(im)replaceText:withText:options:completionHandler:	swift.method	replaceText(_:withText:options:)	BETextInput.replaceText(_:withText:options:)	func replaceText(_ originalText: String, withText replacementText: String, options: BETextReplacementOptions = []) async -> [UITextSelectionRect]
+c:objc(pl)BETextInput(im)requestDocumentContext:completionHandler:	swift.method	requestDocumentContext(_:)	BETextInput.requestDocumentContext(_:)	func requestDocumentContext(_ request: BETextDocumentRequest) async -> BETextDocumentContext
+c:objc(pl)BETextInput(im)requestPreferredArrowDirectionForEditMenuWithCompletionHandler:	swift.method	requestPreferredArrowDirectionForEditMenu(completionHandler:)	BETextInput.requestPreferredArrowDirectionForEditMenu(completionHandler:)	func requestPreferredArrowDirectionForEditMenu(completionHandler: @escaping (UIEditMenuArrowDirection) -> Void)
+c:objc(pl)BETextInput(im)requestTextContextForAutocorrectionWithCompletionHandler:	swift.method	requestTextContextForAutocorrection(completionHandler:)	BETextInput.requestTextContextForAutocorrection(completionHandler:)	func requestTextContextForAutocorrection(completionHandler: @escaping (BETextDocumentContext) -> Void)
+c:objc(pl)BETextInput(im)requestTextRectsForString:withCompletionHandler:	swift.method	requestTextRects(for:)	BETextInput.requestTextRects(for:)	func requestTextRects(for input: String) async -> [UITextSelectionRect]
+c:objc(pl)BETextInput(im)selectPositionAtPoint:completionHandler:	swift.method	selectPosition(at:)	BETextInput.selectPosition(at:)	func selectPosition(at point: CGPoint) async
+c:objc(pl)BETextInput(im)selectPositionAtPoint:withContextRequest:completionHandler:	swift.method	selectPosition(at:for:)	BETextInput.selectPosition(at:for:)	func selectPosition(at point: CGPoint, for request: BETextDocumentRequest) async -> BETextDocumentContext
+c:objc(pl)BETextInput(im)selectTextForEditMenuWithLocationInView:completionHandler:	swift.method	selectTextForEditMenuWithLocation(inView:)	BETextInput.selectTextForEditMenuWithLocation(inView:)	func selectTextForEditMenuWithLocation(inView locationInView: CGPoint) async -> (Bool, String?, NSRange)
+c:objc(pl)BETextInput(im)selectTextInGranularity:atPoint:completionHandler:	swift.method	selectText(in:at:)	BETextInput.selectText(in:at:)	func selectText(in granularity: UITextGranularity, at point: CGPoint) async
+c:objc(pl)BETextInput(im)selectWordForReplacement	swift.method	selectWordForReplacement()	BETextInput.selectWordForReplacement()	func selectWordForReplacement()
+c:objc(pl)BETextInput(im)selectionRectsForRange:	swift.method	selectionRects(for:)	BETextInput.selectionRects(for:)	func selectionRects(for range: UITextRange) -> [UITextSelectionRect]
+c:objc(pl)BETextInput(im)setAttributedMarkedText:selectedRange:	swift.method	setAttributedMarkedText(_:selectedRange:)	BETextInput.setAttributedMarkedText(_:selectedRange:)	func setAttributedMarkedText(_ markedText: NSAttributedString?, selectedRange: NSRange)
+c:objc(pl)BETextInput(im)setBaseWritingDirection:forRange:	swift.method	setBaseWritingDirection(_:for:)	BETextInput.setBaseWritingDirection(_:for:)	func setBaseWritingDirection(_ writingDirection: NSWritingDirection, for range: UITextRange)
+c:objc(pl)BETextInput(im)setMarkedText:selectedRange:	swift.method	setMarkedText(_:selectedRange:)	BETextInput.setMarkedText(_:selectedRange:)	func setMarkedText(_ markedText: String?, selectedRange: NSRange)
+c:objc(pl)BETextInput(im)setSelectionFromPoint:toPoint:gesture:state:	swift.method	setSelection(from:to:gesture:state:)	BETextInput.setSelection(from:to:gesture:state:)	func setSelection(from: CGPoint, to: CGPoint, gesture: BEGestureType, state: UIGestureRecognizer.State)
+c:objc(pl)BETextInput(im)shiftKeyStateChangedFromState:toState:	swift.method	shiftKeyStateChanged(fromState:toState:)	BETextInput.shiftKeyStateChanged(fromState:toState:)	func shiftKeyStateChanged(fromState oldState: BEKeyModifierFlags, toState newState: BEKeyModifierFlags)
+c:objc(pl)BETextInput(im)systemWillDismissEditMenuWithAnimator:	swift.method	systemWillDismissEditMenu(withAnimator:)	BETextInput.systemWillDismissEditMenu(withAnimator:)	func systemWillDismissEditMenu(withAnimator animator: any UIEditMenuInteractionAnimating)
+c:objc(pl)BETextInput(im)systemWillPresentEditMenuWithAnimator:	swift.method	systemWillPresentEditMenu(withAnimator:)	BETextInput.systemWillPresentEditMenu(withAnimator:)	func systemWillPresentEditMenu(withAnimator animator: any UIEditMenuInteractionAnimating)
+c:objc(pl)BETextInput(im)textInRange:	swift.method	text(in:)	BETextInput.text(in:)	func text(in range: UITextRange) -> String?
+c:objc(pl)BETextInput(im)textInteractionGesture:shouldBeginAtPoint:	swift.method	textInteractionGesture(_:shouldBeginAt:)	BETextInput.textInteractionGesture(_:shouldBeginAt:)	func textInteractionGesture(_ gestureType: BEGestureType, shouldBeginAt point: CGPoint) -> Bool
+c:objc(pl)BETextInput(im)textStylingAtPosition:inDirection:	swift.method	textStyling(at:in:)	BETextInput.textStyling(at:in:)	func textStyling(at position: UITextPosition, in direction: UITextStorageDirection) -> [NSAttributedString.Key : Any]?
+c:objc(pl)BETextInput(im)transposeCharactersAroundSelection	swift.method	transposeCharactersAroundSelection()	BETextInput.transposeCharactersAroundSelection()	func transposeCharactersAroundSelection()
+c:objc(pl)BETextInput(im)unmarkText	swift.method	unmarkText()	BETextInput.unmarkText()	func unmarkText()
+c:objc(pl)BETextInput(im)updateCurrentSelectionTo:fromGesture:inState:	swift.method	updateCurrentSelection(to:from:in:)	BETextInput.updateCurrentSelection(to:from:in:)	func updateCurrentSelection(to point: CGPoint, from gestureType: BEGestureType, in state: UIGestureRecognizer.State)
+c:objc(pl)BETextInput(im)updateSelectionWithExtentPoint:boundary:completionHandler:	swift.method	updateSelection(extent:boundary:)	BETextInput.updateSelection(extent:boundary:)	func updateSelection(extent point: CGPoint, boundary granularity: UITextGranularity) async -> Bool
+c:objc(pl)BETextInput(im)willInsertFinalDictationResult	swift.method	willInsertFinalDictationResult()	BETextInput.willInsertFinalDictationResult()	func willInsertFinalDictationResult()
+c:objc(pl)BETextInput(py)asyncInputDelegate	swift.property	asyncInputDelegate	BETextInput.asyncInputDelegate	weak var asyncInputDelegate: (any BETextInputDelegate)? { get set }
+c:objc(pl)BETextInput(py)attributedMarkedText	swift.property	attributedMarkedText	BETextInput.attributedMarkedText	var attributedMarkedText: NSAttributedString? { get }
+c:objc(pl)BETextInput(py)automaticallyPresentEditMenu	swift.property	automaticallyPresentEditMenu	BETextInput.automaticallyPresentEditMenu	var automaticallyPresentEditMenu: Bool { get }
+c:objc(pl)BETextInput(py)editable	swift.property	isEditable	BETextInput.isEditable	var isEditable: Bool { get }
+c:objc(pl)BETextInput(py)extendedTextInputTraits	swift.property	extendedTextInputTraits	BETextInput.extendedTextInputTraits	var extendedTextInputTraits: (any BEExtendedTextInputTraits)? { get }
+c:objc(pl)BETextInput(py)hasMarkedText	swift.property	hasMarkedText	BETextInput.hasMarkedText	var hasMarkedText: Bool { get }
+c:objc(pl)BETextInput(py)markedText	swift.property	markedText	BETextInput.markedText	var markedText: String? { get }
+c:objc(pl)BETextInput(py)markedTextRange	swift.property	markedTextRange	BETextInput.markedTextRange	var markedTextRange: UITextRange? { get }
+c:objc(pl)BETextInput(py)replaceAllowed	swift.property	isReplaceAllowed	BETextInput.isReplaceAllowed	var isReplaceAllowed: Bool { get }
+c:objc(pl)BETextInput(py)selectedText	swift.property	selectedText	BETextInput.selectedText	var selectedText: String? { get }
+c:objc(pl)BETextInput(py)selectedTextRange	swift.property	selectedTextRange	BETextInput.selectedTextRange	@NSCopying var selectedTextRange: UITextRange? { get set }
+c:objc(pl)BETextInput(py)selectionAtDocumentStart	swift.property	isSelectionAtDocumentStart	BETextInput.isSelectionAtDocumentStart	var isSelectionAtDocumentStart: Bool { get }
+c:objc(pl)BETextInput(py)selectionClipRect	swift.property	selectionClipRect	BETextInput.selectionClipRect	var selectionClipRect: CGRect { get }
+c:objc(pl)BETextInput(py)selectionContainerViewAboveText	swift.property	selectionContainerViewAboveText	BETextInput.selectionContainerViewAboveText	optional var selectionContainerViewAboveText: UIView? { get }
+c:objc(pl)BETextInput(py)selectionContainerViewBelowText	swift.property	selectionContainerViewBelowText	BETextInput.selectionContainerViewBelowText	optional var selectionContainerViewBelowText: UIView? { get }
+c:objc(pl)BETextInput(py)textFirstRect	swift.property	textFirstRect	BETextInput.textFirstRect	var textFirstRect: CGRect { get }
+c:objc(pl)BETextInput(py)textInputView	swift.property	textInputView	BETextInput.textInputView	var textInputView: UIView { get }
+c:objc(pl)BETextInput(py)textLastRect	swift.property	textLastRect	BETextInput.textLastRect	var textLastRect: CGRect { get }
+c:objc(pl)BETextInput(py)unobscuredContentRect	swift.property	unobscuredContentRect	BETextInput.unobscuredContentRect	var unobscuredContentRect: CGRect { get }
+c:objc(pl)BETextInput(py)unscaledView	swift.property	unscaledView	BETextInput.unscaledView	var unscaledView: UIView { get }
+c:objc(pl)BETextInputDelegate	swift.protocol	BETextInputDelegate	BETextInputDelegate	protocol BETextInputDelegate
+c:objc(pl)BETextInputDelegate(im)invalidateTextEntryContextForTextInput:	swift.method	invalidateTextEntryContext(for:)	BETextInputDelegate.invalidateTextEntryContext(for:)	func invalidateTextEntryContext(for textInput: any BETextInput)
+c:objc(pl)BETextInputDelegate(im)selectionDidChangeForTextInput:	swift.method	selectionDidChange(for:)	BETextInputDelegate.selectionDidChange(for:)	func selectionDidChange(for textInput: any BETextInput)
+c:objc(pl)BETextInputDelegate(im)selectionWillChangeForTextInput:	swift.method	selectionWillChange(for:)	BETextInputDelegate.selectionWillChange(for:)	func selectionWillChange(for textInput: any BETextInput)
+c:objc(pl)BETextInputDelegate(im)shouldDeferEventHandlingToSystemForTextInput:context:	swift.method	shouldDeferEventHandlingToSystem(for:context:)	BETextInputDelegate.shouldDeferEventHandlingToSystem(for:context:)	func shouldDeferEventHandlingToSystem(for textInput: any BETextInput, context keyEventContext: BEKeyEntryContext) -> Bool
+c:objc(pl)BETextInputDelegate(im)textInput:deferReplaceTextActionToSystem:	swift.method	textInput(_:deferReplaceTextActionToSystem:)	BETextInputDelegate.textInput(_:deferReplaceTextActionToSystem:)	func textInput(_ textInput: any BETextInput, deferReplaceTextActionToSystem sender: Any)
+c:objc(pl)BETextInputDelegate(im)textInput:setCandidateSuggestions:	swift.method	textInput(_:setCandidateSuggestions:)	BETextInputDelegate.textInput(_:setCandidateSuggestions:)	func textInput(_ textInput: any BETextInput, setCandidateSuggestions suggestions: [BETextSuggestion]?)
+c:objc(pl)BETextInteractionDelegate	swift.protocol	BETextInteractionDelegate	BETextInteractionDelegate	protocol BETextInteractionDelegate
+c:objc(pl)BETextInteractionDelegate(im)systemDidChangeSelectionForInteraction:	swift.method	systemDidChangeSelection(for:)	BETextInteractionDelegate.systemDidChangeSelection(for:)	func systemDidChangeSelection(for textInteraction: BETextInteraction)
+c:objc(pl)BETextInteractionDelegate(im)systemWillChangeSelectionForInteraction:	swift.method	systemWillChangeSelection(for:)	BETextInteractionDelegate.systemWillChangeSelection(for:)	func systemWillChangeSelection(for textInteraction: BETextInteraction)
+c:objc(pl)BETextSelectionDirectionNavigation	swift.protocol	BETextSelectionDirectionNavigation	BETextSelectionDirectionNavigation	protocol BETextSelectionDirectionNavigation
+c:objc(pl)BETextSelectionDirectionNavigation(im)extendInLayoutDirection:	swift.method	extend(in:)	BETextSelectionDirectionNavigation.extend(in:)	func extend(in direction: UITextLayoutDirection)
+c:objc(pl)BETextSelectionDirectionNavigation(im)extendInStorageDirection:byGranularity:	swift.method	extend(in:by:)	BETextSelectionDirectionNavigation.extend(in:by:)	func extend(in direction: UITextStorageDirection, by granularity: UITextGranularity)
+c:objc(pl)BETextSelectionDirectionNavigation(im)moveInLayoutDirection:	swift.method	move(in:)	BETextSelectionDirectionNavigation.move(in:)	func move(in direction: UITextLayoutDirection)
+c:objc(pl)BETextSelectionDirectionNavigation(im)moveInStorageDirection:byGranularity:	swift.method	move(in:by:)	BETextSelectionDirectionNavigation.move(in:by:)	func move(in direction: UITextStorageDirection, by granularity: UITextGranularity)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)BEAccessibilityTextMarker	swift.init	init(coder:)	BEAccessibilityTextMarker.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)BEAccessibilityTextMarkerRange	swift.init	init(coder:)	BEAccessibilityTextMarker.Range.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)BELayerHierarchyHandle	swift.init	init(coder:)	LayerHierarchyHandle.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)BELayerHierarchyHostingTransactionCoordinator	swift.init	init(coder:)	LayerHierarchyHostingTransactionCoordinator.init(coder:)	init?(coder: NSCoder)
+s:16BrowserEngineKit16MediaEnvironmentV	swift.struct	MediaEnvironment	MediaEnvironment	struct MediaEnvironment
+s:16BrowserEngineKit16MediaEnvironmentV17xpcRepresentationACSo03OS_F7_object_p_tKcfc	swift.init	init(xpcRepresentation:)	MediaEnvironment.init(xpcRepresentation:)	init(xpcRepresentation: xpc_object_t) throws
+s:16BrowserEngineKit16MediaEnvironmentV18makeCaptureSessionSo09AVCaptureH0CyKF	swift.method	makeCaptureSession()	MediaEnvironment.makeCaptureSession()	func makeCaptureSession() throws -> AVCaptureSession
+s:16BrowserEngineKit16MediaEnvironmentV23createXPCRepresentationSo13OS_xpc_object_pyF	swift.method	createXPCRepresentation()	MediaEnvironment.createXPCRepresentation()	func createXPCRepresentation() -> xpc_object_t
+s:16BrowserEngineKit16MediaEnvironmentV7suspendyyKF	swift.method	suspend()	MediaEnvironment.suspend()	func suspend() throws
+s:16BrowserEngineKit16MediaEnvironmentV7webPageAC10Foundation3URLV_tcfc	swift.init	init(webPage:)	MediaEnvironment.init(webPage:)	init(webPage url: URL)
+s:16BrowserEngineKit16MediaEnvironmentV8activateyyKF	swift.method	activate()	MediaEnvironment.activate()	func activate() throws
+s:16BrowserEngineKit16RenderingProcessV	swift.struct	RenderingProcess	RenderingProcess	struct RenderingProcess
+s:16BrowserEngineKit16RenderingProcessV10invalidateyyF	swift.method	invalidate()	RenderingProcess.invalidate()	func invalidate()
+s:16BrowserEngineKit16RenderingProcessV15grantCapability_19invalidationHandlerAA0eG0O5GrantVAG_yyctKF	swift.method	grantCapability(_:invalidationHandler:)	RenderingProcess.grantCapability(_:invalidationHandler:)	func grantCapability(_ capability: ProcessCapability, invalidationHandler: @escaping () -> Void) throws -> ProcessCapability.Grant
+s:16BrowserEngineKit16RenderingProcessV15grantCapabilityyAA0eG0O5GrantVAFKF	swift.method	grantCapability(_:)	RenderingProcess.grantCapability(_:)	func grantCapability(_ capability: ProcessCapability) throws -> ProcessCapability.Grant
+s:16BrowserEngineKit16RenderingProcessV16bundleIdentifier14onInterruptionACSSSg_yyctYaKcfc	swift.init	init(bundleIdentifier:onInterruption:)	RenderingProcess.init(bundleIdentifier:onInterruption:)	init(bundleIdentifier: String? = nil, onInterruption: @escaping () -> Void) async throws
+s:16BrowserEngineKit16RenderingProcessV20makeLibXPCConnectionSo13OS_xpc_object_pyKF	swift.method	makeLibXPCConnection()	RenderingProcess.makeLibXPCConnection()	func makeLibXPCConnection() throws -> xpc_connection_t
+s:16BrowserEngineKit16RenderingProcessV38createVisibilityPropagationInteractionSo13UIInteraction_pyF	swift.method	createVisibilityPropagationInteraction()	RenderingProcess.createVisibilityPropagationInteraction()	func createVisibilityPropagationInteraction() -> any UIInteraction
+s:16BrowserEngineKit17BEDownloadMonitorC2IDa	swift.typealias	BEDownloadMonitor.ID	BEDownloadMonitor.ID	typealias ID = UUID
+s:16BrowserEngineKit17BEDownloadMonitorC8LocationC	swift.class	BEDownloadMonitor.Location	BEDownloadMonitor.Location	@objc(BEDownloadMonitorLocation) class Location
+s:16BrowserEngineKit17BEDownloadMonitorC8LocationC12bookmarkData10Foundation0H0Vvp	swift.property	bookmarkData	BEDownloadMonitor.Location.bookmarkData	@objc final let bookmarkData: Data
+s:16BrowserEngineKit17BEDownloadMonitorC8LocationC3url10Foundation3URLVvp	swift.property	url	BEDownloadMonitor.Location.url	@objc final let url: URL
+s:16BrowserEngineKit17NetworkingProcessV	swift.struct	NetworkingProcess	NetworkingProcess	struct NetworkingProcess
+s:16BrowserEngineKit17NetworkingProcessV10invalidateyyF	swift.method	invalidate()	NetworkingProcess.invalidate()	func invalidate()
+s:16BrowserEngineKit17NetworkingProcessV15grantCapability_19invalidationHandlerAA0eG0O5GrantVAG_yyctKF	swift.method	grantCapability(_:invalidationHandler:)	NetworkingProcess.grantCapability(_:invalidationHandler:)	func grantCapability(_ capability: ProcessCapability, invalidationHandler: @escaping () -> Void) throws -> ProcessCapability.Grant
+s:16BrowserEngineKit17NetworkingProcessV15grantCapabilityyAA0eG0O5GrantVAFKF	swift.method	grantCapability(_:)	NetworkingProcess.grantCapability(_:)	func grantCapability(_ capability: ProcessCapability) throws -> ProcessCapability.Grant
+s:16BrowserEngineKit17NetworkingProcessV16bundleIdentifier14onInterruptionACSSSg_yyctYaKcfc	swift.init	init(bundleIdentifier:onInterruption:)	NetworkingProcess.init(bundleIdentifier:onInterruption:)	init(bundleIdentifier: String? = nil, onInterruption: @escaping () -> Void) async throws
+s:16BrowserEngineKit17NetworkingProcessV20makeLibXPCConnectionSo13OS_xpc_object_pyKF	swift.method	makeLibXPCConnection()	NetworkingProcess.makeLibXPCConnection()	func makeLibXPCConnection() throws -> xpc_connection_t
+s:16BrowserEngineKit17ProcessCapabilityO	swift.enum	ProcessCapability	ProcessCapability	enum ProcessCapability
+s:16BrowserEngineKit17ProcessCapabilityO10backgroundyA2CmF	swift.enum.case	ProcessCapability.background	ProcessCapability.background	case background
+s:16BrowserEngineKit17ProcessCapabilityO10foregroundyA2CmF	swift.enum.case	ProcessCapability.foreground	ProcessCapability.foreground	case foreground
+s:16BrowserEngineKit17ProcessCapabilityO23mediaPlaybackAndCaptureyAcA16MediaEnvironmentV_tcACmF	swift.enum.case	ProcessCapability.mediaPlaybackAndCapture(environment:)	ProcessCapability.mediaPlaybackAndCapture(environment:)	case mediaPlaybackAndCapture(environment: MediaEnvironment)
+s:16BrowserEngineKit17ProcessCapabilityO5GrantV	swift.struct	ProcessCapability.Grant	ProcessCapability.Grant	struct Grant
+s:16BrowserEngineKit17ProcessCapabilityO5GrantV10invalidateyyF	swift.method	invalidate()	ProcessCapability.Grant.invalidate()	func invalidate()
+s:16BrowserEngineKit17ProcessCapabilityO5GrantV7isValidSbvp	swift.property	isValid	ProcessCapability.Grant.isValid	var isValid: Bool { get }
+s:16BrowserEngineKit17ProcessCapabilityO9suspendedyA2CmF	swift.enum.case	ProcessCapability.suspended	ProcessCapability.suspended	case suspended
+s:16BrowserEngineKit17WebContentProcessV	swift.struct	WebContentProcess	WebContentProcess	struct WebContentProcess
+s:16BrowserEngineKit17WebContentProcessV10invalidateyyF	swift.method	invalidate()	WebContentProcess.invalidate()	func invalidate()
+s:16BrowserEngineKit17WebContentProcessV15grantCapability_19invalidationHandlerAA0fH0O5GrantVAG_yyctKF	swift.method	grantCapability(_:invalidationHandler:)	WebContentProcess.grantCapability(_:invalidationHandler:)	func grantCapability(_ capability: ProcessCapability, invalidationHandler: @escaping () -> Void) throws -> ProcessCapability.Grant
+s:16BrowserEngineKit17WebContentProcessV15grantCapabilityyAA0fH0O5GrantVAFKF	swift.method	grantCapability(_:)	WebContentProcess.grantCapability(_:)	func grantCapability(_ capability: ProcessCapability) throws -> ProcessCapability.Grant
+s:16BrowserEngineKit17WebContentProcessV16bundleIdentifier14onInterruptionACSSSg_yyctYaKcfc	swift.init	init(bundleIdentifier:onInterruption:)	WebContentProcess.init(bundleIdentifier:onInterruption:)	init(bundleIdentifier: String? = nil, onInterruption: @escaping () -> Void) async throws
+s:16BrowserEngineKit17WebContentProcessV20makeLibXPCConnectionSo13OS_xpc_object_pyKF	swift.method	makeLibXPCConnection()	WebContentProcess.makeLibXPCConnection()	func makeLibXPCConnection() throws -> xpc_connection_t
+s:16BrowserEngineKit17WebContentProcessV38createVisibilityPropagationInteractionSo13UIInteraction_pyF	swift.method	createVisibilityPropagationInteraction()	WebContentProcess.createVisibilityPropagationInteraction()	func createVisibilityPropagationInteraction() -> any UIInteraction
+s:16BrowserEngineKit18RenderingExtensionP	swift.protocol	RenderingExtension	RenderingExtension	protocol RenderingExtension : RestrictedSandboxAppliable, AppExtension
+s:16BrowserEngineKit18RenderingExtensionP6handle13xpcConnectionySo03OS_G7_object_p_tF	swift.method	handle(xpcConnection:)	RenderingExtension.handle(xpcConnection:)	func handle(xpcConnection: xpc_connection_t)
+s:16BrowserEngineKit18RenderingExtensionPAAE13configurationAA0dE13ConfigurationVvp	swift.property	configuration	RenderingExtension.configuration	var configuration: RenderingExtensionConfiguration { get }
+s:16BrowserEngineKit19NetworkingExtensionP	swift.protocol	NetworkingExtension	NetworkingExtension	protocol NetworkingExtension : RestrictedSandboxAppliable, AppExtension
+s:16BrowserEngineKit19NetworkingExtensionP6handle13xpcConnectionySo03OS_G7_object_p_tF	swift.method	handle(xpcConnection:)	NetworkingExtension.handle(xpcConnection:)	func handle(xpcConnection: xpc_connection_t)
+s:16BrowserEngineKit19NetworkingExtensionPAAE13configurationAA0dE13ConfigurationVvp	swift.property	configuration	NetworkingExtension.configuration	var configuration: NetworkingExtensionConfiguration { get }
+s:16BrowserEngineKit19WebContentExtensionP	swift.protocol	WebContentExtension	WebContentExtension	protocol WebContentExtension : RestrictedSandboxAppliable, AppExtension
+s:16BrowserEngineKit19WebContentExtensionP6handle13xpcConnectionySo03OS_H7_object_p_tF	swift.method	handle(xpcConnection:)	WebContentExtension.handle(xpcConnection:)	func handle(xpcConnection: xpc_connection_t)
+s:16BrowserEngineKit19WebContentExtensionPAAE13configurationAA0deF13ConfigurationVvp	swift.property	configuration	WebContentExtension.configuration	var configuration: WebContentExtensionConfiguration { get }
+s:16BrowserEngineKit25RestrictedSandboxRevisionO	swift.enum	RestrictedSandboxRevision	RestrictedSandboxRevision	enum RestrictedSandboxRevision
+s:16BrowserEngineKit25RestrictedSandboxRevisionO1loiySbAC_ACtFZ	swift.func.op	<(_:_:)	RestrictedSandboxRevision.<(_:_:)	static func < (lhs: RestrictedSandboxRevision, rhs: RestrictedSandboxRevision) -> Bool
+s:16BrowserEngineKit25RestrictedSandboxRevisionO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	RestrictedSandboxRevision.==(_:_:)	static func == (a: RestrictedSandboxRevision, b: RestrictedSandboxRevision) -> Bool
+s:16BrowserEngineKit25RestrictedSandboxRevisionO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	RestrictedSandboxRevision.hash(into:)	func hash(into hasher: inout Hasher)
+s:16BrowserEngineKit25RestrictedSandboxRevisionO8AllCasesa	swift.typealias	RestrictedSandboxRevision.AllCases	RestrictedSandboxRevision.AllCases	typealias AllCases = [RestrictedSandboxRevision]
+s:16BrowserEngineKit25RestrictedSandboxRevisionO8allCasesSayACGvpZ	swift.type.property	allCases	RestrictedSandboxRevision.allCases	static var allCases: [RestrictedSandboxRevision] { get }
+s:16BrowserEngineKit25RestrictedSandboxRevisionO9hashValueSivp	swift.property	hashValue	RestrictedSandboxRevision.hashValue	var hashValue: Int { get }
+s:16BrowserEngineKit25RestrictedSandboxRevisionO9revision1yA2CmF	swift.enum.case	RestrictedSandboxRevision.revision1	RestrictedSandboxRevision.revision1	case revision1
+s:16BrowserEngineKit25RestrictedSandboxRevisionO9revision2yA2CmF	swift.enum.case	RestrictedSandboxRevision.revision2	RestrictedSandboxRevision.revision2	case revision2
+s:16BrowserEngineKit26RestrictedSandboxAppliableP	swift.protocol	RestrictedSandboxAppliable	RestrictedSandboxAppliable	protocol RestrictedSandboxAppliable
+s:16BrowserEngineKit26RestrictedSandboxAppliableP05applydE08revisionyAA0dE8RevisionO_tF	swift.method	applyRestrictedSandbox(revision:)	RestrictedSandboxAppliable.applyRestrictedSandbox(revision:)	func applyRestrictedSandbox(revision: RestrictedSandboxRevision)
+s:16BrowserEngineKit26RestrictedSandboxAppliablePA2A19WebContentExtensionRzrlE05applydE08revisionyAA0dE8RevisionO_tF	swift.method	applyRestrictedSandbox(revision:)	RestrictedSandboxAppliable.applyRestrictedSandbox(revision:)	func applyRestrictedSandbox(revision: RestrictedSandboxRevision)
+s:16BrowserEngineKit26RestrictedSandboxAppliablePAAE05applydE08revisionyAA0dE8RevisionO_tF	swift.method	applyRestrictedSandbox(revision:)	RestrictedSandboxAppliable.applyRestrictedSandbox(revision:)	func applyRestrictedSandbox(revision: RestrictedSandboxRevision)
+s:16BrowserEngineKit31RenderingExtensionConfigurationV	swift.struct	RenderingExtensionConfiguration	RenderingExtensionConfiguration	@MainActor @preconcurrency struct RenderingExtensionConfiguration
+s:16BrowserEngineKit31RenderingExtensionConfigurationV6accept10connectionSbSo15NSXPCConnectionC_tF	swift.method	accept(connection:)	RenderingExtensionConfiguration.accept(connection:)	nonisolated func accept(connection: NSXPCConnection) -> Bool
+s:16BrowserEngineKit32NetworkingExtensionConfigurationV	swift.struct	NetworkingExtensionConfiguration	NetworkingExtensionConfiguration	@MainActor @preconcurrency struct NetworkingExtensionConfiguration
+s:16BrowserEngineKit32NetworkingExtensionConfigurationV6accept10connectionSbSo15NSXPCConnectionC_tF	swift.method	accept(connection:)	NetworkingExtensionConfiguration.accept(connection:)	nonisolated func accept(connection: NSXPCConnection) -> Bool
+s:16BrowserEngineKit32WebContentExtensionConfigurationV	swift.struct	WebContentExtensionConfiguration	WebContentExtensionConfiguration	@MainActor @preconcurrency struct WebContentExtensionConfiguration
+s:16BrowserEngineKit32WebContentExtensionConfigurationV6accept10connectionSbSo15NSXPCConnectionC_tF	swift.method	accept(connection:)	WebContentExtensionConfiguration.accept(connection:)	nonisolated func accept(connection: NSXPCConnection) -> Bool
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:16BrowserEngineKit25RestrictedSandboxRevisionO	swift.func.op	>(_:_:)	RestrictedSandboxRevision.>(_:_:)	static func > (lhs: Self, rhs: Self) -> Bool
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:16BrowserEngineKit25RestrictedSandboxRevisionO	swift.func.op	>=(_:_:)	RestrictedSandboxRevision.>=(_:_:)	static func >= (lhs: Self, rhs: Self) -> Bool
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:16BrowserEngineKit25RestrictedSandboxRevisionO	swift.func.op	<=(_:_:)	RestrictedSandboxRevision.<=(_:_:)	static func <= (lhs: Self, rhs: Self) -> Bool
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::s:16BrowserEngineKit25RestrictedSandboxRevisionO	swift.func.op	..<(_:_:)	RestrictedSandboxRevision...<(_:_:)	static func ..< (minimum: Self, maximum: Self) -> Range<Self>
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:16BrowserEngineKit25RestrictedSandboxRevisionO	swift.func.op	..<(_:)	RestrictedSandboxRevision...<(_:)	static func ..< (maximum: Self) -> PartialRangeUpTo<Self>
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:16BrowserEngineKit25RestrictedSandboxRevisionO	swift.func.op	...(_:)	RestrictedSandboxRevision....(_:)	static func ... (minimum: Self) -> PartialRangeFrom<Self>
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:16BrowserEngineKit25RestrictedSandboxRevisionO	swift.func.op	...(_:_:)	RestrictedSandboxRevision....(_:_:)	static func ... (minimum: Self, maximum: Self) -> ClosedRange<Self>
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:16BrowserEngineKit25RestrictedSandboxRevisionO	swift.func.op	...(_:)	RestrictedSandboxRevision....(_:)	static func ... (maximum: Self) -> PartialRangeThrough<Self>
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.func.op	!=(_:_:)	BEAccessibilityContainerType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BEAccessibilityPressedState	swift.func.op	!=(_:_:)	BEAccessibilityPressedState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BEGestureType	swift.func.op	!=(_:_:)	BEGestureType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BEKeyModifierFlags	swift.func.op	!=(_:_:)	BEKeyModifierFlags.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BEKeyPressState	swift.func.op	!=(_:_:)	BEKeyEntry.KeyPressState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BEScrollViewScrollUpdatePhase	swift.func.op	!=(_:_:)	BEScrollViewScrollUpdate.Phase.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BESelectionFlags	swift.func.op	!=(_:_:)	BESelectionFlags.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BESelectionTouchPhase	swift.func.op	!=(_:_:)	BESelectionTouchPhase.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.func.op	!=(_:_:)	BETextDocumentRequest.Options.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.func.op	!=(_:_:)	BETextReplacementOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16BrowserEngineKit25RestrictedSandboxRevisionO	swift.func.op	!=(_:_:)	RestrictedSandboxRevision.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BEAccessibilityPressedState	swift.property	hashValue	BEAccessibilityPressedState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BEGestureType	swift.property	hashValue	BEGestureType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BEKeyModifierFlags	swift.property	hashValue	BEKeyModifierFlags.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BEKeyPressState	swift.property	hashValue	BEKeyEntry.KeyPressState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BEScrollViewScrollUpdatePhase	swift.property	hashValue	BEScrollViewScrollUpdate.Phase.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BESelectionTouchPhase	swift.property	hashValue	BESelectionTouchPhase.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BEAccessibilityPressedState	swift.method	hash(into:)	BEAccessibilityPressedState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BEGestureType	swift.method	hash(into:)	BEGestureType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BEKeyModifierFlags	swift.method	hash(into:)	BEKeyModifierFlags.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BEKeyPressState	swift.method	hash(into:)	BEKeyEntry.KeyPressState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BEScrollViewScrollUpdatePhase	swift.method	hash(into:)	BEScrollViewScrollUpdate.Phase.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BESelectionTouchPhase	swift.method	hash(into:)	BESelectionTouchPhase.hash(into:)	func hash(into hasher: inout Hasher)
+s:So13BEGestureTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	BEGestureType.init(rawValue:)	init?(rawValue: Int)
+s:So15BEKeyPressStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	BEKeyEntry.KeyPressState.init(rawValue:)	init?(rawValue: Int)
+s:So16BESelectionFlagsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	BESelectionFlags.init(rawValue:)	init(rawValue: UInt)
+s:So18BEKeyModifierFlagsV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	BEKeyModifierFlags.init(rawValue:)	init?(rawValue: Int)
+s:So21BESelectionTouchPhaseV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	BESelectionTouchPhase.init(rawValue:)	init?(rawValue: Int)
+s:So22BEDirectionalTextRangea6offset6lengthABSi_Sitcfc	swift.init	init(offset:length:)	BEDirectionalTextRange.init(offset:length:)	init(offset: Int, length: Int)
+s:So22BEDirectionalTextRangeaABycfc	swift.init	init()	BEDirectionalTextRange.init()	init()
+s:So24BETextReplacementOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	BETextReplacementOptions.init(rawValue:)	init(rawValue: UInt)
+s:So27BEAccessibilityPressedStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	BEAccessibilityPressedState.init(rawValue:)	init?(rawValue: Int)
+s:So28BEAccessibilityContainerTypeV8rawValueABSu_tcfc	swift.init	init(rawValue:)	BEAccessibilityContainerType.init(rawValue:)	init(rawValue: UInt)
+s:So28BETextDocumentRequestOptionsV8rawValueABSi_tcfc	swift.init	init(rawValue:)	BETextDocumentRequest.Options.init(rawValue:)	init(rawValue: Int)
+s:So29BEScrollViewScrollUpdatePhaseV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	BEScrollViewScrollUpdate.Phase.init(rawValue:)	init?(rawValue: Int)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.init	init(arrayLiteral:)	BEAccessibilityContainerType.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@BESelectionFlags	swift.init	init(arrayLiteral:)	BESelectionFlags.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.init	init(arrayLiteral:)	BETextDocumentRequest.Options.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.init	init(arrayLiteral:)	BETextReplacementOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	isDisjoint(with:)	BEAccessibilityContainerType.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	isDisjoint(with:)	BESelectionFlags.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	isDisjoint(with:)	BETextDocumentRequest.Options.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	isDisjoint(with:)	BETextReplacementOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	isSuperset(of:)	BEAccessibilityContainerType.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	isSuperset(of:)	BESelectionFlags.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	isSuperset(of:)	BETextDocumentRequest.Options.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	isSuperset(of:)	BETextReplacementOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	subtracting(_:)	BEAccessibilityContainerType.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	subtracting(_:)	BESelectionFlags.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	subtracting(_:)	BETextDocumentRequest.Options.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	subtracting(_:)	BETextReplacementOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	isStrictSubset(of:)	BEAccessibilityContainerType.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	isStrictSubset(of:)	BESelectionFlags.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	isStrictSubset(of:)	BETextDocumentRequest.Options.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	isStrictSubset(of:)	BETextReplacementOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	isStrictSuperset(of:)	BEAccessibilityContainerType.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	isStrictSuperset(of:)	BESelectionFlags.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	isStrictSuperset(of:)	BETextDocumentRequest.Options.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	isStrictSuperset(of:)	BETextReplacementOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.property	isEmpty	BEAccessibilityContainerType.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@BESelectionFlags	swift.property	isEmpty	BESelectionFlags.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.property	isEmpty	BETextDocumentRequest.Options.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.property	isEmpty	BETextReplacementOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	isSubset(of:)	BEAccessibilityContainerType.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	isSubset(of:)	BESelectionFlags.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	isSubset(of:)	BETextDocumentRequest.Options.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	isSubset(of:)	BETextReplacementOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	subtract(_:)	BEAccessibilityContainerType.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	subtract(_:)	BESelectionFlags.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	subtract(_:)	BETextDocumentRequest.Options.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	subtract(_:)	BETextReplacementOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.init	init(_:)	BEAccessibilityContainerType.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@BESelectionFlags	swift.init	init(_:)	BESelectionFlags.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.init	init(_:)	BETextDocumentRequest.Options.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.init	init(_:)	BETextReplacementOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	insert(_:)	BEAccessibilityContainerType.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	insert(_:)	BESelectionFlags.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	insert(_:)	BETextDocumentRequest.Options.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	insert(_:)	BETextReplacementOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	remove(_:)	BEAccessibilityContainerType.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	remove(_:)	BESelectionFlags.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	remove(_:)	BETextDocumentRequest.Options.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	remove(_:)	BETextReplacementOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	update(with:)	BEAccessibilityContainerType.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	update(with:)	BESelectionFlags.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	update(with:)	BETextDocumentRequest.Options.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	update(with:)	BETextReplacementOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	contains(_:)	BEAccessibilityContainerType.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	contains(_:)	BESelectionFlags.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	contains(_:)	BETextDocumentRequest.Options.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	contains(_:)	BETextReplacementOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	intersection(_:)	BEAccessibilityContainerType.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	intersection(_:)	BESelectionFlags.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	intersection(_:)	BETextDocumentRequest.Options.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	intersection(_:)	BETextReplacementOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	symmetricDifference(_:)	BEAccessibilityContainerType.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	symmetricDifference(_:)	BESelectionFlags.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	symmetricDifference(_:)	BETextDocumentRequest.Options.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	symmetricDifference(_:)	BETextReplacementOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	union(_:)	BEAccessibilityContainerType.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	union(_:)	BESelectionFlags.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	union(_:)	BETextDocumentRequest.Options.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	union(_:)	BETextReplacementOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	formIntersection(_:)	BEAccessibilityContainerType.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	formIntersection(_:)	BESelectionFlags.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	formIntersection(_:)	BETextDocumentRequest.Options.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	formIntersection(_:)	BETextReplacementOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	formSymmetricDifference(_:)	BEAccessibilityContainerType.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	formSymmetricDifference(_:)	BESelectionFlags.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	formSymmetricDifference(_:)	BETextDocumentRequest.Options.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	formSymmetricDifference(_:)	BETextReplacementOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.method	formUnion(_:)	BEAccessibilityContainerType.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@BESelectionFlags	swift.method	formUnion(_:)	BESelectionFlags.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.method	formUnion(_:)	BETextDocumentRequest.Options.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.method	formUnion(_:)	BETextReplacementOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@BEAccessibilityContainerType	swift.init	init()	BEAccessibilityContainerType.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@BESelectionFlags	swift.init	init()	BESelectionFlags.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@BETextDocumentRequestOptions	swift.init	init()	BETextDocumentRequest.Options.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@BETextReplacementOptions	swift.init	init()	BETextReplacementOptions.init()	init()

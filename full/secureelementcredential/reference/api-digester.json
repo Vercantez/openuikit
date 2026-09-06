@@ -1,0 +1,4247 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SecureElementCredential",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SecureElementCredential",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SecureElementCredential",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SecureElementCredential",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CredentialSession",
+                "printedName": "SecureElementCredential.CredentialSession",
+                "usr": "s:23SecureElementCredential0C7SessionC"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s23SecureElementCredential0C7SessionC05startD0ACyYaKFZ",
+            "moduleName": "SecureElementCredential",
+            "name": "startSession",
+            "printedName": "startSession()",
+            "static": true,
+            "throwing": true,
+            "usr": "s:23SecureElementCredential0C7SessionC05startD0ACyYaKFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s23SecureElementCredential0C7SessionC10invalidateyyYaKF",
+            "moduleName": "SecureElementCredential",
+            "name": "invalidate",
+            "printedName": "invalidate()",
+            "throwing": true,
+            "usr": "s:23SecureElementCredential0C7SessionC10invalidateyyYaKF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "State",
+                    "printedName": "SecureElementCredential.CredentialSession.State",
+                    "usr": "s:23SecureElementCredential0C7SessionC5StateO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s23SecureElementCredential0C7SessionC5stateAC5StateOvg",
+                "moduleName": "SecureElementCredential",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:23SecureElementCredential0C7SessionC5stateAC5StateOvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "State",
+                "printedName": "SecureElementCredential.CredentialSession.State",
+                "usr": "s:23SecureElementCredential0C7SessionC5StateO"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s23SecureElementCredential0C7SessionC5stateAC5StateOvp",
+            "moduleName": "SecureElementCredential",
+            "name": "state",
+            "printedName": "state",
+            "usr": "s:23SecureElementCredential0C7SessionC5stateAC5StateOvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Event",
+                        "printedName": "SecureElementCredential.CredentialSession.Event",
+                        "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "AsyncStream",
+                    "printedName": "_Concurrency.AsyncStream<SecureElementCredential.CredentialSession.Event>",
+                    "usr": "s:ScS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s23SecureElementCredential0C7SessionC11eventStreamScSyAC5EventOGvg",
+                "moduleName": "SecureElementCredential",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:23SecureElementCredential0C7SessionC11eventStreamScSyAC5EventOGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Event",
+                    "printedName": "SecureElementCredential.CredentialSession.Event",
+                    "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "AsyncStream",
+                "printedName": "_Concurrency.AsyncStream<SecureElementCredential.CredentialSession.Event>",
+                "usr": "s:ScS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s23SecureElementCredential0C7SessionC11eventStreamScSyAC5EventOGvp",
+            "moduleName": "SecureElementCredential",
+            "name": "eventStream",
+            "printedName": "eventStream",
+            "usr": "s:23SecureElementCredential0C7SessionC11eventStreamScSyAC5EventOGvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "State",
+                        "printedName": "SecureElementCredential.CredentialSession.State",
+                        "usr": "s:23SecureElementCredential0C7SessionC5StateO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "SecureElementCredential.CredentialSession.State",
+                            "usr": "s:23SecureElementCredential0C7SessionC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.State.Type) -> SecureElementCredential.CredentialSession.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC5StateO10managementyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "management",
+                "printedName": "management",
+                "usr": "s:23SecureElementCredential0C7SessionC5StateO10managementyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "SecureElementCredential.CredentialSession.State",
+                            "usr": "s:23SecureElementCredential0C7SessionC5StateO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Credential",
+                                "printedName": "SecureElementCredential.CredentialSession.Credential",
+                                "usr": "s:23SecureElementCredential0C7SessionC0C0V"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(credential: SecureElementCredential.CredentialSession.Credential)"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(SecureElementCredential.CredentialSession.Credential) -> SecureElementCredential.CredentialSession.State"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "SecureElementCredential.CredentialSession.State",
+                            "usr": "s:23SecureElementCredential0C7SessionC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.State.Type) -> (SecureElementCredential.CredentialSession.Credential) -> SecureElementCredential.CredentialSession.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC5StateO13cardEmulationyAeC0C0V_tcAEmF",
+                "moduleName": "SecureElementCredential",
+                "name": "cardEmulation",
+                "printedName": "cardEmulation",
+                "usr": "s:23SecureElementCredential0C7SessionC5StateO13cardEmulationyAeC0C0V_tcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "SecureElementCredential.CredentialSession.State",
+                            "usr": "s:23SecureElementCredential0C7SessionC5StateO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Credential",
+                                "printedName": "SecureElementCredential.CredentialSession.Credential",
+                                "usr": "s:23SecureElementCredential0C7SessionC0C0V"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(credential: SecureElementCredential.CredentialSession.Credential)"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(SecureElementCredential.CredentialSession.Credential) -> SecureElementCredential.CredentialSession.State"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "SecureElementCredential.CredentialSession.State",
+                            "usr": "s:23SecureElementCredential0C7SessionC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.State.Type) -> (SecureElementCredential.CredentialSession.Credential) -> SecureElementCredential.CredentialSession.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC5StateO5wiredyAeC0C0V_tcAEmF",
+                "moduleName": "SecureElementCredential",
+                "name": "wired",
+                "printedName": "wired",
+                "usr": "s:23SecureElementCredential0C7SessionC5StateO5wiredyAeC0C0V_tcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "State",
+                        "printedName": "SecureElementCredential.CredentialSession.State",
+                        "usr": "s:23SecureElementCredential0C7SessionC5StateO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "SecureElementCredential.CredentialSession.State",
+                            "usr": "s:23SecureElementCredential0C7SessionC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.State.Type) -> SecureElementCredential.CredentialSession.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC5StateO7invalidyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "invalid",
+                "printedName": "invalid",
+                "usr": "s:23SecureElementCredential0C7SessionC5StateO7invalidyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "State",
+                    "printedName": "SecureElementCredential.CredentialSession.State",
+                    "usr": "s:23SecureElementCredential0C7SessionC5StateO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "State",
+                    "printedName": "SecureElementCredential.CredentialSession.State",
+                    "usr": "s:23SecureElementCredential0C7SessionC5StateO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s23SecureElementCredential0C7SessionC5StateO2eeoiySbAE_AEtFZ",
+                "moduleName": "SecureElementCredential",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:23SecureElementCredential0C7SessionC5StateO2eeoiySbAE_AEtFZ"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s23SecureElementCredential0C7SessionC5StateO",
+            "moduleName": "SecureElementCredential",
+            "name": "State",
+            "printedName": "State",
+            "usr": "s:23SecureElementCredential0C7SessionC5StateO"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Event",
+                            "printedName": "SecureElementCredential.CredentialSession.Event",
+                            "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "ErrorCode",
+                                "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(reason: SecureElementCredential.CredentialSession.ErrorCode)"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(SecureElementCredential.CredentialSession.ErrorCode) -> SecureElementCredential.CredentialSession.Event"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Event",
+                            "printedName": "SecureElementCredential.CredentialSession.Event",
+                            "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.Event.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.Event.Type) -> (SecureElementCredential.CredentialSession.ErrorCode) -> SecureElementCredential.CredentialSession.Event"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC5EventO18sessionInvalidatedyAeC9ErrorCodeO_tcAEmF",
+                "moduleName": "SecureElementCredential",
+                "name": "sessionInvalidated",
+                "printedName": "sessionInvalidated",
+                "usr": "s:23SecureElementCredential0C7SessionC5EventO18sessionInvalidatedyAeC9ErrorCodeO_tcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Event",
+                            "printedName": "SecureElementCredential.CredentialSession.Event",
+                            "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Credential",
+                                "printedName": "SecureElementCredential.CredentialSession.Credential",
+                                "usr": "s:23SecureElementCredential0C7SessionC0C0V"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(credential: SecureElementCredential.CredentialSession.Credential)"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(SecureElementCredential.CredentialSession.Credential) -> SecureElementCredential.CredentialSession.Event"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Event",
+                            "printedName": "SecureElementCredential.CredentialSession.Event",
+                            "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.Event.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.Event.Type) -> (SecureElementCredential.CredentialSession.Credential) -> SecureElementCredential.CredentialSession.Event"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC5EventO28credentialFinishedInstallingyAeC0C0V_tcAEmF",
+                "moduleName": "SecureElementCredential",
+                "name": "credentialFinishedInstalling",
+                "printedName": "credentialFinishedInstalling",
+                "usr": "s:23SecureElementCredential0C7SessionC5EventO28credentialFinishedInstallingyAeC0C0V_tcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Event",
+                            "printedName": "SecureElementCredential.CredentialSession.Event",
+                            "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "NFCFieldInformation",
+                                "printedName": "SecureElementCredential.CredentialSession.NFCFieldInformation",
+                                "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(info: SecureElementCredential.CredentialSession.NFCFieldInformation)"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(SecureElementCredential.CredentialSession.NFCFieldInformation) -> SecureElementCredential.CredentialSession.Event"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Event",
+                            "printedName": "SecureElementCredential.CredentialSession.Event",
+                            "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.Event.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.Event.Type) -> (SecureElementCredential.CredentialSession.NFCFieldInformation) -> SecureElementCredential.CredentialSession.Event"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC5EventO17fieldStateChangedyAeC19NFCFieldInformationO_tcAEmF",
+                "moduleName": "SecureElementCredential",
+                "name": "fieldStateChanged",
+                "printedName": "fieldStateChanged",
+                "usr": "s:23SecureElementCredential0C7SessionC5EventO17fieldStateChangedyAeC19NFCFieldInformationO_tcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Event",
+                            "printedName": "SecureElementCredential.CredentialSession.Event",
+                            "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ConnectivityEvent",
+                            "printedName": "SecureElementCredential.CredentialSession.ConnectivityEvent",
+                            "usr": "s:23SecureElementCredential0C7SessionC17ConnectivityEventV"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(SecureElementCredential.CredentialSession.ConnectivityEvent) -> SecureElementCredential.CredentialSession.Event"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Event",
+                            "printedName": "SecureElementCredential.CredentialSession.Event",
+                            "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.Event.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.Event.Type) -> (SecureElementCredential.CredentialSession.ConnectivityEvent) -> SecureElementCredential.CredentialSession.Event"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC5EventO012connectivityE0yAeC012ConnectivityE0VcAEmF",
+                "moduleName": "SecureElementCredential",
+                "name": "connectivityEvent",
+                "printedName": "connectivityEvent",
+                "usr": "s:23SecureElementCredential0C7SessionC5EventO012connectivityE0yAeC012ConnectivityE0VcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Event",
+                        "printedName": "SecureElementCredential.CredentialSession.Event",
+                        "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Event",
+                            "printedName": "SecureElementCredential.CredentialSession.Event",
+                            "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.Event.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.Event.Type) -> SecureElementCredential.CredentialSession.Event"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC5EventO20cardEmulationTimeoutyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "cardEmulationTimeout",
+                "printedName": "cardEmulationTimeout",
+                "usr": "s:23SecureElementCredential0C7SessionC5EventO20cardEmulationTimeoutyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Event",
+                        "printedName": "SecureElementCredential.CredentialSession.Event",
+                        "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Event",
+                            "printedName": "SecureElementCredential.CredentialSession.Event",
+                            "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.Event.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.Event.Type) -> SecureElementCredential.CredentialSession.Event"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC5EventO33presentmentIntentAssertionTimeoutyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "presentmentIntentAssertionTimeout",
+                "printedName": "presentmentIntentAssertionTimeout",
+                "usr": "s:23SecureElementCredential0C7SessionC5EventO33presentmentIntentAssertionTimeoutyA2EmF"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s23SecureElementCredential0C7SessionC5EventO",
+            "moduleName": "SecureElementCredential",
+            "name": "Event",
+            "printedName": "Event",
+            "usr": "s:23SecureElementCredential0C7SessionC5EventO"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NFCFieldInformation",
+                        "printedName": "SecureElementCredential.CredentialSession.NFCFieldInformation",
+                        "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "NFCFieldInformation",
+                            "printedName": "SecureElementCredential.CredentialSession.NFCFieldInformation",
+                            "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.NFCFieldInformation.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.NFCFieldInformation.Type) -> SecureElementCredential.CredentialSession.NFCFieldInformation"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC19NFCFieldInformationO12fieldPresentyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "fieldPresent",
+                "printedName": "fieldPresent",
+                "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO12fieldPresentyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NFCFieldInformation",
+                        "printedName": "SecureElementCredential.CredentialSession.NFCFieldInformation",
+                        "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "NFCFieldInformation",
+                            "printedName": "SecureElementCredential.CredentialSession.NFCFieldInformation",
+                            "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.NFCFieldInformation.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.NFCFieldInformation.Type) -> SecureElementCredential.CredentialSession.NFCFieldInformation"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC19NFCFieldInformationO11fieldAbsentyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "fieldAbsent",
+                "printedName": "fieldAbsent",
+                "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO11fieldAbsentyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NFCFieldInformation",
+                    "printedName": "SecureElementCredential.CredentialSession.NFCFieldInformation",
+                    "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NFCFieldInformation",
+                    "printedName": "SecureElementCredential.CredentialSession.NFCFieldInformation",
+                    "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s23SecureElementCredential0C7SessionC19NFCFieldInformationO2eeoiySbAE_AEtFZ",
+                "moduleName": "SecureElementCredential",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s23SecureElementCredential0C7SessionC19NFCFieldInformationO4hash4intoys6HasherVz_tF",
+                "moduleName": "SecureElementCredential",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC19NFCFieldInformationO9hashValueSivg",
+                    "moduleName": "SecureElementCredential",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC19NFCFieldInformationO9hashValueSivp",
+                "moduleName": "SecureElementCredential",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s23SecureElementCredential0C7SessionC19NFCFieldInformationO",
+            "moduleName": "SecureElementCredential",
+            "name": "NFCFieldInformation",
+            "printedName": "NFCFieldInformation",
+            "usr": "s:23SecureElementCredential0C7SessionC19NFCFieldInformationO"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC17ConnectivityEventV29instanceApplicationIdentifier10Foundation4DataVvg",
+                    "moduleName": "SecureElementCredential",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:23SecureElementCredential0C7SessionC17ConnectivityEventV29instanceApplicationIdentifier10Foundation4DataVvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC17ConnectivityEventV29instanceApplicationIdentifier10Foundation4DataVvp",
+                "moduleName": "SecureElementCredential",
+                "name": "instanceApplicationIdentifier",
+                "printedName": "instanceApplicationIdentifier",
+                "usr": "s:23SecureElementCredential0C7SessionC17ConnectivityEventV29instanceApplicationIdentifier10Foundation4DataVvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC17ConnectivityEventV4data10Foundation4DataVvg",
+                    "moduleName": "SecureElementCredential",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:23SecureElementCredential0C7SessionC17ConnectivityEventV4data10Foundation4DataVvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC17ConnectivityEventV4data10Foundation4DataVvp",
+                "moduleName": "SecureElementCredential",
+                "name": "data",
+                "printedName": "data",
+                "usr": "s:23SecureElementCredential0C7SessionC17ConnectivityEventV4data10Foundation4DataVvp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "kind": "TypeDecl",
+            "mangledName": "$s23SecureElementCredential0C7SessionC17ConnectivityEventV",
+            "moduleName": "SecureElementCredential",
+            "name": "ConnectivityEvent",
+            "printedName": "ConnectivityEvent",
+            "usr": "s:23SecureElementCredential0C7SessionC17ConnectivityEventV"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO17userNotAuthorizedyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "userNotAuthorized",
+                "printedName": "userNotAuthorized",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO17userNotAuthorizedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO12accessDeniedyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "accessDenied",
+                "printedName": "accessDenied",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO12accessDeniedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO21clientNotInForegroundyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "clientNotInForeground",
+                "printedName": "clientNotInForeground",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO21clientNotInForegroundyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO07invalidD5StateyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "invalidSessionState",
+                "printedName": "invalidSessionState",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO07invalidD5StateyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO07invalidC5StateyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "invalidCredentialState",
+                "printedName": "invalidCredentialState",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO07invalidC5StateyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO22credentialDoesNotExistyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "credentialDoesNotExist",
+                "printedName": "credentialDoesNotExist",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO22credentialDoesNotExistyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO20instanceDoesNotExistyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "instanceDoesNotExist",
+                "printedName": "instanceDoesNotExist",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO20instanceDoesNotExistyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO18sessionInvalidatedyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "sessionInvalidated",
+                "printedName": "sessionInvalidated",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO18sessionInvalidatedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO25userCanceledAuthorizationyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "userCanceledAuthorization",
+                "printedName": "userCanceledAuthorization",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO25userCanceledAuthorizationyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO25userAuthorizationTimedOutyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "userAuthorizationTimedOut",
+                "printedName": "userAuthorizationTimedOut",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO25userAuthorizationTimedOutyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO19commandNotSupportedyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "commandNotSupported",
+                "printedName": "commandNotSupported",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO19commandNotSupportedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO7networkyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "network",
+                "printedName": "network",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO7networkyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO19resourceUnavailableyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "resourceUnavailable",
+                "printedName": "resourceUnavailable",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO19resourceUnavailableyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO17insufficientSpaceyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "insufficientSpace",
+                "printedName": "insufficientSpace",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO17insufficientSpaceyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO33presentmentIntentAssertionTimeoutyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "presentmentIntentAssertionTimeout",
+                "printedName": "presentmentIntentAssertionTimeout",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO33presentmentIntentAssertionTimeoutyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO18featureUnavailableyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "featureUnavailable",
+                "printedName": "featureUnavailable",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO18featureUnavailableyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO10ineligibleyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "ineligible",
+                "printedName": "ineligible",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO10ineligibleyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO11invalidViewyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "invalidView",
+                "printedName": "invalidView",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO11invalidViewyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO28acquiredResourceRelinquishedyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "acquiredResourceRelinquished",
+                "printedName": "acquiredResourceRelinquished",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO28acquiredResourceRelinquishedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO22conditionsNotSatisfiedyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "conditionsNotSatisfied",
+                "printedName": "conditionsNotSatisfied",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO22conditionsNotSatisfiedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO12invalidInputyA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "invalidInput",
+                "printedName": "invalidInput",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO12invalidInputyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorCode",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                        "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorCode",
+                            "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SecureElementCredential.CredentialSession.ErrorCode.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SecureElementCredential.CredentialSession.ErrorCode.Type) -> SecureElementCredential.CredentialSession.ErrorCode"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO08internalE0yA2EmF",
+                "moduleName": "SecureElementCredential",
+                "name": "internalError",
+                "printedName": "internalError",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO08internalE0yA2EmF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Swift.String?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO13failureReasonSSSgvg",
+                    "moduleName": "SecureElementCredential",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO13failureReasonSSSgvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO13failureReasonSSSgvp",
+                "moduleName": "SecureElementCredential",
+                "name": "failureReason",
+                "printedName": "failureReason",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO13failureReasonSSSgvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ErrorCode",
+                    "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                    "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ErrorCode",
+                    "printedName": "SecureElementCredential.CredentialSession.ErrorCode",
+                    "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO2eeoiySbAE_AEtFZ",
+                "moduleName": "SecureElementCredential",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO4hash4intoys6HasherVz_tF",
+                "moduleName": "SecureElementCredential",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO9hashValueSivg",
+                    "moduleName": "SecureElementCredential",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO9hashValueSivp",
+                "moduleName": "SecureElementCredential",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$s10Foundation14LocalizedErrorP",
+                "name": "LocalizedError",
+                "printedName": "LocalizedError",
+                "usr": "s:10Foundation14LocalizedErrorP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss5ErrorP",
+                "name": "Error",
+                "printedName": "Error",
+                "usr": "s:s5ErrorP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s23SecureElementCredential0C7SessionC9ErrorCodeO",
+            "moduleName": "SecureElementCredential",
+            "name": "ErrorCode",
+            "printedName": "ErrorCode",
+            "usr": "s:23SecureElementCredential0C7SessionC9ErrorCodeO"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CredentialSession",
+                "printedName": "SecureElementCredential.CredentialSession",
+                "usr": "s:23SecureElementCredential0C7SessionC"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s23SecureElementCredential0C7SessionCACycfc",
+            "moduleName": "SecureElementCredential",
+            "name": "init",
+            "printedName": "init()",
+            "usr": "s:23SecureElementCredential0C7SessionCACycfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CredentialSession",
+                "printedName": "SecureElementCredential.CredentialSession",
+                "usr": "s:23SecureElementCredential0C7SessionC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CredentialSession",
+                "printedName": "SecureElementCredential.CredentialSession",
+                "usr": "s:23SecureElementCredential0C7SessionC"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s23SecureElementCredential0C7SessionC2eeoiySbAC_ACtFZ",
+            "moduleName": "SecureElementCredential",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:23SecureElementCredential0C7SessionC2eeoiySbAC_ACtFZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UnownedSerialExecutor",
+                    "printedName": "_Concurrency.UnownedSerialExecutor",
+                    "usr": "s:Sce"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s23SecureElementCredential0C7SessionC15unownedExecutorScevg",
+                "moduleName": "SecureElementCredential",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:23SecureElementCredential0C7SessionC15unownedExecutorScevg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UnownedSerialExecutor",
+                "printedName": "_Concurrency.UnownedSerialExecutor",
+                "usr": "s:Sce"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Nonisolated",
+              "Semantics",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_Macosx": "10.15",
+            "intro_iOS": "18.1",
+            "intro_tvOS": "13.0",
+            "intro_watchOS": "6.0",
+            "kind": "Var",
+            "mangledName": "$s23SecureElementCredential0C7SessionC15unownedExecutorScevp",
+            "moduleName": "SecureElementCredential",
+            "name": "unownedExecutor",
+            "printedName": "unownedExecutor",
+            "usr": "s:23SecureElementCredential0C7SessionC15unownedExecutorScevp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s23SecureElementCredential0C7SessionC10isEligibleSbvgZ",
+                "moduleName": "SecureElementCredential",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "throwing": true,
+                "usr": "s:23SecureElementCredential0C7SessionC10isEligibleSbvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s23SecureElementCredential0C7SessionC10isEligibleSbvpZ",
+            "moduleName": "SecureElementCredential",
+            "name": "isEligible",
+            "printedName": "isEligible",
+            "static": true,
+            "usr": "s:23SecureElementCredential0C7SessionC10isEligibleSbvpZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Credential",
+                "printedName": "SecureElementCredential.CredentialSession.Credential",
+                "usr": "s:23SecureElementCredential0C7SessionC0C0V"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s23SecureElementCredential0C7SessionC14enterWiredMode5usingyAC0C0V_tYaKF",
+            "moduleName": "SecureElementCredential",
+            "name": "enterWiredMode",
+            "printedName": "enterWiredMode(using:)",
+            "throwing": true,
+            "usr": "s:23SecureElementCredential0C7SessionC14enterWiredMode5usingyAC0C0V_tYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s23SecureElementCredential0C7SessionC10transceivey10Foundation4DataVAGYaKF",
+            "moduleName": "SecureElementCredential",
+            "name": "transceive",
+            "printedName": "transceive(_:)",
+            "throwing": true,
+            "usr": "s:23SecureElementCredential0C7SessionC10transceivey10Foundation4DataVAGYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s23SecureElementCredential0C7SessionC12endWiredModeyyYaKF",
+            "moduleName": "SecureElementCredential",
+            "name": "endWiredMode",
+            "printedName": "endWiredMode()",
+            "throwing": true,
+            "usr": "s:23SecureElementCredential0C7SessionC12endWiredModeyyYaKF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CardEmulationOptions",
+                    "printedName": "SecureElementCredential.CredentialSession.CardEmulationOptions",
+                    "usr": "s:23SecureElementCredential0C7SessionC20CardEmulationOptionsV"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s23SecureElementCredential0C7SessionC20CardEmulationOptionsVAEycfc",
+                "moduleName": "SecureElementCredential",
+                "name": "init",
+                "printedName": "init()",
+                "usr": "s:23SecureElementCredential0C7SessionC20CardEmulationOptionsVAEycfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s23SecureElementCredential0C7SessionC20CardEmulationOptionsV",
+            "moduleName": "SecureElementCredential",
+            "name": "CardEmulationOptions",
+            "printedName": "CardEmulationOptions",
+            "usr": "s:23SecureElementCredential0C7SessionC20CardEmulationOptionsV"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UUID",
+                        "printedName": "Foundation.UUID",
+                        "usr": "s:10Foundation4UUIDV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V10identifier10Foundation4UUIDVvg",
+                    "moduleName": "SecureElementCredential",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V10identifier10Foundation4UUIDVvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UUID",
+                    "printedName": "Foundation.UUID",
+                    "usr": "s:10Foundation4UUIDV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC0C0V10identifier10Foundation4UUIDVvp",
+                "moduleName": "SecureElementCredential",
+                "name": "identifier",
+                "printedName": "identifier",
+                "usr": "s:23SecureElementCredential0C7SessionC0C0V10identifier10Foundation4UUIDVvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V4nameSSvg",
+                    "moduleName": "SecureElementCredential",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V4nameSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC0C0V4nameSSvp",
+                "moduleName": "SecureElementCredential",
+                "name": "name",
+                "printedName": "name",
+                "usr": "s:23SecureElementCredential0C7SessionC0C0V4nameSSvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "State",
+                        "printedName": "SecureElementCredential.CredentialSession.Credential.State",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V5stateAE5StateOvg",
+                    "moduleName": "SecureElementCredential",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V5stateAE5StateOvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "State",
+                    "printedName": "SecureElementCredential.CredentialSession.Credential.State",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC0C0V5stateAE5StateOvp",
+                "moduleName": "SecureElementCredential",
+                "name": "state",
+                "printedName": "state",
+                "usr": "s:23SecureElementCredential0C7SessionC0C0V5stateAE5StateOvp"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "SecureElementCredential.CredentialSession.Credential.State",
+                            "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "State",
+                                "printedName": "SecureElementCredential.CredentialSession.Credential.State",
+                                "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Metatype",
+                            "printedName": "SecureElementCredential.CredentialSession.Credential.State.Type"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(SecureElementCredential.CredentialSession.Credential.State.Type) -> SecureElementCredential.CredentialSession.Credential.State"
+                      }
+                    ],
+                    "declKind": "EnumElement",
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V5StateO19installationPendingyA2GmF",
+                    "moduleName": "SecureElementCredential",
+                    "name": "installationPending",
+                    "printedName": "installationPending",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO19installationPendingyA2GmF"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "State",
+                                "printedName": "SecureElementCredential.CredentialSession.Credential.State",
+                                "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO"
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "children": [
+                                      {
+                                        "kind": "TypeNominal",
+                                        "name": "InstanceInfo",
+                                        "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo",
+                                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV"
+                                      }
+                                    ],
+                                    "kind": "TypeNominal",
+                                    "name": "Array",
+                                    "printedName": "[SecureElementCredential.CredentialSession.Credential.InstanceInfo]",
+                                    "usr": "s:Sa"
+                                  }
+                                ],
+                                "kind": "TypeNominal",
+                                "name": "Tuple",
+                                "printedName": "(instances: [SecureElementCredential.CredentialSession.Credential.InstanceInfo])"
+                              }
+                            ],
+                            "kind": "TypeFunc",
+                            "name": "Function",
+                            "printedName": "([SecureElementCredential.CredentialSession.Credential.InstanceInfo]) -> SecureElementCredential.CredentialSession.Credential.State"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "State",
+                                "printedName": "SecureElementCredential.CredentialSession.Credential.State",
+                                "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Metatype",
+                            "printedName": "SecureElementCredential.CredentialSession.Credential.State.Type"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(SecureElementCredential.CredentialSession.Credential.State.Type) -> ([SecureElementCredential.CredentialSession.Credential.InstanceInfo]) -> SecureElementCredential.CredentialSession.Credential.State"
+                      }
+                    ],
+                    "declKind": "EnumElement",
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V5StateO9installedyAGSayAE12InstanceInfoVG_tcAGmF",
+                    "moduleName": "SecureElementCredential",
+                    "name": "installed",
+                    "printedName": "installed",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO9installedyAGSayAE12InstanceInfoVG_tcAGmF"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "SecureElementCredential.CredentialSession.Credential.State",
+                            "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "State",
+                                "printedName": "SecureElementCredential.CredentialSession.Credential.State",
+                                "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Metatype",
+                            "printedName": "SecureElementCredential.CredentialSession.Credential.State.Type"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(SecureElementCredential.CredentialSession.Credential.State.Type) -> SecureElementCredential.CredentialSession.Credential.State"
+                      }
+                    ],
+                    "declKind": "EnumElement",
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V5StateO18installationFailedyA2GmF",
+                    "moduleName": "SecureElementCredential",
+                    "name": "installationFailed",
+                    "printedName": "installationFailed",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO18installationFailedyA2GmF"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "State",
+                        "printedName": "SecureElementCredential.CredentialSession.Credential.State",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "State",
+                        "printedName": "SecureElementCredential.CredentialSession.Credential.State",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "NonMutating",
+                    "kind": "Function",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V5StateO2eeoiySbAG_AGtFZ",
+                    "moduleName": "SecureElementCredential",
+                    "name": "==",
+                    "printedName": "==(_:_:)",
+                    "static": true,
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO2eeoiySbAG_AGtFZ"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8SendableP",
+                    "name": "Sendable",
+                    "printedName": "Sendable",
+                    "usr": "s:s8SendableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$sSQ",
+                    "name": "Equatable",
+                    "printedName": "Equatable",
+                    "usr": "s:SQ"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss16SendableMetatypeP",
+                    "name": "SendableMetatype",
+                    "printedName": "SendableMetatype",
+                    "usr": "s:s16SendableMetatypeP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  }
+                ],
+                "declKind": "Enum",
+                "kind": "TypeDecl",
+                "mangledName": "$s23SecureElementCredential0C7SessionC0C0V5StateO",
+                "moduleName": "SecureElementCredential",
+                "name": "State",
+                "printedName": "State",
+                "usr": "s:23SecureElementCredential0C7SessionC0C0V5StateO"
+              },
+              {
+                "children": [
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Data",
+                            "printedName": "Foundation.Data",
+                            "usr": "s:10Foundation4DataV"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV11instanceAID10Foundation4DataVvg",
+                        "moduleName": "SecureElementCredential",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV11instanceAID10Foundation4DataVvg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declAttributes": [
+                      "HasStorage"
+                    ],
+                    "declKind": "Var",
+                    "hasStorage": true,
+                    "isLet": true,
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV11instanceAID10Foundation4DataVvp",
+                    "moduleName": "SecureElementCredential",
+                    "name": "instanceAID",
+                    "printedName": "instanceAID",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV11instanceAID10Foundation4DataVvp"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Data",
+                            "printedName": "Foundation.Data",
+                            "usr": "s:10Foundation4DataV"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV10packageAID10Foundation4DataVvg",
+                        "moduleName": "SecureElementCredential",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV10packageAID10Foundation4DataVvg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declAttributes": [
+                      "HasStorage"
+                    ],
+                    "declKind": "Var",
+                    "hasStorage": true,
+                    "isLet": true,
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV10packageAID10Foundation4DataVvp",
+                    "moduleName": "SecureElementCredential",
+                    "name": "packageAID",
+                    "printedName": "packageAID",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV10packageAID10Foundation4DataVvp"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Data",
+                            "printedName": "Foundation.Data",
+                            "usr": "s:10Foundation4DataV"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV9moduleAID10Foundation4DataVvg",
+                        "moduleName": "SecureElementCredential",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV9moduleAID10Foundation4DataVvg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declAttributes": [
+                      "HasStorage"
+                    ],
+                    "declKind": "Var",
+                    "hasStorage": true,
+                    "isLet": true,
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV9moduleAID10Foundation4DataVvp",
+                    "moduleName": "SecureElementCredential",
+                    "name": "moduleAID",
+                    "printedName": "moduleAID",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV9moduleAID10Foundation4DataVvp"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Data",
+                            "printedName": "Foundation.Data",
+                            "usr": "s:10Foundation4DataV"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV17securityDomainAID10Foundation4DataVvg",
+                        "moduleName": "SecureElementCredential",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV17securityDomainAID10Foundation4DataVvg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declAttributes": [
+                      "HasStorage"
+                    ],
+                    "declKind": "Var",
+                    "hasStorage": true,
+                    "isLet": true,
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV17securityDomainAID10Foundation4DataVvp",
+                    "moduleName": "SecureElementCredential",
+                    "name": "securityDomainAID",
+                    "printedName": "securityDomainAID",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV17securityDomainAID10Foundation4DataVvp"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Data",
+                            "printedName": "Foundation.Data",
+                            "usr": "s:10Foundation4DataV"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV017securityDomainKeyF010Foundation4DataVvg",
+                        "moduleName": "SecureElementCredential",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV017securityDomainKeyF010Foundation4DataVvg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declAttributes": [
+                      "HasStorage"
+                    ],
+                    "declKind": "Var",
+                    "hasStorage": true,
+                    "isLet": true,
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV017securityDomainKeyF010Foundation4DataVvp",
+                    "moduleName": "SecureElementCredential",
+                    "name": "securityDomainKeyInfo",
+                    "printedName": "securityDomainKeyInfo",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV017securityDomainKeyF010Foundation4DataVvp"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Data",
+                            "printedName": "Foundation.Data",
+                            "usr": "s:10Foundation4DataV"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV14lifeCycleState10Foundation4DataVvg",
+                        "moduleName": "SecureElementCredential",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV14lifeCycleState10Foundation4DataVvg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declAttributes": [
+                      "HasStorage"
+                    ],
+                    "declKind": "Var",
+                    "hasStorage": true,
+                    "isLet": true,
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV14lifeCycleState10Foundation4DataVvp",
+                    "moduleName": "SecureElementCredential",
+                    "name": "lifeCycleState",
+                    "printedName": "lifeCycleState",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV14lifeCycleState10Foundation4DataVvp"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "kind": "Accessor",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV21securityDomainCounterSivg",
+                        "moduleName": "SecureElementCredential",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "throwing": true,
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV21securityDomainCounterSivg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Var",
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV21securityDomainCounterSivp",
+                    "moduleName": "SecureElementCredential",
+                    "name": "securityDomainCounter",
+                    "printedName": "securityDomainCounter",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV21securityDomainCounterSivp"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "InstanceType",
+                                "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType",
+                                "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO"
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "InstanceType",
+                                    "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType",
+                                    "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO"
+                                  }
+                                ],
+                                "kind": "TypeNominal",
+                                "name": "Metatype",
+                                "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType.Type"
+                              }
+                            ],
+                            "kind": "TypeFunc",
+                            "name": "Function",
+                            "printedName": "(SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType.Type) -> SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType"
+                          }
+                        ],
+                        "declKind": "EnumElement",
+                        "kind": "Var",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO10standaloneyA2ImF",
+                        "moduleName": "SecureElementCredential",
+                        "name": "standalone",
+                        "printedName": "standalone",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO10standaloneyA2ImF"
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "InstanceType",
+                                "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType",
+                                "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO"
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "InstanceType",
+                                    "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType",
+                                    "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO"
+                                  }
+                                ],
+                                "kind": "TypeNominal",
+                                "name": "Metatype",
+                                "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType.Type"
+                              }
+                            ],
+                            "kind": "TypeFunc",
+                            "name": "Function",
+                            "printedName": "(SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType.Type) -> SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType"
+                          }
+                        ],
+                        "declKind": "EnumElement",
+                        "kind": "Var",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO15headApplicationyA2ImF",
+                        "moduleName": "SecureElementCredential",
+                        "name": "headApplication",
+                        "printedName": "headApplication",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO15headApplicationyA2ImF"
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "InstanceType",
+                                "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType",
+                                "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO"
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "InstanceType",
+                                    "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType",
+                                    "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO"
+                                  }
+                                ],
+                                "kind": "TypeNominal",
+                                "name": "Metatype",
+                                "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType.Type"
+                              }
+                            ],
+                            "kind": "TypeFunc",
+                            "name": "Function",
+                            "printedName": "(SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType.Type) -> SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType"
+                          }
+                        ],
+                        "declKind": "EnumElement",
+                        "kind": "Var",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO16groupApplicationyA2ImF",
+                        "moduleName": "SecureElementCredential",
+                        "name": "groupApplication",
+                        "printedName": "groupApplication",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO16groupApplicationyA2ImF"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Bool",
+                            "printedName": "Swift.Bool",
+                            "usr": "s:Sb"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "InstanceType",
+                            "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType",
+                            "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "InstanceType",
+                            "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType",
+                            "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO"
+                          }
+                        ],
+                        "declKind": "Func",
+                        "funcSelfKind": "NonMutating",
+                        "kind": "Function",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO2eeoiySbAI_AItFZ",
+                        "moduleName": "SecureElementCredential",
+                        "name": "==",
+                        "printedName": "==(_:_:)",
+                        "static": true,
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO2eeoiySbAI_AItFZ"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Void",
+                            "printedName": "()"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Hasher",
+                            "paramValueOwnership": "InOut",
+                            "printedName": "Swift.Hasher",
+                            "usr": "s:s6HasherV"
+                          }
+                        ],
+                        "declKind": "Func",
+                        "funcSelfKind": "NonMutating",
+                        "kind": "Function",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO4hash4intoys6HasherVz_tF",
+                        "moduleName": "SecureElementCredential",
+                        "name": "hash",
+                        "printedName": "hash(into:)",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO4hash4intoys6HasherVz_tF"
+                      },
+                      {
+                        "accessors": [
+                          {
+                            "accessorKind": "get",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Int",
+                                "printedName": "Swift.Int",
+                                "usr": "s:Si"
+                              }
+                            ],
+                            "declKind": "Accessor",
+                            "kind": "Accessor",
+                            "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO9hashValueSivg",
+                            "moduleName": "SecureElementCredential",
+                            "name": "Get",
+                            "printedName": "Get()",
+                            "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO9hashValueSivg"
+                          }
+                        ],
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "declKind": "Var",
+                        "kind": "Var",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO9hashValueSivp",
+                        "moduleName": "SecureElementCredential",
+                        "name": "hashValue",
+                        "printedName": "hashValue",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO9hashValueSivp"
+                      }
+                    ],
+                    "conformances": [
+                      {
+                        "kind": "Conformance",
+                        "mangledName": "$ss8SendableP",
+                        "name": "Sendable",
+                        "printedName": "Sendable",
+                        "usr": "s:s8SendableP"
+                      },
+                      {
+                        "kind": "Conformance",
+                        "mangledName": "$sSQ",
+                        "name": "Equatable",
+                        "printedName": "Equatable",
+                        "usr": "s:SQ"
+                      },
+                      {
+                        "kind": "Conformance",
+                        "mangledName": "$ss16SendableMetatypeP",
+                        "name": "SendableMetatype",
+                        "printedName": "SendableMetatype",
+                        "usr": "s:s16SendableMetatypeP"
+                      },
+                      {
+                        "kind": "Conformance",
+                        "mangledName": "$ss8CopyableP",
+                        "name": "Copyable",
+                        "printedName": "Copyable",
+                        "usr": "s:s8CopyableP"
+                      },
+                      {
+                        "kind": "Conformance",
+                        "mangledName": "$ss9EscapableP",
+                        "name": "Escapable",
+                        "printedName": "Escapable",
+                        "usr": "s:s9EscapableP"
+                      },
+                      {
+                        "kind": "Conformance",
+                        "mangledName": "$sSH",
+                        "name": "Hashable",
+                        "printedName": "Hashable",
+                        "usr": "s:SH"
+                      }
+                    ],
+                    "declKind": "Enum",
+                    "kind": "TypeDecl",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO",
+                    "moduleName": "SecureElementCredential",
+                    "name": "InstanceType",
+                    "printedName": "InstanceType",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "InstanceType",
+                            "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType",
+                            "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV12instanceTypeAG0eH0Ovg",
+                        "moduleName": "SecureElementCredential",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV12instanceTypeAG0eH0Ovg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "InstanceType",
+                        "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo.InstanceType",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV0E4TypeO"
+                      }
+                    ],
+                    "declAttributes": [
+                      "HasStorage"
+                    ],
+                    "declKind": "Var",
+                    "hasStorage": true,
+                    "isLet": true,
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV12instanceTypeAG0eH0Ovp",
+                    "moduleName": "SecureElementCredential",
+                    "name": "instanceType",
+                    "printedName": "instanceType",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV12instanceTypeAG0eH0Ovp"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "InstanceInfo",
+                        "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "InstanceInfo",
+                        "printedName": "SecureElementCredential.CredentialSession.Credential.InstanceInfo",
+                        "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "NonMutating",
+                    "kind": "Function",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV2eeoiySbAG_AGtFZ",
+                    "moduleName": "SecureElementCredential",
+                    "name": "==",
+                    "printedName": "==(_:_:)",
+                    "static": true,
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV2eeoiySbAG_AGtFZ"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8SendableP",
+                    "name": "Sendable",
+                    "printedName": "Sendable",
+                    "usr": "s:s8SendableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$sSQ",
+                    "name": "Equatable",
+                    "printedName": "Equatable",
+                    "usr": "s:SQ"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss16SendableMetatypeP",
+                    "name": "SendableMetatype",
+                    "printedName": "SendableMetatype",
+                    "usr": "s:s16SendableMetatypeP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  }
+                ],
+                "declKind": "Struct",
+                "kind": "TypeDecl",
+                "mangledName": "$s23SecureElementCredential0C7SessionC0C0V12InstanceInfoV",
+                "moduleName": "SecureElementCredential",
+                "name": "InstanceInfo",
+                "printedName": "InstanceInfo",
+                "usr": "s:23SecureElementCredential0C7SessionC0C0V12InstanceInfoV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s23SecureElementCredential0C7SessionC0C0V4hash4intoys6HasherVz_tF",
+                "moduleName": "SecureElementCredential",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:23SecureElementCredential0C7SessionC0C0V4hash4intoys6HasherVz_tF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Credential",
+                    "printedName": "SecureElementCredential.CredentialSession.Credential",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Credential",
+                    "printedName": "SecureElementCredential.CredentialSession.Credential",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s23SecureElementCredential0C7SessionC0C0V2eeoiySbAE_AEtFZ",
+                "moduleName": "SecureElementCredential",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:23SecureElementCredential0C7SessionC0C0V2eeoiySbAE_AEtFZ"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s23SecureElementCredential0C7SessionC0C0V",
+            "moduleName": "SecureElementCredential",
+            "name": "Credential",
+            "printedName": "Credential",
+            "usr": "s:23SecureElementCredential0C7SessionC0C0V"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PresentmentIntentAssertion",
+                "printedName": "SecureElementCredential.CredentialSession.PresentmentIntentAssertion",
+                "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s23SecureElementCredential0C7SessionC27acquirePresentmentAssertionAC0f6IntentG0CyYaKF",
+            "moduleName": "SecureElementCredential",
+            "name": "acquirePresentmentAssertion",
+            "printedName": "acquirePresentmentAssertion()",
+            "throwing": true,
+            "usr": "s:23SecureElementCredential0C7SessionC27acquirePresentmentAssertionAC0f6IntentG0CyYaKF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC10relinquishyyYaKF",
+                "moduleName": "SecureElementCredential",
+                "name": "relinquish",
+                "printedName": "relinquish()",
+                "throwing": true,
+                "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC10relinquishyyYaKF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State",
+                            "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "State",
+                                "printedName": "SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State",
+                                "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Metatype",
+                            "printedName": "SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State.Type"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State.Type) -> SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State"
+                      }
+                    ],
+                    "declKind": "EnumElement",
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO6activeyA2GmF",
+                    "moduleName": "SecureElementCredential",
+                    "name": "active",
+                    "printedName": "active",
+                    "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO6activeyA2GmF"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State",
+                            "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "State",
+                                "printedName": "SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State",
+                                "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Metatype",
+                            "printedName": "SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State.Type"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State.Type) -> SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State"
+                      }
+                    ],
+                    "declKind": "EnumElement",
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO7invalidyA2GmF",
+                    "moduleName": "SecureElementCredential",
+                    "name": "invalid",
+                    "printedName": "invalid",
+                    "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO7invalidyA2GmF"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "State",
+                        "printedName": "SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State",
+                        "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "State",
+                        "printedName": "SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State",
+                        "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "NonMutating",
+                    "kind": "Function",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO2eeoiySbAG_AGtFZ",
+                    "moduleName": "SecureElementCredential",
+                    "name": "==",
+                    "printedName": "==(_:_:)",
+                    "static": true,
+                    "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO2eeoiySbAG_AGtFZ"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Hasher",
+                        "paramValueOwnership": "InOut",
+                        "printedName": "Swift.Hasher",
+                        "usr": "s:s6HasherV"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "NonMutating",
+                    "kind": "Function",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO4hash4intoys6HasherVz_tF",
+                    "moduleName": "SecureElementCredential",
+                    "name": "hash",
+                    "printedName": "hash(into:)",
+                    "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO4hash4intoys6HasherVz_tF"
+                  },
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "kind": "Accessor",
+                        "mangledName": "$s23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO9hashValueSivg",
+                        "moduleName": "SecureElementCredential",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO9hashValueSivg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Var",
+                    "kind": "Var",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO9hashValueSivp",
+                    "moduleName": "SecureElementCredential",
+                    "name": "hashValue",
+                    "printedName": "hashValue",
+                    "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO9hashValueSivp"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$sSQ",
+                    "name": "Equatable",
+                    "printedName": "Equatable",
+                    "usr": "s:SQ"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$sSH",
+                    "name": "Hashable",
+                    "printedName": "Hashable",
+                    "usr": "s:SH"
+                  }
+                ],
+                "declKind": "Enum",
+                "kind": "TypeDecl",
+                "mangledName": "$s23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO",
+                "moduleName": "SecureElementCredential",
+                "name": "State",
+                "printedName": "State",
+                "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "State",
+                        "printedName": "SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State",
+                        "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Final"
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5stateAE5StateOvg",
+                    "moduleName": "SecureElementCredential",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5stateAE5StateOvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "State",
+                    "printedName": "SecureElementCredential.CredentialSession.PresentmentIntentAssertion.State",
+                    "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5StateO"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5stateAE5StateOvp",
+                "moduleName": "SecureElementCredential",
+                "name": "state",
+                "printedName": "state",
+                "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC5stateAE5StateOvp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Class",
+            "hasMissingDesignatedInitializers": true,
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC",
+            "moduleName": "SecureElementCredential",
+            "name": "PresentmentIntentAssertion",
+            "printedName": "PresentmentIntentAssertion",
+            "usr": "s:23SecureElementCredential0C7SessionC26PresentmentIntentAssertionC"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0aB4InfoV022hardwareReleaseVersionE0SSvg",
+                    "moduleName": "SecureElementCredential",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:23SecureElementCredential0C7SessionC0aB4InfoV022hardwareReleaseVersionE0SSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC0aB4InfoV022hardwareReleaseVersionE0SSvp",
+                "moduleName": "SecureElementCredential",
+                "name": "hardwareReleaseVersionInfo",
+                "printedName": "hardwareReleaseVersionInfo",
+                "usr": "s:23SecureElementCredential0C7SessionC0aB4InfoV022hardwareReleaseVersionE0SSvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s23SecureElementCredential0C7SessionC0aB4InfoV06secureB26PlatformSigningCertificate10Foundation4DataVvg",
+                    "moduleName": "SecureElementCredential",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:23SecureElementCredential0C7SessionC0aB4InfoV06secureB26PlatformSigningCertificate10Foundation4DataVvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s23SecureElementCredential0C7SessionC0aB4InfoV06secureB26PlatformSigningCertificate10Foundation4DataVvp",
+                "moduleName": "SecureElementCredential",
+                "name": "secureElementPlatformSigningCertificate",
+                "printedName": "secureElementPlatformSigningCertificate",
+                "usr": "s:23SecureElementCredential0C7SessionC0aB4InfoV06secureB26PlatformSigningCertificate10Foundation4DataVvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoder",
+                    "printedName": "any Swift.Encoder",
+                    "usr": "s:s7EncoderP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s23SecureElementCredential0C7SessionC0aB4InfoV6encode2toys7Encoder_p_tKF",
+                "moduleName": "SecureElementCredential",
+                "name": "encode",
+                "printedName": "encode(to:)",
+                "throwing": true,
+                "usr": "s:23SecureElementCredential0C7SessionC0aB4InfoV6encode2toys7Encoder_p_tKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SecureElementInfo",
+                    "printedName": "SecureElementCredential.CredentialSession.SecureElementInfo",
+                    "usr": "s:23SecureElementCredential0C7SessionC0aB4InfoV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Decoder",
+                    "printedName": "any Swift.Decoder",
+                    "usr": "s:s7DecoderP"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s23SecureElementCredential0C7SessionC0aB4InfoV4fromAEs7Decoder_p_tKcfc",
+                "moduleName": "SecureElementCredential",
+                "name": "init",
+                "printedName": "init(from:)",
+                "throwing": true,
+                "usr": "s:23SecureElementCredential0C7SessionC0aB4InfoV4fromAEs7Decoder_p_tKcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSe",
+                "name": "Decodable",
+                "printedName": "Decodable",
+                "usr": "s:Se"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSE",
+                "name": "Encodable",
+                "printedName": "Encodable",
+                "usr": "s:SE"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s23SecureElementCredential0C7SessionC0aB4InfoV",
+            "moduleName": "SecureElementCredential",
+            "name": "SecureElementInfo",
+            "printedName": "SecureElementInfo",
+            "usr": "s:23SecureElementCredential0C7SessionC0aB4InfoV"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SecureElementInfo",
+                    "printedName": "SecureElementCredential.CredentialSession.SecureElementInfo",
+                    "usr": "s:23SecureElementCredential0C7SessionC0aB4InfoV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s23SecureElementCredential0C7SessionC06secureB4InfoAC0abF0Vvg",
+                "moduleName": "SecureElementCredential",
+                "name": "Get",
+                "printedName": "Get()",
+                "throwing": true,
+                "usr": "s:23SecureElementCredential0C7SessionC06secureB4InfoAC0abF0Vvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SecureElementInfo",
+                "printedName": "SecureElementCredential.CredentialSession.SecureElementInfo",
+                "usr": "s:23SecureElementCredential0C7SessionC0aB4InfoV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s23SecureElementCredential0C7SessionC06secureB4InfoAC0abF0Vvp",
+            "moduleName": "SecureElementCredential",
+            "name": "secureElementInfo",
+            "printedName": "secureElementInfo",
+            "usr": "s:23SecureElementCredential0C7SessionC06secureB4InfoAC0abF0Vvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Credential",
+                    "printedName": "SecureElementCredential.CredentialSession.Credential",
+                    "usr": "s:23SecureElementCredential0C7SessionC0C0V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[SecureElementCredential.CredentialSession.Credential]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s23SecureElementCredential0C7SessionC15listCredentialsSayAC0C0VGyYaKF",
+            "moduleName": "SecureElementCredential",
+            "name": "listCredentials",
+            "printedName": "listCredentials()",
+            "throwing": true,
+            "usr": "s:23SecureElementCredential0C7SessionC15listCredentialsSayAC0C0VGyYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Credential",
+                "printedName": "SecureElementCredential.CredentialSession.Credential",
+                "usr": "s:23SecureElementCredential0C7SessionC0C0V"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UUID",
+                "printedName": "Foundation.UUID",
+                "usr": "s:10Foundation4UUIDV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s23SecureElementCredential0C7SessionC09provisionC017configurationUUID4nameAC0C0V10Foundation0G0V_SStYaKF",
+            "moduleName": "SecureElementCredential",
+            "name": "provisionCredential",
+            "printedName": "provisionCredential(configurationUUID:name:)",
+            "throwing": true,
+            "usr": "s:23SecureElementCredential0C7SessionC09provisionC017configurationUUID4nameAC0C0V10Foundation0G0V_SStYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Credential",
+                "printedName": "SecureElementCredential.CredentialSession.Credential",
+                "usr": "s:23SecureElementCredential0C7SessionC0C0V"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s23SecureElementCredential0C7SessionC06deleteC0yyAC0C0VYaKF",
+            "moduleName": "SecureElementCredential",
+            "name": "deleteCredential",
+            "printedName": "deleteCredential(_:)",
+            "throwing": true,
+            "usr": "s:23SecureElementCredential0C7SessionC06deleteC0yyAC0C0VYaKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sScA",
+            "name": "Actor",
+            "printedName": "Actor",
+            "usr": "s:ScA"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "intro_iOS": "18.1",
+        "kind": "TypeDecl",
+        "mangledName": "$s23SecureElementCredential0C7SessionC",
+        "moduleName": "SecureElementCredential",
+        "name": "CredentialSession",
+        "printedName": "CredentialSession",
+        "usr": "s:23SecureElementCredential0C7SessionC"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "SecureElementCredential",
+    "printedName": "SecureElementCredential"
+  }
+}

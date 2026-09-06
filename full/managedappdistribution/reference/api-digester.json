@@ -1,0 +1,3563 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedAppDistribution",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedAppDistribution",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedAppDistribution",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedAppDistribution",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Platform",
+                    "printedName": "ManagedAppDistribution.Platform",
+                    "usr": "s:22ManagedAppDistribution8PlatformV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V8platformAA8PlatformVvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V8platformAA8PlatformVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Platform",
+                "printedName": "ManagedAppDistribution.Platform",
+                "usr": "s:22ManagedAppDistribution8PlatformV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V8platformAA8PlatformVvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "platform",
+            "printedName": "platform",
+            "usr": "s:22ManagedAppDistribution0aB0V8platformAA8PlatformVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "UnitInformationStorage",
+                            "printedName": "Foundation.UnitInformationStorage",
+                            "usr": "c:objc(cs)NSUnitInformationStorage"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Measurement",
+                        "printedName": "Foundation.Measurement<Foundation.UnitInformationStorage>",
+                        "usr": "s:10Foundation11MeasurementV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Measurement<Foundation.UnitInformationStorage>?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V8fileSize10Foundation11MeasurementVySo24NSUnitInformationStorageCGSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V8fileSize10Foundation11MeasurementVySo24NSUnitInformationStorageCGSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UnitInformationStorage",
+                        "printedName": "Foundation.UnitInformationStorage",
+                        "usr": "c:objc(cs)NSUnitInformationStorage"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Measurement",
+                    "printedName": "Foundation.Measurement<Foundation.UnitInformationStorage>",
+                    "usr": "s:10Foundation11MeasurementV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Measurement<Foundation.UnitInformationStorage>?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V8fileSize10Foundation11MeasurementVySo24NSUnitInformationStorageCGSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "fileSize",
+            "printedName": "fileSize",
+            "usr": "s:22ManagedAppDistribution0aB0V8fileSize10Foundation11MeasurementVySo24NSUnitInformationStorageCGSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Language",
+                        "printedName": "Foundation.Locale.Language",
+                        "usr": "s:10Foundation6LocaleV8LanguageV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Locale.Language?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V16metadataLanguage10Foundation6LocaleV0E0VSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V16metadataLanguage10Foundation6LocaleV0E0VSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Language",
+                    "printedName": "Foundation.Locale.Language",
+                    "usr": "s:10Foundation6LocaleV8LanguageV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Locale.Language?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V16metadataLanguage10Foundation6LocaleV0E0VSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "metadataLanguage",
+            "printedName": "metadataLanguage",
+            "usr": "s:22ManagedAppDistribution0aB0V16metadataLanguage10Foundation6LocaleV0E0VSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V4nameSSvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V4nameSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V4nameSSvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "name",
+            "printedName": "name",
+            "usr": "s:22ManagedAppDistribution0aB0V4nameSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V8subtitleSSSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V8subtitleSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V8subtitleSSSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "subtitle",
+            "printedName": "subtitle",
+            "usr": "s:22ManagedAppDistribution0aB0V8subtitleSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V6sellerSSSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V6sellerSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V6sellerSSSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "seller",
+            "printedName": "seller",
+            "usr": "s:22ManagedAppDistribution0aB0V6sellerSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.String]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V6genresSaySSGvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V6genresSaySSGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.String]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V6genresSaySSGvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "genres",
+            "printedName": "genres",
+            "usr": "s:22ManagedAppDistribution0aB0V6genresSaySSGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V11descriptionSSSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V11descriptionSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V11descriptionSSSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "description",
+            "printedName": "description",
+            "usr": "s:22ManagedAppDistribution0aB0V11descriptionSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Language",
+                        "printedName": "Foundation.Locale.Language",
+                        "usr": "s:10Foundation6LocaleV8LanguageV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Foundation.Locale.Language]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V9languagesSay10Foundation6LocaleV8LanguageVGvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V9languagesSay10Foundation6LocaleV8LanguageVGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Language",
+                    "printedName": "Foundation.Locale.Language",
+                    "usr": "s:10Foundation6LocaleV8LanguageV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.Locale.Language]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V9languagesSay10Foundation6LocaleV8LanguageVGvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "languages",
+            "printedName": "languages",
+            "usr": "s:22ManagedAppDistribution0aB0V9languagesSay10Foundation6LocaleV8LanguageVGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V12requirementsSSSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V12requirementsSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V12requirementsSSSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "requirements",
+            "printedName": "requirements",
+            "usr": "s:22ManagedAppDistribution0aB0V12requirementsSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V7versionSSSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V7versionSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V7versionSSSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "version",
+            "printedName": "version",
+            "usr": "s:22ManagedAppDistribution0aB0V7versionSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Date",
+                        "printedName": "Foundation.Date",
+                        "usr": "s:10Foundation4DateV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Date?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V11releaseDate10Foundation0E0VSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V11releaseDate10Foundation0E0VSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Date",
+                    "printedName": "Foundation.Date",
+                    "usr": "s:10Foundation4DateV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Date?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V11releaseDate10Foundation0E0VSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "releaseDate",
+            "printedName": "releaseDate",
+            "usr": "s:22ManagedAppDistribution0aB0V11releaseDate10Foundation0E0VSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V12releaseNotesSSSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V12releaseNotesSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V12releaseNotesSSSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "releaseNotes",
+            "printedName": "releaseNotes",
+            "usr": "s:22ManagedAppDistribution0aB0V12releaseNotesSSSgvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.URL?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CGSize",
+                "printedName": "CoreFoundation.CGSize",
+                "usr": "c:@S@CGSize"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s22ManagedAppDistribution0aB0V7iconURL7fitting10Foundation0E0VSgSo6CGSizeV_tF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "iconURL",
+            "printedName": "iconURL(fitting:)",
+            "usr": "s:22ManagedAppDistribution0aB0V7iconURL7fitting10Foundation0E0VSgSo6CGSizeV_tF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.URL]",
+                "usr": "s:Sa"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CGSize",
+                "printedName": "CoreFoundation.CGSize",
+                "usr": "c:@S@CGSize"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s22ManagedAppDistribution0aB0V14screenshotURLs7fittingSay10Foundation3URLVGSo6CGSizeV_tF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "screenshotURLs",
+            "printedName": "screenshotURLs(fitting:)",
+            "usr": "s:22ManagedAppDistribution0aB0V14screenshotURLs7fittingSay10Foundation3URLVGSo6CGSizeV_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V13contentRatingSSSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V13contentRatingSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V13contentRatingSSSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "contentRating",
+            "printedName": "contentRating",
+            "usr": "s:22ManagedAppDistribution0aB0V13contentRatingSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URL",
+                        "printedName": "Foundation.URL",
+                        "usr": "s:10Foundation3URLV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.URL?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V16developerWebsite10Foundation3URLVSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V16developerWebsite10Foundation3URLVSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.URL?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V16developerWebsite10Foundation3URLVSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "developerWebsite",
+            "printedName": "developerWebsite",
+            "usr": "s:22ManagedAppDistribution0aB0V16developerWebsite10Foundation3URLVSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URL",
+                        "printedName": "Foundation.URL",
+                        "usr": "s:10Foundation3URLV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.URL?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V13privacyPolicy10Foundation3URLVSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V13privacyPolicy10Foundation3URLVSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.URL?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V13privacyPolicy10Foundation3URLVSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "privacyPolicy",
+            "printedName": "privacyPolicy",
+            "usr": "s:22ManagedAppDistribution0aB0V13privacyPolicy10Foundation3URLVSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URL",
+                        "printedName": "Foundation.URL",
+                        "usr": "s:10Foundation3URLV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.URL?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V16licenseAgreement10Foundation3URLVSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V16licenseAgreement10Foundation3URLVSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.URL?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V16licenseAgreement10Foundation3URLVSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "licenseAgreement",
+            "printedName": "licenseAgreement",
+            "usr": "s:22ManagedAppDistribution0aB0V16licenseAgreement10Foundation3URLVSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V9copyrightSSSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V9copyrightSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V9copyrightSSSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "copyright",
+            "printedName": "copyright",
+            "usr": "s:22ManagedAppDistribution0aB0V9copyrightSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V2idSSvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V2idSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V2idSSvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "id",
+            "printedName": "id",
+            "usr": "s:22ManagedAppDistribution0aB0V2idSSvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_iOS": "17.2",
+            "isFromExtension": true,
+            "kind": "TypeAlias",
+            "mangledName": "$s22ManagedAppDistribution0aB0V2IDa",
+            "moduleName": "ManagedAppDistribution",
+            "name": "ID",
+            "printedName": "ID",
+            "usr": "s:22ManagedAppDistribution0aB0V2IDa"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedApp",
+                "printedName": "ManagedAppDistribution.ManagedApp",
+                "usr": "s:22ManagedAppDistribution0aB0V"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedApp",
+                "printedName": "ManagedAppDistribution.ManagedApp",
+                "usr": "s:22ManagedAppDistribution0aB0V"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "17.4",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s22ManagedAppDistribution0aB0V2eeoiySbAC_ACtFZ",
+            "moduleName": "ManagedAppDistribution",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:22ManagedAppDistribution0aB0V2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "17.4",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s22ManagedAppDistribution0aB0V4hash4intoys6HasherVz_tF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:22ManagedAppDistribution0aB0V4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB0V9hashValueSivg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB0V9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB0V9hashValueSivp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:22ManagedAppDistribution0aB0V9hashValueSivp"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Platform",
+                        "printedName": "ManagedAppDistribution.ManagedApp.Platform",
+                        "usr": "s:22ManagedAppDistribution0aB0V8PlatformV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s22ManagedAppDistribution0aB0V8PlatformV5macOSAEvgZ",
+                    "moduleName": "ManagedAppDistribution",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:22ManagedAppDistribution0aB0V8PlatformV5macOSAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Platform",
+                    "printedName": "ManagedAppDistribution.ManagedApp.Platform",
+                    "usr": "s:22ManagedAppDistribution0aB0V8PlatformV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s22ManagedAppDistribution0aB0V8PlatformV5macOSAEvpZ",
+                "moduleName": "ManagedAppDistribution",
+                "name": "macOS",
+                "printedName": "macOS",
+                "static": true,
+                "usr": "s:22ManagedAppDistribution0aB0V8PlatformV5macOSAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Platform",
+                        "printedName": "ManagedAppDistribution.ManagedApp.Platform",
+                        "usr": "s:22ManagedAppDistribution0aB0V8PlatformV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s22ManagedAppDistribution0aB0V8PlatformV3iOSAEvgZ",
+                    "moduleName": "ManagedAppDistribution",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:22ManagedAppDistribution0aB0V8PlatformV3iOSAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Platform",
+                    "printedName": "ManagedAppDistribution.ManagedApp.Platform",
+                    "usr": "s:22ManagedAppDistribution0aB0V8PlatformV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s22ManagedAppDistribution0aB0V8PlatformV3iOSAEvpZ",
+                "moduleName": "ManagedAppDistribution",
+                "name": "iOS",
+                "printedName": "iOS",
+                "static": true,
+                "usr": "s:22ManagedAppDistribution0aB0V8PlatformV3iOSAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Platform",
+                        "printedName": "ManagedAppDistribution.ManagedApp.Platform",
+                        "usr": "s:22ManagedAppDistribution0aB0V8PlatformV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s22ManagedAppDistribution0aB0V8PlatformV8visionOSAEvgZ",
+                    "moduleName": "ManagedAppDistribution",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:22ManagedAppDistribution0aB0V8PlatformV8visionOSAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Platform",
+                    "printedName": "ManagedAppDistribution.ManagedApp.Platform",
+                    "usr": "s:22ManagedAppDistribution0aB0V8PlatformV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s22ManagedAppDistribution0aB0V8PlatformV8visionOSAEvpZ",
+                "moduleName": "ManagedAppDistribution",
+                "name": "visionOS",
+                "printedName": "visionOS",
+                "static": true,
+                "usr": "s:22ManagedAppDistribution0aB0V8PlatformV8visionOSAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s22ManagedAppDistribution0aB0V8PlatformV11descriptionSSvg",
+                    "moduleName": "ManagedAppDistribution",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:22ManagedAppDistribution0aB0V8PlatformV11descriptionSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s22ManagedAppDistribution0aB0V8PlatformV11descriptionSSvp",
+                "moduleName": "ManagedAppDistribution",
+                "name": "description",
+                "printedName": "description",
+                "usr": "s:22ManagedAppDistribution0aB0V8PlatformV11descriptionSSvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Platform",
+                    "printedName": "ManagedAppDistribution.ManagedApp.Platform",
+                    "usr": "s:22ManagedAppDistribution0aB0V8PlatformV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Platform",
+                    "printedName": "ManagedAppDistribution.ManagedApp.Platform",
+                    "usr": "s:22ManagedAppDistribution0aB0V8PlatformV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s22ManagedAppDistribution0aB0V8PlatformV2eeoiySbAE_AEtFZ",
+                "moduleName": "ManagedAppDistribution",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:22ManagedAppDistribution0aB0V8PlatformV2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s22ManagedAppDistribution0aB0V8PlatformV4hash4intoys6HasherVz_tF",
+                "moduleName": "ManagedAppDistribution",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:22ManagedAppDistribution0aB0V8PlatformV4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s22ManagedAppDistribution0aB0V8PlatformV9hashValueSivg",
+                    "moduleName": "ManagedAppDistribution",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:22ManagedAppDistribution0aB0V8PlatformV9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s22ManagedAppDistribution0aB0V8PlatformV9hashValueSivp",
+                "moduleName": "ManagedAppDistribution",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:22ManagedAppDistribution0aB0V8PlatformV9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss23CustomStringConvertibleP",
+                "name": "CustomStringConvertible",
+                "printedName": "CustomStringConvertible",
+                "usr": "s:s23CustomStringConvertibleP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s22ManagedAppDistribution0aB0V8PlatformV",
+            "moduleName": "ManagedAppDistribution",
+            "name": "Platform",
+            "printedName": "Platform",
+            "usr": "s:22ManagedAppDistribution0aB0V8PlatformV"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ID",
+                    "printedName": "ManagedAppDistribution.ManagedApp.ID"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "ID",
+                "printedName": "ID"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss12IdentifiableP",
+            "name": "Identifiable",
+            "printedName": "Identifiable",
+            "usr": "s:s12IdentifiableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "17.2",
+        "kind": "TypeDecl",
+        "mangledName": "$s22ManagedAppDistribution0aB0V",
+        "moduleName": "ManagedAppDistribution",
+        "name": "ManagedApp",
+        "printedName": "ManagedApp",
+        "usr": "s:22ManagedAppDistribution0aB0V"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Platform",
+                    "printedName": "ManagedAppDistribution.Platform",
+                    "usr": "s:22ManagedAppDistribution8PlatformV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution8PlatformV5macOSACvgZ",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:22ManagedAppDistribution8PlatformV5macOSACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Platform",
+                "printedName": "ManagedAppDistribution.Platform",
+                "usr": "s:22ManagedAppDistribution8PlatformV"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution8PlatformV5macOSACvpZ",
+            "moduleName": "ManagedAppDistribution",
+            "name": "macOS",
+            "printedName": "macOS",
+            "static": true,
+            "usr": "s:22ManagedAppDistribution8PlatformV5macOSACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Platform",
+                    "printedName": "ManagedAppDistribution.Platform",
+                    "usr": "s:22ManagedAppDistribution8PlatformV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution8PlatformV3iOSACvgZ",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:22ManagedAppDistribution8PlatformV3iOSACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Platform",
+                "printedName": "ManagedAppDistribution.Platform",
+                "usr": "s:22ManagedAppDistribution8PlatformV"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution8PlatformV3iOSACvpZ",
+            "moduleName": "ManagedAppDistribution",
+            "name": "iOS",
+            "printedName": "iOS",
+            "static": true,
+            "usr": "s:22ManagedAppDistribution8PlatformV3iOSACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Platform",
+                    "printedName": "ManagedAppDistribution.Platform",
+                    "usr": "s:22ManagedAppDistribution8PlatformV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution8PlatformV8visionOSACvgZ",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:22ManagedAppDistribution8PlatformV8visionOSACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Platform",
+                "printedName": "ManagedAppDistribution.Platform",
+                "usr": "s:22ManagedAppDistribution8PlatformV"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution8PlatformV8visionOSACvpZ",
+            "moduleName": "ManagedAppDistribution",
+            "name": "visionOS",
+            "printedName": "visionOS",
+            "static": true,
+            "usr": "s:22ManagedAppDistribution8PlatformV8visionOSACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution8PlatformV11descriptionSSvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution8PlatformV11descriptionSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution8PlatformV11descriptionSSvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "description",
+            "printedName": "description",
+            "usr": "s:22ManagedAppDistribution8PlatformV11descriptionSSvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Platform",
+                "printedName": "ManagedAppDistribution.Platform",
+                "usr": "s:22ManagedAppDistribution8PlatformV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Platform",
+                "printedName": "ManagedAppDistribution.Platform",
+                "usr": "s:22ManagedAppDistribution8PlatformV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s22ManagedAppDistribution8PlatformV2eeoiySbAC_ACtFZ",
+            "moduleName": "ManagedAppDistribution",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:22ManagedAppDistribution8PlatformV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s22ManagedAppDistribution8PlatformV4hash4intoys6HasherVz_tF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:22ManagedAppDistribution8PlatformV4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution8PlatformV9hashValueSivg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution8PlatformV9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution8PlatformV9hashValueSivp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:22ManagedAppDistribution8PlatformV9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "17.2",
+        "kind": "TypeDecl",
+        "mangledName": "$s22ManagedAppDistribution8PlatformV",
+        "moduleName": "ManagedAppDistribution",
+        "name": "Platform",
+        "printedName": "Platform",
+        "usr": "s:22ManagedAppDistribution8PlatformV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedAppLibrary",
+                    "printedName": "ManagedAppDistribution.ManagedAppLibrary",
+                    "usr": "s:22ManagedAppDistribution0aB7LibraryC"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB7LibraryC18currentDistributorACvgZ",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:22ManagedAppDistribution0aB7LibraryC18currentDistributorACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedAppLibrary",
+                "printedName": "ManagedAppDistribution.ManagedAppLibrary",
+                "usr": "s:22ManagedAppDistribution0aB7LibraryC"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB7LibraryC18currentDistributorACvpZ",
+            "moduleName": "ManagedAppDistribution",
+            "name": "currentDistributor",
+            "printedName": "currentDistributor",
+            "static": true,
+            "usr": "s:22ManagedAppDistribution0aB7LibraryC18currentDistributorACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedApps",
+                    "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps",
+                    "usr": "s:22ManagedAppDistribution0aB7LibraryC0A4AppsV"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0aB7LibraryC13availableAppsAC0aF0Vvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0aB7LibraryC13availableAppsAC0aF0Vvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedApps",
+                "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps",
+                "usr": "s:22ManagedAppDistribution0aB7LibraryC0A4AppsV"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0aB7LibraryC13availableAppsAC0aF0Vvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "availableApps",
+            "printedName": "availableApps",
+            "usr": "s:22ManagedAppDistribution0aB7LibraryC13availableAppsAC0aF0Vvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "ManagedApp",
+                                "printedName": "ManagedAppDistribution.ManagedApp",
+                                "usr": "s:22ManagedAppDistribution0aB0V"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Array",
+                            "printedName": "[ManagedAppDistribution.ManagedApp]",
+                            "usr": "s:Sa"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ManagedAppDistributionError",
+                            "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                            "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Result",
+                        "printedName": "Swift.Result<[ManagedAppDistribution.ManagedApp], ManagedAppDistribution.ManagedAppDistributionError>",
+                        "usr": "s:s6ResultO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Element",
+                    "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps.AsyncIterator.Element"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "mangledName": "$s22ManagedAppDistribution0aB7LibraryC0A4AppsV7Elementa",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Element",
+                "printedName": "Element",
+                "usr": "s:22ManagedAppDistribution0aB7LibraryC0A4AppsV7Elementa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "ManagedApp",
+                                "printedName": "ManagedAppDistribution.ManagedApp",
+                                "usr": "s:22ManagedAppDistribution0aB0V"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Array",
+                            "printedName": "[ManagedAppDistribution.ManagedApp]",
+                            "usr": "s:Sa"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ManagedAppDistributionError",
+                            "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                            "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Result",
+                        "printedName": "Swift.Result<[ManagedAppDistribution.ManagedApp], ManagedAppDistribution.ManagedAppDistributionError>",
+                        "usr": "s:s6ResultO"
+                      }
+                    ],
+                    "declKind": "TypeAlias",
+                    "kind": "TypeAlias",
+                    "mangledName": "$s22ManagedAppDistribution0aB7LibraryC0A4AppsV13AsyncIteratorV7Elementa",
+                    "moduleName": "ManagedAppDistribution",
+                    "name": "Element",
+                    "printedName": "Element",
+                    "usr": "s:22ManagedAppDistribution0aB7LibraryC0A4AppsV13AsyncIteratorV7Elementa"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Never",
+                        "printedName": "Swift.Never",
+                        "usr": "s:s5NeverO"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Available"
+                    ],
+                    "declKind": "TypeAlias",
+                    "intro_iOS": "18.0",
+                    "kind": "TypeAlias",
+                    "mangledName": "$s22ManagedAppDistribution0aB7LibraryC0A4AppsV13AsyncIteratorV7Failurea",
+                    "moduleName": "ManagedAppDistribution",
+                    "name": "Failure",
+                    "printedName": "Failure",
+                    "usr": "s:22ManagedAppDistribution0aB7LibraryC0A4AppsV13AsyncIteratorV7Failurea"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "children": [
+                                      {
+                                        "kind": "TypeNominal",
+                                        "name": "ManagedApp",
+                                        "printedName": "ManagedAppDistribution.ManagedApp",
+                                        "usr": "s:22ManagedAppDistribution0aB0V"
+                                      }
+                                    ],
+                                    "kind": "TypeNominal",
+                                    "name": "Array",
+                                    "printedName": "[ManagedAppDistribution.ManagedApp]",
+                                    "usr": "s:Sa"
+                                  },
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "ManagedAppDistributionError",
+                                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                                    "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                                  }
+                                ],
+                                "kind": "TypeNominal",
+                                "name": "Result",
+                                "printedName": "Swift.Result<[ManagedAppDistribution.ManagedApp], ManagedAppDistribution.ManagedAppDistributionError>",
+                                "usr": "s:s6ResultO"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Element",
+                            "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps.AsyncIterator.Element"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps.AsyncIterator.Element?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "Mutating",
+                    "kind": "Function",
+                    "mangledName": "$s22ManagedAppDistribution0aB7LibraryC0A4AppsV13AsyncIteratorV4nexts6ResultOySayAA0aB0VGAA0abC5ErrorOGSgyYaKF",
+                    "moduleName": "ManagedAppDistribution",
+                    "name": "next",
+                    "printedName": "next()",
+                    "throwing": true,
+                    "usr": "s:22ManagedAppDistribution0aB7LibraryC0A4AppsV13AsyncIteratorV4nexts6ResultOySayAA0aB0VGAA0abC5ErrorOGSgyYaKF"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "children": [
+                                      {
+                                        "kind": "TypeNominal",
+                                        "name": "ManagedApp",
+                                        "printedName": "ManagedAppDistribution.ManagedApp",
+                                        "usr": "s:22ManagedAppDistribution0aB0V"
+                                      }
+                                    ],
+                                    "kind": "TypeNominal",
+                                    "name": "Array",
+                                    "printedName": "[ManagedAppDistribution.ManagedApp]",
+                                    "usr": "s:Sa"
+                                  },
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "ManagedAppDistributionError",
+                                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                                    "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                                  }
+                                ],
+                                "kind": "TypeNominal",
+                                "name": "Result",
+                                "printedName": "Swift.Result<[ManagedAppDistribution.ManagedApp], ManagedAppDistribution.ManagedAppDistributionError>",
+                                "usr": "s:s6ResultO"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Element",
+                            "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps.AsyncIterator.Element"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps.AsyncIterator.Element?",
+                        "usr": "s:Sq"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Actor",
+                            "printedName": "any _Concurrency.Actor",
+                            "usr": "s:ScA"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "(any _Concurrency.Actor)?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Available"
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "NonMutating",
+                    "intro_iOS": "18.0",
+                    "kind": "Function",
+                    "mangledName": "$s22ManagedAppDistribution0aB7LibraryC0A4AppsV13AsyncIteratorV4next9isolations6ResultOySayAA0aB0VGAA0abC5ErrorOGSgScA_pSgYi_tYaF",
+                    "moduleName": "ManagedAppDistribution",
+                    "name": "next",
+                    "printedName": "next(isolation:)",
+                    "throwing": true,
+                    "usr": "s:22ManagedAppDistribution0aB7LibraryC0A4AppsV13AsyncIteratorV4next9isolations6ResultOySayAA0aB0VGAA0abC5ErrorOGSgScA_pSgYi_tYaF"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "children": [
+                                      {
+                                        "kind": "TypeNominal",
+                                        "name": "ManagedApp",
+                                        "printedName": "ManagedAppDistribution.ManagedApp",
+                                        "usr": "s:22ManagedAppDistribution0aB0V"
+                                      }
+                                    ],
+                                    "kind": "TypeNominal",
+                                    "name": "Array",
+                                    "printedName": "[ManagedAppDistribution.ManagedApp]",
+                                    "usr": "s:Sa"
+                                  },
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "ManagedAppDistributionError",
+                                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                                    "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                                  }
+                                ],
+                                "kind": "TypeNominal",
+                                "name": "Result",
+                                "printedName": "Swift.Result<[ManagedAppDistribution.ManagedApp], ManagedAppDistribution.ManagedAppDistributionError>",
+                                "usr": "s:s6ResultO"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Element",
+                            "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps.AsyncIterator.Element"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Element",
+                        "printedName": "Element"
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Never",
+                                "printedName": "Swift.Never",
+                                "usr": "s:s5NeverO"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Failure",
+                            "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps.AsyncIterator.Failure"
+                          }
+                        ],
+                        "kind": "TypeWitness",
+                        "name": "Failure",
+                        "printedName": "Failure"
+                      }
+                    ],
+                    "kind": "Conformance",
+                    "mangledName": "$sScI",
+                    "name": "AsyncIteratorProtocol",
+                    "printedName": "AsyncIteratorProtocol",
+                    "usr": "s:ScI"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  }
+                ],
+                "declKind": "Struct",
+                "kind": "TypeDecl",
+                "mangledName": "$s22ManagedAppDistribution0aB7LibraryC0A4AppsV13AsyncIteratorV",
+                "moduleName": "ManagedAppDistribution",
+                "name": "AsyncIterator",
+                "printedName": "AsyncIterator",
+                "usr": "s:22ManagedAppDistribution0aB7LibraryC0A4AppsV13AsyncIteratorV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AsyncIterator",
+                    "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps.AsyncIterator",
+                    "usr": "s:22ManagedAppDistribution0aB7LibraryC0A4AppsV13AsyncIteratorV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s22ManagedAppDistribution0aB7LibraryC0A4AppsV17makeAsyncIteratorAE0gH0VyF",
+                "moduleName": "ManagedAppDistribution",
+                "name": "makeAsyncIterator",
+                "printedName": "makeAsyncIterator()",
+                "usr": "s:22ManagedAppDistribution0aB7LibraryC0A4AppsV17makeAsyncIteratorAE0gH0VyF"
+              }
+            ],
+            "conformances": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AsyncIterator",
+                        "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps.AsyncIterator",
+                        "usr": "s:22ManagedAppDistribution0aB7LibraryC0A4AppsV13AsyncIteratorV"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "AsyncIterator",
+                    "printedName": "AsyncIterator"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "children": [
+                                      {
+                                        "kind": "TypeNominal",
+                                        "name": "ManagedApp",
+                                        "printedName": "ManagedAppDistribution.ManagedApp",
+                                        "usr": "s:22ManagedAppDistribution0aB0V"
+                                      }
+                                    ],
+                                    "kind": "TypeNominal",
+                                    "name": "Array",
+                                    "printedName": "[ManagedAppDistribution.ManagedApp]",
+                                    "usr": "s:Sa"
+                                  },
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "ManagedAppDistributionError",
+                                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                                    "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                                  }
+                                ],
+                                "kind": "TypeNominal",
+                                "name": "Result",
+                                "printedName": "Swift.Result<[ManagedAppDistribution.ManagedApp], ManagedAppDistribution.ManagedAppDistributionError>",
+                                "usr": "s:s6ResultO"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Element",
+                            "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps.AsyncIterator.Element"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Never",
+                                "printedName": "Swift.Never",
+                                "usr": "s:s5NeverO"
+                              }
+                            ],
+                            "kind": "TypeNameAlias",
+                            "name": "Failure",
+                            "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps.AsyncIterator.Failure"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "__AsyncSequence_Failure",
+                        "printedName": "ManagedAppDistribution.ManagedAppLibrary.ManagedApps.__AsyncSequence_Failure"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Failure",
+                    "printedName": "Failure"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSci",
+                "name": "AsyncSequence",
+                "printedName": "AsyncSequence",
+                "usr": "s:Sci"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s22ManagedAppDistribution0aB7LibraryC0A4AppsV",
+            "moduleName": "ManagedAppDistribution",
+            "name": "ManagedApps",
+            "printedName": "ManagedApps",
+            "usr": "s:22ManagedAppDistribution0aB7LibraryC0A4AppsV"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Final",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "intro_iOS": "17.2",
+        "kind": "TypeDecl",
+        "mangledName": "$s22ManagedAppDistribution0aB7LibraryC",
+        "moduleName": "ManagedAppDistribution",
+        "name": "ManagedAppLibrary",
+        "printedName": "ManagedAppLibrary",
+        "usr": "s:22ManagedAppDistribution0aB7LibraryC"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedAppDistributionError",
+                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                    "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedAppDistributionError",
+                        "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                        "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ManagedAppDistribution.ManagedAppDistributionError.Type) -> ManagedAppDistribution.ManagedAppDistributionError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO013unrecoverableD0yA2CmF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "unrecoverableError",
+            "printedName": "unrecoverableError",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO013unrecoverableD0yA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedAppDistributionError",
+                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                    "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedAppDistributionError",
+                        "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                        "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ManagedAppDistribution.ManagedAppDistributionError.Type) -> ManagedAppDistribution.ManagedAppDistributionError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO07networkD0yA2CmF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "networkError",
+            "printedName": "networkError",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO07networkD0yA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedAppDistributionError",
+                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                    "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedAppDistributionError",
+                        "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                        "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ManagedAppDistribution.ManagedAppDistributionError.Type) -> ManagedAppDistribution.ManagedAppDistributionError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO09deviceNotA0yA2CmF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "deviceNotManaged",
+            "printedName": "deviceNotManaged",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO09deviceNotA0yA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedAppDistributionError",
+                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                    "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedAppDistributionError",
+                        "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                        "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ManagedAppDistribution.ManagedAppDistributionError.Type) -> ManagedAppDistribution.ManagedAppDistributionError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO19unsupportedPlatformyA2CmF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "unsupportedPlatform",
+            "printedName": "unsupportedPlatform",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO19unsupportedPlatformyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedAppDistributionError",
+                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                    "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedAppDistributionError",
+                        "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                        "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ManagedAppDistribution.ManagedAppDistributionError.Type) -> ManagedAppDistribution.ManagedAppDistributionError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "EnumElement",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "18.0",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO15licenseNotFoundyA2CmF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "licenseNotFound",
+            "printedName": "licenseNotFound",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO15licenseNotFoundyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedAppDistributionError",
+                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                    "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedAppDistributionError",
+                        "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                        "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ManagedAppDistribution.ManagedAppDistributionError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ManagedAppDistribution.ManagedAppDistributionError.Type) -> ManagedAppDistribution.ManagedAppDistributionError"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "EnumElement",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "18.0",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO06appNotA0yA2CmF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "appNotManaged",
+            "printedName": "appNotManaged",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO06appNotA0yA2CmF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LocalizedStringResource",
+                    "printedName": "Foundation.LocalizedStringResource",
+                    "usr": "s:10Foundation23LocalizedStringResourceV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0abC5ErrorO23localizedStringResource10Foundation09LocalizedfG0Vvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0abC5ErrorO23localizedStringResource10Foundation09LocalizedfG0Vvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "LocalizedStringResource",
+                "printedName": "Foundation.LocalizedStringResource",
+                "usr": "s:10Foundation23LocalizedStringResourceV"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO23localizedStringResource10Foundation09LocalizedfG0Vvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "localizedStringResource",
+            "printedName": "localizedStringResource",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO23localizedStringResource10Foundation09LocalizedfG0Vvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0abC5ErrorO11descriptionSSvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0abC5ErrorO11descriptionSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO11descriptionSSvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "description",
+            "printedName": "description",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO11descriptionSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0abC5ErrorO16errorDescriptionSSSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0abC5ErrorO16errorDescriptionSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO16errorDescriptionSSSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "errorDescription",
+            "printedName": "errorDescription",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO16errorDescriptionSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0abC5ErrorO13failureReasonSSSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0abC5ErrorO13failureReasonSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO13failureReasonSSSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "failureReason",
+            "printedName": "failureReason",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO13failureReasonSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0abC5ErrorO18recoverySuggestionSSSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0abC5ErrorO18recoverySuggestionSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO18recoverySuggestionSSSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "recoverySuggestion",
+            "printedName": "recoverySuggestion",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO18recoverySuggestionSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0abC5ErrorO10helpAnchorSSSgvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0abC5ErrorO10helpAnchorSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO10helpAnchorSSSgvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "helpAnchor",
+            "printedName": "helpAnchor",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO10helpAnchorSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.String]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0abC5ErrorO15recoveryOptionsSaySSGvg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0abC5ErrorO15recoveryOptionsSaySSGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.String]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO15recoveryOptionsSaySSGvp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "recoveryOptions",
+            "printedName": "recoveryOptions",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO15recoveryOptionsSaySSGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO15attemptRecovery11optionIndexSbSi_tF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "attemptRecovery",
+            "printedName": "attemptRecovery(optionIndex:)",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO15attemptRecovery11optionIndexSbSi_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.Bool) -> Swift.Void"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO15attemptRecovery11optionIndex13resultHandlerySi_ySbctF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "attemptRecovery",
+            "printedName": "attemptRecovery(optionIndex:resultHandler:)",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO15attemptRecovery11optionIndex13resultHandlerySi_ySbctF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedAppDistributionError",
+                "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedAppDistributionError",
+                "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO2eeoiySbAC_ACtFZ",
+            "moduleName": "ManagedAppDistribution",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO6encode2toys7Encoder_p_tKF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO6encode2toys7Encoder_p_tKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO4hash4intoys6HasherVz_tF",
+            "moduleName": "ManagedAppDistribution",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s22ManagedAppDistribution0abC5ErrorO9hashValueSivg",
+                "moduleName": "ManagedAppDistribution",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:22ManagedAppDistribution0abC5ErrorO9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO9hashValueSivp",
+            "moduleName": "ManagedAppDistribution",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO9hashValueSivp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedAppDistributionError",
+                "printedName": "ManagedAppDistribution.ManagedAppDistributionError",
+                "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s22ManagedAppDistribution0abC5ErrorO4fromACs7Decoder_p_tKcfc",
+            "moduleName": "ManagedAppDistribution",
+            "name": "init",
+            "printedName": "init(from:)",
+            "throwing": true,
+            "usr": "s:22ManagedAppDistribution0abC5ErrorO4fromACs7Decoder_p_tKcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation14LocalizedErrorP",
+            "name": "LocalizedError",
+            "printedName": "LocalizedError",
+            "usr": "s:10Foundation14LocalizedErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation16RecoverableErrorP",
+            "name": "RecoverableError",
+            "printedName": "RecoverableError",
+            "usr": "s:10Foundation16RecoverableErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation40CustomLocalizedStringResourceConvertibleP",
+            "name": "CustomLocalizedStringResourceConvertible",
+            "printedName": "CustomLocalizedStringResourceConvertible",
+            "usr": "s:10Foundation40CustomLocalizedStringResourceConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "17.2",
+        "kind": "TypeDecl",
+        "mangledName": "$s22ManagedAppDistribution0abC5ErrorO",
+        "moduleName": "ManagedAppDistribution",
+        "name": "ManagedAppDistributionError",
+        "printedName": "ManagedAppDistributionError",
+        "usr": "s:22ManagedAppDistribution0abC5ErrorO"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "ManagedAppDistribution",
+    "printedName": "ManagedAppDistribution"
+  }
+}

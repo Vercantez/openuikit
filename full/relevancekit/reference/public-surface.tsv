@@ -1,0 +1,30 @@
+precise	kind	title	path	declaration
+s:12RelevanceKit15RelevantContextV	swift.struct	RelevantContext	RelevantContext	struct RelevantContext
+s:12RelevanceKit15RelevantContextV01_ab4_MapB0E8location8categoryACSgSo25MKPointOfInterestCategorya_tFZ	swift.type.method	location(category:)	RelevantContext.location(category:)	static func location(category: MKPointOfInterestCategory) -> RelevantContext?
+s:12RelevanceKit15RelevantContextV14SleepConditionV	swift.struct	RelevantContext.SleepCondition	RelevantContext.SleepCondition	struct SleepCondition
+s:12RelevanceKit15RelevantContextV14SleepConditionV6wakeupAEvpZ	swift.type.property	wakeup	RelevantContext.SleepCondition.wakeup	static var wakeup: RelevantContext.SleepCondition { get }
+s:12RelevanceKit15RelevantContextV14SleepConditionV7bedtimeAEvpZ	swift.type.property	bedtime	RelevantContext.SleepCondition.bedtime	static var bedtime: RelevantContext.SleepCondition { get }
+s:12RelevanceKit15RelevantContextV16FitnessConditionV	swift.struct	RelevantContext.FitnessCondition	RelevantContext.FitnessCondition	struct FitnessCondition
+s:12RelevanceKit15RelevantContextV16FitnessConditionV13workoutActiveAEvpZ	swift.type.property	workoutActive	RelevantContext.FitnessCondition.workoutActive	static var workoutActive: RelevantContext.FitnessCondition { get }
+s:12RelevanceKit15RelevantContextV16FitnessConditionV23activityRingsIncompleteAEvpZ	swift.type.property	activityRingsIncomplete	RelevantContext.FitnessCondition.activityRingsIncomplete	static var activityRingsIncomplete: RelevantContext.FitnessCondition { get }
+s:12RelevanceKit15RelevantContextV16InferredLocationV	swift.struct	RelevantContext.InferredLocation	RelevantContext.InferredLocation	struct InferredLocation
+s:12RelevanceKit15RelevantContextV16InferredLocationV4homeAEvpZ	swift.type.property	home	RelevantContext.InferredLocation.home	static var home: RelevantContext.InferredLocation { get }
+s:12RelevanceKit15RelevantContextV16InferredLocationV4workAEvpZ	swift.type.property	work	RelevantContext.InferredLocation.work	static var work: RelevantContext.InferredLocation { get }
+s:12RelevanceKit15RelevantContextV16InferredLocationV6schoolAEvpZ	swift.type.property	school	RelevantContext.InferredLocation.school	static var school: RelevantContext.InferredLocation { get }
+s:12RelevanceKit15RelevantContextV16InferredLocationV7commuteAEvpZ	swift.type.property	commute	RelevantContext.InferredLocation.commute	static var commute: RelevantContext.InferredLocation { get }
+s:12RelevanceKit15RelevantContextV19HeadphonesConditionV	swift.struct	RelevantContext.HeadphonesCondition	RelevantContext.HeadphonesCondition	struct HeadphonesCondition
+s:12RelevanceKit15RelevantContextV19HeadphonesConditionV9connectedAEvpZ	swift.type.property	connected	RelevantContext.HeadphonesCondition.connected	static var connected: RelevantContext.HeadphonesCondition { get }
+s:12RelevanceKit15RelevantContextV4date4from2toAC10Foundation4DateV_AItFZ	swift.type.method	date(from:to:)	RelevantContext.date(from:to:)	static func date(from: Date, to: Date) -> RelevantContext
+s:12RelevanceKit15RelevantContextV4date5range4kindACSNy10Foundation4DateVG_AC0I4KindVtFZ	swift.type.method	date(range:kind:)	RelevantContext.date(range:kind:)	static func date(range: ClosedRange<Date>, kind: RelevantContext.DateKind) -> RelevantContext
+s:12RelevanceKit15RelevantContextV4date8interval4kindAC10Foundation12DateIntervalV_AC0I4KindVtFZ	swift.type.method	date(interval:kind:)	RelevantContext.date(interval:kind:)	static func date(interval: DateInterval, kind: RelevantContext.DateKind) -> RelevantContext
+s:12RelevanceKit15RelevantContextV4date_4kindAC10Foundation4DateV_AC0H4KindVtFZ	swift.type.method	date(_:kind:)	RelevantContext.date(_:kind:)	static func date(_ exact: Date, kind: RelevantContext.DateKind) -> RelevantContext
+s:12RelevanceKit15RelevantContextV4dateyAC10Foundation4DateVFZ	swift.type.method	date(_:)	RelevantContext.date(_:)	static func date(_ exact: Date) -> RelevantContext
+s:12RelevanceKit15RelevantContextV5sleepyA2C14SleepConditionVFZ	swift.type.method	sleep(_:)	RelevantContext.sleep(_:)	static func sleep(_ condition: RelevantContext.SleepCondition) -> RelevantContext
+s:12RelevanceKit15RelevantContextV7fitnessyA2C16FitnessConditionVFZ	swift.type.method	fitness(_:)	RelevantContext.fitness(_:)	static func fitness(_ condition: RelevantContext.FitnessCondition) -> RelevantContext
+s:12RelevanceKit15RelevantContextV8DateKindV	swift.struct	RelevantContext.DateKind	RelevantContext.DateKind	struct DateKind
+s:12RelevanceKit15RelevantContextV8DateKindV13informationalAEvpZ	swift.type.property	informational	RelevantContext.DateKind.informational	static var informational: RelevantContext.DateKind { get }
+s:12RelevanceKit15RelevantContextV8DateKindV7defaultAEvpZ	swift.type.property	default	RelevantContext.DateKind.default	static var `default`: RelevantContext.DateKind { get }
+s:12RelevanceKit15RelevantContextV8DateKindV9scheduledAEvpZ	swift.type.property	scheduled	RelevantContext.DateKind.scheduled	static var scheduled: RelevantContext.DateKind { get }
+s:12RelevanceKit15RelevantContextV8hardware10headphonesA2C19HeadphonesConditionV_tFZ	swift.type.method	hardware(headphones:)	RelevantContext.hardware(headphones:)	static func hardware(headphones: RelevantContext.HeadphonesCondition) -> RelevantContext
+s:12RelevanceKit15RelevantContextV8location8inferredA2C16InferredLocationV_tFZ	swift.type.method	location(inferred:)	RelevantContext.location(inferred:)	static func location(inferred: RelevantContext.InferredLocation) -> RelevantContext
+s:12RelevanceKit15RelevantContextV8locationyACSo8CLRegionCFZ	swift.type.method	location(_:)	RelevantContext.location(_:)	static func location(_ exact: CLRegion) -> RelevantContext

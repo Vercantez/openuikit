@@ -1,0 +1,3 @@
+category	sdkRelativePath	size	sha256
+swiftinterface	System/Library/Frameworks/PermissionKit.framework/Modules/PermissionKit.swiftmodule/arm64e-apple-ios.swiftinterface	9450	70cc87427cbada8011e64d0888aba3e2a0e8a889eec4fa01a0611a031c2a5f5d
+tbd	System/Library/Frameworks/PermissionKit.framework/PermissionKit.tbd	19402	7bf30f80f585bdc000df7b63c20272119124046ba3192d6f49536b34884947ac
