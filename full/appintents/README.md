@@ -30,7 +30,7 @@ Coverage this round:
 | | implemented | declared | deferred | unavailable | not-applicable | nondeferred |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Before | 805 | 2730 | 1463 | 0 | 1588 | 3535 |
-| After | 1222 | 2560 | 1216 | 0 | 1588 | 3782 |
+| After | 1234 | 2548 | 1216 | 0 | 1588 | 3782 |
 
 Floor is 3293. SwiftUI `s:7SwiftUI…` View / Button / Toggle / ModifiedContent
 overlay re-exports (1,588 rows) are `not-applicable` with
