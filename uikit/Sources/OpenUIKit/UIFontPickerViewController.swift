@@ -39,7 +39,9 @@ open class UIFontPickerViewController: UIViewController {
 
     private var didFinish = false
 
-    public convenience override init() {
+    /// Not `override`: see UIColorPickerViewController.init() / Focus
+    /// AutocompleteSettingViewController.swift:19.
+    public convenience init() {
         self.init(configuration: Configuration())
     }
 

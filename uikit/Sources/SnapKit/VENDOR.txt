@@ -1,0 +1,4 @@
+Unmodified SnapKit 5.7.0 sources (pin e74fe2a978d1216c3602b129447c7301573cc2d8,
+Focus Package.resolved). Cloned at scratch/ladder-corpus/deps/SnapKit per
+clone_deps.sh. No SnapKit source patches. OpenUIKit UIKit is the Linux / port
+UIKit this target depends on. LICENSE is SnapKit's MIT license.

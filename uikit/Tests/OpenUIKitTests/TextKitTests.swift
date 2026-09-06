@@ -11,6 +11,9 @@ private typealias NSTextStorage = OpenUIKit.NSTextStorage
 private typealias NSTextContainer = OpenUIKit.NSTextContainer
 private typealias NSLayoutManager = OpenUIKit.NSLayoutManager
 private typealias NSTextAttachmentViewProvider = OpenUIKit.NSTextAttachmentViewProvider
+// Linux corelibs Foundation also ships NotificationCenter.default
+// (MEASURED merge-focus3 `swift build --build-tests` on swift:6.2-noble).
+private typealias NotificationCenter = OpenUIKit.NotificationCenter
 
 final class TextKitProbeProvider: OpenUIKit.NSTextAttachmentViewProvider {
     static var loads = 0
