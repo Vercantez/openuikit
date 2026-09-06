@@ -44,7 +44,7 @@ func testControllerFailClosed() {
     mtrRequire(device.state == .unknown, "state")
     mtrRequire(device.sessionTransportType == .undefined, "transport")
     do {
-        _ = try device.readAttribute(withEndpointID: n(1), clusterID: n(6), attributeID: n(0), params: nil)
+        _ = try (device as MTRBaseDevice).readAttribute(withEndpointID: n(1), clusterID: n(6), attributeID: n(0), params: nil)
         mtrRequire(false, "read should throw")
     } catch let err as MTRError {
         mtrRequire(err.code == .invalidState, "read")

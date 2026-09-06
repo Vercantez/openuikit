@@ -165,6 +165,34 @@ open class MTREventReport: NSObject {
         self.error = error
         super.init()
     }
+
+    public convenience init(responseValue: [String: Any]) throws {
+        guard let path = responseValue[MTREventPathKey] as? MTREventPath else {
+            throw MTRMakeError(.schemaMismatch, reason: "missing event path")
+        }
+        if let err = responseValue[MTRErrorKey] as? (any Error) {
+            self.init(
+                path: path, eventNumber: 0, priority: .debug, eventTimeType: .systemUpTime,
+                systemUpTime: 0, timestampDate: nil, value: nil, error: err
+            )
+            return
+        }
+        let data = responseValue[MTRDataKey] as? [String: Any]
+        let number = responseValue[MTREventNumberKey] as? NSNumber ?? 0
+        let upTime = responseValue[MTREventSystemUpTimeKey] as? TimeInterval ?? 0
+        let date = responseValue[MTREventTimestampDateKey] as? Date
+        let timeType: MTREventTimeType = date != nil ? .timestampDate : .systemUpTime
+        self.init(
+            path: path,
+            eventNumber: number,
+            priority: .info,
+            eventTimeType: timeType,
+            systemUpTime: upTime,
+            timestampDate: date,
+            value: data?[MTRValueKey],
+            error: nil
+        )
+    }
 }
 
 open class MTRReadParams: NSObject {
