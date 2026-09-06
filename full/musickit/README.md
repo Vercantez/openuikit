@@ -81,6 +81,47 @@ Largest new tests are `testChartsResponse` (24) and
 `testSectionedRequestFilters` (22). No non-enum test exceeds the 40%
 bulk-relabel ceiling (40% of 1171 = 468).
 
+## Depth pass 2026-09 (wave 8, hashValue ledger repair)
+
+Checked merge of `d959fd546b56` refused the branch because **59
+not-applicable rows are not SwiftUI cross-import overlay IDs** (example:
+`s:8MusicKit011ApplicationA6PlayerC5QueueC7EntriesV9hashValueSivp`).
+Those are MusicKit-owned synthesized `Hashable.hashValue` properties.
+Swift 6.2.4 on this host compiles `.hashValue` under `-warnings-as-errors`,
+so focused tests now read it.
+
+`MusicKitDepthTests.swift` is split into family files. Each `implemented`
+row cites `test:full/musickit/tests/agent/<File>Tests.swift#testName` for a
+real top-level synchronous `func testName()` that exercises that identifier.
+`MusicLibraryResponse` / `MusicRecentlyPlayedResponse` /
+`MusicCatalogResourceResponse` Hashable surface is constructed locally
+(no Apple catalog fetch). `_MusicKit_SwiftUI` `Options.hashValue` stays
+`not-applicable` (SwiftUI overlay). Stdlib `::SYNTHESIZED::` witnesses and
+ArtworkImage `View` overlays stay `not-applicable`.
+
+| status | before (refused merge) | after |
+| --- | ---: | ---: |
+| implemented | 1171 | 1248 |
+| declared | 194 | 176 |
+| deferred | 0 | 0 |
+| unavailable | 0 | 0 |
+| not-applicable | 1169 | 1110 |
+
+Nondeferred: **1424** (floor 1267). Gain is **+77 implemented** (59
+`hashValue` + 18 Hashable members of the three leftover response types).
+
+Top-5 evidence distribution (1248 implemented rows):
+
+1. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testPlaylistAndVideo` — 169 (13.5%)
+2. `test:full/musickit/tests/agent/MusicKitEnumTests.swift#testEnumRawValues` — 158 (12.7%)
+3. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testSupportingTypes` — 99 (7.9%)
+4. `test:full/musickit/tests/agent/MusicKitBehaviorTests.swift#testPlayerQueue` — 75 (6.0%)
+5. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testArtistGenreStation` — 72 (5.8%)
+
+Enum / option-set members share `testEnumRawValues`. No other single test
+is cited by more than 40% of the remaining implemented rows
+(40% cap after the enum table = 436.0; largest non-enum is 169).
+
 ## Public surface implemented
 
 - **MusicItemID** string wrapper: `init(_:)`, `init(rawValue:)`, string
