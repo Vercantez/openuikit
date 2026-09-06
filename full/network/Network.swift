@@ -631,9 +631,14 @@ extension NWPathMonitor: AsyncSequence {
 
 public class NWProtocol {}
 
-public class NWProtocolDefinition {
+public class NWProtocolDefinition: Equatable, CustomDebugStringConvertible {
     public let identifier: String
+    public var name: String { identifier }
+    public var debugDescription: String { identifier }
     public init(identifier: String) { self.identifier = identifier }
+    public static func == (lhs: NWProtocolDefinition, rhs: NWProtocolDefinition) -> Bool {
+        lhs.identifier == rhs.identifier
+    }
 }
 
 public class NWProtocolOptions {

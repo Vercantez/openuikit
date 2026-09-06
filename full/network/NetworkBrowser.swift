@@ -147,4 +147,34 @@ public final class NWConnectionGroup: @unchecked Sendable {
         state = .cancelled
         stateUpdateHandler?(.cancelled)
     }
+
+    public var debugDescription: String { "NWConnectionGroup(\(state))" }
+
+    public func send(
+        content: Data?,
+        to endpoint: NWEndpoint? = nil,
+        message: Message = .default,
+        completion: @escaping (NWError?) -> Void
+    ) {
+        _ = content
+        _ = endpoint
+        _ = message
+        completion(.unsupported)
+    }
+
+    public func metadata(definition: NWProtocolDefinition) -> NWProtocolMetadata? {
+        _ = definition
+        return nil
+    }
+}
+
+extension NWConnectionGroup.Message {
+    public static let `default` = Message(group: nil)
+    public var localEndpoint: NWEndpoint? { nil }
+    public var remoteEndpoint: NWEndpoint? { nil }
+    public var path: NWPath? { nil }
+    public func metadata(definition: NWProtocolDefinition) -> NWProtocolMetadata? {
+        _ = definition
+        return nil
+    }
 }

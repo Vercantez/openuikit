@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ProxyConfiguration: Hashable, Sendable {
+public struct ProxyConfiguration: Hashable, Sendable, CustomDebugStringConvertible {
     public struct RelayHop: Hashable, Sendable {
         public let http3RelayEndpoint: NWEndpoint?
         public let http2RelayEndpoint: NWEndpoint?
@@ -22,6 +22,12 @@ public struct ProxyConfiguration: Hashable, Sendable {
     public init(relays: [RelayHop] = []) {
         self.relays = relays
     }
+
+    public var debugDescription: String { "ProxyConfiguration(relays: \(relays.count))" }
+}
+
+extension ProxyConfiguration.RelayHop: CustomDebugStringConvertible {
+    public var debugDescription: String { "RelayHop" }
 }
 
 public class NWProtocolQUIC: NWProtocol {
@@ -787,12 +793,36 @@ extension NWConnection {
             public let endpointCount: Int
             public let preferredEndpoint: NWEndpoint
             public let successfulEndpoint: NWEndpoint
+
+            public init(
+                duration: TimeInterval,
+                source: Source,
+                endpointCount: Int,
+                preferredEndpoint: NWEndpoint,
+                successfulEndpoint: NWEndpoint
+            ) {
+                self.duration = duration
+                self.source = source
+                self.endpointCount = endpointCount
+                self.preferredEndpoint = preferredEndpoint
+                self.successfulEndpoint = successfulEndpoint
+            }
         }
 
         public struct Handshake {
             public let definition: NWProtocolDefinition
             public let handshakeRTT: TimeInterval
             public let handshakeDuration: TimeInterval
+
+            public init(
+                definition: NWProtocolDefinition,
+                handshakeRTT: TimeInterval,
+                handshakeDuration: TimeInterval
+            ) {
+                self.definition = definition
+                self.handshakeRTT = handshakeRTT
+                self.handshakeDuration = handshakeDuration
+            }
         }
 
         public let duration: TimeInterval
@@ -804,6 +834,26 @@ extension NWConnection {
         public let resolutions: [Resolution]
         public let handshakes: [Handshake]
         public var debugDescription: String { "EstablishmentReport" }
+
+        public init(
+            duration: TimeInterval,
+            attemptStartedAfterInterval: TimeInterval,
+            previousAttemptCount: Int,
+            usedProxy: Bool,
+            proxyConfigured: Bool,
+            proxyEndpoint: NWEndpoint?,
+            resolutions: [Resolution],
+            handshakes: [Handshake]
+        ) {
+            self.duration = duration
+            self.attemptStartedAfterInterval = attemptStartedAfterInterval
+            self.previousAttemptCount = previousAttemptCount
+            self.usedProxy = usedProxy
+            self.proxyConfigured = proxyConfigured
+            self.proxyEndpoint = proxyEndpoint
+            self.resolutions = resolutions
+            self.handshakes = handshakes
+        }
     }
 
     public func requestEstablishmentReport(

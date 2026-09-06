@@ -455,19 +455,57 @@ final class _NWLinux_nw_group_descriptor: NSObject, OS_nw_group_descriptor {}
 final class _NWLinux_nw_interface: NSObject, OS_nw_interface {}
 final class _NWLinux_nw_listener: NSObject, OS_nw_listener {}
 final class _NWLinux_nw_object: NSObject, OS_nw_object {}
-final class _NWLinux_nw_parameters: NSObject, OS_nw_parameters {}
+final class _NWLinux_nw_parameters: NSObject, OS_nw_parameters {
+    var allowUltraConstrained = false
+    var attribution = nw_parameters_attribution_t.developer
+    var expiredDNSBehavior = nw_parameters_expired_dns_behavior_t(rawValue: 0)
+    var fastOpenEnabled = false
+    var includePeerToPeer = false
+    var localOnly = false
+    var multipathService = nw_multipath_service_t(rawValue: 0)
+    var preferNoProxy = false
+    var prohibitConstrained = false
+    var prohibitExpensive = false
+    var requiredInterfaceType = nw_interface_type_other
+    var reuseLocalAddress = false
+    var serviceClass = nw_service_class_best_effort
+    var requiresDNSSECValidation = false
+    var localEndpoint: nw_endpoint_t?
+    var requiredInterface: nw_interface_t?
+    var privacyContext: nw_privacy_context_t?
+}
 final class _NWLinux_nw_path: NSObject, OS_nw_path {}
 final class _NWLinux_nw_path_monitor: NSObject, OS_nw_path_monitor {}
 final class _NWLinux_nw_privacy_context: NSObject, OS_nw_privacy_context {}
 final class _NWLinux_nw_protocol_definition: NSObject, OS_nw_protocol_definition {}
 final class _NWLinux_nw_protocol_metadata: NSObject, OS_nw_protocol_metadata {}
-final class _NWLinux_nw_protocol_options: NSObject, OS_nw_protocol_options {}
+final class _NWLinux_nw_protocol_options: NSObject, OS_nw_protocol_options {
+    var connectionTimeout: UInt32 = 0
+    var disableAckStretching = false
+    var disableECN = false
+    var enableFastOpen = false
+    var enableKeepalive = false
+    var keepaliveCount: UInt32 = 0
+    var keepaliveIdleTime: UInt32 = 0
+    var keepaliveInterval: UInt32 = 0
+    var maximumSegmentSize: UInt32 = 0
+    var multipathForceVersion = nw_multipath_version_t(rawValue: 0)
+    var noDelay = false
+    var noOptions = false
+    var noPush = false
+    var persistTimeout: UInt32 = 0
+    var retransmitConnectionDropTime: UInt32 = 0
+    var retransmitFinDrop = false
+    var preferNoChecksum = false
+}
 final class _NWLinux_nw_protocol_stack: NSObject, OS_nw_protocol_stack {}
 final class _NWLinux_nw_proxy_config: NSObject, OS_nw_proxy_config {}
 final class _NWLinux_nw_relay_hop: NSObject, OS_nw_relay_hop {}
 final class _NWLinux_nw_resolution_report: NSObject, OS_nw_resolution_report {}
 final class _NWLinux_nw_resolver_config: NSObject, OS_nw_resolver_config {}
-final class _NWLinux_nw_txt_record: NSObject, OS_nw_txt_record {}
+final class _NWLinux_nw_txt_record: NSObject, OS_nw_txt_record {
+    var entries: [(key: String, value: Data)] = []
+}
 final class _NWLinux_nw_ws_request: NSObject, OS_nw_ws_request {}
 final class _NWLinux_nw_ws_response: NSObject, OS_nw_ws_response {}
 
