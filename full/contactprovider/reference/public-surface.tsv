@@ -1,0 +1,100 @@
+precise	kind	title	path	declaration
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::s:15ContactProvider0aB5ErrorO	swift.type.property	errorDomain	ContactProviderError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::s:15ContactProvider0aB5ErrorO	swift.property	errorUserInfo	ContactProviderError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::s:15ContactProvider0aB5ErrorO	swift.property	errorCode	ContactProviderError.errorCode	var errorCode: Int { get }
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:15ContactProvider0aB5ErrorO	swift.property	helpAnchor	ContactProviderError.helpAnchor	var helpAnchor: String? { get }
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:15ContactProvider0aB5ErrorO	swift.property	failureReason	ContactProviderError.failureReason	var failureReason: String? { get }
+s:10Foundation14LocalizedErrorPAAE16errorDescriptionSSSgvp::SYNTHESIZED::s:15ContactProvider0aB5ErrorO	swift.property	errorDescription	ContactProviderError.errorDescription	var errorDescription: String? { get }
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:15ContactProvider0aB5ErrorO	swift.property	recoverySuggestion	ContactProviderError.recoverySuggestion	var recoverySuggestion: String? { get }
+s:15ContactProvider07DefaultaB6DomainV	swift.struct	DefaultContactProviderDomain	DefaultContactProviderDomain	struct DefaultContactProviderDomain
+s:15ContactProvider07DefaultaB6DomainV10identifierSSvp	swift.property	identifier	DefaultContactProviderDomain.identifier	var identifier: String { get }
+s:15ContactProvider07DefaultaB6DomainV10identifierSSvpZ	swift.type.property	identifier	DefaultContactProviderDomain.identifier	static let identifier: String
+s:15ContactProvider07DefaultaB6DomainV11displayNameSSvp	swift.property	displayName	DefaultContactProviderDomain.displayName	let displayName: String
+s:15ContactProvider07DefaultaB6DomainV8userInfoSDySSypGvp	swift.property	userInfo	DefaultContactProviderDomain.userInfo	let userInfo: Dictionary<String, Any>
+s:15ContactProvider07DefaultaB6DomainVACycfc	swift.init	init()	DefaultContactProviderDomain.init()	init()
+s:15ContactProvider0A14ItemEnumeratorP	swift.protocol	ContactItemEnumerator	ContactItemEnumerator	protocol ContactItemEnumerator
+s:15ContactProvider0A14ItemEnumeratorP10invalidateyyYaF	swift.method	invalidate()	ContactItemEnumerator.invalidate()	func invalidate() async
+s:15ContactProvider0A14ItemEnumeratorP16enumerateChanges10startingAt3foryAA0aC10SyncAnchorV_AA0aC14ChangeObserver_ptYaF	swift.method	enumerateChanges(startingAt:for:)	ContactItemEnumerator.enumerateChanges(startingAt:for:)	func enumerateChanges(startingAt syncAnchor: ContactItemSyncAnchor, for observer: any ContactItemChangeObserver) async
+s:15ContactProvider0A14ItemEnumeratorP16enumerateContent2in3foryAA0aC4PageV_AA0acF8Observer_ptYaF	swift.method	enumerateContent(in:for:)	ContactItemEnumerator.enumerateContent(in:for:)	func enumerateContent(in page: ContactItemPage, for observer: any ContactItemContentObserver) async
+s:15ContactProvider0A14ItemSyncAnchorV	swift.struct	ContactItemSyncAnchor	ContactItemSyncAnchor	struct ContactItemSyncAnchor
+s:15ContactProvider0A14ItemSyncAnchorV16generationMarker10Foundation4DataVvp	swift.property	generationMarker	ContactItemSyncAnchor.generationMarker	var generationMarker: Data
+s:15ContactProvider0A14ItemSyncAnchorV16generationMarker6offsetAC10Foundation4DataV_Sitcfc	swift.init	init(generationMarker:offset:)	ContactItemSyncAnchor.init(generationMarker:offset:)	init(generationMarker: Data, offset: Int)
+s:15ContactProvider0A14ItemSyncAnchorV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	ContactItemSyncAnchor.==(_:_:)	static func == (a: ContactItemSyncAnchor, b: ContactItemSyncAnchor) -> Bool
+s:15ContactProvider0A14ItemSyncAnchorV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	ContactItemSyncAnchor.init(from:)	init(from decoder: any Decoder) throws
+s:15ContactProvider0A14ItemSyncAnchorV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ContactItemSyncAnchor.encode(to:)	func encode(to encoder: any Encoder) throws
+s:15ContactProvider0A14ItemSyncAnchorV6offsetSivp	swift.property	offset	ContactItemSyncAnchor.offset	var offset: Int
+s:15ContactProvider0A15ItemEnumeratingP	swift.protocol	ContactItemEnumerating	ContactItemEnumerating	protocol ContactItemEnumerating
+s:15ContactProvider0A15ItemEnumeratingP10enumerator3forAA0aC10Enumerator_pAA0aC0O10IdentifierV_tF	swift.method	enumerator(for:)	ContactItemEnumerating.enumerator(for:)	func enumerator(for collection: ContactItem.Identifier) -> any ContactItemEnumerator
+s:15ContactProvider0A18ItemChangeObserverP	swift.protocol	ContactItemChangeObserver	ContactItemChangeObserver	protocol ContactItemChangeObserver
+s:15ContactProvider0A18ItemChangeObserverP18suggestedBatchSizeSivp	swift.property	suggestedBatchSize	ContactItemChangeObserver.suggestedBatchSize	var suggestedBatchSize: Int { get }
+s:15ContactProvider0A18ItemChangeObserverP27didFinishEnumeratingChanges4upTo10moreComingyAA0aC10SyncAnchorV_SbtF	swift.method	didFinishEnumeratingChanges(upTo:moreComing:)	ContactItemChangeObserver.didFinishEnumeratingChanges(upTo:moreComing:)	func didFinishEnumeratingChanges(upTo syncAnchor: ContactItemSyncAnchor, moreComing: Bool)
+s:15ContactProvider0A18ItemChangeObserverP36didFinishEnumeratingChangesWithErroryys0K0_pF	swift.method	didFinishEnumeratingChangesWithError(_:)	ContactItemChangeObserver.didFinishEnumeratingChangesWithError(_:)	func didFinishEnumeratingChangesWithError(_: any Error)
+s:15ContactProvider0A18ItemChangeObserverP9didDeleteyySayAA0aC0O10IdentifierVGF	swift.method	didDelete(_:)	ContactItemChangeObserver.didDelete(_:)	func didDelete(_ identifiers: [ContactItem.Identifier])
+s:15ContactProvider0A18ItemChangeObserverP9didUpdateyySayAA0aC0OGF	swift.method	didUpdate(_:)	ContactItemChangeObserver.didUpdate(_:)	func didUpdate(_ items: [ContactItem])
+s:15ContactProvider0A19ItemContentObserverP	swift.protocol	ContactItemContentObserver	ContactItemContentObserver	protocol ContactItemContentObserver
+s:15ContactProvider0A19ItemContentObserverP020didFinishEnumeratingD04upToy10Foundation4DataV_tF	swift.method	didFinishEnumeratingContent(upTo:)	ContactItemContentObserver.didFinishEnumeratingContent(upTo:)	func didFinishEnumeratingContent(upTo generationMarker: Data)
+s:15ContactProvider0A19ItemContentObserverP020didFinishEnumeratingD9WithErroryys0J0_pF	swift.method	didFinishEnumeratingContentWithError(_:)	ContactItemContentObserver.didFinishEnumeratingContentWithError(_:)	func didFinishEnumeratingContentWithError(_: any Error)
+s:15ContactProvider0A19ItemContentObserverP12didEnumerateyySayAA0aC0OGF	swift.method	didEnumerate(_:)	ContactItemContentObserver.didEnumerate(_:)	func didEnumerate(_: [ContactItem])
+s:15ContactProvider0A19ItemContentObserverP17suggestedPageSizeSivp	swift.property	suggestedPageSize	ContactItemContentObserver.suggestedPageSize	var suggestedPageSize: Int { get }
+s:15ContactProvider0A19ItemContentObserverP24didFinishEnumeratingPage4upToyAA0acI0V_tF	swift.method	didFinishEnumeratingPage(upTo:)	ContactItemContentObserver.didFinishEnumeratingPage(upTo:)	func didFinishEnumeratingPage(upTo nextPage: ContactItemPage)
+s:15ContactProvider0A4ItemO	swift.enum	ContactItem	ContactItem	enum ContactItem
+s:15ContactProvider0A4ItemO10IdentifierV	swift.struct	ContactItem.Identifier	ContactItem.Identifier	struct Identifier
+s:15ContactProvider0A4ItemO10IdentifierV13rootContainerAEvpZ	swift.type.property	rootContainer	ContactItem.Identifier.rootContainer	static let rootContainer: ContactItem.Identifier
+s:15ContactProvider0A4ItemO10IdentifierV2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	ContactItem.Identifier.==(_:_:)	static func == (a: ContactItem.Identifier, b: ContactItem.Identifier) -> Bool
+s:15ContactProvider0A4ItemO10IdentifierV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ContactItem.Identifier.hash(into:)	func hash(into hasher: inout Hasher)
+s:15ContactProvider0A4ItemO10IdentifierV5valueSSvp	swift.property	value	ContactItem.Identifier.value	let value: String
+s:15ContactProvider0A4ItemO10IdentifierV9hashValueSivp	swift.property	hashValue	ContactItem.Identifier.hashValue	var hashValue: Int { get }
+s:15ContactProvider0A4ItemO10IdentifierVyAESScfc	swift.init	init(_:)	ContactItem.Identifier.init(_:)	init(_ value: String)
+s:15ContactProvider0A4ItemO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	ContactItem.==(_:_:)	static func == (a: ContactItem, b: ContactItem) -> Bool
+s:15ContactProvider0A4ItemO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ContactItem.hash(into:)	func hash(into hasher: inout Hasher)
+s:15ContactProvider0A4ItemO7contactyACSo09CNMutableA0C_AC10IdentifierVtcACmF	swift.enum.case	ContactItem.contact(_:_:)	ContactItem.contact(_:_:)	case contact(CNMutableContact, ContactItem.Identifier)
+s:15ContactProvider0A4ItemO9hashValueSivp	swift.property	hashValue	ContactItem.hashValue	var hashValue: Int { get }
+s:15ContactProvider0A8ItemPageV	swift.struct	ContactItemPage	ContactItemPage	struct ContactItemPage
+s:15ContactProvider0A8ItemPageV07initialD0ACvpZ	swift.type.property	initialPage	ContactItemPage.initialPage	static let initialPage: ContactItemPage
+s:15ContactProvider0A8ItemPageV16generationMarker10Foundation4DataVvp	swift.property	generationMarker	ContactItemPage.generationMarker	var generationMarker: Data
+s:15ContactProvider0A8ItemPageV16generationMarker6offsetAC10Foundation4DataV_Sitcfc	swift.init	init(generationMarker:offset:)	ContactItemPage.init(generationMarker:offset:)	init(generationMarker: Data, offset: Int)
+s:15ContactProvider0A8ItemPageV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	ContactItemPage.==(_:_:)	static func == (a: ContactItemPage, b: ContactItemPage) -> Bool
+s:15ContactProvider0A8ItemPageV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	ContactItemPage.init(from:)	init(from decoder: any Decoder) throws
+s:15ContactProvider0A8ItemPageV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ContactItemPage.encode(to:)	func encode(to encoder: any Encoder) throws
+s:15ContactProvider0A8ItemPageV6offsetSivp	swift.property	offset	ContactItemPage.offset	var offset: Int
+s:15ContactProvider0aB5ErrorO	swift.enum	ContactProviderError	ContactProviderError	enum ContactProviderError
+s:15ContactProvider0aB5ErrorO11pageExpiredyA2CmF	swift.enum.case	ContactProviderError.pageExpired	ContactProviderError.pageExpired	case pageExpired
+s:15ContactProvider0aB5ErrorO12deniedByUseryA2CmF	swift.enum.case	ContactProviderError.deniedByUser	ContactProviderError.deniedByUser	case deniedByUser
+s:15ContactProvider0aB5ErrorO13errorUserInfoSDySSypGvp	swift.property	errorUserInfo	ContactProviderError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:15ContactProvider0aB5ErrorO13failureReasonSSSgvp	swift.property	failureReason	ContactProviderError.failureReason	var failureReason: String? { get }
+s:15ContactProvider0aB5ErrorO15cannotEnumerateyA2CmF	swift.enum.case	ContactProviderError.cannotEnumerate	ContactProviderError.cannotEnumerate	case cannotEnumerate
+s:15ContactProvider0aB5ErrorO16errorDescriptionSSSgvp	swift.property	errorDescription	ContactProviderError.errorDescription	var errorDescription: String? { get }
+s:15ContactProvider0aB5ErrorO17extensionNotFoundyA2CmF	swift.enum.case	ContactProviderError.extensionNotFound	ContactProviderError.extensionNotFound	case extensionNotFound
+s:15ContactProvider0aB5ErrorO17itemsLimitReachedyA2CmF	swift.enum.case	ContactProviderError.itemsLimitReached	ContactProviderError.itemsLimitReached	case itemsLimitReached
+s:15ContactProvider0aB5ErrorO18enumerationTimeoutyA2CmF	swift.enum.case	ContactProviderError.enumerationTimeout	ContactProviderError.enumerationTimeout	case enumerationTimeout
+s:15ContactProvider0aB5ErrorO19changeAnchorExpiredyA2CmF	swift.enum.case	ContactProviderError.changeAnchorExpired	ContactProviderError.changeAnchorExpired	case changeAnchorExpired
+s:15ContactProvider0aB5ErrorO19domainNotRegisteredyA2CmF	swift.enum.case	ContactProviderError.domainNotRegistered	ContactProviderError.domainNotRegistered	case domainNotRegistered
+s:15ContactProvider0aB5ErrorO19featureNotAvailableyA2CmF	swift.enum.case	ContactProviderError.featureNotAvailable	ContactProviderError.featureNotAvailable	case featureNotAvailable
+s:15ContactProvider0aB5ErrorO20extensionInvalidatedyA2CmF	swift.enum.case	ContactProviderError.extensionInvalidated	ContactProviderError.extensionInvalidated	case extensionInvalidated
+s:15ContactProvider0aB5ErrorO26extensionInvalidateTimeoutyA2CmF	swift.enum.case	ContactProviderError.extensionInvalidateTimeout	ContactProviderError.extensionInvalidateTimeout	case extensionInvalidateTimeout
+s:15ContactProvider0aB5ErrorO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ContactProviderError.hash(into:)	func hash(into hasher: inout Hasher)
+s:15ContactProvider0aB5ErrorO9errorCodeSivp	swift.property	errorCode	ContactProviderError.errorCode	var errorCode: Int { get }
+s:15ContactProvider0aB5ErrorO9hashValueSivp	swift.property	hashValue	ContactProviderError.hashValue	var hashValue: Int { get }
+s:15ContactProvider0aB6DomainP	swift.protocol	ContactProviderDomain	ContactProviderDomain	protocol ContactProviderDomain
+s:15ContactProvider0aB6DomainP10identifierSSvp	swift.property	identifier	ContactProviderDomain.identifier	var identifier: String { get }
+s:15ContactProvider0aB6DomainP11displayNameSSvp	swift.property	displayName	ContactProviderDomain.displayName	var displayName: String { get }
+s:15ContactProvider0aB6DomainP8userInfoSDySSypGvp	swift.property	userInfo	ContactProviderDomain.userInfo	var userInfo: Dictionary<String, Any> { get }
+s:15ContactProvider0aB7ManagerC	swift.class	ContactProviderManager	ContactProviderManager	class ContactProviderManager
+s:15ContactProvider0aB7ManagerC10invalidateyyYaKF	swift.method	invalidate()	ContactProviderManager.invalidate()	func invalidate() async throws
+s:15ContactProvider0aB7ManagerC16domainIdentifierACSS_tKcfc	swift.init	init(domainIdentifier:)	ContactProviderManager.init(domainIdentifier:)	init(domainIdentifier: String = DefaultContactProviderDomain.identifier) throws
+s:15ContactProvider0aB7ManagerC16signalEnumerator3foryAA0A4ItemO10IdentifierV_tYaKF	swift.method	signalEnumerator(for:)	ContactProviderManager.signalEnumerator(for:)	func signalEnumerator(for collection: ContactItem.Identifier = .rootContainer) async throws
+s:15ContactProvider0aB7ManagerC5resetyyYaKF	swift.method	reset()	ContactProviderManager.reset()	func reset() async throws
+s:15ContactProvider0aB7ManagerC6domainAA0aB6Domain_pvp	swift.property	domain	ContactProviderManager.domain	var domain: any ContactProviderDomain { get }
+s:15ContactProvider0aB7ManagerC6enableyyYaKF	swift.method	enable()	ContactProviderManager.enable()	func enable() async throws
+s:15ContactProvider0aB7ManagerC7disableyyYaKF	swift.method	disable()	ContactProviderManager.disable()	func disable() async throws
+s:15ContactProvider0aB7ManagerC9isEnabledSbvp	swift.property	isEnabled	ContactProviderManager.isEnabled	var isEnabled: Bool { get }
+s:15ContactProvider0aB9ExtensionP	swift.protocol	ContactProviderExtension	ContactProviderExtension	protocol ContactProviderExtension : ContactItemEnumerating, AppExtension
+s:15ContactProvider0aB9ExtensionP10invalidateyyYaKF	swift.method	invalidate()	ContactProviderExtension.invalidate()	func invalidate() async throws
+s:15ContactProvider0aB9ExtensionP9configure3foryAA0aB6Domain_p_tF	swift.method	configure(for:)	ContactProviderExtension.configure(for:)	func configure(for domain: any ContactProviderDomain)
+s:15ContactProvider0aB9ExtensionPAAE13configurationQrvp	swift.property	configuration	ContactProviderExtension.configuration	var configuration: some AppExtensionConfiguration { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ContactProvider0A14ItemSyncAnchorV	swift.func.op	!=(_:_:)	ContactItemSyncAnchor.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ContactProvider0A4ItemO	swift.func.op	!=(_:_:)	ContactItem.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ContactProvider0A4ItemO10IdentifierV	swift.func.op	!=(_:_:)	ContactItem.Identifier.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ContactProvider0A8ItemPageV	swift.func.op	!=(_:_:)	ContactItemPage.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15ContactProvider0aB5ErrorO	swift.func.op	!=(_:_:)	ContactProviderError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:15ContactProvider0aB5ErrorO	swift.property	localizedDescription	ContactProviderError.localizedDescription	var localizedDescription: String { get }

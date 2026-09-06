@@ -1,0 +1,31 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave12-repair-5",
+    "maxActive": 24,
+    "maxRuns": 1
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "localauthenticationembeddedui": {
+      "agentId": "bc-62d5b1ea-88b4-5ff4-a62f-8098b08e71d7",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T05:04:09Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/219",
+      "expectedPriorHead": "3d67047a9d4d925a1402db1a5eb06ca8044461de",
+      "idempotencyKey": "6b210c67-09d9-5417-9783-a7b7ca8f3cd7",
+      "launchStatus": "SENT",
+      "module": "LocalAuthenticationEmbeddedUI",
+      "promptBytes": 1498,
+      "promptSha256": "7e1abe1361b341400c3bc665479b77bd4666358fa89ec10962dae51023f356ba",
+      "runId": "run-841b0e80-e386-49c3-b49f-88676946561c",
+      "runStatus": "running",
+      "slug": "localauthenticationembeddedui"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

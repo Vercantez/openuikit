@@ -1,0 +1,4241 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PermissionKit",
+        "name": "CoreGraphics",
+        "printedName": "CoreGraphics"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PermissionKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PermissionKit",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PermissionKit",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PermissionKit",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PermissionKit",
+        "name": "os.log",
+        "printedName": "os.log"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "PermissionKit",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Kind",
+                        "printedName": "PermissionKit.CommunicationHandle.Kind",
+                        "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Kind",
+                            "printedName": "PermissionKit.CommunicationHandle.Kind",
+                            "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.CommunicationHandle.Kind.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.CommunicationHandle.Kind.Type) -> PermissionKit.CommunicationHandle.Kind"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit19CommunicationHandleV4KindO11phoneNumberyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "phoneNumber",
+                "printedName": "phoneNumber",
+                "usr": "s:13PermissionKit19CommunicationHandleV4KindO11phoneNumberyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Kind",
+                        "printedName": "PermissionKit.CommunicationHandle.Kind",
+                        "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Kind",
+                            "printedName": "PermissionKit.CommunicationHandle.Kind",
+                            "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.CommunicationHandle.Kind.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.CommunicationHandle.Kind.Type) -> PermissionKit.CommunicationHandle.Kind"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit19CommunicationHandleV4KindO12emailAddressyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "emailAddress",
+                "printedName": "emailAddress",
+                "usr": "s:13PermissionKit19CommunicationHandleV4KindO12emailAddressyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Kind",
+                        "printedName": "PermissionKit.CommunicationHandle.Kind",
+                        "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Kind",
+                            "printedName": "PermissionKit.CommunicationHandle.Kind",
+                            "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.CommunicationHandle.Kind.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.CommunicationHandle.Kind.Type) -> PermissionKit.CommunicationHandle.Kind"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit19CommunicationHandleV4KindO6customyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "custom",
+                "printedName": "custom",
+                "usr": "s:13PermissionKit19CommunicationHandleV4KindO6customyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Kind",
+                    "printedName": "PermissionKit.CommunicationHandle.Kind",
+                    "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Kind",
+                    "printedName": "PermissionKit.CommunicationHandle.Kind",
+                    "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s13PermissionKit19CommunicationHandleV4KindO2eeoiySbAE_AEtFZ",
+                "moduleName": "PermissionKit",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:13PermissionKit19CommunicationHandleV4KindO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoder",
+                    "printedName": "any Swift.Encoder",
+                    "usr": "s:s7EncoderP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s13PermissionKit19CommunicationHandleV4KindO6encode2toys7Encoder_p_tKF",
+                "moduleName": "PermissionKit",
+                "name": "encode",
+                "printedName": "encode(to:)",
+                "throwing": true,
+                "usr": "s:13PermissionKit19CommunicationHandleV4KindO6encode2toys7Encoder_p_tKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s13PermissionKit19CommunicationHandleV4KindO4hash4intoys6HasherVz_tF",
+                "moduleName": "PermissionKit",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:13PermissionKit19CommunicationHandleV4KindO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s13PermissionKit19CommunicationHandleV4KindO9hashValueSivg",
+                    "moduleName": "PermissionKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:13PermissionKit19CommunicationHandleV4KindO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit19CommunicationHandleV4KindO9hashValueSivp",
+                "moduleName": "PermissionKit",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:13PermissionKit19CommunicationHandleV4KindO9hashValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Kind",
+                    "printedName": "PermissionKit.CommunicationHandle.Kind",
+                    "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Decoder",
+                    "printedName": "any Swift.Decoder",
+                    "usr": "s:s7DecoderP"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s13PermissionKit19CommunicationHandleV4KindO4fromAEs7Decoder_p_tKcfc",
+                "moduleName": "PermissionKit",
+                "name": "init",
+                "printedName": "init(from:)",
+                "throwing": true,
+                "usr": "s:13PermissionKit19CommunicationHandleV4KindO4fromAEs7Decoder_p_tKcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSe",
+                "name": "Decodable",
+                "printedName": "Decodable",
+                "usr": "s:Se"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSE",
+                "name": "Encodable",
+                "printedName": "Encodable",
+                "usr": "s:SE"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s13PermissionKit19CommunicationHandleV4KindO",
+            "moduleName": "PermissionKit",
+            "name": "Kind",
+            "printedName": "Kind",
+            "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CommunicationHandle",
+                "printedName": "PermissionKit.CommunicationHandle",
+                "usr": "s:13PermissionKit19CommunicationHandleV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Kind",
+                "printedName": "PermissionKit.CommunicationHandle.Kind",
+                "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s13PermissionKit19CommunicationHandleV5value4kindACSS_AC4KindOtcfc",
+            "moduleName": "PermissionKit",
+            "name": "init",
+            "printedName": "init(value:kind:)",
+            "usr": "s:13PermissionKit19CommunicationHandleV5value4kindACSS_AC4KindOtcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit19CommunicationHandleV5valueSSvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit19CommunicationHandleV5valueSSvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit19CommunicationHandleV5valueSSvs",
+                "moduleName": "PermissionKit",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:13PermissionKit19CommunicationHandleV5valueSSvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit19CommunicationHandleV5valueSSvp",
+            "moduleName": "PermissionKit",
+            "name": "value",
+            "printedName": "value",
+            "usr": "s:13PermissionKit19CommunicationHandleV5valueSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Kind",
+                    "printedName": "PermissionKit.CommunicationHandle.Kind",
+                    "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit19CommunicationHandleV4kindAC4KindOvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit19CommunicationHandleV4kindAC4KindOvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Kind",
+                    "printedName": "PermissionKit.CommunicationHandle.Kind",
+                    "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit19CommunicationHandleV4kindAC4KindOvs",
+                "moduleName": "PermissionKit",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:13PermissionKit19CommunicationHandleV4kindAC4KindOvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Kind",
+                "printedName": "PermissionKit.CommunicationHandle.Kind",
+                "usr": "s:13PermissionKit19CommunicationHandleV4KindO"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit19CommunicationHandleV4kindAC4KindOvp",
+            "moduleName": "PermissionKit",
+            "name": "kind",
+            "printedName": "kind",
+            "usr": "s:13PermissionKit19CommunicationHandleV4kindAC4KindOvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CommunicationHandle",
+                "printedName": "PermissionKit.CommunicationHandle",
+                "usr": "s:13PermissionKit19CommunicationHandleV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CommunicationHandle",
+                "printedName": "PermissionKit.CommunicationHandle",
+                "usr": "s:13PermissionKit19CommunicationHandleV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s13PermissionKit19CommunicationHandleV2eeoiySbAC_ACtFZ",
+            "moduleName": "PermissionKit",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:13PermissionKit19CommunicationHandleV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s13PermissionKit19CommunicationHandleV6encode2toys7Encoder_p_tKF",
+            "moduleName": "PermissionKit",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:13PermissionKit19CommunicationHandleV6encode2toys7Encoder_p_tKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s13PermissionKit19CommunicationHandleV4hash4intoys6HasherVz_tF",
+            "moduleName": "PermissionKit",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:13PermissionKit19CommunicationHandleV4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit19CommunicationHandleV9hashValueSivg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit19CommunicationHandleV9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit19CommunicationHandleV9hashValueSivp",
+            "moduleName": "PermissionKit",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:13PermissionKit19CommunicationHandleV9hashValueSivp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CommunicationHandle",
+                "printedName": "PermissionKit.CommunicationHandle",
+                "usr": "s:13PermissionKit19CommunicationHandleV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s13PermissionKit19CommunicationHandleV4fromACs7Decoder_p_tKcfc",
+            "moduleName": "PermissionKit",
+            "name": "init",
+            "printedName": "init(from:)",
+            "throwing": true,
+            "usr": "s:13PermissionKit19CommunicationHandleV4fromACs7Decoder_p_tKcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s13PermissionKit19CommunicationHandleV",
+        "moduleName": "PermissionKit",
+        "name": "CommunicationHandle",
+        "printedName": "CommunicationHandle",
+        "usr": "s:13PermissionKit19CommunicationHandleV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CommunicationLimits",
+                    "printedName": "PermissionKit.CommunicationLimits",
+                    "usr": "s:13PermissionKit19CommunicationLimitsC"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit19CommunicationLimitsC7currentACvgZ",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:13PermissionKit19CommunicationLimitsC7currentACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CommunicationLimits",
+                "printedName": "PermissionKit.CommunicationLimits",
+                "usr": "s:13PermissionKit19CommunicationLimitsC"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit19CommunicationLimitsC7currentACvpZ",
+            "moduleName": "PermissionKit",
+            "name": "current",
+            "printedName": "current",
+            "static": true,
+            "usr": "s:13PermissionKit19CommunicationLimitsC7currentACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AsyncSequence",
+                        "printedName": "_Concurrency.AsyncSequence",
+                        "usr": "s:Sci"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some _Concurrency.AsyncSequence<PermissionKit.PermissionResponse<PermissionKit.CommunicationTopic>, Swift.Never>"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit19CommunicationLimitsC7updatesQrvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit19CommunicationLimitsC7updatesQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AsyncSequence",
+                    "printedName": "_Concurrency.AsyncSequence",
+                    "usr": "s:Sci"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some _Concurrency.AsyncSequence<PermissionKit.PermissionResponse<PermissionKit.CommunicationTopic>, Swift.Never>"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit19CommunicationLimitsC7updatesQrvp",
+            "moduleName": "PermissionKit",
+            "name": "updates",
+            "printedName": "updates",
+            "usr": "s:13PermissionKit19CommunicationLimitsC7updatesQrvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CommunicationHandle",
+                "printedName": "PermissionKit.CommunicationHandle",
+                "usr": "s:13PermissionKit19CommunicationHandleV"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s13PermissionKit19CommunicationLimitsC13isKnownHandleySbAA0cG0VYaF",
+            "moduleName": "PermissionKit",
+            "name": "isKnownHandle",
+            "printedName": "isKnownHandle(_:)",
+            "usr": "s:13PermissionKit19CommunicationLimitsC13isKnownHandleySbAA0cG0VYaF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CommunicationHandle",
+                    "printedName": "PermissionKit.CommunicationHandle",
+                    "usr": "s:13PermissionKit19CommunicationHandleV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<PermissionKit.CommunicationHandle>",
+                "usr": "s:Sh"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CommunicationHandle",
+                    "printedName": "PermissionKit.CommunicationHandle",
+                    "usr": "s:13PermissionKit19CommunicationHandleV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<PermissionKit.CommunicationHandle>",
+                "usr": "s:Sh"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s13PermissionKit19CommunicationLimitsC12knownHandles2inShyAA0C6HandleVGAH_tYaF",
+            "moduleName": "PermissionKit",
+            "name": "knownHandles",
+            "printedName": "knownHandles(in:)",
+            "usr": "s:13PermissionKit19CommunicationLimitsC12knownHandles2inShyAA0C6HandleVGAH_tYaF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Final",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s13PermissionKit19CommunicationLimitsC",
+        "moduleName": "PermissionKit",
+        "name": "CommunicationLimits",
+        "printedName": "CommunicationLimits",
+        "usr": "s:13PermissionKit19CommunicationLimitsC"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Answer",
+                        "printedName": "PermissionKit.PermissionChoice.Answer",
+                        "usr": "s:13PermissionKit0A6ChoiceV6AnswerO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Answer",
+                            "printedName": "PermissionKit.PermissionChoice.Answer",
+                            "usr": "s:13PermissionKit0A6ChoiceV6AnswerO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.PermissionChoice.Answer.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.PermissionChoice.Answer.Type) -> PermissionKit.PermissionChoice.Answer"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit0A6ChoiceV6AnswerO8approvalyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "approval",
+                "printedName": "approval",
+                "usr": "s:13PermissionKit0A6ChoiceV6AnswerO8approvalyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Answer",
+                        "printedName": "PermissionKit.PermissionChoice.Answer",
+                        "usr": "s:13PermissionKit0A6ChoiceV6AnswerO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Answer",
+                            "printedName": "PermissionKit.PermissionChoice.Answer",
+                            "usr": "s:13PermissionKit0A6ChoiceV6AnswerO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.PermissionChoice.Answer.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.PermissionChoice.Answer.Type) -> PermissionKit.PermissionChoice.Answer"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit0A6ChoiceV6AnswerO6denialyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "denial",
+                "printedName": "denial",
+                "usr": "s:13PermissionKit0A6ChoiceV6AnswerO6denialyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Answer",
+                    "printedName": "PermissionKit.PermissionChoice.Answer",
+                    "usr": "s:13PermissionKit0A6ChoiceV6AnswerO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Answer",
+                    "printedName": "PermissionKit.PermissionChoice.Answer",
+                    "usr": "s:13PermissionKit0A6ChoiceV6AnswerO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s13PermissionKit0A6ChoiceV6AnswerO2eeoiySbAE_AEtFZ",
+                "moduleName": "PermissionKit",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:13PermissionKit0A6ChoiceV6AnswerO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoder",
+                    "printedName": "any Swift.Encoder",
+                    "usr": "s:s7EncoderP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s13PermissionKit0A6ChoiceV6AnswerO6encode2toys7Encoder_p_tKF",
+                "moduleName": "PermissionKit",
+                "name": "encode",
+                "printedName": "encode(to:)",
+                "throwing": true,
+                "usr": "s:13PermissionKit0A6ChoiceV6AnswerO6encode2toys7Encoder_p_tKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s13PermissionKit0A6ChoiceV6AnswerO4hash4intoys6HasherVz_tF",
+                "moduleName": "PermissionKit",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:13PermissionKit0A6ChoiceV6AnswerO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s13PermissionKit0A6ChoiceV6AnswerO9hashValueSivg",
+                    "moduleName": "PermissionKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:13PermissionKit0A6ChoiceV6AnswerO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit0A6ChoiceV6AnswerO9hashValueSivp",
+                "moduleName": "PermissionKit",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:13PermissionKit0A6ChoiceV6AnswerO9hashValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Answer",
+                    "printedName": "PermissionKit.PermissionChoice.Answer",
+                    "usr": "s:13PermissionKit0A6ChoiceV6AnswerO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Decoder",
+                    "printedName": "any Swift.Decoder",
+                    "usr": "s:s7DecoderP"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s13PermissionKit0A6ChoiceV6AnswerO4fromAEs7Decoder_p_tKcfc",
+                "moduleName": "PermissionKit",
+                "name": "init",
+                "printedName": "init(from:)",
+                "throwing": true,
+                "usr": "s:13PermissionKit0A6ChoiceV6AnswerO4fromAEs7Decoder_p_tKcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSe",
+                "name": "Decodable",
+                "printedName": "Decodable",
+                "usr": "s:Se"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSE",
+                "name": "Encodable",
+                "printedName": "Encodable",
+                "usr": "s:SE"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s13PermissionKit0A6ChoiceV6AnswerO",
+            "moduleName": "PermissionKit",
+            "name": "Answer",
+            "printedName": "Answer",
+            "usr": "s:13PermissionKit0A6ChoiceV6AnswerO"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PermissionChoice",
+                    "printedName": "PermissionKit.PermissionChoice",
+                    "usr": "s:13PermissionKit0A6ChoiceV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A6ChoiceV7approveACvgZ",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:13PermissionKit0A6ChoiceV7approveACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PermissionChoice",
+                "printedName": "PermissionKit.PermissionChoice",
+                "usr": "s:13PermissionKit0A6ChoiceV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit0A6ChoiceV7approveACvpZ",
+            "moduleName": "PermissionKit",
+            "name": "approve",
+            "printedName": "approve",
+            "static": true,
+            "usr": "s:13PermissionKit0A6ChoiceV7approveACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PermissionChoice",
+                    "printedName": "PermissionKit.PermissionChoice",
+                    "usr": "s:13PermissionKit0A6ChoiceV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A6ChoiceV7declineACvgZ",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:13PermissionKit0A6ChoiceV7declineACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PermissionChoice",
+                "printedName": "PermissionKit.PermissionChoice",
+                "usr": "s:13PermissionKit0A6ChoiceV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit0A6ChoiceV7declineACvpZ",
+            "moduleName": "PermissionKit",
+            "name": "decline",
+            "printedName": "decline",
+            "static": true,
+            "usr": "s:13PermissionKit0A6ChoiceV7declineACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A6ChoiceV2idSSvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit0A6ChoiceV2idSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit0A6ChoiceV2idSSvp",
+            "moduleName": "PermissionKit",
+            "name": "id",
+            "printedName": "id",
+            "usr": "s:13PermissionKit0A6ChoiceV2idSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A6ChoiceV5titleSSvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit0A6ChoiceV5titleSSvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A6ChoiceV5titleSSvs",
+                "moduleName": "PermissionKit",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:13PermissionKit0A6ChoiceV5titleSSvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit0A6ChoiceV5titleSSvp",
+            "moduleName": "PermissionKit",
+            "name": "title",
+            "printedName": "title",
+            "usr": "s:13PermissionKit0A6ChoiceV5titleSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Answer",
+                    "printedName": "PermissionKit.PermissionChoice.Answer",
+                    "usr": "s:13PermissionKit0A6ChoiceV6AnswerO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A6ChoiceV6answerAC6AnswerOvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit0A6ChoiceV6answerAC6AnswerOvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Answer",
+                    "printedName": "PermissionKit.PermissionChoice.Answer",
+                    "usr": "s:13PermissionKit0A6ChoiceV6AnswerO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A6ChoiceV6answerAC6AnswerOvs",
+                "moduleName": "PermissionKit",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:13PermissionKit0A6ChoiceV6answerAC6AnswerOvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Answer",
+                "printedName": "PermissionKit.PermissionChoice.Answer",
+                "usr": "s:13PermissionKit0A6ChoiceV6AnswerO"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit0A6ChoiceV6answerAC6AnswerOvp",
+            "moduleName": "PermissionKit",
+            "name": "answer",
+            "printedName": "answer",
+            "usr": "s:13PermissionKit0A6ChoiceV6answerAC6AnswerOvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PermissionChoice",
+                "printedName": "PermissionKit.PermissionChoice",
+                "usr": "s:13PermissionKit0A6ChoiceV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PermissionChoice",
+                "printedName": "PermissionKit.PermissionChoice",
+                "usr": "s:13PermissionKit0A6ChoiceV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s13PermissionKit0A6ChoiceV2eeoiySbAC_ACtFZ",
+            "moduleName": "PermissionKit",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:13PermissionKit0A6ChoiceV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s13PermissionKit0A6ChoiceV4hash4intoys6HasherVz_tF",
+            "moduleName": "PermissionKit",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:13PermissionKit0A6ChoiceV4hash4intoys6HasherVz_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s13PermissionKit0A6ChoiceV2IDa",
+            "moduleName": "PermissionKit",
+            "name": "ID",
+            "printedName": "ID",
+            "usr": "s:13PermissionKit0A6ChoiceV2IDa"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s13PermissionKit0A6ChoiceV6encode2toys7Encoder_p_tKF",
+            "moduleName": "PermissionKit",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:13PermissionKit0A6ChoiceV6encode2toys7Encoder_p_tKF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A6ChoiceV9hashValueSivg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit0A6ChoiceV9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit0A6ChoiceV9hashValueSivp",
+            "moduleName": "PermissionKit",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:13PermissionKit0A6ChoiceV9hashValueSivp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PermissionChoice",
+                "printedName": "PermissionKit.PermissionChoice",
+                "usr": "s:13PermissionKit0A6ChoiceV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s13PermissionKit0A6ChoiceV4fromACs7Decoder_p_tKcfc",
+            "moduleName": "PermissionKit",
+            "name": "init",
+            "printedName": "init(from:)",
+            "throwing": true,
+            "usr": "s:13PermissionKit0A6ChoiceV4fromACs7Decoder_p_tKcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ID",
+                    "printedName": "PermissionKit.PermissionChoice.ID"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "ID",
+                "printedName": "ID"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss12IdentifiableP",
+            "name": "Identifiable",
+            "printedName": "Identifiable",
+            "usr": "s:s12IdentifiableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s13PermissionKit0A6ChoiceV",
+        "moduleName": "PermissionKit",
+        "name": "PermissionChoice",
+        "printedName": "PermissionChoice",
+        "usr": "s:13PermissionKit0A6ChoiceV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AskError",
+                    "printedName": "PermissionKit.AskError",
+                    "usr": "s:13PermissionKit8AskErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AskError",
+                        "printedName": "PermissionKit.AskError",
+                        "usr": "s:13PermissionKit8AskErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "PermissionKit.AskError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(PermissionKit.AskError.Type) -> PermissionKit.AskError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit8AskErrorO7unknownyA2CmF",
+            "moduleName": "PermissionKit",
+            "name": "unknown",
+            "printedName": "unknown",
+            "usr": "s:13PermissionKit8AskErrorO7unknownyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AskError",
+                    "printedName": "PermissionKit.AskError",
+                    "usr": "s:13PermissionKit8AskErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AskError",
+                        "printedName": "PermissionKit.AskError",
+                        "usr": "s:13PermissionKit8AskErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "PermissionKit.AskError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(PermissionKit.AskError.Type) -> PermissionKit.AskError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit8AskErrorO15invalidQuestionyA2CmF",
+            "moduleName": "PermissionKit",
+            "name": "invalidQuestion",
+            "printedName": "invalidQuestion",
+            "usr": "s:13PermissionKit8AskErrorO15invalidQuestionyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AskError",
+                    "printedName": "PermissionKit.AskError",
+                    "usr": "s:13PermissionKit8AskErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AskError",
+                        "printedName": "PermissionKit.AskError",
+                        "usr": "s:13PermissionKit8AskErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "PermissionKit.AskError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(PermissionKit.AskError.Type) -> PermissionKit.AskError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit8AskErrorO19contactSyncNotSetupyA2CmF",
+            "moduleName": "PermissionKit",
+            "name": "contactSyncNotSetup",
+            "printedName": "contactSyncNotSetup",
+            "usr": "s:13PermissionKit8AskErrorO19contactSyncNotSetupyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AskError",
+                    "printedName": "PermissionKit.AskError",
+                    "usr": "s:13PermissionKit8AskErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AskError",
+                        "printedName": "PermissionKit.AskError",
+                        "usr": "s:13PermissionKit8AskErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "PermissionKit.AskError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(PermissionKit.AskError.Type) -> PermissionKit.AskError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit8AskErrorO29communicationLimitsNotEnabledyA2CmF",
+            "moduleName": "PermissionKit",
+            "name": "communicationLimitsNotEnabled",
+            "printedName": "communicationLimitsNotEnabled",
+            "usr": "s:13PermissionKit8AskErrorO29communicationLimitsNotEnabledyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AskError",
+                        "printedName": "PermissionKit.AskError",
+                        "usr": "s:13PermissionKit8AskErrorO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "any Swift.Error",
+                            "usr": "s:s5ErrorP"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Tuple",
+                        "printedName": "(underlyingError: any Swift.Error)"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(any Swift.Error) -> PermissionKit.AskError"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AskError",
+                        "printedName": "PermissionKit.AskError",
+                        "usr": "s:13PermissionKit8AskErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "PermissionKit.AskError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(PermissionKit.AskError.Type) -> (any Swift.Error) -> PermissionKit.AskError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit8AskErrorO06systemD0yACs0D0_p_tcACmF",
+            "moduleName": "PermissionKit",
+            "name": "systemError",
+            "printedName": "systemError",
+            "usr": "s:13PermissionKit8AskErrorO06systemD0yACs0D0_p_tcACmF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit8AskErrorO16errorDescriptionSSSgvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit8AskErrorO16errorDescriptionSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit8AskErrorO16errorDescriptionSSSgvp",
+            "moduleName": "PermissionKit",
+            "name": "errorDescription",
+            "printedName": "errorDescription",
+            "usr": "s:13PermissionKit8AskErrorO16errorDescriptionSSSgvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation14LocalizedErrorP",
+            "name": "LocalizedError",
+            "printedName": "LocalizedError",
+            "usr": "s:10Foundation14LocalizedErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s13PermissionKit8AskErrorO",
+        "moduleName": "PermissionKit",
+        "name": "AskError",
+        "printedName": "AskError",
+        "usr": "s:13PermissionKit8AskErrorO"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV2idSSvgZ",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:13PermissionKit18CommunicationTopicV2idSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit18CommunicationTopicV2idSSvpZ",
+            "moduleName": "PermissionKit",
+            "name": "id",
+            "printedName": "id",
+            "static": true,
+            "usr": "s:13PermissionKit18CommunicationTopicV2idSSvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PersonInformation",
+                        "printedName": "PermissionKit.CommunicationTopic.PersonInformation",
+                        "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[PermissionKit.CommunicationTopic.PersonInformation]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV17personInformationSayAC06PersonF0VGvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit18CommunicationTopicV17personInformationSayAC06PersonF0VGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PersonInformation",
+                        "printedName": "PermissionKit.CommunicationTopic.PersonInformation",
+                        "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[PermissionKit.CommunicationTopic.PersonInformation]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV17personInformationSayAC06PersonF0VGvs",
+                "moduleName": "PermissionKit",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:13PermissionKit18CommunicationTopicV17personInformationSayAC06PersonF0VGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PersonInformation",
+                    "printedName": "PermissionKit.CommunicationTopic.PersonInformation",
+                    "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[PermissionKit.CommunicationTopic.PersonInformation]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit18CommunicationTopicV17personInformationSayAC06PersonF0VGvp",
+            "moduleName": "PermissionKit",
+            "name": "personInformation",
+            "printedName": "personInformation",
+            "usr": "s:13PermissionKit18CommunicationTopicV17personInformationSayAC06PersonF0VGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Action",
+                        "printedName": "PermissionKit.CommunicationTopic.Action",
+                        "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<PermissionKit.CommunicationTopic.Action>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV7actionsShyAC6ActionOGvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit18CommunicationTopicV7actionsShyAC6ActionOGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Action",
+                        "printedName": "PermissionKit.CommunicationTopic.Action",
+                        "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Set",
+                    "printedName": "Swift.Set<PermissionKit.CommunicationTopic.Action>",
+                    "usr": "s:Sh"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV7actionsShyAC6ActionOGvs",
+                "moduleName": "PermissionKit",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:13PermissionKit18CommunicationTopicV7actionsShyAC6ActionOGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Action",
+                    "printedName": "PermissionKit.CommunicationTopic.Action",
+                    "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<PermissionKit.CommunicationTopic.Action>",
+                "usr": "s:Sh"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit18CommunicationTopicV7actionsShyAC6ActionOGvp",
+            "moduleName": "PermissionKit",
+            "name": "actions",
+            "printedName": "actions",
+            "usr": "s:13PermissionKit18CommunicationTopicV7actionsShyAC6ActionOGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CommunicationTopic",
+                "printedName": "PermissionKit.CommunicationTopic",
+                "usr": "s:13PermissionKit18CommunicationTopicV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PersonInformation",
+                    "printedName": "PermissionKit.CommunicationTopic.PersonInformation",
+                    "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[PermissionKit.CommunicationTopic.PersonInformation]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Action",
+                    "printedName": "PermissionKit.CommunicationTopic.Action",
+                    "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<PermissionKit.CommunicationTopic.Action>",
+                "usr": "s:Sh"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s13PermissionKit18CommunicationTopicV17personInformation7actionsACSayAC06PersonF0VG_ShyAC6ActionOGtcfc",
+            "moduleName": "PermissionKit",
+            "name": "init",
+            "printedName": "init(personInformation:actions:)",
+            "usr": "s:13PermissionKit18CommunicationTopicV17personInformation7actionsACSayAC06PersonF0VG_ShyAC6ActionOGtcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CommunicationTopic",
+                "printedName": "PermissionKit.CommunicationTopic",
+                "usr": "s:13PermissionKit18CommunicationTopicV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PersonInformation",
+                    "printedName": "PermissionKit.CommunicationTopic.PersonInformation",
+                    "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[PermissionKit.CommunicationTopic.PersonInformation]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s13PermissionKit18CommunicationTopicV17personInformationACSayAC06PersonF0VG_tcfc",
+            "moduleName": "PermissionKit",
+            "name": "init",
+            "printedName": "init(personInformation:)",
+            "usr": "s:13PermissionKit18CommunicationTopicV17personInformationACSayAC06PersonF0VG_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s13PermissionKit18CommunicationTopicV6encode2toys7Encoder_p_tKF",
+            "moduleName": "PermissionKit",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:13PermissionKit18CommunicationTopicV6encode2toys7Encoder_p_tKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CommunicationTopic",
+                "printedName": "PermissionKit.CommunicationTopic",
+                "usr": "s:13PermissionKit18CommunicationTopicV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s13PermissionKit18CommunicationTopicV4fromACs7Decoder_p_tKcfc",
+            "moduleName": "PermissionKit",
+            "name": "init",
+            "printedName": "init(from:)",
+            "throwing": true,
+            "usr": "s:13PermissionKit18CommunicationTopicV4fromACs7Decoder_p_tKcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Action",
+                        "printedName": "PermissionKit.CommunicationTopic.Action",
+                        "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Action",
+                            "printedName": "PermissionKit.CommunicationTopic.Action",
+                            "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.CommunicationTopic.Action.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.CommunicationTopic.Action.Type) -> PermissionKit.CommunicationTopic.Action"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO6friendyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "friend",
+                "printedName": "friend",
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO6friendyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Action",
+                        "printedName": "PermissionKit.CommunicationTopic.Action",
+                        "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Action",
+                            "printedName": "PermissionKit.CommunicationTopic.Action",
+                            "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.CommunicationTopic.Action.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.CommunicationTopic.Action.Type) -> PermissionKit.CommunicationTopic.Action"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO6followyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "follow",
+                "printedName": "follow",
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO6followyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Action",
+                        "printedName": "PermissionKit.CommunicationTopic.Action",
+                        "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Action",
+                            "printedName": "PermissionKit.CommunicationTopic.Action",
+                            "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.CommunicationTopic.Action.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.CommunicationTopic.Action.Type) -> PermissionKit.CommunicationTopic.Action"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO10beFollowedyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "beFollowed",
+                "printedName": "beFollowed",
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO10beFollowedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Action",
+                        "printedName": "PermissionKit.CommunicationTopic.Action",
+                        "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Action",
+                            "printedName": "PermissionKit.CommunicationTopic.Action",
+                            "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.CommunicationTopic.Action.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.CommunicationTopic.Action.Type) -> PermissionKit.CommunicationTopic.Action"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO4callyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "call",
+                "printedName": "call",
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO4callyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Action",
+                        "printedName": "PermissionKit.CommunicationTopic.Action",
+                        "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Action",
+                            "printedName": "PermissionKit.CommunicationTopic.Action",
+                            "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.CommunicationTopic.Action.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.CommunicationTopic.Action.Type) -> PermissionKit.CommunicationTopic.Action"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO7messageyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "message",
+                "printedName": "message",
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO7messageyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Action",
+                        "printedName": "PermissionKit.CommunicationTopic.Action",
+                        "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Action",
+                            "printedName": "PermissionKit.CommunicationTopic.Action",
+                            "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.CommunicationTopic.Action.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.CommunicationTopic.Action.Type) -> PermissionKit.CommunicationTopic.Action"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO9videoCallyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "videoCall",
+                "printedName": "videoCall",
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO9videoCallyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Action",
+                        "printedName": "PermissionKit.CommunicationTopic.Action",
+                        "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Action",
+                            "printedName": "PermissionKit.CommunicationTopic.Action",
+                            "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.CommunicationTopic.Action.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.CommunicationTopic.Action.Type) -> PermissionKit.CommunicationTopic.Action"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO9audioCallyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "audioCall",
+                "printedName": "audioCall",
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO9audioCallyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Action",
+                        "printedName": "PermissionKit.CommunicationTopic.Action",
+                        "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Action",
+                            "printedName": "PermissionKit.CommunicationTopic.Action",
+                            "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.CommunicationTopic.Action.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.CommunicationTopic.Action.Type) -> PermissionKit.CommunicationTopic.Action"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO11communicateyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "communicate",
+                "printedName": "communicate",
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO11communicateyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Action",
+                        "printedName": "PermissionKit.CommunicationTopic.Action",
+                        "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Action",
+                            "printedName": "PermissionKit.CommunicationTopic.Action",
+                            "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.CommunicationTopic.Action.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.CommunicationTopic.Action.Type) -> PermissionKit.CommunicationTopic.Action"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO4chatyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "chat",
+                "printedName": "chat",
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO4chatyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Action",
+                        "printedName": "PermissionKit.CommunicationTopic.Action",
+                        "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Action",
+                            "printedName": "PermissionKit.CommunicationTopic.Action",
+                            "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "PermissionKit.CommunicationTopic.Action.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(PermissionKit.CommunicationTopic.Action.Type) -> PermissionKit.CommunicationTopic.Action"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO7connectyA2EmF",
+                "moduleName": "PermissionKit",
+                "name": "connect",
+                "printedName": "connect",
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO7connectyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Action",
+                    "printedName": "PermissionKit.CommunicationTopic.Action",
+                    "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Action",
+                    "printedName": "PermissionKit.CommunicationTopic.Action",
+                    "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO2eeoiySbAE_AEtFZ",
+                "moduleName": "PermissionKit",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoder",
+                    "printedName": "any Swift.Encoder",
+                    "usr": "s:s7EncoderP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO6encode2toys7Encoder_p_tKF",
+                "moduleName": "PermissionKit",
+                "name": "encode",
+                "printedName": "encode(to:)",
+                "throwing": true,
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO6encode2toys7Encoder_p_tKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO4hash4intoys6HasherVz_tF",
+                "moduleName": "PermissionKit",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO9hashValueSivg",
+                    "moduleName": "PermissionKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:13PermissionKit18CommunicationTopicV6ActionO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO9hashValueSivp",
+                "moduleName": "PermissionKit",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO9hashValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Action",
+                    "printedName": "PermissionKit.CommunicationTopic.Action",
+                    "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Decoder",
+                    "printedName": "any Swift.Decoder",
+                    "usr": "s:s7DecoderP"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO4fromAEs7Decoder_p_tKcfc",
+                "moduleName": "PermissionKit",
+                "name": "init",
+                "printedName": "init(from:)",
+                "throwing": true,
+                "usr": "s:13PermissionKit18CommunicationTopicV6ActionO4fromAEs7Decoder_p_tKcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSe",
+                "name": "Decodable",
+                "printedName": "Decodable",
+                "usr": "s:Se"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSE",
+                "name": "Encodable",
+                "printedName": "Encodable",
+                "usr": "s:SE"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Enum",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s13PermissionKit18CommunicationTopicV6ActionO",
+            "moduleName": "PermissionKit",
+            "name": "Action",
+            "printedName": "Action",
+            "usr": "s:13PermissionKit18CommunicationTopicV6ActionO"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CommunicationHandle",
+                        "printedName": "PermissionKit.CommunicationHandle",
+                        "usr": "s:13PermissionKit19CommunicationHandleV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s13PermissionKit18CommunicationTopicV17PersonInformationV6handleAA0C6HandleVvg",
+                    "moduleName": "PermissionKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV6handleAA0C6HandleVvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CommunicationHandle",
+                        "printedName": "PermissionKit.CommunicationHandle",
+                        "usr": "s:13PermissionKit19CommunicationHandleV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s13PermissionKit18CommunicationTopicV17PersonInformationV6handleAA0C6HandleVvs",
+                    "moduleName": "PermissionKit",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV6handleAA0C6HandleVvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CommunicationHandle",
+                    "printedName": "PermissionKit.CommunicationHandle",
+                    "usr": "s:13PermissionKit19CommunicationHandleV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV17PersonInformationV6handleAA0C6HandleVvp",
+                "moduleName": "PermissionKit",
+                "name": "handle",
+                "printedName": "handle",
+                "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV6handleAA0C6HandleVvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "PersonNameComponents",
+                            "printedName": "Foundation.PersonNameComponents",
+                            "usr": "s:10Foundation20PersonNameComponentsV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Foundation.PersonNameComponents?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s13PermissionKit18CommunicationTopicV17PersonInformationV14nameComponents10Foundation0e4NameH0VSgvg",
+                    "moduleName": "PermissionKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV14nameComponents10Foundation0e4NameH0VSgvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "PersonNameComponents",
+                            "printedName": "Foundation.PersonNameComponents",
+                            "usr": "s:10Foundation20PersonNameComponentsV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Foundation.PersonNameComponents?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s13PermissionKit18CommunicationTopicV17PersonInformationV14nameComponents10Foundation0e4NameH0VSgvs",
+                    "moduleName": "PermissionKit",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV14nameComponents10Foundation0e4NameH0VSgvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PersonNameComponents",
+                        "printedName": "Foundation.PersonNameComponents",
+                        "usr": "s:10Foundation20PersonNameComponentsV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.PersonNameComponents?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "HasInitialValue",
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV17PersonInformationV14nameComponents10Foundation0e4NameH0VSgvp",
+                "moduleName": "PermissionKit",
+                "name": "nameComponents",
+                "printedName": "nameComponents",
+                "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV14nameComponents10Foundation0e4NameH0VSgvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "CGImage",
+                            "printedName": "CoreGraphics.CGImage",
+                            "usr": "c:@T@CGImageRef"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "CoreGraphics.CGImage?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s13PermissionKit18CommunicationTopicV17PersonInformationV11avatarImageSo10CGImageRefaSgvg",
+                    "moduleName": "PermissionKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV11avatarImageSo10CGImageRefaSgvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "CGImage",
+                            "printedName": "CoreGraphics.CGImage",
+                            "usr": "c:@T@CGImageRef"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "CoreGraphics.CGImage?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s13PermissionKit18CommunicationTopicV17PersonInformationV11avatarImageSo10CGImageRefaSgvs",
+                    "moduleName": "PermissionKit",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV11avatarImageSo10CGImageRefaSgvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CGImage",
+                        "printedName": "CoreGraphics.CGImage",
+                        "usr": "c:@T@CGImageRef"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "CoreGraphics.CGImage?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "HasInitialValue",
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV17PersonInformationV11avatarImageSo10CGImageRefaSgvp",
+                "moduleName": "PermissionKit",
+                "name": "avatarImage",
+                "printedName": "avatarImage",
+                "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV11avatarImageSo10CGImageRefaSgvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PersonInformation",
+                    "printedName": "PermissionKit.CommunicationTopic.PersonInformation",
+                    "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CommunicationHandle",
+                    "printedName": "PermissionKit.CommunicationHandle",
+                    "usr": "s:13PermissionKit19CommunicationHandleV"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PersonNameComponents",
+                        "printedName": "Foundation.PersonNameComponents",
+                        "usr": "s:10Foundation20PersonNameComponentsV"
+                      }
+                    ],
+                    "hasDefaultArg": true,
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.PersonNameComponents?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CGImage",
+                        "printedName": "CoreGraphics.CGImage",
+                        "usr": "c:@T@CGImageRef"
+                      }
+                    ],
+                    "hasDefaultArg": true,
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "CoreGraphics.CGImage?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV17PersonInformationV6handle14nameComponents11avatarImageAeA0C6HandleV_10Foundation0e4NameI0VSgSo10CGImageRefaSgtcfc",
+                "moduleName": "PermissionKit",
+                "name": "init",
+                "printedName": "init(handle:nameComponents:avatarImage:)",
+                "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV6handle14nameComponents11avatarImageAeA0C6HandleV_10Foundation0e4NameI0VSgSo10CGImageRefaSgtcfc"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PersonInformation",
+                    "printedName": "PermissionKit.CommunicationTopic.PersonInformation",
+                    "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Decoder",
+                    "printedName": "any Swift.Decoder",
+                    "usr": "s:s7DecoderP"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV17PersonInformationV4fromAEs7Decoder_p_tKcfc",
+                "moduleName": "PermissionKit",
+                "name": "init",
+                "printedName": "init(from:)",
+                "throwing": true,
+                "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV4fromAEs7Decoder_p_tKcfc"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoder",
+                    "printedName": "any Swift.Encoder",
+                    "usr": "s:s7EncoderP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s13PermissionKit18CommunicationTopicV17PersonInformationV6encode2toys7Encoder_p_tKF",
+                "moduleName": "PermissionKit",
+                "name": "encode",
+                "printedName": "encode(to:)",
+                "throwing": true,
+                "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV6encode2toys7Encoder_p_tKF"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSe",
+                "name": "Decodable",
+                "printedName": "Decodable",
+                "usr": "s:Se"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSE",
+                "name": "Encodable",
+                "printedName": "Encodable",
+                "usr": "s:SE"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Struct",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s13PermissionKit18CommunicationTopicV17PersonInformationV",
+            "moduleName": "PermissionKit",
+            "name": "PersonInformation",
+            "printedName": "PersonInformation",
+            "usr": "s:13PermissionKit18CommunicationTopicV17PersonInformationV"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s13PermissionKit13QuestionTopicP",
+            "name": "QuestionTopic",
+            "printedName": "QuestionTopic",
+            "usr": "s:13PermissionKit13QuestionTopicP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s13PermissionKit18CommunicationTopicV",
+        "moduleName": "PermissionKit",
+        "name": "CommunicationTopic",
+        "printedName": "CommunicationTopic",
+        "usr": "s:13PermissionKit18CommunicationTopicV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : PermissionKit.QuestionTopic>",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit13QuestionTopicP2idSSvgZ",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "static": true,
+                "usr": "s:13PermissionKit13QuestionTopicP2idSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit13QuestionTopicP2idSSvpZ",
+            "moduleName": "PermissionKit",
+            "name": "id",
+            "printedName": "id",
+            "protocolReq": true,
+            "static": true,
+            "usr": "s:13PermissionKit13QuestionTopicP2idSSvpZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : Swift.Decodable, Self : Swift.Encodable>",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s13PermissionKit13QuestionTopicP",
+        "moduleName": "PermissionKit",
+        "name": "QuestionTopic",
+        "printedName": "QuestionTopic",
+        "usr": "s:13PermissionKit13QuestionTopicP"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UUID",
+                    "printedName": "Foundation.UUID",
+                    "usr": "s:10Foundation4UUIDV"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Topic where Topic : PermissionKit.QuestionTopic>",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A8QuestionC2id10Foundation4UUIDVvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit0A8QuestionC2id10Foundation4UUIDVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UUID",
+                "printedName": "Foundation.UUID",
+                "usr": "s:10Foundation4UUIDV"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit0A8QuestionC2id10Foundation4UUIDVvp",
+            "moduleName": "PermissionKit",
+            "name": "id",
+            "printedName": "id",
+            "usr": "s:13PermissionKit0A8QuestionC2id10Foundation4UUIDVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Topic"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Topic where Topic : PermissionKit.QuestionTopic>",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A8QuestionC5topicxvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit0A8QuestionC5topicxvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "Topic"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit0A8QuestionC5topicxvp",
+            "moduleName": "PermissionKit",
+            "name": "topic",
+            "printedName": "topic",
+            "usr": "s:13PermissionKit0A8QuestionC5topicxvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PermissionChoice",
+                        "printedName": "PermissionKit.PermissionChoice",
+                        "usr": "s:13PermissionKit0A6ChoiceV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[PermissionKit.PermissionChoice]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Topic where Topic : PermissionKit.QuestionTopic>",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A8QuestionC7choicesSayAA0A6ChoiceVGvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit0A8QuestionC7choicesSayAA0A6ChoiceVGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PermissionChoice",
+                    "printedName": "PermissionKit.PermissionChoice",
+                    "usr": "s:13PermissionKit0A6ChoiceV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[PermissionKit.PermissionChoice]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit0A8QuestionC7choicesSayAA0A6ChoiceVGvp",
+            "moduleName": "PermissionKit",
+            "name": "choices",
+            "printedName": "choices",
+            "usr": "s:13PermissionKit0A8QuestionC7choicesSayAA0A6ChoiceVGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PermissionChoice",
+                    "printedName": "PermissionKit.PermissionChoice",
+                    "usr": "s:13PermissionKit0A6ChoiceV"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Topic where Topic : PermissionKit.QuestionTopic>",
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A8QuestionC13defaultChoiceAA0aE0Vvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit0A8QuestionC13defaultChoiceAA0aE0Vvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PermissionChoice",
+                "printedName": "PermissionKit.PermissionChoice",
+                "usr": "s:13PermissionKit0A6ChoiceV"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit0A8QuestionC13defaultChoiceAA0aE0Vvp",
+            "moduleName": "PermissionKit",
+            "name": "defaultChoice",
+            "printedName": "defaultChoice",
+            "usr": "s:13PermissionKit0A8QuestionC13defaultChoiceAA0aE0Vvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Date",
+                        "printedName": "Foundation.Date",
+                        "usr": "s:10Foundation4DateV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Date?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Topic where Topic : PermissionKit.QuestionTopic>",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A8QuestionC14expirationDate10Foundation0E0VSgvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit0A8QuestionC14expirationDate10Foundation0E0VSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Date",
+                        "printedName": "Foundation.Date",
+                        "usr": "s:10Foundation4DateV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Date?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Topic where Topic : PermissionKit.QuestionTopic>",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A8QuestionC14expirationDate10Foundation0E0VSgvs",
+                "moduleName": "PermissionKit",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:13PermissionKit0A8QuestionC14expirationDate10Foundation0E0VSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Date",
+                    "printedName": "Foundation.Date",
+                    "usr": "s:10Foundation4DateV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Date?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasInitialValue",
+              "Final",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit0A8QuestionC14expirationDate10Foundation0E0VSgvp",
+            "moduleName": "PermissionKit",
+            "name": "expirationDate",
+            "printedName": "expirationDate",
+            "usr": "s:13PermissionKit0A8QuestionC14expirationDate10Foundation0E0VSgvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UUID",
+                "printedName": "Foundation.UUID",
+                "usr": "s:10Foundation4UUIDV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "genericSig": "<Topic where Topic : PermissionKit.QuestionTopic>",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s13PermissionKit0A8QuestionC2IDa",
+            "moduleName": "PermissionKit",
+            "name": "ID",
+            "printedName": "ID",
+            "usr": "s:13PermissionKit0A8QuestionC2IDa"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Topic where Topic : PermissionKit.QuestionTopic>",
+            "kind": "Function",
+            "mangledName": "$s13PermissionKit0A8QuestionC6encode2toys7Encoder_p_tKF",
+            "moduleName": "PermissionKit",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:13PermissionKit0A8QuestionC6encode2toys7Encoder_p_tKF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Topic"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "PermissionQuestion",
+                "printedName": "PermissionKit.PermissionQuestion<Topic>",
+                "usr": "s:13PermissionKit0A8QuestionC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              }
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Topic where Topic : PermissionKit.QuestionTopic>",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s13PermissionKit0A8QuestionC4fromACyxGs7Decoder_p_tKcfc",
+            "moduleName": "PermissionKit",
+            "name": "init",
+            "printedName": "init(from:)",
+            "throwing": true,
+            "usr": "s:13PermissionKit0A8QuestionC4fromACyxGs7Decoder_p_tKcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Topic"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "PermissionQuestion",
+                "printedName": "PermissionKit.PermissionQuestion<Topic>",
+                "usr": "s:13PermissionKit0A8QuestionC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "Topic"
+              }
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Topic where Topic == PermissionKit.CommunicationTopic>",
+            "init_kind": "Convenience",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$s13PermissionKit0A8QuestionCA2A18CommunicationTopicVRszrlE013communicationE0ACyAEGAE_tcfc",
+            "moduleName": "PermissionKit",
+            "name": "init",
+            "printedName": "init(communicationTopic:)",
+            "usr": "s:13PermissionKit0A8QuestionCA2A18CommunicationTopicVRszrlE013communicationE0ACyAEGAE_tcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Topic"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "PermissionQuestion",
+                "printedName": "PermissionKit.PermissionQuestion<Topic>",
+                "usr": "s:13PermissionKit0A8QuestionC"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CommunicationHandle",
+                    "printedName": "PermissionKit.CommunicationHandle",
+                    "usr": "s:13PermissionKit19CommunicationHandleV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[PermissionKit.CommunicationHandle]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Topic where Topic == PermissionKit.CommunicationTopic>",
+            "init_kind": "Convenience",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$s13PermissionKit0A8QuestionCA2A18CommunicationTopicVRszrlE7handlesACyAEGSayAA0D6HandleVG_tcfc",
+            "moduleName": "PermissionKit",
+            "name": "init",
+            "printedName": "init(handles:)",
+            "usr": "s:13PermissionKit0A8QuestionCA2A18CommunicationTopicVRszrlE7handlesACyAEGSayAA0D6HandleVG_tcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Topic"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "PermissionQuestion",
+                "printedName": "PermissionKit.PermissionQuestion<Topic>",
+                "usr": "s:13PermissionKit0A8QuestionC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CommunicationHandle",
+                "printedName": "PermissionKit.CommunicationHandle",
+                "usr": "s:13PermissionKit19CommunicationHandleV"
+              }
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Topic where Topic == PermissionKit.CommunicationTopic>",
+            "init_kind": "Convenience",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$s13PermissionKit0A8QuestionCA2A18CommunicationTopicVRszrlE6handleACyAEGAA0D6HandleV_tcfc",
+            "moduleName": "PermissionKit",
+            "name": "init",
+            "printedName": "init(handle:)",
+            "usr": "s:13PermissionKit0A8QuestionCA2A18CommunicationTopicVRszrlE6handleACyAEGAA0D6HandleV_tcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UUID",
+                        "printedName": "Foundation.UUID",
+                        "usr": "s:10Foundation4UUIDV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ID",
+                    "printedName": "PermissionKit.PermissionQuestion<Topic>.ID"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "ID",
+                "printedName": "ID"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss12IdentifiableP",
+            "name": "Identifiable",
+            "printedName": "Identifiable",
+            "usr": "s:s12IdentifiableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Final",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "genericSig": "<Topic where Topic : PermissionKit.QuestionTopic>",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s13PermissionKit0A8QuestionC",
+        "moduleName": "PermissionKit",
+        "name": "PermissionQuestion",
+        "printedName": "PermissionQuestion",
+        "usr": "s:13PermissionKit0A8QuestionC"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GenericTypeParam",
+                        "printedName": "Topic"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "PermissionQuestion",
+                    "printedName": "PermissionKit.PermissionQuestion<Topic>",
+                    "usr": "s:13PermissionKit0A8QuestionC"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Topic where Topic : PermissionKit.QuestionTopic>",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A8ResponseV8questionAA0A8QuestionCyxGvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit0A8ResponseV8questionAA0A8QuestionCyxGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Topic"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "PermissionQuestion",
+                "printedName": "PermissionKit.PermissionQuestion<Topic>",
+                "usr": "s:13PermissionKit0A8QuestionC"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit0A8ResponseV8questionAA0A8QuestionCyxGvp",
+            "moduleName": "PermissionKit",
+            "name": "question",
+            "printedName": "question",
+            "usr": "s:13PermissionKit0A8ResponseV8questionAA0A8QuestionCyxGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PermissionChoice",
+                    "printedName": "PermissionKit.PermissionChoice",
+                    "usr": "s:13PermissionKit0A6ChoiceV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Topic where Topic : PermissionKit.QuestionTopic>",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s13PermissionKit0A8ResponseV6choiceAA0A6ChoiceVvg",
+                "moduleName": "PermissionKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:13PermissionKit0A8ResponseV6choiceAA0A6ChoiceVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PermissionChoice",
+                "printedName": "PermissionKit.PermissionChoice",
+                "usr": "s:13PermissionKit0A6ChoiceV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s13PermissionKit0A8ResponseV6choiceAA0A6ChoiceVvp",
+            "moduleName": "PermissionKit",
+            "name": "choice",
+            "printedName": "choice",
+            "usr": "s:13PermissionKit0A8ResponseV6choiceAA0A6ChoiceVvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "genericSig": "<Topic where Topic : PermissionKit.QuestionTopic>",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s13PermissionKit0A8ResponseV",
+        "moduleName": "PermissionKit",
+        "name": "PermissionResponse",
+        "printedName": "PermissionResponse",
+        "usr": "s:13PermissionKit0A8ResponseV"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "PermissionKit",
+    "printedName": "PermissionKit"
+  }
+}

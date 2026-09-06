@@ -1,0 +1,865 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "TranslationUIProvider",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "TranslationUIProvider",
+        "name": "ExtensionKit",
+        "printedName": "ExtensionKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "TranslationUIProvider",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "TranslationUIProvider",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "TranslationUIProvider",
+        "name": "TranslationUIProvider",
+        "printedName": "TranslationUIProvider"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "TranslationUIProvider",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "TranslationUIProvider",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "TranslationUIProvider",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "TranslationUIProvider",
+        "name": "os.log",
+        "printedName": "os.log"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "TranslationUIProvider",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s12ExtensionKit03AppA5SceneP",
+            "name": "AppExtensionScene",
+            "printedName": "AppExtensionScene",
+            "usr": "s:12ExtensionKit03AppA5SceneP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionKit.AppExtensionScene>",
+        "intro_iOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s21TranslationUIProvider0aB14ExtensionSceneP",
+        "moduleName": "TranslationUIProvider",
+        "name": "TranslationUIProviderExtensionScene",
+        "printedName": "TranslationUIProviderExtensionScene",
+        "usr": "s:21TranslationUIProvider0aB14ExtensionSceneP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Content"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "TranslationUIProviderSelectedTextScene",
+                "printedName": "TranslationUIProvider.TranslationUIProviderSelectedTextScene<Content>",
+                "usr": "s:21TranslationUIProvider0aB17SelectedTextSceneV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Content"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "TranslationUIProviderContext",
+                    "printedName": "any TranslationUIProvider.TranslationUIProviderContext",
+                    "usr": "s:21TranslationUIProvider0aB7ContextP"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(any TranslationUIProvider.TranslationUIProviderContext) -> Content"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Content where Content : SwiftUI.View>",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s21TranslationUIProvider0aB17SelectedTextSceneV7contentACyxGxAA0aB7Context_pc_tcfc",
+            "moduleName": "TranslationUIProvider",
+            "name": "init",
+            "printedName": "init(content:)",
+            "usr": "s:21TranslationUIProvider0aB17SelectedTextSceneV7contentACyxGxAA0aB7Context_pc_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AppExtensionScene",
+                        "printedName": "ExtensionKit.AppExtensionScene",
+                        "usr": "s:12ExtensionKit03AppA5SceneP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some ExtensionKit.AppExtensionScene"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Content where Content : SwiftUI.View>",
+                "kind": "Accessor",
+                "mangledName": "$s21TranslationUIProvider0aB17SelectedTextSceneV4bodyQrvg",
+                "moduleName": "TranslationUIProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:21TranslationUIProvider0aB17SelectedTextSceneV4bodyQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s21TranslationUIProvider0aB17SelectedTextSceneV4bodyQrvp",
+            "moduleName": "TranslationUIProvider",
+            "name": "body",
+            "printedName": "body",
+            "usr": "s:21TranslationUIProvider0aB17SelectedTextSceneV4bodyQrvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "genericSig": "<Content where Content : SwiftUI.View>",
+            "intro_iOS": "18.4",
+            "kind": "TypeAlias",
+            "mangledName": "$s21TranslationUIProvider0aB17SelectedTextSceneV4Bodya",
+            "moduleName": "TranslationUIProvider",
+            "name": "Body",
+            "printedName": "Body",
+            "usr": "s:21TranslationUIProvider0aB17SelectedTextSceneV4Bodya"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s21TranslationUIProvider0aB14ExtensionSceneP",
+            "name": "TranslationUIProviderExtensionScene",
+            "printedName": "TranslationUIProviderExtensionScene",
+            "usr": "s:21TranslationUIProvider0aB14ExtensionSceneP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AppExtensionScene",
+                            "printedName": "ExtensionKit.AppExtensionScene",
+                            "usr": "s:12ExtensionKit03AppA5SceneP"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "OpaqueTypeArchetype",
+                        "printedName": "some ExtensionKit.AppExtensionScene"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "TranslationUIProvider.TranslationUIProviderSelectedTextScene<Content>.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s12ExtensionKit03AppA5SceneP",
+            "name": "AppExtensionScene",
+            "printedName": "AppExtensionScene",
+            "usr": "s:12ExtensionKit03AppA5SceneP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "genericSig": "<Content where Content : SwiftUI.View>",
+        "intro_iOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s21TranslationUIProvider0aB17SelectedTextSceneV",
+        "moduleName": "TranslationUIProvider",
+        "name": "TranslationUIProviderSelectedTextScene",
+        "printedName": "TranslationUIProviderSelectedTextScene",
+        "usr": "s:21TranslationUIProvider0aB17SelectedTextSceneV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AttributedString",
+                        "printedName": "Foundation.AttributedString",
+                        "usr": "s:10Foundation16AttributedStringV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.AttributedString?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : TranslationUIProvider.TranslationUIProviderContext>",
+                "kind": "Accessor",
+                "mangledName": "$s21TranslationUIProvider0aB7ContextP9inputText10Foundation16AttributedStringVSgvg",
+                "moduleName": "TranslationUIProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:21TranslationUIProvider0aB7ContextP9inputText10Foundation16AttributedStringVSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AttributedString",
+                    "printedName": "Foundation.AttributedString",
+                    "usr": "s:10Foundation16AttributedStringV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.AttributedString?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s21TranslationUIProvider0aB7ContextP9inputText10Foundation16AttributedStringVSgvp",
+            "moduleName": "TranslationUIProvider",
+            "name": "inputText",
+            "printedName": "inputText",
+            "protocolReq": true,
+            "usr": "s:21TranslationUIProvider0aB7ContextP9inputText10Foundation16AttributedStringVSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : TranslationUIProvider.TranslationUIProviderContext>",
+                "kind": "Accessor",
+                "mangledName": "$s21TranslationUIProvider0aB7ContextP17allowsReplacementSbvg",
+                "moduleName": "TranslationUIProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:21TranslationUIProvider0aB7ContextP17allowsReplacementSbvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s21TranslationUIProvider0aB7ContextP17allowsReplacementSbvp",
+            "moduleName": "TranslationUIProvider",
+            "name": "allowsReplacement",
+            "printedName": "allowsReplacement",
+            "protocolReq": true,
+            "usr": "s:21TranslationUIProvider0aB7ContextP17allowsReplacementSbvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AttributedString",
+                    "printedName": "Foundation.AttributedString",
+                    "usr": "s:10Foundation16AttributedStringV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.AttributedString?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : TranslationUIProvider.TranslationUIProviderContext>",
+            "kind": "Function",
+            "mangledName": "$s21TranslationUIProvider0aB7ContextP6finish11translationy10Foundation16AttributedStringVSg_tF",
+            "moduleName": "TranslationUIProvider",
+            "name": "finish",
+            "printedName": "finish(translation:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:21TranslationUIProvider0aB7ContextP6finish11translationy10Foundation16AttributedStringVSg_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : TranslationUIProvider.TranslationUIProviderContext>",
+            "kind": "Function",
+            "mangledName": "$s21TranslationUIProvider0aB7ContextP11expandSheetyyF",
+            "moduleName": "TranslationUIProvider",
+            "name": "expandSheet",
+            "printedName": "expandSheet()",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:21TranslationUIProvider0aB7ContextP11expandSheetyyF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s11Observation10ObservableP",
+            "name": "Observable",
+            "printedName": "Observable",
+            "usr": "s:11Observation10ObservableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : Observation.Observable>",
+        "intro_iOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s21TranslationUIProvider0aB7ContextP",
+        "moduleName": "TranslationUIProvider",
+        "name": "TranslationUIProviderContext",
+        "printedName": "TranslationUIProviderContext",
+        "usr": "s:21TranslationUIProvider0aB7ContextP"
+      },
+      {
+        "children": [
+          {
+            "declKind": "AssociatedType",
+            "kind": "AssociatedType",
+            "mangledName": "$s21TranslationUIProvider0aB9ExtensionP4BodyQa",
+            "moduleName": "TranslationUIProvider",
+            "name": "Body",
+            "printedName": "Body",
+            "protocolReq": true,
+            "usr": "s:21TranslationUIProvider0aB9ExtensionP4BodyQa"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DependentMember",
+                    "printedName": "Self.Body"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : TranslationUIProvider.TranslationUIProviderExtension>",
+                "kind": "Accessor",
+                "mangledName": "$s21TranslationUIProvider0aB9ExtensionP4body4BodyQzvg",
+                "moduleName": "TranslationUIProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:21TranslationUIProvider0aB9ExtensionP4body4BodyQzvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DependentMember",
+                "printedName": "Self.Body"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s21TranslationUIProvider0aB9ExtensionP4body4BodyQzvp",
+            "moduleName": "TranslationUIProvider",
+            "name": "body",
+            "printedName": "body",
+            "protocolReq": true,
+            "usr": "s:21TranslationUIProvider0aB9ExtensionP4body4BodyQzvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionSceneConfiguration",
+                    "printedName": "ExtensionKit.AppExtensionSceneConfiguration",
+                    "usr": "s:12ExtensionKit03AppA18SceneConfigurationV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : TranslationUIProvider.TranslationUIProviderExtension>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s21TranslationUIProvider0aB9ExtensionPAAE13configuration0C3Kit03AppC18SceneConfigurationVvg",
+                "moduleName": "TranslationUIProvider",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:21TranslationUIProvider0aB9ExtensionPAAE13configuration0C3Kit03AppC18SceneConfigurationVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AppExtensionSceneConfiguration",
+                "printedName": "ExtensionKit.AppExtensionSceneConfiguration",
+                "usr": "s:12ExtensionKit03AppA18SceneConfigurationV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s21TranslationUIProvider0aB9ExtensionPAAE13configuration0C3Kit03AppC18SceneConfigurationVvp",
+            "moduleName": "TranslationUIProvider",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:21TranslationUIProvider0aB9ExtensionPAAE13configuration0C3Kit03AppC18SceneConfigurationVvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA0P",
+            "name": "AppExtension",
+            "printedName": "AppExtension",
+            "usr": "s:19ExtensionFoundation03AppA0P"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionFoundation.AppExtension, Self.Body : TranslationUIProvider.TranslationUIProviderExtensionScene>",
+        "intro_iOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s21TranslationUIProvider0aB9ExtensionP",
+        "moduleName": "TranslationUIProvider",
+        "name": "TranslationUIProviderExtension",
+        "printedName": "TranslationUIProviderExtension",
+        "usr": "s:21TranslationUIProvider0aB9ExtensionP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "TranslationProviderUIExtensionConfiguration",
+                "printedName": "TranslationUIProvider.TranslationProviderUIExtensionConfiguration",
+                "usr": "s:21TranslationUIProvider0A32ProviderUIExtensionConfigurationV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "TranslationUIProviderExtension",
+                "printedName": "any TranslationUIProvider.TranslationUIProviderExtension",
+                "usr": "s:21TranslationUIProvider0aB9ExtensionP"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s21TranslationUIProvider0A32ProviderUIExtensionConfigurationVyAcA0aB9Extension_pcfc",
+            "moduleName": "TranslationUIProvider",
+            "name": "init",
+            "printedName": "init(_:)",
+            "usr": "s:21TranslationUIProvider0A32ProviderUIExtensionConfigurationVyAcA0aB9Extension_pcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA13ConfigurationP",
+            "name": "AppExtensionConfiguration",
+            "printedName": "AppExtensionConfiguration",
+            "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s21TranslationUIProvider0A32ProviderUIExtensionConfigurationV",
+        "moduleName": "TranslationUIProvider",
+        "name": "TranslationProviderUIExtensionConfiguration",
+        "printedName": "TranslationProviderUIExtensionConfiguration",
+        "usr": "s:21TranslationUIProvider0A32ProviderUIExtensionConfigurationV"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "TranslationUIProvider",
+    "printedName": "TranslationUIProvider"
+  }
+}

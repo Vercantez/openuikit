@@ -1,0 +1,181 @@
+precise	kind	title	path	declaration
+c:@M@PaperKit@objc(cs)MarkupEditViewController	swift.class	MarkupEditViewController	MarkupEditViewController	@MainActor @objc @preconcurrency class MarkupEditViewController
+c:@M@PaperKit@objc(cs)MarkupEditViewController(im)viewDidLoad	swift.method	viewDidLoad()	MarkupEditViewController.viewDidLoad()	@MainActor @preconcurrency override dynamic func viewDidLoad()
+c:@M@PaperKit@objc(cs)PaperMarkupViewController	swift.class	PaperMarkupViewController	PaperMarkupViewController	@MainActor @objc @preconcurrency class PaperMarkupViewController
+c:@M@PaperKit@objc(cs)PaperMarkupViewController(im)toolPickerIsRulerActiveDidChange:	swift.method	toolPickerIsRulerActiveDidChange(_:)	PaperMarkupViewController.toolPickerIsRulerActiveDidChange(_:)	@MainActor @preconcurrency func toolPickerIsRulerActiveDidChange(_ toolPicker: PKToolPicker)
+c:@M@PaperKit@objc(cs)PaperMarkupViewController(im)toolPickerSelectedToolItemDidChange:	swift.method	toolPickerSelectedToolItemDidChange(_:)	PaperMarkupViewController.toolPickerSelectedToolItemDidChange(_:)	@MainActor @preconcurrency func toolPickerSelectedToolItemDidChange(_ toolPicker: PKToolPicker)
+c:@M@PaperKit@objc(cs)PaperMarkupViewController(im)viewDidLoad	swift.method	viewDidLoad()	PaperMarkupViewController.viewDidLoad()	@MainActor @preconcurrency override dynamic func viewDidLoad()
+c:@M@PaperKit@objc(cs)PaperMarkupViewController(py)canBecomeFirstResponder	swift.property	canBecomeFirstResponder	PaperMarkupViewController.canBecomeFirstResponder	@MainActor @preconcurrency override dynamic var canBecomeFirstResponder: Bool { get }
+c:@M@PaperKit@objc(cs)PaperMarkupViewController(py)undoManager	swift.property	undoManager	PaperMarkupViewController.undoManager	@MainActor @preconcurrency override dynamic var undoManager: UndoManager? { get }
+s:22UniformTypeIdentifiers6UTTypeV8PaperKitE8paperkitACvpZ	swift.type.property	paperkit	UTType.paperkit	static let paperkit: UTType
+s:8PaperKit0A20MarkupViewControllerC07contentD0So6UIViewCSgvp	swift.property	contentView	PaperMarkupViewController.contentView	@MainActor @preconcurrency var contentView: UIView? { get set }
+s:8PaperKit0A20MarkupViewControllerC08selectedC0AA0aC0Vvp	swift.property	selectedMarkup	PaperMarkupViewController.selectedMarkup	@MainActor @preconcurrency var selectedMarkup: PaperMarkup { get set }
+s:8PaperKit0A20MarkupViewControllerC10isEditableSbvp	swift.property	isEditable	PaperMarkupViewController.isEditable	@MainActor @preconcurrency var isEditable: Bool { get set }
+s:8PaperKit0A20MarkupViewControllerC11drawingTool06PencilB06PKTool_pvp	swift.property	drawingTool	PaperMarkupViewController.drawingTool	@MainActor @preconcurrency var drawingTool: any PKTool { get set }
+s:8PaperKit0A20MarkupViewControllerC13isRulerActiveSbvp	swift.property	isRulerActive	PaperMarkupViewController.isRulerActive	@MainActor @preconcurrency var isRulerActive: Bool { get set }
+s:8PaperKit0A20MarkupViewControllerC15directTouchModeAC0gH0Ovp	swift.property	directTouchMode	PaperMarkupViewController.directTouchMode	@MainActor @preconcurrency var directTouchMode: PaperMarkupViewController.TouchMode { get set }
+s:8PaperKit0A20MarkupViewControllerC19contentVisibleFrameSo6CGRectVvp	swift.property	contentVisibleFrame	PaperMarkupViewController.contentVisibleFrame	@MainActor @preconcurrency var contentVisibleFrame: CGRect { get set }
+s:8PaperKit0A20MarkupViewControllerC19supportedFeatureSetAA0gH0Vvp	swift.property	supportedFeatureSet	PaperMarkupViewController.supportedFeatureSet	@MainActor @preconcurrency var supportedFeatureSet: FeatureSet { get }
+s:8PaperKit0A20MarkupViewControllerC22setContentVisibleFrame_8animatedySo6CGRectV_SbtF	swift.method	setContentVisibleFrame(_:animated:)	PaperMarkupViewController.setContentVisibleFrame(_:animated:)	@MainActor @preconcurrency func setContentVisibleFrame(_ rect: CGRect, animated: Bool)
+s:8PaperKit0A20MarkupViewControllerC24indirectPointerTouchModeAC0hI0Ovp	swift.property	indirectPointerTouchMode	PaperMarkupViewController.indirectPointerTouchMode	@MainActor @preconcurrency var indirectPointerTouchMode: PaperMarkupViewController.TouchMode { get set }
+s:8PaperKit0A20MarkupViewControllerC26suggestedFrameForInserting09contentInG0So6CGRectVAG_tF	swift.method	suggestedFrameForInserting(contentInFrame:)	PaperMarkupViewController.suggestedFrameForInserting(contentInFrame:)	@MainActor @preconcurrency func suggestedFrameForInserting(contentInFrame frame: CGRect) -> CGRect
+s:8PaperKit0A20MarkupViewControllerC28showsVerticalScrollIndicatorSbvp	swift.property	showsVerticalScrollIndicator	PaperMarkupViewController.showsVerticalScrollIndicator	@MainActor @preconcurrency var showsVerticalScrollIndicator: Bool { get set }
+s:8PaperKit0A20MarkupViewControllerC29directTouchAutomaticallyDrawsSbvp	swift.property	directTouchAutomaticallyDraws	PaperMarkupViewController.directTouchAutomaticallyDraws	@MainActor @preconcurrency var directTouchAutomaticallyDraws: Bool { get set }
+s:8PaperKit0A20MarkupViewControllerC30showsHorizontalScrollIndicatorSbvp	swift.property	showsHorizontalScrollIndicator	PaperMarkupViewController.showsHorizontalScrollIndicator	@MainActor @preconcurrency var showsHorizontalScrollIndicator: Bool { get set }
+s:8PaperKit0A20MarkupViewControllerC6markup19supportedFeatureSetAcA0aC0VSg_AA0hI0Vtcfc	swift.init	init(markup:supportedFeatureSet:)	PaperMarkupViewController.init(markup:supportedFeatureSet:)	@MainActor @preconcurrency init(markup: PaperMarkup? = nil, supportedFeatureSet: FeatureSet)
+s:8PaperKit0A20MarkupViewControllerC6markupAA0aC0VSgvp	swift.property	markup	PaperMarkupViewController.markup	@MainActor @preconcurrency var markup: PaperMarkup? { get set }
+s:8PaperKit0A20MarkupViewControllerC8DelegateP	swift.protocol	PaperMarkupViewController.Delegate	PaperMarkupViewController.Delegate	protocol Delegate : AnyObject
+s:8PaperKit0A20MarkupViewControllerC8DelegateP05papercdE15DidBeginDrawingyyACF	swift.method	paperMarkupViewControllerDidBeginDrawing(_:)	PaperMarkupViewController.Delegate.paperMarkupViewControllerDidBeginDrawing(_:)	func paperMarkupViewControllerDidBeginDrawing(_ paperMarkupViewController: PaperMarkupViewController)
+s:8PaperKit0A20MarkupViewControllerC8DelegateP05papercdE18DidChangeSelectionyyACF	swift.method	paperMarkupViewControllerDidChangeSelection(_:)	PaperMarkupViewController.Delegate.paperMarkupViewControllerDidChangeSelection(_:)	func paperMarkupViewControllerDidChangeSelection(_ paperMarkupViewController: PaperMarkupViewController)
+s:8PaperKit0A20MarkupViewControllerC8DelegateP05papercdE28DidChangeContentVisibleFrameyyACF	swift.method	paperMarkupViewControllerDidChangeContentVisibleFrame(_:)	PaperMarkupViewController.Delegate.paperMarkupViewControllerDidChangeContentVisibleFrame(_:)	func paperMarkupViewControllerDidChangeContentVisibleFrame(_ paperMarkupViewController: PaperMarkupViewController)
+s:8PaperKit0A20MarkupViewControllerC8DelegateP05papercde9DidChangeC0yyACF	swift.method	paperMarkupViewControllerDidChangeMarkup(_:)	PaperMarkupViewController.Delegate.paperMarkupViewControllerDidChangeMarkup(_:)	func paperMarkupViewControllerDidChangeMarkup(_ paperMarkupViewController: PaperMarkupViewController)
+s:8PaperKit0A20MarkupViewControllerC8delegateAC8Delegate_pSgvp	swift.property	delegate	PaperMarkupViewController.delegate	@MainActor @preconcurrency weak var delegate: (any PaperMarkupViewController.Delegate)? { get set }
+s:8PaperKit0A20MarkupViewControllerC9TouchModeO	swift.enum	PaperMarkupViewController.TouchMode	PaperMarkupViewController.TouchMode	enum TouchMode
+s:8PaperKit0A20MarkupViewControllerC9TouchModeO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	PaperMarkupViewController.TouchMode.==(_:_:)	static func == (a: PaperMarkupViewController.TouchMode, b: PaperMarkupViewController.TouchMode) -> Bool
+s:8PaperKit0A20MarkupViewControllerC9TouchModeO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	PaperMarkupViewController.TouchMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:8PaperKit0A20MarkupViewControllerC9TouchModeO7drawingyA2EmF	swift.enum.case	PaperMarkupViewController.TouchMode.drawing	PaperMarkupViewController.TouchMode.drawing	case drawing
+s:8PaperKit0A20MarkupViewControllerC9TouchModeO9hashValueSivp	swift.property	hashValue	PaperMarkupViewController.TouchMode.hashValue	var hashValue: Int { get }
+s:8PaperKit0A20MarkupViewControllerC9TouchModeO9selectionyA2EmF	swift.enum.case	PaperMarkupViewController.TouchMode.selection	PaperMarkupViewController.TouchMode.selection	case selection
+s:8PaperKit0A20MarkupViewControllerC9zoomRangeSNy14CoreFoundation7CGFloatVGvp	swift.property	zoomRange	PaperMarkupViewController.zoomRange	@MainActor @preconcurrency var zoomRange: ClosedRange<CGFloat> { get set }
+s:8PaperKit0A6MarkupV	swift.struct	PaperMarkup	PaperMarkup	struct PaperMarkup
+s:8PaperKit0A6MarkupV10featureSetAA07FeatureE0Vvp	swift.property	featureSet	PaperMarkup.featureSet	var featureSet: FeatureSet { get }
+s:8PaperKit0A6MarkupV13insertNewLine13configuration4from2to11startMarker03endK0yAA18ShapeConfigurationV_So7CGPointVAMS2btF	swift.method	insertNewLine(configuration:from:to:startMarker:endMarker:)	PaperMarkup.insertNewLine(configuration:from:to:startMarker:endMarker:)	mutating func insertNewLine(configuration: ShapeConfiguration, from start: CGPoint, to end: CGPoint, startMarker lineStartMarker: Bool = false, endMarker lineEndMarker: Bool = false)
+s:8PaperKit0A6MarkupV14insertNewImage_5frame8rotationySo10CGImageRefa_So6CGRectV14CoreFoundation7CGFloatVtF	swift.method	insertNewImage(_:frame:rotation:)	PaperMarkup.insertNewImage(_:frame:rotation:)	mutating func insertNewImage(_ image: CGImage, frame: CGRect, rotation: CGFloat = 0)
+s:8PaperKit0A6MarkupV14insertNewShape13configuration5frame8rotationyAA0F13ConfigurationV_So6CGRectV14CoreFoundation7CGFloatVtF	swift.method	insertNewShape(configuration:frame:rotation:)	PaperMarkup.insertNewShape(configuration:frame:rotation:)	mutating func insertNewShape(configuration: ShapeConfiguration, frame: CGRect, rotation: CGFloat = 0)
+s:8PaperKit0A6MarkupV16indexableContentSSSgvp	swift.property	indexableContent	PaperMarkup.indexableContent	var indexableContent: String? { get async }
+s:8PaperKit0A6MarkupV16insertNewTextbox14attributedText5frame8rotationy10Foundation16AttributedStringV_So6CGRectV04CoreK07CGFloatVtF	swift.method	insertNewTextbox(attributedText:frame:rotation:)	PaperMarkup.insertNewTextbox(attributedText:frame:rotation:)	mutating func insertNewTextbox(attributedText: AttributedString, frame: CGRect, rotation: CGFloat = 0)
+s:8PaperKit0A6MarkupV16insertNewTextbox14attributedText5frame8rotationySo18NSAttributedStringC_So6CGRectV14CoreFoundation7CGFloatVtF	swift.method	insertNewTextbox(attributedText:frame:rotation:)	PaperMarkup.insertNewTextbox(attributedText:frame:rotation:)	mutating func insertNewTextbox(attributedText: NSAttributedString, frame: CGRect, rotation: CGFloat = 0)
+s:8PaperKit0A6MarkupV16transformContentyySo17CGAffineTransformVF	swift.method	transformContent(_:)	PaperMarkup.transformContent(_:)	mutating func transformContent(_ transform: CGAffineTransform)
+s:8PaperKit0A6MarkupV18dataRepresentation10Foundation4DataVyYaKF	swift.method	dataRepresentation()	PaperMarkup.dataRepresentation()	func dataRepresentation() async throws -> Data
+s:8PaperKit0A6MarkupV18dataRepresentationAC10Foundation4DataV_tKcfc	swift.init	init(dataRepresentation:)	PaperMarkup.init(dataRepresentation:)	init(dataRepresentation: Data) throws
+s:8PaperKit0A6MarkupV19contentsRenderFrameSo6CGRectVvp	swift.property	contentsRenderFrame	PaperMarkup.contentsRenderFrame	var contentsRenderFrame: CGRect { get }
+s:8PaperKit0A6MarkupV24removeContentUnsupported2byyAA10FeatureSetV_tF	swift.method	removeContentUnsupported(by:)	PaperMarkup.removeContentUnsupported(by:)	mutating func removeContentUnsupported(by featureSet: FeatureSet)
+s:8PaperKit0A6MarkupV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	PaperMarkup.==(_:_:)	static func == (lhs: PaperMarkup, rhs: PaperMarkup) -> Bool
+s:8PaperKit0A6MarkupV4draw2in5frame7optionsySo12CGContextRefa_So6CGRectVAA16RenderingOptionsVtYaF	swift.method	draw(in:frame:options:)	PaperMarkup.draw(in:frame:options:)	nonisolated(nonsending) func draw(in context: CGContext, frame: CGRect, options: RenderingOptions = RenderingOptions()) async
+s:8PaperKit0A6MarkupV6append10contentsOfy06PencilB09PKDrawingV_tF	swift.method	append(contentsOf:)	PaperMarkup.append(contentsOf:)	mutating func append(contentsOf drawing: PKDrawing)
+s:8PaperKit0A6MarkupV6append10contentsOfyAC_tF	swift.method	append(contentsOf:)	PaperMarkup.append(contentsOf:)	mutating func append(contentsOf other: PaperMarkup)
+s:8PaperKit0A6MarkupV6boundsACSo6CGRectV_tcfc	swift.init	init(bounds:)	PaperMarkup.init(bounds:)	init(bounds: CGRect)
+s:8PaperKit0A6MarkupV6boundsSo6CGRectVvp	swift.property	bounds	PaperMarkup.bounds	var bounds: CGRect { get set }
+s:8PaperKit10FeatureSetV	swift.struct	FeatureSet	FeatureSet	struct FeatureSet
+s:8PaperKit10FeatureSetV0C0O	swift.enum	FeatureSet.Feature	FeatureSet.Feature	enum Feature
+s:8PaperKit10FeatureSetV0C0O10shapeFillsyA2EmF	swift.enum.case	FeatureSet.Feature.shapeFills	FeatureSet.Feature.shapeFills	case shapeFills
+s:8PaperKit10FeatureSetV0C0O12shapeOpacityyA2EmF	swift.enum.case	FeatureSet.Feature.shapeOpacity	FeatureSet.Feature.shapeOpacity	case shapeOpacity
+s:8PaperKit10FeatureSetV0C0O12shapeStrokesyA2EmF	swift.enum.case	FeatureSet.Feature.shapeStrokes	FeatureSet.Feature.shapeStrokes	case shapeStrokes
+s:8PaperKit10FeatureSetV0C0O2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	FeatureSet.Feature.==(_:_:)	static func == (a: FeatureSet.Feature, b: FeatureSet.Feature) -> Bool
+s:8PaperKit10FeatureSetV0C0O4hash4intoys6HasherVz_tF	swift.method	hash(into:)	FeatureSet.Feature.hash(into:)	func hash(into hasher: inout Hasher)
+s:8PaperKit10FeatureSetV0C0O4textyA2EmF	swift.enum.case	FeatureSet.Feature.text	FeatureSet.Feature.text	case text
+s:8PaperKit10FeatureSetV0C0O5linksyA2EmF	swift.enum.case	FeatureSet.Feature.links	FeatureSet.Feature.links	case links
+s:8PaperKit10FeatureSetV0C0O6imagesyA2EmF	swift.enum.case	FeatureSet.Feature.images	FeatureSet.Feature.images	case images
+s:8PaperKit10FeatureSetV0C0O6loupesyA2EmF	swift.enum.case	FeatureSet.Feature.loupes	FeatureSet.Feature.loupes	case loupes
+s:8PaperKit10FeatureSetV0C0O7drawingyA2EmF	swift.enum.case	FeatureSet.Feature.drawing	FeatureSet.Feature.drawing	case drawing
+s:8PaperKit10FeatureSetV0C0O8AllCasesa	swift.typealias	FeatureSet.Feature.AllCases	FeatureSet.Feature.AllCases	typealias AllCases = [FeatureSet.Feature]
+s:8PaperKit10FeatureSetV0C0O8allCasesSayAEGvpZ	swift.type.property	allCases	FeatureSet.Feature.allCases	nonisolated static var allCases: [FeatureSet.Feature] { get }
+s:8PaperKit10FeatureSetV0C0O8stickersyA2EmF	swift.enum.case	FeatureSet.Feature.stickers	FeatureSet.Feature.stickers	case stickers
+s:8PaperKit10FeatureSetV0C0O9hashValueSivp	swift.property	hashValue	FeatureSet.Feature.hashValue	var hashValue: Int { get }
+s:8PaperKit10FeatureSetV14ContentVersionO	swift.enum	FeatureSet.ContentVersion	FeatureSet.ContentVersion	enum ContentVersion
+s:8PaperKit10FeatureSetV14ContentVersionO06pencilbeF0So09PKContentF0Vvp	swift.property	pencilKitContentVersion	FeatureSet.ContentVersion.pencilKitContentVersion	var pencilKitContentVersion: PKContentVersion { get }
+s:8PaperKit10FeatureSetV14ContentVersionO6latestAEvpZ	swift.type.property	latest	FeatureSet.ContentVersion.latest	static var latest: FeatureSet.ContentVersion { get }
+s:8PaperKit10FeatureSetV14ContentVersionO8RawValuea	swift.typealias	FeatureSet.ContentVersion.RawValue	FeatureSet.ContentVersion.RawValue	typealias RawValue = Int
+s:8PaperKit10FeatureSetV14ContentVersionO8rawValueAESgSi_tcfc	swift.init	init(rawValue:)	FeatureSet.ContentVersion.init(rawValue:)	init?(rawValue: Int)
+s:8PaperKit10FeatureSetV14ContentVersionO8rawValueSivp	swift.property	rawValue	FeatureSet.ContentVersion.rawValue	var rawValue: Int { get }
+s:8PaperKit10FeatureSetV14ContentVersionO8version1yA2EmF	swift.enum.case	FeatureSet.ContentVersion.version1	FeatureSet.ContentVersion.version1	case version1
+s:8PaperKit10FeatureSetV14contentVersionAC07ContentF0Ovp	swift.property	contentVersion	FeatureSet.contentVersion	var contentVersion: FeatureSet.ContentVersion
+s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.struct	FeatureSet.LineMarkerPositions	FeatureSet.LineMarkerPositions	struct LineMarkerPositions
+s:8PaperKit10FeatureSetV19LineMarkerPositionsV19ArrayLiteralElementa	swift.typealias	FeatureSet.LineMarkerPositions.ArrayLiteralElement	FeatureSet.LineMarkerPositions.ArrayLiteralElement	typealias ArrayLiteralElement = FeatureSet.LineMarkerPositions
+s:8PaperKit10FeatureSetV19LineMarkerPositionsV3allAEvpZ	swift.type.property	all	FeatureSet.LineMarkerPositions.all	static let all: FeatureSet.LineMarkerPositions
+s:8PaperKit10FeatureSetV19LineMarkerPositionsV5plainAEvpZ	swift.type.property	plain	FeatureSet.LineMarkerPositions.plain	static let plain: FeatureSet.LineMarkerPositions
+s:8PaperKit10FeatureSetV19LineMarkerPositionsV6doubleAEvpZ	swift.type.property	double	FeatureSet.LineMarkerPositions.double	static let double: FeatureSet.LineMarkerPositions
+s:8PaperKit10FeatureSetV19LineMarkerPositionsV6singleAEvpZ	swift.type.property	single	FeatureSet.LineMarkerPositions.single	static let single: FeatureSet.LineMarkerPositions
+s:8PaperKit10FeatureSetV19LineMarkerPositionsV7Elementa	swift.typealias	FeatureSet.LineMarkerPositions.Element	FeatureSet.LineMarkerPositions.Element	typealias Element = FeatureSet.LineMarkerPositions
+s:8PaperKit10FeatureSetV19LineMarkerPositionsV8RawValuea	swift.typealias	FeatureSet.LineMarkerPositions.RawValue	FeatureSet.LineMarkerPositions.RawValue	typealias RawValue = Int
+s:8PaperKit10FeatureSetV19LineMarkerPositionsV8rawValueAESi_tcfc	swift.init	init(rawValue:)	FeatureSet.LineMarkerPositions.init(rawValue:)	init(rawValue: Int)
+s:8PaperKit10FeatureSetV19LineMarkerPositionsV8rawValueSivp	swift.property	rawValue	FeatureSet.LineMarkerPositions.rawValue	let rawValue: Int
+s:8PaperKit10FeatureSetV19lineMarkerPositionsAC04LinefG0Vvp	swift.property	lineMarkerPositions	FeatureSet.lineMarkerPositions	var lineMarkerPositions: FeatureSet.LineMarkerPositions
+s:8PaperKit10FeatureSetV26colorMaximumLinearExposure14CoreFoundation7CGFloatVvp	swift.property	colorMaximumLinearExposure	FeatureSet.colorMaximumLinearExposure	var colorMaximumLinearExposure: CGFloat
+s:8PaperKit10FeatureSetV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	FeatureSet.==(_:_:)	static func == (a: FeatureSet, b: FeatureSet) -> Bool
+s:8PaperKit10FeatureSetV4inksShy06PencilB012PKInkingToolV7InkTypeOGvp	swift.property	inks	FeatureSet.inks	var inks: Set<PKInkingTool.InkType>
+s:8PaperKit10FeatureSetV5emptyACvpZ	swift.type.property	empty	FeatureSet.empty	static var empty: FeatureSet { get }
+s:8PaperKit10FeatureSetV6insertyyAC0C0OF	swift.method	insert(_:)	FeatureSet.insert(_:)	mutating func insert(_ newFeature: FeatureSet.Feature)
+s:8PaperKit10FeatureSetV6latestACvpZ	swift.type.property	latest	FeatureSet.latest	static var latest: FeatureSet { get }
+s:8PaperKit10FeatureSetV6removeyyAC0C0OF	swift.method	remove(_:)	FeatureSet.remove(_:)	mutating func remove(_ feature: FeatureSet.Feature)
+s:8PaperKit10FeatureSetV6shapesShyAA18ShapeConfigurationV0F0OGvp	swift.property	shapes	FeatureSet.shapes	var shapes: Set<ShapeConfiguration.Shape>
+s:8PaperKit10FeatureSetV8containsySbAC0C0OF	swift.method	contains(_:)	FeatureSet.contains(_:)	func contains(_ feature: FeatureSet.Feature) -> Bool
+s:8PaperKit10FeatureSetV8featuresShyAC0C0OGvp	swift.property	features	FeatureSet.features	var features: Set<FeatureSet.Feature>
+s:8PaperKit10FeatureSetV8isSubset2ofSbAC_tF	swift.method	isSubset(of:)	FeatureSet.isSubset(of:)	func isSubset(of other: FeatureSet) -> Bool
+s:8PaperKit10FeatureSetV8version1ACvpZ	swift.type.property	version1	FeatureSet.version1	static var version1: FeatureSet { get }
+s:8PaperKit11MarkupErrorO	swift.enum	MarkupError	MarkupError	enum MarkupError
+s:8PaperKit11MarkupErrorO13malformedDatayA2CmF	swift.enum.case	MarkupError.malformedData	MarkupError.malformedData	case malformedData
+s:8PaperKit11MarkupErrorO15incorrectFormatyA2CmF	swift.enum.case	MarkupError.incorrectFormat	MarkupError.incorrectFormat	case incorrectFormat
+s:8PaperKit11MarkupErrorO24incompatibleFormatTooNewyA2CmF	swift.enum.case	MarkupError.incompatibleFormatTooNew	MarkupError.incompatibleFormatTooNew	case incompatibleFormatTooNew
+s:8PaperKit11MarkupErrorO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	MarkupError.==(_:_:)	static func == (a: MarkupError, b: MarkupError) -> Bool
+s:8PaperKit11MarkupErrorO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	MarkupError.hash(into:)	func hash(into hasher: inout Hasher)
+s:8PaperKit11MarkupErrorO9hashValueSivp	swift.property	hashValue	MarkupError.hashValue	var hashValue: Int { get }
+s:8PaperKit16RenderingOptionsV	swift.struct	RenderingOptions	RenderingOptions	struct RenderingOptions
+s:8PaperKit16RenderingOptionsV15traitCollectionACSo07UITraitF0C_tcfc	swift.init	init(traitCollection:)	RenderingOptions.init(traitCollection:)	init(traitCollection: UITraitCollection)
+s:8PaperKit16RenderingOptionsV22darkUserInterfaceStyle17layoutRightToLeftACSb_Sbtcfc	swift.init	init(darkUserInterfaceStyle:layoutRightToLeft:)	RenderingOptions.init(darkUserInterfaceStyle:layoutRightToLeft:)	init(darkUserInterfaceStyle: Bool = false, layoutRightToLeft: Bool = false)
+s:8PaperKit16RenderingOptionsV22darkUserInterfaceStyleSbvp	swift.property	darkUserInterfaceStyle	RenderingOptions.darkUserInterfaceStyle	var darkUserInterfaceStyle: Bool
+s:8PaperKit16RenderingOptionsV26rightToLeftLayoutDirectionSbvp	swift.property	rightToLeftLayoutDirection	RenderingOptions.rightToLeftLayoutDirection	var rightToLeftLayoutDirection: Bool
+s:8PaperKit16RenderingOptionsV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	RenderingOptions.==(_:_:)	static func == (a: RenderingOptions, b: RenderingOptions) -> Bool
+s:8PaperKit18ShapeConfigurationV	swift.struct	ShapeConfiguration	ShapeConfiguration	struct ShapeConfiguration
+s:8PaperKit18ShapeConfigurationV0C0O	swift.enum	ShapeConfiguration.Shape	ShapeConfiguration.Shape	enum Shape
+s:8PaperKit18ShapeConfigurationV0C0O05arrowC0yA2EmF	swift.enum.case	ShapeConfiguration.Shape.arrowShape	ShapeConfiguration.Shape.arrowShape	case arrowShape
+s:8PaperKit18ShapeConfigurationV0C0O10chatBubbleyA2EmF	swift.enum.case	ShapeConfiguration.Shape.chatBubble	ShapeConfiguration.Shape.chatBubble	case chatBubble
+s:8PaperKit18ShapeConfigurationV0C0O14regularPolygonyA2EmF	swift.enum.case	ShapeConfiguration.Shape.regularPolygon	ShapeConfiguration.Shape.regularPolygon	case regularPolygon
+s:8PaperKit18ShapeConfigurationV0C0O16roundedRectangleyA2EmF	swift.enum.case	ShapeConfiguration.Shape.roundedRectangle	ShapeConfiguration.Shape.roundedRectangle	case roundedRectangle
+s:8PaperKit18ShapeConfigurationV0C0O2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	ShapeConfiguration.Shape.==(_:_:)	static func == (a: ShapeConfiguration.Shape, b: ShapeConfiguration.Shape) -> Bool
+s:8PaperKit18ShapeConfigurationV0C0O4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ShapeConfiguration.Shape.hash(into:)	func hash(into hasher: inout Hasher)
+s:8PaperKit18ShapeConfigurationV0C0O4lineyA2EmF	swift.enum.case	ShapeConfiguration.Shape.line	ShapeConfiguration.Shape.line	case line
+s:8PaperKit18ShapeConfigurationV0C0O4staryA2EmF	swift.enum.case	ShapeConfiguration.Shape.star	ShapeConfiguration.Shape.star	case star
+s:8PaperKit18ShapeConfigurationV0C0O7ellipseyA2EmF	swift.enum.case	ShapeConfiguration.Shape.ellipse	ShapeConfiguration.Shape.ellipse	case ellipse
+s:8PaperKit18ShapeConfigurationV0C0O8AllCasesa	swift.typealias	ShapeConfiguration.Shape.AllCases	ShapeConfiguration.Shape.AllCases	typealias AllCases = [ShapeConfiguration.Shape]
+s:8PaperKit18ShapeConfigurationV0C0O8allCasesSayAEGvpZ	swift.type.property	allCases	ShapeConfiguration.Shape.allCases	nonisolated static var allCases: [ShapeConfiguration.Shape] { get }
+s:8PaperKit18ShapeConfigurationV0C0O9hashValueSivp	swift.property	hashValue	ShapeConfiguration.Shape.hashValue	var hashValue: Int { get }
+s:8PaperKit18ShapeConfigurationV0C0O9rectangleyA2EmF	swift.enum.case	ShapeConfiguration.Shape.rectangle	ShapeConfiguration.Shape.rectangle	case rectangle
+s:8PaperKit18ShapeConfigurationV11strokeColorSo10CGColorRefaSgvp	swift.property	strokeColor	ShapeConfiguration.strokeColor	var strokeColor: CGColor?
+s:8PaperKit18ShapeConfigurationV4type9fillColor06strokeG09lineWidthA2C0C0O_So10CGColorRefaSgAL14CoreFoundation7CGFloatVtcfc	swift.init	init(type:fillColor:strokeColor:lineWidth:)	ShapeConfiguration.init(type:fillColor:strokeColor:lineWidth:)	init(type: ShapeConfiguration.Shape, fillColor: CGColor? = CGColor(srgbRed: 0, green: 0, blue: 0, alpha: 1), strokeColor: CGColor? = nil, lineWidth: CGFloat = 0)
+s:8PaperKit18ShapeConfigurationV4typeAC0C0Ovp	swift.property	type	ShapeConfiguration.type	var type: ShapeConfiguration.Shape
+s:8PaperKit18ShapeConfigurationV9fillColorSo10CGColorRefaSgvp	swift.property	fillColor	ShapeConfiguration.fillColor	var fillColor: CGColor?
+s:8PaperKit18ShapeConfigurationV9lineWidth14CoreFoundation7CGFloatVvp	swift.property	lineWidth	ShapeConfiguration.lineWidth	var lineWidth: CGFloat
+s:8PaperKit24MarkupEditViewControllerC19supportedFeatureSet17additionalActionsAcA0hI0V_SaySo13UIMenuElementCGtcfc	swift.init	init(supportedFeatureSet:additionalActions:)	MarkupEditViewController.init(supportedFeatureSet:additionalActions:)	@MainActor @preconcurrency init(supportedFeatureSet: FeatureSet, additionalActions: [UIMenuElement] = [])
+s:8PaperKit24MarkupEditViewControllerC19supportedFeatureSetAA0hI0Vvp	swift.property	supportedFeatureSet	MarkupEditViewController.supportedFeatureSet	@MainActor @preconcurrency final let supportedFeatureSet: FeatureSet
+s:8PaperKit24MarkupEditViewControllerC8DelegateP	swift.protocol	MarkupEditViewController.Delegate	MarkupEditViewController.Delegate	protocol Delegate : AnyObject
+s:8PaperKit24MarkupEditViewControllerC8DelegateP06markupdeF0_14insertNewShapeyAC_AA0K13ConfigurationV0K0OtF	swift.method	markupEditViewController(_:insertNewShape:)	MarkupEditViewController.Delegate.markupEditViewController(_:insertNewShape:)	func markupEditViewController(_ markupEditViewController: MarkupEditViewController, insertNewShape type: ShapeConfiguration.Shape)
+s:8PaperKit24MarkupEditViewControllerC8DelegateP06markupdeF0_17insertNewContentsyAC_AA0aC0VtF	swift.method	markupEditViewController(_:insertNewContents:)	MarkupEditViewController.Delegate.markupEditViewController(_:insertNewContents:)	func markupEditViewController(_ markupEditViewController: MarkupEditViewController, insertNewContents toInsert: PaperMarkup)
+s:8PaperKit24MarkupEditViewControllerC8DelegateP06markupdeF0_28insertNewLineWithStartMarker03endN0yAC_S2btF	swift.method	markupEditViewController(_:insertNewLineWithStartMarker:endMarker:)	MarkupEditViewController.Delegate.markupEditViewController(_:insertNewLineWithStartMarker:endMarker:)	func markupEditViewController(_ markupEditViewController: MarkupEditViewController, insertNewLineWithStartMarker lineStartMarker: Bool, endMarker lineEndMarker: Bool)
+s:8PaperKit24MarkupEditViewControllerC8DelegateP06markupdeF16InsertNewTextboxyyACF	swift.method	markupEditViewControllerInsertNewTextbox(_:)	MarkupEditViewController.Delegate.markupEditViewControllerInsertNewTextbox(_:)	func markupEditViewControllerInsertNewTextbox(_ markupEditViewController: MarkupEditViewController)
+s:8PaperKit24MarkupEditViewControllerC8delegateAC8Delegate_pSgvp	swift.property	delegate	MarkupEditViewController.delegate	@MainActor @preconcurrency weak var delegate: (any MarkupEditViewController.Delegate)? { get set }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8PaperKit0A20MarkupViewControllerC9TouchModeO	swift.func.op	!=(_:_:)	PaperMarkupViewController.TouchMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8PaperKit0A6MarkupV	swift.func.op	!=(_:_:)	PaperMarkup.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8PaperKit10FeatureSetV	swift.func.op	!=(_:_:)	FeatureSet.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8PaperKit10FeatureSetV0C0O	swift.func.op	!=(_:_:)	FeatureSet.Feature.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8PaperKit10FeatureSetV14ContentVersionO	swift.func.op	!=(_:_:)	FeatureSet.ContentVersion.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.func.op	!=(_:_:)	FeatureSet.LineMarkerPositions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8PaperKit11MarkupErrorO	swift.func.op	!=(_:_:)	MarkupError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8PaperKit16RenderingOptionsV	swift.func.op	!=(_:_:)	RenderingOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8PaperKit18ShapeConfigurationV0C0O	swift.func.op	!=(_:_:)	ShapeConfiguration.Shape.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8PaperKit10FeatureSetV14ContentVersionO	swift.property	hashValue	FeatureSet.ContentVersion.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.property	hashValue	FeatureSet.LineMarkerPositions.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8PaperKit10FeatureSetV14ContentVersionO	swift.method	hash(into:)	FeatureSet.ContentVersion.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	hash(into:)	FeatureSet.LineMarkerPositions.hash(into:)	func hash(into hasher: inout Hasher)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.init	init(arrayLiteral:)	FeatureSet.LineMarkerPositions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	isDisjoint(with:)	FeatureSet.LineMarkerPositions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	isSuperset(of:)	FeatureSet.LineMarkerPositions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	subtracting(_:)	FeatureSet.LineMarkerPositions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	isStrictSubset(of:)	FeatureSet.LineMarkerPositions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	isStrictSuperset(of:)	FeatureSet.LineMarkerPositions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.property	isEmpty	FeatureSet.LineMarkerPositions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	isSubset(of:)	FeatureSet.LineMarkerPositions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	subtract(_:)	FeatureSet.LineMarkerPositions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.init	init(_:)	FeatureSet.LineMarkerPositions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:8PaperKit11MarkupErrorO	swift.property	localizedDescription	MarkupError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	insert(_:)	FeatureSet.LineMarkerPositions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	remove(_:)	FeatureSet.LineMarkerPositions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	update(with:)	FeatureSet.LineMarkerPositions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	contains(_:)	FeatureSet.LineMarkerPositions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	intersection(_:)	FeatureSet.LineMarkerPositions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	symmetricDifference(_:)	FeatureSet.LineMarkerPositions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	union(_:)	FeatureSet.LineMarkerPositions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	formIntersection(_:)	FeatureSet.LineMarkerPositions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	formSymmetricDifference(_:)	FeatureSet.LineMarkerPositions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.method	formUnion(_:)	FeatureSet.LineMarkerPositions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::s:8PaperKit10FeatureSetV19LineMarkerPositionsV	swift.init	init()	FeatureSet.LineMarkerPositions.init()	init()

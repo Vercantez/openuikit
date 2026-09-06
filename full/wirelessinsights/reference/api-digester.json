@@ -1,0 +1,2160 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "WirelessInsights",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "WirelessInsights",
+        "name": "WirelessInsights",
+        "printedName": "WirelessInsights"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "WirelessInsights",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "WirelessInsights",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "WirelessInsights",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "WirelessInsights",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Impact",
+                        "printedName": "WirelessInsights.ServicePrediction.Impact",
+                        "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Impact",
+                            "printedName": "WirelessInsights.ServicePrediction.Impact",
+                            "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "WirelessInsights.ServicePrediction.Impact.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(WirelessInsights.ServicePrediction.Impact.Type) -> WirelessInsights.ServicePrediction.Impact"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV6ImpactO3lowyA2EmF",
+                "moduleName": "WirelessInsights",
+                "name": "low",
+                "printedName": "low",
+                "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO3lowyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Impact",
+                        "printedName": "WirelessInsights.ServicePrediction.Impact",
+                        "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Impact",
+                            "printedName": "WirelessInsights.ServicePrediction.Impact",
+                            "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "WirelessInsights.ServicePrediction.Impact.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(WirelessInsights.ServicePrediction.Impact.Type) -> WirelessInsights.ServicePrediction.Impact"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV6ImpactO6mediumyA2EmF",
+                "moduleName": "WirelessInsights",
+                "name": "medium",
+                "printedName": "medium",
+                "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO6mediumyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Impact",
+                        "printedName": "WirelessInsights.ServicePrediction.Impact",
+                        "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Impact",
+                            "printedName": "WirelessInsights.ServicePrediction.Impact",
+                            "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "WirelessInsights.ServicePrediction.Impact.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(WirelessInsights.ServicePrediction.Impact.Type) -> WirelessInsights.ServicePrediction.Impact"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV6ImpactO4highyA2EmF",
+                "moduleName": "WirelessInsights",
+                "name": "high",
+                "printedName": "high",
+                "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO4highyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Impact",
+                    "printedName": "WirelessInsights.ServicePrediction.Impact",
+                    "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Impact",
+                    "printedName": "WirelessInsights.ServicePrediction.Impact",
+                    "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV6ImpactO1loiySbAE_AEtFZ",
+                "moduleName": "WirelessInsights",
+                "name": "<",
+                "printedName": "<(_:_:)",
+                "static": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO1loiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Impact",
+                    "printedName": "WirelessInsights.ServicePrediction.Impact",
+                    "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Impact",
+                    "printedName": "WirelessInsights.ServicePrediction.Impact",
+                    "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV6ImpactO2eeoiySbAE_AEtFZ",
+                "moduleName": "WirelessInsights",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoder",
+                    "printedName": "any Swift.Encoder",
+                    "usr": "s:s7EncoderP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV6ImpactO6encode2toys7Encoder_p_tKF",
+                "moduleName": "WirelessInsights",
+                "name": "encode",
+                "printedName": "encode(to:)",
+                "throwing": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO6encode2toys7Encoder_p_tKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV6ImpactO4hash4intoys6HasherVz_tF",
+                "moduleName": "WirelessInsights",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s16WirelessInsights17ServicePredictionV6ImpactO9hashValueSivg",
+                    "moduleName": "WirelessInsights",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV6ImpactO9hashValueSivp",
+                "moduleName": "WirelessInsights",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO9hashValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Impact",
+                    "printedName": "WirelessInsights.ServicePrediction.Impact",
+                    "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Decoder",
+                    "printedName": "any Swift.Decoder",
+                    "usr": "s:s7DecoderP"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV6ImpactO4fromAEs7Decoder_p_tKcfc",
+                "moduleName": "WirelessInsights",
+                "name": "init",
+                "printedName": "init(from:)",
+                "throwing": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO4fromAEs7Decoder_p_tKcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSe",
+                "name": "Decodable",
+                "printedName": "Decodable",
+                "usr": "s:Se"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSE",
+                "name": "Encodable",
+                "printedName": "Encodable",
+                "usr": "s:SE"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSL",
+                "name": "Comparable",
+                "printedName": "Comparable",
+                "usr": "s:SL"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s16WirelessInsights17ServicePredictionV6ImpactO",
+            "moduleName": "WirelessInsights",
+            "name": "Impact",
+            "printedName": "Impact",
+            "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Confidence",
+                        "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                        "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Confidence",
+                            "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                            "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "WirelessInsights.ServicePrediction.Confidence.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(WirelessInsights.ServicePrediction.Confidence.Type) -> WirelessInsights.ServicePrediction.Confidence"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV10ConfidenceO3lowyA2EmF",
+                "moduleName": "WirelessInsights",
+                "name": "low",
+                "printedName": "low",
+                "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO3lowyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Confidence",
+                        "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                        "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Confidence",
+                            "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                            "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "WirelessInsights.ServicePrediction.Confidence.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(WirelessInsights.ServicePrediction.Confidence.Type) -> WirelessInsights.ServicePrediction.Confidence"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV10ConfidenceO6mediumyA2EmF",
+                "moduleName": "WirelessInsights",
+                "name": "medium",
+                "printedName": "medium",
+                "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO6mediumyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Confidence",
+                        "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                        "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Confidence",
+                            "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                            "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "WirelessInsights.ServicePrediction.Confidence.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(WirelessInsights.ServicePrediction.Confidence.Type) -> WirelessInsights.ServicePrediction.Confidence"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV10ConfidenceO4highyA2EmF",
+                "moduleName": "WirelessInsights",
+                "name": "high",
+                "printedName": "high",
+                "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO4highyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Confidence",
+                    "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                    "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Confidence",
+                    "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                    "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV10ConfidenceO1loiySbAE_AEtFZ",
+                "moduleName": "WirelessInsights",
+                "name": "<",
+                "printedName": "<(_:_:)",
+                "static": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO1loiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Confidence",
+                    "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                    "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Confidence",
+                    "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                    "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV10ConfidenceO2eeoiySbAE_AEtFZ",
+                "moduleName": "WirelessInsights",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoder",
+                    "printedName": "any Swift.Encoder",
+                    "usr": "s:s7EncoderP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV10ConfidenceO6encode2toys7Encoder_p_tKF",
+                "moduleName": "WirelessInsights",
+                "name": "encode",
+                "printedName": "encode(to:)",
+                "throwing": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO6encode2toys7Encoder_p_tKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV10ConfidenceO4hash4intoys6HasherVz_tF",
+                "moduleName": "WirelessInsights",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s16WirelessInsights17ServicePredictionV10ConfidenceO9hashValueSivg",
+                    "moduleName": "WirelessInsights",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV10ConfidenceO9hashValueSivp",
+                "moduleName": "WirelessInsights",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO9hashValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Confidence",
+                    "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                    "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Decoder",
+                    "printedName": "any Swift.Decoder",
+                    "usr": "s:s7DecoderP"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV10ConfidenceO4fromAEs7Decoder_p_tKcfc",
+                "moduleName": "WirelessInsights",
+                "name": "init",
+                "printedName": "init(from:)",
+                "throwing": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO4fromAEs7Decoder_p_tKcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSe",
+                "name": "Decodable",
+                "printedName": "Decodable",
+                "usr": "s:Se"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSE",
+                "name": "Encodable",
+                "printedName": "Encodable",
+                "usr": "s:SE"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSL",
+                "name": "Comparable",
+                "printedName": "Comparable",
+                "usr": "s:SL"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s16WirelessInsights17ServicePredictionV10ConfidenceO",
+            "moduleName": "WirelessInsights",
+            "name": "Confidence",
+            "printedName": "Confidence",
+            "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16WirelessInsights17ServicePredictionV17QuantizedIntervalV7minimalSdvgZ",
+                    "moduleName": "WirelessInsights",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV7minimalSdvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV17QuantizedIntervalV7minimalSdvpZ",
+                "moduleName": "WirelessInsights",
+                "name": "minimal",
+                "printedName": "minimal",
+                "static": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV7minimalSdvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16WirelessInsights17ServicePredictionV17QuantizedIntervalV5shortSdvgZ",
+                    "moduleName": "WirelessInsights",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV5shortSdvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV17QuantizedIntervalV5shortSdvpZ",
+                "moduleName": "WirelessInsights",
+                "name": "short",
+                "printedName": "short",
+                "static": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV5shortSdvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16WirelessInsights17ServicePredictionV17QuantizedIntervalV6mediumSdvgZ",
+                    "moduleName": "WirelessInsights",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV6mediumSdvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV17QuantizedIntervalV6mediumSdvpZ",
+                "moduleName": "WirelessInsights",
+                "name": "medium",
+                "printedName": "medium",
+                "static": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV6mediumSdvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16WirelessInsights17ServicePredictionV17QuantizedIntervalV4longSdvgZ",
+                    "moduleName": "WirelessInsights",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV4longSdvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV17QuantizedIntervalV4longSdvpZ",
+                "moduleName": "WirelessInsights",
+                "name": "long",
+                "printedName": "long",
+                "static": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV4longSdvpZ"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "kind": "TypeDecl",
+            "mangledName": "$s16WirelessInsights17ServicePredictionV17QuantizedIntervalV",
+            "moduleName": "WirelessInsights",
+            "name": "QuantizedInterval",
+            "printedName": "QuantizedInterval",
+            "usr": "s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Impact",
+                    "printedName": "WirelessInsights.ServicePrediction.Impact",
+                    "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV6impactAC6ImpactOvg",
+                "moduleName": "WirelessInsights",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16WirelessInsights17ServicePredictionV6impactAC6ImpactOvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Impact",
+                "printedName": "WirelessInsights.ServicePrediction.Impact",
+                "usr": "s:16WirelessInsights17ServicePredictionV6ImpactO"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16WirelessInsights17ServicePredictionV6impactAC6ImpactOvp",
+            "moduleName": "WirelessInsights",
+            "name": "impact",
+            "printedName": "impact",
+            "usr": "s:16WirelessInsights17ServicePredictionV6impactAC6ImpactOvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Date",
+                    "printedName": "Foundation.Date",
+                    "usr": "s:10Foundation4DateV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV18predictedStartTime10Foundation4DateVvg",
+                "moduleName": "WirelessInsights",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16WirelessInsights17ServicePredictionV18predictedStartTime10Foundation4DateVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Date",
+                "printedName": "Foundation.Date",
+                "usr": "s:10Foundation4DateV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16WirelessInsights17ServicePredictionV18predictedStartTime10Foundation4DateVvp",
+            "moduleName": "WirelessInsights",
+            "name": "predictedStartTime",
+            "printedName": "predictedStartTime",
+            "usr": "s:16WirelessInsights17ServicePredictionV18predictedStartTime10Foundation4DateVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Double",
+                        "printedName": "Swift.Double",
+                        "usr": "s:Sd"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "TimeInterval",
+                    "printedName": "Foundation.TimeInterval"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV17predictedIntervalSdvg",
+                "moduleName": "WirelessInsights",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16WirelessInsights17ServicePredictionV17predictedIntervalSdvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "TimeInterval",
+                "printedName": "Foundation.TimeInterval"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16WirelessInsights17ServicePredictionV17predictedIntervalSdvp",
+            "moduleName": "WirelessInsights",
+            "name": "predictedInterval",
+            "printedName": "predictedInterval",
+            "usr": "s:16WirelessInsights17ServicePredictionV17predictedIntervalSdvp"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Confidence",
+                        "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                        "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16WirelessInsights17ServicePredictionV15ConfidenceScoreV10predictionAC0E0Ovg",
+                    "moduleName": "WirelessInsights",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV10predictionAC0E0Ovg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Confidence",
+                    "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                    "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV15ConfidenceScoreV10predictionAC0E0Ovp",
+                "moduleName": "WirelessInsights",
+                "name": "prediction",
+                "printedName": "prediction",
+                "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV10predictionAC0E0Ovp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Confidence",
+                        "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                        "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16WirelessInsights17ServicePredictionV15ConfidenceScoreV9startTimeAC0E0Ovg",
+                    "moduleName": "WirelessInsights",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV9startTimeAC0E0Ovg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Confidence",
+                    "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                    "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV15ConfidenceScoreV9startTimeAC0E0Ovp",
+                "moduleName": "WirelessInsights",
+                "name": "startTime",
+                "printedName": "startTime",
+                "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV9startTimeAC0E0Ovp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Confidence",
+                        "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                        "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16WirelessInsights17ServicePredictionV15ConfidenceScoreV8durationAC0E0Ovg",
+                    "moduleName": "WirelessInsights",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV8durationAC0E0Ovg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Confidence",
+                    "printedName": "WirelessInsights.ServicePrediction.Confidence",
+                    "usr": "s:16WirelessInsights17ServicePredictionV10ConfidenceO"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV15ConfidenceScoreV8durationAC0E0Ovp",
+                "moduleName": "WirelessInsights",
+                "name": "duration",
+                "printedName": "duration",
+                "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV8durationAC0E0Ovp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ConfidenceScore",
+                    "printedName": "WirelessInsights.ServicePrediction.ConfidenceScore",
+                    "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ConfidenceScore",
+                    "printedName": "WirelessInsights.ServicePrediction.ConfidenceScore",
+                    "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV15ConfidenceScoreV2eeoiySbAE_AEtFZ",
+                "moduleName": "WirelessInsights",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoder",
+                    "printedName": "any Swift.Encoder",
+                    "usr": "s:s7EncoderP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV15ConfidenceScoreV6encode2toys7Encoder_p_tKF",
+                "moduleName": "WirelessInsights",
+                "name": "encode",
+                "printedName": "encode(to:)",
+                "throwing": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV6encode2toys7Encoder_p_tKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV15ConfidenceScoreV4hash4intoys6HasherVz_tF",
+                "moduleName": "WirelessInsights",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s16WirelessInsights17ServicePredictionV15ConfidenceScoreV9hashValueSivg",
+                    "moduleName": "WirelessInsights",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV15ConfidenceScoreV9hashValueSivp",
+                "moduleName": "WirelessInsights",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV9hashValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ConfidenceScore",
+                    "printedName": "WirelessInsights.ServicePrediction.ConfidenceScore",
+                    "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Decoder",
+                    "printedName": "any Swift.Decoder",
+                    "usr": "s:s7DecoderP"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV15ConfidenceScoreV4fromAEs7Decoder_p_tKcfc",
+                "moduleName": "WirelessInsights",
+                "name": "init",
+                "printedName": "init(from:)",
+                "throwing": true,
+                "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV4fromAEs7Decoder_p_tKcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSe",
+                "name": "Decodable",
+                "printedName": "Decodable",
+                "usr": "s:Se"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSE",
+                "name": "Encodable",
+                "printedName": "Encodable",
+                "usr": "s:SE"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "kind": "TypeDecl",
+            "mangledName": "$s16WirelessInsights17ServicePredictionV15ConfidenceScoreV",
+            "moduleName": "WirelessInsights",
+            "name": "ConfidenceScore",
+            "printedName": "ConfidenceScore",
+            "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ConfidenceScore",
+                    "printedName": "WirelessInsights.ServicePrediction.ConfidenceScore",
+                    "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV15confidenceScoreAC010ConfidenceF0Vvg",
+                "moduleName": "WirelessInsights",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16WirelessInsights17ServicePredictionV15confidenceScoreAC010ConfidenceF0Vvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ConfidenceScore",
+                "printedName": "WirelessInsights.ServicePrediction.ConfidenceScore",
+                "usr": "s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16WirelessInsights17ServicePredictionV15confidenceScoreAC010ConfidenceF0Vvp",
+            "moduleName": "WirelessInsights",
+            "name": "confidenceScore",
+            "printedName": "confidenceScore",
+            "usr": "s:16WirelessInsights17ServicePredictionV15confidenceScoreAC010ConfidenceF0Vvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ServicePrediction",
+                "printedName": "WirelessInsights.ServicePrediction",
+                "usr": "s:16WirelessInsights17ServicePredictionV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ServicePrediction",
+                "printedName": "WirelessInsights.ServicePrediction",
+                "usr": "s:16WirelessInsights17ServicePredictionV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16WirelessInsights17ServicePredictionV2eeoiySbAC_ACtFZ",
+            "moduleName": "WirelessInsights",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:16WirelessInsights17ServicePredictionV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16WirelessInsights17ServicePredictionV6encode2toys7Encoder_p_tKF",
+            "moduleName": "WirelessInsights",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:16WirelessInsights17ServicePredictionV6encode2toys7Encoder_p_tKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16WirelessInsights17ServicePredictionV4hash4intoys6HasherVz_tF",
+            "moduleName": "WirelessInsights",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:16WirelessInsights17ServicePredictionV4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s16WirelessInsights17ServicePredictionV9hashValueSivg",
+                "moduleName": "WirelessInsights",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16WirelessInsights17ServicePredictionV9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s16WirelessInsights17ServicePredictionV9hashValueSivp",
+            "moduleName": "WirelessInsights",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:16WirelessInsights17ServicePredictionV9hashValueSivp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ServicePrediction",
+                "printedName": "WirelessInsights.ServicePrediction",
+                "usr": "s:16WirelessInsights17ServicePredictionV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s16WirelessInsights17ServicePredictionV4fromACs7Decoder_p_tKcfc",
+            "moduleName": "WirelessInsights",
+            "name": "init",
+            "printedName": "init(from:)",
+            "throwing": true,
+            "usr": "s:16WirelessInsights17ServicePredictionV4fromACs7Decoder_p_tKcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s16WirelessInsights17ServicePredictionV",
+        "moduleName": "WirelessInsights",
+        "name": "ServicePrediction",
+        "printedName": "ServicePrediction",
+        "usr": "s:16WirelessInsights17ServicePredictionV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ServicePredictionError",
+                    "printedName": "WirelessInsights.ServicePredictionError",
+                    "usr": "s:16WirelessInsights22ServicePredictionErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ServicePredictionError",
+                        "printedName": "WirelessInsights.ServicePredictionError",
+                        "usr": "s:16WirelessInsights22ServicePredictionErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "WirelessInsights.ServicePredictionError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(WirelessInsights.ServicePredictionError.Type) -> WirelessInsights.ServicePredictionError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s16WirelessInsights22ServicePredictionErrorO17unsupportedDeviceyA2CmF",
+            "moduleName": "WirelessInsights",
+            "name": "unsupportedDevice",
+            "printedName": "unsupportedDevice",
+            "usr": "s:16WirelessInsights22ServicePredictionErrorO17unsupportedDeviceyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ServicePredictionError",
+                    "printedName": "WirelessInsights.ServicePredictionError",
+                    "usr": "s:16WirelessInsights22ServicePredictionErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ServicePredictionError",
+                        "printedName": "WirelessInsights.ServicePredictionError",
+                        "usr": "s:16WirelessInsights22ServicePredictionErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "WirelessInsights.ServicePredictionError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(WirelessInsights.ServicePredictionError.Type) -> WirelessInsights.ServicePredictionError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s16WirelessInsights22ServicePredictionErrorO010connectionE0yA2CmF",
+            "moduleName": "WirelessInsights",
+            "name": "connectionError",
+            "printedName": "connectionError",
+            "usr": "s:16WirelessInsights22ServicePredictionErrorO010connectionE0yA2CmF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ServicePredictionError",
+                "printedName": "WirelessInsights.ServicePredictionError",
+                "usr": "s:16WirelessInsights22ServicePredictionErrorO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ServicePredictionError",
+                "printedName": "WirelessInsights.ServicePredictionError",
+                "usr": "s:16WirelessInsights22ServicePredictionErrorO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16WirelessInsights22ServicePredictionErrorO2eeoiySbAC_ACtFZ",
+            "moduleName": "WirelessInsights",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:16WirelessInsights22ServicePredictionErrorO2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16WirelessInsights22ServicePredictionErrorO4hash4intoys6HasherVz_tF",
+            "moduleName": "WirelessInsights",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:16WirelessInsights22ServicePredictionErrorO4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s16WirelessInsights22ServicePredictionErrorO9hashValueSivg",
+                "moduleName": "WirelessInsights",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16WirelessInsights22ServicePredictionErrorO9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s16WirelessInsights22ServicePredictionErrorO9hashValueSivp",
+            "moduleName": "WirelessInsights",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:16WirelessInsights22ServicePredictionErrorO9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s16WirelessInsights22ServicePredictionErrorO",
+        "moduleName": "WirelessInsights",
+        "name": "ServicePredictionError",
+        "printedName": "ServicePredictionError",
+        "usr": "s:16WirelessInsights22ServicePredictionErrorO"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AsyncSequence",
+                    "printedName": "any _Concurrency.AsyncSequence<[WirelessInsights.ServicePrediction], any Swift.Error>",
+                    "usr": "s:Sci"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s16WirelessInsights25ServicePredictionProviderC18servicePredictionsSci_pSayAA0cD0VG7ElementSciRts_s5Error_p7FailureSciRtsXPvg",
+                "moduleName": "WirelessInsights",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:16WirelessInsights25ServicePredictionProviderC18servicePredictionsSci_pSayAA0cD0VG7ElementSciRts_s5Error_p7FailureSciRtsXPvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AsyncSequence",
+                "printedName": "any _Concurrency.AsyncSequence<[WirelessInsights.ServicePrediction], any Swift.Error>",
+                "usr": "s:Sci"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s16WirelessInsights25ServicePredictionProviderC18servicePredictionsSci_pSayAA0cD0VG7ElementSciRts_s5Error_p7FailureSciRtsXPvp",
+            "moduleName": "WirelessInsights",
+            "name": "servicePredictions",
+            "printedName": "servicePredictions",
+            "usr": "s:16WirelessInsights25ServicePredictionProviderC18servicePredictionsSci_pSayAA0cD0VG7ElementSciRts_s5Error_p7FailureSciRtsXPvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ServicePredictionProvider",
+                "printedName": "WirelessInsights.ServicePredictionProvider",
+                "usr": "s:16WirelessInsights25ServicePredictionProviderC"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s16WirelessInsights25ServicePredictionProviderCACycfc",
+            "moduleName": "WirelessInsights",
+            "name": "init",
+            "printedName": "init()",
+            "usr": "s:16WirelessInsights25ServicePredictionProviderCACycfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Final",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s16WirelessInsights25ServicePredictionProviderC",
+        "moduleName": "WirelessInsights",
+        "name": "ServicePredictionProvider",
+        "printedName": "ServicePredictionProvider",
+        "usr": "s:16WirelessInsights25ServicePredictionProviderC"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "WirelessInsights",
+    "printedName": "WirelessInsights"
+  }
+}

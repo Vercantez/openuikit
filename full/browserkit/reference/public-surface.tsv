@@ -1,0 +1,9 @@
+precise	kind	title	path	declaration
+c:@E@BEEligibilityContext	swift.enum	BEAvailability.Context	BEAvailability.Context	enum Context
+c:@E@BEEligibilityContext@BEEligibilityContextWebBrowser	swift.enum.case	BEAvailability.Context.webBrowser	BEAvailability.Context.webBrowser	case webBrowser
+c:objc(cs)BEAvailability	swift.class	BEAvailability	BEAvailability	class BEAvailability
+c:objc(cs)BEAvailability(cm)isEligibleForContext:completionHandler:	swift.type.method	isEligible(for:)	BEAvailability.isEligible(for:)	class func isEligible(for context: BEAvailability.Context) async throws -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BEEligibilityContext	swift.func.op	!=(_:_:)	BEAvailability.Context.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BEEligibilityContext	swift.property	hashValue	BEAvailability.Context.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BEEligibilityContext	swift.method	hash(into:)	BEAvailability.Context.hash(into:)	func hash(into hasher: inout Hasher)
+s:So20BEEligibilityContextV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	BEAvailability.Context.init(rawValue:)	init?(rawValue: Int)

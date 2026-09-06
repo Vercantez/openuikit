@@ -1,0 +1,48 @@
+precise	kind	title	path	declaration
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:10ManagedApp0aB5ErrorO	swift.property	helpAnchor	ManagedAppError.helpAnchor	var helpAnchor: String? { get }
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:10ManagedApp0aB5ErrorO	swift.property	failureReason	ManagedAppError.failureReason	var failureReason: String? { get }
+s:10Foundation14LocalizedErrorPAAE16errorDescriptionSSSgvp::SYNTHESIZED::s:10ManagedApp0aB5ErrorO	swift.property	errorDescription	ManagedAppError.errorDescription	var errorDescription: String? { get }
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:10ManagedApp0aB5ErrorO	swift.property	recoverySuggestion	ManagedAppError.recoverySuggestion	var recoverySuggestion: String? { get }
+s:10ManagedApp0aB17PasswordsProviderC	swift.class	ManagedAppPasswordsProvider	ManagedAppPasswordsProvider	class ManagedAppPasswordsProvider
+s:10ManagedApp0aB17PasswordsProviderC11identifiersQrvp	swift.property	identifiers	ManagedAppPasswordsProvider.identifiers	var identifiers: some AsyncSequence<Array<String>, Never> { get async }
+s:10ManagedApp0aB17PasswordsProviderC8password14withIdentifierS2S_tYaAA0aB5ErrorOYKF	swift.method	password(withIdentifier:)	ManagedAppPasswordsProvider.password(withIdentifier:)	func password(withIdentifier identifier: String) async throws(ManagedAppError) -> String
+s:10ManagedApp0aB17PasswordsProviderCACycfc	swift.init	init()	ManagedAppPasswordsProvider.init()	init()
+s:10ManagedApp0aB18IdentitiesProviderC	swift.class	ManagedAppIdentitiesProvider	ManagedAppIdentitiesProvider	class ManagedAppIdentitiesProvider
+s:10ManagedApp0aB18IdentitiesProviderC11identifiersQrvp	swift.property	identifiers	ManagedAppIdentitiesProvider.identifiers	var identifiers: some AsyncSequence<Array<String>, Never> { get async }
+s:10ManagedApp0aB18IdentitiesProviderC8identity14withIdentifierSo14SecIdentityRefaSS_tYaAA0aB5ErrorOYKF	swift.method	identity(withIdentifier:)	ManagedAppIdentitiesProvider.identity(withIdentifier:)	func identity(withIdentifier identifier: String) async throws(ManagedAppError) -> SecIdentity
+s:10ManagedApp0aB18IdentitiesProviderCACycfc	swift.init	init()	ManagedAppIdentitiesProvider.init()	init()
+s:10ManagedApp0aB20CertificatesProviderC	swift.class	ManagedAppCertificatesProvider	ManagedAppCertificatesProvider	class ManagedAppCertificatesProvider
+s:10ManagedApp0aB20CertificatesProviderC11certificate14withIdentifierSo17SecCertificateRefaSS_tYaAA0aB5ErrorOYKF	swift.method	certificate(withIdentifier:)	ManagedAppCertificatesProvider.certificate(withIdentifier:)	func certificate(withIdentifier identifier: String) async throws(ManagedAppError) -> SecCertificate
+s:10ManagedApp0aB20CertificatesProviderC11identifiersQrvp	swift.property	identifiers	ManagedAppCertificatesProvider.identifiers	var identifiers: some AsyncSequence<Array<String>, Never> { get async }
+s:10ManagedApp0aB20CertificatesProviderCACycfc	swift.init	init()	ManagedAppCertificatesProvider.init()	init()
+s:10ManagedApp0aB21ConfigurationProviderC	swift.class	ManagedAppConfigurationProvider	ManagedAppConfigurationProvider	class ManagedAppConfigurationProvider
+s:10ManagedApp0aB21ConfigurationProviderC14configurationsyQrxmYaSeRzlF	swift.method	configurations(_:)	ManagedAppConfigurationProvider.configurations(_:)	func configurations<Configuration>(_ t: Configuration.Type) async -> some AsyncSequence<Optional<Configuration>, Never> where Configuration : Decodable\n
+s:10ManagedApp0aB21ConfigurationProviderCACycfc	swift.init	init()	ManagedAppConfigurationProvider.init()	init()
+s:10ManagedApp0aB26ConfigurationDecodingErrorP	swift.protocol	ManagedAppConfigurationDecodingError	ManagedAppConfigurationDecodingError	protocol ManagedAppConfigurationDecodingError : Decodable, Encodable, Error
+s:10ManagedApp0aB26ConfigurationDecodingErrorP4codeAA0abcdE4CodeVvp	swift.property	code	ManagedAppConfigurationDecodingError.code	var code: ManagedAppConfigurationDecodingErrorCode { get set }
+s:10ManagedApp0aB26ConfigurationDecodingErrorP7messageSSvp	swift.property	message	ManagedAppConfigurationDecodingError.message	var message: String { get set }
+s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV	swift.struct	ManagedAppConfigurationDecodingErrorCode	ManagedAppConfigurationDecodingErrorCode	struct ManagedAppConfigurationDecodingErrorCode
+s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV11keyNotFoundSivpZ	swift.type.property	keyNotFound	ManagedAppConfigurationDecodingErrorCode.keyNotFound	static let keyNotFound: Int
+s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV12typeMismatchSivpZ	swift.type.property	typeMismatch	ManagedAppConfigurationDecodingErrorCode.typeMismatch	static let typeMismatch: Int
+s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV13dataCorruptedSivpZ	swift.type.property	dataCorrupted	ManagedAppConfigurationDecodingErrorCode.dataCorrupted	static let dataCorrupted: Int
+s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV13firstReservedSivpZ	swift.type.property	firstReserved	ManagedAppConfigurationDecodingErrorCode.firstReserved	static let firstReserved: Int
+s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV13valueNotFoundSivpZ	swift.type.property	valueNotFound	ManagedAppConfigurationDecodingErrorCode.valueNotFound	static let valueNotFound: Int
+s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV7genericSivpZ	swift.type.property	generic	ManagedAppConfigurationDecodingErrorCode.generic	static let generic: Int
+s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV7timeoutSivpZ	swift.type.property	timeout	ManagedAppConfigurationDecodingErrorCode.timeout	static let timeout: Int
+s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV8RawValuea	swift.typealias	ManagedAppConfigurationDecodingErrorCode.RawValue	ManagedAppConfigurationDecodingErrorCode.RawValue	typealias RawValue = Int
+s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV8rawValueACSgSi_tcfc	swift.init	init(rawValue:)	ManagedAppConfigurationDecodingErrorCode.init(rawValue:)	init?(rawValue: Int)
+s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV8rawValueSivp	swift.property	rawValue	ManagedAppConfigurationDecodingErrorCode.rawValue	let rawValue: Int
+s:10ManagedApp0aB5ErrorO	swift.enum	ManagedAppError	ManagedAppError	enum ManagedAppError
+s:10ManagedApp0aB5ErrorO06serverC0yA2CmF	swift.enum.case	ManagedAppError.serverError	ManagedAppError.serverError	case serverError
+s:10ManagedApp0aB5ErrorO08internalC0yA2CmF	swift.enum.case	ManagedAppError.internalError	ManagedAppError.internalError	case internalError
+s:10ManagedApp0aB5ErrorO17invalidIdentifieryA2CmF	swift.enum.case	ManagedAppError.invalidIdentifier	ManagedAppError.invalidIdentifier	case invalidIdentifier
+s:10ManagedApp0aB5ErrorO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	ManagedAppError.==(_:_:)	static func == (a: ManagedAppError, b: ManagedAppError) -> Bool
+s:10ManagedApp0aB5ErrorO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ManagedAppError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10ManagedApp0aB5ErrorO9hashValueSivp	swift.property	hashValue	ManagedAppError.hashValue	var hashValue: Int { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV	swift.func.op	!=(_:_:)	ManagedAppConfigurationDecodingErrorCode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10ManagedApp0aB5ErrorO	swift.func.op	!=(_:_:)	ManagedAppError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSERzSi8RawValueSYRtzrlE6encode2toys7Encoder_p_tKF::SYNTHESIZED::s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV	swift.method	encode(to:)	ManagedAppConfigurationDecodingErrorCode.encode(to:)	func encode(to encoder: any Encoder) throws
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV	swift.property	hashValue	ManagedAppConfigurationDecodingErrorCode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV	swift.method	hash(into:)	ManagedAppConfigurationDecodingErrorCode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSeRzSi8RawValueSYRtzrlE4fromxs7Decoder_p_tKcfc::SYNTHESIZED::s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV	swift.init	init(from:)	ManagedAppConfigurationDecodingErrorCode.init(from:)	init(from decoder: any Decoder) throws
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:10ManagedApp0aB5ErrorO	swift.property	localizedDescription	ManagedAppError.localizedDescription	var localizedDescription: String { get }

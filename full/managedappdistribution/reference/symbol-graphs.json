@@ -1,0 +1,36 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 3,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/ManagedAppDistribution.symbols.json",
+      "relationshipCount": 132,
+      "sha256": "c671615a8aef085633c28d492abbf6920bb3d6d483a5833ae578d7f870883482",
+      "symbolCount": 101
+    },
+    {
+      "path": "reference/symbol-graphs/_ManagedAppDistribution_SwiftUI@ManagedAppDistribution.symbols.json",
+      "relationshipCount": 1566,
+      "sha256": "e6db75e6cf779142f95c6935b83fbf0be75fa16dc4849768a12e34208d3975f6",
+      "symbolCount": 1562
+    },
+    {
+      "path": "reference/symbol-graphs/_ManagedAppDistribution_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "510b62c2eb96de84ed7f0b7ce9ded861e511d87666f402649d1e4bd5e208c25c",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "ManagedAppDistribution",
+  "relationshipCount": 1699,
+  "relationshipMultisetSHA256": "f038648734fc92f5821b932e4370c76c595e4ebee1f056a32c43788abfba82df",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 1664,
+  "symbolMultisetSHA256": "c0d742a6acd0d53abcb89ca38b03da4e58e558bb2ec6fea188a20e4323b24ab9",
+  "target": "arm64-apple-ios26.0"
+}

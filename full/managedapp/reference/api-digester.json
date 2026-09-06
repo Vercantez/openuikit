@@ -1,0 +1,1498 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedApp",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedApp",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedApp",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedApp",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedAppError",
+                    "printedName": "ManagedApp.ManagedAppError",
+                    "usr": "s:10ManagedApp0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedAppError",
+                        "printedName": "ManagedApp.ManagedAppError",
+                        "usr": "s:10ManagedApp0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ManagedApp.ManagedAppError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ManagedApp.ManagedAppError.Type) -> ManagedApp.ManagedAppError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB5ErrorO17invalidIdentifieryA2CmF",
+            "moduleName": "ManagedApp",
+            "name": "invalidIdentifier",
+            "printedName": "invalidIdentifier",
+            "usr": "s:10ManagedApp0aB5ErrorO17invalidIdentifieryA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedAppError",
+                    "printedName": "ManagedApp.ManagedAppError",
+                    "usr": "s:10ManagedApp0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedAppError",
+                        "printedName": "ManagedApp.ManagedAppError",
+                        "usr": "s:10ManagedApp0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ManagedApp.ManagedAppError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ManagedApp.ManagedAppError.Type) -> ManagedApp.ManagedAppError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB5ErrorO06serverC0yA2CmF",
+            "moduleName": "ManagedApp",
+            "name": "serverError",
+            "printedName": "serverError",
+            "usr": "s:10ManagedApp0aB5ErrorO06serverC0yA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedAppError",
+                    "printedName": "ManagedApp.ManagedAppError",
+                    "usr": "s:10ManagedApp0aB5ErrorO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ManagedAppError",
+                        "printedName": "ManagedApp.ManagedAppError",
+                        "usr": "s:10ManagedApp0aB5ErrorO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "ManagedApp.ManagedAppError.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(ManagedApp.ManagedAppError.Type) -> ManagedApp.ManagedAppError"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB5ErrorO08internalC0yA2CmF",
+            "moduleName": "ManagedApp",
+            "name": "internalError",
+            "printedName": "internalError",
+            "usr": "s:10ManagedApp0aB5ErrorO08internalC0yA2CmF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedAppError",
+                "printedName": "ManagedApp.ManagedAppError",
+                "usr": "s:10ManagedApp0aB5ErrorO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedAppError",
+                "printedName": "ManagedApp.ManagedAppError",
+                "usr": "s:10ManagedApp0aB5ErrorO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10ManagedApp0aB5ErrorO2eeoiySbAC_ACtFZ",
+            "moduleName": "ManagedApp",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:10ManagedApp0aB5ErrorO2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10ManagedApp0aB5ErrorO4hash4intoys6HasherVz_tF",
+            "moduleName": "ManagedApp",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:10ManagedApp0aB5ErrorO4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB5ErrorO9hashValueSivg",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:10ManagedApp0aB5ErrorO9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB5ErrorO9hashValueSivp",
+            "moduleName": "ManagedApp",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:10ManagedApp0aB5ErrorO9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation14LocalizedErrorP",
+            "name": "LocalizedError",
+            "printedName": "LocalizedError",
+            "usr": "s:10Foundation14LocalizedErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_iOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s10ManagedApp0aB5ErrorO",
+        "moduleName": "ManagedApp",
+        "name": "ManagedAppError",
+        "printedName": "ManagedAppError",
+        "usr": "s:10ManagedApp0aB5ErrorO"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedAppConfigurationProvider",
+                "printedName": "ManagedApp.ManagedAppConfigurationProvider",
+                "usr": "s:10ManagedApp0aB21ConfigurationProviderC"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s10ManagedApp0aB21ConfigurationProviderCACycfc",
+            "moduleName": "ManagedApp",
+            "name": "init",
+            "printedName": "init()",
+            "usr": "s:10ManagedApp0aB21ConfigurationProviderCACycfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AsyncSequence",
+                    "printedName": "_Concurrency.AsyncSequence",
+                    "usr": "s:Sci"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some _Concurrency.AsyncSequence<Configuration?, Swift.Never>"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Configuration"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Metatype",
+                "printedName": "Configuration.Type"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Configuration where Configuration : Swift.Decodable>",
+            "kind": "Function",
+            "mangledName": "$s10ManagedApp0aB21ConfigurationProviderC14configurationsyQrxmYaSeRzlF",
+            "moduleName": "ManagedApp",
+            "name": "configurations",
+            "printedName": "configurations(_:)",
+            "usr": "s:10ManagedApp0aB21ConfigurationProviderC14configurationsyQrxmYaSeRzlF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "intro_iOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s10ManagedApp0aB21ConfigurationProviderC",
+        "moduleName": "ManagedApp",
+        "name": "ManagedAppConfigurationProvider",
+        "printedName": "ManagedAppConfigurationProvider",
+        "usr": "s:10ManagedApp0aB21ConfigurationProviderC"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedAppConfigurationDecodingErrorCode",
+                    "printedName": "ManagedApp.ManagedAppConfigurationDecodingErrorCode",
+                    "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : ManagedApp.ManagedAppConfigurationDecodingError>",
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB26ConfigurationDecodingErrorP4codeAA0abcdE4CodeVvg",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:10ManagedApp0aB26ConfigurationDecodingErrorP4codeAA0abcdE4CodeVvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedAppConfigurationDecodingErrorCode",
+                    "printedName": "ManagedApp.ManagedAppConfigurationDecodingErrorCode",
+                    "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : ManagedApp.ManagedAppConfigurationDecodingError>",
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB26ConfigurationDecodingErrorP4codeAA0abcdE4CodeVvs",
+                "moduleName": "ManagedApp",
+                "name": "Set",
+                "printedName": "Set()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:10ManagedApp0aB26ConfigurationDecodingErrorP4codeAA0abcdE4CodeVvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedAppConfigurationDecodingErrorCode",
+                "printedName": "ManagedApp.ManagedAppConfigurationDecodingErrorCode",
+                "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB26ConfigurationDecodingErrorP4codeAA0abcdE4CodeVvp",
+            "moduleName": "ManagedApp",
+            "name": "code",
+            "printedName": "code",
+            "protocolReq": true,
+            "usr": "s:10ManagedApp0aB26ConfigurationDecodingErrorP4codeAA0abcdE4CodeVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : ManagedApp.ManagedAppConfigurationDecodingError>",
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB26ConfigurationDecodingErrorP7messageSSvg",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:10ManagedApp0aB26ConfigurationDecodingErrorP7messageSSvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : ManagedApp.ManagedAppConfigurationDecodingError>",
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB26ConfigurationDecodingErrorP7messageSSvs",
+                "moduleName": "ManagedApp",
+                "name": "Set",
+                "printedName": "Set()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:10ManagedApp0aB26ConfigurationDecodingErrorP7messageSSvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB26ConfigurationDecodingErrorP7messageSSvp",
+            "moduleName": "ManagedApp",
+            "name": "message",
+            "printedName": "message",
+            "protocolReq": true,
+            "usr": "s:10ManagedApp0aB26ConfigurationDecodingErrorP7messageSSvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : Swift.Decodable, Self : Swift.Encodable, Self : Swift.Error>",
+        "intro_iOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s10ManagedApp0aB26ConfigurationDecodingErrorP",
+        "moduleName": "ManagedApp",
+        "name": "ManagedAppConfigurationDecodingError",
+        "printedName": "ManagedAppConfigurationDecodingError",
+        "usr": "s:10ManagedApp0aB26ConfigurationDecodingErrorP"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV8rawValueSivg",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV8rawValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV8rawValueSivp",
+            "moduleName": "ManagedApp",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV8rawValueSivp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ManagedAppConfigurationDecodingErrorCode",
+                    "printedName": "ManagedApp.ManagedAppConfigurationDecodingErrorCode",
+                    "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "ManagedApp.ManagedAppConfigurationDecodingErrorCode?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV8rawValueACSgSi_tcfc",
+            "moduleName": "ManagedApp",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV8rawValueACSgSi_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV13firstReservedSivgZ",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV13firstReservedSivgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV13firstReservedSivpZ",
+            "moduleName": "ManagedApp",
+            "name": "firstReserved",
+            "printedName": "firstReserved",
+            "static": true,
+            "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV13firstReservedSivpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV7genericSivgZ",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV7genericSivgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV7genericSivpZ",
+            "moduleName": "ManagedApp",
+            "name": "generic",
+            "printedName": "generic",
+            "static": true,
+            "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV7genericSivpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV13dataCorruptedSivgZ",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV13dataCorruptedSivgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV13dataCorruptedSivpZ",
+            "moduleName": "ManagedApp",
+            "name": "dataCorrupted",
+            "printedName": "dataCorrupted",
+            "static": true,
+            "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV13dataCorruptedSivpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV11keyNotFoundSivgZ",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV11keyNotFoundSivgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV11keyNotFoundSivpZ",
+            "moduleName": "ManagedApp",
+            "name": "keyNotFound",
+            "printedName": "keyNotFound",
+            "static": true,
+            "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV11keyNotFoundSivpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV12typeMismatchSivgZ",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV12typeMismatchSivgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV12typeMismatchSivpZ",
+            "moduleName": "ManagedApp",
+            "name": "typeMismatch",
+            "printedName": "typeMismatch",
+            "static": true,
+            "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV12typeMismatchSivpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV13valueNotFoundSivgZ",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV13valueNotFoundSivgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV13valueNotFoundSivpZ",
+            "moduleName": "ManagedApp",
+            "name": "valueNotFound",
+            "printedName": "valueNotFound",
+            "static": true,
+            "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV13valueNotFoundSivpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV7timeoutSivgZ",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV7timeoutSivgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV7timeoutSivpZ",
+            "moduleName": "ManagedApp",
+            "name": "timeout",
+            "printedName": "timeout",
+            "static": true,
+            "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV7timeoutSivpZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_iOS": "18.4",
+            "kind": "TypeAlias",
+            "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV8RawValuea",
+            "moduleName": "ManagedApp",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV8RawValuea"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "ManagedApp.ManagedAppConfigurationDecodingErrorCode.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s10ManagedApp0aB30ConfigurationDecodingErrorCodeV",
+        "moduleName": "ManagedApp",
+        "name": "ManagedAppConfigurationDecodingErrorCode",
+        "printedName": "ManagedAppConfigurationDecodingErrorCode",
+        "usr": "s:10ManagedApp0aB30ConfigurationDecodingErrorCodeV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedAppPasswordsProvider",
+                "printedName": "ManagedApp.ManagedAppPasswordsProvider",
+                "usr": "s:10ManagedApp0aB17PasswordsProviderC"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s10ManagedApp0aB17PasswordsProviderCACycfc",
+            "moduleName": "ManagedApp",
+            "name": "init",
+            "printedName": "init()",
+            "usr": "s:10ManagedApp0aB17PasswordsProviderCACycfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AsyncSequence",
+                        "printedName": "_Concurrency.AsyncSequence",
+                        "usr": "s:Sci"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some _Concurrency.AsyncSequence<[Swift.String], Swift.Never>"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB17PasswordsProviderC11identifiersQrvg",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:10ManagedApp0aB17PasswordsProviderC11identifiersQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AsyncSequence",
+                    "printedName": "_Concurrency.AsyncSequence",
+                    "usr": "s:Sci"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some _Concurrency.AsyncSequence<[Swift.String], Swift.Never>"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB17PasswordsProviderC11identifiersQrvp",
+            "moduleName": "ManagedApp",
+            "name": "identifiers",
+            "printedName": "identifiers",
+            "usr": "s:10ManagedApp0aB17PasswordsProviderC11identifiersQrvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10ManagedApp0aB17PasswordsProviderC8password14withIdentifierS2S_tYaAA0aB5ErrorOYKF",
+            "moduleName": "ManagedApp",
+            "name": "password",
+            "printedName": "password(withIdentifier:)",
+            "throwing": true,
+            "usr": "s:10ManagedApp0aB17PasswordsProviderC8password14withIdentifierS2S_tYaAA0aB5ErrorOYKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "intro_iOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s10ManagedApp0aB17PasswordsProviderC",
+        "moduleName": "ManagedApp",
+        "name": "ManagedAppPasswordsProvider",
+        "printedName": "ManagedAppPasswordsProvider",
+        "usr": "s:10ManagedApp0aB17PasswordsProviderC"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedAppCertificatesProvider",
+                "printedName": "ManagedApp.ManagedAppCertificatesProvider",
+                "usr": "s:10ManagedApp0aB20CertificatesProviderC"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s10ManagedApp0aB20CertificatesProviderCACycfc",
+            "moduleName": "ManagedApp",
+            "name": "init",
+            "printedName": "init()",
+            "usr": "s:10ManagedApp0aB20CertificatesProviderCACycfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AsyncSequence",
+                        "printedName": "_Concurrency.AsyncSequence",
+                        "usr": "s:Sci"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some _Concurrency.AsyncSequence<[Swift.String], Swift.Never>"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB20CertificatesProviderC11identifiersQrvg",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:10ManagedApp0aB20CertificatesProviderC11identifiersQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AsyncSequence",
+                    "printedName": "_Concurrency.AsyncSequence",
+                    "usr": "s:Sci"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some _Concurrency.AsyncSequence<[Swift.String], Swift.Never>"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB20CertificatesProviderC11identifiersQrvp",
+            "moduleName": "ManagedApp",
+            "name": "identifiers",
+            "printedName": "identifiers",
+            "usr": "s:10ManagedApp0aB20CertificatesProviderC11identifiersQrvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SecCertificate",
+                "printedName": "Security.SecCertificate",
+                "usr": "c:@T@SecCertificateRef"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10ManagedApp0aB20CertificatesProviderC11certificate14withIdentifierSo17SecCertificateRefaSS_tYaAA0aB5ErrorOYKF",
+            "moduleName": "ManagedApp",
+            "name": "certificate",
+            "printedName": "certificate(withIdentifier:)",
+            "throwing": true,
+            "usr": "s:10ManagedApp0aB20CertificatesProviderC11certificate14withIdentifierSo17SecCertificateRefaSS_tYaAA0aB5ErrorOYKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "intro_iOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s10ManagedApp0aB20CertificatesProviderC",
+        "moduleName": "ManagedApp",
+        "name": "ManagedAppCertificatesProvider",
+        "printedName": "ManagedAppCertificatesProvider",
+        "usr": "s:10ManagedApp0aB20CertificatesProviderC"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ManagedAppIdentitiesProvider",
+                "printedName": "ManagedApp.ManagedAppIdentitiesProvider",
+                "usr": "s:10ManagedApp0aB18IdentitiesProviderC"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s10ManagedApp0aB18IdentitiesProviderCACycfc",
+            "moduleName": "ManagedApp",
+            "name": "init",
+            "printedName": "init()",
+            "usr": "s:10ManagedApp0aB18IdentitiesProviderCACycfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AsyncSequence",
+                        "printedName": "_Concurrency.AsyncSequence",
+                        "usr": "s:Sci"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some _Concurrency.AsyncSequence<[Swift.String], Swift.Never>"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s10ManagedApp0aB18IdentitiesProviderC11identifiersQrvg",
+                "moduleName": "ManagedApp",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:10ManagedApp0aB18IdentitiesProviderC11identifiersQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AsyncSequence",
+                    "printedName": "_Concurrency.AsyncSequence",
+                    "usr": "s:Sci"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some _Concurrency.AsyncSequence<[Swift.String], Swift.Never>"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s10ManagedApp0aB18IdentitiesProviderC11identifiersQrvp",
+            "moduleName": "ManagedApp",
+            "name": "identifiers",
+            "printedName": "identifiers",
+            "usr": "s:10ManagedApp0aB18IdentitiesProviderC11identifiersQrvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SecIdentity",
+                "printedName": "Security.SecIdentity",
+                "usr": "c:@T@SecIdentityRef"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10ManagedApp0aB18IdentitiesProviderC8identity14withIdentifierSo14SecIdentityRefaSS_tYaAA0aB5ErrorOYKF",
+            "moduleName": "ManagedApp",
+            "name": "identity",
+            "printedName": "identity(withIdentifier:)",
+            "throwing": true,
+            "usr": "s:10ManagedApp0aB18IdentitiesProviderC8identity14withIdentifierSo14SecIdentityRefaSS_tYaAA0aB5ErrorOYKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "intro_iOS": "18.4",
+        "kind": "TypeDecl",
+        "mangledName": "$s10ManagedApp0aB18IdentitiesProviderC",
+        "moduleName": "ManagedApp",
+        "name": "ManagedAppIdentitiesProvider",
+        "printedName": "ManagedAppIdentitiesProvider",
+        "usr": "s:10ManagedApp0aB18IdentitiesProviderC"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "ManagedApp",
+    "printedName": "ManagedApp"
+  }
+}

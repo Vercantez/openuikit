@@ -1,0 +1,165 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomatedDeviceEnrollment",
+        "name": "Combine",
+        "printedName": "Combine"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomatedDeviceEnrollment",
+        "name": "ExtensionFoundation",
+        "printedName": "ExtensionFoundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomatedDeviceEnrollment",
+        "name": "ExtensionKit",
+        "printedName": "ExtensionKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomatedDeviceEnrollment",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomatedDeviceEnrollment",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomatedDeviceEnrollment",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomatedDeviceEnrollment",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomatedDeviceEnrollment",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomatedDeviceEnrollment",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Binding",
+                "printedName": "SwiftUI.Binding<Swift.Bool>",
+                "usr": "s:7SwiftUI7BindingV"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : SwiftUI.View>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s7SwiftUI4ViewP25AutomatedDeviceEnrollmentE09automatedeF8Addition11isPresentedQrAA7BindingVySbG_tF",
+            "moduleName": "AutomatedDeviceEnrollment",
+            "name": "automatedDeviceEnrollmentAddition",
+            "printedName": "automatedDeviceEnrollmentAddition(isPresented:)",
+            "usr": "s:7SwiftUI4ViewP25AutomatedDeviceEnrollmentE09automatedeF8Addition11isPresentedQrAA7BindingVySbG_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "TypeEraser",
+          "TypeEraser",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self.Body : SwiftUI.View>",
+        "intro_Macosx": "10.15",
+        "intro_iOS": "13.0",
+        "intro_tvOS": "13.0",
+        "intro_watchOS": "6.0",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s7SwiftUI4ViewP",
+        "moduleName": "SwiftUICore",
+        "name": "View",
+        "printedName": "View",
+        "usr": "s:7SwiftUI4ViewP"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "AutomatedDeviceEnrollment",
+    "printedName": "AutomatedDeviceEnrollment"
+  }
+}

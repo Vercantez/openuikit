@@ -1,0 +1,10 @@
+precise	graphKind	graphPath	status	basis	rawCandidateCount	compatibleCandidateCount	selectedNodePath	candidateNodePaths
+c:@CM@StickerKit@@objc(cs)PHLivePhotoView(py)intrinsicContentSize	swift.property	["PHLivePhotoView","intrinsicContentSize"]	exact-usr	exact-usr	1	1	/ABIRoot/children/37/children/0	["/ABIRoot/children/37/children/0"]
+c:@M@StickerKit@objc(cs)AvatarEditorViewController	swift.class	["AvatarEditorViewController"]	exact-usr	exact-usr	1	1	/ABIRoot/children/36	["/ABIRoot/children/36"]
+c:@M@StickerKit@objc(cs)AvatarEditorViewController(im)initWithCoder:	swift.init	["AvatarEditorViewController","init(coder:)"]	exact-usr	exact-usr	1	1	/ABIRoot/children/36/children/4	["/ABIRoot/children/36/children/4"]
+c:@M@StickerKit@objc(cs)AvatarEditorViewController(im)initWithNibName:bundle:	swift.init	["AvatarEditorViewController","init(nibName:bundle:)"]	exact-usr	exact-usr	1	1	/ABIRoot/children/36/children/3	["/ABIRoot/children/36/children/3"]
+c:@M@StickerKit@objc(cs)AvatarEditorViewController(im)viewDidLoad	swift.method	["AvatarEditorViewController","viewDidLoad()"]	exact-usr	exact-usr	1	1	/ABIRoot/children/36/children/1	["/ABIRoot/children/36/children/1"]
+c:@M@StickerKit@objc(cs)AvatarEditorViewController(im)viewWillAppear:	swift.method	["AvatarEditorViewController","viewWillAppear(_:)"]	exact-usr	exact-usr	1	1	/ABIRoot/children/36/children/2	["/ABIRoot/children/36/children/2"]
+s:10StickerKit26AvatarEditorViewControllerC8delegateAA0cdeF8Delegate_pSgvp	swift.property	["AvatarEditorViewController","delegate"]	exact-usr	exact-usr	1	1	/ABIRoot/children/36/children/0	["/ABIRoot/children/36/children/0"]
+s:10StickerKit34AvatarEditorViewControllerDelegateP	swift.protocol	["AvatarEditorViewControllerDelegate"]	exact-usr	exact-usr	1	1	/ABIRoot/children/35	["/ABIRoot/children/35"]
+s:10StickerKit34AvatarEditorViewControllerDelegateP06avatard6RemoteeF13ShouldDismissyyF	swift.method	["AvatarEditorViewControllerDelegate","avatarEditorRemoteViewControllerShouldDismiss()"]	exact-usr	exact-usr	1	1	/ABIRoot/children/35/children/0	["/ABIRoot/children/35/children/0"]

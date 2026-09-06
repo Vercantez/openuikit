@@ -1,0 +1,3 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/DeclaredAgeRange.framework/DeclaredAgeRange.tbd	6701	3fca87427ed75b13e5ff624e38902539e173a3d4f9817345b0e0c9ed6d8b4e4e
+swiftinterface	System/Library/Frameworks/DeclaredAgeRange.framework/Modules/DeclaredAgeRange.swiftmodule/arm64e-apple-ios.swiftinterface	4188	04aa8d64437df662191cd7f2dbfb725be6a2136c32fb51406faf26c63de4e69b

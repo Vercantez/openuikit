@@ -1,0 +1,1683 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeclaredAgeRange",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeclaredAgeRange",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeclaredAgeRange",
+        "name": "UIKit",
+        "printedName": "UIKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeclaredAgeRange",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeclaredAgeRange",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeclaredAgeRange",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AgeRangeService",
+                    "printedName": "DeclaredAgeRange.AgeRangeService",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV6sharedACvgZ",
+                "moduleName": "DeclaredAgeRange",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV6sharedACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AgeRangeService",
+                "printedName": "DeclaredAgeRange.AgeRangeService",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s16DeclaredAgeRange0bC7ServiceV6sharedACvpZ",
+            "moduleName": "DeclaredAgeRange",
+            "name": "shared",
+            "printedName": "shared",
+            "static": true,
+            "usr": "s:16DeclaredAgeRange0bC7ServiceV6sharedACvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.Error",
+                        "usr": "s:16DeclaredAgeRange0bC7ServiceV5ErrorO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "DeclaredAgeRange.AgeRangeService.Error",
+                            "usr": "s:16DeclaredAgeRange0bC7ServiceV5ErrorO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.Error.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeclaredAgeRange.AgeRangeService.Error.Type) -> DeclaredAgeRange.AgeRangeService.Error"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV5ErrorO12notAvailableyA2EmF",
+                "moduleName": "DeclaredAgeRange",
+                "name": "notAvailable",
+                "printedName": "notAvailable",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV5ErrorO12notAvailableyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.Error",
+                        "usr": "s:16DeclaredAgeRange0bC7ServiceV5ErrorO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "DeclaredAgeRange.AgeRangeService.Error",
+                            "usr": "s:16DeclaredAgeRange0bC7ServiceV5ErrorO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.Error.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeclaredAgeRange.AgeRangeService.Error.Type) -> DeclaredAgeRange.AgeRangeService.Error"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV5ErrorO14invalidRequestyA2EmF",
+                "moduleName": "DeclaredAgeRange",
+                "name": "invalidRequest",
+                "printedName": "invalidRequest",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV5ErrorO14invalidRequestyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Error",
+                    "printedName": "DeclaredAgeRange.AgeRangeService.Error",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV5ErrorO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Error",
+                    "printedName": "DeclaredAgeRange.AgeRangeService.Error",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV5ErrorO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV5ErrorO2eeoiySbAE_AEtFZ",
+                "moduleName": "DeclaredAgeRange",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV5ErrorO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV5ErrorO4hash4intoys6HasherVz_tF",
+                "moduleName": "DeclaredAgeRange",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV5ErrorO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s16DeclaredAgeRange0bC7ServiceV5ErrorO9hashValueSivg",
+                    "moduleName": "DeclaredAgeRange",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV5ErrorO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV5ErrorO9hashValueSivp",
+                "moduleName": "DeclaredAgeRange",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV5ErrorO9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$s10Foundation14LocalizedErrorP",
+                "name": "LocalizedError",
+                "printedName": "LocalizedError",
+                "usr": "s:10Foundation14LocalizedErrorP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss5ErrorP",
+                "name": "Error",
+                "printedName": "Error",
+                "usr": "s:s5ErrorP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s16DeclaredAgeRange0bC7ServiceV5ErrorO",
+            "moduleName": "DeclaredAgeRange",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:16DeclaredAgeRange0bC7ServiceV5ErrorO"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AgeRangeDeclaration",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration",
+                        "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AgeRangeDeclaration",
+                            "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration",
+                            "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration.Type) -> DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO04selfA0yA2EmF",
+                "moduleName": "DeclaredAgeRange",
+                "name": "selfDeclared",
+                "printedName": "selfDeclared",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO04selfA0yA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AgeRangeDeclaration",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration",
+                        "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AgeRangeDeclaration",
+                            "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration",
+                            "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration.Type) -> DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO08guardianA0yA2EmF",
+                "moduleName": "DeclaredAgeRange",
+                "name": "guardianDeclared",
+                "printedName": "guardianDeclared",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO08guardianA0yA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AgeRangeDeclaration",
+                    "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AgeRangeDeclaration",
+                    "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO2eeoiySbAE_AEtFZ",
+                "moduleName": "DeclaredAgeRange",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO4hash4intoys6HasherVz_tF",
+                "moduleName": "DeclaredAgeRange",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO9hashValueSivg",
+                    "moduleName": "DeclaredAgeRange",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO9hashValueSivp",
+                "moduleName": "DeclaredAgeRange",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO",
+            "moduleName": "DeclaredAgeRange",
+            "name": "AgeRangeDeclaration",
+            "printedName": "AgeRangeDeclaration",
+            "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16DeclaredAgeRange0bC7ServiceV16ParentalControlsV8rawValueSivg",
+                    "moduleName": "DeclaredAgeRange",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV16ParentalControlsV8rawValueSivp",
+                "moduleName": "DeclaredAgeRange",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV8rawValueSivp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ParentalControls",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls",
+                        "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16DeclaredAgeRange0bC7ServiceV16ParentalControlsV19communicationLimitsAEvgZ",
+                    "moduleName": "DeclaredAgeRange",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV19communicationLimitsAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ParentalControls",
+                    "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV16ParentalControlsV19communicationLimitsAEvpZ",
+                "moduleName": "DeclaredAgeRange",
+                "name": "communicationLimits",
+                "printedName": "communicationLimits",
+                "static": true,
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV19communicationLimitsAEvpZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ParentalControls",
+                    "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV16ParentalControlsV8rawValueAESi_tcfc",
+                "moduleName": "DeclaredAgeRange",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV8rawValueAESi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s16DeclaredAgeRange0bC7ServiceV16ParentalControlsV11descriptionSSvg",
+                    "moduleName": "DeclaredAgeRange",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV11descriptionSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV16ParentalControlsV11descriptionSSvp",
+                "moduleName": "DeclaredAgeRange",
+                "name": "description",
+                "printedName": "description",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV11descriptionSSvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ParentalControls",
+                    "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "26.0",
+                "intro_iOS": "26.0",
+                "kind": "TypeAlias",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV16ParentalControlsV19ArrayLiteralElementa",
+                "moduleName": "DeclaredAgeRange",
+                "name": "ArrayLiteralElement",
+                "printedName": "ArrayLiteralElement",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV19ArrayLiteralElementa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ParentalControls",
+                    "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "26.0",
+                "intro_iOS": "26.0",
+                "kind": "TypeAlias",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV16ParentalControlsV7Elementa",
+                "moduleName": "DeclaredAgeRange",
+                "name": "Element",
+                "printedName": "Element",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV7Elementa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "26.0",
+                "intro_iOS": "26.0",
+                "kind": "TypeAlias",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV16ParentalControlsV8RawValuea",
+                "moduleName": "DeclaredAgeRange",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV8RawValuea"
+              }
+            ],
+            "conformances": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ParentalControls",
+                            "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls",
+                            "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss9OptionSetP",
+                "name": "OptionSet",
+                "printedName": "OptionSet",
+                "usr": "s:s9OptionSetP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ParentalControls",
+                            "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls",
+                            "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss10SetAlgebraP",
+                "name": "SetAlgebra",
+                "printedName": "SetAlgebra",
+                "usr": "s:s10SetAlgebraP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ParentalControls",
+                            "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls",
+                            "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "ArrayLiteralElement",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls.ArrayLiteralElement"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "ArrayLiteralElement",
+                    "printedName": "ArrayLiteralElement"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss25ExpressibleByArrayLiteralP",
+                "name": "ExpressibleByArrayLiteral",
+                "printedName": "ExpressibleByArrayLiteral",
+                "usr": "s:s25ExpressibleByArrayLiteralP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "kind": "TypeDecl",
+            "mangledName": "$s16DeclaredAgeRange0bC7ServiceV16ParentalControlsV",
+            "moduleName": "DeclaredAgeRange",
+            "name": "ParentalControls",
+            "printedName": "ParentalControls",
+            "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Swift.Int?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC0V10lowerBoundSiSgvg",
+                    "moduleName": "DeclaredAgeRange",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V10lowerBoundSiSgvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Swift.Int?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC0V10lowerBoundSiSgvs",
+                    "moduleName": "DeclaredAgeRange",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V10lowerBoundSiSgvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Int?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "HasInitialValue",
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC0V10lowerBoundSiSgvp",
+                "moduleName": "DeclaredAgeRange",
+                "name": "lowerBound",
+                "printedName": "lowerBound",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V10lowerBoundSiSgvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Swift.Int?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC0V10upperBoundSiSgvg",
+                    "moduleName": "DeclaredAgeRange",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V10upperBoundSiSgvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Swift.Int?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC0V10upperBoundSiSgvs",
+                    "moduleName": "DeclaredAgeRange",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V10upperBoundSiSgvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Int?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "HasInitialValue",
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC0V10upperBoundSiSgvp",
+                "moduleName": "DeclaredAgeRange",
+                "name": "upperBound",
+                "printedName": "upperBound",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V10upperBoundSiSgvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AgeRangeDeclaration",
+                            "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration",
+                            "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC0V03ageC11DeclarationAC0bcF0OSgvg",
+                    "moduleName": "DeclaredAgeRange",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V03ageC11DeclarationAC0bcF0OSgvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AgeRangeDeclaration",
+                            "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration",
+                            "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC0V03ageC11DeclarationAC0bcF0OSgvs",
+                    "moduleName": "DeclaredAgeRange",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V03ageC11DeclarationAC0bcF0OSgvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AgeRangeDeclaration",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration",
+                        "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC11DeclarationO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "DeclaredAgeRange.AgeRangeService.AgeRangeDeclaration?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "HasInitialValue",
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC0V03ageC11DeclarationAC0bcF0OSgvp",
+                "moduleName": "DeclaredAgeRange",
+                "name": "ageRangeDeclaration",
+                "printedName": "ageRangeDeclaration",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V03ageC11DeclarationAC0bcF0OSgvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ParentalControls",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls",
+                        "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC0V22activeParentalControlsAC0fG0Vvg",
+                    "moduleName": "DeclaredAgeRange",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V22activeParentalControlsAC0fG0Vvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ParentalControls",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls",
+                        "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC0V22activeParentalControlsAC0fG0Vvs",
+                    "moduleName": "DeclaredAgeRange",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V22activeParentalControlsAC0fG0Vvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ParentalControls",
+                    "printedName": "DeclaredAgeRange.AgeRangeService.ParentalControls",
+                    "usr": "s:16DeclaredAgeRange0bC7ServiceV16ParentalControlsV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC0V22activeParentalControlsAC0fG0Vvp",
+                "moduleName": "DeclaredAgeRange",
+                "name": "activeParentalControls",
+                "printedName": "activeParentalControls",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V22activeParentalControlsAC0fG0Vvp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "kind": "TypeDecl",
+            "mangledName": "$s16DeclaredAgeRange0bC7ServiceV0bC0V",
+            "moduleName": "DeclaredAgeRange",
+            "name": "AgeRange",
+            "printedName": "AgeRange",
+            "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Response",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.Response",
+                        "usr": "s:16DeclaredAgeRange0bC7ServiceV8ResponseO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Response",
+                            "printedName": "DeclaredAgeRange.AgeRangeService.Response",
+                            "usr": "s:16DeclaredAgeRange0bC7ServiceV8ResponseO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.Response.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeclaredAgeRange.AgeRangeService.Response.Type) -> DeclaredAgeRange.AgeRangeService.Response"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV8ResponseO15declinedSharingyA2EmF",
+                "moduleName": "DeclaredAgeRange",
+                "name": "declinedSharing",
+                "printedName": "declinedSharing",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV8ResponseO15declinedSharingyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Response",
+                            "printedName": "DeclaredAgeRange.AgeRangeService.Response",
+                            "usr": "s:16DeclaredAgeRange0bC7ServiceV8ResponseO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "AgeRange",
+                                "printedName": "DeclaredAgeRange.AgeRangeService.AgeRange",
+                                "usr": "s:16DeclaredAgeRange0bC7ServiceV0bC0V"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(range: DeclaredAgeRange.AgeRangeService.AgeRange)"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(DeclaredAgeRange.AgeRangeService.AgeRange) -> DeclaredAgeRange.AgeRangeService.Response"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Response",
+                            "printedName": "DeclaredAgeRange.AgeRangeService.Response",
+                            "usr": "s:16DeclaredAgeRange0bC7ServiceV8ResponseO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeclaredAgeRange.AgeRangeService.Response.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeclaredAgeRange.AgeRangeService.Response.Type) -> (DeclaredAgeRange.AgeRangeService.AgeRange) -> DeclaredAgeRange.AgeRangeService.Response"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s16DeclaredAgeRange0bC7ServiceV8ResponseO7sharingyAeC0bC0V_tcAEmF",
+                "moduleName": "DeclaredAgeRange",
+                "name": "sharing",
+                "printedName": "sharing",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV8ResponseO7sharingyAeC0bC0V_tcAEmF"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s16DeclaredAgeRange0bC7ServiceV8ResponseO",
+            "moduleName": "DeclaredAgeRange",
+            "name": "Response",
+            "printedName": "Response",
+            "usr": "s:16DeclaredAgeRange0bC7ServiceV8ResponseO"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Response",
+                "printedName": "DeclaredAgeRange.AgeRangeService.Response",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV8ResponseO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Int?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Int?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UIViewController",
+                "printedName": "UIKit.UIViewController",
+                "usr": "c:objc(cs)UIViewController"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16DeclaredAgeRange0bC7ServiceV07requestbC08ageGates__2inAC8ResponseOSi_SiSgAISo16UIViewControllerCtYaKF",
+            "moduleName": "DeclaredAgeRange",
+            "name": "requestAgeRange",
+            "printedName": "requestAgeRange(ageGates:_:_:in:)",
+            "throwing": true,
+            "usr": "s:16DeclaredAgeRange0bC7ServiceV07requestbC08ageGates__2inAC8ResponseOSi_SiSgAISo16UIViewControllerCtYaKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s16DeclaredAgeRange0bC7ServiceV",
+        "moduleName": "DeclaredAgeRange",
+        "name": "AgeRangeService",
+        "printedName": "AgeRangeService",
+        "usr": "s:16DeclaredAgeRange0bC7ServiceV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Response",
+                "printedName": "DeclaredAgeRange.AgeRangeService.Response",
+                "usr": "s:16DeclaredAgeRange0bC7ServiceV8ResponseO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Int?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Int?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s16DeclaredAgeRange0abC6ActionV14callAsFunction8ageGates__AA0bC7ServiceV8ResponseOSi_SiSgAJtYaKF",
+            "moduleName": "DeclaredAgeRange",
+            "name": "callAsFunction",
+            "printedName": "callAsFunction(ageGates:_:_:)",
+            "throwing": true,
+            "usr": "s:16DeclaredAgeRange0abC6ActionV14callAsFunction8ageGates__AA0bC7ServiceV8ResponseOSi_SiSgAJtYaKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s16DeclaredAgeRange0abC6ActionV",
+        "moduleName": "DeclaredAgeRange",
+        "name": "DeclaredAgeRangeAction",
+        "printedName": "DeclaredAgeRangeAction",
+        "usr": "s:16DeclaredAgeRange0abC6ActionV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DeclaredAgeRangeAction",
+                    "printedName": "DeclaredAgeRange.DeclaredAgeRangeAction",
+                    "usr": "s:16DeclaredAgeRange0abC6ActionV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s7SwiftUI17EnvironmentValuesV16DeclaredAgeRangeE07requestfG0AD0efG6ActionVvg",
+                "moduleName": "DeclaredAgeRange",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:7SwiftUI17EnvironmentValuesV16DeclaredAgeRangeE07requestfG0AD0efG6ActionVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DeclaredAgeRangeAction",
+                "printedName": "DeclaredAgeRange.DeclaredAgeRangeAction",
+                "usr": "s:16DeclaredAgeRange0abC6ActionV"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s7SwiftUI17EnvironmentValuesV16DeclaredAgeRangeE07requestfG0AD0efG6ActionVvp",
+            "moduleName": "DeclaredAgeRange",
+            "name": "requestAgeRange",
+            "printedName": "requestAgeRange",
+            "usr": "s:7SwiftUI17EnvironmentValuesV16DeclaredAgeRangeE07requestfG0AD0efG6ActionVvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "10.15",
+        "intro_iOS": "13.0",
+        "intro_tvOS": "13.0",
+        "intro_watchOS": "6.0",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s7SwiftUI17EnvironmentValuesV",
+        "moduleName": "SwiftUICore",
+        "name": "EnvironmentValues",
+        "printedName": "EnvironmentValues",
+        "usr": "s:7SwiftUI17EnvironmentValuesV"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "DeclaredAgeRange",
+    "printedName": "DeclaredAgeRange"
+  }
+}

@@ -1,0 +1,3 @@
+precise	payloadSHA256	graphPath	ownershipTier	occurrenceCount	canonicalSelection	kind	title	symbolPath	declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	ca5a78519a41c4ace3998bb5aee3944370deb12d10c24a93720691e37235fef2	reference/symbol-graphs/SystemExtensions.symbols.json	0	1	1	swift.func.op	!=(_:_:)	OSSystemExtensionError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	a2e0653d86f5b402ea9a53d911a3ef17ee4f133b0d0fe75cf9aebe46f4f6b2b9	reference/symbol-graphs/SystemExtensions.symbols.json	0	1	0	swift.func.op	!=(_:_:)	OSSystemExtensionError.Code.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool

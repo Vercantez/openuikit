@@ -1,0 +1,1114 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "RelevanceKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "RelevanceKit",
+        "name": "CoreLocation",
+        "printedName": "CoreLocation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "RelevanceKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "RelevanceKit",
+        "name": "OSLog",
+        "printedName": "OSLog"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "RelevanceKit",
+        "name": "RelevanceKit",
+        "printedName": "RelevanceKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "RelevanceKit",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "RelevanceKit",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "RelevanceKit",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RelevantContext",
+                "printedName": "AppIntents.RelevantContext",
+                "usr": "s:12RelevanceKit15RelevantContextV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Date",
+                "printedName": "Foundation.Date",
+                "usr": "s:10Foundation4DateV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10AppIntents15RelevantContextV4dateyAC10Foundation4DateVFZ",
+            "moduleName": "RelevanceKit",
+            "name": "date",
+            "printedName": "date(_:)",
+            "static": true,
+            "usr": "s:12RelevanceKit15RelevantContextV4dateyAC10Foundation4DateVFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RelevantContext",
+                "printedName": "AppIntents.RelevantContext",
+                "usr": "s:12RelevanceKit15RelevantContextV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Date",
+                "printedName": "Foundation.Date",
+                "usr": "s:10Foundation4DateV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Date",
+                "printedName": "Foundation.Date",
+                "usr": "s:10Foundation4DateV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "deprecated": true,
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "14.0",
+            "intro_iOS": "17.0",
+            "intro_tvOS": "17.0",
+            "intro_watchOS": "10.0",
+            "kind": "Function",
+            "mangledName": "$s10AppIntents15RelevantContextV4date4from2toAC10Foundation4DateV_AItFZ",
+            "moduleName": "RelevanceKit",
+            "name": "date",
+            "printedName": "date(from:to:)",
+            "static": true,
+            "usr": "s:12RelevanceKit15RelevantContextV4date4from2toAC10Foundation4DateV_AItFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RelevantContext",
+                "printedName": "AppIntents.RelevantContext",
+                "usr": "s:12RelevanceKit15RelevantContextV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CLRegion",
+                "printedName": "CoreLocation.CLRegion",
+                "usr": "c:objc(cs)CLRegion"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "14.0",
+            "intro_iOS": "17.0",
+            "intro_tvOS": "17.0",
+            "intro_watchOS": "10.0",
+            "kind": "Function",
+            "mangledName": "$s10AppIntents15RelevantContextV8locationyACSo8CLRegionCFZ",
+            "moduleName": "RelevanceKit",
+            "name": "location",
+            "printedName": "location(_:)",
+            "static": true,
+            "usr": "s:12RelevanceKit15RelevantContextV8locationyACSo8CLRegionCFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RelevantContext",
+                "printedName": "AppIntents.RelevantContext",
+                "usr": "s:12RelevanceKit15RelevantContextV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "InferredLocation",
+                "printedName": "AppIntents.RelevantContext.InferredLocation",
+                "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10AppIntents15RelevantContextV8location8inferredA2C16InferredLocationV_tFZ",
+            "moduleName": "RelevanceKit",
+            "name": "location",
+            "printedName": "location(inferred:)",
+            "static": true,
+            "usr": "s:12RelevanceKit15RelevantContextV8location8inferredA2C16InferredLocationV_tFZ"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "InferredLocation",
+                        "printedName": "AppIntents.RelevantContext.InferredLocation",
+                        "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10AppIntents15RelevantContextV16InferredLocationV4homeAEvgZ",
+                    "moduleName": "RelevanceKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV4homeAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "InferredLocation",
+                    "printedName": "AppIntents.RelevantContext.InferredLocation",
+                    "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10AppIntents15RelevantContextV16InferredLocationV4homeAEvpZ",
+                "moduleName": "RelevanceKit",
+                "name": "home",
+                "printedName": "home",
+                "static": true,
+                "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV4homeAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "InferredLocation",
+                        "printedName": "AppIntents.RelevantContext.InferredLocation",
+                        "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10AppIntents15RelevantContextV16InferredLocationV4workAEvgZ",
+                    "moduleName": "RelevanceKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV4workAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "InferredLocation",
+                    "printedName": "AppIntents.RelevantContext.InferredLocation",
+                    "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10AppIntents15RelevantContextV16InferredLocationV4workAEvpZ",
+                "moduleName": "RelevanceKit",
+                "name": "work",
+                "printedName": "work",
+                "static": true,
+                "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV4workAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "InferredLocation",
+                        "printedName": "AppIntents.RelevantContext.InferredLocation",
+                        "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10AppIntents15RelevantContextV16InferredLocationV6schoolAEvgZ",
+                    "moduleName": "RelevanceKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV6schoolAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "InferredLocation",
+                    "printedName": "AppIntents.RelevantContext.InferredLocation",
+                    "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10AppIntents15RelevantContextV16InferredLocationV6schoolAEvpZ",
+                "moduleName": "RelevanceKit",
+                "name": "school",
+                "printedName": "school",
+                "static": true,
+                "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV6schoolAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "InferredLocation",
+                        "printedName": "AppIntents.RelevantContext.InferredLocation",
+                        "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10AppIntents15RelevantContextV16InferredLocationV7commuteAEvgZ",
+                    "moduleName": "RelevanceKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV7commuteAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "InferredLocation",
+                    "printedName": "AppIntents.RelevantContext.InferredLocation",
+                    "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10AppIntents15RelevantContextV16InferredLocationV7commuteAEvpZ",
+                "moduleName": "RelevanceKit",
+                "name": "commute",
+                "printedName": "commute",
+                "static": true,
+                "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV7commuteAEvpZ"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "kind": "TypeDecl",
+            "mangledName": "$s10AppIntents15RelevantContextV16InferredLocationV",
+            "moduleName": "RelevanceKit",
+            "name": "InferredLocation",
+            "printedName": "InferredLocation",
+            "usr": "s:12RelevanceKit15RelevantContextV16InferredLocationV"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RelevantContext",
+                "printedName": "AppIntents.RelevantContext",
+                "usr": "s:12RelevanceKit15RelevantContextV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "SleepCondition",
+                "printedName": "AppIntents.RelevantContext.SleepCondition",
+                "usr": "s:12RelevanceKit15RelevantContextV14SleepConditionV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10AppIntents15RelevantContextV5sleepyA2C14SleepConditionVFZ",
+            "moduleName": "RelevanceKit",
+            "name": "sleep",
+            "printedName": "sleep(_:)",
+            "static": true,
+            "usr": "s:12RelevanceKit15RelevantContextV5sleepyA2C14SleepConditionVFZ"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SleepCondition",
+                        "printedName": "AppIntents.RelevantContext.SleepCondition",
+                        "usr": "s:12RelevanceKit15RelevantContextV14SleepConditionV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10AppIntents15RelevantContextV14SleepConditionV6wakeupAEvgZ",
+                    "moduleName": "RelevanceKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:12RelevanceKit15RelevantContextV14SleepConditionV6wakeupAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SleepCondition",
+                    "printedName": "AppIntents.RelevantContext.SleepCondition",
+                    "usr": "s:12RelevanceKit15RelevantContextV14SleepConditionV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10AppIntents15RelevantContextV14SleepConditionV6wakeupAEvpZ",
+                "moduleName": "RelevanceKit",
+                "name": "wakeup",
+                "printedName": "wakeup",
+                "static": true,
+                "usr": "s:12RelevanceKit15RelevantContextV14SleepConditionV6wakeupAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SleepCondition",
+                        "printedName": "AppIntents.RelevantContext.SleepCondition",
+                        "usr": "s:12RelevanceKit15RelevantContextV14SleepConditionV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10AppIntents15RelevantContextV14SleepConditionV7bedtimeAEvgZ",
+                    "moduleName": "RelevanceKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:12RelevanceKit15RelevantContextV14SleepConditionV7bedtimeAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SleepCondition",
+                    "printedName": "AppIntents.RelevantContext.SleepCondition",
+                    "usr": "s:12RelevanceKit15RelevantContextV14SleepConditionV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10AppIntents15RelevantContextV14SleepConditionV7bedtimeAEvpZ",
+                "moduleName": "RelevanceKit",
+                "name": "bedtime",
+                "printedName": "bedtime",
+                "static": true,
+                "usr": "s:12RelevanceKit15RelevantContextV14SleepConditionV7bedtimeAEvpZ"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "kind": "TypeDecl",
+            "mangledName": "$s10AppIntents15RelevantContextV14SleepConditionV",
+            "moduleName": "RelevanceKit",
+            "name": "SleepCondition",
+            "printedName": "SleepCondition",
+            "usr": "s:12RelevanceKit15RelevantContextV14SleepConditionV"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RelevantContext",
+                "printedName": "AppIntents.RelevantContext",
+                "usr": "s:12RelevanceKit15RelevantContextV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FitnessCondition",
+                "printedName": "AppIntents.RelevantContext.FitnessCondition",
+                "usr": "s:12RelevanceKit15RelevantContextV16FitnessConditionV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10AppIntents15RelevantContextV7fitnessyA2C16FitnessConditionVFZ",
+            "moduleName": "RelevanceKit",
+            "name": "fitness",
+            "printedName": "fitness(_:)",
+            "static": true,
+            "usr": "s:12RelevanceKit15RelevantContextV7fitnessyA2C16FitnessConditionVFZ"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FitnessCondition",
+                        "printedName": "AppIntents.RelevantContext.FitnessCondition",
+                        "usr": "s:12RelevanceKit15RelevantContextV16FitnessConditionV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10AppIntents15RelevantContextV16FitnessConditionV13workoutActiveAEvgZ",
+                    "moduleName": "RelevanceKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:12RelevanceKit15RelevantContextV16FitnessConditionV13workoutActiveAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FitnessCondition",
+                    "printedName": "AppIntents.RelevantContext.FitnessCondition",
+                    "usr": "s:12RelevanceKit15RelevantContextV16FitnessConditionV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10AppIntents15RelevantContextV16FitnessConditionV13workoutActiveAEvpZ",
+                "moduleName": "RelevanceKit",
+                "name": "workoutActive",
+                "printedName": "workoutActive",
+                "static": true,
+                "usr": "s:12RelevanceKit15RelevantContextV16FitnessConditionV13workoutActiveAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FitnessCondition",
+                        "printedName": "AppIntents.RelevantContext.FitnessCondition",
+                        "usr": "s:12RelevanceKit15RelevantContextV16FitnessConditionV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10AppIntents15RelevantContextV16FitnessConditionV23activityRingsIncompleteAEvgZ",
+                    "moduleName": "RelevanceKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:12RelevanceKit15RelevantContextV16FitnessConditionV23activityRingsIncompleteAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FitnessCondition",
+                    "printedName": "AppIntents.RelevantContext.FitnessCondition",
+                    "usr": "s:12RelevanceKit15RelevantContextV16FitnessConditionV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10AppIntents15RelevantContextV16FitnessConditionV23activityRingsIncompleteAEvpZ",
+                "moduleName": "RelevanceKit",
+                "name": "activityRingsIncomplete",
+                "printedName": "activityRingsIncomplete",
+                "static": true,
+                "usr": "s:12RelevanceKit15RelevantContextV16FitnessConditionV23activityRingsIncompleteAEvpZ"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "kind": "TypeDecl",
+            "mangledName": "$s10AppIntents15RelevantContextV16FitnessConditionV",
+            "moduleName": "RelevanceKit",
+            "name": "FitnessCondition",
+            "printedName": "FitnessCondition",
+            "usr": "s:12RelevanceKit15RelevantContextV16FitnessConditionV"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RelevantContext",
+                "printedName": "AppIntents.RelevantContext",
+                "usr": "s:12RelevanceKit15RelevantContextV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "HeadphonesCondition",
+                "printedName": "AppIntents.RelevantContext.HeadphonesCondition",
+                "usr": "s:12RelevanceKit15RelevantContextV19HeadphonesConditionV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10AppIntents15RelevantContextV8hardware10headphonesA2C19HeadphonesConditionV_tFZ",
+            "moduleName": "RelevanceKit",
+            "name": "hardware",
+            "printedName": "hardware(headphones:)",
+            "static": true,
+            "usr": "s:12RelevanceKit15RelevantContextV8hardware10headphonesA2C19HeadphonesConditionV_tFZ"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "HeadphonesCondition",
+                        "printedName": "AppIntents.RelevantContext.HeadphonesCondition",
+                        "usr": "s:12RelevanceKit15RelevantContextV19HeadphonesConditionV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10AppIntents15RelevantContextV19HeadphonesConditionV9connectedAEvgZ",
+                    "moduleName": "RelevanceKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:12RelevanceKit15RelevantContextV19HeadphonesConditionV9connectedAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "HeadphonesCondition",
+                    "printedName": "AppIntents.RelevantContext.HeadphonesCondition",
+                    "usr": "s:12RelevanceKit15RelevantContextV19HeadphonesConditionV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10AppIntents15RelevantContextV19HeadphonesConditionV9connectedAEvpZ",
+                "moduleName": "RelevanceKit",
+                "name": "connected",
+                "printedName": "connected",
+                "static": true,
+                "usr": "s:12RelevanceKit15RelevantContextV19HeadphonesConditionV9connectedAEvpZ"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "kind": "TypeDecl",
+            "mangledName": "$s10AppIntents15RelevantContextV19HeadphonesConditionV",
+            "moduleName": "RelevanceKit",
+            "name": "HeadphonesCondition",
+            "printedName": "HeadphonesCondition",
+            "usr": "s:12RelevanceKit15RelevantContextV19HeadphonesConditionV"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RelevantContext",
+                "printedName": "AppIntents.RelevantContext",
+                "usr": "s:12RelevanceKit15RelevantContextV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Date",
+                "printedName": "Foundation.Date",
+                "usr": "s:10Foundation4DateV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DateKind",
+                "printedName": "AppIntents.RelevantContext.DateKind",
+                "usr": "s:12RelevanceKit15RelevantContextV8DateKindV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s10AppIntents15RelevantContextV12RelevanceKitE4date_4kindAC10Foundation4DateV_AcDE0J4KindVtFZ",
+            "moduleName": "RelevanceKit",
+            "name": "date",
+            "printedName": "date(_:kind:)",
+            "static": true,
+            "usr": "s:12RelevanceKit15RelevantContextV4date_4kindAC10Foundation4DateV_AC0H4KindVtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RelevantContext",
+                "printedName": "AppIntents.RelevantContext",
+                "usr": "s:12RelevanceKit15RelevantContextV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DateInterval",
+                "printedName": "Foundation.DateInterval",
+                "usr": "s:10Foundation12DateIntervalV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DateKind",
+                "printedName": "AppIntents.RelevantContext.DateKind",
+                "usr": "s:12RelevanceKit15RelevantContextV8DateKindV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s10AppIntents15RelevantContextV12RelevanceKitE4date8interval4kindAC10Foundation12DateIntervalV_AcDE0K4KindVtFZ",
+            "moduleName": "RelevanceKit",
+            "name": "date",
+            "printedName": "date(interval:kind:)",
+            "static": true,
+            "usr": "s:12RelevanceKit15RelevantContextV4date8interval4kindAC10Foundation12DateIntervalV_AC0I4KindVtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RelevantContext",
+                "printedName": "AppIntents.RelevantContext",
+                "usr": "s:12RelevanceKit15RelevantContextV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Date",
+                    "printedName": "Foundation.Date",
+                    "usr": "s:10Foundation4DateV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "ClosedRange",
+                "printedName": "Swift.ClosedRange<Foundation.Date>",
+                "usr": "s:SN"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DateKind",
+                "printedName": "AppIntents.RelevantContext.DateKind",
+                "usr": "s:12RelevanceKit15RelevantContextV8DateKindV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s10AppIntents15RelevantContextV12RelevanceKitE4date5range4kindACSNy10Foundation4DateVG_AcDE0K4KindVtFZ",
+            "moduleName": "RelevanceKit",
+            "name": "date",
+            "printedName": "date(range:kind:)",
+            "static": true,
+            "usr": "s:12RelevanceKit15RelevantContextV4date5range4kindACSNy10Foundation4DateVG_AC0I4KindVtFZ"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DateKind",
+                        "printedName": "AppIntents.RelevantContext.DateKind",
+                        "usr": "s:12RelevanceKit15RelevantContextV8DateKindV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10AppIntents15RelevantContextV12RelevanceKitE8DateKindV13informationalAFvgZ",
+                    "moduleName": "RelevanceKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:12RelevanceKit15RelevantContextV8DateKindV13informationalAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DateKind",
+                    "printedName": "AppIntents.RelevantContext.DateKind",
+                    "usr": "s:12RelevanceKit15RelevantContextV8DateKindV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10AppIntents15RelevantContextV12RelevanceKitE8DateKindV13informationalAFvpZ",
+                "moduleName": "RelevanceKit",
+                "name": "informational",
+                "printedName": "informational",
+                "static": true,
+                "usr": "s:12RelevanceKit15RelevantContextV8DateKindV13informationalAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DateKind",
+                        "printedName": "AppIntents.RelevantContext.DateKind",
+                        "usr": "s:12RelevanceKit15RelevantContextV8DateKindV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10AppIntents15RelevantContextV12RelevanceKitE8DateKindV7defaultAFvgZ",
+                    "moduleName": "RelevanceKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:12RelevanceKit15RelevantContextV8DateKindV7defaultAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DateKind",
+                    "printedName": "AppIntents.RelevantContext.DateKind",
+                    "usr": "s:12RelevanceKit15RelevantContextV8DateKindV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10AppIntents15RelevantContextV12RelevanceKitE8DateKindV7defaultAFvpZ",
+                "moduleName": "RelevanceKit",
+                "name": "default",
+                "printedName": "default",
+                "static": true,
+                "usr": "s:12RelevanceKit15RelevantContextV8DateKindV7defaultAEvpZ"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DateKind",
+                        "printedName": "AppIntents.RelevantContext.DateKind",
+                        "usr": "s:12RelevanceKit15RelevantContextV8DateKindV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s10AppIntents15RelevantContextV12RelevanceKitE8DateKindV9scheduledAFvgZ",
+                    "moduleName": "RelevanceKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:12RelevanceKit15RelevantContextV8DateKindV9scheduledAEvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DateKind",
+                    "printedName": "AppIntents.RelevantContext.DateKind",
+                    "usr": "s:12RelevanceKit15RelevantContextV8DateKindV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s10AppIntents15RelevantContextV12RelevanceKitE8DateKindV9scheduledAFvpZ",
+                "moduleName": "RelevanceKit",
+                "name": "scheduled",
+                "printedName": "scheduled",
+                "static": true,
+                "usr": "s:12RelevanceKit15RelevantContextV8DateKindV9scheduledAEvpZ"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s10AppIntents15RelevantContextV12RelevanceKitE8DateKindV",
+            "moduleName": "RelevanceKit",
+            "name": "DateKind",
+            "printedName": "DateKind",
+            "usr": "s:12RelevanceKit15RelevantContextV8DateKindV"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "14.0",
+        "intro_iOS": "17.0",
+        "intro_tvOS": "17.0",
+        "intro_watchOS": "10.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s10AppIntents15RelevantContextV",
+        "moduleName": "RelevanceKit",
+        "name": "RelevantContext",
+        "printedName": "RelevantContext",
+        "usr": "s:12RelevanceKit15RelevantContextV"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "RelevanceKit",
+    "printedName": "RelevanceKit"
+  }
+}

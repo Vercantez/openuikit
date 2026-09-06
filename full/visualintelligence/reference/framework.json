@@ -1,0 +1,81 @@
+{
+  "apiCrosswalk": "reference/api-crosswalk.tsv",
+  "apiDigester": "reference/api-digester.json",
+  "corpusSummary": "reference/corpus-summary.json",
+  "coveragePolicy": {
+    "allowedStatuses": [
+      "implemented",
+      "declared",
+      "deferred",
+      "unavailable",
+      "not-applicable"
+    ],
+    "minimumNondeferredCount": 11,
+    "nondeferredStatuses": [
+      "implemented",
+      "declared"
+    ],
+    "rule": "ceil(80% of exact public symbols)"
+  },
+  "dependencies": [
+    "Foundation"
+  ],
+  "externalEvidence": "reference/external-evidence.json",
+  "guestManifest": "visualintelligence_guest_sources.txt",
+  "lane": "leaf-full",
+  "module": "VisualIntelligence",
+  "moduleLocation": {
+    "kind": "framework",
+    "reason": "public iPhoneOS framework bundle is present at System/Library/Frameworks/VisualIntelligence.framework",
+    "sdkRelativePath": "System/Library/Frameworks/VisualIntelligence.framework"
+  },
+  "provenance": {
+    "apiCrosswalkAmbiguousCount": 0,
+    "apiCrosswalkExactUSRCount": 11,
+    "apiCrosswalkImportNameCount": 0,
+    "apiCrosswalkUnmatchedCount": 2,
+    "apiDeclarationNodeCount": 24,
+    "apiDigesterFormatVersion": 8,
+    "apiDigesterNodeCount": 59,
+    "apiDigesterPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-api-digester",
+    "apiDigesterSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "apiDigesterVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "apiOwnedDeclarationNodeCount": 24,
+    "arm64TBDExportCount": 76,
+    "externalEvidenceLockPath": "full/framework-fanout/external-evidence-sources.json",
+    "externalEvidenceLockSHA256": "a0b7ebf22affede443bc79ae75fb8ac7b9f450a407f666147efa3ba93878b752",
+    "frameworkSDKRelativePath": "System/Library/Frameworks/VisualIntelligence.framework",
+    "generatorPath": "scripts/framework-fanout/generate_seed_v2.py",
+    "generatorSHA256": "e56ee6e70b5464f6e1d76679652d670222bf6200daf198d2f4c6aea67d7421e6",
+    "rawSDKInputCount": 2,
+    "roadmapPath": "full/framework-roadmap/framework-roadmap.json",
+    "roadmapSHA256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a",
+    "sdkName": "iphoneos",
+    "sdkVersion": "26.1",
+    "symbolGraphExtractorPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-symbolgraph-extract",
+    "symbolGraphExtractorSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "symbolGraphExtractorVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "symbolGraphRelationshipMultisetSHA256": "d920ddf201c7c504f1f2d9b695ebe0820cb5dabfab5ec3218de955abcf8b7f86",
+    "symbolGraphSymbolMultisetSHA256": "a5b1726ad4028b419a5939ba8c50fa3571b32a5b9716057e19f3cbe934eef5fa",
+    "target": "arm64-apple-ios26.0",
+    "tbdInputCount": 1,
+    "xcodeBuild": "17B55",
+    "xcodeVersion": "26.1"
+  },
+  "publicSurface": "reference/public-surface.tsv",
+  "relationshipCount": 24,
+  "risks": [
+    "ml",
+    "extension",
+    "fail-closed"
+  ],
+  "roadmap": "none (operator override)",
+  "runtimeMarker": "VISUALINTELLIGENCE_AGENT_RUNTIME_OK",
+  "schema": 2,
+  "sdkInputs": "reference/sdk-inputs.tsv",
+  "slug": "visualintelligence",
+  "symbolConflicts": "reference/symbol-conflicts.tsv",
+  "symbolCount": 13,
+  "symbolGraph": "reference/symbol-graphs.json",
+  "tbdExports": "reference/tbd-exports.tsv"
+}

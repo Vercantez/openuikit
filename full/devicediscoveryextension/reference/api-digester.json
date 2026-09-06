@@ -1,0 +1,1966 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "DeviceDiscoveryExtension.DDCommon",
+        "printedName": "DeviceDiscoveryExtension.DDCommon"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "DeviceDiscoveryExtension.DDDevice",
+        "printedName": "DeviceDiscoveryExtension.DDDevice"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "DeviceDiscoveryExtension.DDErrors",
+        "printedName": "DeviceDiscoveryExtension.DDErrors"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "DeviceDiscoveryExtension.DDEvent",
+        "printedName": "DeviceDiscoveryExtension.DDEvent"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "DeviceDiscoveryExtension.DDExtension",
+        "printedName": "DeviceDiscoveryExtension.DDExtension"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11DDErrorCodeLeV8_nsErrorSo7NSErrorCvg",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC11DDErrorCodeLeV8_nsErrorSo7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC11DDErrorCodeLeV8_nsErrorSo7NSErrorCvp",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC11DDErrorCodeLeV8_nsErrorSo7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DDError",
+                "printedName": "DeviceDiscoveryExtension.DDError",
+                "usr": "c:@E@DDErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC11DDErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC11DDErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11DDErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11DDErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC11DDErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC11DDErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                        "usr": "c:@E@DDErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "DeviceDiscoveryExtension.DDError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo11DDErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So11DDErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11DDErrorCodeV8rawValueSivg",
+                    "moduleName": "DeviceDiscoveryExtension",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11DDErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo11DDErrorCodeV8rawValueSivp",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So11DDErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11DDErrorCodeV8RawValuea",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So11DDErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DDError",
+                    "printedName": "DeviceDiscoveryExtension.DDError",
+                    "usr": "c:@E@DDErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@DDErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                        "usr": "c:@E@DDErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                            "usr": "c:@E@DDErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceDiscoveryExtension.DDError.Code.Type) -> DeviceDiscoveryExtension.DDError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "success",
+                "printedName": "success",
+                "usr": "c:@E@DDErrorCode@DDErrorCodeSuccess"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                        "usr": "c:@E@DDErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                            "usr": "c:@E@DDErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceDiscoveryExtension.DDError.Code.Type) -> DeviceDiscoveryExtension.DDError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "unknown",
+                "printedName": "unknown",
+                "usr": "c:@E@DDErrorCode@DDErrorCodeUnknown"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                        "usr": "c:@E@DDErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                            "usr": "c:@E@DDErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceDiscoveryExtension.DDError.Code.Type) -> DeviceDiscoveryExtension.DDError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "badParameter",
+                "printedName": "badParameter",
+                "usr": "c:@E@DDErrorCode@DDErrorCodeBadParameter"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                        "usr": "c:@E@DDErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                            "usr": "c:@E@DDErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceDiscoveryExtension.DDError.Code.Type) -> DeviceDiscoveryExtension.DDError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "unsupported",
+                "printedName": "unsupported",
+                "usr": "c:@E@DDErrorCode@DDErrorCodeUnsupported"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                        "usr": "c:@E@DDErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                            "usr": "c:@E@DDErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceDiscoveryExtension.DDError.Code.Type) -> DeviceDiscoveryExtension.DDError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "timeout",
+                "printedName": "timeout",
+                "usr": "c:@E@DDErrorCode@DDErrorCodeTimeout"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                        "usr": "c:@E@DDErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                            "usr": "c:@E@DDErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceDiscoveryExtension.DDError.Code.Type) -> DeviceDiscoveryExtension.DDError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "internal",
+                "printedName": "internal",
+                "usr": "c:@E@DDErrorCode@DDErrorCodeInternal"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                        "usr": "c:@E@DDErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                            "usr": "c:@E@DDErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceDiscoveryExtension.DDError.Code.Type) -> DeviceDiscoveryExtension.DDError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "missingEntitlement",
+                "printedName": "missingEntitlement",
+                "usr": "c:@E@DDErrorCode@DDErrorCodeMissingEntitlement"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                        "usr": "c:@E@DDErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                            "usr": "c:@E@DDErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceDiscoveryExtension.DDError.Code.Type) -> DeviceDiscoveryExtension.DDError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "permission",
+                "printedName": "permission",
+                "usr": "c:@E@DDErrorCode@DDErrorCodePermission"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                        "usr": "c:@E@DDErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                            "usr": "c:@E@DDErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(DeviceDiscoveryExtension.DDError.Code.Type) -> DeviceDiscoveryExtension.DDError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "next",
+                "printedName": "next",
+                "usr": "c:@E@DDErrorCode@DDErrorCodeNext"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "DeviceDiscoveryExtension.DDError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "16.0",
+            "kind": "TypeDecl",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "Code",
+            "objc_name": "DDErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@DDErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                    "usr": "c:@E@DDErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11DDErrorCodeLeV7successSoAAVvgZ",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11DDErrorCodeLeV7successSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                "usr": "c:@E@DDErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "success",
+            "printedName": "success",
+            "static": true,
+            "usr": "c:@E@DDErrorCode@DDErrorCodeSuccess"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                    "usr": "c:@E@DDErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11DDErrorCodeLeV7unknownSoAAVvgZ",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11DDErrorCodeLeV7unknownSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                "usr": "c:@E@DDErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "unknown",
+            "printedName": "unknown",
+            "static": true,
+            "usr": "c:@E@DDErrorCode@DDErrorCodeUnknown"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                    "usr": "c:@E@DDErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11DDErrorCodeLeV12badParameterSoAAVvgZ",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11DDErrorCodeLeV12badParameterSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                "usr": "c:@E@DDErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "badParameter",
+            "printedName": "badParameter",
+            "static": true,
+            "usr": "c:@E@DDErrorCode@DDErrorCodeBadParameter"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                    "usr": "c:@E@DDErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11DDErrorCodeLeV11unsupportedSoAAVvgZ",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11DDErrorCodeLeV11unsupportedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                "usr": "c:@E@DDErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "unsupported",
+            "printedName": "unsupported",
+            "static": true,
+            "usr": "c:@E@DDErrorCode@DDErrorCodeUnsupported"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                    "usr": "c:@E@DDErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11DDErrorCodeLeV7timeoutSoAAVvgZ",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11DDErrorCodeLeV7timeoutSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                "usr": "c:@E@DDErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "timeout",
+            "printedName": "timeout",
+            "static": true,
+            "usr": "c:@E@DDErrorCode@DDErrorCodeTimeout"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                    "usr": "c:@E@DDErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11DDErrorCodeLeV8internalSoAAVvgZ",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11DDErrorCodeLeV8internalSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                "usr": "c:@E@DDErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "internal",
+            "printedName": "internal",
+            "static": true,
+            "usr": "c:@E@DDErrorCode@DDErrorCodeInternal"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                    "usr": "c:@E@DDErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11DDErrorCodeLeV18missingEntitlementSoAAVvgZ",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11DDErrorCodeLeV18missingEntitlementSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                "usr": "c:@E@DDErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "missingEntitlement",
+            "printedName": "missingEntitlement",
+            "static": true,
+            "usr": "c:@E@DDErrorCode@DDErrorCodeMissingEntitlement"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                    "usr": "c:@E@DDErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11DDErrorCodeLeV10permissionSoAAVvgZ",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11DDErrorCodeLeV10permissionSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                "usr": "c:@E@DDErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "permission",
+            "printedName": "permission",
+            "static": true,
+            "usr": "c:@E@DDErrorCode@DDErrorCodePermission"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                    "usr": "c:@E@DDErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11DDErrorCodeLeV4nextSoAAVvgZ",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11DDErrorCodeLeV4nextSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "DeviceDiscoveryExtension.DDError.Code",
+                "usr": "c:@E@DDErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "next",
+            "printedName": "next",
+            "static": true,
+            "usr": "c:@E@DDErrorCode@DDErrorCodeNext"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "16.0",
+        "kind": "TypeDecl",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "DDError",
+        "printedName": "DDError",
+        "usr": "c:@E@DDErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "DeviceDiscoveryExtension",
+        "printedName": "DeviceDiscoveryExtension"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "ExtensionFoundation",
+        "printedName": "ExtensionFoundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "Network",
+        "printedName": "Network"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA13ConfigurationP",
+            "name": "AppExtensionConfiguration",
+            "printedName": "AppExtensionConfiguration",
+            "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionFoundation.AppExtensionConfiguration>",
+        "intro_iOS": "16.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s24DeviceDiscoveryExtension011DDDiscoveryC21ConfigurationProtocolP",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "DDDiscoveryExtensionConfigurationProtocol",
+        "printedName": "DDDiscoveryExtensionConfigurationProtocol",
+        "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC21ConfigurationProtocolP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DDDiscoverySession",
+                "printedName": "DeviceDiscoveryExtension.DDDiscoverySession",
+                "usr": "c:objc(cs)DDDiscoverySession"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : DeviceDiscoveryExtension.DDDiscoveryExtension>",
+            "kind": "Function",
+            "mangledName": "$s24DeviceDiscoveryExtension011DDDiscoveryC0P05startB07sessionySo0D7SessionC_tF",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "startDiscovery",
+            "printedName": "startDiscovery(session:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC0P05startB07sessionySo0D7SessionC_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DDDiscoverySession",
+                "printedName": "DeviceDiscoveryExtension.DDDiscoverySession",
+                "usr": "c:objc(cs)DDDiscoverySession"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : DeviceDiscoveryExtension.DDDiscoveryExtension>",
+            "kind": "Function",
+            "mangledName": "$s24DeviceDiscoveryExtension011DDDiscoveryC0P04stopB07sessionySo0D7SessionC_tF",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "stopDiscovery",
+            "printedName": "stopDiscovery(session:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC0P04stopB07sessionySo0D7SessionC_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DDDeviceEvent",
+                "printedName": "DeviceDiscoveryExtension.DDDeviceEvent",
+                "usr": "c:objc(cs)DDDeviceEvent"
+              }
+            ],
+            "declAttributes": [
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : DeviceDiscoveryExtension.DDDiscoveryExtension>",
+            "intro_iOS": "17.0",
+            "kind": "Function",
+            "mangledName": "$s24DeviceDiscoveryExtension011DDDiscoveryC0P15didReceiveEventyySo08DDDeviceG0CF",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "didReceiveEvent",
+            "printedName": "didReceiveEvent(_:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC0P15didReceiveEventyySo08DDDeviceG0CF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DDDiscoveryExtensionConfigurationProtocol",
+                        "printedName": "DeviceDiscoveryExtension.DDDiscoveryExtensionConfigurationProtocol",
+                        "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC21ConfigurationProtocolP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some DeviceDiscoveryExtension.DDDiscoveryExtensionConfigurationProtocol"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : DeviceDiscoveryExtension.DDDiscoveryExtension>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s24DeviceDiscoveryExtension011DDDiscoveryC0PAAE13configurationQrvg",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC0PAAE13configurationQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DDDiscoveryExtensionConfigurationProtocol",
+                    "printedName": "DeviceDiscoveryExtension.DDDiscoveryExtensionConfigurationProtocol",
+                    "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC21ConfigurationProtocolP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some DeviceDiscoveryExtension.DDDiscoveryExtensionConfigurationProtocol"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s24DeviceDiscoveryExtension011DDDiscoveryC0PAAE13configurationQrvp",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC0PAAE13configurationQrvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DDDeviceEvent",
+                "printedName": "DeviceDiscoveryExtension.DDDeviceEvent",
+                "usr": "c:objc(cs)DDDeviceEvent"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : DeviceDiscoveryExtension.DDDiscoveryExtension>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s24DeviceDiscoveryExtension011DDDiscoveryC0PAAE15didReceiveEventyySo08DDDeviceG0CF",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "didReceiveEvent",
+            "printedName": "didReceiveEvent(_:)",
+            "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC0PAAE15didReceiveEventyySo08DDDeviceG0CF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA0P",
+            "name": "AppExtension",
+            "printedName": "AppExtension",
+            "usr": "s:19ExtensionFoundation03AppA0P"
+          }
+        ],
+        "declAttributes": [
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionFoundation.AppExtension>",
+        "intro_iOS": "16.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s24DeviceDiscoveryExtension011DDDiscoveryC0P",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "DDDiscoveryExtension",
+        "printedName": "DDDiscoveryExtension",
+        "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC0P"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "T"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "DDDiscoveryExtensionConfiguration",
+                "printedName": "DeviceDiscoveryExtension.DDDiscoveryExtensionConfiguration<T>",
+                "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC13ConfigurationC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "T"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<T where T : DeviceDiscoveryExtension.DDDiscoveryExtension>",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s24DeviceDiscoveryExtension011DDDiscoveryC13ConfigurationC09discoveryC0ACyxGx_tcfc",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "init",
+            "printedName": "init(discoveryExtension:)",
+            "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC13ConfigurationC09discoveryC0ACyxGx_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSXPCConnection",
+                "printedName": "Foundation.NSXPCConnection",
+                "usr": "c:objc(cs)NSXPCConnection"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<T where T : DeviceDiscoveryExtension.DDDiscoveryExtension>",
+            "kind": "Function",
+            "mangledName": "$s24DeviceDiscoveryExtension011DDDiscoveryC13ConfigurationC6accept10connectionSbSo15NSXPCConnectionC_tF",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "accept",
+            "printedName": "accept(connection:)",
+            "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC13ConfigurationC6accept10connectionSbSo15NSXPCConnectionC_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s24DeviceDiscoveryExtension011DDDiscoveryC21ConfigurationProtocolP",
+            "name": "DDDiscoveryExtensionConfigurationProtocol",
+            "printedName": "DDDiscoveryExtensionConfigurationProtocol",
+            "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC21ConfigurationProtocolP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA13ConfigurationP",
+            "name": "AppExtensionConfiguration",
+            "printedName": "AppExtensionConfiguration",
+            "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Custom"
+        ],
+        "declKind": "Class",
+        "genericSig": "<T where T : DeviceDiscoveryExtension.DDDiscoveryExtension>",
+        "kind": "TypeDecl",
+        "mangledName": "$s24DeviceDiscoveryExtension011DDDiscoveryC13ConfigurationC",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "DDDiscoveryExtensionConfiguration",
+        "printedName": "DDDiscoveryExtensionConfiguration",
+        "usr": "s:24DeviceDiscoveryExtension011DDDiscoveryC13ConfigurationC"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NWEndpoint",
+                        "printedName": "Network.NWEndpoint",
+                        "usr": "s:7Network10NWEndpointO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Network.NWEndpoint?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo8DDDeviceC24DeviceDiscoveryExtensionE15networkEndpoint7Network10NWEndpointOSgvg",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So8DDDeviceC24DeviceDiscoveryExtensionE15networkEndpoint7Network10NWEndpointOSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NWEndpoint",
+                        "printedName": "Network.NWEndpoint",
+                        "usr": "s:7Network10NWEndpointO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Network.NWEndpoint?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo8DDDeviceC24DeviceDiscoveryExtensionE15networkEndpoint7Network10NWEndpointOSgvs",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:So8DDDeviceC24DeviceDiscoveryExtensionE15networkEndpoint7Network10NWEndpointOSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NWEndpoint",
+                    "printedName": "Network.NWEndpoint",
+                    "usr": "s:7Network10NWEndpointO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Network.NWEndpoint?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo8DDDeviceC24DeviceDiscoveryExtensionE15networkEndpoint7Network10NWEndpointOSgvp",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "networkEndpoint",
+            "printedName": "networkEndpoint",
+            "usr": "s:So8DDDeviceC24DeviceDiscoveryExtensionE15networkEndpoint7Network10NWEndpointOSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NWTXTRecord",
+                        "printedName": "Network.NWTXTRecord",
+                        "usr": "s:7Network11NWTXTRecordV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Network.NWTXTRecord?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo8DDDeviceC24DeviceDiscoveryExtensionE9txtRecord7Network11NWTXTRecordVSgvg",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So8DDDeviceC24DeviceDiscoveryExtensionE9txtRecord7Network11NWTXTRecordVSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "NWTXTRecord",
+                        "printedName": "Network.NWTXTRecord",
+                        "usr": "s:7Network11NWTXTRecordV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Network.NWTXTRecord?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo8DDDeviceC24DeviceDiscoveryExtensionE9txtRecord7Network11NWTXTRecordVSgvs",
+                "moduleName": "DeviceDiscoveryExtension",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:So8DDDeviceC24DeviceDiscoveryExtensionE9txtRecord7Network11NWTXTRecordVSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NWTXTRecord",
+                    "printedName": "Network.NWTXTRecord",
+                    "usr": "s:7Network11NWTXTRecordV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Network.NWTXTRecord?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo8DDDeviceC24DeviceDiscoveryExtensionE9txtRecord7Network11NWTXTRecordVSgvp",
+            "moduleName": "DeviceDiscoveryExtension",
+            "name": "txtRecord",
+            "printedName": "txtRecord",
+            "usr": "s:So8DDDeviceC24DeviceDiscoveryExtensionE9txtRecord7Network11NWTXTRecordVSgvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "16.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "DeviceDiscoveryExtension",
+        "name": "DDDevice",
+        "objc_name": "DDDevice",
+        "printedName": "DDDevice",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)DDDevice"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "DeviceDiscoveryExtension",
+    "printedName": "DeviceDiscoveryExtension"
+  }
+}

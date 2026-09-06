@@ -1,0 +1,10 @@
+precise	kind	title	path	declaration
+c:objc(cs)SFCertificatePresentation	swift.class	SFCertificatePresentation	SFCertificatePresentation	class SFCertificatePresentation
+c:objc(cs)SFCertificatePresentation(im)dismissSheet	swift.method	dismissSheet()	SFCertificatePresentation.dismissSheet()	func dismissSheet()
+c:objc(cs)SFCertificatePresentation(im)initWithTrust:	swift.init	init(trust:)	SFCertificatePresentation.init(trust:)	init(trust: SecTrust)
+c:objc(cs)SFCertificatePresentation(im)presentSheetInViewController:dismissHandler:	swift.method	presentSheet(in:dismissHandler:)	SFCertificatePresentation.presentSheet(in:dismissHandler:)	func presentSheet(in viewController: UIViewController, dismissHandler: (() -> Void)? = nil)
+c:objc(cs)SFCertificatePresentation(py)helpURL	swift.property	helpURL	SFCertificatePresentation.helpURL	var helpURL: URL? { get set }
+c:objc(cs)SFCertificatePresentation(py)message	swift.property	message	SFCertificatePresentation.message	var message: String? { get set }
+c:objc(cs)SFCertificatePresentation(py)title	swift.property	title	SFCertificatePresentation.title	var title: String? { get set }
+c:objc(cs)SFCertificatePresentation(py)trust	swift.property	trust	SFCertificatePresentation.trust	unowned(unsafe) var trust: SecTrust { get }
+s:7SwiftUI4ViewP08SecurityB0E16certificateSheet5trust5title7message4helpQrAA7BindingVySo11SecTrustRefaSgG_SSSgAP10Foundation3URLVSgtF	swift.method	certificateSheet(trust:title:message:help:)	View.certificateSheet(trust:title:message:help:)	@MainActor @preconcurrency func certificateSheet(trust: Binding<SecTrust?>, title: String? = nil, message: String? = nil, help: URL? = nil) -> some View\n

@@ -1,0 +1,76 @@
+precise	kind	title	path	declaration
+s:16WirelessInsights17ServicePredictionV	swift.struct	ServicePrediction	ServicePrediction	struct ServicePrediction
+s:16WirelessInsights17ServicePredictionV10ConfidenceO	swift.enum	ServicePrediction.Confidence	ServicePrediction.Confidence	enum Confidence
+s:16WirelessInsights17ServicePredictionV10ConfidenceO1loiySbAE_AEtFZ	swift.func.op	<(_:_:)	ServicePrediction.Confidence.<(_:_:)	static func < (a: ServicePrediction.Confidence, b: ServicePrediction.Confidence) -> Bool
+s:16WirelessInsights17ServicePredictionV10ConfidenceO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	ServicePrediction.Confidence.==(_:_:)	static func == (a: ServicePrediction.Confidence, b: ServicePrediction.Confidence) -> Bool
+s:16WirelessInsights17ServicePredictionV10ConfidenceO3lowyA2EmF	swift.enum.case	ServicePrediction.Confidence.low	ServicePrediction.Confidence.low	case low
+s:16WirelessInsights17ServicePredictionV10ConfidenceO4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	ServicePrediction.Confidence.init(from:)	init(from decoder: any Decoder) throws
+s:16WirelessInsights17ServicePredictionV10ConfidenceO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ServicePrediction.Confidence.hash(into:)	func hash(into hasher: inout Hasher)
+s:16WirelessInsights17ServicePredictionV10ConfidenceO4highyA2EmF	swift.enum.case	ServicePrediction.Confidence.high	ServicePrediction.Confidence.high	case high
+s:16WirelessInsights17ServicePredictionV10ConfidenceO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ServicePrediction.Confidence.encode(to:)	func encode(to encoder: any Encoder) throws
+s:16WirelessInsights17ServicePredictionV10ConfidenceO6mediumyA2EmF	swift.enum.case	ServicePrediction.Confidence.medium	ServicePrediction.Confidence.medium	case medium
+s:16WirelessInsights17ServicePredictionV10ConfidenceO9hashValueSivp	swift.property	hashValue	ServicePrediction.Confidence.hashValue	var hashValue: Int { get }
+s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV	swift.struct	ServicePrediction.ConfidenceScore	ServicePrediction.ConfidenceScore	struct ConfidenceScore
+s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV10predictionAC0E0Ovp	swift.property	prediction	ServicePrediction.ConfidenceScore.prediction	let prediction: ServicePrediction.Confidence
+s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	ServicePrediction.ConfidenceScore.==(_:_:)	static func == (a: ServicePrediction.ConfidenceScore, b: ServicePrediction.ConfidenceScore) -> Bool
+s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	ServicePrediction.ConfidenceScore.init(from:)	init(from decoder: any Decoder) throws
+s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ServicePrediction.ConfidenceScore.hash(into:)	func hash(into hasher: inout Hasher)
+s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ServicePrediction.ConfidenceScore.encode(to:)	func encode(to encoder: any Encoder) throws
+s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV8durationAC0E0Ovp	swift.property	duration	ServicePrediction.ConfidenceScore.duration	let duration: ServicePrediction.Confidence
+s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV9hashValueSivp	swift.property	hashValue	ServicePrediction.ConfidenceScore.hashValue	var hashValue: Int { get }
+s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV9startTimeAC0E0Ovp	swift.property	startTime	ServicePrediction.ConfidenceScore.startTime	let startTime: ServicePrediction.Confidence
+s:16WirelessInsights17ServicePredictionV15confidenceScoreAC010ConfidenceF0Vvp	swift.property	confidenceScore	ServicePrediction.confidenceScore	let confidenceScore: ServicePrediction.ConfidenceScore
+s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV	swift.struct	ServicePrediction.QuantizedInterval	ServicePrediction.QuantizedInterval	struct QuantizedInterval
+s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV4longSdvpZ	swift.type.property	long	ServicePrediction.QuantizedInterval.long	static let long: Double
+s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV5shortSdvpZ	swift.type.property	short	ServicePrediction.QuantizedInterval.short	static let short: Double
+s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV6mediumSdvpZ	swift.type.property	medium	ServicePrediction.QuantizedInterval.medium	static let medium: Double
+s:16WirelessInsights17ServicePredictionV17QuantizedIntervalV7minimalSdvpZ	swift.type.property	minimal	ServicePrediction.QuantizedInterval.minimal	static let minimal: Double
+s:16WirelessInsights17ServicePredictionV17predictedIntervalSdvp	swift.property	predictedInterval	ServicePrediction.predictedInterval	let predictedInterval: TimeInterval
+s:16WirelessInsights17ServicePredictionV18predictedStartTime10Foundation4DateVvp	swift.property	predictedStartTime	ServicePrediction.predictedStartTime	let predictedStartTime: Date
+s:16WirelessInsights17ServicePredictionV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	ServicePrediction.==(_:_:)	static func == (a: ServicePrediction, b: ServicePrediction) -> Bool
+s:16WirelessInsights17ServicePredictionV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	ServicePrediction.init(from:)	init(from decoder: any Decoder) throws
+s:16WirelessInsights17ServicePredictionV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ServicePrediction.hash(into:)	func hash(into hasher: inout Hasher)
+s:16WirelessInsights17ServicePredictionV6ImpactO	swift.enum	ServicePrediction.Impact	ServicePrediction.Impact	enum Impact
+s:16WirelessInsights17ServicePredictionV6ImpactO1loiySbAE_AEtFZ	swift.func.op	<(_:_:)	ServicePrediction.Impact.<(_:_:)	static func < (a: ServicePrediction.Impact, b: ServicePrediction.Impact) -> Bool
+s:16WirelessInsights17ServicePredictionV6ImpactO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	ServicePrediction.Impact.==(_:_:)	static func == (a: ServicePrediction.Impact, b: ServicePrediction.Impact) -> Bool
+s:16WirelessInsights17ServicePredictionV6ImpactO3lowyA2EmF	swift.enum.case	ServicePrediction.Impact.low	ServicePrediction.Impact.low	case low
+s:16WirelessInsights17ServicePredictionV6ImpactO4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	ServicePrediction.Impact.init(from:)	init(from decoder: any Decoder) throws
+s:16WirelessInsights17ServicePredictionV6ImpactO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ServicePrediction.Impact.hash(into:)	func hash(into hasher: inout Hasher)
+s:16WirelessInsights17ServicePredictionV6ImpactO4highyA2EmF	swift.enum.case	ServicePrediction.Impact.high	ServicePrediction.Impact.high	case high
+s:16WirelessInsights17ServicePredictionV6ImpactO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ServicePrediction.Impact.encode(to:)	func encode(to encoder: any Encoder) throws
+s:16WirelessInsights17ServicePredictionV6ImpactO6mediumyA2EmF	swift.enum.case	ServicePrediction.Impact.medium	ServicePrediction.Impact.medium	case medium
+s:16WirelessInsights17ServicePredictionV6ImpactO9hashValueSivp	swift.property	hashValue	ServicePrediction.Impact.hashValue	var hashValue: Int { get }
+s:16WirelessInsights17ServicePredictionV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ServicePrediction.encode(to:)	func encode(to encoder: any Encoder) throws
+s:16WirelessInsights17ServicePredictionV6impactAC6ImpactOvp	swift.property	impact	ServicePrediction.impact	let impact: ServicePrediction.Impact
+s:16WirelessInsights17ServicePredictionV9hashValueSivp	swift.property	hashValue	ServicePrediction.hashValue	var hashValue: Int { get }
+s:16WirelessInsights22ServicePredictionErrorO	swift.enum	ServicePredictionError	ServicePredictionError	enum ServicePredictionError
+s:16WirelessInsights22ServicePredictionErrorO010connectionE0yA2CmF	swift.enum.case	ServicePredictionError.connectionError	ServicePredictionError.connectionError	case connectionError
+s:16WirelessInsights22ServicePredictionErrorO17unsupportedDeviceyA2CmF	swift.enum.case	ServicePredictionError.unsupportedDevice	ServicePredictionError.unsupportedDevice	case unsupportedDevice
+s:16WirelessInsights22ServicePredictionErrorO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	ServicePredictionError.==(_:_:)	static func == (a: ServicePredictionError, b: ServicePredictionError) -> Bool
+s:16WirelessInsights22ServicePredictionErrorO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ServicePredictionError.hash(into:)	func hash(into hasher: inout Hasher)
+s:16WirelessInsights22ServicePredictionErrorO9hashValueSivp	swift.property	hashValue	ServicePredictionError.hashValue	var hashValue: Int { get }
+s:16WirelessInsights25ServicePredictionProviderC	swift.class	ServicePredictionProvider	ServicePredictionProvider	final class ServicePredictionProvider
+s:16WirelessInsights25ServicePredictionProviderC18servicePredictionsSci_pSayAA0cD0VG7ElementSciRts_s5Error_p7FailureSciRtsXPvp	swift.property	servicePredictions	ServicePredictionProvider.servicePredictions	final var servicePredictions: any AsyncSequence<[ServicePrediction], any Error> { get }
+s:16WirelessInsights25ServicePredictionProviderCACycfc	swift.init	init()	ServicePredictionProvider.init()	init()
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV10ConfidenceO	swift.func.op	>(_:_:)	ServicePrediction.Confidence.>(_:_:)	static func > (lhs: Self, rhs: Self) -> Bool
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV6ImpactO	swift.func.op	>(_:_:)	ServicePrediction.Impact.>(_:_:)	static func > (lhs: Self, rhs: Self) -> Bool
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV10ConfidenceO	swift.func.op	>=(_:_:)	ServicePrediction.Confidence.>=(_:_:)	static func >= (lhs: Self, rhs: Self) -> Bool
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV6ImpactO	swift.func.op	>=(_:_:)	ServicePrediction.Impact.>=(_:_:)	static func >= (lhs: Self, rhs: Self) -> Bool
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV10ConfidenceO	swift.func.op	<=(_:_:)	ServicePrediction.Confidence.<=(_:_:)	static func <= (lhs: Self, rhs: Self) -> Bool
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV6ImpactO	swift.func.op	<=(_:_:)	ServicePrediction.Impact.<=(_:_:)	static func <= (lhs: Self, rhs: Self) -> Bool
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV10ConfidenceO	swift.func.op	..<(_:_:)	ServicePrediction.Confidence...<(_:_:)	static func ..< (minimum: Self, maximum: Self) -> Range<Self>
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV6ImpactO	swift.func.op	..<(_:_:)	ServicePrediction.Impact...<(_:_:)	static func ..< (minimum: Self, maximum: Self) -> Range<Self>
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV10ConfidenceO	swift.func.op	..<(_:)	ServicePrediction.Confidence...<(_:)	static func ..< (maximum: Self) -> PartialRangeUpTo<Self>
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV6ImpactO	swift.func.op	..<(_:)	ServicePrediction.Impact...<(_:)	static func ..< (maximum: Self) -> PartialRangeUpTo<Self>
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV10ConfidenceO	swift.func.op	...(_:)	ServicePrediction.Confidence....(_:)	static func ... (minimum: Self) -> PartialRangeFrom<Self>
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV6ImpactO	swift.func.op	...(_:)	ServicePrediction.Impact....(_:)	static func ... (minimum: Self) -> PartialRangeFrom<Self>
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV10ConfidenceO	swift.func.op	...(_:_:)	ServicePrediction.Confidence....(_:_:)	static func ... (minimum: Self, maximum: Self) -> ClosedRange<Self>
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV6ImpactO	swift.func.op	...(_:_:)	ServicePrediction.Impact....(_:_:)	static func ... (minimum: Self, maximum: Self) -> ClosedRange<Self>
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV10ConfidenceO	swift.func.op	...(_:)	ServicePrediction.Confidence....(_:)	static func ... (maximum: Self) -> PartialRangeThrough<Self>
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV6ImpactO	swift.func.op	...(_:)	ServicePrediction.Impact....(_:)	static func ... (maximum: Self) -> PartialRangeThrough<Self>
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV	swift.func.op	!=(_:_:)	ServicePrediction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV10ConfidenceO	swift.func.op	!=(_:_:)	ServicePrediction.Confidence.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV15ConfidenceScoreV	swift.func.op	!=(_:_:)	ServicePrediction.ConfidenceScore.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16WirelessInsights17ServicePredictionV6ImpactO	swift.func.op	!=(_:_:)	ServicePrediction.Impact.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16WirelessInsights22ServicePredictionErrorO	swift.func.op	!=(_:_:)	ServicePredictionError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:16WirelessInsights22ServicePredictionErrorO	swift.property	localizedDescription	ServicePredictionError.localizedDescription	var localizedDescription: String { get }

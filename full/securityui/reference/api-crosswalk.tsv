@@ -1,0 +1,10 @@
+precise	graphKind	graphPath	status	basis	rawCandidateCount	compatibleCandidateCount	selectedNodePath	candidateNodePaths
+c:objc(cs)SFCertificatePresentation	swift.class	["SFCertificatePresentation"]	import-name	exported-import-name	1	1	/ABIRoot/children/0	["/ABIRoot/children/0"]
+c:objc(cs)SFCertificatePresentation(im)dismissSheet	swift.method	["SFCertificatePresentation","dismissSheet()"]	unmatched	none	0	0		[]
+c:objc(cs)SFCertificatePresentation(im)initWithTrust:	swift.init	["SFCertificatePresentation","init(trust:)"]	unmatched	none	0	0		[]
+c:objc(cs)SFCertificatePresentation(im)presentSheetInViewController:dismissHandler:	swift.method	["SFCertificatePresentation","presentSheet(in:dismissHandler:)"]	unmatched	none	0	0		[]
+c:objc(cs)SFCertificatePresentation(py)helpURL	swift.property	["SFCertificatePresentation","helpURL"]	unmatched	none	0	0		[]
+c:objc(cs)SFCertificatePresentation(py)message	swift.property	["SFCertificatePresentation","message"]	unmatched	none	0	0		[]
+c:objc(cs)SFCertificatePresentation(py)title	swift.property	["SFCertificatePresentation","title"]	unmatched	none	0	0		[]
+c:objc(cs)SFCertificatePresentation(py)trust	swift.property	["SFCertificatePresentation","trust"]	unmatched	none	0	0		[]
+s:7SwiftUI4ViewP08SecurityB0E16certificateSheet5trust5title7message4helpQrAA7BindingVySo11SecTrustRefaSgG_SSSgAP10Foundation3URLVSgtF	swift.method	["View","certificateSheet(trust:title:message:help:)"]	exact-usr	exact-usr	1	1	/ABIRoot/children/15/children/0	["/ABIRoot/children/15/children/0"]

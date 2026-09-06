@@ -1,0 +1,1986 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FinanceKitUI",
+        "name": "ExtensionKit",
+        "printedName": "ExtensionKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FinanceKitUI",
+        "name": "FinanceKit",
+        "printedName": "FinanceKit"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FinanceKitUI",
+        "name": "FinanceKitUI",
+        "printedName": "FinanceKitUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FinanceKitUI",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FinanceKitUI",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FinanceKitUI",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FinanceKitUI",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "FinanceKitUI",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "declKind": "AssociatedType",
+            "kind": "AssociatedType",
+            "mangledName": "$s12FinanceKitUI30FinancialConnectionUIExtensionP4BodyQa",
+            "moduleName": "FinanceKitUI",
+            "name": "Body",
+            "printedName": "Body",
+            "protocolReq": true,
+            "usr": "s:12FinanceKitUI30FinancialConnectionUIExtensionP4BodyQa"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DependentMember",
+                    "printedName": "Self.Body"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : FinanceKitUI.FinancialConnectionUIExtension>",
+                "kind": "Accessor",
+                "mangledName": "$s12FinanceKitUI30FinancialConnectionUIExtensionP4body4BodyQzvg",
+                "moduleName": "FinanceKitUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:12FinanceKitUI30FinancialConnectionUIExtensionP4body4BodyQzvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DependentMember",
+                "printedName": "Self.Body"
+              }
+            ],
+            "declAttributes": [
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s12FinanceKitUI30FinancialConnectionUIExtensionP4body4BodyQzvp",
+            "moduleName": "FinanceKitUI",
+            "name": "body",
+            "printedName": "body",
+            "protocolReq": true,
+            "usr": "s:12FinanceKitUI30FinancialConnectionUIExtensionP4body4BodyQzvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionSceneConfiguration",
+                    "printedName": "ExtensionKit.AppExtensionSceneConfiguration",
+                    "usr": "s:12ExtensionKit03AppA18SceneConfigurationV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : FinanceKitUI.FinancialConnectionUIExtension>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s12FinanceKitUI30FinancialConnectionUIExtensionPAAE13configuration09ExtensionB003AppH18SceneConfigurationVvg",
+                "moduleName": "FinanceKitUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:12FinanceKitUI30FinancialConnectionUIExtensionPAAE13configuration09ExtensionB003AppH18SceneConfigurationVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AppExtensionSceneConfiguration",
+                "printedName": "ExtensionKit.AppExtensionSceneConfiguration",
+                "usr": "s:12ExtensionKit03AppA18SceneConfigurationV"
+              }
+            ],
+            "declAttributes": [
+              "Custom"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s12FinanceKitUI30FinancialConnectionUIExtensionPAAE13configuration09ExtensionB003AppH18SceneConfigurationVvp",
+            "moduleName": "FinanceKitUI",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:12FinanceKitUI30FinancialConnectionUIExtensionPAAE13configuration09ExtensionB003AppH18SceneConfigurationVvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s12FinanceKitUI39FinancialConnectionUIExtensionProvidingP",
+            "name": "FinancialConnectionUIExtensionProviding",
+            "printedName": "FinancialConnectionUIExtensionProviding",
+            "usr": "s:12FinanceKitUI39FinancialConnectionUIExtensionProvidingP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA0P",
+            "name": "AppExtension",
+            "printedName": "AppExtension",
+            "usr": "s:19ExtensionFoundation03AppA0P"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionFoundation.AppExtension, Self : FinanceKitUI.FinancialConnectionUIExtensionProviding, Self.Body : FinanceKitUI.FinancialConnectionUIExtensionScene>",
+        "intro_iOS": "17",
+        "kind": "TypeDecl",
+        "mangledName": "$s12FinanceKitUI30FinancialConnectionUIExtensionP",
+        "moduleName": "FinanceKitUI",
+        "name": "FinancialConnectionUIExtension",
+        "printedName": "FinancialConnectionUIExtension",
+        "usr": "s:12FinanceKitUI30FinancialConnectionUIExtensionP"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s12ExtensionKit03AppA5SceneP",
+            "name": "AppExtensionScene",
+            "printedName": "AppExtensionScene",
+            "usr": "s:12ExtensionKit03AppA5SceneP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionKit.AppExtensionScene>",
+        "intro_iOS": "17",
+        "kind": "TypeDecl",
+        "mangledName": "$s12FinanceKitUI35FinancialConnectionUIExtensionSceneP",
+        "moduleName": "FinanceKitUI",
+        "name": "FinancialConnectionUIExtensionScene",
+        "printedName": "FinancialConnectionUIExtensionScene",
+        "usr": "s:12FinanceKitUI35FinancialConnectionUIExtensionSceneP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Content"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "FinancialConnectionUIExtensionAuthorizationScene",
+                "printedName": "FinanceKitUI.FinancialConnectionUIExtensionAuthorizationScene<Content>",
+                "usr": "s:12FinanceKitUI48FinancialConnectionUIExtensionAuthorizationSceneV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Content"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> Content"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Content where Content : SwiftUI.View>",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s12FinanceKitUI48FinancialConnectionUIExtensionAuthorizationSceneV7contentACyxGxyc_tcfc",
+            "moduleName": "FinanceKitUI",
+            "name": "init",
+            "printedName": "init(content:)",
+            "usr": "s:12FinanceKitUI48FinancialConnectionUIExtensionAuthorizationSceneV7contentACyxGxyc_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AppExtensionScene",
+                        "printedName": "ExtensionKit.AppExtensionScene",
+                        "usr": "s:12ExtensionKit03AppA5SceneP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some ExtensionKit.AppExtensionScene"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Content where Content : SwiftUI.View>",
+                "kind": "Accessor",
+                "mangledName": "$s12FinanceKitUI48FinancialConnectionUIExtensionAuthorizationSceneV4bodyQrvg",
+                "moduleName": "FinanceKitUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:12FinanceKitUI48FinancialConnectionUIExtensionAuthorizationSceneV4bodyQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s12FinanceKitUI48FinancialConnectionUIExtensionAuthorizationSceneV4bodyQrvp",
+            "moduleName": "FinanceKitUI",
+            "name": "body",
+            "printedName": "body",
+            "usr": "s:12FinanceKitUI48FinancialConnectionUIExtensionAuthorizationSceneV4bodyQrvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "genericSig": "<Content where Content : SwiftUI.View>",
+            "intro_iOS": "17",
+            "kind": "TypeAlias",
+            "mangledName": "$s12FinanceKitUI48FinancialConnectionUIExtensionAuthorizationSceneV4Bodya",
+            "moduleName": "FinanceKitUI",
+            "name": "Body",
+            "printedName": "Body",
+            "usr": "s:12FinanceKitUI48FinancialConnectionUIExtensionAuthorizationSceneV4Bodya"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s12FinanceKitUI35FinancialConnectionUIExtensionSceneP",
+            "name": "FinancialConnectionUIExtensionScene",
+            "printedName": "FinancialConnectionUIExtensionScene",
+            "usr": "s:12FinanceKitUI35FinancialConnectionUIExtensionSceneP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AppExtensionScene",
+                            "printedName": "ExtensionKit.AppExtensionScene",
+                            "usr": "s:12ExtensionKit03AppA5SceneP"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "OpaqueTypeArchetype",
+                        "printedName": "some ExtensionKit.AppExtensionScene"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "FinanceKitUI.FinancialConnectionUIExtensionAuthorizationScene<Content>.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s12ExtensionKit03AppA5SceneP",
+            "name": "AppExtensionScene",
+            "printedName": "AppExtensionScene",
+            "usr": "s:12ExtensionKit03AppA5SceneP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "genericSig": "<Content where Content : SwiftUI.View>",
+        "intro_iOS": "17",
+        "kind": "TypeDecl",
+        "mangledName": "$s12FinanceKitUI48FinancialConnectionUIExtensionAuthorizationSceneV",
+        "moduleName": "FinanceKitUI",
+        "name": "FinancialConnectionUIExtensionAuthorizationScene",
+        "printedName": "FinancialConnectionUIExtensionAuthorizationScene",
+        "usr": "s:12FinanceKitUI48FinancialConnectionUIExtensionAuthorizationSceneV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FinancialConnectionExtensionAuthorizationRequest",
+                "printedName": "FinanceKitUI.FinancialConnectionExtensionAuthorizationRequest",
+                "usr": "s:12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : FinanceKitUI.FinancialConnectionUIExtensionProviding>",
+            "kind": "Function",
+            "mangledName": "$s12FinanceKitUI39FinancialConnectionUIExtensionProvidingP9authorizeyyAA0dE29ExtensionAuthorizationRequestVF",
+            "moduleName": "FinanceKitUI",
+            "name": "authorize",
+            "printedName": "authorize(_:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:12FinanceKitUI39FinancialConnectionUIExtensionProvidingP9authorizeyyAA0dE29ExtensionAuthorizationRequestVF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "intro_iOS": "17",
+        "kind": "TypeDecl",
+        "mangledName": "$s12FinanceKitUI39FinancialConnectionUIExtensionProvidingP",
+        "moduleName": "FinanceKitUI",
+        "name": "FinancialConnectionUIExtensionProviding",
+        "printedName": "FinancialConnectionUIExtensionProviding",
+        "usr": "s:12FinanceKitUI39FinancialConnectionUIExtensionProvidingP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AddOrderToWalletButton",
+                "printedName": "FinanceKitUI.AddOrderToWalletButton",
+                "usr": "s:12FinanceKitUI22AddOrderToWalletButtonV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SaveOrderResult",
+                        "printedName": "FinanceKit.FinanceStore.SaveOrderResult",
+                        "usr": "s:10FinanceKit0A5StoreC15SaveOrderResultO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "any Swift.Error",
+                        "usr": "s:s5ErrorP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Result",
+                    "printedName": "Swift.Result<FinanceKit.FinanceStore.SaveOrderResult, any Swift.Error>",
+                    "usr": "s:s6ResultO"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.Result<FinanceKit.FinanceStore.SaveOrderResult, any Swift.Error>) -> Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s12FinanceKitUI22AddOrderToWalletButtonV13signedArchive12onCompletionAC10Foundation4DataV_ys6ResultOy0aB00A5StoreC04SaveeO0Os5Error_pGctcfc",
+            "moduleName": "FinanceKitUI",
+            "name": "init",
+            "printedName": "init(signedArchive:onCompletion:)",
+            "usr": "s:12FinanceKitUI22AddOrderToWalletButtonV13signedArchive12onCompletionAC10Foundation4DataV_ys6ResultOy0aB00A5StoreC04SaveeO0Os5Error_pGctcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "View",
+                        "printedName": "SwiftUI.View",
+                        "usr": "s:7SwiftUI4ViewP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some SwiftUI.View"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s12FinanceKitUI22AddOrderToWalletButtonV4bodyQrvg",
+                "moduleName": "FinanceKitUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:12FinanceKitUI22AddOrderToWalletButtonV4bodyQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s12FinanceKitUI22AddOrderToWalletButtonV4bodyQrvp",
+            "moduleName": "FinanceKitUI",
+            "name": "body",
+            "printedName": "body",
+            "usr": "s:12FinanceKitUI22AddOrderToWalletButtonV4bodyQrvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_iOS": "17",
+            "kind": "TypeAlias",
+            "mangledName": "$s12FinanceKitUI22AddOrderToWalletButtonV4Bodya",
+            "moduleName": "FinanceKitUI",
+            "name": "Body",
+            "printedName": "Body",
+            "usr": "s:12FinanceKitUI22AddOrderToWalletButtonV4Bodya"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "View",
+                            "printedName": "SwiftUI.View",
+                            "usr": "s:7SwiftUI4ViewP"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "OpaqueTypeArchetype",
+                        "printedName": "some SwiftUI.View"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "FinanceKitUI.AddOrderToWalletButton.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI4ViewP",
+            "name": "View",
+            "printedName": "View",
+            "usr": "s:7SwiftUI4ViewP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "17",
+        "kind": "TypeDecl",
+        "mangledName": "$s12FinanceKitUI22AddOrderToWalletButtonV",
+        "moduleName": "FinanceKitUI",
+        "name": "AddOrderToWalletButton",
+        "printedName": "AddOrderToWalletButton",
+        "usr": "s:12FinanceKitUI22AddOrderToWalletButtonV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AddOrderToWalletButtonStyle",
+                    "printedName": "FinanceKitUI.AddOrderToWalletButtonStyle",
+                    "usr": "s:12FinanceKitUI27AddOrderToWalletButtonStyleV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s12FinanceKitUI27AddOrderToWalletButtonStyleV5blackACvgZ",
+                "moduleName": "FinanceKitUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:12FinanceKitUI27AddOrderToWalletButtonStyleV5blackACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AddOrderToWalletButtonStyle",
+                "printedName": "FinanceKitUI.AddOrderToWalletButtonStyle",
+                "usr": "s:12FinanceKitUI27AddOrderToWalletButtonStyleV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s12FinanceKitUI27AddOrderToWalletButtonStyleV5blackACvpZ",
+            "moduleName": "FinanceKitUI",
+            "name": "black",
+            "printedName": "black",
+            "static": true,
+            "usr": "s:12FinanceKitUI27AddOrderToWalletButtonStyleV5blackACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AddOrderToWalletButtonStyle",
+                    "printedName": "FinanceKitUI.AddOrderToWalletButtonStyle",
+                    "usr": "s:12FinanceKitUI27AddOrderToWalletButtonStyleV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s12FinanceKitUI27AddOrderToWalletButtonStyleV12blackOutlineACvgZ",
+                "moduleName": "FinanceKitUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:12FinanceKitUI27AddOrderToWalletButtonStyleV12blackOutlineACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AddOrderToWalletButtonStyle",
+                "printedName": "FinanceKitUI.AddOrderToWalletButtonStyle",
+                "usr": "s:12FinanceKitUI27AddOrderToWalletButtonStyleV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s12FinanceKitUI27AddOrderToWalletButtonStyleV12blackOutlineACvpZ",
+            "moduleName": "FinanceKitUI",
+            "name": "blackOutline",
+            "printedName": "blackOutline",
+            "static": true,
+            "usr": "s:12FinanceKitUI27AddOrderToWalletButtonStyleV12blackOutlineACvpZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "17",
+        "kind": "TypeDecl",
+        "mangledName": "$s12FinanceKitUI27AddOrderToWalletButtonStyleV",
+        "moduleName": "FinanceKitUI",
+        "name": "AddOrderToWalletButtonStyle",
+        "printedName": "AddOrderToWalletButtonStyle",
+        "usr": "s:12FinanceKitUI27AddOrderToWalletButtonStyleV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "Dictionary",
+            "printedName": "[Swift.String : Swift.String]",
+            "usr": "s:SD"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "TypeAlias",
+        "intro_iOS": "17",
+        "kind": "TypeAlias",
+        "mangledName": "$s12FinanceKitUI47FinancialConnectionExtensionAuthorizationParamsa",
+        "moduleName": "FinanceKitUI",
+        "name": "FinancialConnectionExtensionAuthorizationParams",
+        "printedName": "FinancialConnectionExtensionAuthorizationParams",
+        "usr": "s:12FinanceKitUI47FinancialConnectionExtensionAuthorizationParamsa"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Dictionary",
+                        "printedName": "[Swift.String : Swift.String]",
+                        "usr": "s:SD"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "FinancialConnectionExtensionAuthorizationParams",
+                    "printedName": "FinanceKitUI.FinancialConnectionExtensionAuthorizationParams"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV6paramsSDyS2SGvg",
+                "moduleName": "FinanceKitUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV6paramsSDyS2SGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Dictionary",
+                        "printedName": "[Swift.String : Swift.String]",
+                        "usr": "s:SD"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "FinancialConnectionExtensionAuthorizationParams",
+                    "printedName": "FinanceKitUI.FinancialConnectionExtensionAuthorizationParams"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV6paramsSDyS2SGvs",
+                "moduleName": "FinanceKitUI",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV6paramsSDyS2SGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Swift.String]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "FinancialConnectionExtensionAuthorizationParams",
+                "printedName": "FinanceKitUI.FinancialConnectionExtensionAuthorizationParams"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV6paramsSDyS2SGvp",
+            "moduleName": "FinanceKitUI",
+            "name": "params",
+            "printedName": "params",
+            "usr": "s:12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV6paramsSDyS2SGvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FinancialConnectionExtensionAuthorizationResult",
+                    "printedName": "FinanceKitUI.FinancialConnectionExtensionAuthorizationResult",
+                    "usr": "s:12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Error",
+                    "printedName": "any Swift.Error",
+                    "usr": "s:s5ErrorP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Result",
+                "printedName": "Swift.Result<FinanceKitUI.FinancialConnectionExtensionAuthorizationResult, any Swift.Error>",
+                "usr": "s:s6ResultO"
+              }
+            ],
+            "declKind": "TypeAlias",
+            "kind": "TypeAlias",
+            "mangledName": "$s12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV23CompletionHandlerResulta",
+            "moduleName": "FinanceKitUI",
+            "name": "CompletionHandlerResult",
+            "printedName": "CompletionHandlerResult",
+            "usr": "s:12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV23CompletionHandlerResulta"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "FinancialConnectionExtensionAuthorizationResult",
+                            "printedName": "FinanceKitUI.FinancialConnectionExtensionAuthorizationResult",
+                            "usr": "s:12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "any Swift.Error",
+                            "usr": "s:s5ErrorP"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Result",
+                        "printedName": "Swift.Result<FinanceKitUI.FinancialConnectionExtensionAuthorizationResult, any Swift.Error>",
+                        "usr": "s:s6ResultO"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "CompletionHandlerResult",
+                    "printedName": "FinanceKitUI.FinancialConnectionExtensionAuthorizationRequest.CompletionHandlerResult"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(FinanceKitUI.FinancialConnectionExtensionAuthorizationRequest.CompletionHandlerResult) -> Swift.Void"
+              }
+            ],
+            "declKind": "TypeAlias",
+            "kind": "TypeAlias",
+            "mangledName": "$s12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV17CompletionHandlera",
+            "moduleName": "FinanceKitUI",
+            "name": "CompletionHandler",
+            "printedName": "CompletionHandler",
+            "usr": "s:12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV17CompletionHandlera"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FinancialConnectionExtensionAuthorizationResult",
+                "printedName": "FinanceKitUI.FinancialConnectionExtensionAuthorizationResult",
+                "usr": "s:12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV8complete19authorizationResultyAA0defgK0V_tF",
+            "moduleName": "FinanceKitUI",
+            "name": "complete",
+            "printedName": "complete(authorizationResult:)",
+            "usr": "s:12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV8complete19authorizationResultyAA0defgK0V_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Error",
+                "printedName": "any Swift.Error",
+                "usr": "s:s5ErrorP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV8complete5errorys5Error_p_tF",
+            "moduleName": "FinanceKitUI",
+            "name": "complete",
+            "printedName": "complete(error:)",
+            "usr": "s:12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV8complete5errorys5Error_p_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "17",
+        "kind": "TypeDecl",
+        "mangledName": "$s12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV",
+        "moduleName": "FinanceKitUI",
+        "name": "FinancialConnectionExtensionAuthorizationRequest",
+        "printedName": "FinancialConnectionExtensionAuthorizationRequest",
+        "usr": "s:12FinanceKitUI48FinancialConnectionExtensionAuthorizationRequestV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Dictionary",
+                        "printedName": "[Swift.String : Swift.String]",
+                        "usr": "s:SD"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "FinancialConnectionExtensionAuthorizationParams",
+                    "printedName": "FinanceKitUI.FinancialConnectionExtensionAuthorizationParams"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV6paramsSDyS2SGvg",
+                "moduleName": "FinanceKitUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV6paramsSDyS2SGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Swift.String]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "FinancialConnectionExtensionAuthorizationParams",
+                "printedName": "FinanceKitUI.FinancialConnectionExtensionAuthorizationParams"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV6paramsSDyS2SGvp",
+            "moduleName": "FinanceKitUI",
+            "name": "params",
+            "printedName": "params",
+            "usr": "s:12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV6paramsSDyS2SGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FinancialConnectionExtensionAuthorizationResult",
+                "printedName": "FinanceKitUI.FinancialConnectionExtensionAuthorizationResult",
+                "usr": "s:12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Swift.String]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "FinancialConnectionExtensionAuthorizationParams",
+                "printedName": "FinanceKitUI.FinancialConnectionExtensionAuthorizationParams"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV6paramsACSDyS2SG_tcfc",
+            "moduleName": "FinanceKitUI",
+            "name": "init",
+            "printedName": "init(params:)",
+            "usr": "s:12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV6paramsACSDyS2SG_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV6encode2toys7Encoder_p_tKF",
+            "moduleName": "FinanceKitUI",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV6encode2toys7Encoder_p_tKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FinancialConnectionExtensionAuthorizationResult",
+                "printedName": "FinanceKitUI.FinancialConnectionExtensionAuthorizationResult",
+                "usr": "s:12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV4fromACs7Decoder_p_tKcfc",
+            "moduleName": "FinanceKitUI",
+            "name": "init",
+            "printedName": "init(from:)",
+            "throwing": true,
+            "usr": "s:12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV4fromACs7Decoder_p_tKcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "17",
+        "kind": "TypeDecl",
+        "mangledName": "$s12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV",
+        "moduleName": "FinanceKitUI",
+        "name": "FinancialConnectionExtensionAuthorizationResult",
+        "printedName": "FinancialConnectionExtensionAuthorizationResult",
+        "usr": "s:12FinanceKitUI47FinancialConnectionExtensionAuthorizationResultV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Label"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "TransactionPicker",
+                "printedName": "FinanceKitUI.TransactionPicker<Label>",
+                "usr": "s:12FinanceKitUI17TransactionPickerV"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Transaction",
+                        "printedName": "FinanceKit.Transaction",
+                        "usr": "s:10FinanceKit11TransactionV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[FinanceKit.Transaction]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Binding",
+                "printedName": "SwiftUI.Binding<[FinanceKit.Transaction]>",
+                "usr": "s:7SwiftUI7BindingV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Label"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> Label",
+                "typeAttributes": [
+                  "noescape"
+                ]
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Label where Label : SwiftUI.View>",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s12FinanceKitUI17TransactionPickerV9selection5labelACyxG05SwiftC07BindingVySay0aB00D0VGG_xyXEtcfc",
+            "moduleName": "FinanceKitUI",
+            "name": "init",
+            "printedName": "init(selection:label:)",
+            "usr": "s:12FinanceKitUI17TransactionPickerV9selection5labelACyxG05SwiftC07BindingVySay0aB00D0VGG_xyXEtcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "View",
+                        "printedName": "SwiftUI.View",
+                        "usr": "s:7SwiftUI4ViewP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some SwiftUI.View"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Label where Label : SwiftUI.View>",
+                "kind": "Accessor",
+                "mangledName": "$s12FinanceKitUI17TransactionPickerV4bodyQrvg",
+                "moduleName": "FinanceKitUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:12FinanceKitUI17TransactionPickerV4bodyQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s12FinanceKitUI17TransactionPickerV4bodyQrvp",
+            "moduleName": "FinanceKitUI",
+            "name": "body",
+            "printedName": "body",
+            "usr": "s:12FinanceKitUI17TransactionPickerV4bodyQrvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "genericSig": "<Label where Label : SwiftUI.View>",
+            "intro_iOS": "18",
+            "kind": "TypeAlias",
+            "mangledName": "$s12FinanceKitUI17TransactionPickerV4Bodya",
+            "moduleName": "FinanceKitUI",
+            "name": "Body",
+            "printedName": "Body",
+            "usr": "s:12FinanceKitUI17TransactionPickerV4Bodya"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "View",
+                            "printedName": "SwiftUI.View",
+                            "usr": "s:7SwiftUI4ViewP"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "OpaqueTypeArchetype",
+                        "printedName": "some SwiftUI.View"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "FinanceKitUI.TransactionPicker<Label>.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s7SwiftUI4ViewP",
+            "name": "View",
+            "printedName": "View",
+            "usr": "s:7SwiftUI4ViewP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "genericSig": "<Label where Label : SwiftUI.View>",
+        "intro_iOS": "18",
+        "kind": "TypeDecl",
+        "mangledName": "$s12FinanceKitUI17TransactionPickerV",
+        "moduleName": "FinanceKitUI",
+        "name": "TransactionPicker",
+        "printedName": "TransactionPicker",
+        "usr": "s:12FinanceKitUI17TransactionPickerV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AddOrderToWalletButtonStyle",
+                "printedName": "FinanceKitUI.AddOrderToWalletButtonStyle",
+                "usr": "s:12FinanceKitUI27AddOrderToWalletButtonStyleV"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : SwiftUI.View>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s7SwiftUI4ViewP010FinanceKitB0E27addOrderToWalletButtonStyleyQrAD03AddghijK0VF",
+            "moduleName": "FinanceKitUI",
+            "name": "addOrderToWalletButtonStyle",
+            "printedName": "addOrderToWalletButtonStyle(_:)",
+            "usr": "s:7SwiftUI4ViewP010FinanceKitB0E27addOrderToWalletButtonStyleyQrAD03AddghijK0VF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Binding",
+                "printedName": "SwiftUI.Binding<Swift.Bool>",
+                "usr": "s:7SwiftUI7BindingV"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Transaction",
+                        "printedName": "FinanceKit.Transaction",
+                        "usr": "s:10FinanceKit11TransactionV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[FinanceKit.Transaction]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Binding",
+                "printedName": "SwiftUI.Binding<[FinanceKit.Transaction]>",
+                "usr": "s:7SwiftUI7BindingV"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : SwiftUI.View>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s7SwiftUI4ViewP010FinanceKitB0E17transactionPicker11isPresented9selectionQrAA7BindingVySbG_AIySay0dE011TransactionVGGtF",
+            "moduleName": "FinanceKitUI",
+            "name": "transactionPicker",
+            "printedName": "transactionPicker(isPresented:selection:)",
+            "usr": "s:7SwiftUI4ViewP010FinanceKitB0E17transactionPicker11isPresented9selectionQrAA7BindingVySbG_AIySay0dE011TransactionVGGtF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "TypeEraser",
+          "TypeEraser",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self.Body : SwiftUI.View>",
+        "intro_Macosx": "10.15",
+        "intro_iOS": "13.0",
+        "intro_tvOS": "13.0",
+        "intro_watchOS": "6.0",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s7SwiftUI4ViewP",
+        "moduleName": "SwiftUICore",
+        "name": "View",
+        "printedName": "View",
+        "usr": "s:7SwiftUI4ViewP"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "FinanceKitUI",
+    "printedName": "FinanceKitUI"
+  }
+}

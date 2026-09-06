@@ -1,0 +1,4194 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityDocumentServices",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityDocumentServices",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityDocumentServices",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityDocumentServices",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "IdentityDocumentWebPresentmentRawRequestValidator",
+                "printedName": "IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequestValidator",
+                "usr": "s:24IdentityDocumentServices0aB33WebPresentmentRawRequestValidatorV"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s24IdentityDocumentServices0aB33WebPresentmentRawRequestValidatorVACycfc",
+            "moduleName": "IdentityDocumentServices",
+            "name": "init",
+            "printedName": "init()",
+            "usr": "s:24IdentityDocumentServices0aB33WebPresentmentRawRequestValidatorVACycfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ISO18013MobileDocumentRequest",
+                "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s24IdentityDocumentServices0aB33WebPresentmentRawRequestValidatorV022validateISO18013MobilebG0_6originAA0jkbG0V10Foundation4DataV_AH3URLVtKF",
+            "moduleName": "IdentityDocumentServices",
+            "name": "validateISO18013MobileDocumentRequest",
+            "printedName": "validateISO18013MobileDocumentRequest(_:origin:)",
+            "throwing": true,
+            "usr": "s:24IdentityDocumentServices0aB33WebPresentmentRawRequestValidatorV022validateISO18013MobilebG0_6originAA0jkbG0V10Foundation4DataV_AH3URLVtKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s24IdentityDocumentServices0aB33WebPresentmentRawRequestValidatorV",
+        "moduleName": "IdentityDocumentServices",
+        "name": "IdentityDocumentWebPresentmentRawRequestValidator",
+        "printedName": "IdentityDocumentWebPresentmentRawRequestValidator",
+        "usr": "s:24IdentityDocumentServices0aB33WebPresentmentRawRequestValidatorV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PresentmentRequest",
+                        "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.PresentmentRequest",
+                        "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.PresentmentRequest]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV19presentmentRequestsSayAC011PresentmentF0VGvg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV19presentmentRequestsSayAC011PresentmentF0VGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PresentmentRequest",
+                        "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.PresentmentRequest",
+                        "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.PresentmentRequest]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV19presentmentRequestsSayAC011PresentmentF0VGvs",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV19presentmentRequestsSayAC011PresentmentF0VGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PresentmentRequest",
+                    "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.PresentmentRequest",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.PresentmentRequest]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV19presentmentRequestsSayAC011PresentmentF0VGvp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "presentmentRequests",
+            "printedName": "presentmentRequests",
+            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV19presentmentRequestsSayAC011PresentmentF0VGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "RequestAuthentication",
+                        "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.RequestAuthentication",
+                        "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.RequestAuthentication]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV22requestAuthenticationsSayAC0F14AuthenticationVGvg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV22requestAuthenticationsSayAC0F14AuthenticationVGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "RequestAuthentication",
+                        "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.RequestAuthentication",
+                        "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.RequestAuthentication]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV22requestAuthenticationsSayAC0F14AuthenticationVGvs",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV22requestAuthenticationsSayAC0F14AuthenticationVGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RequestAuthentication",
+                    "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.RequestAuthentication",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.RequestAuthentication]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV22requestAuthenticationsSayAC0F14AuthenticationVGvp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "requestAuthentications",
+            "printedName": "requestAuthentications",
+            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV22requestAuthenticationsSayAC0F14AuthenticationVGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ISO18013MobileDocumentRequest",
+                "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PresentmentRequest",
+                    "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.PresentmentRequest",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.PresentmentRequest]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RequestAuthentication",
+                    "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.RequestAuthentication",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.RequestAuthentication]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV19presentmentRequests22requestAuthenticationsACSayAC011PresentmentF0VG_SayAC0F14AuthenticationVGtcfc",
+            "moduleName": "IdentityDocumentServices",
+            "name": "init",
+            "printedName": "init(presentmentRequests:requestAuthentications:)",
+            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV19presentmentRequests22requestAuthenticationsACSayAC011PresentmentF0VG_SayAC0F14AuthenticationVGtcfc"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SecCertificate",
+                            "printedName": "Security.SecCertificate",
+                            "usr": "c:@T@SecCertificateRef"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[Security.SecCertificate]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV30authenticationCertificateChainSaySo03SecI3RefaGvg",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV30authenticationCertificateChainSaySo03SecI3RefaGvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SecCertificate",
+                            "printedName": "Security.SecCertificate",
+                            "usr": "c:@T@SecCertificateRef"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[Security.SecCertificate]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV30authenticationCertificateChainSaySo03SecI3RefaGvs",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV30authenticationCertificateChainSaySo03SecI3RefaGvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SecCertificate",
+                        "printedName": "Security.SecCertificate",
+                        "usr": "c:@T@SecCertificateRef"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Security.SecCertificate]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV30authenticationCertificateChainSaySo03SecI3RefaGvp",
+                "moduleName": "IdentityDocumentServices",
+                "name": "authenticationCertificateChain",
+                "printedName": "authenticationCertificateChain",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV30authenticationCertificateChainSaySo03SecI3RefaGvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RequestAuthentication",
+                    "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.RequestAuthentication",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SecCertificate",
+                        "printedName": "Security.SecCertificate",
+                        "usr": "c:@T@SecCertificateRef"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Security.SecCertificate]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV30authenticationCertificateChainAESaySo03SecI3RefaG_tcfc",
+                "moduleName": "IdentityDocumentServices",
+                "name": "init",
+                "printedName": "init(authenticationCertificateChain:)",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV30authenticationCertificateChainAESaySo03SecI3RefaG_tcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV",
+            "moduleName": "IdentityDocumentServices",
+            "name": "RequestAuthentication",
+            "printedName": "RequestAuthentication",
+            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0F14AuthenticationV"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DocumentRequestSet",
+                            "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequestSet",
+                            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequestSet]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V08documentF4SetsSayAC0bF3SetVGvg",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V08documentF4SetsSayAC0bF3SetVGvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DocumentRequestSet",
+                            "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequestSet",
+                            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequestSet]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V08documentF4SetsSayAC0bF3SetVGvs",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V08documentF4SetsSayAC0bF3SetVGvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DocumentRequestSet",
+                        "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequestSet",
+                        "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequestSet]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V08documentF4SetsSayAC0bF3SetVGvp",
+                "moduleName": "IdentityDocumentServices",
+                "name": "documentRequestSets",
+                "printedName": "documentRequestSets",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V08documentF4SetsSayAC0bF3SetVGvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V11isMandatorySbvg",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V11isMandatorySbvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V11isMandatorySbvs",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V11isMandatorySbvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V11isMandatorySbvp",
+                "moduleName": "IdentityDocumentServices",
+                "name": "isMandatory",
+                "printedName": "isMandatory",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V11isMandatorySbvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PresentmentRequest",
+                    "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.PresentmentRequest",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DocumentRequestSet",
+                        "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequestSet",
+                        "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequestSet]",
+                    "usr": "s:Sa"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V08documentF4Sets11isMandatoryAESayAC0bF3SetVG_Sbtcfc",
+                "moduleName": "IdentityDocumentServices",
+                "name": "init",
+                "printedName": "init(documentRequestSets:isMandatory:)",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V08documentF4Sets11isMandatoryAESayAC0bF3SetVG_Sbtcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V",
+            "moduleName": "IdentityDocumentServices",
+            "name": "PresentmentRequest",
+            "printedName": "PresentmentRequest",
+            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV011PresentmentF0V"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DocumentRequest",
+                            "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequest",
+                            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequest]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV8requestsSayAC0bF0VGvg",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV8requestsSayAC0bF0VGvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "DocumentRequest",
+                            "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequest",
+                            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequest]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV8requestsSayAC0bF0VGvs",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV8requestsSayAC0bF0VGvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DocumentRequest",
+                        "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequest",
+                        "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequest]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV8requestsSayAC0bF0VGvp",
+                "moduleName": "IdentityDocumentServices",
+                "name": "requests",
+                "printedName": "requests",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV8requestsSayAC0bF0VGvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DocumentRequestSet",
+                    "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequestSet",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "DocumentRequest",
+                        "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequest",
+                        "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequest]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV8requestsAESayAC0bF0VG_tcfc",
+                "moduleName": "IdentityDocumentServices",
+                "name": "init",
+                "printedName": "init(requests:)",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV8requestsAESayAC0bF0VG_tcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV",
+            "moduleName": "IdentityDocumentServices",
+            "name": "DocumentRequestSet",
+            "printedName": "DocumentRequestSet",
+            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF3SetV"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V12documentTypeSSvg",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V12documentTypeSSvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V12documentTypeSSvs",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V12documentTypeSSvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V12documentTypeSSvp",
+                "moduleName": "IdentityDocumentServices",
+                "name": "documentType",
+                "printedName": "documentType",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V12documentTypeSSvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "String",
+                                "printedName": "Swift.String",
+                                "usr": "s:SS"
+                              },
+                              {
+                                "kind": "TypeNominal",
+                                "name": "ElementInfo",
+                                "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.ElementInfo",
+                                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Dictionary",
+                            "printedName": "[Swift.String : IdentityDocumentServices.ISO18013MobileDocumentRequest.ElementInfo]",
+                            "usr": "s:SD"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Dictionary",
+                        "printedName": "[Swift.String : [Swift.String : IdentityDocumentServices.ISO18013MobileDocumentRequest.ElementInfo]]",
+                        "usr": "s:SD"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V10namespacesSDySSSDySSAC11ElementInfoVGGvg",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V10namespacesSDySSSDySSAC11ElementInfoVGGvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "String",
+                                "printedName": "Swift.String",
+                                "usr": "s:SS"
+                              },
+                              {
+                                "kind": "TypeNominal",
+                                "name": "ElementInfo",
+                                "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.ElementInfo",
+                                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Dictionary",
+                            "printedName": "[Swift.String : IdentityDocumentServices.ISO18013MobileDocumentRequest.ElementInfo]",
+                            "usr": "s:SD"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Dictionary",
+                        "printedName": "[Swift.String : [Swift.String : IdentityDocumentServices.ISO18013MobileDocumentRequest.ElementInfo]]",
+                        "usr": "s:SD"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V10namespacesSDySSSDySSAC11ElementInfoVGGvs",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V10namespacesSDySSSDySSAC11ElementInfoVGGvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ElementInfo",
+                            "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.ElementInfo",
+                            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Dictionary",
+                        "printedName": "[Swift.String : IdentityDocumentServices.ISO18013MobileDocumentRequest.ElementInfo]",
+                        "usr": "s:SD"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : [Swift.String : IdentityDocumentServices.ISO18013MobileDocumentRequest.ElementInfo]]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V10namespacesSDySSSDySSAC11ElementInfoVGGvp",
+                "moduleName": "IdentityDocumentServices",
+                "name": "namespaces",
+                "printedName": "namespaces",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V10namespacesSDySSSDySSAC11ElementInfoVGGvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DocumentRequest",
+                    "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.DocumentRequest",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ElementInfo",
+                            "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.ElementInfo",
+                            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Dictionary",
+                        "printedName": "[Swift.String : IdentityDocumentServices.ISO18013MobileDocumentRequest.ElementInfo]",
+                        "usr": "s:SD"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : [Swift.String : IdentityDocumentServices.ISO18013MobileDocumentRequest.ElementInfo]]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V12documentType10namespacesAESS_SDySSSDySSAC11ElementInfoVGGtcfc",
+                "moduleName": "IdentityDocumentServices",
+                "name": "init",
+                "printedName": "init(documentType:namespaces:)",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V12documentType10namespacesAESS_SDySSSDySSAC11ElementInfoVGGtcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V",
+            "moduleName": "IdentityDocumentServices",
+            "name": "DocumentRequest",
+            "printedName": "DocumentRequest",
+            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV0bF0V"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV11isRetainingSbvg",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV11isRetainingSbvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV11isRetainingSbvs",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV11isRetainingSbvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV11isRetainingSbvp",
+                "moduleName": "IdentityDocumentServices",
+                "name": "isRetaining",
+                "printedName": "isRetaining",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV11isRetainingSbvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ElementInfo",
+                    "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest.ElementInfo",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV11isRetainingAESb_tcfc",
+                "moduleName": "IdentityDocumentServices",
+                "name": "init",
+                "printedName": "init(isRetaining:)",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV11isRetainingAESb_tcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV",
+            "moduleName": "IdentityDocumentServices",
+            "name": "ElementInfo",
+            "printedName": "ElementInfo",
+            "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV11ElementInfoV"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s24IdentityDocumentServices0aB21WebPresentmentRequestP",
+            "name": "IdentityDocumentWebPresentmentRequest",
+            "printedName": "IdentityDocumentWebPresentmentRequest",
+            "usr": "s:24IdentityDocumentServices0aB21WebPresentmentRequestP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB7RequestV",
+        "moduleName": "IdentityDocumentServices",
+        "name": "ISO18013MobileDocumentRequest",
+        "printedName": "ISO18013MobileDocumentRequest",
+        "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB8ResponseV12responseData10Foundation0H0Vvg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB8ResponseV12responseData10Foundation0H0Vvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB8ResponseV12responseData10Foundation0H0Vvp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "responseData",
+            "printedName": "responseData",
+            "usr": "s:24IdentityDocumentServices014ISO18013MobileB8ResponseV12responseData10Foundation0H0Vvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ISO18013MobileDocumentResponse",
+                "printedName": "IdentityDocumentServices.ISO18013MobileDocumentResponse",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB8ResponseV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB8ResponseV12responseDataAC10Foundation0H0V_tcfc",
+            "moduleName": "IdentityDocumentServices",
+            "name": "init",
+            "printedName": "init(responseData:)",
+            "usr": "s:24IdentityDocumentServices014ISO18013MobileB8ResponseV12responseDataAC10Foundation0H0V_tcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s24IdentityDocumentServices0aB22WebPresentmentResponseP",
+            "name": "IdentityDocumentWebPresentmentResponse",
+            "printedName": "IdentityDocumentWebPresentmentResponse",
+            "usr": "s:24IdentityDocumentServices0aB22WebPresentmentResponseP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s24IdentityDocumentServices014ISO18013MobileB8ResponseV",
+        "moduleName": "IdentityDocumentServices",
+        "name": "ISO18013MobileDocumentResponse",
+        "printedName": "ISO18013MobileDocumentResponse",
+        "usr": "s:24IdentityDocumentServices014ISO18013MobileB8ResponseV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                        "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                            "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentPresentmentError.Code.Type) -> IdentityDocumentServices.IdentityDocumentPresentmentError.Code"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV4CodeO7unknownyA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "unknown",
+                "printedName": "unknown",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO7unknownyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                        "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                            "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentPresentmentError.Code.Type) -> IdentityDocumentServices.IdentityDocumentPresentmentError.Code"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV4CodeO14invalidRequestyA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "invalidRequest",
+                "printedName": "invalidRequest",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO14invalidRequestyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                        "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                            "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentPresentmentError.Code.Type) -> IdentityDocumentServices.IdentityDocumentPresentmentError.Code"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV4CodeO17requestInProgressyA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "requestInProgress",
+                "printedName": "requestInProgress",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO17requestInProgressyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                        "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                            "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentPresentmentError.Code.Type) -> IdentityDocumentServices.IdentityDocumentPresentmentError.Code"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV4CodeO9cancelledyA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "cancelled",
+                "printedName": "cancelled",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO9cancelledyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                        "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                            "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentPresentmentError.Code.Type) -> IdentityDocumentServices.IdentityDocumentPresentmentError.Code"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV4CodeO11notEntitledyA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "notEntitled",
+                "printedName": "notEntitled",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO11notEntitledyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                        "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV4CodeO8rawValueAESgSi_tcfc",
+                "moduleName": "IdentityDocumentServices",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO8rawValueAESgSi_tcfc"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "TypeAlias",
+                "intro_Macosx": "26.0",
+                "intro_iOS": "26.0",
+                "kind": "TypeAlias",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV4CodeO8RawValuea",
+                "moduleName": "IdentityDocumentServices",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO8RawValuea"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV4CodeO8rawValueSivg",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV4CodeO8rawValueSivp",
+                "moduleName": "IdentityDocumentServices",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                    "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Error",
+                    "printedName": "any Swift.Error",
+                    "usr": "s:s5ErrorP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "isFromExtension": true,
+                "kind": "Function",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV4CodeO2teoiySbAE_s0E0_ptFZ",
+                "moduleName": "IdentityDocumentServices",
+                "name": "~=",
+                "printedName": "~=(_:_:)",
+                "static": true,
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO2teoiySbAE_s0E0_ptFZ"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              }
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "kind": "TypeDecl",
+            "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV4CodeO",
+            "moduleName": "IdentityDocumentServices",
+            "name": "Code",
+            "printedName": "Code",
+            "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                    "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV4codeAC4CodeOvg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4codeAC4CodeOvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV4codeAC4CodeOvp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "code",
+            "printedName": "code",
+            "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4codeAC4CodeOvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV16debugDescriptionSSvg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV16debugDescriptionSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV16debugDescriptionSSvp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "debugDescription",
+            "printedName": "debugDescription",
+            "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV16debugDescriptionSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                    "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV7unknownAC4CodeOvgZ",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV7unknownAC4CodeOvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV7unknownAC4CodeOvpZ",
+            "moduleName": "IdentityDocumentServices",
+            "name": "unknown",
+            "printedName": "unknown",
+            "static": true,
+            "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV7unknownAC4CodeOvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                    "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV14invalidRequestAC4CodeOvgZ",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV14invalidRequestAC4CodeOvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV14invalidRequestAC4CodeOvpZ",
+            "moduleName": "IdentityDocumentServices",
+            "name": "invalidRequest",
+            "printedName": "invalidRequest",
+            "static": true,
+            "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV14invalidRequestAC4CodeOvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                    "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV17requestInProgressAC4CodeOvgZ",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV17requestInProgressAC4CodeOvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV17requestInProgressAC4CodeOvpZ",
+            "moduleName": "IdentityDocumentServices",
+            "name": "requestInProgress",
+            "printedName": "requestInProgress",
+            "static": true,
+            "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV17requestInProgressAC4CodeOvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                    "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV9cancelledAC4CodeOvgZ",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV9cancelledAC4CodeOvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV9cancelledAC4CodeOvpZ",
+            "moduleName": "IdentityDocumentServices",
+            "name": "cancelled",
+            "printedName": "cancelled",
+            "static": true,
+            "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV9cancelledAC4CodeOvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                    "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV11notEntitledAC4CodeOvgZ",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV11notEntitledAC4CodeOvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "IdentityDocumentServices.IdentityDocumentPresentmentError.Code",
+                "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV4CodeO"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV11notEntitledAC4CodeOvpZ",
+            "moduleName": "IdentityDocumentServices",
+            "name": "notEntitled",
+            "printedName": "notEntitled",
+            "static": true,
+            "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV11notEntitledAC4CodeOvpZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation14LocalizedErrorP",
+            "name": "LocalizedError",
+            "printedName": "LocalizedError",
+            "usr": "s:10Foundation14LocalizedErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s24IdentityDocumentServices0aB16PresentmentErrorV",
+        "moduleName": "IdentityDocumentServices",
+        "name": "IdentityDocumentPresentmentError",
+        "printedName": "IdentityDocumentPresentmentError",
+        "usr": "s:24IdentityDocumentServices0aB16PresentmentErrorV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "RequestType",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest.RequestType",
+                        "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "RequestType",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest.RequestType",
+                            "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest.RequestType.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest.RequestType.Type) -> IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest.RequestType"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO014iso18013MobileB0yA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "iso18013MobileDocument",
+                "printedName": "iso18013MobileDocument",
+                "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO014iso18013MobileB0yA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RequestType",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest.RequestType",
+                    "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RequestType",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest.RequestType",
+                    "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO2eeoiySbAE_AEtFZ",
+                "moduleName": "IdentityDocumentServices",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO4hash4intoys6HasherVz_tF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO9hashValueSivg",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO9hashValueSivp",
+                "moduleName": "IdentityDocumentServices",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO",
+            "moduleName": "IdentityDocumentServices",
+            "name": "RequestType",
+            "printedName": "RequestType",
+            "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RequestType",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest.RequestType",
+                    "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestTypeAC0gI0Ovg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestTypeAC0gI0Ovg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RequestType",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest.RequestType",
+                    "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestTypeAC0gI0Ovs",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestTypeAC0gI0Ovs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RequestType",
+                "printedName": "IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest.RequestType",
+                "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestTypeAC0gI0Ovp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "requestType",
+            "printedName": "requestType",
+            "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestTypeAC0gI0Ovp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestData10Foundation0I0Vvg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestData10Foundation0I0Vvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestData10Foundation0I0Vvs",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestData10Foundation0I0Vvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestData10Foundation0I0Vvp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "requestData",
+            "printedName": "requestData",
+            "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestData10Foundation0I0Vvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "IdentityDocumentWebPresentmentRawRequest",
+                "printedName": "IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest",
+                "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "RequestType",
+                "printedName": "IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest.RequestType",
+                "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV0G4TypeO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestType0H4DataA2C0gI0O_10Foundation0J0Vtcfc",
+            "moduleName": "IdentityDocumentServices",
+            "name": "init",
+            "printedName": "init(requestType:requestData:)",
+            "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV11requestType0H4DataA2C0gI0O_10Foundation0J0Vtcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s24IdentityDocumentServices0aB24WebPresentmentRawRequestV",
+        "moduleName": "IdentityDocumentServices",
+        "name": "IdentityDocumentWebPresentmentRawRequest",
+        "printedName": "IdentityDocumentWebPresentmentRawRequest",
+        "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : Swift.Sendable>",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s24IdentityDocumentServices0aB21WebPresentmentRequestP",
+        "moduleName": "IdentityDocumentServices",
+        "name": "IdentityDocumentWebPresentmentRequest",
+        "printedName": "IdentityDocumentWebPresentmentRequest",
+        "usr": "s:24IdentityDocumentServices0aB21WebPresentmentRequestP"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : Swift.Sendable>",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s24IdentityDocumentServices0aB22WebPresentmentResponseP",
+        "moduleName": "IdentityDocumentServices",
+        "name": "IdentityDocumentWebPresentmentResponse",
+        "printedName": "IdentityDocumentWebPresentmentResponse",
+        "usr": "s:24IdentityDocumentServices0aB22WebPresentmentResponseP"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Status",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status",
+                    "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC6statusAC6StatusOvg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6statusAC6StatusOvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Status",
+                "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC6statusAC6StatusOvp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "status",
+            "printedName": "status",
+            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6statusAC6StatusOvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "IdentityDocumentRegistration",
+                        "printedName": "any IdentityDocumentServices.IdentityDocumentRegistration",
+                        "usr": "s:24IdentityDocumentServices0aB12RegistrationP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[any IdentityDocumentServices.IdentityDocumentRegistration]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC13registrationsSayAA0abE0_pGvg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "throwing": true,
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC13registrationsSayAA0abE0_pGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "IdentityDocumentRegistration",
+                    "printedName": "any IdentityDocumentServices.IdentityDocumentRegistration",
+                    "usr": "s:24IdentityDocumentServices0aB12RegistrationP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[any IdentityDocumentServices.IdentityDocumentRegistration]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC13registrationsSayAA0abE0_pGvp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "registrations",
+            "printedName": "registrations",
+            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC13registrationsSayAA0abE0_pGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "IdentityDocumentProviderRegistrationStore",
+                "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreCACycfc",
+            "moduleName": "IdentityDocumentServices",
+            "name": "init",
+            "printedName": "init()",
+            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreCACycfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "some IdentityDocumentServices.IdentityDocumentRegistration"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC03addE0yyxYaKAA0abE0RzlF",
+            "moduleName": "IdentityDocumentServices",
+            "name": "addRegistration",
+            "printedName": "addRegistration(_:)",
+            "throwing": true,
+            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC03addE0yyxYaKAA0abE0RzlF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC06removeE003forB10IdentifierySS_tYaKF",
+            "moduleName": "IdentityDocumentServices",
+            "name": "removeRegistration",
+            "printedName": "removeRegistration(forDocumentIdentifier:)",
+            "throwing": true,
+            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC06removeE003forB10IdentifierySS_tYaKF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UnownedSerialExecutor",
+                    "printedName": "_Concurrency.UnownedSerialExecutor",
+                    "usr": "s:Sce"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC15unownedExecutorScevg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC15unownedExecutorScevg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UnownedSerialExecutor",
+                "printedName": "_Concurrency.UnownedSerialExecutor",
+                "usr": "s:Sce"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Nonisolated",
+              "Semantics",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_Macosx": "10.15",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "13.0",
+            "intro_watchOS": "6.0",
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC15unownedExecutorScevp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "unownedExecutor",
+            "printedName": "unownedExecutor",
+            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC15unownedExecutorScevp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "RegistrationError",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError",
+                        "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "RegistrationError",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError",
+                            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError.Type) -> IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO7unknownyA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "unknown",
+                "printedName": "unknown",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO7unknownyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "RegistrationError",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError",
+                        "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "RegistrationError",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError",
+                            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError.Type) -> IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO14invalidRequestyA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "invalidRequest",
+                "printedName": "invalidRequest",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO14invalidRequestyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "RegistrationError",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError",
+                        "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "RegistrationError",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError",
+                            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError.Type) -> IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO13notAuthorizedyA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "notAuthorized",
+                "printedName": "notAuthorized",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO13notAuthorizedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "RegistrationError",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError",
+                        "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "RegistrationError",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError",
+                            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError.Type) -> IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO12notSupportedyA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "notSupported",
+                "printedName": "notSupported",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO12notSupportedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RegistrationError",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError",
+                    "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "RegistrationError",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.RegistrationError",
+                    "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO2eeoiySbAE_AEtFZ",
+                "moduleName": "IdentityDocumentServices",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO4hash4intoys6HasherVz_tF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO9hashValueSivg",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO9hashValueSivp",
+                "moduleName": "IdentityDocumentServices",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$s10Foundation14LocalizedErrorP",
+                "name": "LocalizedError",
+                "printedName": "LocalizedError",
+                "usr": "s:10Foundation14LocalizedErrorP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss5ErrorP",
+                "name": "Error",
+                "printedName": "Error",
+                "usr": "s:s5ErrorP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declKind": "Enum",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO",
+            "moduleName": "IdentityDocumentServices",
+            "name": "RegistrationError",
+            "printedName": "RegistrationError",
+            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC0E5ErrorO"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Status",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status",
+                        "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Status",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status",
+                            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status.Type) -> IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO10authorizedyA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "authorized",
+                "printedName": "authorized",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO10authorizedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Status",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status",
+                        "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Status",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status",
+                            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status.Type) -> IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO13notDeterminedyA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "notDetermined",
+                "printedName": "notDetermined",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO13notDeterminedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Status",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status",
+                        "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Status",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status",
+                            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status.Type) -> IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO13notAuthorizedyA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "notAuthorized",
+                "printedName": "notAuthorized",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO13notAuthorizedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Status",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status",
+                        "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Status",
+                            "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status",
+                            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status.Type) -> IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO12notSupportedyA2EmF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "notSupported",
+                "printedName": "notSupported",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO12notSupportedyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Status",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status",
+                    "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Status",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentProviderRegistrationStore.Status",
+                    "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO2eeoiySbAE_AEtFZ",
+                "moduleName": "IdentityDocumentServices",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO4hash4intoys6HasherVz_tF",
+                "moduleName": "IdentityDocumentServices",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO9hashValueSivg",
+                    "moduleName": "IdentityDocumentServices",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO9hashValueSivp",
+                "moduleName": "IdentityDocumentServices",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declKind": "Enum",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO",
+            "moduleName": "IdentityDocumentServices",
+            "name": "Status",
+            "printedName": "Status",
+            "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC6StatusO"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sScA",
+            "name": "Actor",
+            "printedName": "Actor",
+            "usr": "s:ScA"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s24IdentityDocumentServices0aB25ProviderRegistrationStoreC",
+        "moduleName": "IdentityDocumentServices",
+        "name": "IdentityDocumentProviderRegistrationStore",
+        "printedName": "IdentityDocumentProviderRegistrationStore",
+        "usr": "s:24IdentityDocumentServices0aB25ProviderRegistrationStoreC"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : IdentityDocumentServices.IdentityDocumentRegistration>",
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices0aB12RegistrationP18documentIdentifierSSvg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:24IdentityDocumentServices0aB12RegistrationP18documentIdentifierSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices0aB12RegistrationP18documentIdentifierSSvp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "documentIdentifier",
+            "printedName": "documentIdentifier",
+            "protocolReq": true,
+            "usr": "s:24IdentityDocumentServices0aB12RegistrationP18documentIdentifierSSvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : Swift.Sendable>",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s24IdentityDocumentServices0aB12RegistrationP",
+        "moduleName": "IdentityDocumentServices",
+        "name": "IdentityDocumentRegistration",
+        "printedName": "IdentityDocumentRegistration",
+        "usr": "s:24IdentityDocumentServices0aB12RegistrationP"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV06mobileB4TypeSSvg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV06mobileB4TypeSSvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV06mobileB4TypeSSvs",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV06mobileB4TypeSSvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV06mobileB4TypeSSvp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "mobileDocumentType",
+            "printedName": "mobileDocumentType",
+            "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV06mobileB4TypeSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Foundation.Data]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV32supportedAuthorityKeyIdentifiersSay10Foundation4DataVGvg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV32supportedAuthorityKeyIdentifiersSay10Foundation4DataVGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Foundation.Data]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV32supportedAuthorityKeyIdentifiersSay10Foundation4DataVGvs",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV32supportedAuthorityKeyIdentifiersSay10Foundation4DataVGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.Data]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV32supportedAuthorityKeyIdentifiersSay10Foundation4DataVGvp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "supportedAuthorityKeyIdentifiers",
+            "printedName": "supportedAuthorityKeyIdentifiers",
+            "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV32supportedAuthorityKeyIdentifiersSay10Foundation4DataVGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV18documentIdentifierSSvg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV18documentIdentifierSSvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV18documentIdentifierSSvs",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV18documentIdentifierSSvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV18documentIdentifierSSvp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "documentIdentifier",
+            "printedName": "documentIdentifier",
+            "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV18documentIdentifierSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Date",
+                        "printedName": "Foundation.Date",
+                        "usr": "s:10Foundation4DateV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Date?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV16invalidationDate10Foundation0G0VSgvg",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV16invalidationDate10Foundation0G0VSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Date",
+                        "printedName": "Foundation.Date",
+                        "usr": "s:10Foundation4DateV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Date?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV16invalidationDate10Foundation0G0VSgvs",
+                "moduleName": "IdentityDocumentServices",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV16invalidationDate10Foundation0G0VSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Date",
+                    "printedName": "Foundation.Date",
+                    "usr": "s:10Foundation4DateV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Date?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV16invalidationDate10Foundation0G0VSgvp",
+            "moduleName": "IdentityDocumentServices",
+            "name": "invalidationDate",
+            "printedName": "invalidationDate",
+            "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV16invalidationDate10Foundation0G0VSgvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MobileDocumentRegistration",
+                "printedName": "IdentityDocumentServices.MobileDocumentRegistration",
+                "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.Data]",
+                "usr": "s:Sa"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Date",
+                    "printedName": "Foundation.Date",
+                    "usr": "s:10Foundation4DateV"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Date?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV06mobileB4Type32supportedAuthorityKeyIdentifiers18documentIdentifier16invalidationDateACSS_Say10Foundation4DataVGSSAH0O0VSgtcfc",
+            "moduleName": "IdentityDocumentServices",
+            "name": "init",
+            "printedName": "init(mobileDocumentType:supportedAuthorityKeyIdentifiers:documentIdentifier:invalidationDate:)",
+            "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV06mobileB4Type32supportedAuthorityKeyIdentifiers18documentIdentifier16invalidationDateACSS_Say10Foundation4DataVGSSAH0O0VSgtcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s24IdentityDocumentServices0aB12RegistrationP",
+            "name": "IdentityDocumentRegistration",
+            "printedName": "IdentityDocumentRegistration",
+            "usr": "s:24IdentityDocumentServices0aB12RegistrationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s24IdentityDocumentServices06MobileB12RegistrationV",
+        "moduleName": "IdentityDocumentServices",
+        "name": "MobileDocumentRegistration",
+        "printedName": "MobileDocumentRegistration",
+        "usr": "s:24IdentityDocumentServices06MobileB12RegistrationV"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "IdentityDocumentServices",
+    "printedName": "IdentityDocumentServices"
+  }
+}

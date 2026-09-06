@@ -1,0 +1,30 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/FinanceKitUI.symbols.json",
+      "relationshipCount": 1584,
+      "sha256": "6fa9a8a58d1a74bf3808fff7aab64e0bf38034bacbac96a82c16acdb3a67dff7",
+      "symbolCount": 1574
+    },
+    {
+      "path": "reference/symbol-graphs/FinanceKitUI@SwiftUICore.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "41e2967c294aacfd65e868757307fe0f8afd41b672b379468bfc1f2347cec7ef",
+      "symbolCount": 2
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "FinanceKitUI",
+  "relationshipCount": 1586,
+  "relationshipMultisetSHA256": "c4b4287fe5a0a2be6af9d4a70483f3e4bb117daf3ce9447ebcf10e0432cd4869",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 1576,
+  "symbolMultisetSHA256": "bb9df047e50706efe4c4ecf4d54c64f87cebbf9a8e95e7a8f495f71deedeb548",
+  "target": "arm64-apple-ios26.0"
+}

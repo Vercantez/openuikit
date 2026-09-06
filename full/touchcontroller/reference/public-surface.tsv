@@ -1,0 +1,303 @@
+precise	kind	title	path	declaration
+c:@E@TCColliderShape	swift.enum	TCColliderShape	TCColliderShape	enum TCColliderShape
+c:@E@TCColliderShape@TCColliderShapeCircle	swift.enum.case	TCColliderShape.circle	TCColliderShape.circle	case circle
+c:@E@TCColliderShape@TCColliderShapeLeftSide	swift.enum.case	TCColliderShape.leftSide	TCColliderShape.leftSide	case leftSide
+c:@E@TCColliderShape@TCColliderShapeRect	swift.enum.case	TCColliderShape.rect	TCColliderShape.rect	case rect
+c:@E@TCColliderShape@TCColliderShapeRightSide	swift.enum.case	TCColliderShape.rightSide	TCColliderShape.rightSide	case rightSide
+c:@E@TCControlContentsButtonShape	swift.enum	TCControlContents.ButtonShape	TCControlContents.ButtonShape	enum ButtonShape
+c:@E@TCControlContentsButtonShape@TCControlContentsButtonShapeCircle	swift.enum.case	TCControlContents.ButtonShape.circle	TCControlContents.ButtonShape.circle	case circle
+c:@E@TCControlContentsButtonShape@TCControlContentsButtonShapeRect	swift.enum.case	TCControlContents.ButtonShape.rect	TCControlContents.ButtonShape.rect	case rect
+c:@E@TCControlContentsDpadDirection	swift.enum	TCControlContents.DpadDirection	TCControlContents.DpadDirection	enum DpadDirection
+c:@E@TCControlContentsDpadDirection@TCControlContentsDpadDirectionDown	swift.enum.case	TCControlContents.DpadDirection.down	TCControlContents.DpadDirection.down	case down
+c:@E@TCControlContentsDpadDirection@TCControlContentsDpadDirectionLeft	swift.enum.case	TCControlContents.DpadDirection.left	TCControlContents.DpadDirection.left	case left
+c:@E@TCControlContentsDpadDirection@TCControlContentsDpadDirectionRight	swift.enum.case	TCControlContents.DpadDirection.right	TCControlContents.DpadDirection.right	case right
+c:@E@TCControlContentsDpadDirection@TCControlContentsDpadDirectionUp	swift.enum.case	TCControlContents.DpadDirection.up	TCControlContents.DpadDirection.up	case up
+c:@E@TCControlContentsDpadElementStyle	swift.enum	TCControlContents.DpadElementStyle	TCControlContents.DpadElementStyle	enum DpadElementStyle
+c:@E@TCControlContentsDpadElementStyle@TCControlContentsDpadElementStyleCircle	swift.enum.case	TCControlContents.DpadElementStyle.circle	TCControlContents.DpadElementStyle.circle	case circle
+c:@E@TCControlContentsDpadElementStyle@TCControlContentsDpadElementStylePentagon	swift.enum.case	TCControlContents.DpadElementStyle.pentagon	TCControlContents.DpadElementStyle.pentagon	case pentagon
+c:@E@TCControlLabelRole	swift.enum	TCControlLabel.Role	TCControlLabel.Role	enum Role
+c:@E@TCControlLabelRole@TCControlLabelRoleButton	swift.enum.case	TCControlLabel.Role.button	TCControlLabel.Role.button	case button
+c:@E@TCControlLabelRole@TCControlLabelRoleDirectionPad	swift.enum.case	TCControlLabel.Role.directionPad	TCControlLabel.Role.directionPad	case directionPad
+c:@E@TCControlLayoutAnchor	swift.enum	TCControlLayoutAnchor	TCControlLayoutAnchor	enum TCControlLayoutAnchor
+c:@E@TCControlLayoutAnchor@TCControlLayoutAnchorBottomCenter	swift.enum.case	TCControlLayoutAnchor.bottomCenter	TCControlLayoutAnchor.bottomCenter	case bottomCenter
+c:@E@TCControlLayoutAnchor@TCControlLayoutAnchorBottomLeft	swift.enum.case	TCControlLayoutAnchor.bottomLeft	TCControlLayoutAnchor.bottomLeft	case bottomLeft
+c:@E@TCControlLayoutAnchor@TCControlLayoutAnchorBottomRight	swift.enum.case	TCControlLayoutAnchor.bottomRight	TCControlLayoutAnchor.bottomRight	case bottomRight
+c:@E@TCControlLayoutAnchor@TCControlLayoutAnchorCenter	swift.enum.case	TCControlLayoutAnchor.center	TCControlLayoutAnchor.center	case center
+c:@E@TCControlLayoutAnchor@TCControlLayoutAnchorCenterLeft	swift.enum.case	TCControlLayoutAnchor.centerLeft	TCControlLayoutAnchor.centerLeft	case centerLeft
+c:@E@TCControlLayoutAnchor@TCControlLayoutAnchorCenterRight	swift.enum.case	TCControlLayoutAnchor.centerRight	TCControlLayoutAnchor.centerRight	case centerRight
+c:@E@TCControlLayoutAnchor@TCControlLayoutAnchorTopCenter	swift.enum.case	TCControlLayoutAnchor.topCenter	TCControlLayoutAnchor.topCenter	case topCenter
+c:@E@TCControlLayoutAnchor@TCControlLayoutAnchorTopLeft	swift.enum.case	TCControlLayoutAnchor.topLeft	TCControlLayoutAnchor.topLeft	case topLeft
+c:@E@TCControlLayoutAnchor@TCControlLayoutAnchorTopRight	swift.enum.case	TCControlLayoutAnchor.topRight	TCControlLayoutAnchor.topRight	case topRight
+c:@E@TCControlLayoutAnchorCoordinateSystem	swift.enum	TCControlLayoutAnchorCoordinateSystem	TCControlLayoutAnchorCoordinateSystem	enum TCControlLayoutAnchorCoordinateSystem
+c:@E@TCControlLayoutAnchorCoordinateSystem@TCControlLayoutAnchorCoordinateSystemAbsolute	swift.enum.case	TCControlLayoutAnchorCoordinateSystem.absolute	TCControlLayoutAnchorCoordinateSystem.absolute	case absolute
+c:@E@TCControlLayoutAnchorCoordinateSystem@TCControlLayoutAnchorCoordinateSystemRelative	swift.enum.case	TCControlLayoutAnchorCoordinateSystem.relative	TCControlLayoutAnchorCoordinateSystem.relative	case relative
+c:@E@TCThrottleOrientation	swift.enum	TCThrottle.Orientation	TCThrottle.Orientation	enum Orientation
+c:@E@TCThrottleOrientation@TCThrottleOrientationHorizontal	swift.enum.case	TCThrottle.Orientation.horizontal	TCThrottle.Orientation.horizontal	case horizontal
+c:@E@TCThrottleOrientation@TCThrottleOrientationVertical	swift.enum.case	TCThrottle.Orientation.vertical	TCThrottle.Orientation.vertical	case vertical
+c:@TCGameControllerProductCategoryTouchController	swift.var	TCGameControllerProductCategoryTouchController	TCGameControllerProductCategoryTouchController	let TCGameControllerProductCategoryTouchController: String
+c:objc(cs)TCButton	swift.class	TCButton	TCButton	class TCButton
+c:objc(cs)TCButton(py)colliderShape	swift.property	colliderShape	TCButton.colliderShape	var colliderShape: TCColliderShape { get }
+c:objc(cs)TCButton(py)contents	swift.property	contents	TCButton.contents	var contents: TCControlContents? { get set }
+c:objc(cs)TCButton(py)highlightDuration	swift.property	highlightDuration	TCButton.highlightDuration	var highlightDuration: TimeInterval { get set }
+c:objc(cs)TCButtonDescriptor	swift.class	TCButtonDescriptor	TCButtonDescriptor	class TCButtonDescriptor
+c:objc(cs)TCButtonDescriptor(im)init	swift.init	init()	TCButtonDescriptor.init()	init()
+c:objc(cs)TCButtonDescriptor(py)anchor	swift.property	anchor	TCButtonDescriptor.anchor	var anchor: TCControlLayoutAnchor { get set }
+c:objc(cs)TCButtonDescriptor(py)anchorCoordinateSystem	swift.property	anchorCoordinateSystem	TCButtonDescriptor.anchorCoordinateSystem	var anchorCoordinateSystem: TCControlLayoutAnchorCoordinateSystem { get set }
+c:objc(cs)TCButtonDescriptor(py)colliderShape	swift.property	colliderShape	TCButtonDescriptor.colliderShape	var colliderShape: TCColliderShape { get set }
+c:objc(cs)TCButtonDescriptor(py)contents	swift.property	contents	TCButtonDescriptor.contents	var contents: TCControlContents? { get set }
+c:objc(cs)TCButtonDescriptor(py)highlightDuration	swift.property	highlightDuration	TCButtonDescriptor.highlightDuration	var highlightDuration: TimeInterval { get set }
+c:objc(cs)TCButtonDescriptor(py)label	swift.property	label	TCButtonDescriptor.label	var label: TCControlLabel { get set }
+c:objc(cs)TCButtonDescriptor(py)offset	swift.property	offset	TCButtonDescriptor.offset	var offset: CGPoint { get set }
+c:objc(cs)TCButtonDescriptor(py)size	swift.property	size	TCButtonDescriptor.size	var size: CGSize { get set }
+c:objc(cs)TCButtonDescriptor(py)zIndex	swift.property	zIndex	TCButtonDescriptor.zIndex	var zIndex: Int { get set }
+c:objc(cs)TCControlContents	swift.class	TCControlContents	TCControlContents	class TCControlContents
+c:objc(cs)TCControlContents(cm)buttonContentsForSystemImageNamed:size:shape:controller:	swift.type.method	buttonContents(forSystemImageNamed:size:shape:controller:)	TCControlContents.buttonContents(forSystemImageNamed:size:shape:controller:)	class func buttonContents(forSystemImageNamed imageName: String, size: CGSize, shape: TCControlContents.ButtonShape, controller: TCTouchController) -> TCControlContents
+c:objc(cs)TCControlContents(cm)contentsWithImages:	swift.init	init(images:)	TCControlContents.init(images:)	convenience init(images: [TCControlImage])
+c:objc(cs)TCControlContents(cm)directionPadContentsForLabel:size:style:direction:controller:	swift.type.method	directionPadContents(label:size:style:direction:controller:)	TCControlContents.directionPadContents(label:size:style:direction:controller:)	class func directionPadContents(label: TCControlLabel, size: CGSize, style: TCControlContents.DpadElementStyle, direction: TCControlContents.DpadDirection, controller: TCTouchController) -> TCControlContents
+c:objc(cs)TCControlContents(cm)switchedOnContentsForSystemImageNamed:size:shape:controller:	swift.type.method	switchedOnContents(forSystemImageNamed:size:shape:controller:)	TCControlContents.switchedOnContents(forSystemImageNamed:size:shape:controller:)	class func switchedOnContents(forSystemImageNamed imageName: String, size: CGSize, shape: TCControlContents.ButtonShape, controller: TCTouchController) -> TCControlContents
+c:objc(cs)TCControlContents(cm)throttleBackgroundContentsOfSize:controller:	swift.type.method	throttleBackgroundContents(size:controller:)	TCControlContents.throttleBackgroundContents(size:controller:)	class func throttleBackgroundContents(size: CGSize, controller: TCTouchController) -> TCControlContents
+c:objc(cs)TCControlContents(cm)throttleIndicatorContentsOfSize:controller:	swift.type.method	throttleIndicatorContents(size:controller:)	TCControlContents.throttleIndicatorContents(size:controller:)	class func throttleIndicatorContents(size: CGSize, controller: TCTouchController) -> TCControlContents
+c:objc(cs)TCControlContents(cm)thumbstickBackgroundContentsOfSize:controller:	swift.type.method	thumbstickStickBackgroundContents(size:controller:)	TCControlContents.thumbstickStickBackgroundContents(size:controller:)	class func thumbstickStickBackgroundContents(size: CGSize, controller: TCTouchController) -> TCControlContents
+c:objc(cs)TCControlContents(cm)thumbstickStickContentsOfSize:controller:	swift.type.method	thumbstickStickContents(size:controller:)	TCControlContents.thumbstickStickContents(size:controller:)	class func thumbstickStickContents(size: CGSize, controller: TCTouchController) -> TCControlContents
+c:objc(cs)TCControlContents(py)images	swift.property	images	TCControlContents.images	var images: [TCControlImage] { get }
+c:objc(cs)TCControlImage	swift.class	TCControlImage	TCControlImage	class TCControlImage
+c:objc(cs)TCControlImage(im)initWithCGImage:size:device:	swift.init	init(cgImage:size:device:)	TCControlImage.init(cgImage:size:device:)	convenience init?(cgImage: CGImage, size: CGSize, device: any MTLDevice)
+c:objc(cs)TCControlImage(im)initWithCGImage:size:device:::SYNTHESIZED::c:objc(cs)TCControlImage	swift.init	init(CGImage:size:device:)	TCControlImage.init(CGImage:size:device:)	convenience init?(CGImage cgImage: CGImage, size: CGSize, device: any MTLDevice)
+c:objc(cs)TCControlImage(im)initWithTexture:size:	swift.init	init(texture:size:)	TCControlImage.init(texture:size:)	convenience init(texture: any MTLTexture, size: CGSize)
+c:objc(cs)TCControlImage(im)initWithTexture:size:highlightTexture:offset:tintColor:	swift.init	init(texture:size:highlight:offset:tintColor:)	TCControlImage.init(texture:size:highlight:offset:tintColor:)	init(texture: any MTLTexture, size: CGSize, highlight highlightTexture: (any MTLTexture)?, offset: CGPoint, tintColor: CGColor)
+c:objc(cs)TCControlImage(im)initWithTexture:size:highlightTexture:offset:tintColor:::SYNTHESIZED::c:objc(cs)TCControlImage	swift.init	init(texture:size:highlightTexture:offset:tintColor:)	TCControlImage.init(texture:size:highlightTexture:offset:tintColor:)	init(texture: any MTLTexture, size: CGSize, highlightTexture: (any MTLTexture)?, offset: CGPoint, tintColor: CGColor)
+c:objc(cs)TCControlImage(im)initWithUIImage:size:device:	swift.init	init(uiImage:size:device:)	TCControlImage.init(uiImage:size:device:)	convenience init?(uiImage: UIImage, size: CGSize, device: any MTLDevice)
+c:objc(cs)TCControlImage(im)initWithUIImage:size:device:::SYNTHESIZED::c:objc(cs)TCControlImage	swift.init	init(UIImage:size:device:)	TCControlImage.init(UIImage:size:device:)	convenience init?(UIImage uiImage: UIImage, size: CGSize, device: any MTLDevice)
+c:objc(cs)TCControlImage(py)highlightTexture	swift.property	highlightTexture	TCControlImage.highlightTexture	var highlightTexture: (any MTLTexture)? { get set }
+c:objc(cs)TCControlImage(py)offset	swift.property	offset	TCControlImage.offset	var offset: CGPoint { get set }
+c:objc(cs)TCControlImage(py)size	swift.property	size	TCControlImage.size	var size: CGSize { get set }
+c:objc(cs)TCControlImage(py)texture	swift.property	texture	TCControlImage.texture	var texture: any MTLTexture { get set }
+c:objc(cs)TCControlImage(py)tintColor	swift.property	tintColor	TCControlImage.tintColor	unowned(unsafe) var tintColor: CGColor { get set }
+c:objc(cs)TCControlLabel	swift.class	TCControlLabel	TCControlLabel	class TCControlLabel
+c:objc(cs)TCControlLabel(cpy)buttonA	swift.type.property	buttonA	TCControlLabel.buttonA	class var buttonA: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)buttonB	swift.type.property	buttonB	TCControlLabel.buttonB	class var buttonB: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)buttonLeftShoulder	swift.type.property	buttonLeftShoulder	TCControlLabel.buttonLeftShoulder	class var buttonLeftShoulder: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)buttonLeftTrigger	swift.type.property	buttonLeftTrigger	TCControlLabel.buttonLeftTrigger	class var buttonLeftTrigger: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)buttonMenu	swift.type.property	buttonMenu	TCControlLabel.buttonMenu	class var buttonMenu: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)buttonOptions	swift.type.property	buttonOptions	TCControlLabel.buttonOptions	class var buttonOptions: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)buttonRightShoulder	swift.type.property	buttonRightShoulder	TCControlLabel.buttonRightShoulder	class var buttonRightShoulder: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)buttonRightTrigger	swift.type.property	buttonRightTrigger	TCControlLabel.buttonRightTrigger	class var buttonRightTrigger: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)buttonX	swift.type.property	buttonX	TCControlLabel.buttonX	class var buttonX: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)buttonY	swift.type.property	buttonY	TCControlLabel.buttonY	class var buttonY: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)directionPad	swift.type.property	directionPad	TCControlLabel.directionPad	class var directionPad: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)leftThumbstick	swift.type.property	leftThumbstick	TCControlLabel.leftThumbstick	class var leftThumbstick: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)leftThumbstickButton	swift.type.property	leftThumbstickButton	TCControlLabel.leftThumbstickButton	class var leftThumbstickButton: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)rightThumbstick	swift.type.property	rightThumbstick	TCControlLabel.rightThumbstick	class var rightThumbstick: TCControlLabel { get }
+c:objc(cs)TCControlLabel(cpy)rightThumbstickButton	swift.type.property	rightThumbstickButton	TCControlLabel.rightThumbstickButton	class var rightThumbstickButton: TCControlLabel { get }
+c:objc(cs)TCControlLabel(im)initWithName:role:	swift.init	init(name:role:)	TCControlLabel.init(name:role:)	init(name: String, role: TCControlLabel.Role)
+c:objc(cs)TCControlLabel(py)name	swift.property	name	TCControlLabel.name	var name: String { get }
+c:objc(cs)TCControlLabel(py)role	swift.property	role	TCControlLabel.role	var role: TCControlLabel.Role { get }
+c:objc(cs)TCDirectionPad	swift.class	TCDirectionPad	TCDirectionPad	class TCDirectionPad
+c:objc(cs)TCDirectionPad(py)colliderShape	swift.property	colliderShape	TCDirectionPad.colliderShape	var colliderShape: TCColliderShape { get }
+c:objc(cs)TCDirectionPad(py)compositeLabel	swift.property	compositeLabel	TCDirectionPad.compositeLabel	var compositeLabel: TCControlLabel? { get set }
+c:objc(cs)TCDirectionPad(py)digital	swift.property	isDigital	TCDirectionPad.isDigital	var isDigital: Bool { get set }
+c:objc(cs)TCDirectionPad(py)downContents	swift.property	downContents	TCDirectionPad.downContents	var downContents: TCControlContents? { get set }
+c:objc(cs)TCDirectionPad(py)downLabel	swift.property	downLabel	TCDirectionPad.downLabel	var downLabel: TCControlLabel? { get set }
+c:objc(cs)TCDirectionPad(py)highlightDuration	swift.property	highlightDuration	TCDirectionPad.highlightDuration	var highlightDuration: TimeInterval { get set }
+c:objc(cs)TCDirectionPad(py)leftContents	swift.property	leftContents	TCDirectionPad.leftContents	var leftContents: TCControlContents? { get set }
+c:objc(cs)TCDirectionPad(py)leftLabel	swift.property	leftLabel	TCDirectionPad.leftLabel	var leftLabel: TCControlLabel? { get set }
+c:objc(cs)TCDirectionPad(py)mutuallyExclusiveInput	swift.property	inputIsMutuallyExclusive	TCDirectionPad.inputIsMutuallyExclusive	var inputIsMutuallyExclusive: Bool { get set }
+c:objc(cs)TCDirectionPad(py)radial	swift.property	isRadial	TCDirectionPad.isRadial	var isRadial: Bool { get set }
+c:objc(cs)TCDirectionPad(py)rightContents	swift.property	rightContents	TCDirectionPad.rightContents	var rightContents: TCControlContents? { get set }
+c:objc(cs)TCDirectionPad(py)rightLabel	swift.property	rightLabel	TCDirectionPad.rightLabel	var rightLabel: TCControlLabel? { get set }
+c:objc(cs)TCDirectionPad(py)upContents	swift.property	upContents	TCDirectionPad.upContents	var upContents: TCControlContents? { get set }
+c:objc(cs)TCDirectionPad(py)upLabel	swift.property	upLabel	TCDirectionPad.upLabel	var upLabel: TCControlLabel? { get set }
+c:objc(cs)TCDirectionPadDescriptor	swift.class	TCDirectionPadDescriptor	TCDirectionPadDescriptor	class TCDirectionPadDescriptor
+c:objc(cs)TCDirectionPadDescriptor(im)init	swift.init	init()	TCDirectionPadDescriptor.init()	init()
+c:objc(cs)TCDirectionPadDescriptor(py)anchor	swift.property	anchor	TCDirectionPadDescriptor.anchor	var anchor: TCControlLayoutAnchor { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)anchorCoordinateSystem	swift.property	anchorCoordinateSystem	TCDirectionPadDescriptor.anchorCoordinateSystem	var anchorCoordinateSystem: TCControlLayoutAnchorCoordinateSystem { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)colliderShape	swift.property	colliderShape	TCDirectionPadDescriptor.colliderShape	var colliderShape: TCColliderShape { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)compositeLabel	swift.property	compositeLabel	TCDirectionPadDescriptor.compositeLabel	var compositeLabel: TCControlLabel? { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)digital	swift.property	isDigital	TCDirectionPadDescriptor.isDigital	var isDigital: Bool { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)downContents	swift.property	downContents	TCDirectionPadDescriptor.downContents	var downContents: TCControlContents? { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)downLabel	swift.property	downLabel	TCDirectionPadDescriptor.downLabel	var downLabel: TCControlLabel? { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)highlightDuration	swift.property	highlightDuration	TCDirectionPadDescriptor.highlightDuration	var highlightDuration: TimeInterval { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)leftContents	swift.property	leftContents	TCDirectionPadDescriptor.leftContents	var leftContents: TCControlContents? { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)leftLabel	swift.property	leftLabel	TCDirectionPadDescriptor.leftLabel	var leftLabel: TCControlLabel? { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)mutuallyExclusiveInput	swift.property	inputIsMutuallyExclusive	TCDirectionPadDescriptor.inputIsMutuallyExclusive	var inputIsMutuallyExclusive: Bool { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)offset	swift.property	offset	TCDirectionPadDescriptor.offset	var offset: CGPoint { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)radial	swift.property	isRadial	TCDirectionPadDescriptor.isRadial	var isRadial: Bool { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)rightContents	swift.property	rightContents	TCDirectionPadDescriptor.rightContents	var rightContents: TCControlContents? { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)rightLabel	swift.property	rightLabel	TCDirectionPadDescriptor.rightLabel	var rightLabel: TCControlLabel? { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)size	swift.property	size	TCDirectionPadDescriptor.size	var size: CGSize { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)upContents	swift.property	upContents	TCDirectionPadDescriptor.upContents	var upContents: TCControlContents? { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)upLabel	swift.property	upLabel	TCDirectionPadDescriptor.upLabel	var upLabel: TCControlLabel? { get set }
+c:objc(cs)TCDirectionPadDescriptor(py)zIndex	swift.property	zIndex	TCDirectionPadDescriptor.zIndex	var zIndex: Int { get set }
+c:objc(cs)TCSwitch	swift.class	TCSwitch	TCSwitch	class TCSwitch
+c:objc(cs)TCSwitch(py)colliderShape	swift.property	colliderShape	TCSwitch.colliderShape	var colliderShape: TCColliderShape { get }
+c:objc(cs)TCSwitch(py)contents	swift.property	contents	TCSwitch.contents	var contents: TCControlContents? { get set }
+c:objc(cs)TCSwitch(py)highlightDuration	swift.property	highlightDuration	TCSwitch.highlightDuration	var highlightDuration: TimeInterval { get set }
+c:objc(cs)TCSwitch(py)switchedOn	swift.property	isSwitchedOn	TCSwitch.isSwitchedOn	var isSwitchedOn: Bool { get }
+c:objc(cs)TCSwitch(py)switchedOnContents	swift.property	switchedOnContents	TCSwitch.switchedOnContents	var switchedOnContents: TCControlContents? { get set }
+c:objc(cs)TCSwitchDescriptor	swift.class	TCSwitchDescriptor	TCSwitchDescriptor	class TCSwitchDescriptor
+c:objc(cs)TCSwitchDescriptor(im)init	swift.init	init()	TCSwitchDescriptor.init()	init()
+c:objc(cs)TCSwitchDescriptor(py)anchor	swift.property	anchor	TCSwitchDescriptor.anchor	var anchor: TCControlLayoutAnchor { get set }
+c:objc(cs)TCSwitchDescriptor(py)anchorCoordinateSystem	swift.property	anchorCoordinateSystem	TCSwitchDescriptor.anchorCoordinateSystem	var anchorCoordinateSystem: TCControlLayoutAnchorCoordinateSystem { get set }
+c:objc(cs)TCSwitchDescriptor(py)colliderShape	swift.property	colliderShape	TCSwitchDescriptor.colliderShape	var colliderShape: TCColliderShape { get set }
+c:objc(cs)TCSwitchDescriptor(py)contents	swift.property	contents	TCSwitchDescriptor.contents	var contents: TCControlContents? { get set }
+c:objc(cs)TCSwitchDescriptor(py)highlightDuration	swift.property	highlightDuration	TCSwitchDescriptor.highlightDuration	var highlightDuration: TimeInterval { get set }
+c:objc(cs)TCSwitchDescriptor(py)label	swift.property	label	TCSwitchDescriptor.label	var label: TCControlLabel { get set }
+c:objc(cs)TCSwitchDescriptor(py)offset	swift.property	offset	TCSwitchDescriptor.offset	var offset: CGPoint { get set }
+c:objc(cs)TCSwitchDescriptor(py)size	swift.property	size	TCSwitchDescriptor.size	var size: CGSize { get set }
+c:objc(cs)TCSwitchDescriptor(py)switchedOnContents	swift.property	switchedOnContents	TCSwitchDescriptor.switchedOnContents	var switchedOnContents: TCControlContents? { get set }
+c:objc(cs)TCSwitchDescriptor(py)zIndex	swift.property	zIndex	TCSwitchDescriptor.zIndex	var zIndex: Int { get set }
+c:objc(cs)TCThrottle	swift.class	TCThrottle	TCThrottle	class TCThrottle
+c:objc(cs)TCThrottle(py)backgroundContents	swift.property	backgroundContents	TCThrottle.backgroundContents	var backgroundContents: TCControlContents? { get set }
+c:objc(cs)TCThrottle(py)baseValue	swift.property	baseValue	TCThrottle.baseValue	var baseValue: CGFloat { get set }
+c:objc(cs)TCThrottle(py)colliderShape	swift.property	colliderShape	TCThrottle.colliderShape	var colliderShape: TCColliderShape { get }
+c:objc(cs)TCThrottle(py)highlightDuration	swift.property	highlightDuration	TCThrottle.highlightDuration	var highlightDuration: TimeInterval { get set }
+c:objc(cs)TCThrottle(py)indicatorContents	swift.property	indicatorContents	TCThrottle.indicatorContents	var indicatorContents: TCControlContents? { get set }
+c:objc(cs)TCThrottle(py)indicatorSize	swift.property	indicatorSize	TCThrottle.indicatorSize	var indicatorSize: CGSize { get set }
+c:objc(cs)TCThrottle(py)orientation	swift.property	orientation	TCThrottle.orientation	var orientation: TCThrottle.Orientation { get }
+c:objc(cs)TCThrottle(py)snapsToBaseValue	swift.property	snapsToBaseValue	TCThrottle.snapsToBaseValue	var snapsToBaseValue: Bool { get set }
+c:objc(cs)TCThrottle(py)throttleSize	swift.property	throttleSize	TCThrottle.throttleSize	var throttleSize: CGSize { get set }
+c:objc(cs)TCThrottleDescriptor	swift.class	TCThrottleDescriptor	TCThrottleDescriptor	class TCThrottleDescriptor
+c:objc(cs)TCThrottleDescriptor(im)init	swift.init	init()	TCThrottleDescriptor.init()	init()
+c:objc(cs)TCThrottleDescriptor(py)anchor	swift.property	anchor	TCThrottleDescriptor.anchor	var anchor: TCControlLayoutAnchor { get set }
+c:objc(cs)TCThrottleDescriptor(py)anchorCoordinateSystem	swift.property	anchorCoordinateSystem	TCThrottleDescriptor.anchorCoordinateSystem	var anchorCoordinateSystem: TCControlLayoutAnchorCoordinateSystem { get set }
+c:objc(cs)TCThrottleDescriptor(py)backgroundContents	swift.property	backgroundContents	TCThrottleDescriptor.backgroundContents	var backgroundContents: TCControlContents? { get set }
+c:objc(cs)TCThrottleDescriptor(py)baseValue	swift.property	baseValue	TCThrottleDescriptor.baseValue	var baseValue: CGFloat { get set }
+c:objc(cs)TCThrottleDescriptor(py)colliderShape	swift.property	colliderShape	TCThrottleDescriptor.colliderShape	var colliderShape: TCColliderShape { get set }
+c:objc(cs)TCThrottleDescriptor(py)highlightDuration	swift.property	highlightDuration	TCThrottleDescriptor.highlightDuration	var highlightDuration: TimeInterval { get set }
+c:objc(cs)TCThrottleDescriptor(py)indicatorContents	swift.property	indicatorContents	TCThrottleDescriptor.indicatorContents	var indicatorContents: TCControlContents? { get set }
+c:objc(cs)TCThrottleDescriptor(py)indicatorSize	swift.property	indicatorSize	TCThrottleDescriptor.indicatorSize	var indicatorSize: CGSize { get set }
+c:objc(cs)TCThrottleDescriptor(py)label	swift.property	label	TCThrottleDescriptor.label	var label: TCControlLabel { get set }
+c:objc(cs)TCThrottleDescriptor(py)offset	swift.property	offset	TCThrottleDescriptor.offset	var offset: CGPoint { get set }
+c:objc(cs)TCThrottleDescriptor(py)orientation	swift.property	orientation	TCThrottleDescriptor.orientation	var orientation: TCThrottle.Orientation { get set }
+c:objc(cs)TCThrottleDescriptor(py)size	swift.property	size	TCThrottleDescriptor.size	var size: CGSize { get set }
+c:objc(cs)TCThrottleDescriptor(py)snapsToBaseValue	swift.property	snapsToBaseValue	TCThrottleDescriptor.snapsToBaseValue	var snapsToBaseValue: Bool { get set }
+c:objc(cs)TCThrottleDescriptor(py)throttleSize	swift.property	throttleSize	TCThrottleDescriptor.throttleSize	var throttleSize: CGSize { get set }
+c:objc(cs)TCThrottleDescriptor(py)zIndex	swift.property	zIndex	TCThrottleDescriptor.zIndex	var zIndex: Int { get set }
+c:objc(cs)TCThumbstick	swift.class	TCThumbstick	TCThumbstick	class TCThumbstick
+c:objc(cs)TCThumbstick(py)backgroundContents	swift.property	backgroundContents	TCThumbstick.backgroundContents	var backgroundContents: TCControlContents? { get set }
+c:objc(cs)TCThumbstick(py)colliderShape	swift.property	colliderShape	TCThumbstick.colliderShape	var colliderShape: TCColliderShape { get }
+c:objc(cs)TCThumbstick(py)hidesWhenNotPressed	swift.property	hidesWhenNotPressed	TCThumbstick.hidesWhenNotPressed	var hidesWhenNotPressed: Bool { get set }
+c:objc(cs)TCThumbstick(py)highlightDuration	swift.property	highlightDuration	TCThumbstick.highlightDuration	var highlightDuration: TimeInterval { get set }
+c:objc(cs)TCThumbstick(py)stickContents	swift.property	stickContents	TCThumbstick.stickContents	var stickContents: TCControlContents? { get set }
+c:objc(cs)TCThumbstick(py)stickSize	swift.property	stickSize	TCThumbstick.stickSize	var stickSize: CGSize { get set }
+c:objc(cs)TCThumbstickDescriptor	swift.class	TCThumbstickDescriptor	TCThumbstickDescriptor	class TCThumbstickDescriptor
+c:objc(cs)TCThumbstickDescriptor(im)init	swift.init	init()	TCThumbstickDescriptor.init()	init()
+c:objc(cs)TCThumbstickDescriptor(py)anchor	swift.property	anchor	TCThumbstickDescriptor.anchor	var anchor: TCControlLayoutAnchor { get set }
+c:objc(cs)TCThumbstickDescriptor(py)anchorCoordinateSystem	swift.property	anchorCoordinateSystem	TCThumbstickDescriptor.anchorCoordinateSystem	var anchorCoordinateSystem: TCControlLayoutAnchorCoordinateSystem { get set }
+c:objc(cs)TCThumbstickDescriptor(py)backgroundContents	swift.property	backgroundContents	TCThumbstickDescriptor.backgroundContents	var backgroundContents: TCControlContents? { get set }
+c:objc(cs)TCThumbstickDescriptor(py)colliderShape	swift.property	colliderShape	TCThumbstickDescriptor.colliderShape	var colliderShape: TCColliderShape { get set }
+c:objc(cs)TCThumbstickDescriptor(py)hidesWhenNotPressed	swift.property	hidesWhenNotPressed	TCThumbstickDescriptor.hidesWhenNotPressed	var hidesWhenNotPressed: Bool { get set }
+c:objc(cs)TCThumbstickDescriptor(py)highlightDuration	swift.property	highlightDuration	TCThumbstickDescriptor.highlightDuration	var highlightDuration: TimeInterval { get set }
+c:objc(cs)TCThumbstickDescriptor(py)label	swift.property	label	TCThumbstickDescriptor.label	var label: TCControlLabel { get set }
+c:objc(cs)TCThumbstickDescriptor(py)offset	swift.property	offset	TCThumbstickDescriptor.offset	var offset: CGPoint { get set }
+c:objc(cs)TCThumbstickDescriptor(py)size	swift.property	size	TCThumbstickDescriptor.size	var size: CGSize { get set }
+c:objc(cs)TCThumbstickDescriptor(py)stickContents	swift.property	stickContents	TCThumbstickDescriptor.stickContents	var stickContents: TCControlContents? { get set }
+c:objc(cs)TCThumbstickDescriptor(py)stickSize	swift.property	stickSize	TCThumbstickDescriptor.stickSize	var stickSize: CGSize { get set }
+c:objc(cs)TCThumbstickDescriptor(py)zIndex	swift.property	zIndex	TCThumbstickDescriptor.zIndex	var zIndex: Int { get set }
+c:objc(cs)TCTouchController	swift.class	TCTouchController	TCTouchController	class TCTouchController
+c:objc(cs)TCTouchController(cpy)supported	swift.type.property	isSupported	TCTouchController.isSupported	class var isSupported: Bool { get }
+c:objc(cs)TCTouchController(im)addButtonWithDescriptor:	swift.method	addButton(descriptor:)	TCTouchController.addButton(descriptor:)	func addButton(descriptor: TCButtonDescriptor) -> TCButton
+c:objc(cs)TCTouchController(im)addDirectionPadWithDescriptor:	swift.method	addDirectionPad(descriptor:)	TCTouchController.addDirectionPad(descriptor:)	func addDirectionPad(descriptor: TCDirectionPadDescriptor) -> TCDirectionPad
+c:objc(cs)TCTouchController(im)addSwitchWithDescriptor:	swift.method	addSwitch(descriptor:)	TCTouchController.addSwitch(descriptor:)	func addSwitch(descriptor: TCSwitchDescriptor) -> TCSwitch
+c:objc(cs)TCTouchController(im)addThrottleWithDescriptor:	swift.method	addThrottle(descriptor:)	TCTouchController.addThrottle(descriptor:)	func addThrottle(descriptor: TCThrottleDescriptor) -> TCThrottle
+c:objc(cs)TCTouchController(im)addThumbstickWithDescriptor:	swift.method	addThumbstick(descriptor:)	TCTouchController.addThumbstick(descriptor:)	func addThumbstick(descriptor: TCThumbstickDescriptor) -> TCThumbstick
+c:objc(cs)TCTouchController(im)addTouchpadWithDescriptor:	swift.method	addTouchpad(descriptor:)	TCTouchController.addTouchpad(descriptor:)	func addTouchpad(descriptor: TCTouchpadDescriptor) -> TCTouchpad
+c:objc(cs)TCTouchController(im)automaticallyLayoutControlsForLabels:	swift.method	automaticallyLayoutControls(for:)	TCTouchController.automaticallyLayoutControls(for:)	func automaticallyLayoutControls(for labels: [TCControlLabel])
+c:objc(cs)TCTouchController(im)connect	swift.method	connect()	TCTouchController.connect()	func connect()
+c:objc(cs)TCTouchController(im)controlAtPoint:	swift.method	control(at:)	TCTouchController.control(at:)	func control(at point: CGPoint) -> (any TCControl)?
+c:objc(cs)TCTouchController(im)disconnect	swift.method	disconnect()	TCTouchController.disconnect()	func disconnect()
+c:objc(cs)TCTouchController(im)handleTouchBeganAtPoint:index:	swift.method	handleTouchBegan(at:index:)	TCTouchController.handleTouchBegan(at:index:)	func handleTouchBegan(at point: CGPoint, index: Int) -> Bool
+c:objc(cs)TCTouchController(im)handleTouchEndedAtPoint:index:	swift.method	handleTouchEnded(at:index:)	TCTouchController.handleTouchEnded(at:index:)	func handleTouchEnded(at point: CGPoint, index: Int) -> Bool
+c:objc(cs)TCTouchController(im)handleTouchMovedAtPoint:index:	swift.method	handleTouchMoved(at:index:)	TCTouchController.handleTouchMoved(at:index:)	func handleTouchMoved(at point: CGPoint, index: Int) -> Bool
+c:objc(cs)TCTouchController(im)initWithDescriptor:	swift.init	init(descriptor:)	TCTouchController.init(descriptor:)	init(descriptor: TCTouchControllerDescriptor)
+c:objc(cs)TCTouchController(im)removeAllControls	swift.method	removeAllControls()	TCTouchController.removeAllControls()	func removeAllControls()
+c:objc(cs)TCTouchController(im)removeControl:	swift.method	removeControl(_:)	TCTouchController.removeControl(_:)	func removeControl(_ control: any TCControl)
+c:objc(cs)TCTouchController(im)renderUsingRenderCommandEncoder:	swift.method	render(using:)	TCTouchController.render(using:)	func render(using encoder: any MTLRenderCommandEncoder)
+c:objc(cs)TCTouchController(py)buttons	swift.property	buttons	TCTouchController.buttons	var buttons: [TCButton] { get }
+c:objc(cs)TCTouchController(py)connected	swift.property	isConnected	TCTouchController.isConnected	var isConnected: Bool { get }
+c:objc(cs)TCTouchController(py)controller	swift.property	controller	TCTouchController.controller	var controller: GCController { get }
+c:objc(cs)TCTouchController(py)controls	swift.property	controls	TCTouchController.controls	var controls: [any TCControl] { get }
+c:objc(cs)TCTouchController(py)device	swift.property	device	TCTouchController.device	var device: any MTLDevice { get }
+c:objc(cs)TCTouchController(py)directionPads	swift.property	directionPads	TCTouchController.directionPads	var directionPads: [TCDirectionPad] { get }
+c:objc(cs)TCTouchController(py)drawableSize	swift.property	drawableSize	TCTouchController.drawableSize	var drawableSize: CGSize { get set }
+c:objc(cs)TCTouchController(py)size	swift.property	size	TCTouchController.size	var size: CGSize { get set }
+c:objc(cs)TCTouchController(py)switches	swift.property	switches	TCTouchController.switches	var switches: [TCSwitch] { get }
+c:objc(cs)TCTouchController(py)throttles	swift.property	throttles	TCTouchController.throttles	var throttles: [TCThrottle] { get }
+c:objc(cs)TCTouchController(py)thumbsticks	swift.property	thumbsticks	TCTouchController.thumbsticks	var thumbsticks: [TCThumbstick] { get }
+c:objc(cs)TCTouchController(py)touchpads	swift.property	touchpads	TCTouchController.touchpads	var touchpads: [TCTouchpad] { get }
+c:objc(cs)TCTouchControllerDescriptor	swift.class	TCTouchControllerDescriptor	TCTouchControllerDescriptor	class TCTouchControllerDescriptor
+c:objc(cs)TCTouchControllerDescriptor(im)init	swift.init	init()	TCTouchControllerDescriptor.init()	init()
+c:objc(cs)TCTouchControllerDescriptor(im)initWithMTKView:	swift.init	init(mtkView:)	TCTouchControllerDescriptor.init(mtkView:)	convenience init(mtkView: MTKView)
+c:objc(cs)TCTouchControllerDescriptor(im)initWithMTKView:::SYNTHESIZED::c:objc(cs)TCTouchControllerDescriptor	swift.init	init(MTKView:)	TCTouchControllerDescriptor.init(MTKView:)	convenience init(MTKView mtkView: MTKView)
+c:objc(cs)TCTouchControllerDescriptor(py)colorPixelFormat	swift.property	colorPixelFormat	TCTouchControllerDescriptor.colorPixelFormat	var colorPixelFormat: MTLPixelFormat { get set }
+c:objc(cs)TCTouchControllerDescriptor(py)depthAttachmentPixelFormat	swift.property	depthAttachmentPixelFormat	TCTouchControllerDescriptor.depthAttachmentPixelFormat	var depthAttachmentPixelFormat: MTLPixelFormat { get set }
+c:objc(cs)TCTouchControllerDescriptor(py)device	swift.property	device	TCTouchControllerDescriptor.device	var device: any MTLDevice { get set }
+c:objc(cs)TCTouchControllerDescriptor(py)drawableSize	swift.property	drawableSize	TCTouchControllerDescriptor.drawableSize	var drawableSize: CGSize { get set }
+c:objc(cs)TCTouchControllerDescriptor(py)sampleCount	swift.property	sampleCount	TCTouchControllerDescriptor.sampleCount	var sampleCount: Int { get set }
+c:objc(cs)TCTouchControllerDescriptor(py)size	swift.property	size	TCTouchControllerDescriptor.size	var size: CGSize { get set }
+c:objc(cs)TCTouchControllerDescriptor(py)stencilAttachmentPixelFormat	swift.property	stencilAttachmentPixelFormat	TCTouchControllerDescriptor.stencilAttachmentPixelFormat	var stencilAttachmentPixelFormat: MTLPixelFormat { get set }
+c:objc(cs)TCTouchpad	swift.class	TCTouchpad	TCTouchpad	class TCTouchpad
+c:objc(cs)TCTouchpad(py)colliderShape	swift.property	colliderShape	TCTouchpad.colliderShape	var colliderShape: TCColliderShape { get }
+c:objc(cs)TCTouchpad(py)contents	swift.property	contents	TCTouchpad.contents	var contents: TCControlContents? { get set }
+c:objc(cs)TCTouchpad(py)highlightDuration	swift.property	highlightDuration	TCTouchpad.highlightDuration	var highlightDuration: TimeInterval { get set }
+c:objc(cs)TCTouchpad(py)reportsRelativeValues	swift.property	reportsRelativeValues	TCTouchpad.reportsRelativeValues	var reportsRelativeValues: Bool { get set }
+c:objc(cs)TCTouchpadDescriptor	swift.class	TCTouchpadDescriptor	TCTouchpadDescriptor	class TCTouchpadDescriptor
+c:objc(cs)TCTouchpadDescriptor(im)init	swift.init	init()	TCTouchpadDescriptor.init()	init()
+c:objc(cs)TCTouchpadDescriptor(py)anchor	swift.property	anchor	TCTouchpadDescriptor.anchor	var anchor: TCControlLayoutAnchor { get set }
+c:objc(cs)TCTouchpadDescriptor(py)anchorCoordinateSystem	swift.property	anchorCoordinateSystem	TCTouchpadDescriptor.anchorCoordinateSystem	var anchorCoordinateSystem: TCControlLayoutAnchorCoordinateSystem { get set }
+c:objc(cs)TCTouchpadDescriptor(py)colliderShape	swift.property	colliderShape	TCTouchpadDescriptor.colliderShape	var colliderShape: TCColliderShape { get set }
+c:objc(cs)TCTouchpadDescriptor(py)contents	swift.property	contents	TCTouchpadDescriptor.contents	var contents: TCControlContents? { get set }
+c:objc(cs)TCTouchpadDescriptor(py)highlightDuration	swift.property	highlightDuration	TCTouchpadDescriptor.highlightDuration	var highlightDuration: TimeInterval { get set }
+c:objc(cs)TCTouchpadDescriptor(py)label	swift.property	label	TCTouchpadDescriptor.label	var label: TCControlLabel { get set }
+c:objc(cs)TCTouchpadDescriptor(py)offset	swift.property	offset	TCTouchpadDescriptor.offset	var offset: CGPoint { get set }
+c:objc(cs)TCTouchpadDescriptor(py)reportsRelativeValues	swift.property	reportsRelativeValues	TCTouchpadDescriptor.reportsRelativeValues	var reportsRelativeValues: Bool { get set }
+c:objc(cs)TCTouchpadDescriptor(py)size	swift.property	size	TCTouchpadDescriptor.size	var size: CGSize { get set }
+c:objc(cs)TCTouchpadDescriptor(py)zIndex	swift.property	zIndex	TCTouchpadDescriptor.zIndex	var zIndex: Int { get set }
+c:objc(pl)TCControl	swift.protocol	TCControl	TCControl	protocol TCControl : TCControlLayout
+c:objc(pl)TCControl(im)handleTouchBeganAtPoint:	swift.method	handleTouchBegan(at:)	TCControl.handleTouchBegan(at:)	func handleTouchBegan(at point: CGPoint)
+c:objc(pl)TCControl(im)handleTouchEndedAtPoint:	swift.method	handleTouchEnded(at:)	TCControl.handleTouchEnded(at:)	func handleTouchEnded(at point: CGPoint)
+c:objc(pl)TCControl(im)handleTouchMovedAtPoint:	swift.method	handleTouchMoved(at:)	TCControl.handleTouchMoved(at:)	func handleTouchMoved(at point: CGPoint)
+c:objc(pl)TCControl(py)colliderShape	swift.property	colliderShape	TCControl.colliderShape	var colliderShape: TCColliderShape { get }
+c:objc(pl)TCControl(py)enabled	swift.property	isEnabled	TCControl.isEnabled	var isEnabled: Bool { get set }
+c:objc(pl)TCControl(py)highlightDuration	swift.property	highlightDuration	TCControl.highlightDuration	optional var highlightDuration: TimeInterval { get set }
+c:objc(pl)TCControl(py)label	swift.property	label	TCControl.label	var label: TCControlLabel { get }
+c:objc(pl)TCControl(py)pressed	swift.property	isPressed	TCControl.isPressed	var isPressed: Bool { get }
+c:objc(pl)TCControlLayout	swift.protocol	TCControlLayout	TCControlLayout	protocol TCControlLayout : NSObjectProtocol
+c:objc(pl)TCControlLayout(py)anchor	swift.property	anchor	TCControlLayout.anchor	var anchor: TCControlLayoutAnchor { get set }
+c:objc(pl)TCControlLayout(py)anchorCoordinateSystem	swift.property	anchorCoordinateSystem	TCControlLayout.anchorCoordinateSystem	var anchorCoordinateSystem: TCControlLayoutAnchorCoordinateSystem { get set }
+c:objc(pl)TCControlLayout(py)offset	swift.property	offset	TCControlLayout.offset	var offset: CGPoint { get set }
+c:objc(pl)TCControlLayout(py)position	swift.property	position	TCControlLayout.position	var position: CGPoint { get }
+c:objc(pl)TCControlLayout(py)size	swift.property	size	TCControlLayout.size	var size: CGSize { get set }
+c:objc(pl)TCControlLayout(py)zIndex	swift.property	zIndex	TCControlLayout.zIndex	var zIndex: Int { get set }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TCColliderShape	swift.func.op	!=(_:_:)	TCColliderShape.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TCControlContentsButtonShape	swift.func.op	!=(_:_:)	TCControlContents.ButtonShape.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TCControlContentsDpadDirection	swift.func.op	!=(_:_:)	TCControlContents.DpadDirection.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TCControlContentsDpadElementStyle	swift.func.op	!=(_:_:)	TCControlContents.DpadElementStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TCControlLabelRole	swift.func.op	!=(_:_:)	TCControlLabel.Role.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TCControlLayoutAnchor	swift.func.op	!=(_:_:)	TCControlLayoutAnchor.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TCControlLayoutAnchorCoordinateSystem	swift.func.op	!=(_:_:)	TCControlLayoutAnchorCoordinateSystem.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TCThrottleOrientation	swift.func.op	!=(_:_:)	TCThrottle.Orientation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TCColliderShape	swift.property	hashValue	TCColliderShape.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TCControlContentsButtonShape	swift.property	hashValue	TCControlContents.ButtonShape.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TCControlContentsDpadDirection	swift.property	hashValue	TCControlContents.DpadDirection.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TCControlContentsDpadElementStyle	swift.property	hashValue	TCControlContents.DpadElementStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TCControlLabelRole	swift.property	hashValue	TCControlLabel.Role.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TCControlLayoutAnchor	swift.property	hashValue	TCControlLayoutAnchor.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TCControlLayoutAnchorCoordinateSystem	swift.property	hashValue	TCControlLayoutAnchorCoordinateSystem.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TCThrottleOrientation	swift.property	hashValue	TCThrottle.Orientation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TCColliderShape	swift.method	hash(into:)	TCColliderShape.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TCControlContentsButtonShape	swift.method	hash(into:)	TCControlContents.ButtonShape.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TCControlContentsDpadDirection	swift.method	hash(into:)	TCControlContents.DpadDirection.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TCControlContentsDpadElementStyle	swift.method	hash(into:)	TCControlContents.DpadElementStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TCControlLabelRole	swift.method	hash(into:)	TCControlLabel.Role.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TCControlLayoutAnchor	swift.method	hash(into:)	TCControlLayoutAnchor.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TCControlLayoutAnchorCoordinateSystem	swift.method	hash(into:)	TCControlLayoutAnchorCoordinateSystem.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TCThrottleOrientation	swift.method	hash(into:)	TCThrottle.Orientation.hash(into:)	func hash(into hasher: inout Hasher)
+s:So15TCColliderShapeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TCColliderShape.init(rawValue:)	init?(rawValue: Int)
+s:So18TCControlLabelRoleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TCControlLabel.Role.init(rawValue:)	init?(rawValue: Int)
+s:So21TCControlLayoutAnchorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TCControlLayoutAnchor.init(rawValue:)	init?(rawValue: Int)
+s:So21TCThrottleOrientationV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TCThrottle.Orientation.init(rawValue:)	init?(rawValue: Int)
+s:So28TCControlContentsButtonShapeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TCControlContents.ButtonShape.init(rawValue:)	init?(rawValue: Int)
+s:So30TCControlContentsDpadDirectionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TCControlContents.DpadDirection.init(rawValue:)	init?(rawValue: Int)
+s:So33TCControlContentsDpadElementStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TCControlContents.DpadElementStyle.init(rawValue:)	init?(rawValue: Int)
+s:So37TCControlLayoutAnchorCoordinateSystemV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TCControlLayoutAnchorCoordinateSystem.init(rawValue:)	init?(rawValue: Int)

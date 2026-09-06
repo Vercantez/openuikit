@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 2,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/WirelessInsights.symbols.json",
+      "relationshipCount": 108,
+      "sha256": "a06c57d7bfe2fdfc77423bde2fde16e66dee011757d549a0531546030ed39ab7",
+      "symbolCount": 75
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "WirelessInsights",
+  "relationshipCount": 108,
+  "relationshipMultisetSHA256": "e39fa68f06daa4220132edf049a33150d68181189c21c0e5610f61a6de695734",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 75,
+  "symbolMultisetSHA256": "a916b1676cffeb537ebccb42563a2e90c9acadfdc9a39c4f79614871eec6d68e",
+  "target": "arm64-apple-ios26.0"
+}
