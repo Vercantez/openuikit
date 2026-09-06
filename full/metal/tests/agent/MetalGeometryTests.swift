@@ -149,3 +149,76 @@ func testAccelerationStructureDescriptors() {
     )
     precondition(sparsePage.width == 0)
 }
+
+func testAccelerationStructureGeometryDescriptors() {
+    let keyframe = MTLMotionKeyframeData.data()
+    keyframe.offset = 16
+    precondition(keyframe.offset == 16)
+    keyframe.buffer = nil
+    let geometry = MTLAccelerationStructureGeometryDescriptor()
+    geometry.intersectionFunctionTableOffset = 3
+    geometry.opaque = true
+    geometry.allowDuplicateIntersectionFunctionInvocation = false
+    geometry.label = "geom"
+    geometry.primitiveDataBuffer = nil
+    geometry.primitiveDataBufferOffset = 8
+    geometry.primitiveDataStride = 16
+    geometry.primitiveDataElementSize = 4
+    precondition(geometry.opaque)
+    let curve = MTLAccelerationStructureCurveGeometryDescriptor.descriptor()
+    curve.controlPointCount = 4
+    curve.controlPointBufferOffset = 0
+    curve.controlPointFormat = .float3
+    curve.controlPointStride = 12
+    curve.radiusBufferOffset = 0
+    curve.radiusFormat = .float
+    curve.radiusStride = 4
+    curve.indexBufferOffset = 0
+    curve.indexType = .uint16
+    curve.segmentCount = 1
+    curve.segmentControlPointCount = 4
+    curve.curveType = .round
+    curve.curveBasis = .bSpline
+    curve.curveEndCaps = .none
+    curve.controlPointBuffer = nil
+    curve.radiusBuffer = nil
+    curve.indexBuffer = nil
+    precondition(curve.controlPointCount == 4)
+    precondition(curve.curveBasis == .bSpline)
+    let motion = MTLAccelerationStructureMotionCurveGeometryDescriptor.descriptor()
+    motion.controlPointBuffers = [keyframe]
+    motion.controlPointCount = 4
+    motion.controlPointFormat = .float3
+    motion.controlPointStride = 12
+    motion.radiusBuffers = [keyframe]
+    motion.radiusFormat = .float
+    motion.radiusStride = 4
+    motion.indexBuffer = nil
+    motion.indexBufferOffset = 0
+    motion.indexType = .uint32
+    motion.segmentCount = 1
+    motion.segmentControlPointCount = 4
+    motion.curveType = .flat
+    motion.curveBasis = .bezier
+    motion.curveEndCaps = .sphere
+    precondition(motion.controlPointBuffers.count == 1)
+    precondition(motion.curveType == .flat)
+    let indirect = MTLIndirectInstanceAccelerationStructureDescriptor.descriptor()
+    indirect.instanceDescriptorBuffer = nil
+    indirect.instanceDescriptorBufferOffset = 0
+    indirect.instanceDescriptorStride = 64
+    indirect.instanceDescriptorType = .indirect
+    indirect.maxInstanceCount = 8
+    indirect.instanceCountBuffer = nil
+    indirect.instanceCountBufferOffset = 4
+    indirect.instanceTransformationMatrixLayout = .columnMajor
+    indirect.motionTransformBuffer = nil
+    indirect.motionTransformBufferOffset = 0
+    indirect.motionTransformStride = 48
+    indirect.motionTransformType = .packedFloat4x3
+    indirect.maxMotionTransformCount = 2
+    indirect.motionTransformCountBuffer = nil
+    indirect.motionTransformCountBufferOffset = 0
+    precondition(indirect.maxInstanceCount == 8)
+    precondition(indirect.instanceDescriptorType == .indirect)
+}

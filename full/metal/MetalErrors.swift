@@ -149,3 +149,53 @@ extension MTLIOError.Code {
         (error as? MTLIOError)?.code == match
     }
 }
+
+/// Metal 4 command-queue errors. Integer codes follow the documented
+/// MTLCommandBufferError sequence and are recorded in oracle-questions.tsv
+/// until an Apple-oracle probe confirms iPhoneOS 26.1 values.
+public struct MTL4CommandQueueError: Error, CustomNSError, Hashable, Equatable, @unchecked Sendable {
+    public enum Code: Int, Hashable, Sendable {
+        case none = 0
+        case `internal` = 1
+        case timeout = 2
+        case notPermitted = 3
+        case outOfMemory = 4
+        case accessRevoked = 5
+        case deviceRemoved = 6
+    }
+
+    public let code: Code
+    public let userInfo: [String: Any]
+
+    public init(_ code: Code, userInfo: [String: Any] = [:]) {
+        self.code = code
+        self.userInfo = userInfo
+    }
+
+    public static var errorDomain: String { MTL4CommandQueueErrorDomain }
+    public var errorCode: Int { code.rawValue }
+    public var errorUserInfo: [String: Any] { userInfo }
+
+    public static let none = Code.none
+    public static let `internal` = Code.internal
+    public static let timeout = Code.timeout
+    public static let notPermitted = Code.notPermitted
+    public static let outOfMemory = Code.outOfMemory
+    public static let accessRevoked = Code.accessRevoked
+    public static let deviceRemoved = Code.deviceRemoved
+
+    public static func == (lhs: MTL4CommandQueueError, rhs: MTL4CommandQueueError) -> Bool {
+        guard lhs.code == rhs.code else { return false }
+        return NSDictionary(dictionary: lhs.userInfo).isEqual(to: rhs.userInfo)
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(code)
+    }
+}
+
+extension MTL4CommandQueueError.Code {
+    public static func ~= (match: MTL4CommandQueueError.Code, error: any Error) -> Bool {
+        (error as? MTL4CommandQueueError)?.code == match
+    }
+}

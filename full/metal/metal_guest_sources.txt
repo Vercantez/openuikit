@@ -1,4 +1,5 @@
 full/metal/Metal.swift
+full/metal/Metal4.swift
 full/metal/MetalAcceleration.swift
 full/metal/MetalCPU.swift
 full/metal/MetalCommand.swift
@@ -7,6 +8,7 @@ full/metal/MetalEnums.swift
 full/metal/MetalErrors.swift
 full/metal/MetalGeometry.swift
 full/metal/MetalHost.swift
+full/metal/MetalIO.swift
 full/metal/MetalOptionSets.swift
 full/metal/MetalOverlays.swift
 full/metal/MetalPixelFormat.swift

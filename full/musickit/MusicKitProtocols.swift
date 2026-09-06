@@ -186,7 +186,13 @@ public protocol LibraryPlaylistEntryFilter {
 }
 
 public protocol LibraryMusicVideoFilter {
+    var albumTitle: String? { get }
+    var artistName: String? { get }
     var id: MusicItemID { get }
+    var title: String { get }
+    var albums: MusicItemCollection<Album>? { get }
+    var genres: MusicItemCollection<Genre>? { get }
+    var artists: MusicItemCollection<Artist>? { get }
 }
 
 public protocol LibrarySongSortProperties {
@@ -216,8 +222,15 @@ public protocol LibraryGenreSortProperties {
 }
 
 public protocol LibraryTrackSortProperties {
-    var title: String { get }
+    var albumTitle: String? { get }
+    var artistName: String? { get }
+    var discNumber: Int? { get }
+    var trackNumber: Int? { get }
     var lastPlayedDate: Date? { get }
+    var libraryAddedDate: Date? { get }
+    var title: String { get }
+    var duration: TimeInterval? { get }
+    var playCount: Int? { get }
 }
 
 public protocol LibraryArtistSortProperties {
@@ -236,7 +249,14 @@ public protocol LibraryPlaylistEntrySortProperties {
 }
 
 public protocol LibraryMusicVideoSortProperties {
+    var albumTitle: String? { get }
+    var artistName: String? { get }
+    var trackNumber: Int? { get }
+    var lastPlayedDate: Date? { get }
+    var libraryAddedDate: Date? { get }
     var title: String { get }
+    var duration: TimeInterval? { get }
+    var playCount: Int? { get }
 }
 
 public protocol MusicLibraryRequestFilterValueEquatable {}

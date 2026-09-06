@@ -467,7 +467,283 @@ open class MPSPredicate: NSObject {
     }
 }
 
-open class MPSAccelerationStructure: MPSKernel {}
+open class MPSAccelerationStructureGroup: NSObject {
+    public private(set) var device: any MTLDevice
+
+    public init(device: any MTLDevice) {
+        self.device = device
+        super.init()
+    }
+}
+
+open class MPSAccelerationStructure: MPSKernel, NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+    public private(set) var group: MPSAccelerationStructureGroup
+    public private(set) var status: MPSAccelerationStructureStatus = .unbuilt
+    public var usage: MPSAccelerationStructureUsage = []
+    public private(set) var boundingBox: MPSAxisAlignedBoundingBox = MPSAxisAlignedBoundingBox()
+
+    public required init(device: any MTLDevice) {
+        self.group = MPSAccelerationStructureGroup(device: device)
+        super.init(device: device)
+    }
+
+    public init(group: MPSAccelerationStructureGroup) {
+        self.group = group
+        super.init(device: group.device)
+    }
+
+    public override init?(coder aDecoder: NSCoder, device: any MTLDevice) {
+        _ = aDecoder
+        return nil
+    }
+
+    public init?(coder aDecoder: NSCoder, group: MPSAccelerationStructureGroup) {
+        _ = (aDecoder, group)
+        return nil
+    }
+
+    public required override init?(coder: NSCoder) {
+        return nil
+    }
+
+    public func encode(with coder: NSCoder) {
+        _ = coder
+    }
+
+    open override func copy(with zone: NSZone? = nil, device: (any MTLDevice)?) -> Self {
+        let copied = Self.init(device: device ?? self.device)
+        copied.options = options
+        copied.label = label
+        copied.usage = usage
+        copied.status = .unbuilt
+        copied.boundingBox = boundingBox
+        return copied
+    }
+
+    open func copy(with zone: NSZone? = nil, group: MPSAccelerationStructureGroup) -> Self {
+        let copied = Self.init(device: group.device)
+        copied.options = options
+        copied.label = label
+        copied.usage = usage
+        copied.status = .unbuilt
+        copied.boundingBox = boundingBox
+        return copied
+    }
+
+    open func rebuild() {
+        status = .unbuilt
+        MPSHostBoundary.refuseGPUEncode("MPSAccelerationStructure.rebuild")
+    }
+
+    open func rebuild(completionHandler: @escaping MPSAccelerationStructureCompletionHandler) {
+        rebuild()
+        completionHandler(self)
+    }
+
+    open func encodeRefit(commandBuffer: any MTLCommandBuffer) {
+        _ = commandBuffer
+        MPSHostBoundary.refuseGPUEncode("MPSAccelerationStructure.encodeRefit")
+    }
+}
+
+open class MPSPolygonBuffer: NSObject, NSCopying, NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+    public var vertexBuffer: (any MTLBuffer)?
+    public var vertexBufferOffset: Int = 0
+    public var indexBuffer: (any MTLBuffer)?
+    public var indexBufferOffset: Int = 0
+    public var maskBuffer: (any MTLBuffer)?
+    public var maskBufferOffset: Int = 0
+    public var polygonCount: Int = 0
+
+    public override init() {
+        super.init()
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        _ = aDecoder
+        return nil
+    }
+
+    public func encode(with coder: NSCoder) {
+        _ = coder
+    }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copied = MPSPolygonBuffer()
+        copied.vertexBuffer = vertexBuffer
+        copied.vertexBufferOffset = vertexBufferOffset
+        copied.indexBuffer = indexBuffer
+        copied.indexBufferOffset = indexBufferOffset
+        copied.maskBuffer = maskBuffer
+        copied.maskBufferOffset = maskBufferOffset
+        copied.polygonCount = polygonCount
+        return copied
+    }
+}
+
+open class MPSPolygonAccelerationStructure: MPSAccelerationStructure {
+    public var vertexBuffer: (any MTLBuffer)?
+    public var vertexBufferOffset: Int = 0
+    public var vertexStride: Int = 12
+    public var indexBuffer: (any MTLBuffer)?
+    public var indexBufferOffset: Int = 0
+    public var indexType: MPSDataType = .uInt32
+    public var maskBuffer: (any MTLBuffer)?
+    public var maskBufferOffset: Int = 0
+    public var polygonBuffers: [MPSPolygonBuffer]?
+    public var polygonCount: Int = 0
+    public var polygonType: MPSPolygonType = .triangle
+
+    public required init(device: any MTLDevice) {
+        super.init(device: device)
+    }
+
+    public required init?(coder: NSCoder) {
+        return nil
+    }
+}
+
+open class MPSTriangleAccelerationStructure: MPSPolygonAccelerationStructure {
+    public var triangleCount: Int {
+        get { polygonCount }
+        set { polygonCount = newValue }
+    }
+
+    public required init(device: any MTLDevice) {
+        super.init(device: device)
+    }
+
+    public required init?(coder: NSCoder) {
+        return nil
+    }
+}
+
+open class MPSInstanceAccelerationStructure: MPSAccelerationStructure {
+    public var accelerationStructures: [MPSAccelerationStructure]?
+    public var instanceBuffer: (any MTLBuffer)?
+    public var instanceBufferOffset: Int = 0
+    public var instanceCount: Int = 0
+    public var maskBuffer: (any MTLBuffer)?
+    public var maskBufferOffset: Int = 0
+    public var transformBuffer: (any MTLBuffer)?
+    public var transformBufferOffset: Int = 0
+    public var transformType: MPSTransformType = .float4x4
+
+    public required init(device: any MTLDevice) {
+        super.init(device: device)
+    }
+
+    public required init?(coder: NSCoder) {
+        return nil
+    }
+}
+
+open class MPSCommandBuffer: NSObject {
+    public let commandBuffer: any MTLCommandBuffer
+    public var heapProvider: (any MPSHeapProvider)?
+    public var predicate: MPSPredicate?
+    public var rootCommandBuffer: any MTLCommandBuffer { commandBuffer }
+
+    public init(commandBuffer: any MTLCommandBuffer) {
+        self.commandBuffer = commandBuffer
+        super.init()
+    }
+
+    public convenience init(from commandQueue: any MTLCommandQueue) {
+        let buffer = commandQueue.makeCommandBuffer() ?? MPSHostCommandBuffer(device: commandQueue.device)
+        self.init(commandBuffer: buffer)
+    }
+
+    public convenience init(fromCommandQueue commandQueue: any MTLCommandQueue) {
+        self.init(from: commandQueue)
+    }
+
+    open func commitAndContinue() {}
+
+    open func prefetchHeap(forWorkloadSize size: Int) {
+        _ = size
+    }
+}
+
+open class MPSKeyedUnarchiver: NSObject, MPSDeviceProvider {
+    private let storedDevice: any MTLDevice
+
+    public init?(device: any MTLDevice) {
+        self.storedDevice = device
+        super.init()
+    }
+
+    public init(forReadingFrom data: Data, device: any MTLDevice, error: NSErrorPointer) {
+        self.storedDevice = device
+        super.init()
+        _ = data
+        error?.pointee = MPSKeyedUnarchiver.hostUnavailableError
+    }
+
+    public init(forReadingFromData data: Data, device: any MTLDevice, error: NSErrorPointer) {
+        self.storedDevice = device
+        super.init()
+        _ = data
+        error?.pointee = MPSKeyedUnarchiver.hostUnavailableError
+    }
+
+    public init(forReadingWith data: Data, device: any MTLDevice) {
+        self.storedDevice = device
+        super.init()
+        _ = data
+    }
+
+    public init(forReadingWithData data: Data, device: any MTLDevice) {
+        self.storedDevice = device
+        super.init()
+        _ = data
+    }
+
+    public func mpsMTLDevice() -> (any MTLDevice)! {
+        storedDevice
+    }
+
+    open class func unarchiveObject(with data: Data, device: any MTLDevice) -> Any? {
+        _ = (data, device)
+        MPSHostBoundary.refuseGPUEncode("MPSKeyedUnarchiver.unarchiveObject")
+        return nil
+    }
+
+    open class func unarchiveObject(withFile path: String, device: any MTLDevice) -> Any? {
+        _ = (path, device)
+        MPSHostBoundary.refuseGPUEncode("MPSKeyedUnarchiver.unarchiveObject(withFile:)")
+        return nil
+    }
+
+    open class func unarchiveTopLevelObject(with data: Data, device: any MTLDevice) throws -> Any {
+        _ = (data, device)
+        MPSHostBoundary.refuseGPUEncode("MPSKeyedUnarchiver.unarchiveTopLevelObject")
+        throw MPSKeyedUnarchiver.hostUnavailableError
+    }
+
+    open class func unarchivedObject(of cls: AnyClass, from data: Data, device: any MTLDevice) throws -> Any {
+        _ = (cls, data, device)
+        MPSHostBoundary.refuseGPUEncode("MPSKeyedUnarchiver.unarchivedObject(of:)")
+        throw MPSKeyedUnarchiver.hostUnavailableError
+    }
+
+    open class func unarchivedObject(ofClasses classes: Set<AnyHashable>, from data: Data, device: any MTLDevice) throws -> Any {
+        _ = (classes, data, device)
+        MPSHostBoundary.refuseGPUEncode("MPSKeyedUnarchiver.unarchivedObject(ofClasses:)")
+        throw MPSKeyedUnarchiver.hostUnavailableError
+    }
+
+    private static var hostUnavailableError: NSError {
+        NSError(
+            domain: "MetalPerformanceShaders",
+            code: 1,
+            userInfo: [NSLocalizedDescriptionKey: "MPSKeyedUnarchiver cannot decode GPU kernels on Linux"]
+        )
+    }
+}
 
 public func MPSSupportsMTLDevice(_ device: (any MTLDevice)?) -> Bool {
     _ = device

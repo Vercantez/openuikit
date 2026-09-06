@@ -24,6 +24,10 @@ import Foundation
 #endif
 #if canImport(Foundation)
 import struct Foundation.URL
+#elseif canImport(FoundationEssentials)
+// Guest library route (build_full OpenUIKit, same c4dce839 URL miss as
+// UIPrintInteractionController): FoundationEssentials.URL is the facade type.
+import struct FoundationEssentials.URL
 #endif
 
 @preconcurrency @MainActor

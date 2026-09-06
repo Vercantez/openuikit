@@ -107,6 +107,12 @@ swift build -c release --product openrender 2>&1 | grep -E 'error|Build of' | ta
 rm -rf /tmp/agent_merge_gate; ./.build/release/openrender render /tmp/agent_merge_gate fixtures/scenes/*.json >/dev/null
 python3 Tools/compare/compare.py --out /tmp/agent_merge_gate 2>&1 | grep -E '^FAIL|scenes pass' | tail -5
 python3 Tools/compare/compare.py --out /tmp/agent_merge_gate 2>&1 | grep -q '^FAIL' && { echo "GATE RED"; exit 5; }
+echo "==> guest library route (Foundation hidden)"
+# The Docker/corelibs Linux build cannot see this: OpenUIKit is compiled
+# against a Darwin sysroot with no Foundation.swiftmodule (rung b/c, build_full.sh).
+# x86 cycle c4dce839 went red on unguarded NSNumber/URL/Data after the ladder
+# merges. Refuse that class at merge time (Mac, under 10 minutes).
+bash scripts/guest_route_check.sh
 echo "==> test bundle builds (a keep-both on a test file once merged an unbalanced class)"
 swift build --build-tests > /tmp/agent_merge_tests.log 2>&1 || { grep -E 'error:' /tmp/agent_merge_tests.log | head -5; echo "TEST BUNDLE RED"; exit 5; }
 echo "==> real-app screens"

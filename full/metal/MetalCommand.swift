@@ -1458,6 +1458,15 @@ final class LinuxMTLRenderPipelineState: NSObject, MTLRenderPipelineState, @unch
     var imageblockSampleLength: Int { 0 }
     var supportIndirectCommandBuffers: Bool { false }
     var shaderValidation: MTLShaderValidation { descriptor.shaderValidation }
+    var maxTotalThreadgroupsPerMeshGrid: Int { 0 }
+    var maxTotalThreadsPerMeshThreadgroup: Int { 0 }
+    var maxTotalThreadsPerObjectThreadgroup: Int { 0 }
+    var meshThreadExecutionWidth: Int { 1 }
+    var objectThreadExecutionWidth: Int { 1 }
+    var requiredThreadsPerMeshThreadgroup: MTLSize { MTLSize() }
+    var requiredThreadsPerObjectThreadgroup: MTLSize { MTLSize() }
+    var requiredThreadsPerTileThreadgroup: MTLSize { MTLSize() }
+    var threadgroupSizeMatchesTileSize: Bool { false }
 
     var device: any MTLDevice { owningDevice }
 
@@ -1471,6 +1480,30 @@ final class LinuxMTLRenderPipelineState: NSObject, MTLRenderPipelineState, @unch
     func imageblockMemoryLength(forDimensions imageblockDimensions: MTLSize) -> Int {
         _ = imageblockDimensions
         return 0
+    }
+
+    func makeRenderPipelineState(
+        additionalBinaryFunctions binaryFunctionsDescriptor: MTL4RenderPipelineBinaryFunctionsDescriptor
+    ) throws -> any MTLRenderPipelineState {
+        _ = binaryFunctionsDescriptor
+        throw metalUnsupportedLibraryError(
+            .compileFailure,
+            reason: "no shader compiler"
+        )
+    }
+
+    func makeRenderPipelineState(
+        additionalBinaryFunctions: MTLRenderPipelineFunctionsDescriptor
+    ) throws -> any MTLRenderPipelineState {
+        _ = additionalBinaryFunctions
+        throw metalUnsupportedLibraryError(
+            .compileFailure,
+            reason: "no shader compiler"
+        )
+    }
+
+    func makeRenderPipelineDescriptorForSpecialization() -> MTL4PipelineDescriptor {
+        MTL4PipelineDescriptor()
     }
 }
 

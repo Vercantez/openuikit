@@ -16,6 +16,13 @@ import class Foundation.NSObject
 #elseif canImport(ObjectiveC)
 import class ObjectiveC.NSObject
 #endif
+// Guest library route (x86 cycle c4dce839 UIPrintInteractionController.swift:44,
+// URL/Data at 146–147): Foundation is hidden; both types live on
+// FoundationEssentials, which OpenUIKit already sees (UIDatePicker sibling).
+#if !canImport(Foundation) && canImport(FoundationEssentials)
+import struct FoundationEssentials.URL
+import struct FoundationEssentials.Data
+#endif
 
 public enum UIPrinterCutterBehavior: Int, Sendable {
     case noCut = 0
