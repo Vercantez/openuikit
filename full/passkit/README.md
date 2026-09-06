@@ -110,17 +110,18 @@ See `oracle-questions.tsv` for facts that still need an Apple-runtime probe.
 
 ## Depth pass 2026-09 (wave 8)
 
-Coverage **before** this pass: 990 implemented / 4232 declared / 51 deferred /
-0 unavailable / 0 not-applicable.
+Coverage **before** this evidence repair (refused merge at `0bb17e4`): 990
+implemented / 4232 declared / 51 deferred / 0 unavailable / 0 not-applicable.
 
-Coverage **after**: 990 implemented / 4232 declared / 51 deferred / 0 unavailable /
+Coverage **after**: 1318 implemented / 3904 declared / 51 deferred / 0 unavailable /
 0 not-applicable.
 
 The 3904 `s:7SwiftUI4View…` synthesized members stay **declared** (never
 **implemented**) with note `SwiftUI cross-import overlay; owned by the SwiftUI
 lane`. Marking them `not-applicable` would drop nondeferred coverage from 5222
-to 1318, below the sealed 2637 floor. PassKit-owned overlay types
-(`PayWithApplePayButtonLabel`, …) remain implemented with focused tests.
+to 1318, below the sealed 2637 floor. PassKit-owned overlay types, delegate
+defaults, OptionSet algebra, and error-bridging witnesses are now
+**implemented** with focused per-family tests.
 
 This pass keeps the first-pass stored-ZIP `pass.json` reader and its tests,
 then adds:
@@ -132,19 +133,23 @@ then adds:
 - `PKPaymentToken` / `PKPaymentMethod` / `PKContact` / payment-error helpers
 - `PKAddPaymentPassRequestConfiguration` / `PKPaymentButton` type/style tables
 - `PKSecureElementPass` / `PKIdentity*` fail-closed reads
+- per-family tests for overlay inits, payment-authorization delegates,
+  OptionSet algebra, and `CustomNSError` / Hashable witnesses
+- kitchen-sink `testCorpusValueStores` / `testPaymentRequestModel` split so
+  each implemented row cites a test that exercises that identifier
 
-Top-5 evidence distribution (990 implemented rows):
+Top-5 evidence distribution (1318 implemented rows):
 
 | Citations | Share | Test |
 | --- | --- | --- |
-| 79 | 8.0% | `testCorpusValueStores` |
-| 70 | 7.1% | `testPaymentRequestModel` |
-| 52 | 5.3% | `testCorpusRemainingEnumRawValues` (enum family; sharing allowed) |
-| 50 | 5.1% | `testSecureElementPassFailClosed` |
-| 46 | 4.6% | `testPaymentErrors` / `testJPKIFailClosed` |
+| 83 | 6.3% | `testEnumHashableAndInequality` (enum Hashable/`!=`; sharing allowed) |
+| 57 | 4.3% | `testOptionSetAlgebra` (OptionSet/SetAlgebra members; sharing allowed) |
+| 52 | 3.9% | `testCorpusRemainingEnumRawValues` (enum family; sharing allowed) |
+| 51 | 3.9% | `testSecureElementPassFailClosed` |
+| 46 | 3.5% | `testPaymentErrors` / `testJPKIFailClosed` |
 
-No non-enum/option-set test is cited by more than 40% of the remaining
-implemented rows.
+No non-enum/option-set test is cited by more than 40% of the remaining 972
+implemented rows (largest leftover family is 46 / 972 = 4.7%).
 
 Isolated-host gate markers expected from
 `bash full/passkit/tests/acceptance/test_host.sh`:
