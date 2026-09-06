@@ -87,6 +87,13 @@ open class NSItemProvider: NSObject, @unchecked Sendable {
         }
     }
 
+    /// Gestures-dnd census spelling (`init(contentsOf:)`). Darwin Foundation
+    /// already vends this; Linux stores the file URL as `public.file-url`.
+    public convenience init(contentsOf fileURL: URL) {
+        self.init(item: fileURL, typeIdentifier: "public.file-url")
+        suggestedName = fileURL.lastPathComponent
+    }
+
     open var registeredTypeIdentifiers: [String] {
         lock.lock()
         defer { lock.unlock() }
@@ -272,6 +279,38 @@ open class NSItemProvider: NSObject, @unchecked Sendable {
     static var _unexpectedClass: NSError {
         NSError(domain: NSItemProviderErrorDomain,
                 code: NSItemProviderErrorCode.unexpectedValueClass.rawValue)
+    }
+
+    /// Process-local drag (`UIDragDrop.swift`) needs a typed in-process
+    /// getter. Darwin Foundation does not expose one (tests set
+    /// `UIDragItem.localObject`). MEASURED GestureProbe, iPhone SE 2x /
+    /// iOS 26.1: drag items carry the provider plus optional localObject.
+    func _canLoad(_ type: Any.Type) -> Bool {
+        if type == String.self {
+            return hasItemConformingToTypeIdentifier("public.utf8-plain-text")
+                || hasItemConformingToTypeIdentifier("public.text")
+                || hasItemConformingToTypeIdentifier("public.plain-text")
+        }
+        if type == URL.self {
+            return hasItemConformingToTypeIdentifier("public.url")
+                || hasItemConformingToTypeIdentifier("public.file-url")
+        }
+        if type == Data.self {
+            return hasItemConformingToTypeIdentifier("public.data")
+        }
+        lock.lock()
+        defer { lock.unlock() }
+        return representations.contains { $0.object != nil }
+    }
+
+    func _load<T>(_ type: T.Type) -> T? {
+        _ = type
+        lock.lock()
+        defer { lock.unlock() }
+        for rep in representations {
+            if let obj = rep.object as? T { return obj }
+        }
+        return nil
     }
 }
 

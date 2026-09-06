@@ -354,6 +354,21 @@ open class UIGestureRecognizer: NSObject {
     /// Time-only advance (no touch change): UIWindow.tick / stationary
     /// phases call this so time-based recognizers (long press) can fire.
     open func timeAdvanced(to timestamp: TimeInterval, with event: UIEvent) {}
+
+    func _twoTouchSpan() -> (distance: CGFloat, angle: CGFloat)? {
+        let live = trackedTouches.filter { $0.phase != .cancelled }
+        guard live.count >= 2 else { return nil }
+        let a = live[0].location(in: nil)
+        let b = live[1].location(in: nil)
+        let dx: CGFloat = b.x - a.x
+        let dy: CGFloat = b.y - a.y
+        let distance: CGFloat = (dx * dx + dy * dy).squareRoot()
+        return (distance, _atan2(dy, dx))
+    }
+
+    func _liveTouchCount() -> Int {
+        trackedTouches.filter { $0.phase != .ended && $0.phase != .cancelled }.count
+    }
 }
 
 // MARK: - Tap
@@ -575,5 +590,279 @@ public final class UILongPressGestureRecognizer: UIGestureRecognizer {
               trackedTouches.count == numberOfTouchesRequired,
               timestamp - pressStart >= minimumPressDuration else { return }
         state = .began
+    }
+}
+
+// MARK: - Pinch
+
+/// Two-touch continuous pinch. MEASURED GestureProbe, iPhone SE 2x /
+/// iOS 26.1 (`/tmp/gestureprobe`, OpenUIKit-2x-uikit-gestures-dnd):
+///
+///   - possible until |Δdistance| ≥ 10 pt (same slop as pan's 10 pt)
+///   - at recognition, baseline = initialDistance + 8 × sign(Δ)
+///     pinch-out 100→110: scale = 110/108 = 1.018518519
+///     pinch-in  200→190: scale = 190/192 = 0.989583333
+///   - `scale = currentDistance / baseline`; `set scale` retargets
+///     baseline = currentDistance / newScale (200 pt then 250 pt → 1.25)
+///   - location is the two-touch centroid (150, 200) for a 100-pt pair
+///     on y=200
+///   - velocity is last-step Δscale/Δt; first sample matches iOS exactly
+///     ((110/108 − 1)/0.05 = 0.370370370). Later iOS samples apply a
+///     private IIR (recorded in docs/agent_reports/uikit-gestures-dnd.md)
+///   - one finger never recognizes; one finger remaining stays `.changed`;
+///     `.ended` when both have lifted (UIPinchGestureRecognizer.h)
+@preconcurrency @MainActor
+open class UIPinchGestureRecognizer: UIGestureRecognizer {
+    /// MEASURED GestureProbe pinch-threshold, SE 2x / iOS 26.1: d=8
+    /// dist=108 stays `.possible`; d=10 dist=110 enters `.began`.
+    static let activationDistance: CGFloat = 10
+    /// MEASURED same probe: 8 pt hysteresis baked into the recognition
+    /// baseline (pinch-out +8, pinch-in −8).
+    static let hysteresis: CGFloat = 8
+
+    var initialDistance: CGFloat = 0
+    var baseline: CGFloat = 1
+    var lastScale: CGFloat = 1
+    var lastTimestamp: TimeInterval = 0
+    var _scale: CGFloat = 1
+    var _velocity: CGFloat = 0
+
+    public var scale: CGFloat {
+        get { _scale }
+        set {
+            if let span = _twoTouchSpan(), span.distance > 0 {
+                baseline = span.distance / max(newValue, CGFloat(1e-12))
+            }
+            _scale = newValue
+        }
+    }
+    public var velocity: CGFloat { _velocity }
+
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+        guard _state == .possible else { return }
+        if let span = _twoTouchSpan() {
+            initialDistance = span.distance
+            lastTimestamp = event.timestamp
+        }
+    }
+
+    public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+        guard let span = _twoTouchSpan() else { return }
+        switch _state {
+        case .possible:
+            let delta = span.distance - initialDistance
+            if delta.magnitude >= UIPinchGestureRecognizer.activationDistance,
+               initialDistance > 0 {
+                let signedHysteresis = delta >= 0
+                    ? UIPinchGestureRecognizer.hysteresis
+                    : -UIPinchGestureRecognizer.hysteresis
+                baseline = initialDistance + signedHysteresis
+                if baseline == 0 { baseline = span.distance }
+                updateScale(span.distance, at: event.timestamp)
+                state = .began
+            }
+        case .began, .changed:
+            updateScale(span.distance, at: event.timestamp)
+            state = .changed
+        default:
+            break
+        }
+    }
+
+    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+        switch _state {
+        case .began, .changed:
+            if _liveTouchCount() == 0 {
+                state = .ended
+            } else if _state == .began {
+                // MEASURED GestureProbe: lifting one finger of a
+                // recognized pinch stays continuous (`.changed`), and
+                // `.ended` only when both have lifted.
+                state = .changed
+            }
+        case .possible:
+            if _liveTouchCount() == 0 { state = .failed }
+        default:
+            break
+        }
+    }
+
+    func updateScale(_ distance: CGFloat, at timestamp: TimeInterval) {
+        let newScale = baseline == 0 ? 1 : distance / baseline
+        let dt = timestamp - lastTimestamp
+        if dt > 0 { _velocity = (newScale - lastScale) / CGFloat(dt) }
+        lastScale = newScale
+        lastTimestamp = timestamp
+        _scale = newScale
+    }
+
+    public override func reset() {
+        super.reset()
+        _scale = 1
+        _velocity = 0
+        lastScale = 1
+        initialDistance = 0
+        baseline = 1
+    }
+}
+
+// MARK: - Rotation
+
+/// Two-touch continuous rotation. MEASURED GestureProbe, iPhone SE 2x /
+/// iOS 26.1: 10° to begin, 5° hysteresis in the direction of rotation
+/// (10° reports 0.087266465 = 5°; 45° reports 0.698131703 = 40°;
+/// 90° reports 1.483529867 = 85°). `set rotation` retargets the baseline
+/// (0 at 90° then 135° → 0.785398163 = 45°, no extra hysteresis).
+/// Velocity is last-step Δ(raw angle)/Δt; first sample 0.174532925/0.05
+/// = 3.490658504 matches iOS. Location is the centroid.
+@preconcurrency @MainActor
+open class UIRotationGestureRecognizer: UIGestureRecognizer {
+    static let activationAngle: CGFloat = 10 * CGFloat.pi / 180
+    static let hysteresis: CGFloat = 5 * CGFloat.pi / 180
+
+    var initialAngle: CGFloat = 0
+    var baseline: CGFloat = 0
+    var lastAngle: CGFloat = 0
+    var lastTimestamp: TimeInterval = 0
+    var _rotation: CGFloat = 0
+    var _velocity: CGFloat = 0
+    var didCaptureInitial = false
+
+    public var rotation: CGFloat {
+        get { _rotation }
+        set {
+            if let span = _twoTouchSpan() {
+                baseline = span.angle - newValue
+            }
+            _rotation = newValue
+        }
+    }
+    public var velocity: CGFloat { _velocity }
+
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+        guard _state == .possible else { return }
+        if let span = _twoTouchSpan() {
+            initialAngle = span.angle
+            lastAngle = span.angle
+            lastTimestamp = event.timestamp
+            didCaptureInitial = true
+        }
+    }
+
+    public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+        guard let span = _twoTouchSpan() else { return }
+        switch _state {
+        case .possible:
+            var delta = span.angle - initialAngle
+            while delta > CGFloat.pi { delta -= 2 * CGFloat.pi }
+            while delta < -CGFloat.pi { delta += 2 * CGFloat.pi }
+            // 10° constructed via cos/sin then re-read via atan2 is 1 ULP
+            // below `10 * π / 180` (GestureProbe SE 2x / iOS 26.1: 10°
+            // begins, 0.17453292519943284 vs 0.17453292519943295). Compare
+            // in degrees so the nameable threshold stays 10.
+            let degrees = delta.magnitude * 180 / CGFloat.pi
+            if degrees + 1e-12 >= 10 {
+                let signed = delta >= 0
+                    ? UIRotationGestureRecognizer.hysteresis
+                    : -UIRotationGestureRecognizer.hysteresis
+                baseline = initialAngle + signed
+                updateRotation(span.angle, at: event.timestamp)
+                state = .began
+            }
+        case .began, .changed:
+            updateRotation(span.angle, at: event.timestamp)
+            state = .changed
+        default:
+            break
+        }
+    }
+
+    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+        switch _state {
+        case .began, .changed:
+            if _liveTouchCount() == 0 { state = .ended }
+            else if _state == .began { state = .changed }
+        case .possible:
+            if _liveTouchCount() == 0 { state = .failed }
+        default:
+            break
+        }
+    }
+
+    func updateRotation(_ angle: CGFloat, at timestamp: TimeInterval) {
+        var raw = angle - lastAngle
+        while raw > CGFloat.pi { raw -= 2 * CGFloat.pi }
+        while raw < -CGFloat.pi { raw += 2 * CGFloat.pi }
+        let dt = timestamp - lastTimestamp
+        if dt > 0 { _velocity = raw / CGFloat(dt) }
+        lastAngle = angle
+        lastTimestamp = timestamp
+        var reported = angle - baseline
+        while reported > CGFloat.pi { reported -= 2 * CGFloat.pi }
+        while reported < -CGFloat.pi { reported += 2 * CGFloat.pi }
+        _rotation = reported
+    }
+
+    public override func reset() {
+        super.reset()
+        _rotation = 0
+        _velocity = 0
+        initialAngle = 0
+        baseline = 0
+        lastAngle = 0
+        didCaptureInitial = false
+    }
+}
+
+// MARK: - Hover
+
+/// Pointer-hover continuous recognizer. Apple's header (iOS 26.1):
+/// "On iOS, this gesture recognizer doesn't recognize anything and is
+/// effectively a no-op." MEASURED GestureProbe, iPhone SE 2x / iOS 26.1:
+/// zOffset/altitude/roll are 0, state stays `.possible` without a hover
+/// event source. `UIWindow.sendHover` is the host injection used by tests
+/// and iPad-class pointer backends (possible → began → changed → ended).
+@preconcurrency @MainActor
+open class UIHoverGestureRecognizer: UIGestureRecognizer {
+    var hoverLocationInWindow: CGPoint = .zero
+    public private(set) var zOffset: CGFloat = 0
+    public private(set) var altitudeAngle: CGFloat = 0
+    public private(set) var rollAngle: CGFloat = 0
+
+    public func azimuthAngle(in view: UIView?) -> CGFloat { 0 }
+    public func azimuthUnitVector(in view: UIView?) -> CGVector { CGVector(dx: 0, dy: 0) }
+
+    public override func location(in view: UIView?) -> CGPoint {
+        guard let view else { return hoverLocationInWindow }
+        return view.convert(hoverLocationInWindow, from: windowView)
+    }
+
+    var windowView: UIWindow? { view?.window ?? view as? UIWindow }
+
+    func _hoverEntered(at point: CGPoint, timestamp: TimeInterval) {
+        guard isEnabled, _state == .possible else { return }
+        hoverLocationInWindow = point
+        state = .began
+    }
+
+    func _hoverMoved(at point: CGPoint, timestamp: TimeInterval) {
+        hoverLocationInWindow = point
+        switch _state {
+        case .began, .changed: state = .changed
+        default: break
+        }
+    }
+
+    func _hoverExited(at point: CGPoint, timestamp: TimeInterval) {
+        hoverLocationInWindow = point
+        switch _state {
+        case .began, .changed: state = .ended
+        default: break
+        }
+    }
+
+    public override func reset() {
+        super.reset()
+        hoverLocationInWindow = .zero
     }
 }

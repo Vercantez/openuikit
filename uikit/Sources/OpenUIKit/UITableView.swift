@@ -405,6 +405,23 @@ open class UITableView: UIScrollView {
     public weak var dataSource: UITableViewDataSource? {
         didSet { if dataSource !== oldValue { reloadData() } }
     }
+    /// Drag source. Installing a delegate also installs the 0.325 s lift
+    /// long-press (MEASURED GestureProbe, iPhone SE 2x / iOS 26.1).
+    public weak var dragDelegate: UITableViewDragDelegate? {
+        didSet { _installDragLift() }
+    }
+    public weak var dropDelegate: UITableViewDropDelegate?
+    /// As of iOS 15 this defaults to true on iPhone (UITableView.h).
+    public var dragInteractionEnabled = true
+    public internal(set) var hasActiveDrag = false
+    public internal(set) var hasActiveDrop = false
+    var _activeDrag = false {
+        didSet { hasActiveDrag = _activeDrag }
+    }
+    var _activeDrop = false {
+        didSet { hasActiveDrop = _activeDrop }
+    }
+    var _dragLift: UILongPressGestureRecognizer?
     // NOTE: like UIKit, the table's delegate is the inherited scroll-view
     // `delegate`; assign a UITableViewDelegate to it (the protocol refines
     // UIScrollViewDelegate) — the table discovers the table conformance
