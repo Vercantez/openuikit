@@ -2,8 +2,8 @@ import Foundation
 
 // Measurement unit catalogs and @Parameter inits for Foundation.Measurement.
 // Nested unit names come from the pinned 26.1 graph. Linux stores the enum
-// case and builds Measurement with UnitType(symbol:); it does not invent
-// Apple locale conversion coefficients.
+// case and builds Measurement with UnitType(symbol:converter:) using an
+// identity converter; it does not invent Apple locale coefficients.
 
 extension Measurement: _IntentValue where UnitType: Unit {}
 
@@ -74,7 +74,7 @@ extension IntentParameter where Value == Measurement<UnitVolume> {
         case teaspoons
 
         public var foundationUnit: UnitVolume {
-            UnitVolume(symbol: rawValue)
+            UnitVolume(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -382,7 +382,7 @@ extension IntentParameter where Value == Measurement<UnitLength> {
         case furlongs
 
         public var foundationUnit: UnitLength {
-            UnitLength(symbol: rawValue)
+            UnitLength(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -703,7 +703,7 @@ extension IntentParameter where Value == Measurement<UnitInformationStorage> {
         case zettabits
 
         public var foundationUnit: UnitInformationStorage {
-            UnitInformationStorage(symbol: rawValue)
+            UnitInformationStorage(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1005,7 +1005,7 @@ extension IntentParameter where Value == Measurement<UnitMass> {
         case shortTons
 
         public var foundationUnit: UnitMass {
-            UnitMass(symbol: rawValue)
+            UnitMass(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1048,7 +1048,7 @@ extension IntentParameter where Value == Measurement<UnitArea> {
         case hectares
 
         public var foundationUnit: UnitArea {
-            UnitArea(symbol: rawValue)
+            UnitArea(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1088,7 +1088,7 @@ extension IntentParameter where Value == Measurement<UnitPower> {
         case terawatts
 
         public var foundationUnit: UnitPower {
-            UnitPower(symbol: rawValue)
+            UnitPower(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1127,7 +1127,7 @@ extension IntentParameter where Value == Measurement<UnitPressure> {
         case millibars
 
         public var foundationUnit: UnitPressure {
-            UnitPressure(symbol: rawValue)
+            UnitPressure(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1165,7 +1165,7 @@ extension IntentParameter where Value == Measurement<UnitFrequency> {
         case terahertz
 
         public var foundationUnit: UnitFrequency {
-            UnitFrequency(symbol: rawValue)
+            UnitFrequency(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1201,7 +1201,7 @@ extension IntentParameter where Value == Measurement<UnitDuration> {
         case seconds
 
         public var foundationUnit: UnitDuration {
-            UnitDuration(symbol: rawValue)
+            UnitDuration(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1236,7 +1236,7 @@ extension IntentParameter where Value == Measurement<UnitAngle> {
         case gradians
 
         public var foundationUnit: UnitAngle {
-            UnitAngle(symbol: rawValue)
+            UnitAngle(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1271,7 +1271,7 @@ extension IntentParameter where Value == Measurement<UnitElectricCharge> {
         case coulombs
 
         public var foundationUnit: UnitElectricCharge {
-            UnitElectricCharge(symbol: rawValue)
+            UnitElectricCharge(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1305,7 +1305,7 @@ extension IntentParameter where Value == Measurement<UnitEnergy> {
         case calories
 
         public var foundationUnit: UnitEnergy {
-            UnitEnergy(symbol: rawValue)
+            UnitEnergy(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1339,7 +1339,7 @@ extension IntentParameter where Value == Measurement<UnitElectricCurrent> {
         case amperes
 
         public var foundationUnit: UnitElectricCurrent {
-            UnitElectricCurrent(symbol: rawValue)
+            UnitElectricCurrent(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1373,7 +1373,7 @@ extension IntentParameter where Value == Measurement<UnitElectricResistance> {
         case milliohms
 
         public var foundationUnit: UnitElectricResistance {
-            UnitElectricResistance(symbol: rawValue)
+            UnitElectricResistance(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1407,7 +1407,7 @@ extension IntentParameter where Value == Measurement<UnitElectricPotentialDiffer
         case megavolts
 
         public var foundationUnit: UnitElectricPotentialDifference {
-            UnitElectricPotentialDifference(symbol: rawValue)
+            UnitElectricPotentialDifference(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1440,7 +1440,7 @@ extension IntentParameter where Value == Measurement<UnitSpeed> {
         case knots
 
         public var foundationUnit: UnitSpeed {
-            UnitSpeed(symbol: rawValue)
+            UnitSpeed(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1472,7 +1472,7 @@ extension IntentParameter where Value == Measurement<UnitTemperature> {
         case celsius
 
         public var foundationUnit: UnitTemperature {
-            UnitTemperature(symbol: rawValue)
+            UnitTemperature(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1504,7 +1504,7 @@ extension IntentParameter where Value == Measurement<UnitFuelEfficiency> {
         case milesPerImperialGallon
 
         public var foundationUnit: UnitFuelEfficiency {
-            UnitFuelEfficiency(symbol: rawValue)
+            UnitFuelEfficiency(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1535,7 +1535,7 @@ extension IntentParameter where Value == Measurement<UnitAcceleration> {
         case gravity
 
         public var foundationUnit: UnitAcceleration {
-            UnitAcceleration(symbol: rawValue)
+            UnitAcceleration(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1566,7 +1566,7 @@ extension IntentParameter where Value == Measurement<UnitConcentrationMass> {
         case milligramsPerDeciliter
 
         public var foundationUnit: UnitConcentrationMass {
-            UnitConcentrationMass(symbol: rawValue)
+            UnitConcentrationMass(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1596,7 +1596,7 @@ extension IntentParameter where Value == Measurement<UnitDispersion> {
         case partsPerMillion
 
         public var foundationUnit: UnitDispersion {
-            UnitDispersion(symbol: rawValue)
+            UnitDispersion(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 
@@ -1626,7 +1626,7 @@ extension IntentParameter where Value == Measurement<UnitIlluminance> {
         case lux
 
         public var foundationUnit: UnitIlluminance {
-            UnitIlluminance(symbol: rawValue)
+            UnitIlluminance(symbol: rawValue, converter: UnitConverterLinear(coefficient: 1))
         }
     }
 

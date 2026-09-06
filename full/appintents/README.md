@@ -78,7 +78,8 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
 - `IntentParameter.Volume` / `Length` / `InformationStorage` (and the
   other 19 Foundation measurement unit enums) are `CaseIterable`. A table
   test checks `allCases` uniqueness and `foundationUnit.symbol == rawValue`.
-  Linux uses `UnitType(symbol:)`; it does not invent Apple locale conversion.
+  Linux uses `UnitType(symbol:converter:)` with an identity converter; it
+  does not invent Apple locale conversion.
 - `@Parameter` measurement inits for Volume / Length / InformationStorage
   store `defaultValue` + `defaultUnit` / `unit`, `supportsNegativeNumbers`,
   and `unitAdjustForLocale`. `makeContext()` copies those onto
