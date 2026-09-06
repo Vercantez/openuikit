@@ -1,0 +1,78 @@
+# LocalAuthenticationEmbeddedUI
+
+Linux starting point for Apple's public `LocalAuthenticationEmbeddedUI` module,
+reconstructed from the pinned Xcode 26.1 iPhoneOS symbol graph. Isolated
+host-gate success is not integrated Linux success.
+
+The public Swift census is two identifiers: `LAPresentationContext` and
+`LARight.authorize(localizedReason:in:)`.
+
+## What is real
+
+- `LAPresentationContext` is a typealias of `UIWindow`, matching
+  `LAPresentationContext.h` and the symbol-graph declaration
+  `typealias LAPresentationContext = UIWindow`. Pinned macios uses
+  `using LAPresentationContext = UIKit.UIWindow` on iOS.
+- `LARight.authorize(localizedReason:in:)` and the completion-handler sibling
+  are the same ObjC selector
+  `authorizeWithLocalizedReason:inPresentationContext:completion:`. Linux
+  records the reason and window, then fail-closes.
+- Isolated-host `LARight.State` raw values are `unknown = 0`,
+  `authorizing = 1`, `authorized = 2`, `notAuthorized = 3` (Apple
+  `LARightState` order). A presentation-context authorize call on the
+  lookalike transitions `unknown → authorizing → notAuthorized`.
+- The fail-closed error bridges to domain `com.apple.LocalAuthentication`
+  and code `-1004` (`kLAErrorNotInteractive`).
+
+## Fail-closed boundaries
+
+- Linux never presents an authorization sheet, never talks to a
+  LocalAuthentication daemon, and never reports success for
+  `authorize(localizedReason:in:)`.
+- Simulated device-passcode hooks that exist on the LocalAuthentication
+  module do not apply here: this selector is specifically UI presentation.
+- TBD-only ObjC types (`LACustomPasswordController`,
+  `LAPasscodeChangeService`, `LARatchetViewController`, and related error
+  domains) are not part of the public Swift census and are not invented.
+
+Isolated host compilation imports Foundation only. `UIWindow` and `LARight`
+use `#if !canImport` lookalikes so the sealed gate can type-check. They are
+not a public UIKit or LocalAuthentication substitute for the EC2 identity
+probe.
+
+## Tests
+
+`tests/agent/LocalAuthenticationEmbeddedUILoadSmoke.swift` is the schema-v2
+load marker (`LOCALAUTHENTICATIONEMBEDDEDUI_AGENT_RUNTIME_OK`). Focused
+checks live in `tests/agent/*Tests.swift` as top-level synchronous
+`func test*()`. `tests/agent/LocalAuthenticationEmbeddedUIDependencyIdentity.swift`
+imports `Foundation`, `LocalAuthentication`, `UIKit`, and
+`LocalAuthenticationEmbeddedUI` for a future clean EC2 probe; it is not part
+of the isolated host gate.
+
+The campaign inventory stamp
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
+is printed by `.cursor/verify-cloud-environment.sh`, not by the sealed
+framework gate. This snapshot's verifier failed
+(`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor
+Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs campaign
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Swift 6.2.4 / linux
+compiled `libLocalAuthenticationEmbeddedUI.dylib`. The sealed gate was not
+weakened.
+
+## Depth pass 2026-09
+
+Implemented **2** / declared **0** / deferred **0** / unavailable **0** /
+not-applicable **0** (2 exact IDs; lane floor 2).
+
+**Top-5 implemented evidence distribution** (2 implemented rows):
+
+| rows | share | evidence |
+| ---: | ---: | --- |
+| 1 | 50% | `test:full/localauthenticationembeddedui/tests/agent/LAPresentationContextTests.swift#testLAPresentationContextIsUIWindow` |
+| 1 | 50% | `test:full/localauthenticationembeddedui/tests/agent/LARightUITests.swift#testAuthorizeInPresentationContextFailClosed` |
+
+There are no enum / option-set / C-constant rows in this census. With two
+non-enum identifiers, one focused test per identifier is the minimum
+concentration possible (50% each). No test is cited by more than one
+implemented row.

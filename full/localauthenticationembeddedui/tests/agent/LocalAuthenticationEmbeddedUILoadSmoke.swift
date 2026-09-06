@@ -1,0 +1,3 @@
+import LocalAuthenticationEmbeddedUI
+
+let frameworkLoadSmokeMarker = "LOCALAUTHENTICATIONEMBEDDEDUI_AGENT_RUNTIME_OK"

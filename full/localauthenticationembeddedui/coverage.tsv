@@ -1,0 +1,3 @@
+precise	status	evidence	notes
+c:@T@LAPresentationContext	implemented	test:full/localauthenticationembeddedui/tests/agent/LAPresentationContextTests.swift#testLAPresentationContextIsUIWindow	-
+c:objc(cs)LARight(im)authorizeWithLocalizedReason:inPresentationContext:completion:	implemented	test:full/localauthenticationembeddedui/tests/agent/LARightUITests.swift#testAuthorizeInPresentationContextFailClosed	-
