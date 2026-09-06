@@ -150,6 +150,7 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
     public var name: String?
     public private(set) var persistentStores: [NSPersistentStore] = []
     private let _lock = NSRecursiveLock()
+    let _historyLog = _CDHistoryLog()
     private static let _registryLock = NSLock()
     private nonisolated(unsafe) static var _registry: [String: AnyClass] = [
         NSInMemoryStoreType: _CDInMemoryPersistentStore.self,
@@ -307,6 +308,10 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
             options: options
         )
         try store.loadMetadata()
+        if (options?[NSReadOnlyPersistentStoreOption] as? Bool == true)
+            || (options?[NSReadOnlyPersistentStoreOption] as? NSNumber)?.boolValue == true {
+            store.isReadOnly = true
+        }
         store.metadata[NSStoreModelVersionHashesKey] = managedObjectModel.entityVersionHashesByName
         persistentStores.append(store)
         store.didAdd(to: self)
@@ -333,13 +338,32 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
     ) {
         let work = {
             do {
-                _ = try self.addPersistentStore(
+                var options: [AnyHashable: Any] = [:]
+                for (key, value) in storeDescription.options {
+                    options[key] = value
+                }
+                if storeDescription.isReadOnly {
+                    options[NSReadOnlyPersistentStoreOption] = true as NSNumber
+                }
+                if storeDescription.timeout > 0 {
+                    options[NSPersistentStoreTimeoutOption] = NSNumber(value: storeDescription.timeout)
+                }
+                if !storeDescription.sqlitePragmas.isEmpty {
+                    options[NSSQLitePragmasOption] = storeDescription.sqlitePragmas
+                }
+                options[NSMigratePersistentStoresAutomaticallyOption] =
+                    NSNumber(value: storeDescription.shouldMigrateStoreAutomatically)
+                options[NSInferMappingModelAutomaticallyOption] =
+                    NSNumber(value: storeDescription.shouldInferMappingModelAutomatically)
+                let store = try self.addPersistentStore(
                     ofType: storeDescription.type,
                     configurationName: storeDescription.configuration,
                     at: storeDescription.url,
-                    options: storeDescription.options
+                    options: options
                 )
+                store.isReadOnly = storeDescription.isReadOnly || store.isReadOnly
                 block(storeDescription, nil)
+                _ = store
             } catch {
                 block(storeDescription, error)
             }
@@ -410,7 +434,7 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
 
     public func currentPersistentHistoryToken(fromStores stores: [Any]?) -> NSPersistentHistoryToken? {
         _ = stores
-        return nil
+        return _historyLog.currentToken()
     }
 
     public func finishDeferredLightweightMigration() throws {
@@ -627,6 +651,9 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
             buckets[id] = entry
         }
         for entry in buckets.values {
+            if entry.store.isReadOnly {
+                throw _CDMakeError(NSPersistentStoreSaveError, "cannot save a read-only persistent store")
+            }
             try _cdApplySaveOnStore(
                 entry.store,
                 inserted: entry.inserted,
@@ -634,6 +661,34 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
                 deleted: entry.deleted
             )
         }
+    }
+
+    func _historyTrackingEnabled() -> Bool {
+        persistentStores.contains { store in
+            if store.options?[NSPersistentHistoryTrackingKey] as? Bool == true { return true }
+            if (store.options?[NSPersistentHistoryTrackingKey] as? NSNumber)?.boolValue == true {
+                return true
+            }
+            return false
+        }
+    }
+
+    func _recordHistory(
+        inserted: [NSManagedObject],
+        updated: [NSManagedObject],
+        deleted: [NSManagedObject],
+        author: String?,
+        contextName: String?
+    ) {
+        guard _historyTrackingEnabled() else { return }
+        _historyLog.record(
+            inserted: inserted,
+            updated: updated,
+            deleted: deleted,
+            author: author,
+            contextName: contextName,
+            storeID: persistentStores.first?.identifier ?? ""
+        )
     }
 
     private func _cdApplySaveOnStore(
@@ -724,7 +779,7 @@ open class NSPersistentContainer: NSObject {
 
     public func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void) {
         let context = newBackgroundContext()
-        context.perform { block(context) }
+        context.performAndWait { block(context) }
     }
 
     public func performBackgroundTask<T>(

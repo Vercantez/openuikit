@@ -11,51 +11,192 @@ open class NSQueryGenerationToken: NSObject {
 }
 
 open class NSPersistentHistoryToken: NSObject {
+    var sequence: Int64 = 0
     public override init() { super.init() }
     public init?(coder: NSCoder) { super.init() }
+    convenience init(sequence: Int64) {
+        self.init()
+        self.sequence = sequence
+    }
 }
 
 open class NSPersistentHistoryChange: NSObject {
-    public var changeID: Int64 { 0 }
-    public var changeType: NSPersistentHistoryChangeType { .insert }
-    public var changedObjectID: NSManagedObjectID {
-        NSManagedObjectID(
+    public internal(set) var changeID: Int64 = 0
+    public internal(set) var changeType: NSPersistentHistoryChangeType = .insert
+    public internal(set) var changedObjectID: NSManagedObjectID
+    public internal(set) var tombstone: [AnyHashable: Any]?
+    public internal(set) var transaction: NSPersistentHistoryTransaction?
+    public internal(set) var updatedProperties: Set<NSPropertyDescription>?
+    open class var entityDescription: NSEntityDescription? { nil }
+    open class var fetchRequest: NSFetchRequest<any NSFetchRequestResult>? {
+        NSFetchRequest<any NSFetchRequestResult>(entityName: "NSPersistentHistoryChange")
+    }
+    open class func entityDescription(with context: NSManagedObjectContext) -> NSEntityDescription? {
+        _ = context
+        return nil
+    }
+
+    public override init() {
+        self.changedObjectID = NSManagedObjectID(
             entity: NSEntityDescription(),
             reference: "0",
             storeIdentifier: "history",
             isTemporary: true,
             store: nil
         )
-    }
-    public var tombstone: [AnyHashable: Any]? { nil }
-    public var transaction: NSPersistentHistoryTransaction? { nil }
-    public var updatedProperties: Set<NSPropertyDescription>? { nil }
-    open class var entityDescription: NSEntityDescription? { nil }
-    open class var fetchRequest: NSFetchRequest<any NSFetchRequestResult>? { nil }
-    open class func entityDescription(with context: NSManagedObjectContext) -> NSEntityDescription? {
-        _ = context
-        return nil
+        super.init()
     }
 }
 
 open class NSPersistentHistoryTransaction: NSObject {
-    public var author: String? { nil }
-    public var bundleID: String { "" }
-    public var changes: [NSPersistentHistoryChange]? { nil }
-    public var contextName: String? { nil }
-    public var processID: String { "" }
-    public var storeID: String { "" }
-    public var timestamp: Date { Date(timeIntervalSince1970: 0) }
-    public var token: NSPersistentHistoryToken { NSPersistentHistoryToken() }
-    public var transactionNumber: Int64 { 0 }
+    public internal(set) var author: String?
+    public internal(set) var bundleID: String = ""
+    public internal(set) var changes: [NSPersistentHistoryChange]?
+    public internal(set) var contextName: String?
+    public internal(set) var processID: String = ""
+    public internal(set) var storeID: String = ""
+    public internal(set) var timestamp: Date = Date(timeIntervalSince1970: 0)
+    public internal(set) var token: NSPersistentHistoryToken = NSPersistentHistoryToken()
+    public internal(set) var transactionNumber: Int64 = 0
     open class var entityDescription: NSEntityDescription? { nil }
-    open class var fetchRequest: NSFetchRequest<any NSFetchRequestResult>? { nil }
+    open class var fetchRequest: NSFetchRequest<any NSFetchRequestResult>? {
+        NSFetchRequest<any NSFetchRequestResult>(entityName: "NSPersistentHistoryTransaction")
+    }
     open class func entityDescription(with context: NSManagedObjectContext) -> NSEntityDescription? {
         _ = context
         return nil
     }
     public func objectIDNotification() -> Notification {
-        Notification(name: .NSPersistentStoreRemoteChange, object: nil, userInfo: nil)
+        let ids = changes?.map(\.changedObjectID) ?? []
+        return Notification(
+            name: .NSPersistentStoreRemoteChange,
+            object: nil,
+            userInfo: [NSUpdatedObjectIDsKey: ids]
+        )
+    }
+}
+
+final class _CDHistoryLog {
+    let lock = NSLock()
+    var nextChangeID: Int64 = 1
+    var nextTransactionNumber: Int64 = 1
+    var transactions: [NSPersistentHistoryTransaction] = []
+    var changes: [NSPersistentHistoryChange] = []
+
+    func record(
+        inserted: [NSManagedObject],
+        updated: [NSManagedObject],
+        deleted: [NSManagedObject],
+        author: String?,
+        contextName: String?,
+        storeID: String
+    ) {
+        lock.lock()
+        defer { lock.unlock() }
+        if inserted.isEmpty && updated.isEmpty && deleted.isEmpty { return }
+        let transaction = NSPersistentHistoryTransaction()
+        transaction.author = author
+        transaction.bundleID = "linux.coredata"
+        transaction.contextName = contextName
+        transaction.processID = String(ProcessInfo.processInfo.processIdentifier)
+        transaction.storeID = storeID
+        transaction.timestamp = Date()
+        transaction.transactionNumber = nextTransactionNumber
+        transaction.token = NSPersistentHistoryToken(sequence: nextTransactionNumber)
+        nextTransactionNumber += 1
+
+        var recorded: [NSPersistentHistoryChange] = []
+        func append(_ objects: [NSManagedObject], type: NSPersistentHistoryChangeType) {
+            for object in objects {
+                let change = NSPersistentHistoryChange()
+                change.changeID = nextChangeID
+                nextChangeID += 1
+                change.changeType = type
+                change.changedObjectID = object.objectID
+                change.transaction = transaction
+                if type == .delete {
+                    change.tombstone = object._snapshotValues()
+                }
+                if type == .update {
+                    let names = Set(object.changedValues().keys)
+                    change.updatedProperties = Set(
+                        object.entity.properties.filter { names.contains($0.name) }
+                    )
+                }
+                recorded.append(change)
+                changes.append(change)
+            }
+        }
+        append(inserted, type: .insert)
+        append(updated, type: .update)
+        append(deleted, type: .delete)
+        transaction.changes = recorded
+        transactions.append(transaction)
+    }
+
+    func currentToken() -> NSPersistentHistoryToken? {
+        lock.lock()
+        defer { lock.unlock() }
+        return transactions.last?.token
+    }
+
+    func execute(_ request: NSPersistentHistoryChangeRequest) -> NSPersistentHistoryResult {
+        lock.lock()
+        defer { lock.unlock() }
+        let result = NSPersistentHistoryResult()
+        result.resultType = request.resultType
+        if request._isDelete {
+            if let date = request._beforeDate {
+                transactions.removeAll { $0.timestamp <= date }
+                changes.removeAll { ($0.transaction?.timestamp ?? Date.distantPast) <= date }
+            } else if let token = request.token {
+                transactions.removeAll { $0.transactionNumber <= token.sequence }
+                changes.removeAll { ($0.transaction?.transactionNumber ?? 0) <= token.sequence }
+            } else {
+                transactions.removeAll()
+                changes.removeAll()
+            }
+            result.resultType = .statusOnly
+            result.result = true
+            return result
+        }
+
+        let floor = request.token?.sequence ?? 0
+        let dateFloor = request._beforeDate
+        let filteredTransactions = transactions.filter { transaction in
+            if transaction.transactionNumber <= floor { return false }
+            if let dateFloor, transaction.timestamp <= dateFloor { return false }
+            return true
+        }
+        var filteredChanges = changes.filter { change in
+            let number = change.transaction?.transactionNumber ?? 0
+            if number <= floor { return false }
+            if let dateFloor, (change.transaction?.timestamp ?? Date.distantPast) <= dateFloor {
+                return false
+            }
+            return true
+        }
+        if let fetch = request.fetchRequest, let predicate = fetch.predicate {
+            filteredChanges = filteredChanges.filter { predicate.evaluate(with: $0) }
+        }
+
+        switch request.resultType {
+        case .statusOnly:
+            result.result = true
+        case .objectIDs:
+            result.result = filteredChanges.map(\.changedObjectID)
+        case .count:
+            result.result = filteredChanges.count
+        case .transactionsOnly:
+            result.result = filteredTransactions
+        case .changesOnly:
+            result.result = filteredChanges
+        case .transactionsAndChanges:
+            result.result = filteredTransactions
+        @unknown default:
+            result.result = filteredTransactions
+        }
+        return result
     }
 }
 
@@ -63,6 +204,8 @@ open class NSPersistentHistoryChangeRequest: NSPersistentStoreRequest {
     public var fetchRequest: NSFetchRequest<any NSFetchRequestResult>?
     public var resultType: NSPersistentHistoryResultType = .transactionsAndChanges
     public private(set) var token: NSPersistentHistoryToken?
+    var _isDelete = false
+    var _beforeDate: Date?
 
     public required override init() {
         super.init()
@@ -71,20 +214,26 @@ open class NSPersistentHistoryChangeRequest: NSPersistentStoreRequest {
     public override var requestType: NSPersistentStoreRequestType { .fetchRequestType }
 
     open class func deleteHistory(before date: Date) -> Self {
-        _ = date
-        return Self()
+        let request = Self()
+        request._isDelete = true
+        request._beforeDate = date
+        request.resultType = .statusOnly
+        return request
     }
     open class func deleteHistory(before token: NSPersistentHistoryToken?) -> Self {
         let request = Self()
         request.token = token
+        request._isDelete = true
+        request.resultType = .statusOnly
         return request
     }
     open class func deleteHistory(before transaction: NSPersistentHistoryTransaction?) -> Self {
         Self.deleteHistory(before: transaction?.token)
     }
     open class func fetchHistory(after date: Date) -> Self {
-        _ = date
-        return Self()
+        let request = Self()
+        request._beforeDate = date
+        return request
     }
     open class func fetchHistory(after token: NSPersistentHistoryToken?) -> Self {
         let request = Self()
@@ -414,7 +563,14 @@ open class NSEntityMigrationPolicy: NSObject {
         forSource sInstance: NSManagedObject,
         in mapping: NSEntityMapping,
         manager: NSMigrationManager
-    ) throws { _ = (sInstance, mapping, manager) }
+    ) throws {
+        guard let destEntity = manager.destinationEntity(for: mapping) else { return }
+        let destination = NSManagedObject(entity: destEntity, insertInto: manager.destinationContext)
+        for (name, _) in sInstance.entity.attributesByName where destEntity.attributesByName[name] != nil {
+            destination.setValue(sInstance.primitiveValue(forKey: name), forKey: name)
+        }
+        manager.associate(sourceInstance: sInstance, withDestinationInstance: destination, for: mapping)
+    }
     open func endInstanceCreation(forMapping mapping: NSEntityMapping, manager: NSMigrationManager) throws {
         _ = (mapping, manager)
     }
@@ -443,10 +599,9 @@ open class NSManagedObjectModelReference: NSObject {
     }
 
     public init(fileURL: URL, versionChecksum: String) {
-        self.resolvedModel = NSManagedObjectModel()
+        self.resolvedModel = NSManagedObjectModel(contentsOfURL: fileURL) ?? NSManagedObjectModel()
         self.versionChecksum = versionChecksum
         super.init()
-        _ = fileURL
     }
 
     public init(entityVersionHashes versionHash: [AnyHashable: Any], in bundle: Bundle?, versionChecksum: String) {
