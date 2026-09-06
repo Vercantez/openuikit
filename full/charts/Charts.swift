@@ -215,6 +215,9 @@ public struct Chart<Content: ChartContent>: View {
     public var yAxisStorage: ChartAxisStorage?
     public var legendStorage: ChartLegendStorage?
     public var foregroundStyleScaleStorage: ChartForegroundStyleScaleStorage?
+    public var scrollableAxes: ChartScrollableAxes?
+    public var scrollPosition: ChartScrollPositionModel?
+    public var xSelection: ChartXSelectionModel?
 
     public init(@ChartContentBuilder content: () -> Content) {
         self.content = content()
@@ -342,6 +345,9 @@ private func resolveScale(
     let domain = min(minValue, maxValue)...max(minValue, maxValue == minValue ? minValue + 1 : maxValue)
     if type == .log {
         return .log(domain: domain, range: range, inverted: !horizontal)
+    }
+    if type == .symbolLog {
+        return .symbolLog(domain: domain, range: range, inverted: !horizontal)
     }
     if type == .date {
         return .date(domain: domain, range: range, inverted: !horizontal)
@@ -719,6 +725,8 @@ public struct BasicChartSymbolShape: Hashable, Sendable, View {
     public static let triangle = BasicChartSymbolShape("triangle")
     public static let role = ShapeRole.fill
 
+    public var description: String { name }
+
     public var body: some View { EmptyView() }
 
     public func path(in rect: CGRect) -> Path {
@@ -746,22 +754,43 @@ public struct _ChartInterpolationContent<Content: View>: View, ChartContent {
     public let method: InterpolationMethod
 
     public var chartPlotRecords: [ChartPlotRecord] {
-        (content as? any ChartContent)?.chartPlotRecords ?? []
+        var records = (content as? any ChartContent)?.chartPlotRecords ?? []
+        for index in records.indices {
+            records[index].interpolation = method
+        }
+        return records
     }
 
     public var body: some View { content }
 }
 
-public struct _ChartSymbolContent<Content: View>: View {
+public struct _ChartSymbolContent<Content: View>: View, ChartContent {
     public let content: Content
     public let symbol: BasicChartSymbolShape
+
+    public var chartPlotRecords: [ChartPlotRecord] {
+        var records = (content as? any ChartContent)?.chartPlotRecords ?? []
+        for index in records.indices {
+            records[index].symbolName = symbol.description
+        }
+        return records
+    }
 
     public var body: some View { content }
 }
 
-public struct _ChartLineStyleContent<Content: View>: View {
+public struct _ChartLineStyleContent<Content: View>: View, ChartContent {
     public let content: Content
     public let style: StrokeStyle
+
+    public var chartPlotRecords: [ChartPlotRecord] {
+        var records = (content as? any ChartContent)?.chartPlotRecords ?? []
+        for index in records.indices {
+            records[index].lineWidth = style.lineWidth
+            records[index].lineDash = style.dash
+        }
+        return records
+    }
 
     public var body: some View { content }
 }
@@ -1021,6 +1050,7 @@ public struct AxisMarks<Content: AxisMark>: AxisContent {
     public let preset: AxisMarkPreset
     public let numericValues: [Double]
     public let labels: [String]
+    public let markValues: AxisMarkValues
     let mark: Content?
 
     public init(position: AxisMarkPosition = .automatic)
@@ -1030,6 +1060,7 @@ public struct AxisMarks<Content: AxisMark>: AxisContent {
         self.preset = .automatic
         self.numericValues = []
         self.labels = []
+        self.markValues = .automatic
         self.mark = _EmptyAxisMark()
     }
 
@@ -1039,11 +1070,11 @@ public struct AxisMarks<Content: AxisMark>: AxisContent {
         values: AxisMarkValues = .automatic,
         stroke: StrokeStyle? = nil
     ) where Content == _EmptyAxisMark {
-        _ = values
         _ = stroke
         self.position = position
         self.preset = preset
-        self.numericValues = []
+        self.markValues = values
+        self.numericValues = values.explicitValues
         self.labels = []
         self.mark = _EmptyAxisMark()
     }
@@ -1059,6 +1090,7 @@ public struct AxisMarks<Content: AxisMark>: AxisContent {
         self.preset = preset
         self.numericValues = values.compactMap(chartNumericScalar)
         self.labels = values.map { String(describing: $0) }
+        self.markValues = .values(self.numericValues)
         self.mark = _EmptyAxisMark()
     }
 
@@ -1070,6 +1102,7 @@ public struct AxisMarks<Content: AxisMark>: AxisContent {
         preset = .automatic
         numericValues = []
         labels = []
+        markValues = .automatic
         let axisValue = AxisValue(index: 0, count: values.count, encoded: nil)
         mark = content(axisValue)
     }
@@ -1080,10 +1113,10 @@ public struct AxisMarks<Content: AxisMark>: AxisContent {
         values: AxisMarkValues = .automatic,
         @AxisMarkBuilder content: @escaping (AxisValue) -> Content
     ) {
-        _ = values
         self.position = position
         self.preset = preset
-        self.numericValues = []
+        self.markValues = values
+        self.numericValues = values.explicitValues
         self.labels = []
         self.mark = content(AxisValue())
     }
@@ -1149,6 +1182,24 @@ public extension View {
     }
 }
 
+public struct _ChartAnnotationContent<Content: ChartContent, Label: View>: ChartContent {
+    let content: Content
+    let position: AnnotationPosition
+    let alignment: Alignment
+    let spacing: CGFloat?
+
+    public var chartPlotRecords: [ChartPlotRecord] {
+        var records = content.chartPlotRecords
+        for index in records.indices {
+            records[index].annotationPosition = position.description
+            records[index].annotationAlignment = "\(alignment)"
+        }
+        return records
+    }
+
+    public var body: some View { content }
+}
+
 public extension ChartContent {
     func annotation<C: View>(
         position: AnnotationPosition = .automatic,
@@ -1156,13 +1207,15 @@ public extension ChartContent {
         spacing: CGFloat? = nil,
         overflowResolution: AnnotationOverflowResolution = AnnotationOverflowResolution(),
         @ViewBuilder content: () -> C
-    ) -> some ChartContent {
-        _ = position
-        _ = alignment
-        _ = spacing
+    ) -> _ChartAnnotationContent<Self, C> {
         _ = overflowResolution
         _ = content
-        return self
+        return _ChartAnnotationContent(
+            content: self,
+            position: position,
+            alignment: alignment,
+            spacing: spacing
+        )
     }
 
     func annotation<C: View>(
@@ -1170,12 +1223,14 @@ public extension ChartContent {
         alignment: Alignment = .center,
         spacing: CGFloat? = nil,
         @ViewBuilder content: () -> C
-    ) -> some ChartContent {
-        _ = position
-        _ = alignment
-        _ = spacing
+    ) -> _ChartAnnotationContent<Self, C> {
         _ = content
-        return self
+        return _ChartAnnotationContent(
+            content: self,
+            position: position,
+            alignment: alignment,
+            spacing: spacing
+        )
     }
 
     func symbolSize<D: Plottable>(by value: PlottableValue<D>) -> some ChartContent {
@@ -1238,16 +1293,6 @@ public extension ChartContent {
         _ = xEnd
         _ = yStart
         _ = yEnd
-        return self
-    }
-
-    func foregroundStyle<S: ShapeStyle>(_ style: S) -> Self {
-        _ = style
-        return self
-    }
-
-    func foregroundStyle<D: Plottable>(by value: PlottableValue<D>) -> Self {
-        _ = value
         return self
     }
 }
@@ -1397,6 +1442,73 @@ public extension Chart {
             domain: domain.map { String(describing: $0) },
             type: type
         )
+        return copy
+    }
+
+    func chartScrollableAxes(_ axes: Axis.Set) -> Chart {
+        var copy = self
+        copy.scrollableAxes = ChartScrollableAxes(axes)
+        return copy
+    }
+
+    func chartScrollPosition<P: Plottable>(x: Binding<P>) -> Chart {
+        var copy = self
+        copy.scrollPosition = ChartScrollPositionModel(xEncoded: chartEncode(x.wrappedValue))
+        return copy
+    }
+
+    func chartScrollPosition<P: Plottable>(y: Binding<P>) -> Chart {
+        var copy = self
+        copy.scrollPosition = ChartScrollPositionModel(yEncoded: chartEncode(y.wrappedValue))
+        return copy
+    }
+
+    func chartScrollPosition<P: Plottable>(initialX: P) -> Chart {
+        var copy = self
+        copy.scrollPosition = ChartScrollPositionModel(xEncoded: chartEncode(initialX))
+        return copy
+    }
+
+    func chartXSelection<P: Plottable>(value: Binding<P?>) -> Chart {
+        var copy = self
+        copy.xSelection = ChartXSelectionModel(value: value.wrappedValue.flatMap(chartEncode))
+        return copy
+    }
+
+    func chartXSelection<P: Plottable & Comparable>(range: Binding<ClosedRange<P>?>) -> Chart {
+        var copy = self
+        if let range = range.wrappedValue,
+           let lo = chartNumericScalar(range.lowerBound),
+           let hi = chartNumericScalar(range.upperBound)
+        {
+            copy.xSelection = ChartXSelectionModel(range: lo...hi)
+        } else {
+            copy.xSelection = ChartXSelectionModel()
+        }
+        return copy
+    }
+
+    func chartXScale<Domain: ScaleDomain, Range: PositionScaleRange>(
+        domain: Domain,
+        range: Range,
+        type: ScaleType? = nil
+    ) -> Chart {
+        var copy = self
+        var stored = storage(axis: "x", domain: domain, type: type)
+        stored.range = range as? PlotDimensionScaleRange
+        copy.xScaleStorage = stored
+        return copy
+    }
+
+    func chartYScale<Domain: ScaleDomain, Range: PositionScaleRange>(
+        domain: Domain,
+        range: Range,
+        type: ScaleType? = nil
+    ) -> Chart {
+        var copy = self
+        var stored = storage(axis: "y", domain: domain, type: type)
+        stored.range = range as? PlotDimensionScaleRange
+        copy.yScaleStorage = stored
         return copy
     }
 }
