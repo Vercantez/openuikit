@@ -31,7 +31,20 @@ public protocol MTRNOCChainIssuer: NSObjectProtocol {}
 
 public protocol MTROperationalCertificateIssuer: NSObjectProtocol {}
 
-public protocol MTRDeviceDelegate: NSObjectProtocol {}
+public protocol MTRDeviceDelegate: NSObjectProtocol {
+    func device(_ device: MTRDevice, stateChanged state: MTRDeviceState)
+    func device(_ device: MTRDevice, receivedAttributeReport attributeReport: [[String: Any]])
+    func device(_ device: MTRDevice, receivedEventReport eventReport: [[String: Any]])
+    func deviceBecameActive(_ device: MTRDevice)
+    func deviceCachePrimed(_ device: MTRDevice)
+    func deviceConfigurationChanged(_ device: MTRDevice)
+}
+
+extension MTRDeviceDelegate {
+    public func deviceBecameActive(_ device: MTRDevice) { _ = device }
+    public func deviceCachePrimed(_ device: MTRDevice) { _ = device }
+    public func deviceConfigurationChanged(_ device: MTRDevice) { _ = device }
+}
 
 public protocol MTRXPCClientProtocol_MTRDevice: NSObjectProtocol {}
 

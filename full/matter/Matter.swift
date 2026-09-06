@@ -1,4 +1,8 @@
 @_exported import Foundation
+import Dispatch
+
+/// Darwin `dispatch_queue_t` spelled for the imported Matter overlays.
+public typealias dispatch_queue_t = DispatchQueue
 
 /// Linux starting point for Apple's public Matter module.
 /// Isolated host compilation produces `libMatter.dylib`.

@@ -1,4 +1,6 @@
+full/matter/MTRClusterParamsGenerated.swift
 full/matter/MTRClusterStubs.swift
+full/matter/MTRClustersGenerated.swift
 full/matter/MTRConstants.swift
 full/matter/MTRControllers.swift
 full/matter/MTRCoreTypes.swift
