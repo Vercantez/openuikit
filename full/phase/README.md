@@ -99,8 +99,8 @@ No non-enum/non-option-set test approaches the 40% bulk-relabel bound on the
 remaining implemented rows (next families are sampler-node defaults and
 ducker/stream host construction).
 
-The sealed host gate is `bash full/phase/tests/acceptance/test_host.sh`.
-Expected ending markers:
+The sealed host gate was run as `bash full/phase/tests/acceptance/test_host.sh`
+and ended:
 
 ```
 FRAMEWORK_FANOUT_DELIVERABLE_OK module=PHASE lane=large-partitioned symbols=639
