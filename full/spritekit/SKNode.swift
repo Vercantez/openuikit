@@ -126,12 +126,31 @@ open class SKNode: NSObject, NSSecureCoding, NSCopying {
     }
 
     public func calculateAccumulatedFrame() -> CGRect {
-        var box = frame
-        for child in _children where !child.isHidden {
-            let childBox = child.calculateAccumulatedFrame()
-            box = box.union(childBox)
+        var minX = frame.minX
+        var minY = frame.minY
+        var maxX = frame.maxX
+        var maxY = frame.maxY
+        func consider(_ point: CGPoint) {
+            minX = min(minX, point.x)
+            minY = min(minY, point.y)
+            maxX = max(maxX, point.x)
+            maxY = max(maxY, point.y)
         }
-        return box
+        func walk(_ node: SKNode) {
+            for child in node._children where !child.isHidden {
+                for corner in sk_rectCorners(child.frame) {
+                    let world = node._localToWorld(corner)
+                    if let parent = self._parent {
+                        consider(parent._worldToLocal(world))
+                    } else {
+                        consider(world)
+                    }
+                }
+                walk(child)
+            }
+        }
+        walk(self)
+        return CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
     }
 
     public func setScale(_ scale: CGFloat) {
@@ -196,24 +215,11 @@ open class SKNode: NSObject, NSSecureCoding, NSCopying {
     }
 
     public func childNode(withName name: String) -> SKNode? {
-        if name.hasPrefix("//") {
-            let needle = String(name.dropFirst(2))
-            return _recursiveChild(named: needle)
-        }
-        if name.hasPrefix("/") {
-            return childNode(withName: String(name.dropFirst()))
-        }
-        return _children.first { $0.name == name }
+        _query(name).first
     }
 
     public subscript(name: String) -> [SKNode] {
-        if name.hasPrefix("//") {
-            let needle = String(name.dropFirst(2))
-            var found: [SKNode] = []
-            _collect(named: needle, into: &found)
-            return found
-        }
-        return _children.filter { $0.name == name }
+        _query(name)
     }
 
     public func enumerateChildNodes(
@@ -221,8 +227,7 @@ open class SKNode: NSObject, NSSecureCoding, NSCopying {
         using block: @escaping (SKNode, UnsafeMutablePointer<ObjCBool>) -> Void
     ) {
         var stop = ObjCBool(false)
-        let matches = self[name.hasPrefix("//") ? name : "//" + name]
-        for node in matches {
+        for node in _query(name) {
             block(node, &stop)
             if stop.boolValue { break }
         }
@@ -239,7 +244,8 @@ open class SKNode: NSObject, NSSecureCoding, NSCopying {
 
     public func nodes(at p: CGPoint) -> [SKNode] {
         var hits: [SKNode] = []
-        if contains(p) { hits.append(self) }
+        if !isHidden, contains(p) { hits.append(self) }
+        if isHidden { return hits }
         for child in _children where !child.isHidden {
             let local = child.convert(p, from: self)
             hits.append(contentsOf: child.nodes(at: local))
@@ -314,18 +320,61 @@ open class SKNode: NSObject, NSSecureCoding, NSCopying {
         }
     }
 
-    func _recursiveChild(named name: String) -> SKNode? {
-        for child in _children {
-            if child.name == name { return child }
-            if let found = child._recursiveChild(named: name) { return found }
+    func _query(_ path: String) -> [SKNode] {
+        var text = path
+        if text.hasPrefix("/") && !text.hasPrefix("//") {
+            if let root = scene {
+                return root._query(String(text.dropFirst()))
+            }
+            text = String(text.dropFirst())
         }
-        return nil
+        var recursive = false
+        if text.hasPrefix("//") {
+            recursive = true
+            text = String(text.dropFirst(2))
+        }
+        if text.isEmpty {
+            return recursive ? _descendants() : _children
+        }
+        let parts = text.split(separator: "/", maxSplits: 1, omittingEmptySubsequences: false)
+        let head = String(parts[0])
+        let tail = parts.count > 1 ? String(parts[1]) : ""
+        if head == ".." {
+            guard let parent = _parent else { return [] }
+            return tail.isEmpty ? [parent] : parent._query(tail)
+        }
+        var matches: [SKNode] = []
+        if recursive {
+            _collectGlob(head, into: &matches)
+        } else {
+            matches = _children.filter { sk_glob(head, $0.name ?? "") }
+        }
+        if tail.isEmpty { return matches }
+        var nested: [SKNode] = []
+        for match in matches {
+            nested.append(contentsOf: match._query(tail))
+        }
+        return nested
     }
 
-    func _collect(named name: String, into found: inout [SKNode]) {
+    func _descendants() -> [SKNode] {
+        var found: [SKNode] = []
+        func walk(_ node: SKNode) {
+            for child in node._children {
+                found.append(child)
+                walk(child)
+            }
+        }
+        walk(self)
+        return found
+    }
+
+    func _collectGlob(_ pattern: String, into found: inout [SKNode]) {
         for child in _children {
-            if child.name == name { found.append(child) }
-            child._collect(named: name, into: &found)
+            if sk_glob(pattern, child.name ?? "") {
+                found.append(child)
+            }
+            child._collectGlob(pattern, into: &found)
         }
     }
 

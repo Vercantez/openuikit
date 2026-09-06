@@ -300,3 +300,156 @@ func sk_hypot(_ x: CGFloat, _ y: CGFloat) -> CGFloat {
 func sk_lerp(_ a: CGFloat, _ b: CGFloat, _ t: CGFloat) -> CGFloat {
     a + (b - a) * t
 }
+
+func sk_glob(_ pattern: String, _ value: String) -> Bool {
+    if pattern == "*" { return true }
+    if pattern == value { return true }
+    func match(_ p: ArraySlice<Character>, _ v: ArraySlice<Character>) -> Bool {
+        if p.isEmpty { return v.isEmpty }
+        if p.first == "*" {
+            let rest = p.dropFirst()
+            if rest.isEmpty { return true }
+            var index = v.startIndex
+            while true {
+                if match(rest, v[index...]) { return true }
+                if index == v.endIndex { return false }
+                index = v.index(after: index)
+            }
+        }
+        guard let head = v.first, p.first == head else { return false }
+        return match(p.dropFirst(), v.dropFirst())
+    }
+    return match(ArraySlice(pattern), ArraySlice(value))
+}
+
+func sk_pngSize(_ data: Data) -> CGSize? {
+    guard data.count >= 24 else { return nil }
+    let signature: [UInt8] = [137, 80, 78, 71, 13, 10, 26, 10]
+    if Array(data.prefix(8)) != signature { return nil }
+    let bytes = [UInt8](data)
+    func u32(_ offset: Int) -> UInt32 {
+        (UInt32(bytes[offset]) << 24)
+            | (UInt32(bytes[offset + 1]) << 16)
+            | (UInt32(bytes[offset + 2]) << 8)
+            | UInt32(bytes[offset + 3])
+    }
+    let width = u32(16)
+    let height = u32(20)
+    guard width > 0, height > 0, width < 16_384, height < 16_384 else { return nil }
+    return CGSize(width: CGFloat(width), height: CGFloat(height))
+}
+
+func sk_polyline(_ path: CGPath) -> [CGPoint] {
+#if canImport(CoreGraphics)
+    _ = path
+    return [.zero]
+#else
+    var points: [CGPoint] = []
+    for command in path.commands {
+        switch command {
+        case .move(let point), .line(let point):
+            points.append(point)
+        case .close:
+            if let first = points.first {
+                points.append(first)
+            }
+        }
+    }
+    return points
+#endif
+}
+
+func sk_pointAlong(_ points: [CGPoint], t: CGFloat) -> CGPoint {
+    guard let first = points.first else { return .zero }
+    if points.count == 1 { return first }
+    var lengths: [CGFloat] = [0]
+    var total: CGFloat = 0
+    for index in 1..<points.count {
+        let delta = sk_hypot(points[index].x - points[index - 1].x, points[index].y - points[index - 1].y)
+        total += delta
+        lengths.append(total)
+    }
+    if total <= 0 { return first }
+    let target = sk_clamp(t, 0, 1) * total
+    for index in 1..<points.count {
+        if lengths[index] >= target {
+            let span = lengths[index] - lengths[index - 1]
+            let local = span <= 0 ? 1 : (target - lengths[index - 1]) / span
+            return CGPoint(
+                x: sk_lerp(points[index - 1].x, points[index].x, local),
+                y: sk_lerp(points[index - 1].y, points[index].y, local)
+            )
+        }
+    }
+    return points.last ?? first
+}
+
+func sk_rectCorners(_ rect: CGRect) -> [CGPoint] {
+    [
+        CGPoint(x: rect.minX, y: rect.minY),
+        CGPoint(x: rect.maxX, y: rect.minY),
+        CGPoint(x: rect.minX, y: rect.maxY),
+        CGPoint(x: rect.maxX, y: rect.maxY),
+    ]
+}
+
+func sk_colorBytes(_ color: SKColor) -> (UInt8, UInt8, UInt8, UInt8) {
+#if canImport(UIKit)
+    var red: CGFloat = 0
+    var green: CGFloat = 0
+    var blue: CGFloat = 0
+    var alpha: CGFloat = 1
+    color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+    return (
+        UInt8(sk_clamp(red, 0, 1) * 255),
+        UInt8(sk_clamp(green, 0, 1) * 255),
+        UInt8(sk_clamp(blue, 0, 1) * 255),
+        UInt8(sk_clamp(alpha, 0, 1) * 255)
+    )
+#else
+    return (
+        UInt8(sk_clamp(color.red, 0, 1) * 255),
+        UInt8(sk_clamp(color.green, 0, 1) * 255),
+        UInt8(sk_clamp(color.blue, 0, 1) * 255),
+        UInt8(sk_clamp(color.alpha, 0, 1) * 255)
+    )
+#endif
+}
+
+public enum SKViewport {
+    public struct Mapping {
+        public var scaleX: CGFloat
+        public var scaleY: CGFloat
+        public var offsetX: CGFloat
+        public var offsetY: CGFloat
+    }
+
+    public static func mapping(sceneSize: CGSize, viewSize: CGSize, mode: SKSceneScaleMode) -> Mapping {
+        let viewWidth = max(viewSize.width, 0.0001)
+        let viewHeight = max(viewSize.height, 0.0001)
+        let sceneWidth = max(sceneSize.width, 0.0001)
+        let sceneHeight = max(sceneSize.height, 0.0001)
+        switch mode {
+        case .fill:
+            return Mapping(scaleX: viewWidth / sceneWidth, scaleY: viewHeight / sceneHeight, offsetX: 0, offsetY: 0)
+        case .aspectFill:
+            let scale = max(viewWidth / sceneWidth, viewHeight / sceneHeight)
+            return Mapping(
+                scaleX: scale,
+                scaleY: scale,
+                offsetX: (viewWidth - sceneWidth * scale) / 2,
+                offsetY: (viewHeight - sceneHeight * scale) / 2
+            )
+        case .aspectFit:
+            let scale = min(viewWidth / sceneWidth, viewHeight / sceneHeight)
+            return Mapping(
+                scaleX: scale,
+                scaleY: scale,
+                offsetX: (viewWidth - sceneWidth * scale) / 2,
+                offsetY: (viewHeight - sceneHeight * scale) / 2
+            )
+        case .resizeFill:
+            return Mapping(scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0)
+        }
+    }
+}
