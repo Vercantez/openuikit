@@ -161,10 +161,18 @@ enum MPSGraphCPU {
             do {
                 let values = try eval(target, feeds: feeds, cache: &cache)
                 let data = MPSGraphShapeMath.data(from: values, dataType: target.dataType)
+                let shape: [NSNumber]
+                if let declared = target.shape,
+                   MPSGraphShapeMath.elementCount(declared) == values.count
+                {
+                    shape = declared
+                } else {
+                    shape = [NSNumber(value: values.count)]
+                }
                 result[target] = MPSGraphTensorData(
                     device: MPSGraphDevice.hostDevice(),
                     data: data,
-                    shape: target.shape ?? [],
+                    shape: shape,
                     dataType: target.dataType
                 )
             } catch {
