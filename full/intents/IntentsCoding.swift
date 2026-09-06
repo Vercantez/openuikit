@@ -210,7 +210,9 @@ func inLinuxApplyCoder(_ object: NSObject, _ coder: NSCoder) {
     if let value = object as? INRestaurantReservationBooking {
         value.bookingDescription = inDecodeString(coder, "bookingDescription")
         value.bookingIdentifier = inDecodeString(coder, "bookingIdentifier") ?? value.bookingIdentifier
-        value.bookingDate = coder.decodeObject(of: NSDate.self, forKey: "bookingDate") as Date?
+        if coder.containsValue(forKey: "bookingDate") {
+            value.bookingDate = coder.decodeObject(of: NSDate.self, forKey: "bookingDate") as Date?
+        }
         if coder.containsValue(forKey: "partySize") {
             value.partySize = Int(coder.decodeInt64(forKey: "partySize"))
         }

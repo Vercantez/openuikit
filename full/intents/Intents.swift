@@ -373,7 +373,9 @@ open class INObject: NSObject, @unchecked Sendable {
             displayString: display,
             pronunciationHint: inDecodeString(coder, "pronunciationHint"),
             subtitleString: inDecodeString(coder, "subtitleString"),
-            displayImage: coder.decodeObject(of: INImage.self, forKey: "displayImage")
+            displayImage: coder.containsValue(forKey: "displayImage")
+                ? coder.decodeObject(of: INImage.self, forKey: "displayImage")
+                : nil
         )
     }
 }
