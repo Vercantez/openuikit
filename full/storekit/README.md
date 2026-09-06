@@ -96,7 +96,7 @@ deferred.
 group has no prior transaction; an auto-renewable purchase consumes eligibility.
 
 The sealed host gate was run as `bash full/storekit/tests/acceptance/test_host.sh`
-and ended:
+(depth pass 3) and ended:
 
 ```
 FRAMEWORK_FANOUT_DELIVERABLE_OK module=StoreKit lane=medium-full symbols=15695
@@ -106,14 +106,14 @@ FRAMEWORK_FANOUT_HOST_OK module=StoreKit dylib=libStoreKit.dylib
 ```
 
 `swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
-`.cursor/verify-cloud-environment.sh` does not print
-`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` on this
-snapshot (`scratch/ladder-corpus/focus-ios` is missing). That campaign token
-is the host-inventory stamp; the sealed framework gate prints the four lines
-above. Active Cursor Build was
-`bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3` rather than campaign
-expected `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`. Starting commit
-was `dd4c8bca7e8735289928bbd1abd44f4b35815308`.
+`.cursor/verify-cloud-environment.sh` fails on this snapshot with
+`missing corpus checkout: scratch/ladder-corpus/focus-ios` and therefore
+does not print
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`.
+That campaign token is the host-inventory stamp; the sealed framework gate
+prints the four lines above. The verify script's success line on a complete
+image is `products=scratch-corpus`, not `products=clean`. Starting commit
+was `bff8535c68425cc39fb45cb00d447b0981b57242`.
 
 ## What is real (isolated host)
 
