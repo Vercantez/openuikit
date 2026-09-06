@@ -826,9 +826,28 @@ open class HKCorrelationQuery: HKQuery, @unchecked Sendable {
 }
 
 open class HKDocumentQuery: HKQuery, @unchecked Sendable {
-    public init(documentType: HKDocumentType, predicate: NSPredicate?, limit: Int, sortDescriptors: [NSSortDescriptor]?, includeDocumentData: Bool, resultsHandler: @escaping (HKDocumentQuery, [HKDocumentSample]?, (any Error)?) -> Void) {
-        _ = (limit, sortDescriptors, includeDocumentData, resultsHandler)
+    public let includeDocumentData: Bool
+    public let limit: Int
+    public let sortDescriptors: [NSSortDescriptor]?
+    private let resultsHandler: ((HKDocumentQuery, [HKDocumentSample]?, (any Error)?) -> Void)?
+
+    public init(
+        documentType: HKDocumentType,
+        predicate: NSPredicate?,
+        limit: Int,
+        sortDescriptors: [NSSortDescriptor]?,
+        includeDocumentData: Bool,
+        resultsHandler: @escaping (HKDocumentQuery, [HKDocumentSample]?, (any Error)?) -> Void
+    ) {
+        self.includeDocumentData = includeDocumentData
+        self.limit = limit
+        self.sortDescriptors = sortDescriptors
+        self.resultsHandler = resultsHandler
         super.init(objectType: documentType, predicate: predicate)
+    }
+
+    func deliver(_ samples: [HKDocumentSample]?, error: (any Error)?) {
+        resultsHandler?(self, samples, error)
     }
 }
 
@@ -1133,6 +1152,19 @@ func hkExecute(_ query: HKQuery) {
             correlationQuery.deliver(samples, error: nil)
             return
         }
+        if let documentQuery = query as? HKDocumentQuery {
+            let samples = try store.hkSamples(
+                of: documentQuery.sampleType ?? HKDocumentType(identifier: HKDocumentTypeIdentifier.CDA.rawValue),
+                predicate: documentQuery.predicate,
+                limit: documentQuery.limit == 0 ? HKObjectQueryNoLimit : documentQuery.limit,
+                sortDescriptors: documentQuery.sortDescriptors
+            ).compactMap { $0 as? HKDocumentSample }
+            if !documentQuery.includeDocumentData {
+                samples.compactMap { $0 as? HKCDADocumentSample }.forEach { $0.document?.documentData = nil }
+            }
+            documentQuery.deliver(samples, error: nil)
+            return
+        }
         if let routeQuery = query as? HKWorkoutRouteQuery {
             var locations = HKHealthStorePortable.locations(for: routeQuery.route.uuid)
             if let interval = routeQuery.dateInterval {
@@ -1191,6 +1223,8 @@ func hkExecute(_ query: HKQuery) {
             sourceQuery.deliver(nil, error: error)
         } else if let correlationQuery = query as? HKCorrelationQuery {
             correlationQuery.deliver(nil, error: error)
+        } else if let documentQuery = query as? HKDocumentQuery {
+            documentQuery.deliver(nil, error: error)
         } else if let routeQuery = query as? HKWorkoutRouteQuery {
             routeQuery.deliver(nil, done: true, error: error)
         } else if let summaryQuery = query as? HKActivitySummaryQuery {
