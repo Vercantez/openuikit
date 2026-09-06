@@ -6,7 +6,8 @@ func testConfigurationObserverType() {
     let queue = DispatchQueue(label: "screentime.observer.type")
     let observer = STScreenTimeConfigurationObserver(updateQueue: queue)
     precondition(type(of: observer) == STScreenTimeConfigurationObserver.self)
-    precondition(observer is NSObject)
+    let object: NSObject = observer
+    precondition(object === observer)
 }
 
 func testConfigurationObserverInitUpdateQueue() {

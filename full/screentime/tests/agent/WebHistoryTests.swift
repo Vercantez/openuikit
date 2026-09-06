@@ -4,7 +4,8 @@ import Foundation
 func testWebHistoryType() {
     let history = STWebHistory(profileIdentifier: nil)
     precondition(type(of: history) == STWebHistory.self)
-    precondition(history is NSObject)
+    let object: NSObject = history
+    precondition(object === history)
 }
 
 func testWebHistoryInitBundleIdentifier() {

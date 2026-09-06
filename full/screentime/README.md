@@ -39,6 +39,21 @@ checkout. The pod booted from
 `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` rather than campaign
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`.
 
+`bash full/screentime/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=ScreenTime lane=leaf-full symbols=30
+FRAMEWORK_FANOUT_REFERENCE_OK
+SCREENTIME_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=ScreenTime dylib=libScreenTime.dylib
+```
+
+The campaign inventory stamp
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
+is a host-inventory token, not printed by the sealed framework gate.
+`swiftc` is Swift 6.2.4 / linux and the gate compiled with a clean product
+tree (`products=clean`).
+
 ## What is real
 
 The public Foundation surface compiles to `libScreenTime.dylib`.

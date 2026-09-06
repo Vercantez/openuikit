@@ -15,7 +15,8 @@ func testWebpageControllerType() {
     stMain {
         let controller = STWebpageController()
         precondition(type(of: controller) == STWebpageController.self)
-        precondition(controller is NSObject)
+        let object: NSObject = controller
+        precondition(object === controller)
     }
 }
 

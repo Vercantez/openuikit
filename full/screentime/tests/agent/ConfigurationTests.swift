@@ -4,7 +4,8 @@ import Foundation
 func testScreenTimeConfigurationType() {
     let configuration = ScreenTimeHostControl.failClosedConfiguration()
     precondition(type(of: configuration) == STScreenTimeConfiguration.self)
-    precondition(configuration is NSObject)
+    let object: NSObject = configuration
+    precondition(object === configuration)
 }
 
 func testEnforcesChildRestrictionsFailClosed() {
