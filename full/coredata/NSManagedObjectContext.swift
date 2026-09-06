@@ -497,6 +497,9 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
         untyped.shouldRefreshRefetchedObjects = request.shouldRefreshRefetchedObjects
         untyped.resultType = request.resultType
         untyped.propertiesToFetch = request.propertiesToFetch
+        untyped.propertiesToGroupBy = request.propertiesToGroupBy
+        untyped.havingPredicate = request.havingPredicate
+        untyped.relationshipKeyPathsForPrefetching = request.relationshipKeyPathsForPrefetching
         untyped.affectedStores = request.affectedStores
         let boxed = try fetch(untyped)
         return boxed.compactMap { $0 as? T }
@@ -515,7 +518,12 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
                     includesSubentities: request.includesSubentities
                 )
                 for row in rows {
-                    objects.append(_materialize(row: row, entity: entity, asFault: request.returnsObjectsAsFaults))
+                    let rowEntity = coordinator.managedObjectModel.entitiesByName[row.entityName] ?? entity
+                    objects.append(_materialize(
+                        row: row,
+                        entity: rowEntity,
+                        asFault: request.returnsObjectsAsFaults || !request.includesPropertyValues
+                    ))
                 }
             }
 
@@ -557,11 +565,46 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
                 }
             }
 
+            if request.returnsDistinctResults {
+                let keys = request.propertiesToFetch as? [String]
+                    ?? Array(entity.attributesByName.keys)
+                var seen: Set<String> = []
+                objects = objects.filter { object in
+                    let signature = keys.map { String(describing: object.value(forKey: $0) ?? NSNull()) }.joined(separator: "\u{1e}")
+                    return seen.insert(signature).inserted
+                }
+            }
+
             if request.fetchOffset > 0 {
                 objects = Array(objects.dropFirst(min(request.fetchOffset, objects.count)))
             }
             if request.fetchLimit > 0, objects.count > request.fetchLimit {
                 objects = Array(objects.prefix(request.fetchLimit))
+            }
+
+            if request.shouldRefreshRefetchedObjects {
+                for object in objects where !object.isInserted {
+                    refresh(object, mergeChanges: true)
+                }
+            }
+
+            if let paths = request.relationshipKeyPathsForPrefetching {
+                for object in objects {
+                    for path in paths {
+                        let first = path.split(separator: ".").first.map(String.init) ?? path
+                        if object.entity.relationshipsByName[first] != nil {
+                            _ = object.value(forKey: first)
+                        }
+                    }
+                }
+            }
+
+            if request.fetchBatchSize > 0, objects.count > request.fetchBatchSize {
+                for object in objects.dropFirst(request.fetchBatchSize) where !object.isInserted {
+                    object.willTurnIntoFault()
+                    object.isFault = true
+                    object.didTurnIntoFault()
+                }
             }
 
             switch request.resultType {
@@ -698,7 +741,13 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
             store: store
         )
         if let existing = registeredObject(for: objectID) {
-            if !asFault {
+            if asFault {
+                if !existing.isFault {
+                    existing.willTurnIntoFault()
+                    existing.isFault = true
+                    existing.didTurnIntoFault()
+                }
+            } else {
                 existing._loadPersistentValues(row.values)
             }
             return existing
@@ -839,6 +888,34 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
                     object.setValue(value, forKey: key)
                 }
                 inserted.append(object)
+            }
+        }
+        if let handler = request.dictionaryHandler {
+            var steps = 0
+            while steps < 10_000 {
+                steps += 1
+                let dictionary = NSMutableDictionary()
+                let keepGoing = handler(dictionary)
+                if dictionary.count > 0 {
+                    let object = NSManagedObject(entity: entity, insertInto: self)
+                    for (key, value) in dictionary {
+                        if let name = key as? String {
+                            object.setValue(value, forKey: name)
+                        }
+                    }
+                    inserted.append(object)
+                }
+                if !keepGoing { break }
+            }
+        }
+        if let handler = request.managedObjectHandler {
+            var steps = 0
+            while steps < 10_000 {
+                steps += 1
+                let object = NSManagedObject(entity: entity, insertInto: self)
+                let keepGoing = handler(object)
+                inserted.append(object)
+                if !keepGoing { break }
             }
         }
         try save()

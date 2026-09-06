@@ -9,6 +9,7 @@ full/appintents/AppIntentsLookalikes.swift
 full/appintents/AppIntentsMeasurement.swift
 full/appintents/AppIntentsMembers.swift
 full/appintents/AppIntentsOverlays.swift
+full/appintents/AppIntentsProperty.swift
 full/appintents/AppIntentsProtocols.swift
 full/appintents/AppIntentsStructs.swift
 full/appintents/AppIntentsViewStubs.swift
