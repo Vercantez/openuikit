@@ -1,0 +1,5 @@
+full/proximityreader/ProximityReader.swift
+full/proximityreader/ProximityReaderDiscovery.swift
+full/proximityreader/ProximityReaderDocuments.swift
+full/proximityreader/ProximityReaderLookalikes.swift
+full/proximityreader/ProximityReaderPayments.swift

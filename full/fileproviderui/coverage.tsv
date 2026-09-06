@@ -1,0 +1,23 @@
+precise	status	evidence	notes
+c:@E@FPUIExtensionErrorCode	implemented	test:full/fileproviderui/tests/agent/FileProviderUIErrorCodeTests.swift#testErrorCodeType	UInt enum; raw values from pinned macios Native order.
+c:@E@FPUIExtensionErrorCode@FPUIExtensionErrorCodeFailed	implemented	test:full/fileproviderui/tests/agent/FileProviderUIErrorCodeTests.swift#testErrorCodeCases	Table-driven raw value 1.
+c:@E@FPUIExtensionErrorCode@FPUIExtensionErrorCodeUserCancelled	implemented	test:full/fileproviderui/tests/agent/FileProviderUIErrorCodeTests.swift#testErrorCodeCases	Table-driven raw value 0.
+c:@FPUIErrorDomain	implemented	test:full/fileproviderui/tests/agent/FileProviderUIErrorCodeTests.swift#testErrorDomain	Constant identity FPUIErrorDomain.
+c:@T@FPUIActionIdentifier	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionIdentifierTests.swift#testActionIdentifierType	String newtype wrapper.
+c:objc(cs)FPUIActionExtensionContext	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionExtensionContextTests.swift#testActionExtensionContextClass	Process-local context; no NSExtensionContext host.
+c:objc(cs)FPUIActionExtensionContext(im)cancelRequestWithError:	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionExtensionContextTests.swift#testCancelRequestWithError	Fail-closed first-terminal-wins cancel.
+c:objc(cs)FPUIActionExtensionContext(im)completeRequest	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionExtensionContextTests.swift#testCompleteRequest	Fail-closed first-terminal-wins complete.
+c:objc(cs)FPUIActionExtensionContext(py)domainIdentifier	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionExtensionContextTests.swift#testDomainIdentifier	Nil until host SPI injects a FileProvider domain.
+c:objc(cs)FPUIActionExtensionViewController	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionExtensionViewControllerTests.swift#testActionExtensionViewControllerClass	UIViewController subclass; no Files.app chrome.
+c:objc(cs)FPUIActionExtensionViewController(im)prepareForActionWithIdentifier:itemIdentifiers:	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionExtensionViewControllerTests.swift#testPrepareForAction	Records action and items; does not present UI.
+c:objc(cs)FPUIActionExtensionViewController(im)prepareForError:	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionExtensionViewControllerTests.swift#testPrepareForError	Records error; does not present UI.
+c:objc(cs)FPUIActionExtensionViewController(py)extensionContext	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionExtensionViewControllerTests.swift#testExtensionContext	Process-local FPUIActionExtensionContext.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@FPUIExtensionErrorCode	implemented	test:full/fileproviderui/tests/agent/FileProviderUIErrorCodeTests.swift#testErrorCodeInequality	Synthesized Equatable.!=
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@FPUIActionIdentifier	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionIdentifierTests.swift#testActionIdentifierInequality	Synthesized Equatable.!=
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@FPUIExtensionErrorCode	implemented	test:full/fileproviderui/tests/agent/FileProviderUIErrorCodeTests.swift#testErrorCodeHashValue	Synthesized Hashable.hashValue
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@FPUIExtensionErrorCode	implemented	test:full/fileproviderui/tests/agent/FileProviderUIErrorCodeTests.swift#testErrorCodeHashInto	Synthesized Hashable.hash(into:)
+s:So20FPUIActionIdentifiera8rawValueABSS_tcfc	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionIdentifierTests.swift#testActionIdentifierInitRawValue	init(rawValue:)
+s:So20FPUIActionIdentifierayABSScfc	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionIdentifierTests.swift#testActionIdentifierInitString	init(_:)
+s:So22FPUIExtensionErrorCodeV8rawValueABSgSu_tcfc	implemented	test:full/fileproviderui/tests/agent/FileProviderUIErrorCodeTests.swift#testErrorCodeInitRawValue	Failable init?(rawValue: UInt)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@FPUIActionIdentifier	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionIdentifierTests.swift#testActionIdentifierHashValue	Synthesized Hashable.hashValue
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@FPUIActionIdentifier	implemented	test:full/fileproviderui/tests/agent/FileProviderUIActionIdentifierTests.swift#testActionIdentifierHashInto	Synthesized Hashable.hash(into:)

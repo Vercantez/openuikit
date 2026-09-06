@@ -1,0 +1,6 @@
+full/roomplan/CapturedRoom.swift
+full/roomplan/CapturedRoomAttributes.swift
+full/roomplan/RoomBuilder.swift
+full/roomplan/RoomCaptureSession.swift
+full/roomplan/RoomCaptureView.swift
+full/roomplan/RoomPlan.swift
