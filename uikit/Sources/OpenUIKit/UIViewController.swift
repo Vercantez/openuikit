@@ -322,6 +322,18 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// The in-flight modal transition's context (kept alive for the duration
     /// of the animation; a custom animator may hold onto it).
     var _activeTransitionContext: UIViewControllerContextTransitioning?
+    /// Public `transitionCoordinator` while a push/pop/present/dismiss is in
+    /// flight. MEASURED animprobe, iPhone SE 2x / iOS 26.1.
+    var _transitionCoordinator: UIViewControllerTransitionCoordinator?
+
+    /// UIKit returns a local coordinator while a presentation, navigation
+    /// transition or size change is active, then asks the containing
+    /// controller. MEASURED animprobe, iPhone SE 2x / iOS 26.1: non-nil on
+    /// from, to and the navigation controller during an animated push
+    /// through viewDidAppear, then nil.
+    open var transitionCoordinator: UIViewControllerTransitionCoordinator? {
+        _transitionCoordinator ?? parent?.transitionCoordinator
+    }
 
     /// App hook for custom present/dismiss animations and a custom
     /// presentation controller (M12 — UIViewControllerTransitioning.swift).
@@ -506,15 +518,6 @@ open class UIViewController: UIResponder, UIContentContainer {
         viewIfLoaded?.traitCollection
             ?? parent?.traitCollection
             ?? UIScreen.main._currentTraitsResolvingSizeClasses
-    }
-
-    /// UIKit returns a local coordinator while a presentation or size change
-    /// is active, then asks the containing controller. OpenUIKit's existing
-    /// animator contexts do not yet vend that public wrapper, but forwarding
-    /// to the parent preserves custom-container behavior and keeps the
-    /// property overridable for a future real coordinator.
-    open var transitionCoordinator: UIViewControllerTransitionCoordinator? {
-        parent?.transitionCoordinator
     }
 
     /// Which edges a full-screen child extends under. Stored; OpenUIKit's
