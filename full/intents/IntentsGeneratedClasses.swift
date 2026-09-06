@@ -1731,7 +1731,10 @@ open class INParameter: NSObject, @unchecked Sendable {
         self.init(for: aClass, keyPath: keyPath)
     }
     open class func parameter(forClass aClass: AnyClass, keyPath: String) -> Self {
-        self.init(for: aClass, keyPath: keyPath)
+        let value = self.init()
+        value.parameterClass = aClass
+        value.parameterKeyPath = keyPath
+        return value
     }
     open func index(forSubKeyPath subKeyPath: String) -> Int {
         indexes[subKeyPath] ?? NSNotFound
