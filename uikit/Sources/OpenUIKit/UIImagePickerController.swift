@@ -116,7 +116,14 @@ open class UIImagePickerController: UINavigationController {
 
     public class func isFlashAvailable(for cameraDevice: CameraDevice) -> Bool { false }
 
+    // Guest library route (x86 cycle c4dce839 UIImagePickerController.swift:119,
+    // build_full OpenUIKit): Foundation is hidden and NSNumber is not in
+    // FoundationEssentials (facade NSNumber is app-side only).
+#if canImport(Foundation)
     public class func availableCaptureModes(for cameraDevice: CameraDevice) -> [NSNumber]? { nil }
+#else
+    public class func availableCaptureModes(for cameraDevice: CameraDevice) -> [Int]? { nil }
+#endif
 
     public override init() {
         let root = UIViewController()
