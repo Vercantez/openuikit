@@ -7976,26 +7976,26 @@ s:7SwiftUI4ViewPAAE7overlay_9alignmentQrqd___AA9AlignmentVtAaBRd__lF::SYNTHESIZE
 s:7SwiftUI4ViewPAAE7overlay_9alignmentQrqd___AA9AlignmentVtAaBRd__lF::SYNTHESIZED::s:6Charts5ChartV	declared	source:full/charts/Charts.swift#overlay	-
 s:7SwiftUI4ViewPAAE7overlay_9alignmentQrqd___AA9AlignmentVtAaBRd__lF::SYNTHESIZED::s:6Charts7Chart3DV	declared	source:full/charts/Charts.swift#overlay	-
 s:7SwiftUI4ViewPAAE7overlay_9alignmentQrqd___AA9AlignmentVtAaBRd__lF::SYNTHESIZED::s:7SwiftUI6CircleV	not-applicable		SwiftUI cross-import overlay; owned by the SwiftUI lane
-s:7SwiftUI4ViewPAAE7paddingyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts16ChartAxisContentV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts16ChartPlotContentV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts19AnyChartSymbolShapeV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts21BasicChartSymbolShapeV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts5ChartV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts7Chart3DV	declared	source:full/charts/Charts.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts16ChartAxisContentV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts16ChartPlotContentV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts19AnyChartSymbolShapeV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts21BasicChartSymbolShapeV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts5ChartV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts7Chart3DV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
 s:7SwiftUI4ViewPAAE7paddingyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:7SwiftUI6CircleV	not-applicable		SwiftUI cross-import overlay; owned by the SwiftUI lane
-s:7SwiftUI4ViewPAAE7paddingyQrAA10EdgeInsetsVF::SYNTHESIZED::s:6Charts16ChartAxisContentV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQrAA10EdgeInsetsVF::SYNTHESIZED::s:6Charts16ChartPlotContentV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQrAA10EdgeInsetsVF::SYNTHESIZED::s:6Charts19AnyChartSymbolShapeV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQrAA10EdgeInsetsVF::SYNTHESIZED::s:6Charts21BasicChartSymbolShapeV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQrAA10EdgeInsetsVF::SYNTHESIZED::s:6Charts5ChartV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQrAA10EdgeInsetsVF::SYNTHESIZED::s:6Charts7Chart3DV	declared	source:full/charts/Charts.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQrAA10EdgeInsetsVF::SYNTHESIZED::s:6Charts16ChartAxisContentV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQrAA10EdgeInsetsVF::SYNTHESIZED::s:6Charts16ChartPlotContentV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQrAA10EdgeInsetsVF::SYNTHESIZED::s:6Charts19AnyChartSymbolShapeV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQrAA10EdgeInsetsVF::SYNTHESIZED::s:6Charts21BasicChartSymbolShapeV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQrAA10EdgeInsetsVF::SYNTHESIZED::s:6Charts5ChartV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQrAA10EdgeInsetsVF::SYNTHESIZED::s:6Charts7Chart3DV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
 s:7SwiftUI4ViewPAAE7paddingyQrAA10EdgeInsetsVF::SYNTHESIZED::s:7SwiftUI6CircleV	not-applicable		SwiftUI cross-import overlay; owned by the SwiftUI lane
-s:7SwiftUI4ViewPAAE7paddingyQrAA4EdgeO3SetV_14CoreFoundation7CGFloatVSgtF::SYNTHESIZED::s:6Charts16ChartAxisContentV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQrAA4EdgeO3SetV_14CoreFoundation7CGFloatVSgtF::SYNTHESIZED::s:6Charts16ChartPlotContentV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQrAA4EdgeO3SetV_14CoreFoundation7CGFloatVSgtF::SYNTHESIZED::s:6Charts19AnyChartSymbolShapeV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQrAA4EdgeO3SetV_14CoreFoundation7CGFloatVSgtF::SYNTHESIZED::s:6Charts21BasicChartSymbolShapeV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQrAA4EdgeO3SetV_14CoreFoundation7CGFloatVSgtF::SYNTHESIZED::s:6Charts5ChartV	declared	source:full/charts/Charts.swift#padding	-
-s:7SwiftUI4ViewPAAE7paddingyQrAA4EdgeO3SetV_14CoreFoundation7CGFloatVSgtF::SYNTHESIZED::s:6Charts7Chart3DV	declared	source:full/charts/Charts.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQrAA4EdgeO3SetV_14CoreFoundation7CGFloatVSgtF::SYNTHESIZED::s:6Charts16ChartAxisContentV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQrAA4EdgeO3SetV_14CoreFoundation7CGFloatVSgtF::SYNTHESIZED::s:6Charts16ChartPlotContentV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQrAA4EdgeO3SetV_14CoreFoundation7CGFloatVSgtF::SYNTHESIZED::s:6Charts19AnyChartSymbolShapeV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQrAA4EdgeO3SetV_14CoreFoundation7CGFloatVSgtF::SYNTHESIZED::s:6Charts21BasicChartSymbolShapeV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQrAA4EdgeO3SetV_14CoreFoundation7CGFloatVSgtF::SYNTHESIZED::s:6Charts5ChartV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
+s:7SwiftUI4ViewPAAE7paddingyQrAA4EdgeO3SetV_14CoreFoundation7CGFloatVSgtF::SYNTHESIZED::s:6Charts7Chart3DV	declared	source:full/charts/ChartsViewSurface.swift#padding	-
 s:7SwiftUI4ViewPAAE7paddingyQrAA4EdgeO3SetV_14CoreFoundation7CGFloatVSgtF::SYNTHESIZED::s:7SwiftUI6CircleV	not-applicable		SwiftUI cross-import overlay; owned by the SwiftUI lane
 s:7SwiftUI4ViewPAAE7popover11isPresented16attachmentAnchor9arrowEdge7contentQrAA7BindingVySbG_AA017PopoverAttachmentH0OAA0J0OSgqd__yctAaBRd__lF::SYNTHESIZED::s:6Charts16ChartAxisContentV	declared	source:full/charts/ChartsViewSurface.swift#popover	-
 s:7SwiftUI4ViewPAAE7popover11isPresented16attachmentAnchor9arrowEdge7contentQrAA7BindingVySbG_AA017PopoverAttachmentH0OAA0J0OSgqd__yctAaBRd__lF::SYNTHESIZED::s:6Charts16ChartPlotContentV	declared	source:full/charts/ChartsViewSurface.swift#popover	-
