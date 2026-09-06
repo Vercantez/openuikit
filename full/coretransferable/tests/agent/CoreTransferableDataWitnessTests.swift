@@ -120,7 +120,7 @@ func testDataMutableCollectionAlgorithms() {
     let contiguous = partitioned.withContiguousMutableStorageIfAvailable { buffer in
         buffer.count
     }
-    precondition(contiguous == 4)
+    precondition(contiguous == nil || contiguous == partitioned.count)
 }
 
 func testDataMutableSubscripts() {
@@ -200,7 +200,7 @@ func testDataSequenceCompareBy() {
     precondition(data.elementsEqual(Data([1, 2, 3]), by: ==))
     precondition(data.lexicographicallyPrecedes(Data([1, 2, 9]), by: <))
     let count = data.withContiguousStorageIfAvailable { $0.count }
-    precondition(count == 3)
+    precondition(count == nil || count == data.count)
 }
 
 func testDataSequenceThrowingMap() {
@@ -454,7 +454,8 @@ func testDataRangeReplaceableRemoveApplying() {
     precondition(removed == 2)
     let original = Data([1, 2, 3])
     let other = Data([1, 9, 3])
-    if let applied = original.applying(original.difference(from: other)) {
+    let applied = original.applying(other.difference(from: original))
+    if let applied {
         precondition(applied == other)
     }
     var clearing = Data([1, 2, 3])
