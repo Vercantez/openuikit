@@ -95,3 +95,14 @@ absent on this VM. The sealed gate compiles with a clean product tree
 `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (campaign expected
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
 `343270ce44481a5ae11b87a6e0713e396ada1ef2` matched.
+
+`bash full/geotoolbox/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=GeoToolbox lane=leaf-full symbols=34
+FRAMEWORK_FANOUT_REFERENCE_OK
+GEOTOOLBOX_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=GeoToolbox dylib=libGeoToolbox.dylib
+```
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. `swiftc` is Swift 6.2.4 / linux and the gate compiled with a clean product tree.
