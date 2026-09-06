@@ -29,13 +29,17 @@ Portable Swift implementations exercised by `tests/agent/*Tests.swift`:
   / `BNNSTranspose` / `BNNSTile` run on host arrays
 - Sparse CSC convert/multiply and Float/Double `SparseFactor`/`SparseSolve`
   via dense Gaussian elimination (not Apple sparse factorizations)
+- Linear Algebra `la_*` dense Float/Double matrices (sum/product/transpose/solve/norms)
+- SparseBLAS `sparse_*` COO Float/Double create/multiply/extract/solve; complex constructors stay `nil`
+- BNNS overlay `Shape`/`DataLayout.rank`, unary/binary arithmetic layers on packed float,
+  plus `BNNS.copy`/`clip`/`gather`/`transpose` and `vDSP.Biquad`
 
 `libAccelerate.dylib` compiles with `-warnings-as-errors`.
 
 Most remaining C entry points are **declared** source-compatible stubs: vImage
 helpers that need Apple services return `kvImageInvalidParameter`, BNNS
 constructors return `nil`, and Linear Algebra objects are inert
-`_OpenUIKitLAObject` values. Those stubs are not Apple behavior.
+`_OpenUIKitLAObject` values unless a Linux numeric path is implemented. Those stubs are not Apple behavior.
 
 ## Fail-closed boundaries
 
@@ -49,6 +53,8 @@ constructors return `nil`, and Linear Algebra objects are inert
 - Complex sparse multiply/factor/solve stay empty or return
   `SparseIterativeParameterError`. Float/Double sparse iterative and
   factorization solve use dense Gaussian elimination on the CSC clone.
+  SparseBLAS `sparse_*_complex` constructors return `nil` and ops return
+  status `-1` (not the sequential `SPARSE_*` placeholders).
 - vImage APIs that take `CGImage`, `CGColorSpace`, `CVPixelBuffer`, or
   `CGAffineTransform` are **deferred**: those types are not declared
   dependencies, and this lane does not introduce public lookalikes.
@@ -93,7 +99,7 @@ Top-5 evidence distribution (share of remaining implemented rows = 2534 − 26):
 
 No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling.
 
-## Depth pass 2026-09 (wave 8)
+## Depth pass 2026-09 (wave 8, r16)
 
 Next depth pass for campaign `ios26.1-fwdepth-r16`, lane `medium-full`, 6856 exact IDs. Earlier passes in this tree stay green (quadrature, CSC multiply, BLAS/LAPACK, vImage affine/rotate/tent). This pass adds packed-float BNNS tensor ops (`BNNSCopy` / `ClipByValue` / `CompareTensor` / `MatMul` / `Transpose` / `Tile`), fail-closed BNNS apply/graph execute (`BNNSLinuxFailClosedStatus = -1`), overlay `Equatable`/`Hashable` for BNNS/vDSP/vImage/BNNSGraph enums plus `BNNSGraph.CompileOptions` and `BLAS.threadingModel`, and Float/Double `SparseFactor` + `SparseSolve` via dense Gaussian elimination (including ApplyOperator column reconstruction). Complex sparse factor/solve stays parameter-error fail-closed.
 
@@ -124,3 +130,25 @@ FRAMEWORK_FANOUT_HOST_OK module=Accelerate dylib=libAccelerate.dylib
 ```
 
 The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this snapshot fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 / linux and the sealed gate compiled with a clean product tree. Starting commit `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b` matched.
+
+## Depth pass 2026-09 (wave 8)
+
+Next depth pass for campaign `ios26.1-fwdepth-r18`, lane `medium-full`, 6856 exact IDs. Keeps earlier passes green and adds real Linear Algebra `la_*`, SparseBLAS `sparse_*` (Float/Double COO; complex fail-closed), BNNS overlay `Shape`/`DataLayout.rank`/arithmetic layers, packed-float `BNNS.gather`, and `vDSP.Biquad`.
+
+- Implemented before: **3181**
+- Implemented after: **3359**
+- Declared: 2247 (was 2425)
+- Deferred: 1250 (unchanged)
+- Unavailable: 0
+- Not-applicable: 0
+
+Top-5 evidence distribution (share of remaining implemented rows = 3359 − 3181 = 178):
+
+1. `testSparseLegacyComplexFailClosed` — 36 (20.2%) — SparseBLAS complex constructors/`nil` and status `-1`
+2. `testSparseLegacyFloatCreateMultiply` — 20 (11.2%) — COO create/insert/multiply/trace/norms
+3. `testSparseLegacyExtractBlockSolve` — 18 (10.1%) — block extract and triangular solve
+4. `testSparseLegacyVectorPackInner` — 14 (7.9%) — packed sparse vectors and inner products
+5. `testSparseLegacyDoubleCreateMultiply` — 12 (6.7%) — Double COO insert/multiply
+   (tied with `testBNNSShapeRankSizeStride` — 12)
+
+No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling (largest is 36/178 = 20.2%). Sequential `LA_*` / `SPARSE_SUCCESS` macros stay `declared`. vImage CV/CG stays deferred. SwiftUI overlay IDs were not present. Starting commit `39dc25a2769fb88a50f0853964137a4f96d50322`.

@@ -7,11 +7,13 @@ full/accelerate/AccelerateCFunctions.swift
 full/accelerate/AccelerateCTypes.swift
 full/accelerate/AccelerateDepthGeometry.swift
 full/accelerate/AccelerateFFT.swift
+full/accelerate/AccelerateLA.swift
 full/accelerate/AccelerateLAPACK.swift
 full/accelerate/AccelerateNumericCore.swift
 full/accelerate/AccelerateOverlay.swift
 full/accelerate/AcceleratePixelFormats.swift
 full/accelerate/AcceleratePixelStorage.swift
+full/accelerate/AccelerateSparseLegacy.swift
 full/accelerate/AccelerateSparseMultiply.swift
 full/accelerate/AccelerateSparseSolve.swift
 full/accelerate/AccelerateVDSPMore.swift

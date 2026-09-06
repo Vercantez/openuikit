@@ -157,7 +157,7 @@ func testBNNSMoreApplyFailClosed() {
     precondition(BNNSPoolingFilterApplyBackwardBatchEx(nil, 1, nil, 0, nil, 0, nil, 0, &descA, 0, nil, BNNSDataType(rawValue: 0), nil, 0) == BNNSLinuxFailClosedStatus)
     precondition(BNNSPoolingFilterApplyBatchEx(nil, 1, p, 0, p, 0, BNNSDataType(rawValue: 0), nil, 0) == BNNSLinuxFailClosedStatus)
     precondition(BNNSComputeNormBackward(p, &descA, p, &descB, BNNSNormType(rawValue: 0), 0) == BNNSLinuxFailClosedStatus)
-    precondition(BNNSDataLayoutGetRank(BNNSDataLayout(rawValue: 0)) == 0)
+    precondition(BNNSDataLayoutGetRank(BNNSDataLayout(rawValue: 255)) == 0)
     _ = BNNSRandomFillCategoricalFloat(nil, &descA, &descB, false)
     _ = BNNSRandomFillNormalFloat(nil, &descA, 0, 0)
     _ = BNNSRandomFillUniformFloat(nil, &descA, 0, 0)
