@@ -65,6 +65,123 @@ open class MTL4AccelerationStructureDescriptor: NSObject, @unchecked Sendable {
     }
 }
 
+open class MTL4AccelerationStructureGeometryDescriptor: NSObject, @unchecked Sendable {
+    public var intersectionFunctionTableOffset: Int = 0
+    public var opaque: Bool = false
+    public var allowDuplicateIntersectionFunctionInvocation: Bool = true
+    public var label: String?
+    public var primitiveDataBuffer = MTL4BufferRange()
+    public var primitiveDataStride: Int = 0
+    public var primitiveDataElementSize: Int = 0
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTL4AccelerationStructureCurveGeometryDescriptor: MTL4AccelerationStructureGeometryDescriptor, @unchecked Sendable {
+    public var controlPointBuffer = MTL4BufferRange()
+    public var controlPointCount: Int = 0
+    public var controlPointStride: Int = 0
+    public var controlPointFormat: MTLAttributeFormat = .float3
+    public var radiusBuffer = MTL4BufferRange()
+    public var radiusFormat: MTLAttributeFormat = .float
+    public var radiusStride: Int = 0
+    public var indexBuffer = MTL4BufferRange()
+    public var indexType: MTLIndexType = .uint16
+    public var segmentCount: Int = 0
+    public var segmentControlPointCount: Int = 0
+    public var curveType: MTLCurveType = .round
+    public var curveBasis: MTLCurveBasis = .bSpline
+    public var curveEndCaps: MTLCurveEndCaps = .none
+}
+
+open class MTL4AccelerationStructureMotionCurveGeometryDescriptor: MTL4AccelerationStructureGeometryDescriptor, @unchecked Sendable {
+    public var controlPointBuffers = MTL4BufferRange()
+    public var controlPointCount: Int = 0
+    public var controlPointStride: Int = 0
+    public var controlPointFormat: MTLAttributeFormat = .float3
+    public var radiusBuffers = MTL4BufferRange()
+    public var radiusFormat: MTLAttributeFormat = .float
+    public var radiusStride: Int = 0
+    public var indexBuffer = MTL4BufferRange()
+    public var indexType: MTLIndexType = .uint16
+    public var segmentCount: Int = 0
+    public var segmentControlPointCount: Int = 0
+    public var curveType: MTLCurveType = .round
+    public var curveBasis: MTLCurveBasis = .bSpline
+    public var curveEndCaps: MTLCurveEndCaps = .none
+}
+
+open class MTL4AccelerationStructureTriangleGeometryDescriptor: MTL4AccelerationStructureGeometryDescriptor, @unchecked Sendable {
+    public var vertexBuffer = MTL4BufferRange()
+    public var vertexFormat: MTLAttributeFormat = .float3
+    public var vertexStride: Int = 0
+    public var indexBuffer = MTL4BufferRange()
+    public var indexType: MTLIndexType = .uint16
+    public var triangleCount: Int = 0
+    public var transformationMatrixBuffer = MTL4BufferRange()
+    public var transformationMatrixLayout: MTLMatrixLayout = .columnMajor
+}
+
+open class MTL4AccelerationStructureMotionTriangleGeometryDescriptor: MTL4AccelerationStructureGeometryDescriptor, @unchecked Sendable {
+    public var vertexBuffers = MTL4BufferRange()
+    public var vertexFormat: MTLAttributeFormat = .float3
+    public var vertexStride: Int = 0
+    public var indexBuffer = MTL4BufferRange()
+    public var indexType: MTLIndexType = .uint16
+    public var triangleCount: Int = 0
+    public var transformationMatrixBuffer = MTL4BufferRange()
+    public var transformationMatrixLayout: MTLMatrixLayout = .columnMajor
+}
+
+open class MTL4AccelerationStructureBoundingBoxGeometryDescriptor: MTL4AccelerationStructureGeometryDescriptor, @unchecked Sendable {
+    public var boundingBoxBuffer = MTL4BufferRange()
+    public var boundingBoxCount: Int = 0
+    public var boundingBoxStride: Int = 0
+}
+
+open class MTL4AccelerationStructureMotionBoundingBoxGeometryDescriptor: MTL4AccelerationStructureGeometryDescriptor, @unchecked Sendable {
+    public var boundingBoxBuffers = MTL4BufferRange()
+    public var boundingBoxCount: Int = 0
+    public var boundingBoxStride: Int = 0
+}
+
+open class MTL4PrimitiveAccelerationStructureDescriptor: MTL4AccelerationStructureDescriptor, @unchecked Sendable {
+    public var geometryDescriptors: [MTL4AccelerationStructureGeometryDescriptor]?
+    public var motionStartBorderMode: MTLMotionBorderMode = .clamp
+    public var motionEndBorderMode: MTLMotionBorderMode = .clamp
+    public var motionStartTime: Float = 0
+    public var motionEndTime: Float = 1
+    public var motionKeyframeCount: Int = 1
+}
+
+open class MTL4InstanceAccelerationStructureDescriptor: MTL4AccelerationStructureDescriptor, @unchecked Sendable {
+    public var instanceDescriptorBuffer = MTL4BufferRange()
+    public var instanceDescriptorStride: Int = 0
+    public var instanceDescriptorType: MTLAccelerationStructureInstanceDescriptorType = .default
+    public var instanceCount: Int = 0
+    public var instanceTransformationMatrixLayout: MTLMatrixLayout = .columnMajor
+    public var motionTransformBuffer = MTL4BufferRange()
+    public var motionTransformStride: Int = 0
+    public var motionTransformType: MTLTransformType = .packedFloat4x3
+    public var motionTransformCount: Int = 0
+}
+
+open class MTL4IndirectInstanceAccelerationStructureDescriptor: MTL4AccelerationStructureDescriptor, @unchecked Sendable {
+    public var instanceDescriptorBuffer = MTL4BufferRange()
+    public var instanceDescriptorStride: Int = 0
+    public var instanceDescriptorType: MTLAccelerationStructureInstanceDescriptorType = .indirect
+    public var maxInstanceCount: Int = 0
+    public var instanceCountBuffer = MTL4BufferRange()
+    public var instanceTransformationMatrixLayout: MTLMatrixLayout = .columnMajor
+    public var motionTransformBuffer = MTL4BufferRange()
+    public var motionTransformStride: Int = 0
+    public var motionTransformType: MTLTransformType = .packedFloat4x3
+    public var maxMotionTransformCount: Int = 0
+    public var motionTransformCountBuffer = MTL4BufferRange()
+}
+
 open class MTL4RenderPipelineColorAttachmentDescriptor: NSObject, @unchecked Sendable {
     public var pixelFormat: MTLPixelFormat = .invalid
     public var blendingState: MTL4BlendState = .disabled
@@ -1181,7 +1298,24 @@ final class LinuxMTL4ComputeCommandEncoder: LinuxMTL4EncoderBase, MTL4ComputeCom
         destinationOrigin: MTLTensorExtents,
         destinationDimensions: MTLTensorExtents
     ) {
-        _ = (sourceTensor, sourceOrigin, sourceDimensions, destinationTensor, destinationOrigin, destinationDimensions)
+        let strides = sourceTensor.strides ?? MTLTensorExtents()
+        let count = metalTensorElementCount(sourceDimensions.extents)
+        let element = metalTensorElementSize(sourceTensor.dataType)
+        let bytes = max(count * element, 1)
+        let storage = UnsafeMutableRawPointer.allocate(byteCount: bytes, alignment: 16)
+        defer { storage.deallocate() }
+        sourceTensor.getBytes(
+            storage,
+            strides: strides,
+            sliceOrigin: sourceOrigin,
+            sliceDimensions: sourceDimensions
+        )
+        destinationTensor.replace(
+            sliceOrigin: destinationOrigin,
+            sliceDimensions: destinationDimensions,
+            withBytes: storage,
+            strides: destinationTensor.strides ?? MTLTensorExtents()
+        )
     }
 
     func build(

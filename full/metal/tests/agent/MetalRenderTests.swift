@@ -407,3 +407,55 @@ func testRenderPipelineStateMeshProperties() {
         fatalError("expected MTLLibraryError")
     }
 }
+
+func testRenderEncoderAccelerationBindings() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let colorDesc = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .rgba8Unorm,
+        width: 1,
+        height: 1,
+        mipmapped: false
+    )
+    colorDesc.usage = [.renderTarget, .shaderRead]
+    let color = device.makeTexture(descriptor: colorDesc)!
+    let pass = MTLRenderPassDescriptor()
+    pass.colorAttachments[0].texture = color
+    pass.colorAttachments[0].loadAction = .load
+    pass.colorAttachments[0].storeAction = .store
+    let pipeline = MTLRenderPipelineDescriptor()
+    pipeline.colorAttachments[0].pixelFormat = .rgba8Unorm
+    let state = try! device.makeRenderPipelineState(descriptor: pipeline)
+    let accel = device.makeAccelerationStructure(size: 0)
+    let queue = device.makeCommandQueue()!
+    let commandBuffer = queue.makeCommandBuffer()!
+    let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: pass)!
+    encoder.setRenderPipelineState(state)
+    encoder.setColorAttachmentMap(MTLLogicalToPhysicalColorAttachmentMap())
+    encoder.setVertexAccelerationStructure(accel, bufferIndex: 0)
+    encoder.setFragmentAccelerationStructure(accel, bufferIndex: 1)
+    encoder.setTileAccelerationStructure(accel, bufferIndex: 2)
+    encoder.setVertexIntersectionFunctionTable(nil, bufferIndex: 0)
+    encoder.setFragmentIntersectionFunctionTable(nil, bufferIndex: 0)
+    encoder.setTileIntersectionFunctionTable(nil, bufferIndex: 0)
+    encoder.setVertexVisibleFunctionTable(nil, bufferIndex: 0)
+    encoder.setFragmentVisibleFunctionTable(nil, bufferIndex: 0)
+    encoder.setTileVisibleFunctionTable(nil, bufferIndex: 0)
+    var mapping = MTLVertexAmplificationViewMapping(viewportArrayIndexOffset: 0, renderTargetArrayIndexOffset: 0)
+    encoder.setVertexAmplificationCount(1, viewMappings: &mapping)
+    encoder.setVertexAmplificationCount(1, viewMappings: nil)
+    let counters = try! device.makeCounterSampleBuffer(descriptor: {
+        let desc = MTLCounterSampleBufferDescriptor()
+        desc.sampleCount = 1
+        return desc
+    }())
+    encoder.sampleCounters(sampleBuffer: counters, sampleIndex: 0, barrier: true)
+    encoder.useHeap(device.makeHeap(descriptor: {
+        let desc = MTLHeapDescriptor()
+        desc.size = 32
+        return desc
+    }())!)
+    encoder.endEncoding()
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+    precondition(commandBuffer.status == .completed)
+}

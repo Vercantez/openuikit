@@ -912,6 +912,86 @@ func testMetal4CommandEncoders() {
     }
 }
 
+func testAccelerationStructureCommandEncoder() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let queue = device.makeCommandQueue()!
+    let commandBuffer = queue.makeCommandBuffer()!
+    let accel = device.makeAccelerationStructure(size: 0)!
+    let dest = device.makeAccelerationStructure(size: 0)!
+    let scratch = device.makeBuffer(length: 16, options: .storageModeShared)!
+    let compacted = device.makeBuffer(length: 8, options: .storageModeShared)!
+    compacted.contents().storeBytes(of: UInt32(99), as: UInt32.self)
+    let heap = device.makeHeap(descriptor: {
+        let desc = MTLHeapDescriptor()
+        desc.size = 64
+        return desc
+    }())!
+    let fence = device.makeFence()!
+    let pass = MTLAccelerationStructurePassDescriptor.accelerationStructurePassDescriptor()
+    pass.sampleBufferAttachments[0].sampleBuffer = try! device.makeCounterSampleBuffer(
+        descriptor: MTLCounterSampleBufferDescriptor()
+    )
+    pass.sampleBufferAttachments[0].startOfEncoderSampleIndex = 0
+    pass.sampleBufferAttachments[0].endOfEncoderSampleIndex = 0
+    let encoder = commandBuffer.makeAccelerationStructureCommandEncoder(descriptor: pass)
+    encoder.label = "as"
+    encoder.insertDebugSignpost("build")
+    encoder.pushDebugGroup("g")
+    encoder.popDebugGroup()
+    encoder.build(
+        accelerationStructure: accel,
+        descriptor: MTLAccelerationStructureDescriptor(),
+        scratchBuffer: scratch,
+        scratchBufferOffset: 0
+    )
+    encoder.copy(sourceAccelerationStructure: accel, destinationAccelerationStructure: dest)
+    encoder.copyAndCompact(sourceAccelerationStructure: accel, destinationAccelerationStructure: dest)
+    encoder.refit(
+        sourceAccelerationStructure: accel,
+        descriptor: MTLAccelerationStructureDescriptor(),
+        destinationAccelerationStructure: dest,
+        scratchBuffer: scratch,
+        scratchBufferOffset: 0
+    )
+    encoder.refit(
+        sourceAccelerationStructure: accel,
+        descriptor: MTLAccelerationStructureDescriptor(),
+        destinationAccelerationStructure: nil,
+        scratchBuffer: nil,
+        scratchBufferOffset: 0,
+        options: .vertexData
+    )
+    encoder.writeCompactedSize(accelerationStructure: accel, buffer: compacted, offset: 0)
+    encoder.writeCompactedSize(
+        accelerationStructure: accel,
+        buffer: compacted,
+        offset: 4,
+        sizeDataType: .uint
+    )
+    encoder.useResource(scratch, usage: .read)
+    encoder.useResources([scratch], usage: .write)
+    encoder.useHeap(heap)
+    encoder.useHeaps([heap])
+    encoder.updateFence(fence)
+    encoder.waitForFence(fence)
+    let counters = try! device.makeCounterSampleBuffer(descriptor: {
+        let desc = MTLCounterSampleBufferDescriptor()
+        desc.sampleCount = 1
+        return desc
+    }())
+    encoder.sampleCounters(sampleBuffer: counters, sampleIndex: 0, barrier: false)
+    encoder.endEncoding()
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+    precondition(commandBuffer.status == .completed)
+    precondition(compacted.contents().load(as: UInt32.self) == 0)
+    let other = queue.makeCommandBuffer()!
+    precondition(other.makeAccelerationStructureCommandEncoder() != nil)
+    other.makeAccelerationStructureCommandEncoder()?.endEncoding()
+    other.commit()
+    other.waitUntilCompleted()
+}
+
 private func libraryDescriptorFixture() -> MTL4LibraryDescriptor {
     let descriptor = MTL4LibraryDescriptor()
     descriptor.source = "not msl"
@@ -1860,14 +1940,9 @@ func testDeviceFailClosedFactories() {
     counterDesc.label = "counters"
     counterDesc.storageMode = .shared
     counterDesc.counterSet = nil
-    do {
-        _ = try device.makeCounterSampleBuffer(descriptor: counterDesc)
-        fatalError("counter sample buffer must fail closed")
-    } catch let error as MTLCPUValidationError {
-        precondition(error.reason.contains("counter"))
-    } catch {
-        fatalError("expected MTLCPUValidationError")
-    }
+    let counters = try! device.makeCounterSampleBuffer(descriptor: counterDesc)
+    precondition(counters.sampleCount == 1)
+    precondition(try! counters.resolveCounterRange(0..<1) == nil)
 }
 
 // from MetalEnumTests.swift
@@ -3871,6 +3946,110 @@ func testMetalEnumOptionSetAndConstantValues() {
     stat.vertexInvocations = 8
     precondition(stat.clipperInvocations == 1)
     precondition(stat.vertexInvocations == 8)
+
+    metalExerciseRawEnum([
+        MTLTensorDataType.none, .float32, .float16, .bfloat16, .int8, .uint8, .int16, .uint16, .int32, .uint32
+    ])
+    metalExerciseRawEnum([
+        MTLStepFunction.constant, .perVertex, .perInstance, .perPatch, .perPatchControlPoint,
+        .threadPositionInGridX, .threadPositionInGridY, .threadPositionInGridXIndexed, .threadPositionInGridYIndexed
+    ])
+    metalExerciseRawEnum([
+        MTLLogLevel.undefined, .debug, .info, .notice, .error, .fault
+    ])
+    metalExerciseRawEnum([
+        MTLCommandEncoderErrorState.unknown, .completed, .affected, .pending, .faulted
+    ])
+    metalExerciseRawEnum([
+        MTLFunctionLogType.validation
+    ])
+    metalExerciseRawEnum([
+        MTLIOCompressionStatus.complete, .error
+    ])
+    metalExerciseRawEnum([
+        MTLLogStateError.invalid, .invalidSize
+    ])
+    metalExerciseRawEnum([
+        MTLDynamicLibraryError.Code.none, .invalidFile, .compilationFailure, .unresolvedInstallName,
+        .dependencyLoadFailure, .unsupported
+    ])
+    precondition(MTLDynamicLibraryError.none == .none)
+    precondition(MTLDynamicLibraryError.invalidFile == .invalidFile)
+    precondition(MTLDynamicLibraryError.compilationFailure == .compilationFailure)
+    precondition(MTLDynamicLibraryError.unresolvedInstallName == .unresolvedInstallName)
+    precondition(MTLDynamicLibraryError.dependencyLoadFailure == .dependencyLoadFailure)
+    precondition(MTLDynamicLibraryError.unsupported == .unsupported)
+    precondition(MTLDynamicLibraryError.errorDomain == MTLDynamicLibraryDomain)
+    let dynError = MTLDynamicLibraryError(.unsupported, userInfo: [NSLocalizedDescriptionKey: "cpu"])
+    precondition(dynError.code == .unsupported)
+    precondition(dynError.errorCode == Int(MTLDynamicLibraryError.Code.unsupported.rawValue))
+    _ = dynError.errorUserInfo
+    _ = dynError.hashValue
+    _ = dynError.localizedDescription
+    var dynHasher = Hasher()
+    dynError.hash(into: &dynHasher)
+    precondition(MTLDynamicLibraryError.unsupported ~= dynError)
+    precondition(dynError != MTLDynamicLibraryError(.none))
+
+    metalExerciseRawEnum([
+        MTLBinaryArchiveError.Code.none, .invalidFile, .unexpectedElement, .compilationFailure, .internalError
+    ])
+    precondition(MTLBinaryArchiveError.none == .none)
+    precondition(MTLBinaryArchiveError.invalidFile == .invalidFile)
+    precondition(MTLBinaryArchiveError.unexpectedElement == .unexpectedElement)
+    precondition(MTLBinaryArchiveError.compilationFailure == .compilationFailure)
+    precondition(MTLBinaryArchiveError.internalError == .internalError)
+    precondition(MTLBinaryArchiveError.errorDomain == MTLBinaryArchiveDomain)
+    let binError = MTLBinaryArchiveError(.internalError, userInfo: [NSLocalizedDescriptionKey: "cpu"])
+    precondition(binError.code == .internalError)
+    precondition(MTLBinaryArchiveError.internalError ~= binError)
+    _ = binError.errorUserInfo
+    _ = binError.hashValue
+    _ = binError.localizedDescription
+
+    metalExerciseRawEnum([
+        MTLCounterSampleBufferError.Code.outOfMemory, .invalid, .internal
+    ])
+    precondition(MTLCounterSampleBufferError.outOfMemory == .outOfMemory)
+    precondition(MTLCounterSampleBufferError.invalid == .invalid)
+    precondition(MTLCounterSampleBufferError.internal == .internal)
+    precondition(MTLCounterSampleBufferError.errorDomain == MTLCounterErrorDomain)
+    let counterError = MTLCounterSampleBufferError(.invalid, userInfo: [NSLocalizedDescriptionKey: "cpu"])
+    precondition(counterError.code == .invalid)
+    precondition(MTLCounterSampleBufferError.invalid ~= counterError)
+    _ = counterError.hashValue
+    _ = counterError.localizedDescription
+
+    metalExerciseRawEnum([
+        MTLTensorError.Code.none, .internalError, .invalidDescriptor
+    ])
+    precondition(MTLTensorError.none == .none)
+    precondition(MTLTensorError.internalError == .internalError)
+    precondition(MTLTensorError.invalidDescriptor == .invalidDescriptor)
+    precondition(MTLTensorError.errorDomain == MTLTensorDomain)
+    let tensorError = MTLTensorError(.invalidDescriptor, userInfo: [NSLocalizedDescriptionKey: "cpu"])
+    precondition(tensorError.code == .invalidDescriptor)
+    precondition(MTLTensorError.invalidDescriptor ~= tensorError)
+    _ = tensorError.hashValue
+    _ = tensorError.localizedDescription
+
+    precondition(MTLCommandBufferError.none == .none)
+    precondition(MTLCommandBufferError.internal == .internal)
+    precondition(MTLCommandBufferError.timeout == .timeout)
+    precondition(MTLCommandBufferError.pageFault == .pageFault)
+    precondition(MTLCommandBufferError.blacklisted == .blacklisted)
+    precondition(MTLCommandBufferError.notPermitted == .notPermitted)
+    precondition(MTLCommandBufferError.outOfMemory == .outOfMemory)
+    precondition(MTLCommandBufferError.invalidResource == .invalidResource)
+    precondition(MTLCommandBufferError.memoryless == .memoryless)
+    precondition(MTLCommandBufferError.stackOverflow == .stackOverflow)
+    _ = MTLCommandBufferError.errorDomain
+    let ioThrown = MTLIOError(.internal, userInfo: [NSLocalizedDescriptionKey: "cpu"])
+    precondition(ioThrown == MTLIOError(.internal))
+    precondition(ioThrown != MTLIOError(.urlInvalid))
+    _ = ioThrown.hashValue
+    _ = ioThrown.localizedDescription
+    precondition(MTLIOError.internal ~= ioThrown)
 }
 
 private func metalExerciseOptionSet<T: OptionSet & Hashable>(_ first: T, _ second: T)
@@ -4229,6 +4408,181 @@ func testIOCommandBufferFailClosed() {
     precondition(cancelled.status == .cancelled)
 }
 
+func testCPUTensorBinaryArchiveAndHandles() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let invalid = MTLTensorDescriptor()
+    invalid.dataType = .none
+    do {
+        _ = try device.makeTensor(descriptor: invalid)
+        fatalError("empty tensor must fail closed")
+    } catch let error as MTLTensorError {
+        precondition(error.code == .invalidDescriptor)
+        precondition(MTLTensorError.invalidDescriptor ~= error)
+        precondition(error.localizedDescription.contains("tensor"))
+    } catch {
+        fatalError("expected MTLTensorError")
+    }
+    let descriptor = MTLTensorDescriptor()
+    descriptor.dataType = .float32
+    descriptor.dimensions = MTLTensorExtents([4])!
+    descriptor.usage = [.compute]
+    descriptor.storageMode = .shared
+    descriptor.cpuCacheMode = .defaultCache
+    descriptor.hazardTrackingMode = .default
+    descriptor.resourceOptions = .storageModeShared
+    descriptor.strides = MTLTensorExtents([1])
+    let copy = descriptor.copy() as! MTLTensorDescriptor
+    precondition(copy.dimensions.extents == [4])
+    let sized = device.tensorSizeAndAlign(descriptor: descriptor)
+    precondition(sized.size >= 16)
+    precondition(sized.align == 16)
+    let tensor = try! device.makeTensor(descriptor: descriptor)
+    precondition(tensor.dataType == .float32)
+    precondition(tensor.dimensions.extents == [4])
+    precondition(tensor.usage.contains(.compute))
+    precondition(tensor.buffer == nil)
+    precondition(tensor.bufferOffset == 0)
+    _ = tensor.gpuResourceID
+    _ = tensor.strides
+    let values: [Float] = [1, 2, 3, 4]
+    values.withUnsafeBytes { raw in
+        tensor.replace(
+            sliceOrigin: MTLTensorExtents([0])!,
+            sliceDimensions: MTLTensorExtents([4])!,
+            withBytes: raw.baseAddress!,
+            strides: MTLTensorExtents([1])!
+        )
+    }
+    var readback = [Float](repeating: 0, count: 4)
+    readback.withUnsafeMutableBytes { raw in
+        tensor.getBytes(
+            raw.baseAddress!,
+            strides: MTLTensorExtents([1])!,
+            sliceOrigin: MTLTensorExtents([0])!,
+            sliceDimensions: MTLTensorExtents([4])!
+        )
+    }
+    precondition(readback == values)
+
+    let archiveDesc = MTLBinaryArchiveDescriptor()
+    archiveDesc.url = URL(fileURLWithPath: "/tmp/missing.metallib")
+    let archive = try! device.makeBinaryArchive(descriptor: archiveDesc)
+    archive.label = "cpu-archive"
+    precondition(archive.device.name == device.name)
+    try! archive.addComputePipelineFunctions(descriptor: MTLComputePipelineDescriptor())
+    try! archive.addRenderPipelineFunctions(descriptor: MTLRenderPipelineDescriptor())
+    do {
+        try archive.serialize(to: URL(fileURLWithPath: "/tmp/out.metallib"))
+        fatalError("serialize must fail closed")
+    } catch let error as MTLBinaryArchiveError {
+        precondition(error.code == .internalError)
+        precondition(MTLBinaryArchiveError.internalError ~= error)
+    } catch {
+        fatalError("expected MTLBinaryArchiveError")
+    }
+
+    let builtin = MTLMakeCPUBuiltinLibrary(device).makeFunction(name: MTLCPUBuiltinKernel.fillUInt32.rawValue)!
+    let handle = device.functionHandle(function: builtin)!
+    precondition(handle.name == builtin.name)
+    precondition(handle.functionType == .kernel)
+    precondition(handle.device.name == device.name)
+    _ = handle.gpuResourceID
+    _ = device.functionHandle(function: LinuxMTL4BinaryFunctionStub())
+
+    do {
+        _ = try device.makeDynamicLibrary(library: MTLMakeCPUBuiltinLibrary(device))
+        fatalError("dynamic library must fail closed")
+    } catch let error as MTLDynamicLibraryError {
+        precondition(error.code == .unsupported)
+        precondition(MTLDynamicLibraryError.unsupported ~= error)
+        precondition(error.localizedDescription.contains("dynamic library"))
+    } catch {
+        fatalError("expected MTLDynamicLibraryError")
+    }
+    do {
+        _ = try device.makeDynamicLibrary(url: URL(fileURLWithPath: "/tmp/missing.dylib"))
+        fatalError("dynamic library URL must fail closed")
+    } catch let error as MTLDynamicLibraryError {
+        precondition(error.code == .unsupported)
+    } catch {
+        fatalError("expected MTLDynamicLibraryError")
+    }
+
+    let logDesc = MTLLogStateDescriptor()
+    logDesc.bufferSize = 256
+    logDesc.level = .info
+    let logState = try! device.makeLogState(descriptor: logDesc)
+    var handlerCount = 0
+    logState.addLogHandler { _, _, _, _ in handlerCount += 1 }
+    precondition(handlerCount == 0)
+    do {
+        let bad = MTLLogStateDescriptor()
+        bad.bufferSize = -1
+        _ = try device.makeLogState(descriptor: bad)
+        fatalError("negative log buffer must fail closed")
+    } catch let error as MTLLogStateError {
+        precondition(error == .invalidSize)
+    } catch {
+        fatalError("expected MTLLogStateError")
+    }
+
+    let sharedDesc = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .rgba8Unorm,
+        width: 1,
+        height: 1,
+        mipmapped: false
+    )
+    precondition(device.makeSharedTexture(descriptor: sharedDesc) == nil)
+    let sharedHandle = MTLSharedTextureHandle()
+    sharedHandle.label = "none"
+    _ = sharedHandle.device
+    _ = MTLSharedTextureHandle.supportsSecureCoding
+    precondition(device.makeSharedTexture(handle: sharedHandle) == nil)
+
+    let poolDesc = MTLResourceViewPoolDescriptor()
+    poolDesc.label = "views"
+    poolDesc.resourceViewCount = 4
+    let pool = try! device.makeTextureViewPool(descriptor: poolDesc)
+    precondition(pool.resourceViewCount == 4)
+    precondition(pool.device.name == device.name)
+    _ = pool.baseResourceID
+    _ = pool.label
+    let texture = device.makeTexture(descriptor: sharedDesc)!
+    let first = pool.setTextureView(texture: texture, index: 0)
+    _ = pool.setTextureView(texture: texture, descriptor: MTLTextureViewDescriptor(), index: 1)
+    let buffer = device.makeBuffer(length: 16, options: .storageModeShared)!
+    _ = pool.setTextureView(
+        buffer: buffer,
+        descriptor: sharedDesc,
+        offset: 0,
+        bytesPerRow: 4,
+        index: 2
+    )
+    _ = pool.copyResourceViews(from: pool, sourceRange: 0..<1, destinationIndex: 3)
+    _ = first
+
+    let counterDesc = MTLCounterSampleBufferDescriptor()
+    counterDesc.sampleCount = 2
+    counterDesc.label = "cpu-counters"
+    let counters = try! device.makeCounterSampleBuffer(descriptor: counterDesc)
+    precondition(counters.sampleCount == 2)
+    precondition(counters.device.name == device.name)
+    precondition(try! counters.resolveCounterRange(0..<2) == nil)
+
+    let encoderInfo = MetalTestCommandBufferEncoderInfo()
+    precondition(encoderInfo.label == "encoder")
+    precondition(encoderInfo.debugSignposts.isEmpty)
+    precondition(encoderInfo.errorState == .completed)
+}
+
+private final class LinuxMTL4BinaryFunctionStub: NSObject, MTL4BinaryFunction {}
+
+private final class MetalTestCommandBufferEncoderInfo: NSObject, MTLCommandBufferEncoderInfo {
+    var label: String { "encoder" }
+    var debugSignposts: [String] { [] }
+    var errorState: MTLCommandEncoderErrorState { .completed }
+}
+
 private final class MetalTestIOFileHandle: NSObject, MTLIOFileHandle, @unchecked Sendable {
     var label: String?
 }
@@ -4456,6 +4810,227 @@ func testAccelerationStructureGeometryDescriptors() {
     precondition(indirect.instanceDescriptorType == .indirect)
 }
 
+func testTriangleAndInstanceAccelerationDescriptors() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let vertices = device.makeBuffer(length: 36, options: .storageModeShared)!
+    let indices = device.makeBuffer(length: 12, options: .storageModeShared)!
+    let boxes = device.makeBuffer(length: 24, options: .storageModeShared)!
+    let triangle = MTLAccelerationStructureTriangleGeometryDescriptor.descriptor()
+    triangle.vertexBuffer = vertices
+    triangle.vertexBufferOffset = 0
+    triangle.vertexStride = 12
+    triangle.vertexFormat = .float3
+    triangle.indexBuffer = indices
+    triangle.indexBufferOffset = 0
+    triangle.indexType = .uint16
+    triangle.triangleCount = 1
+    triangle.transformationMatrixBuffer = nil
+    triangle.transformationMatrixBufferOffset = 0
+    triangle.transformationMatrixLayout = .columnMajor
+    triangle.opaque = true
+    triangle.label = "tri"
+    precondition(triangle.triangleCount == 1)
+    precondition(triangle.vertexStride == 12)
+    let keyframe = MTLMotionKeyframeData.data()
+    keyframe.buffer = vertices
+    keyframe.offset = 0
+    let motionTri = MTLAccelerationStructureMotionTriangleGeometryDescriptor.descriptor()
+    motionTri.vertexBuffers = [keyframe]
+    motionTri.vertexStride = 12
+    motionTri.vertexFormat = .float3
+    motionTri.indexBuffer = indices
+    motionTri.indexBufferOffset = 0
+    motionTri.indexType = .uint32
+    motionTri.triangleCount = 2
+    motionTri.transformationMatrixBuffer = nil
+    motionTri.transformationMatrixBufferOffset = 0
+    motionTri.transformationMatrixLayout = .rowMajor
+    precondition(motionTri.vertexBuffers.count == 1)
+    precondition(motionTri.triangleCount == 2)
+    let box = MTLAccelerationStructureBoundingBoxGeometryDescriptor.descriptor()
+    box.boundingBoxBuffer = boxes
+    box.boundingBoxBufferOffset = 0
+    box.boundingBoxCount = 1
+    box.boundingBoxStride = 24
+    precondition(box.boundingBoxCount == 1)
+    let motionBox = MTLAccelerationStructureMotionBoundingBoxGeometryDescriptor.descriptor()
+    motionBox.boundingBoxBuffers = [keyframe]
+    motionBox.boundingBoxCount = 1
+    motionBox.boundingBoxStride = 24
+    precondition(motionBox.boundingBoxBuffers.count == 1)
+    let primitive = MTLPrimitiveAccelerationStructureDescriptor.descriptor()
+    primitive.geometryDescriptors = [triangle, box]
+    primitive.motionStartBorderMode = .clamp
+    primitive.motionEndBorderMode = .vanish
+    primitive.motionStartTime = 0
+    primitive.motionEndTime = 1
+    primitive.motionKeyframeCount = 1
+    primitive.usage = [.preferFastBuild]
+    precondition(primitive.geometryDescriptors?.count == 2)
+    let instance = MTLInstanceAccelerationStructureDescriptor.descriptor()
+    instance.instanceDescriptorBuffer = vertices
+    instance.instanceDescriptorBufferOffset = 0
+    instance.instanceDescriptorStride = 64
+    instance.instanceDescriptorType = .userID
+    instance.instanceCount = 2
+    instance.instancedAccelerationStructures = [device.makeAccelerationStructure(size: 0)!]
+    instance.instanceTransformationMatrixLayout = .columnMajor
+    instance.motionTransformBuffer = nil
+    instance.motionTransformBufferOffset = 0
+    instance.motionTransformStride = 48
+    instance.motionTransformType = .packedFloat4x3
+    instance.motionTransformCount = 0
+    precondition(instance.instanceCount == 2)
+    precondition(instance.instanceDescriptorType == .userID)
+    let sizes = device.accelerationStructureSizes(descriptor: primitive)
+    precondition(sizes.accelerationStructureSize == 0)
+
+    var quaternion = MTLPackedFloatQuaternion(x: 0, y: 0, z: 0, w: 1)
+    quaternion.x = 0.1
+    precondition(quaternion.w == 1)
+    precondition(MTLPackedFloatQuaternion() != quaternion)
+    var transform = MTLComponentTransform()
+    transform.scale = MTLPackedFloat3Make(1, 2, 3)
+    transform.shear = MTLPackedFloat3()
+    transform.pivot = MTLPackedFloat3()
+    transform.rotation = quaternion
+    transform.translation = MTLPackedFloat3Make(4, 5, 6)
+    precondition(transform.scale.y == 2)
+    precondition(transform == MTLComponentTransform(
+        scale: transform.scale,
+        shear: transform.shear,
+        pivot: transform.pivot,
+        rotation: transform.rotation,
+        translation: transform.translation
+    ))
+    var mapArgs = MTLMapIndirectArguments(
+        regionOriginX: 1, regionOriginY: 2, regionOriginZ: 0,
+        regionSizeWidth: 4, regionSizeHeight: 4, regionSizeDepth: 1,
+        mipMapLevel: 0, sliceId: 0
+    )
+    mapArgs.sliceId = 1
+    precondition(mapArgs.regionSizeWidth == 4)
+    precondition(MTLMapIndirectArguments().mipMapLevel == 0)
+    var draw = MTLDrawPrimitivesIndirectArguments(vertexCount: 3, instanceCount: 1, vertexStart: 0, baseInstance: 0)
+    draw.instanceCount = 2
+    precondition(draw.vertexCount == 3)
+    var indexed = MTLDrawIndexedPrimitivesIndirectArguments(
+        indexCount: 3, instanceCount: 1, indexStart: 0, baseVertex: 0, baseInstance: 0
+    )
+    indexed.baseVertex = -1
+    precondition(indexed.indexCount == 3)
+    var patch = MTLDrawPatchIndirectArguments(patchCount: 1, instanceCount: 1, patchStart: 0, baseInstance: 0)
+    patch.patchStart = 1
+    precondition(patch.patchCount == 1)
+}
+
+func testMetal4AccelerationStructureDescriptors() {
+    let geometry = MTL4AccelerationStructureGeometryDescriptor()
+    geometry.intersectionFunctionTableOffset = 2
+    geometry.opaque = true
+    geometry.allowDuplicateIntersectionFunctionInvocation = false
+    geometry.label = "g4"
+    geometry.primitiveDataBuffer = MTL4BufferRangeMake(8, 16)
+    geometry.primitiveDataStride = 16
+    geometry.primitiveDataElementSize = 4
+    precondition(geometry.opaque)
+    let curve = MTL4AccelerationStructureCurveGeometryDescriptor()
+    curve.controlPointBuffer = MTL4BufferRangeMake(0, 48)
+    curve.controlPointCount = 4
+    curve.controlPointStride = 12
+    curve.controlPointFormat = .float3
+    curve.radiusBuffer = MTL4BufferRangeMake(48, 16)
+    curve.radiusFormat = .float
+    curve.radiusStride = 4
+    curve.indexBuffer = MTL4BufferRangeMake(64, 8)
+    curve.indexType = .uint16
+    curve.segmentCount = 1
+    curve.segmentControlPointCount = 4
+    curve.curveType = .round
+    curve.curveBasis = .bSpline
+    curve.curveEndCaps = .none
+    precondition(curve.controlPointCount == 4)
+    let motionCurve = MTL4AccelerationStructureMotionCurveGeometryDescriptor()
+    motionCurve.controlPointBuffers = MTL4BufferRangeMake(0, 96)
+    motionCurve.controlPointCount = 4
+    motionCurve.controlPointStride = 12
+    motionCurve.controlPointFormat = .float3
+    motionCurve.radiusBuffers = MTL4BufferRangeMake(96, 32)
+    motionCurve.radiusFormat = .float
+    motionCurve.radiusStride = 4
+    motionCurve.indexBuffer = MTL4BufferRangeMake(128, 8)
+    motionCurve.indexType = .uint32
+    motionCurve.segmentCount = 1
+    motionCurve.segmentControlPointCount = 4
+    motionCurve.curveType = .flat
+    motionCurve.curveBasis = .bezier
+    motionCurve.curveEndCaps = .sphere
+    precondition(motionCurve.curveType == .flat)
+    let tri = MTL4AccelerationStructureTriangleGeometryDescriptor()
+    tri.vertexBuffer = MTL4BufferRangeMake(0, 36)
+    tri.vertexFormat = .float3
+    tri.vertexStride = 12
+    tri.indexBuffer = MTL4BufferRangeMake(36, 12)
+    tri.indexType = .uint16
+    tri.triangleCount = 1
+    tri.transformationMatrixBuffer = MTL4BufferRangeMake(48, 48)
+    tri.transformationMatrixLayout = .columnMajor
+    precondition(tri.triangleCount == 1)
+    let motionTri = MTL4AccelerationStructureMotionTriangleGeometryDescriptor()
+    motionTri.vertexBuffers = MTL4BufferRangeMake(0, 72)
+    motionTri.vertexFormat = .float3
+    motionTri.vertexStride = 12
+    motionTri.indexBuffer = MTL4BufferRangeMake(72, 12)
+    motionTri.indexType = .uint32
+    motionTri.triangleCount = 2
+    motionTri.transformationMatrixBuffer = MTL4BufferRange()
+    motionTri.transformationMatrixLayout = .rowMajor
+    precondition(motionTri.triangleCount == 2)
+    let box = MTL4AccelerationStructureBoundingBoxGeometryDescriptor()
+    box.boundingBoxBuffer = MTL4BufferRangeMake(0, 24)
+    box.boundingBoxCount = 1
+    box.boundingBoxStride = 24
+    precondition(box.boundingBoxCount == 1)
+    let motionBox = MTL4AccelerationStructureMotionBoundingBoxGeometryDescriptor()
+    motionBox.boundingBoxBuffers = MTL4BufferRangeMake(0, 48)
+    motionBox.boundingBoxCount = 2
+    motionBox.boundingBoxStride = 24
+    precondition(motionBox.boundingBoxCount == 2)
+    let primitive = MTL4PrimitiveAccelerationStructureDescriptor()
+    primitive.geometryDescriptors = [curve, tri, box]
+    primitive.motionStartBorderMode = .clamp
+    primitive.motionEndBorderMode = .vanish
+    primitive.motionStartTime = 0
+    primitive.motionEndTime = 1
+    primitive.motionKeyframeCount = 2
+    precondition(primitive.geometryDescriptors?.count == 3)
+    let instance = MTL4InstanceAccelerationStructureDescriptor()
+    instance.instanceDescriptorBuffer = MTL4BufferRangeMake(0, 128)
+    instance.instanceDescriptorStride = 64
+    instance.instanceDescriptorType = .default
+    instance.instanceCount = 2
+    instance.instanceTransformationMatrixLayout = .columnMajor
+    instance.motionTransformBuffer = MTL4BufferRange()
+    instance.motionTransformStride = 48
+    instance.motionTransformType = .packedFloat4x3
+    instance.motionTransformCount = 0
+    precondition(instance.instanceCount == 2)
+    let indirect = MTL4IndirectInstanceAccelerationStructureDescriptor()
+    indirect.instanceDescriptorBuffer = MTL4BufferRangeMake(0, 256)
+    indirect.instanceDescriptorStride = 64
+    indirect.instanceDescriptorType = .indirect
+    indirect.maxInstanceCount = 8
+    indirect.instanceCountBuffer = MTL4BufferRangeMake(256, 4)
+    indirect.instanceTransformationMatrixLayout = .columnMajor
+    indirect.motionTransformBuffer = MTL4BufferRange()
+    indirect.motionTransformStride = 48
+    indirect.motionTransformType = .component
+    indirect.maxMotionTransformCount = 2
+    indirect.motionTransformCountBuffer = MTL4BufferRangeMake(260, 4)
+    precondition(indirect.maxInstanceCount == 8)
+    precondition(indirect.instanceDescriptorType == .indirect)
+}
+
 // from MetalHeapTests.swift
 func testHeapFenceAndEvent() {
     let device = MTLCreateSystemDefaultDevice()!
@@ -4545,6 +5120,90 @@ func testSharedEventHostClock() {
     commandBuffer.waitUntilCompleted()
     precondition(event.signaledValue >= 7)
     _ = MTLSharedEventHandle.supportsSecureCoding
+}
+
+func testResidencySetAndRasterizationRateMap() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let residencyDesc = MTLResidencySetDescriptor()
+    residencyDesc.label = "resident"
+    residencyDesc.initialCapacity = 4
+    let residency = try! device.makeResidencySet(descriptor: residencyDesc)
+    residency.label = "cpu-set"
+    precondition(residency.device.name == device.name)
+    precondition(residency.label == "cpu-set")
+    let buffer = device.makeBuffer(length: 32, options: .storageModeShared)!
+    let textureDesc = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .r8Unorm,
+        width: 2,
+        height: 2,
+        mipmapped: false
+    )
+    let texture = device.makeTexture(descriptor: textureDesc)!
+    residency.addAllocation(buffer)
+    residency.addAllocations([texture])
+    precondition(residency.containsAllocation(buffer))
+    precondition(residency.allocationCount == 2)
+    precondition(residency.allAllocations.count == 2)
+    precondition(residency.allocatedSize >= 32)
+    residency.commit()
+    residency.requestResidency()
+    residency.removeAllocation(texture)
+    precondition(!residency.containsAllocation(texture))
+    residency.removeAllocations([buffer])
+    residency.removeAllAllocations()
+    precondition(residency.allocationCount == 0)
+    residency.endResidency()
+    let queue = device.makeCommandQueue()!
+    queue.addResidencySet(residency)
+    queue.addResidencySets([residency])
+    queue.removeResidencySet(residency)
+    queue.removeResidencySets([residency])
+    let commandBuffer = queue.makeCommandBuffer()!
+    commandBuffer.useResidencySet(residency)
+    commandBuffer.useResidencySets([residency])
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+
+    let layer = MTLRasterizationRateLayerDescriptor(sampleCount: MTLSizeMake(2, 2, 1))
+    precondition(layer.maxSampleCount.width == 2)
+    layer.sampleCount = MTLSizeMake(2, 2, 1)
+    layer.horizontal[0] = 1
+    layer.horizontal[1] = 1
+    layer.vertical[0] = 1
+    layer.vertical[1] = 1
+    let fromArrays = MTLRasterizationRateLayerDescriptor(horizontal: [1, 1], vertical: [1, 1])
+    precondition(fromArrays.horizontal[0] == 1)
+    let copied = fromArrays.copy() as! MTLRasterizationRateLayerDescriptor
+    precondition(copied.vertical[0] == 1)
+    let rateDesc = MTLRasterizationRateMapDescriptor(screenSize: MTLSizeMake(8, 8, 1), layer: layer, label: "identity")
+    rateDesc.setLayer(layer, at: 0)
+    precondition(rateDesc.layerCount == 1)
+    precondition(rateDesc.layer(at: 0) != nil)
+    precondition(rateDesc.layers[0] != nil)
+    rateDesc.screenSize = MTLSizeMake(8, 8, 1)
+    let multi = MTLRasterizationRateMapDescriptor(
+        screenSize: MTLSizeMake(4, 4, 1),
+        layers: [layer],
+        label: "multi"
+    )
+    precondition(multi.layerCount == 1)
+    _ = MTLRasterizationRateMapDescriptor(screenSize: MTLSizeMake(2, 2, 1), label: "empty")
+    let map = device.makeRasterizationRateMap(descriptor: rateDesc)!
+    precondition(map.device.name == device.name)
+    precondition(map.label == "identity")
+    precondition(map.screenSize.width == 8)
+    precondition(map.layerCount == 1)
+    precondition(map.physicalGranularity.width == 1)
+    precondition(map.physicalSize(layer: 0).width == 8)
+    precondition(map.parameterBufferSizeAndAlign.size >= 16)
+    let screen = MTLCoordinate2DMake(3, 4)
+    let physical = map.physicalCoordinates(screenCoordinates: screen, layer: 0)
+    precondition(physical.x == 3 && physical.y == 4)
+    let back = map.screenCoordinates(physicalCoordinates: physical, layer: 0)
+    precondition(back.x == 3)
+    let param = device.makeBuffer(length: 64, options: .storageModeShared)!
+    map.copyParameterData(buffer: param, offset: 0)
+    precondition(param.contents().load(as: UInt32.self) == 8)
 }
 
 // from MetalRenderTests.swift
@@ -4955,6 +5614,58 @@ func testRenderPipelineStateMeshProperties() {
     }
 }
 
+func testRenderEncoderAccelerationBindings() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let colorDesc = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .rgba8Unorm,
+        width: 1,
+        height: 1,
+        mipmapped: false
+    )
+    colorDesc.usage = [.renderTarget, .shaderRead]
+    let color = device.makeTexture(descriptor: colorDesc)!
+    let pass = MTLRenderPassDescriptor()
+    pass.colorAttachments[0].texture = color
+    pass.colorAttachments[0].loadAction = .load
+    pass.colorAttachments[0].storeAction = .store
+    let pipeline = MTLRenderPipelineDescriptor()
+    pipeline.colorAttachments[0].pixelFormat = .rgba8Unorm
+    let state = try! device.makeRenderPipelineState(descriptor: pipeline)
+    let accel = device.makeAccelerationStructure(size: 0)
+    let queue = device.makeCommandQueue()!
+    let commandBuffer = queue.makeCommandBuffer()!
+    let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: pass)!
+    encoder.setRenderPipelineState(state)
+    encoder.setColorAttachmentMap(MTLLogicalToPhysicalColorAttachmentMap())
+    encoder.setVertexAccelerationStructure(accel, bufferIndex: 0)
+    encoder.setFragmentAccelerationStructure(accel, bufferIndex: 1)
+    encoder.setTileAccelerationStructure(accel, bufferIndex: 2)
+    encoder.setVertexIntersectionFunctionTable(nil, bufferIndex: 0)
+    encoder.setFragmentIntersectionFunctionTable(nil, bufferIndex: 0)
+    encoder.setTileIntersectionFunctionTable(nil, bufferIndex: 0)
+    encoder.setVertexVisibleFunctionTable(nil, bufferIndex: 0)
+    encoder.setFragmentVisibleFunctionTable(nil, bufferIndex: 0)
+    encoder.setTileVisibleFunctionTable(nil, bufferIndex: 0)
+    var mapping = MTLVertexAmplificationViewMapping(viewportArrayIndexOffset: 0, renderTargetArrayIndexOffset: 0)
+    encoder.setVertexAmplificationCount(1, viewMappings: &mapping)
+    encoder.setVertexAmplificationCount(1, viewMappings: nil)
+    let counters = try! device.makeCounterSampleBuffer(descriptor: {
+        let desc = MTLCounterSampleBufferDescriptor()
+        desc.sampleCount = 1
+        return desc
+    }())
+    encoder.sampleCounters(sampleBuffer: counters, sampleIndex: 0, barrier: true)
+    encoder.useHeap(device.makeHeap(descriptor: {
+        let desc = MTLHeapDescriptor()
+        desc.size = 32
+        return desc
+    }())!)
+    encoder.endEncoding()
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+    precondition(commandBuffer.status == .completed)
+}
+
 // from MetalTextureTests.swift
 func testTextureBytesAndMips() {
     func roundTrip(_ format: MTLPixelFormat, bytesPerPixel: Int, pattern: [UInt8]) {
@@ -5303,7 +6014,6 @@ func testTextureViewsAndDimensionalLayouts() {
     precondition(readVoxels == voxels)
 }
 
-
 testBufferStorage()
 testCommandBufferLifecycle()
 testBlitCopyFillMipmaps()
@@ -5335,5 +6045,11 @@ testRenderEncoderStageBindings()
 testRenderPipelineStateMeshProperties()
 testTextureBytesAndMips()
 testTextureViewsAndDimensionalLayouts()
+testAccelerationStructureCommandEncoder()
+testCPUTensorBinaryArchiveAndHandles()
+testTriangleAndInstanceAccelerationDescriptors()
+testMetal4AccelerationStructureDescriptors()
+testResidencySetAndRasterizationRateMap()
+testRenderEncoderAccelerationBindings()
 
 print("METAL_AGENT_RUNTIME_OK")
