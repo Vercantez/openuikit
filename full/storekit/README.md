@@ -211,6 +211,26 @@ view style statics, overlay style statics, environment actions,
 container-background placements). Enum / option-set members and C
 `k…`/`err…` constants still share table-driven value tests.
 
+The sealed host gate is `bash full/storekit/tests/acceptance/test_host.sh`.
+NA repair ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=StoreKit lane=medium-full symbols=15695
+FRAMEWORK_FANOUT_REFERENCE_OK
+STOREKIT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=StoreKit dylib=libStoreKit.dylib
+```
+
+`swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` fails on this snapshot with
+`missing corpus checkout: scratch/ladder-corpus/focus-ios` and therefore
+does not print
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`.
+That campaign token is the host-inventory stamp; the sealed framework gate
+prints the four lines above. The verify script's success line on a complete
+image is `products=scratch-corpus`, not `products=clean`. Starting commit
+was `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b`.
+
 ## What is real (isolated host)
 
 There is no App Store on Linux. Purchases run through a **local testing
