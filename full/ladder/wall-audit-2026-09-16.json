@@ -1,0 +1,337 @@
+{
+ "definition": "Textual public/open type declaration, any conditional branch; not API completeness or compile/runtime proof. Groups expand the 16 clusters labeled section 4 by the brief and section 8.4 (original cluster table is section 5.1).",
+ "groups": [
+  {
+   "cluster": "transition coordinator",
+   "names": {
+    "UIViewControllerTransitionCoordinator": [
+     "uikit/Sources/OpenUIKit/UIViewControllerTransitioning.swift:383"
+    ],
+    "UIViewControllerTransitionCoordinatorContext": [
+     "uikit/Sources/OpenUIKit/UIViewControllerTransitioning.swift:365"
+    ],
+    "UIPercentDrivenInteractiveTransition": [
+     "uikit/Sources/OpenUIKit/UIViewControllerTransitioning.swift:596"
+    ],
+    "UIViewControllerInteractiveTransitioning": [
+     "uikit/Sources/OpenUIKit/UIViewControllerTransitioning.swift:582"
+    ]
+   }
+  },
+  {
+   "cluster": "pasteboard",
+   "names": {
+    "UIPasteboard": [
+     "uikit/Sources/OpenUIKit/UIPasteboard.swift:175"
+    ]
+   }
+  },
+  {
+   "cluster": "materials / blur",
+   "names": {
+    "UIVisualEffect": [
+     "uikit/Sources/OpenUIKit/UIVisualEffect.swift:60"
+    ],
+    "UIBlurEffect": [
+     "uikit/Sources/OpenUIKit/UIVisualEffect.swift:105"
+    ],
+    "UIVibrancyEffect": [
+     "uikit/Sources/OpenUIKit/UIVisualEffect.swift:287"
+    ],
+    "UIVisualEffectView": [
+     "uikit/Sources/OpenUIKit/UIVisualEffect.swift:661"
+    ],
+    "UIGlassEffect": [
+     "uikit/Sources/OpenUIKit/UIGlassEffect.swift:31"
+    ],
+    "UIGlassContainerEffect": [
+     "uikit/Sources/OpenUIKit/UIGlassEffect.swift:127"
+    ]
+   }
+  },
+  {
+   "cluster": "haptics",
+   "names": {
+    "UIFeedbackGenerator": [
+     "uikit/Sources/OpenUIKit/UIFeedbackGenerator.swift:25"
+    ],
+    "UIImpactFeedbackGenerator": [
+     "uikit/Sources/OpenUIKit/UIFeedbackGenerator.swift:51"
+    ],
+    "UINotificationFeedbackGenerator": [
+     "uikit/Sources/OpenUIKit/UIFeedbackGenerator.swift:124"
+    ],
+    "UISelectionFeedbackGenerator": [
+     "uikit/Sources/OpenUIKit/UIFeedbackGenerator.swift:161"
+    ]
+   }
+  },
+  {
+   "cluster": "shortcuts",
+   "names": {
+    "UIApplicationShortcutIcon": [
+     "uikit/Sources/OpenUIKit/UIApplication.swift:134"
+    ],
+    "UIApplicationShortcutItem": [
+     "uikit/Sources/OpenUIKit/UIApplication.swift:180"
+    ],
+    "UIMutableApplicationShortcutItem": [
+     "uikit/Sources/OpenUIKit/UIApplication.swift:255"
+    ]
+   }
+  },
+  {
+   "cluster": "item provider",
+   "names": {
+    "NSItemProvider": [
+     "uikit/Sources/OpenUIKit/NSItemProvider.swift:72",
+     "uikit/Sources/OpenUIKit/NSItemProvider.swift:405",
+     "uikit/Sources/PhotosUI/PhotosUI.swift:61"
+    ]
+   }
+  },
+  {
+   "cluster": "TextKit-1 / attachments",
+   "names": {
+    "NSTextAttachment": [
+     "uikit/Sources/OpenUIKit/NSTextAttachment.swift:61",
+     "uikit/Sources/UIKitShim/UIKit.swift:335"
+    ],
+    "NSTextContainer": [
+     "uikit/Sources/OpenUIKit/NSTextContainer.swift:21",
+     "uikit/Sources/UIKitShim/UIKit.swift:337"
+    ],
+    "NSTextStorage": [
+     "uikit/Sources/OpenUIKit/NSTextStorage.swift:36",
+     "uikit/Sources/UIKitShim/UIKit.swift:336"
+    ],
+    "NSLayoutManager": [
+     "uikit/Sources/OpenUIKit/NSLayoutManager.swift:67",
+     "uikit/Sources/UIKitShim/UIKit.swift:338"
+    ]
+   }
+  },
+  {
+   "cluster": "property animator",
+   "names": {
+    "UIViewPropertyAnimator": [
+     "uikit/Sources/OpenUIKit/UIViewPropertyAnimator.swift:192"
+    ],
+    "UIViewImplicitlyAnimating": [
+     "uikit/Sources/OpenUIKit/UIViewPropertyAnimator.swift:62"
+    ],
+    "UISpringTimingParameters": [
+     "uikit/Sources/OpenUIKit/UIViewPropertyAnimator.swift:137"
+    ],
+    "UICubicTimingParameters": [
+     "uikit/Sources/OpenUIKit/UIViewPropertyAnimator.swift:71"
+    ]
+   }
+  },
+  {
+   "cluster": "table / collection extras",
+   "names": {
+    "NSDiffableDataSourceSnapshot": [
+     "uikit/Sources/OpenUIKit/UITableViewDiffableDataSource.swift:9",
+     "uikit/Sources/UIKitShim/UIKit.swift:317"
+    ],
+    "UITableViewDiffableDataSource": [
+     "uikit/Sources/OpenUIKit/UITableViewDiffableDataSource.swift:246",
+     "uikit/Sources/UIKitShim/UIKit.swift:323"
+    ],
+    "UICollectionViewDiffableDataSource": [
+     "uikit/Sources/OpenUIKit/UICollectionViewDiffableDataSource.swift:183",
+     "uikit/Sources/UIKitShim/UIKit.swift:326"
+    ],
+    "UIContextualAction": [
+     "uikit/Sources/OpenUIKit/UISwipeActions.swift:18"
+    ],
+    "UISwipeActionsConfiguration": [
+     "uikit/Sources/OpenUIKit/UISwipeActions.swift:55"
+    ],
+    "UICollectionViewListCell": [
+     "uikit/Sources/OpenUIKit/UICollectionViewListCell.swift:210"
+    ],
+    "UICollectionLayoutListConfiguration": [
+     "uikit/Sources/OpenUIKit/UICollectionViewListCell.swift:18"
+    ],
+    "UIListContentConfiguration": [
+     "uikit/Sources/OpenUIKit/UIListContentConfiguration.swift:17"
+    ],
+    "UIBackgroundConfiguration": [
+     "uikit/Sources/OpenUIKit/UIContentConfiguration.swift:124"
+    ]
+   }
+  },
+  {
+   "cluster": "page controller",
+   "names": {
+    "UIPageViewController": [
+     "uikit/Sources/OpenUIKit/UIPageViewController.swift:143"
+    ],
+    "UIPageViewControllerDataSource": [
+     "uikit/Sources/OpenUIKit/UIPageViewController.swift:64"
+    ],
+    "UIPageViewControllerDelegate": [
+     "uikit/Sources/OpenUIKit/UIPageViewController.swift:88"
+    ]
+   }
+  },
+  {
+   "cluster": "search controller",
+   "names": {
+    "UISearchController": [
+     "uikit/Sources/OpenUIKit/UISearchController.swift:65"
+    ],
+    "UISearchResultsUpdating": [
+     "uikit/Sources/OpenUIKit/UISearchController.swift:28"
+    ],
+    "UISearchControllerDelegate": [
+     "uikit/Sources/OpenUIKit/UISearchController.swift:40"
+    ]
+   }
+  },
+  {
+   "cluster": "system pickers",
+   "names": {
+    "UIDocumentPickerViewController": [
+     "uikit/Sources/OpenUIKit/UIDocumentPickerViewController.swift:60"
+    ],
+    "UIDocumentPickerDelegate": [
+     "uikit/Sources/OpenUIKit/UIDocumentPickerViewController.swift:34"
+    ],
+    "UIImagePickerController": [
+     "uikit/Sources/OpenUIKit/UIImagePickerController.swift:35"
+    ],
+    "UIImagePickerControllerDelegate": [
+     "uikit/Sources/OpenUIKit/UIImagePickerController.swift:19"
+    ],
+    "UIFontPickerViewController": [
+     "uikit/Sources/OpenUIKit/UIFontPickerViewController.swift:33"
+    ],
+    "UIFontPickerViewControllerDelegate": [
+     "uikit/Sources/OpenUIKit/UIFontPickerViewController.swift:22"
+    ],
+    "UIColorPickerViewController": [
+     "uikit/Sources/OpenUIKit/UIColorPickerViewController.swift:33"
+    ],
+    "UIColorPickerViewControllerDelegate": [
+     "uikit/Sources/OpenUIKit/UIColorPickerViewController.swift:16"
+    ],
+    "SFSafariViewController": [
+     "uikit/Sources/SafariServices/SafariServices.swift:164"
+    ]
+   }
+  },
+  {
+   "cluster": "accessibility actions",
+   "names": {
+    "UIAccessibilityCustomAction": [
+     "uikit/Sources/OpenUIKit/UIAccessibilityCustomAction.swift:27"
+    ]
+   }
+  },
+  {
+   "cluster": "scene lifecycle",
+   "names": {
+    "UISceneConfiguration": [
+     "uikit/Sources/OpenUIKit/UIApplication.swift:831"
+    ],
+    "UIOpenURLContext": [
+     "uikit/Sources/OpenUIKit/UIApplication.swift:889"
+    ],
+    "UIUserActivityRestoring": [
+     "uikit/Sources/OpenUIKit/UIApplication.swift:292"
+    ],
+    "UISceneActivationConditions": [
+     "uikit/Sources/OpenUIKit/UIApplication.swift:974"
+    ],
+    "UISceneOpenURLOptions": [
+     "uikit/Sources/OpenUIKit/UIApplication.swift:901"
+    ]
+   }
+  },
+  {
+   "cluster": "drag / drop",
+   "names": {
+    "UIDropSession": [
+     "uikit/Sources/OpenUIKit/UIDragDrop.swift:153"
+    ],
+    "UIDragItem": [
+     "uikit/Sources/OpenUIKit/UIDragDrop.swift:117"
+    ],
+    "UIDragSession": [
+     "uikit/Sources/OpenUIKit/UIDragDrop.swift:148"
+    ],
+    "UIDragInteraction": [
+     "uikit/Sources/OpenUIKit/UIDragDrop.swift:316"
+    ],
+    "UIDragInteractionDelegate": [
+     "uikit/Sources/OpenUIKit/UIDragDrop.swift:269"
+    ],
+    "UIDropInteraction": [
+     "uikit/Sources/OpenUIKit/UIDragDrop.swift:431"
+    ],
+    "UIDropInteractionDelegate": [
+     "uikit/Sources/OpenUIKit/UIDragDrop.swift:394"
+    ],
+    "UIDragDropSession": [
+     "uikit/Sources/OpenUIKit/UIDragDrop.swift:132"
+    ],
+    "UIDropProposal": [
+     "uikit/Sources/OpenUIKit/UIDragDrop.swift:50"
+    ]
+   }
+  },
+  {
+   "cluster": "compositional layout",
+   "names": {
+    "NSCollectionLayoutSize": [
+     "uikit/Sources/OpenUIKit/UICollectionViewCompositionalLayout.swift:87"
+    ],
+    "NSCollectionLayoutItem": [
+     "uikit/Sources/OpenUIKit/UICollectionViewCompositionalLayout.swift:120"
+    ],
+    "NSCollectionLayoutGroup": [
+     "uikit/Sources/OpenUIKit/UICollectionViewCompositionalLayout.swift:130"
+    ],
+    "NSCollectionLayoutSection": [
+     "uikit/Sources/OpenUIKit/UICollectionViewCompositionalLayout.swift:236"
+    ],
+    "UICollectionViewCompositionalLayout": [
+     "uikit/Sources/OpenUIKit/UICollectionViewCompositionalLayout.swift:294"
+    ]
+   }
+  }
+ ],
+ "additional_names": {
+  "UIPinchGestureRecognizer": [
+   "uikit/Sources/OpenUIKit/UIGestureRecognizer.swift:615"
+  ],
+  "UIRotationGestureRecognizer": [
+   "uikit/Sources/OpenUIKit/UIGestureRecognizer.swift:719"
+  ],
+  "UIScreenEdgePanGestureRecognizer": [
+   "uikit/Sources/OpenUIKit/UINavigationController.swift:50"
+  ],
+  "UIHoverGestureRecognizer": [
+   "uikit/Sources/OpenUIKit/UIGestureRecognizer.swift:826"
+  ],
+  "UISwipeGestureRecognizer": [],
+  "UIMenuController": [
+   "uikit/Sources/OpenUIKit/FocusLaunchCompat.swift:63"
+  ],
+  "UIMenuItem": [
+   "uikit/Sources/OpenUIKit/FocusLaunchCompat.swift:52"
+  ],
+  "UISplitViewController": [],
+  "UICollectionViewController": [],
+  "UIEditMenuInteraction": [],
+  "UITextItem": [],
+  "NSToolbarItem": [],
+  "UICoordinateSpace": [],
+  "UIScrollEdgeElementContainerInteraction": [],
+  "UICollectionViewLayoutInvalidationContext": []
+ },
+ "distinct_names": 86
+}

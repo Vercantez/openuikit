@@ -1,0 +1,1746 @@
+[
+ {
+  "app": "focus-ios",
+  "score_b_before": 3,
+  "score_b_after": 2,
+  "score_a_before": 5,
+  "score_a_after": 4,
+  "subscore_changes": {
+   "UIK": [
+    1,
+    0
+   ]
+  },
+  "gap_uses": [
+   30,
+   0
+  ],
+  "gap_types": [
+   14,
+   0
+  ],
+  "newly_declared": [
+   [
+    "NSItemProvider",
+    6
+   ],
+   [
+    "UIDropInteraction",
+    4
+   ],
+   [
+    "UIDropSession",
+    3
+   ],
+   [
+    "UIMenuItem",
+    3
+   ],
+   [
+    "UIDragInteraction",
+    2
+   ],
+   [
+    "UIDragItem",
+    2
+   ],
+   [
+    "UIDropProposal",
+    2
+   ],
+   [
+    "UIMenuController",
+    2
+   ],
+   [
+    "UIDragInteractionDelegate",
+    1
+   ],
+   [
+    "UIDragSession",
+    1
+   ],
+   [
+    "UIDropInteractionDelegate",
+    1
+   ],
+   [
+    "UIPrintFormatter",
+    1
+   ],
+   [
+    "UIPrintInfo",
+    1
+   ],
+   [
+    "UIPrintPageRenderer",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "Hackers",
+  "score_b_before": 5,
+  "score_b_after": 5,
+  "score_a_before": 6,
+  "score_a_after": 6,
+  "subscore_changes": {},
+  "gap_uses": [
+   0,
+   0
+  ],
+  "gap_types": [
+   0,
+   0
+  ],
+  "newly_declared": []
+ },
+ {
+  "app": "eidolon",
+  "score_b_before": 6,
+  "score_b_after": 6,
+  "score_a_before": 9,
+  "score_a_after": 9,
+  "subscore_changes": {},
+  "gap_uses": [
+   0,
+   0
+  ],
+  "gap_types": [
+   0,
+   0
+  ],
+  "newly_declared": [
+   [
+    "UIStoryboard",
+    32
+   ]
+  ]
+ },
+ {
+  "app": "ProtonMail-ios",
+  "score_b_before": 7,
+  "score_b_after": 7,
+  "score_a_before": 9,
+  "score_a_after": 9,
+  "subscore_changes": {},
+  "gap_uses": [
+   21,
+   1
+  ],
+  "gap_types": [
+   10,
+   1
+  ],
+  "newly_declared": [
+   [
+    "NSItemProvider",
+    6
+   ],
+   [
+    "UIImagePickerController",
+    6
+   ],
+   [
+    "UISwipeActionsConfiguration",
+    2
+   ],
+   [
+    "UIContextualAction",
+    1
+   ],
+   [
+    "UIGlassEffect",
+    1
+   ],
+   [
+    "UIImagePickerControllerDelegate",
+    1
+   ],
+   [
+    "UINotificationFeedbackGenerator",
+    1
+   ],
+   [
+    "UIPrintInfo",
+    1
+   ],
+   [
+    "UIPrintInteractionController",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "eigen",
+  "score_b_before": 7,
+  "score_b_after": 7,
+  "score_a_before": 9,
+  "score_a_after": 9,
+  "subscore_changes": {},
+  "gap_uses": [
+   5,
+   4
+  ],
+  "gap_types": [
+   4,
+   3
+  ],
+  "newly_declared": [
+   [
+    "UIStoryboard",
+    2
+   ],
+   [
+    "NSTextAttachment",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "simplenote-ios",
+  "score_b_before": 7,
+  "score_b_after": 7,
+  "score_a_before": 10,
+  "score_a_after": 10,
+  "subscore_changes": {},
+  "gap_uses": [
+   43,
+   6
+  ],
+  "gap_types": [
+   17,
+   3
+  ],
+  "newly_declared": [
+   [
+    "UIContextualAction",
+    12
+   ],
+   [
+    "UIMenuController",
+    5
+   ],
+   [
+    "NSTextStorage",
+    3
+   ],
+   [
+    "UISelectionFeedbackGenerator",
+    3
+   ],
+   [
+    "NSTextAttachment",
+    2
+   ],
+   [
+    "UIPercentDrivenInteractiveTransition",
+    2
+   ],
+   [
+    "UISwipeActionsConfiguration",
+    2
+   ],
+   [
+    "UIViewImplicitlyAnimating",
+    2
+   ],
+   [
+    "NSItemProvider",
+    1
+   ],
+   [
+    "NSTextContainer",
+    1
+   ],
+   [
+    "UIAccessibilityCustomAction",
+    1
+   ],
+   [
+    "UIMenuItem",
+    1
+   ],
+   [
+    "UINotificationFeedbackGenerator",
+    1
+   ],
+   [
+    "UIViewControllerInteractiveTransitioning",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "vlc-ios",
+  "score_b_before": 7,
+  "score_b_after": 7,
+  "score_a_before": 10,
+  "score_a_after": 10,
+  "subscore_changes": {},
+  "gap_uses": [
+   75,
+   28
+  ],
+  "gap_types": [
+   19,
+   9
+  ],
+  "newly_declared": [
+   [
+    "UIAccessibilityCustomAction",
+    15
+   ],
+   [
+    "UIContextualAction",
+    7
+   ],
+   [
+    "UISwipeActionsConfiguration",
+    6
+   ],
+   [
+    "UIPinchGestureRecognizer",
+    5
+   ],
+   [
+    "UISelectionFeedbackGenerator",
+    4
+   ],
+   [
+    "UIDocumentPickerViewController",
+    3
+   ],
+   [
+    "UIGlassEffect",
+    2
+   ],
+   [
+    "UINotificationFeedbackGenerator",
+    2
+   ],
+   [
+    "UISearchControllerDelegate",
+    2
+   ],
+   [
+    "UIDocumentPickerDelegate",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "mastodon-ios",
+  "score_b_before": 10,
+  "score_b_after": 9,
+  "score_a_before": 12,
+  "score_a_after": 11,
+  "subscore_changes": {
+   "UIK": [
+    2,
+    1
+   ]
+  },
+  "gap_uses": [
+   100,
+   37
+  ],
+  "gap_types": [
+   27,
+   14
+  ],
+  "newly_declared": [
+   [
+    "UIAccessibilityCustomAction",
+    20
+   ],
+   [
+    "NSItemProvider",
+    13
+   ],
+   [
+    "UICollectionViewDiffableDataSource",
+    8
+   ],
+   [
+    "UIImagePickerController",
+    6
+   ],
+   [
+    "UIBackgroundConfiguration",
+    3
+   ],
+   [
+    "UIDocumentPickerViewController",
+    3
+   ],
+   [
+    "NSTextAttachment",
+    2
+   ],
+   [
+    "UINotificationFeedbackGenerator",
+    2
+   ],
+   [
+    "UIOpenURLContext",
+    2
+   ],
+   [
+    "UIDocumentPickerDelegate",
+    1
+   ],
+   [
+    "UIImagePickerControllerDelegate",
+    1
+   ],
+   [
+    "UIPinchGestureRecognizer",
+    1
+   ],
+   [
+    "UISelectionFeedbackGenerator",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "Signal-iOS",
+  "score_b_before": 11,
+  "score_b_after": 10,
+  "score_a_before": 14,
+  "score_a_after": 13,
+  "subscore_changes": {
+   "UIK": [
+    2,
+    1
+   ]
+  },
+  "gap_uses": [
+   361,
+   61
+  ],
+  "gap_types": [
+   54,
+   15
+  ],
+  "newly_declared": [
+   [
+    "UIGlassEffect",
+    44
+   ],
+   [
+    "UIPercentDrivenInteractiveTransition",
+    21
+   ],
+   [
+    "UIBackgroundConfiguration",
+    19
+   ],
+   [
+    "NSLayoutManager",
+    18
+   ],
+   [
+    "NSTextStorage",
+    18
+   ],
+   [
+    "NSTextContainer",
+    17
+   ],
+   [
+    "UIContentConfiguration",
+    14
+   ],
+   [
+    "UIContextualAction",
+    14
+   ],
+   [
+    "UISwipeActionsConfiguration",
+    14
+   ],
+   [
+    "UIContentView",
+    13
+   ],
+   [
+    "UICellConfigurationState",
+    10
+   ],
+   [
+    "UIDocumentPickerViewController",
+    10
+   ],
+   [
+    "UIImagePickerController",
+    10
+   ],
+   [
+    "UIMenuController",
+    7
+   ],
+   [
+    "UIConfigurationState",
+    6
+   ],
+   [
+    "UIViewControllerInteractiveTransitioning",
+    6
+   ],
+   [
+    "NSItemProvider",
+    5
+   ],
+   [
+    "UIAccessibilityCustomAction",
+    5
+   ],
+   [
+    "UICollectionViewDiffableDataSource",
+    5
+   ],
+   [
+    "UIGlassContainerEffect",
+    5
+   ],
+   [
+    "UIPinchGestureRecognizer",
+    5
+   ],
+   [
+    "UIDocumentPickerDelegate",
+    4
+   ],
+   [
+    "UIStoryboard",
+    4
+   ],
+   [
+    "UIListContentConfiguration",
+    3
+   ],
+   [
+    "UIMenuItem",
+    3
+   ],
+   [
+    "UINotificationFeedbackGenerator",
+    3
+   ],
+   [
+    "UISearchControllerDelegate",
+    3
+   ],
+   [
+    "NSAdaptiveImageGlyph",
+    2
+   ],
+   [
+    "NSTextAttachment",
+    2
+   ],
+   [
+    "UIDragInteraction",
+    2
+   ],
+   [
+    "UIDragItem",
+    2
+   ],
+   [
+    "UIImagePickerControllerDelegate",
+    2
+   ],
+   [
+    "NSLayoutManagerDelegate",
+    1
+   ],
+   [
+    "UIDragInteractionDelegate",
+    1
+   ],
+   [
+    "UIDragPreview",
+    1
+   ],
+   [
+    "UIDragPreviewParameters",
+    1
+   ],
+   [
+    "UIDragSession",
+    1
+   ],
+   [
+    "UIPreviewParameters",
+    1
+   ],
+   [
+    "UIPreviewTarget",
+    1
+   ],
+   [
+    "UISelectionFeedbackGenerator",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "firefox-ios",
+  "score_b_before": 11,
+  "score_b_after": 10,
+  "score_a_before": 14,
+  "score_a_after": 13,
+  "subscore_changes": {
+   "UIK": [
+    2,
+    1
+   ]
+  },
+  "gap_uses": [
+   291,
+   42
+  ],
+  "gap_types": [
+   56,
+   15
+  ],
+  "newly_declared": [
+   [
+    "UICollectionViewListCell",
+    19
+   ],
+   [
+    "UIAccessibilityCustomAction",
+    18
+   ],
+   [
+    "NSItemProvider",
+    16
+   ],
+   [
+    "UIMenuItem",
+    16
+   ],
+   [
+    "UIDragItem",
+    14
+   ],
+   [
+    "UIDragSession",
+    12
+   ],
+   [
+    "UIDropInteraction",
+    12
+   ],
+   [
+    "UIDropSession",
+    12
+   ],
+   [
+    "UIGlassEffect",
+    12
+   ],
+   [
+    "UICollectionViewDiffableDataSource",
+    11
+   ],
+   [
+    "UIListContentConfiguration",
+    9
+   ],
+   [
+    "UISwipeActionsConfiguration",
+    8
+   ],
+   [
+    "UIMenuController",
+    7
+   ],
+   [
+    "UIBackgroundConfiguration",
+    6
+   ],
+   [
+    "UIContextualAction",
+    6
+   ],
+   [
+    "UIDropProposal",
+    6
+   ],
+   [
+    "UICellAccessory",
+    5
+   ],
+   [
+    "UICollectionViewDropProposal",
+    5
+   ],
+   [
+    "UIDragInteraction",
+    5
+   ],
+   [
+    "UIImagePickerController",
+    5
+   ],
+   [
+    "UIPrintInfo",
+    5
+   ],
+   [
+    "UICollectionLayoutListConfiguration",
+    4
+   ],
+   [
+    "UIDragPreviewParameters",
+    4
+   ],
+   [
+    "UIDropInteractionDelegate",
+    3
+   ],
+   [
+    "UIPrintInteractionController",
+    3
+   ],
+   [
+    "UITableViewDropProposal",
+    3
+   ],
+   [
+    "UICollectionViewDragDelegate",
+    2
+   ],
+   [
+    "UICollectionViewDropCoordinator",
+    2
+   ],
+   [
+    "UICollectionViewDropDelegate",
+    2
+   ],
+   [
+    "UIDragInteractionDelegate",
+    2
+   ],
+   [
+    "UIPrintFormatter",
+    2
+   ],
+   [
+    "UIPrintPageRenderer",
+    2
+   ],
+   [
+    "UISearchControllerDelegate",
+    2
+   ],
+   [
+    "UITableViewDragDelegate",
+    2
+   ],
+   [
+    "NSDiffableDataSourceSectionSnapshot",
+    1
+   ],
+   [
+    "UIImagePickerControllerDelegate",
+    1
+   ],
+   [
+    "UIMutableApplicationShortcutItem",
+    1
+   ],
+   [
+    "UIOpenURLContext",
+    1
+   ],
+   [
+    "UIPasteConfiguration",
+    1
+   ],
+   [
+    "UITableViewDropCoordinator",
+    1
+   ],
+   [
+    "UITableViewDropDelegate",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "NetNewsWire",
+  "score_b_before": 12,
+  "score_b_after": 11,
+  "score_a_before": 15,
+  "score_a_after": 14,
+  "subscore_changes": {
+   "UIK": [
+    2,
+    1
+   ]
+  },
+  "gap_uses": [
+   150,
+   71
+  ],
+  "gap_types": [
+   28,
+   6
+  ],
+  "newly_declared": [
+   [
+    "UIStoryboard",
+    34
+   ],
+   [
+    "UIBackgroundConfiguration",
+    14
+   ],
+   [
+    "UIContextualAction",
+    10
+   ],
+   [
+    "UICollectionViewDiffableDataSource",
+    7
+   ],
+   [
+    "UICollectionViewDropProposal",
+    7
+   ],
+   [
+    "UISwipeActionsConfiguration",
+    6
+   ],
+   [
+    "UIDocumentPickerViewController",
+    5
+   ],
+   [
+    "UICellConfigurationState",
+    4
+   ],
+   [
+    "UICollectionLayoutListConfiguration",
+    3
+   ],
+   [
+    "UIDragItem",
+    3
+   ],
+   [
+    "UIDropSession",
+    3
+   ],
+   [
+    "UIPreviewParameters",
+    3
+   ],
+   [
+    "NSItemProvider",
+    2
+   ],
+   [
+    "UIAccessibilityCustomAction",
+    2
+   ],
+   [
+    "UIDocumentPickerDelegate",
+    2
+   ],
+   [
+    "UICollectionViewDragDelegate",
+    1
+   ],
+   [
+    "UICollectionViewDropCoordinator",
+    1
+   ],
+   [
+    "UICollectionViewDropDelegate",
+    1
+   ],
+   [
+    "UIDragSession",
+    1
+   ],
+   [
+    "UIListContentConfiguration",
+    1
+   ],
+   [
+    "UIOpenURLContext",
+    1
+   ],
+   [
+    "UISearchControllerDelegate",
+    1
+   ],
+   [
+    "UISelectionFeedbackGenerator",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "duckduckgo-ios",
+  "score_b_before": 11,
+  "score_b_after": 11,
+  "score_a_before": 14,
+  "score_a_after": 14,
+  "subscore_changes": {},
+  "gap_uses": [
+   99,
+   19
+  ],
+  "gap_types": [
+   35,
+   10
+  ],
+  "newly_declared": [
+   [
+    "UIStoryboard",
+    27
+   ],
+   [
+    "NSItemProvider",
+    7
+   ],
+   [
+    "UIDropSession",
+    7
+   ],
+   [
+    "NSTextAttachment",
+    6
+   ],
+   [
+    "UICollectionViewDropProposal",
+    5
+   ],
+   [
+    "UIMenuController",
+    5
+   ],
+   [
+    "UIMenuItem",
+    5
+   ],
+   [
+    "UIDragItem",
+    4
+   ],
+   [
+    "UIDropInteraction",
+    4
+   ],
+   [
+    "UISelectionFeedbackGenerator",
+    4
+   ],
+   [
+    "UISwipeActionsConfiguration",
+    4
+   ],
+   [
+    "UICollectionViewDropCoordinator",
+    3
+   ],
+   [
+    "UIDragSession",
+    3
+   ],
+   [
+    "UIViewControllerInteractiveTransitioning",
+    3
+   ],
+   [
+    "UICollectionViewDragDelegate",
+    2
+   ],
+   [
+    "UICollectionViewDropDelegate",
+    2
+   ],
+   [
+    "UIContextualAction",
+    2
+   ],
+   [
+    "UIDocumentPickerViewController",
+    2
+   ],
+   [
+    "UIDragPreview",
+    2
+   ],
+   [
+    "UIDropProposal",
+    2
+   ],
+   [
+    "UIPercentDrivenInteractiveTransition",
+    2
+   ],
+   [
+    "UIPrintInteractionController",
+    2
+   ],
+   [
+    "UIDocumentPickerDelegate",
+    1
+   ],
+   [
+    "UIDropInteractionDelegate",
+    1
+   ],
+   [
+    "UIPrintInfo",
+    1
+   ],
+   [
+    "UIViewImplicitlyAnimating",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "ios-oss",
+  "score_b_before": 11,
+  "score_b_after": 11,
+  "score_a_before": 14,
+  "score_a_after": 14,
+  "subscore_changes": {},
+  "gap_uses": [
+   27,
+   2
+  ],
+  "gap_types": [
+   8,
+   2
+  ],
+  "newly_declared": [
+   [
+    "UIPinchGestureRecognizer",
+    9
+   ],
+   [
+    "NSTextAttachment",
+    6
+   ],
+   [
+    "UINotificationFeedbackGenerator",
+    5
+   ],
+   [
+    "UIImagePickerController",
+    2
+   ],
+   [
+    "UISelectionFeedbackGenerator",
+    2
+   ],
+   [
+    "NSTextContainer",
+    1
+   ],
+   [
+    "UIStoryboard",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "Telegram-iOS",
+  "score_b_before": 12,
+  "score_b_after": 12,
+  "score_a_before": 15,
+  "score_a_after": 15,
+  "subscore_changes": {},
+  "gap_uses": [
+   368,
+   123
+  ],
+  "gap_types": [
+   66,
+   41
+  ],
+  "newly_declared": [
+   [
+    "UIPinchGestureRecognizer",
+    34
+   ],
+   [
+    "NSTextStorage",
+    22
+   ],
+   [
+    "UIMenuItem",
+    22
+   ],
+   [
+    "UIDropInteraction",
+    18
+   ],
+   [
+    "UIMenuController",
+    18
+   ],
+   [
+    "UIRotationGestureRecognizer",
+    16
+   ],
+   [
+    "NSTextContainer",
+    15
+   ],
+   [
+    "UIDropSession",
+    15
+   ],
+   [
+    "NSTextAttachment",
+    14
+   ],
+   [
+    "UIAccessibilityCustomAction",
+    14
+   ],
+   [
+    "UIGlassEffect",
+    13
+   ],
+   [
+    "NSLayoutManager",
+    9
+   ],
+   [
+    "UIDropProposal",
+    7
+   ],
+   [
+    "NSAdaptiveImageGlyph",
+    6
+   ],
+   [
+    "UIDocumentPickerViewController",
+    4
+   ],
+   [
+    "NSLayoutManagerDelegate",
+    3
+   ],
+   [
+    "UIDropInteractionDelegate",
+    3
+   ],
+   [
+    "NSTextAttachmentViewProvider",
+    2
+   ],
+   [
+    "NSTextStorageDelegate",
+    2
+   ],
+   [
+    "UINotificationFeedbackGenerator",
+    2
+   ],
+   [
+    "UISelectionFeedbackGenerator",
+    2
+   ],
+   [
+    "UIDocumentPickerDelegate",
+    1
+   ],
+   [
+    "UIDragInteraction",
+    1
+   ],
+   [
+    "UIGlassContainerEffect",
+    1
+   ],
+   [
+    "UIImagePickerController",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "WordPress-iOS",
+  "score_b_before": 14,
+  "score_b_after": 13,
+  "score_a_before": 17,
+  "score_a_after": 16,
+  "subscore_changes": {
+   "UIK": [
+    2,
+    1
+   ]
+  },
+  "gap_uses": [
+   269,
+   69
+  ],
+  "gap_types": [
+   42,
+   20
+  ],
+  "newly_declared": [
+   [
+    "NSTextAttachment",
+    37
+   ],
+   [
+    "UINotificationFeedbackGenerator",
+    36
+   ],
+   [
+    "NSItemProvider",
+    26
+   ],
+   [
+    "UIImagePickerController",
+    22
+   ],
+   [
+    "UISwipeActionsConfiguration",
+    17
+   ],
+   [
+    "UIStoryboard",
+    11
+   ],
+   [
+    "UIContextualAction",
+    9
+   ],
+   [
+    "UIDropInteraction",
+    9
+   ],
+   [
+    "UIDocumentPickerViewController",
+    8
+   ],
+   [
+    "UIDropSession",
+    7
+   ],
+   [
+    "UIDocumentPickerDelegate",
+    6
+   ],
+   [
+    "UIMutableApplicationShortcutItem",
+    4
+   ],
+   [
+    "UISearchControllerDelegate",
+    4
+   ],
+   [
+    "NSLayoutManager",
+    2
+   ],
+   [
+    "NSTextContainer",
+    2
+   ],
+   [
+    "UICollectionViewDiffableDataSource",
+    2
+   ],
+   [
+    "UIDropProposal",
+    2
+   ],
+   [
+    "UIListContentConfiguration",
+    2
+   ],
+   [
+    "NSTextAttachmentViewProvider",
+    1
+   ],
+   [
+    "NSTextStorage",
+    1
+   ],
+   [
+    "UIDropInteractionDelegate",
+    1
+   ],
+   [
+    "UIImagePickerControllerDelegate",
+    1
+   ],
+   [
+    "UIOpenURLContext",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "element-ios",
+  "score_b_before": 13,
+  "score_b_after": 13,
+  "score_a_before": 16,
+  "score_a_after": 16,
+  "subscore_changes": {},
+  "gap_uses": [
+   48,
+   14
+  ],
+  "gap_types": [
+   19,
+   8
+  ],
+  "newly_declared": [
+   [
+    "UIStoryboard",
+    11
+   ],
+   [
+    "UIDocumentPickerViewController",
+    10
+   ],
+   [
+    "UIImagePickerController",
+    8
+   ],
+   [
+    "NSTextAttachment",
+    3
+   ],
+   [
+    "UIDocumentPickerDelegate",
+    3
+   ],
+   [
+    "NSItemProvider",
+    2
+   ],
+   [
+    "NSTextContainer",
+    2
+   ],
+   [
+    "UINotificationFeedbackGenerator",
+    2
+   ],
+   [
+    "NSTextAttachmentViewProvider",
+    1
+   ],
+   [
+    "UIImagePickerControllerDelegate",
+    1
+   ],
+   [
+    "UIMenuController",
+    1
+   ],
+   [
+    "UISearchControllerDelegate",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "home-assistant-ios",
+  "score_b_before": 13,
+  "score_b_after": 13,
+  "score_a_before": 16,
+  "score_a_after": 16,
+  "subscore_changes": {},
+  "gap_uses": [
+   79,
+   56
+  ],
+  "gap_types": [
+   11,
+   6
+  ],
+  "newly_declared": [
+   [
+    "UINotificationFeedbackGenerator",
+    18
+   ],
+   [
+    "UIPinchGestureRecognizer",
+    2
+   ],
+   [
+    "NSItemProvider",
+    1
+   ],
+   [
+    "NSTextAttachment",
+    1
+   ],
+   [
+    "UISelectionFeedbackGenerator",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "nextcloud-ios",
+  "score_b_before": 14,
+  "score_b_after": 13,
+  "score_a_before": 17,
+  "score_a_after": 16,
+  "subscore_changes": {
+   "UIK": [
+    2,
+    1
+   ]
+  },
+  "gap_uses": [
+   120,
+   28
+  ],
+  "gap_types": [
+   31,
+   8
+  ],
+  "newly_declared": [
+   [
+    "UIStoryboard",
+    65
+   ],
+   [
+    "UICollectionViewDropProposal",
+    10
+   ],
+   [
+    "UIDragItem",
+    10
+   ],
+   [
+    "UIDropSession",
+    10
+   ],
+   [
+    "NSItemProvider",
+    9
+   ],
+   [
+    "UIPinchGestureRecognizer",
+    8
+   ],
+   [
+    "UICollectionViewDropCoordinator",
+    6
+   ],
+   [
+    "UIDocumentPickerViewController",
+    4
+   ],
+   [
+    "UIDragPreviewParameters",
+    4
+   ],
+   [
+    "UIDragSession",
+    4
+   ],
+   [
+    "UIPrintInfo",
+    4
+   ],
+   [
+    "UIAccessibilityCustomAction",
+    3
+   ],
+   [
+    "UICollectionViewDragDelegate",
+    3
+   ],
+   [
+    "UICollectionViewDropDelegate",
+    3
+   ],
+   [
+    "UIColorPickerViewController",
+    2
+   ],
+   [
+    "UIDocumentPickerDelegate",
+    2
+   ],
+   [
+    "UIListContentConfiguration",
+    2
+   ],
+   [
+    "UIPrintInteractionController",
+    2
+   ],
+   [
+    "UIColorPickerViewControllerDelegate",
+    1
+   ],
+   [
+    "UIDropInteraction",
+    1
+   ],
+   [
+    "UIDropInteractionDelegate",
+    1
+   ],
+   [
+    "UIOpenURLContext",
+    1
+   ],
+   [
+    "UISearchControllerDelegate",
+    1
+   ],
+   [
+    "UISelectionFeedbackGenerator",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "pocket-casts-ios",
+  "score_b_before": 14,
+  "score_b_after": 13,
+  "score_a_before": 17,
+  "score_a_after": 16,
+  "subscore_changes": {
+   "UIK": [
+    2,
+    1
+   ]
+  },
+  "gap_uses": [
+   126,
+   8
+  ],
+  "gap_types": [
+   40,
+   7
+  ],
+  "newly_declared": [
+   [
+    "UIContentConfiguration",
+    18
+   ],
+   [
+    "UIImagePickerController",
+    15
+   ],
+   [
+    "NSItemProvider",
+    9
+   ],
+   [
+    "UICollectionViewDropProposal",
+    6
+   ],
+   [
+    "UIDragItem",
+    6
+   ],
+   [
+    "UISwipeActionsConfiguration",
+    6
+   ],
+   [
+    "UIContextualAction",
+    5
+   ],
+   [
+    "UIDragSession",
+    5
+   ],
+   [
+    "UIMutableApplicationShortcutItem",
+    5
+   ],
+   [
+    "UIContentView",
+    4
+   ],
+   [
+    "UIDropSession",
+    4
+   ],
+   [
+    "UIGlassEffect",
+    3
+   ],
+   [
+    "UINotificationFeedbackGenerator",
+    3
+   ],
+   [
+    "UIBackgroundConfiguration",
+    2
+   ],
+   [
+    "UICollectionViewDiffableDataSource",
+    2
+   ],
+   [
+    "UICollectionViewDragDelegate",
+    2
+   ],
+   [
+    "UICollectionViewDropCoordinator",
+    2
+   ],
+   [
+    "UICollectionViewDropDelegate",
+    2
+   ],
+   [
+    "UICollectionViewListCell",
+    2
+   ],
+   [
+    "UIConfigurationState",
+    2
+   ],
+   [
+    "UIDocumentPickerViewController",
+    2
+   ],
+   [
+    "UIImagePickerControllerDelegate",
+    2
+   ],
+   [
+    "NSLayoutManager",
+    1
+   ],
+   [
+    "NSTextAttachment",
+    1
+   ],
+   [
+    "NSTextContainer",
+    1
+   ],
+   [
+    "NSTextStorage",
+    1
+   ],
+   [
+    "UIDocumentPickerDelegate",
+    1
+   ],
+   [
+    "UIOpenURLContext",
+    1
+   ],
+   [
+    "UIPercentDrivenInteractiveTransition",
+    1
+   ],
+   [
+    "UISelectionFeedbackGenerator",
+    1
+   ],
+   [
+    "UIStoryboard",
+    1
+   ],
+   [
+    "UITableViewDragDelegate",
+    1
+   ],
+   [
+    "UITableViewDropCoordinator",
+    1
+   ],
+   [
+    "UITableViewDropDelegate",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "wikipedia-ios",
+  "score_b_before": 15,
+  "score_b_after": 14,
+  "score_a_before": 18,
+  "score_a_after": 17,
+  "subscore_changes": {
+   "UIK": [
+    2,
+    1
+   ]
+  },
+  "gap_uses": [
+   100,
+   61
+  ],
+  "gap_types": [
+   39,
+   28
+  ],
+  "newly_declared": [
+   [
+    "UIAccessibilityCustomAction",
+    9
+   ],
+   [
+    "NSTextAttachment",
+    8
+   ],
+   [
+    "UISearchControllerDelegate",
+    6
+   ],
+   [
+    "UIGlassEffect",
+    4
+   ],
+   [
+    "UIViewControllerInteractiveTransitioning",
+    4
+   ],
+   [
+    "UIOpenURLContext",
+    2
+   ],
+   [
+    "UIStoryboard",
+    2
+   ],
+   [
+    "UISwipeActionsConfiguration",
+    2
+   ],
+   [
+    "NSTextContainer",
+    1
+   ],
+   [
+    "UICollectionViewDiffableDataSource",
+    1
+   ],
+   [
+    "UIContextualAction",
+    1
+   ],
+   [
+    "UIPercentDrivenInteractiveTransition",
+    1
+   ]
+  ]
+ }
+]
