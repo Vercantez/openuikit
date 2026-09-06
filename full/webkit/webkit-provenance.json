@@ -84,28 +84,64 @@
   "schema": 1,
   "source_manifest": {
     "path": "full/webkit/webkit_guest_sources.txt",
-    "sha256": "5f65374d541b5502465c3829489a1845bc18fcf962adb1aeca09819cae4e1a17"
+    "sha256": "e08ae40665123ce2273daa7c20dabc43dfa8332bc278a24909446a0e682389e9"
   },
   "sources": [
     {
-      "path": "full/webkit/WebKitError.swift",
-      "sha256": "b1a260b3ab170b943dced4cd1fc76dc8a46e3e69a5c6220d617b84a8a5538ee8"
+      "path": "full/webkit/WebKit.swift",
+      "sha256": "c6f5473ecefe48f34e00c075c96f31cd4340009d2a7edb5f48eb492d3d3f2ab3"
     },
     {
       "path": "full/webkit/WebKitConfiguration.swift",
-      "sha256": "97445930df3831fd2cf05512e5a3d70cfe86b2511db40658ae7c27991b58565b"
+      "sha256": "4dde0d5da1dc7d4ffbad7db08831ce25fc5eb7d5fbc44a3ff974ed07f15d4812"
     },
     {
       "path": "full/webkit/WebKitContent.swift",
-      "sha256": "98f1882e691b94ed493d40eabc280c8f304f70f880b535539c28c94c7be90a7a"
+      "sha256": "d44a8571d9e89fd4bf0ca4714089a371067cd305f29f952b8eb5f2cb934aff6f"
+    },
+    {
+      "path": "full/webkit/WebKitError.swift",
+      "sha256": "4feae2382771dd95d91c3510c1e06dc331edb2d217d661d621f97509ac566594"
+    },
+    {
+      "path": "full/webkit/WebKitExtensionManifest.swift",
+      "sha256": "984e468a2f0efb6b1cec17bdbb17d0ae7be56a5d641982fee4d825bbb713dd0f"
+    },
+    {
+      "path": "full/webkit/WebKitExtensions.swift",
+      "sha256": "2e086dc68ff686ccbd5e2d44c1fb5304493e90f873c5358fc2c0f5257b2d60e1"
     },
     {
       "path": "full/webkit/WebKitNavigation.swift",
-      "sha256": "f1deb0807eae41166cac8ad69bf5b6fd5bad19da3f23aa184815f39952c20509"
+      "sha256": "c3a73cfd2cfe0d2b54f23e86d72996e2febc5281d1b37d122d85d37e7e914b6d"
+    },
+    {
+      "path": "full/webkit/WebKitOptionSets.swift",
+      "sha256": "a11d7821db487674f122fbf7a35421eec6181f580bbb353314ae2a691b092273"
+    },
+    {
+      "path": "full/webkit/WebKitPage.swift",
+      "sha256": "0b3200104920548d0540b09de2036fca46b240485e27f6fec9f88e3d21ab6fbe"
+    },
+    {
+      "path": "full/webkit/WebKitPageHistory.swift",
+      "sha256": "b0b19d6e51827623cd59f41c7a133ee68b5e9659b522f34ef150ccbe86151dee"
+    },
+    {
+      "path": "full/webkit/WebKitPageValues.swift",
+      "sha256": "bab6c354c8bde8df0baa6c62c26b7ba5f3709535849d13c4a4ba34a6fa5e641b"
+    },
+    {
+      "path": "full/webkit/WebKitPortableModel.swift",
+      "sha256": "5c8dd7136febf97ffda37d799dd90595a45232183211660801f1248209ffb200"
+    },
+    {
+      "path": "full/webkit/WebKitSupport.swift",
+      "sha256": "b15bc048336fd71050a60510570a5504c56c4cbc59a12b2315f3c940e2b9846f"
     },
     {
       "path": "full/webkit/WebKitWebView.swift",
-      "sha256": "b15d53964c9abe40f9c24541a56d03095e2939545b35f1fb6fa01cf719c6ffdd"
+      "sha256": "4f09b7f3169a74655f61574204f463008a81aba8e7cddc0c6e90320f3d75a4de"
     }
   ]
 }
