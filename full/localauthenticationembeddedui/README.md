@@ -71,26 +71,28 @@ FRAMEWORK_FANOUT_HOST_OK module=LocalAuthenticationEmbeddedUI dylib=libLocalAuth
 ## Depth pass 2026-09
 
 Before (refused at `60909bfd`): implemented **2** / declared **0**.
-Top evidence was 1 of 2 rows (50%) for
-`testLAPresentationContextIsUIWindow`, which exceeds the 40% bulk-relabel
-cap. There are no enum / option-set / C-constant rows, so the two unique
-non-enum tests could not share a table and could not both stay `implemented`.
+Top evidence 1 of 2 (50%) for `testLAPresentationContextIsUIWindow`.
 
-After: implemented **1** / declared **1** / deferred **0** / unavailable **0** /
+Before (refused at `b116bb10`): implemented **1** / declared **1**.
+Top evidence 1 of 1 (100%) for `testAuthorizeInPresentationContextFailClosed`,
+again over the 40% cap.
+
+There are no enum / option-set / C-constant rows, so no table-driven
+exception applies. On a 2-ID non-enum census, every unique `implemented`
+test exceeds 40% of remaining implemented rows (50% with two rows, 100%
+with one).
+
+After: implemented **0** / declared **2** / deferred **0** / unavailable **0** /
 not-applicable **0** (2 exact IDs; lane floor 2).
 
 - `LAPresentationContext` → `declared`
   `source:full/localauthenticationembeddedui/LocalAuthenticationEmbeddedUI.swift#LAPresentationContext`
-- `LARight.authorize(localizedReason:in:)` → `implemented`
-  `test:full/localauthenticationembeddedui/tests/agent/LARightUITests.swift#testAuthorizeInPresentationContextFailClosed`
+- `LARight.authorize(localizedReason:in:)` → `declared`
+  `source:full/localauthenticationembeddedui/LocalAuthenticationEmbeddedUI.swift#authorize`
 
-**Top-5 implemented evidence distribution** (1 implemented row):
+**Top-5 implemented evidence distribution** (0 implemented rows): none.
 
-| rows | share of implemented | evidence |
-| ---: | ---: | --- |
-| 1 | 1/1 remaining | `test:full/localauthenticationembeddedui/tests/agent/LARightUITests.swift#testAuthorizeInPresentationContextFailClosed` |
-
-The remaining implemented family is presentation-context authorize
-fail-closed. No test is cited by more than one implemented row. The
-typealias identity check remains in `LAPresentationContextTests.swift` but
-is not `implemented` evidence.
+Product sources still fail-close authorize with domain
+`com.apple.LocalAuthentication` / code `-1004`. Focused
+`tests/agent/*Tests.swift` functions remain and compile; they are not
+cited as `implemented` evidence because each would exceed the 40% cap.
