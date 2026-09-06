@@ -20,6 +20,25 @@ func testEnumRawValues() {
 
     var ratingHasher = Hasher()
     ContentRating.explicit.hash(into: &ratingHasher)
+    _ = ContentRating.explicit.hashValue
+    MusicPlayer.RepeatMode.none.hash(into: &ratingHasher)
+    _ = MusicPlayer.RepeatMode.none.hashValue
+    MusicPlayer.ShuffleMode.off.hash(into: &ratingHasher)
+    _ = MusicPlayer.ShuffleMode.off.hashValue
+    MusicPlayer.PlaybackStatus.stopped.hash(into: &ratingHasher)
+    _ = MusicPlayer.PlaybackStatus.stopped.hashValue
+    MusicPlayer.Queue.EntryInsertionPosition.tail.hash(into: &ratingHasher)
+    _ = MusicPlayer.Queue.EntryInsertionPosition.tail.hashValue
+    AudioVariant.lossless.hash(into: &ratingHasher)
+    _ = AudioVariant.lossless.hashValue
+    MusicCatalogChartKind.mostPlayed.hash(into: &ratingHasher)
+    _ = MusicCatalogChartKind.mostPlayed.hashValue
+    Playlist.Kind.editorial.hash(into: &ratingHasher)
+    _ = Playlist.Kind.editorial.hashValue
+    Curator.Kind.editorial.hash(into: &ratingHasher)
+    _ = Curator.Kind.editorial.hashValue
+    MusicPropertySource.catalog.hash(into: &ratingHasher)
+    _ = MusicPropertySource.catalog.hashValue
     precondition(ContentRating.clean != .explicit)
     let explicit = try! JSONDecoder().decode(ContentRating.self, from: Data(#""explicit""#.utf8))
     precondition(explicit == .explicit)

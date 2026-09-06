@@ -606,7 +606,36 @@ open class VNInstanceMaskObservation: VNObservation {}
 open class VNSaliencyImageObservation: VNPixelBufferObservation {}
 open class VNRecognizedObjectObservation: VNDetectedObjectObservation {}
 open class VNImageAestheticsScoresObservation: VNObservation {}
-open class VNTrajectoryObservation: VNObservation {}
+
+open class VNTrajectoryObservation: VNObservation {
+    public var detectedPoints: [VNPoint]
+    public var projectedPoints: [VNPoint]
+    public var equationCoefficients: SIMD3<Float>
+    public var movingAverageRadius: CGFloat
+
+    public init(
+        detectedPoints: [VNPoint],
+        projectedPoints: [VNPoint] = [],
+        equationCoefficients: SIMD3<Float> = SIMD3<Float>(0, 0, 0),
+        movingAverageRadius: CGFloat = 0,
+        confidence: VNConfidence = 1,
+        uuid: UUID = UUID()
+    ) {
+        self.detectedPoints = detectedPoints
+        self.projectedPoints = projectedPoints
+        self.equationCoefficients = equationCoefficients
+        self.movingAverageRadius = movingAverageRadius
+        super.init(uuid: uuid, confidence: confidence)
+    }
+
+    public required init?(coder: NSCoder) {
+        detectedPoints = []
+        projectedPoints = []
+        equationCoefficients = SIMD3<Float>(0, 0, 0)
+        movingAverageRadius = 0
+        super.init(coder: coder)
+    }
+}
 
 private func countContours(_ contours: [VNContour]) -> Int {
     contours.reduce(0) { $0 + 1 + countContours($1.childContours) }

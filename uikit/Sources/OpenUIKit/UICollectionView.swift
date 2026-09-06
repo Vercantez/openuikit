@@ -268,7 +268,7 @@ open class UICollectionView: UIScrollView {
     // MARK: Counts (cached; the layout asks for them once per prepare)
 
     private var sectionItemCounts: [Int] = []
-    private var countsDirty = true
+    var countsDirty = true
 
     private func ensureCounts() {
         guard countsDirty else { return }
@@ -351,7 +351,7 @@ open class UICollectionView: UIScrollView {
         return view
     }
 
-    private func recycle(_ view: UICollectionReusableView) {
+    func recycle(_ view: UICollectionReusableView) {
         if let cell = view as? UICollectionViewCell {
             cell.collectionView = nil
             cellRegistry.recycle(view)
@@ -542,6 +542,31 @@ open class UICollectionView: UIScrollView {
         if let bg = backgroundView { sendSubviewToBack(bg) }
         if let bar = verticalIndicator { bringSubviewToFront(bar) }
         if let bar = horizontalIndicator { bringSubviewToFront(bar) }
+
+        // List self-sizing: MEASURED collection_list_plain Bravo 68.5 after
+        // configure (estimated 52). preferredLayoutAttributesFitting is not
+        // wired through UICollectionView yet, so we sample the configured
+        // cell here and invalidate once the fitted height disagrees.
+        if let layout = collectionViewLayout as? UICollectionViewCompositionalLayout,
+           let listCfg = layout._storedListConfiguration {
+            var changed = false
+            for a in attributes where a.representedElementKind == nil {
+                guard let cell = visibleViews[a.elementKey] as? UICollectionViewListCell else {
+                    continue
+                }
+                var h = cell.preferredHeight(forWidth: a.frame.width)
+                if a.indexPath.item == 0 {
+                    h += UICollectionViewListCell.headerTopPadding(for: listCfg.appearance)
+                }
+                if layout._noteFittedListHeight(h, at: a.indexPath) {
+                    changed = true
+                }
+            }
+            if changed {
+                collectionViewLayout.invalidateLayout()
+                setNeedsLayout()
+            }
+        }
     }
 
     // MARK: Selection

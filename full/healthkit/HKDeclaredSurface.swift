@@ -156,7 +156,31 @@ open class HKElectrocardiogram: HKSeriesSample, @unchecked Sendable {
     public var symptomsStatus: SymptomsStatus = .notSet
     public var samplingFrequency: HKQuantity?
     public var averageHeartRate: HKQuantity?
-    public var numberOfVoltageMeasurements: Int { 0 }
+    public var numberOfVoltageMeasurements: Int {
+        HKHealthStorePortable.voltageMeasurements(for: uuid).count
+    }
+    public override init(
+        type: HKSampleType = HKObjectType.electrocardiogramType(),
+        start startDate: Date,
+        end endDate: Date,
+        uuid: UUID = UUID(),
+        sourceRevision: HKSourceRevision = HKSourceRevision(source: .default(), version: nil),
+        device: HKDevice? = nil,
+        metadata: [String: Any]? = nil
+    ) {
+        super.init(
+            type: type,
+            start: startDate,
+            end: endDate,
+            uuid: uuid,
+            sourceRevision: sourceRevision,
+            device: device,
+            metadata: metadata
+        )
+    }
+    public convenience init(start startDate: Date, end endDate: Date) {
+        self.init(type: HKObjectType.electrocardiogramType(), start: startDate, end: endDate)
+    }
     public required init?(coder: NSCoder) { super.init(coder: coder) }
 }
 
@@ -286,15 +310,95 @@ open class HKUserAnnotatedMedication: NSObject, @unchecked Sendable {
 }
 
 open class HKVerifiableClinicalRecord: HKSample, @unchecked Sendable {
-    public var recordTypes: [String] = []
-    public var issuer: String?
-    public var subject: HKVerifiableClinicalRecordSubject?
-    public required init?(coder: NSCoder) { super.init(coder: coder) }
+    public private(set) var recordTypes: [String]
+    public var issuer: String? { issuerIdentifier }
+    public private(set) var issuerIdentifier: String
+    public private(set) var issuedDate: Date
+    public private(set) var relevantDate: Date
+    public private(set) var expirationDate: Date?
+    public private(set) var itemNames: [String]
+    public private(set) var sourceType: HKVerifiableClinicalRecordSourceType?
+    public private(set) var subject: HKVerifiableClinicalRecordSubject
+    public private(set) var jwsRepresentation: Data
+    public var dataRepresentation: Data { jwsRepresentation }
+
+    public init(
+        recordTypes: [String],
+        issuerIdentifier: String,
+        issuedDate: Date,
+        relevantDate: Date,
+        expirationDate: Date?,
+        itemNames: [String],
+        sourceType: HKVerifiableClinicalRecordSourceType?,
+        subject: HKVerifiableClinicalRecordSubject,
+        jwsRepresentation: Data,
+        start startDate: Date? = nil,
+        end endDate: Date? = nil
+    ) {
+        self.recordTypes = recordTypes
+        self.issuerIdentifier = issuerIdentifier
+        self.issuedDate = issuedDate
+        self.relevantDate = relevantDate
+        self.expirationDate = expirationDate
+        self.itemNames = itemNames
+        self.sourceType = sourceType
+        self.subject = subject
+        self.jwsRepresentation = jwsRepresentation
+        super.init(
+            type: HKSampleType(identifier: "HKVerifiableClinicalRecordTypeIdentifier"),
+            start: startDate ?? relevantDate,
+            end: endDate ?? expirationDate ?? relevantDate
+        )
+    }
+
+    public required init?(coder: NSCoder) {
+        self.recordTypes = (coder.decodeObject(of: [NSArray.self, NSString.self], forKey: "recordTypes") as? [String]) ?? []
+        self.issuerIdentifier = (coder.decodeObject(of: NSString.self, forKey: "issuerIdentifier") as String?) ?? ""
+        self.issuedDate = (coder.decodeObject(of: NSDate.self, forKey: "issuedDate") as Date?) ?? Date()
+        self.relevantDate = (coder.decodeObject(of: NSDate.self, forKey: "relevantDate") as Date?) ?? Date()
+        self.expirationDate = coder.decodeObject(of: NSDate.self, forKey: "expirationDate") as Date?
+        self.itemNames = (coder.decodeObject(of: [NSArray.self, NSString.self], forKey: "itemNames") as? [String]) ?? []
+        if let raw = coder.decodeObject(of: NSString.self, forKey: "sourceType") as String? {
+            self.sourceType = HKVerifiableClinicalRecordSourceType(rawValue: raw)
+        } else {
+            self.sourceType = nil
+        }
+        self.subject = coder.decodeObject(of: HKVerifiableClinicalRecordSubject.self, forKey: "subject")
+            ?? HKVerifiableClinicalRecordSubject(fullName: "", dateOfBirthComponents: nil)
+        self.jwsRepresentation = (coder.decodeObject(of: NSData.self, forKey: "jwsRepresentation") as Data?) ?? Data()
+        super.init(coder: coder)
+    }
 }
 
-open class HKVerifiableClinicalRecordSubject: NSObject, @unchecked Sendable {
-    public var name: String = ""
-    public var dateOfBirth: DateComponents?
+open class HKVerifiableClinicalRecordSubject: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public static var supportsSecureCoding: Bool { true }
+    public private(set) var fullName: String
+    public private(set) var dateOfBirthComponents: DateComponents?
+    public var name: String { fullName }
+    public var dateOfBirth: DateComponents? { dateOfBirthComponents }
+
+    public init(fullName: String, dateOfBirthComponents: DateComponents?) {
+        self.fullName = fullName
+        self.dateOfBirthComponents = dateOfBirthComponents
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        self.fullName = (coder.decodeObject(of: NSString.self, forKey: "fullName") as String?) ?? ""
+        self.dateOfBirthComponents = coder.decodeObject(of: NSDateComponents.self, forKey: "dateOfBirthComponents") as DateComponents?
+        super.init()
+    }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(fullName as NSString, forKey: "fullName")
+        if let dateOfBirthComponents {
+            coder.encode(dateOfBirthComponents as NSDateComponents, forKey: "dateOfBirthComponents")
+        }
+    }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        HKVerifiableClinicalRecordSubject(fullName: fullName, dateOfBirthComponents: dateOfBirthComponents)
+    }
 }
 
 open class HKVisionPrescription: HKSample, @unchecked Sendable {
@@ -304,10 +408,110 @@ open class HKVisionPrescription: HKSample, @unchecked Sendable {
     public required init?(coder: NSCoder) { super.init(coder: coder) }
 }
 
-open class HKVisionPrism: NSObject, @unchecked Sendable {
-    public var amount: HKQuantity = HKQuantity(unit: .prismDiopter(), doubleValue: 0)
-    public var angle: HKQuantity = HKQuantity(unit: .degreeAngle(), doubleValue: 0)
-    public var base: HKPrismBase = .none
+open class HKVisionPrism: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public static var supportsSecureCoding: Bool { true }
+    public private(set) var amount: HKQuantity
+    public private(set) var angle: HKQuantity
+    public private(set) var eye: HKVisionEye
+    public private(set) var verticalAmount: HKQuantity
+    public private(set) var verticalBase: HKPrismBase
+    public private(set) var horizontalAmount: HKQuantity
+    public private(set) var horizontalBase: HKPrismBase
+    public var base: HKPrismBase { verticalBase }
+
+    public override init() {
+        let zeroPrism = HKQuantity(unit: .prismDiopter(), doubleValue: 0)
+        let zeroAngle = HKQuantity(unit: .degreeAngle(), doubleValue: 0)
+        self.amount = zeroPrism
+        self.angle = zeroAngle
+        self.eye = .left
+        self.verticalAmount = zeroPrism
+        self.verticalBase = .none
+        self.horizontalAmount = zeroPrism
+        self.horizontalBase = .none
+        super.init()
+    }
+
+    public init(amount: HKQuantity, angle: HKQuantity, eye: HKVisionEye) {
+        self.amount = amount
+        self.angle = angle
+        self.eye = eye
+        let magnitude = amount.doubleValue(for: .prismDiopter())
+        let degrees = angle.doubleValue(for: .degreeAngle())
+        let radians = degrees * .pi / 180
+        let horizontal = magnitude * cos(radians)
+        let vertical = magnitude * sin(radians)
+        self.horizontalAmount = HKQuantity(unit: .prismDiopter(), doubleValue: abs(horizontal))
+        self.verticalAmount = HKQuantity(unit: .prismDiopter(), doubleValue: abs(vertical))
+        self.horizontalBase = Self.horizontalBase(for: horizontal)
+        self.verticalBase = Self.verticalBase(for: vertical)
+        super.init()
+    }
+
+    public init(
+        verticalAmount: HKQuantity,
+        verticalBase: HKPrismBase,
+        horizontalAmount: HKQuantity,
+        horizontalBase: HKPrismBase,
+        eye: HKVisionEye
+    ) {
+        self.verticalAmount = verticalAmount
+        self.verticalBase = verticalBase
+        self.horizontalAmount = horizontalAmount
+        self.horizontalBase = horizontalBase
+        self.eye = eye
+        let v = verticalAmount.doubleValue(for: .prismDiopter()) * (verticalBase == .down ? -1 : 1)
+        let h = horizontalAmount.doubleValue(for: .prismDiopter()) * (horizontalBase == .in ? -1 : 1)
+        let magnitude = (h * h + v * v).squareRoot()
+        var degrees = atan2(v, h) * 180 / .pi
+        if degrees < 0 { degrees += 360 }
+        self.amount = HKQuantity(unit: .prismDiopter(), doubleValue: magnitude)
+        self.angle = HKQuantity(unit: .degreeAngle(), doubleValue: degrees)
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        let amountValue = coder.decodeDouble(forKey: "amount")
+        let angleValue = coder.decodeDouble(forKey: "angle")
+        self.amount = HKQuantity(unit: .prismDiopter(), doubleValue: amountValue)
+        self.angle = HKQuantity(unit: .degreeAngle(), doubleValue: angleValue)
+        self.eye = HKVisionEye(rawValue: coder.decodeInteger(forKey: "eye")) ?? .left
+        self.verticalAmount = HKQuantity(unit: .prismDiopter(), doubleValue: coder.decodeDouble(forKey: "verticalAmount"))
+        self.horizontalAmount = HKQuantity(unit: .prismDiopter(), doubleValue: coder.decodeDouble(forKey: "horizontalAmount"))
+        self.verticalBase = HKPrismBase(rawValue: coder.decodeInteger(forKey: "verticalBase")) ?? .none
+        self.horizontalBase = HKPrismBase(rawValue: coder.decodeInteger(forKey: "horizontalBase")) ?? .none
+        super.init()
+    }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(amount.doubleValue(for: .prismDiopter()), forKey: "amount")
+        coder.encode(angle.doubleValue(for: .degreeAngle()), forKey: "angle")
+        coder.encode(eye.rawValue, forKey: "eye")
+        coder.encode(verticalAmount.doubleValue(for: .prismDiopter()), forKey: "verticalAmount")
+        coder.encode(horizontalAmount.doubleValue(for: .prismDiopter()), forKey: "horizontalAmount")
+        coder.encode(verticalBase.rawValue, forKey: "verticalBase")
+        coder.encode(horizontalBase.rawValue, forKey: "horizontalBase")
+    }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        HKVisionPrism(
+            verticalAmount: verticalAmount,
+            verticalBase: verticalBase,
+            horizontalAmount: horizontalAmount,
+            horizontalBase: horizontalBase,
+            eye: eye
+        )
+    }
+
+    private static func horizontalBase(for value: Double) -> HKPrismBase {
+        if abs(value) < 1e-12 { return .none }
+        return value >= 0 ? .out : .in
+    }
+
+    private static func verticalBase(for value: Double) -> HKPrismBase {
+        if abs(value) < 1e-12 { return .none }
+        return value >= 0 ? .up : .down
+    }
 }
 
 open class HKWorkoutRoute: HKSeriesSample, @unchecked Sendable {
@@ -320,12 +524,24 @@ open class HKWorkoutEffortRelationship: NSObject, @unchecked Sendable {
     public var workout: HKWorkout?
     public var activity: HKWorkoutActivity?
     public var sample: HKSample?
+    public var samples: [HKSample]? { sample.map { [$0] } }
 }
 
 extension HKElectrocardiogram {
     public class VoltageMeasurement: NSObject, @unchecked Sendable {
-        public var timeSinceSampleStart: TimeInterval = 0
-        public var voltage: HKQuantity?
+        public private(set) var timeSinceSampleStart: TimeInterval
+        public private(set) var voltage: HKQuantity?
+
+        public init(timeSinceSampleStart: TimeInterval, voltage: HKQuantity?) {
+            self.timeSinceSampleStart = timeSinceSampleStart
+            self.voltage = voltage
+            super.init()
+        }
+
+        public func quantity(for lead: HKElectrocardiogram.Lead) -> HKQuantity? {
+            _ = lead
+            return voltage
+        }
     }
 }
 

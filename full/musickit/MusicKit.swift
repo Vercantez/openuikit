@@ -32,6 +32,23 @@ public enum MusicKitPortableError: Error, Equatable, Sendable, CustomStringConve
 }
 
 enum MusicKitJSON {
+    struct FlexibleKey: CodingKey {
+        var stringValue: String
+        var intValue: Int?
+        init(_ string: String) {
+            stringValue = string
+            intValue = nil
+        }
+        init?(stringValue: String) {
+            self.stringValue = stringValue
+            intValue = nil
+        }
+        init?(intValue: Int) {
+            self.stringValue = String(intValue)
+            self.intValue = intValue
+        }
+    }
+
     static func decodeDate(_ raw: String?) -> Date? {
         guard let raw, !raw.isEmpty else { return nil }
         if let t = ISO8601DateFormatter().date(from: raw) {
@@ -52,5 +69,33 @@ enum MusicKitJSON {
         let g = CGFloat((value >> 8) & 0xFF) / 255
         let b = CGFloat(value & 0xFF) / 255
         return CGColor(red: r, green: g, blue: b, alpha: 1)
+    }
+
+    static func resultsContainer(from decoder: any Decoder) throws -> KeyedDecodingContainer<FlexibleKey> {
+        let root = try decoder.container(keyedBy: FlexibleKey.self)
+        if root.contains(FlexibleKey("results")) {
+            return try root.nestedContainer(keyedBy: FlexibleKey.self, forKey: FlexibleKey("results"))
+        }
+        return root
+    }
+
+    static func decodeCollection<T: Decodable & MusicItem & Hashable>(
+        _ container: KeyedDecodingContainer<FlexibleKey>,
+        keys: String...
+    ) -> MusicItemCollection<T> {
+        for key in keys {
+            if let value = try? container.decode(MusicItemCollection<T>.self, forKey: FlexibleKey(key)) {
+                return value
+            }
+        }
+        return MusicItemCollection([])
+    }
+
+    static func encodeCollection<T: Encodable & MusicItem & Hashable>(
+        _ collection: MusicItemCollection<T>,
+        into container: inout KeyedEncodingContainer<FlexibleKey>,
+        key: String
+    ) throws {
+        try container.encode(collection, forKey: FlexibleKey(key))
     }
 }

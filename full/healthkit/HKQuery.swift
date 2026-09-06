@@ -10,7 +10,7 @@ open class HKQueryAnchor: NSObject, NSCopying, NSSecureCoding, @unchecked Sendab
     }
 
     public required init?(coder: NSCoder) {
-        self.value = 0
+        self.value = coder.decodeInteger(forKey: "value")
         super.init()
     }
 
@@ -25,7 +25,8 @@ open class HKQueryAnchor: NSObject, NSCopying, NSSecureCoding, @unchecked Sendab
 
 public var HKAnchoredObjectQueryNoAnchor: Int32 { 0 }
 
-open class HKQueryDescriptor: NSObject, NSCopying, @unchecked Sendable {
+open class HKQueryDescriptor: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public static var supportsSecureCoding: Bool { true }
     public let sampleType: HKSampleType
     public let predicate: NSPredicate?
 
@@ -33,6 +34,17 @@ open class HKQueryDescriptor: NSObject, NSCopying, @unchecked Sendable {
         self.sampleType = sampleType
         self.predicate = predicate
         super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        let identifier = (coder.decodeObject(of: NSString.self, forKey: "sampleType") as String?) ?? ""
+        self.sampleType = HKSampleType(identifier: identifier)
+        self.predicate = nil
+        super.init()
+    }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(sampleType.identifier as NSString, forKey: "sampleType")
     }
 
     public func copy(with zone: NSZone? = nil) -> Any {
@@ -479,7 +491,9 @@ open class HKQuery: NSObject, @unchecked Sendable {
 
     public class func predicateForObjectsAssociated(electrocardiogram: HKElectrocardiogram) -> NSPredicate {
         NSPredicate { object, _ in
-            (object as? HKObject)?.uuid == electrocardiogram.uuid
+            guard let object = object as? HKObject else { return false }
+            if object.uuid == electrocardiogram.uuid { return true }
+            return HKHealthStorePortable.sampleIDs(forElectrocardiogram: electrocardiogram.uuid).contains(object.uuid)
         }
     }
 
@@ -572,7 +586,7 @@ open class HKQuery: NSObject, @unchecked Sendable {
     public class func predicateForVerifiableClinicalRecords(withRelevantDateWithin dateInterval: DateInterval) -> NSPredicate {
         NSPredicate { object, _ in
             guard let record = object as? HKVerifiableClinicalRecord else { return false }
-            return dateInterval.contains(record.startDate)
+            return dateInterval.contains(record.relevantDate)
         }
     }
 }
@@ -837,23 +851,92 @@ open class HKActivitySummaryQuery: HKQuery, @unchecked Sendable {
 }
 
 open class HKHeartbeatSeriesQuery: HKQuery, @unchecked Sendable {
+    public let heartbeatSeries: HKHeartbeatSeriesSample
+    private let dataHandler: (HKHeartbeatSeriesQuery, TimeInterval, Bool, Bool, (any Error)?) -> Void
+
     public init(heartbeatSeries: HKHeartbeatSeriesSample, dataHandler: @escaping (HKHeartbeatSeriesQuery, TimeInterval, Bool, Bool, (any Error)?) -> Void) {
-        _ = (heartbeatSeries, dataHandler)
+        self.heartbeatSeries = heartbeatSeries
+        self.dataHandler = dataHandler
         super.init(objectType: HKSeriesType.heartbeat(), predicate: nil)
+    }
+
+    func deliverBeats() {
+        let beats = HKHealthStorePortable.heartbeatPoints(for: heartbeatSeries.uuid)
+        if beats.isEmpty {
+            dataHandler(self, 0, false, true, nil)
+            return
+        }
+        for (index, beat) in beats.enumerated() {
+            dataHandler(self, beat.timeIntervalSinceStart, beat.precededByGap, index == beats.count - 1, nil)
+        }
     }
 }
 
 open class HKQuantitySeriesSampleQuery: HKQuery, @unchecked Sendable {
+    public let quantityType: HKQuantityType
+    private let quantityHandler: (HKQuantitySeriesSampleQuery, HKQuantity?, Date?, HKQuantitySample?, Bool, (any Error)?) -> Void
+
     public init(quantityType: HKQuantityType, predicate: NSPredicate?, quantityHandler: @escaping (HKQuantitySeriesSampleQuery, HKQuantity?, Date?, HKQuantitySample?, Bool, (any Error)?) -> Void) {
-        _ = quantityHandler
+        self.quantityType = quantityType
+        self.quantityHandler = quantityHandler
         super.init(objectType: quantityType, predicate: predicate)
+    }
+
+    func deliverSeries(_ samples: [HKQuantitySample]) {
+        if samples.isEmpty {
+            quantityHandler(self, nil, nil, nil, true, nil)
+            return
+        }
+        for (index, sample) in samples.enumerated() {
+            let points = HKHealthStorePortable.quantitySeriesPoints(for: sample.uuid)
+            if points.isEmpty {
+                quantityHandler(self, sample.quantity, sample.startDate, sample, index == samples.count - 1, nil)
+            } else {
+                for (pointIndex, point) in points.enumerated() {
+                    let done = index == samples.count - 1 && pointIndex == points.count - 1
+                    quantityHandler(self, point.quantity, point.dateInterval.start, sample, done, nil)
+                }
+            }
+        }
     }
 }
 
 open class HKElectrocardiogramQuery: HKQuery, @unchecked Sendable {
+    public let electrocardiogram: HKElectrocardiogram
+    private let dataHandler: (HKElectrocardiogramQuery, HKElectrocardiogramQuery.Result) -> Void
+
     public init(electrocardiogram: HKElectrocardiogram, dataHandler: @escaping (HKElectrocardiogramQuery, HKElectrocardiogramQuery.Result) -> Void) {
-        _ = (electrocardiogram, dataHandler)
+        self.electrocardiogram = electrocardiogram
+        self.dataHandler = dataHandler
         super.init(objectType: HKObjectType.electrocardiogramType(), predicate: nil)
+    }
+
+    public convenience init(_ ecg: HKElectrocardiogram, dataHandler: @escaping (HKElectrocardiogramQuery, HKElectrocardiogramQuery.Result) -> Void) {
+        self.init(electrocardiogram: ecg, dataHandler: dataHandler)
+    }
+
+    public convenience init(
+        electrocardiogram: HKElectrocardiogram,
+        dataHandler: @escaping (HKElectrocardiogramQuery, HKElectrocardiogram.VoltageMeasurement?, Bool, (any Error)?) -> Void
+    ) {
+        self.init(electrocardiogram: electrocardiogram) { query, result in
+            switch result {
+            case .measurement(let measurement):
+                dataHandler(query, measurement, false, nil)
+            case .done:
+                dataHandler(query, nil, true, nil)
+            case .error(let error):
+                dataHandler(query, nil, true, error)
+            }
+        }
+    }
+
+    func deliverVoltages() {
+        let measurements = HKHealthStorePortable.voltageMeasurements(for: electrocardiogram.uuid)
+        for measurement in measurements {
+            dataHandler(self, .measurement(measurement))
+        }
+        dataHandler(self, .done)
     }
 }
 
@@ -882,14 +965,30 @@ open class HKWorkoutRouteQuery: HKQuery, @unchecked Sendable {
 }
 
 open class HKWorkoutEffortRelationshipQuery: HKQuery, @unchecked Sendable {
+    public let option: HKWorkoutEffortRelationshipQueryOptions
+    public let anchor: HKQueryAnchor?
+    private let resultsHandler: (HKWorkoutEffortRelationshipQuery, [HKWorkoutEffortRelationship]?, HKQueryAnchor?, (any Error)?) -> Void
+
     public init(
         predicate: NSPredicate?,
         anchor: HKQueryAnchor?,
         options: HKWorkoutEffortRelationshipQueryOptions,
         resultsHandler: @escaping (HKWorkoutEffortRelationshipQuery, [HKWorkoutEffortRelationship]?, HKQueryAnchor?, (any Error)?) -> Void
     ) {
-        _ = (anchor, options, resultsHandler)
+        self.option = options
+        self.anchor = anchor
+        self.resultsHandler = resultsHandler
         super.init(objectType: nil, predicate: predicate)
+    }
+
+    func deliverRelationships() {
+        var rows = HKHealthStorePortable.effortRelationshipsLocked().filter {
+            hkEvaluatePredicate(predicate, object: $0)
+        }
+        if option == .mostRelevant, let last = rows.last {
+            rows = [last]
+        }
+        resultsHandler(self, rows, HKQueryAnchor(fromValue: HKHealthStorePortable.loadState().nextAnchor), nil)
     }
 }
 
@@ -901,9 +1000,31 @@ open class HKUserAnnotatedMedicationQuery: HKQuery, @unchecked Sendable {
 }
 
 open class HKVerifiableClinicalRecordQuery: HKQuery, @unchecked Sendable {
+    public let recordTypes: [String]
+    public let sourceTypes: [HKVerifiableClinicalRecordSourceType]
+    private let resultsHandler: (HKVerifiableClinicalRecordQuery, [HKVerifiableClinicalRecord]?, (any Error)?) -> Void
+
     public init(recordTypes: [String], predicate: NSPredicate?, resultsHandler: @escaping (HKVerifiableClinicalRecordQuery, [HKVerifiableClinicalRecord]?, (any Error)?) -> Void) {
-        _ = (recordTypes, resultsHandler)
+        self.recordTypes = recordTypes
+        self.sourceTypes = []
+        self.resultsHandler = resultsHandler
         super.init(objectType: nil, predicate: predicate)
+    }
+
+    public init(
+        recordTypes: [String],
+        sourceTypes: [HKVerifiableClinicalRecordSourceType],
+        predicate: NSPredicate?,
+        resultsHandler: @escaping (HKVerifiableClinicalRecordQuery, [HKVerifiableClinicalRecord]?, (any Error)?) -> Void
+    ) {
+        self.recordTypes = recordTypes
+        self.sourceTypes = sourceTypes
+        self.resultsHandler = resultsHandler
+        super.init(objectType: nil, predicate: predicate)
+    }
+
+    func deliverRecords(_ records: [HKVerifiableClinicalRecord]) {
+        resultsHandler(self, records, nil)
     }
 }
 
@@ -1024,6 +1145,39 @@ func hkExecute(_ query: HKQuery) {
             let summaries = HKHealthStorePortable.loadState().summaries.map { HKActivitySummary(stored: $0) }
                 .filter { hkEvaluatePredicate(query.predicate, object: $0) }
             summaryQuery.deliver(summaries, error: nil)
+            return
+        }
+        if let heartbeatQuery = query as? HKHeartbeatSeriesQuery {
+            heartbeatQuery.deliverBeats()
+            return
+        }
+        if let quantitySeriesQuery = query as? HKQuantitySeriesSampleQuery {
+            let samples = try store.hkSamples(
+                of: quantitySeriesQuery.quantityType,
+                predicate: quantitySeriesQuery.predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: nil
+            ).compactMap { $0 as? HKQuantitySample }
+            quantitySeriesQuery.deliverSeries(samples)
+            return
+        }
+        if let electrocardiogramQuery = query as? HKElectrocardiogramQuery {
+            electrocardiogramQuery.deliverVoltages()
+            return
+        }
+        if let effortQuery = query as? HKWorkoutEffortRelationshipQuery {
+            effortQuery.deliverRelationships()
+            return
+        }
+        if let verifiableQuery = query as? HKVerifiableClinicalRecordQuery {
+            let wanted = Set(verifiableQuery.recordTypes)
+            let sources = Set(verifiableQuery.sourceTypes.map(\.rawValue))
+            let records = store.hkAllSamples().compactMap { $0 as? HKVerifiableClinicalRecord }.filter { record in
+                let typeOK = wanted.isEmpty || record.recordTypes.contains(where: { wanted.contains($0) })
+                let sourceOK = sources.isEmpty || (record.sourceType.map { sources.contains($0.rawValue) } ?? false)
+                return typeOK && sourceOK && hkEvaluatePredicate(query.predicate, object: record)
+            }
+            verifiableQuery.deliverRecords(records)
             return
         }
     } catch {

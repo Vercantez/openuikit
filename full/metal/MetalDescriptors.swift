@@ -425,6 +425,16 @@ open class MTLRenderPipelineDescriptor: NSObject, @unchecked Sendable {
     public var supportAddingVertexBinaryFunctions: Bool = false
     public var supportAddingFragmentBinaryFunctions: Bool = false
     public var shaderValidation: MTLShaderValidation = .default
+    public var inputPrimitiveTopology: MTLPrimitiveTopologyClass = .unspecified
+    public var maxTessellationFactor: Int = 16
+    public var isTessellationFactorScaleEnabled: Bool = false
+    public var tessellationFactorFormat: MTLTessellationFactorFormat = .half
+    public var tessellationControlPointIndexType: MTLTessellationControlPointIndexType = .none
+    public var tessellationFactorStepFunction: MTLTessellationFactorStepFunction = .constant
+    public var tessellationOutputWindingOrder: MTLWinding = .clockwise
+    public var tessellationPartitionMode: MTLTessellationPartitionMode = .pow2
+    public var vertexPreloadedLibraries: [any MTLDynamicLibrary] = []
+    public var fragmentPreloadedLibraries: [any MTLDynamicLibrary] = []
 
     public override init() {
         super.init()
@@ -453,6 +463,16 @@ open class MTLRenderPipelineDescriptor: NSObject, @unchecked Sendable {
         vertexLinkedFunctions = MTLLinkedFunctions()
         fragmentLinkedFunctions = MTLLinkedFunctions()
         binaryArchives = nil
+        inputPrimitiveTopology = .unspecified
+        maxTessellationFactor = 16
+        isTessellationFactorScaleEnabled = false
+        tessellationFactorFormat = .half
+        tessellationControlPointIndexType = .none
+        tessellationFactorStepFunction = .constant
+        tessellationOutputWindingOrder = .clockwise
+        tessellationPartitionMode = .pow2
+        vertexPreloadedLibraries = []
+        fragmentPreloadedLibraries = []
     }
 
     public var vertexBuffers = MTLPipelineBufferDescriptorArray()
@@ -978,6 +998,45 @@ open class MTLLogicalToPhysicalColorAttachmentMap: NSObject, @unchecked Sendable
 
 open class MTLRenderPipelineFunctionsDescriptor: NSObject, @unchecked Sendable {}
 
+open class MTLStitchedLibraryDescriptor: NSObject, @unchecked Sendable {
+    public var functions: [any MTLFunction] = []
+    public var functionGraphs: [MTLFunctionStitchingGraph] = []
+    public var binaryArchives: [any MTLBinaryArchive]?
+    public var options: MTLStitchedLibraryOptions = []
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLFunctionStitchingGraph: NSObject, @unchecked Sendable {
+    public var functionName: String = ""
+    public var nodes: [MTLFunctionStitchingFunctionNode] = []
+    public var outputNode: MTLFunctionStitchingFunctionNode?
+    public var attributes: [any MTLFunctionStitchingAttribute] = []
+
+    public override init() {
+        super.init()
+    }
+
+    public init(
+        functionName: String,
+        nodes: [MTLFunctionStitchingFunctionNode],
+        outputNode: MTLFunctionStitchingFunctionNode?,
+        attributes: [any MTLFunctionStitchingAttribute]
+    ) {
+        self.functionName = functionName
+        self.nodes = nodes
+        self.outputNode = outputNode
+        self.attributes = attributes
+        super.init()
+    }
+}
+
+open class MTLFunctionStitchingFunctionNode: NSObject, @unchecked Sendable {}
+
+public protocol MTLFunctionStitchingAttribute: NSObjectProtocol {}
+
 public typealias MTLAutoreleasedComputePipelineReflection = MTLComputePipelineReflection
 public typealias MTLAutoreleasedRenderPipelineReflection = MTLRenderPipelineReflection
 public typealias MTLAutoreleasedArgument = MTLArgument
@@ -988,4 +1047,80 @@ open class MTLArgument: NSObject, @unchecked Sendable {
     public var access: MTLBindingAccess = .readOnly
     public var index: Int = 0
     public var isActive: Bool = false
+    public var arrayLength: Int = 0
+    public var bufferAlignment: Int = 0
+    public var bufferDataSize: Int = 0
+    public var bufferDataType: MTLDataType = .none
+    public var bufferPointerType: MTLPointerType?
+    public var bufferStructType: MTLStructType?
+    public var isDepthTexture: Bool = false
+    public var textureDataType: MTLDataType = .none
+    public var textureType: MTLTextureType = .type2D
+    public var threadgroupMemoryAlignment: Int = 0
+    public var threadgroupMemoryDataSize: Int = 0
+}
+
+open class MTLStructType: NSObject, @unchecked Sendable {
+    public var members: [MTLStructMember] = []
+
+    public func memberByName(_ name: String) -> MTLStructMember? {
+        members.first { $0.name == name }
+    }
+}
+
+open class MTLStructMember: NSObject, @unchecked Sendable {
+    public var name: String = ""
+    public var dataType: MTLDataType = .none
+    public var offset: Int = 0
+    public var argumentIndex: Int = 0
+
+    public func arrayType() -> MTLArrayType? { nil }
+    public func pointerType() -> MTLPointerType? { nil }
+    public func structType() -> MTLStructType? { nil }
+    public func textureReferenceType() -> MTLTextureReferenceType? { nil }
+    public func tensorReferenceType() -> MTLTensorReferenceType? { nil }
+}
+
+open class MTLArrayType: NSObject, @unchecked Sendable {
+    public var arrayLength: Int = 0
+    public var stride: Int = 0
+    public var argumentIndexStride: Int = 0
+    public var elementType: MTLDataType = .none
+
+    public func element() -> MTLArrayType? { nil }
+    public func elementPointerType() -> MTLPointerType? { nil }
+    public func elementStructType() -> MTLStructType? { nil }
+    public func elementTensorReferenceType() -> MTLTensorReferenceType? { nil }
+    public func elementTextureReferenceType() -> MTLTextureReferenceType? { nil }
+}
+
+open class MTLPointerType: NSObject, @unchecked Sendable {
+    public var access: MTLBindingAccess = .readOnly
+    public var alignment: Int = 0
+    public var dataSize: Int = 0
+    public var elementIsArgumentBuffer: Bool = false
+    public var elementType: MTLDataType = .none
+
+    public func elementArrayType() -> MTLArrayType? { nil }
+    public func elementStructType() -> MTLStructType? { nil }
+}
+
+open class MTLTextureReferenceType: NSObject, @unchecked Sendable {
+    public var access: MTLBindingAccess = .readOnly
+    public var isDepthTexture: Bool = false
+    public var textureDataType: MTLDataType = .none
+    public var textureType: MTLTextureType = .type2D
+}
+
+open class MTLTensorReferenceType: NSObject, @unchecked Sendable {}
+
+open class MTLCounterSampleBufferDescriptor: NSObject, @unchecked Sendable {
+    public var counterSet: (any MTLCounterSet)?
+    public var label: String = ""
+    public var sampleCount: Int = 0
+    public var storageMode: MTLStorageMode = .shared
+
+    public override init() {
+        super.init()
+    }
 }

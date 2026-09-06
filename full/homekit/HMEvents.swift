@@ -183,6 +183,10 @@ open class HMAction: NSObject {
     public class func `new`() -> HMAction {
         HMAction()
     }
+
+    open func host_apply(completion: @escaping ((any Error)?) -> Void) {
+        completion(HMFailClosed(.operationNotSupported))
+    }
 }
 
 open class HMCharacteristicWriteAction<TargetValueType: NSCopying>: HMAction {
@@ -195,8 +199,20 @@ open class HMCharacteristicWriteAction<TargetValueType: NSCopying>: HMAction {
         super.init()
     }
 
+    public func updateTargetValue(
+        _ targetValue: TargetValueType,
+        completionHandler completion: @escaping ((any Error)?) -> Void
+    ) {
+        self.targetValue = targetValue
+        completion(nil)
+    }
+
     public func updateTargetValue(_ targetValue: TargetValueType) async throws {
-        throw HMFailClosed(.operationNotSupported)
+        try await hmFinishAsync { self.updateTargetValue(targetValue, completionHandler: $0) }
+    }
+
+    public override func host_apply(completion: @escaping ((any Error)?) -> Void) {
+        characteristic.host_writeLocal(targetValue, completion: completion)
     }
 }
 
@@ -206,6 +222,7 @@ open class HMTrigger: NSObject {
     public internal(set) var actionSets: [HMActionSet]
     public internal(set) var lastFireDate: Date?
     public let uniqueIdentifier: UUID
+    public internal(set) weak var home: HMHome?
 
     public override init() {
         self.name = ""
@@ -216,22 +233,83 @@ open class HMTrigger: NSObject {
         super.init()
     }
 
+    public func enable(_ enable: Bool, completionHandler completion: @escaping ((any Error)?) -> Void) {
+        if enable {
+            if home?.homeHubState != .connected {
+                completion(HMFailClosed(.noHomeHub))
+                return
+            }
+            if actionSets.isEmpty {
+                completion(HMFailClosed(.noRegisteredActionSets))
+                return
+            }
+        }
+        isEnabled = enable
+        if let eventTrigger = self as? HMEventTrigger {
+            eventTrigger.host_refreshActivationState()
+        }
+        hmNotifyHome(home) { $0.delegate?.home($0, didUpdate: self) }
+        completion(nil)
+    }
+
     public func enable(_ enable: Bool) async throws {
-        throw HMFailClosed()
+        try await hmFinishAsync { self.enable(enable, completionHandler: $0) }
+    }
+
+    public func updateName(_ name: String, completionHandler completion: @escaping ((any Error)?) -> Void) {
+        if let error = HMLocalName.errorIfInvalid(name) {
+            completion(error)
+            return
+        }
+        self.name = name
+        hmNotifyHome(home) { $0.delegate?.home($0, didUpdateNameFor: self) }
+        completion(nil)
     }
 
     public func updateName(_ name: String) async throws {
-        throw HMFailClosed()
+        try await hmFinishAsync { self.updateName(name, completionHandler: $0) }
+    }
+
+    public func addActionSet(_ actionSet: HMActionSet, completionHandler completion: @escaping ((any Error)?) -> Void) {
+        if actionSets.contains(where: { $0 === actionSet }) {
+            completion(HMFailClosed(.alreadyExists))
+            return
+        }
+        actionSets.append(actionSet)
+        hmNotifyHome(home) { $0.delegate?.home($0, didUpdate: self) }
+        completion(nil)
     }
 
     public func addActionSet(_ actionSet: HMActionSet) async throws {
-        _ = actionSet
-        throw HMFailClosed()
+        try await hmFinishAsync { self.addActionSet(actionSet, completionHandler: $0) }
+    }
+
+    public func removeActionSet(
+        _ actionSet: HMActionSet,
+        completionHandler completion: @escaping ((any Error)?) -> Void
+    ) {
+        guard let index = actionSets.firstIndex(where: { $0 === actionSet }) else {
+            completion(HMFailClosed(.notFound))
+            return
+        }
+        actionSets.remove(at: index)
+        hmNotifyHome(home) { $0.delegate?.home($0, didUpdate: self) }
+        completion(nil)
     }
 
     public func removeActionSet(_ actionSet: HMActionSet) async throws {
-        _ = actionSet
-        throw HMFailClosed()
+        try await hmFinishAsync { self.removeActionSet(actionSet, completionHandler: $0) }
+    }
+
+    func host_bind(home: HMHome?) {
+        self.home = home
+        if let eventTrigger = self as? HMEventTrigger {
+            eventTrigger.host_refreshActivationState()
+        }
+    }
+
+    public func host_markFired(at date: Date) {
+        lastFireDate = date
     }
 }
 
@@ -335,104 +413,202 @@ open class HMEventTrigger: HMTrigger {
     }
 
     public func addEvent(_ event: HMEvent, completionHandler completion: @escaping ((any Error)?) -> Void) {
-        _ = event
-        completion(HMFailClosed())
+        if events.contains(where: { $0 === event }) {
+            completion(HMFailClosed(.alreadyExists))
+            return
+        }
+        events.append(event)
+        hmNotifyHome(home) { $0.delegate?.home($0, didUpdate: self) }
+        completion(nil)
     }
 
     public func removeEvent(_ event: HMEvent, completionHandler completion: @escaping ((any Error)?) -> Void) {
-        _ = event
-        completion(HMFailClosed())
+        guard let index = events.firstIndex(where: { $0 === event }) else {
+            completion(HMFailClosed(.notFound))
+            return
+        }
+        events.remove(at: index)
+        hmNotifyHome(home) { $0.delegate?.home($0, didUpdate: self) }
+        completion(nil)
+    }
+
+    public func updateEvents(_ events: [HMEvent], completionHandler completion: @escaping ((any Error)?) -> Void) {
+        self.events = events
+        hmNotifyHome(home) { $0.delegate?.home($0, didUpdate: self) }
+        completion(nil)
     }
 
     public func updateEvents(_ events: [HMEvent]) async throws {
-        _ = events
-        throw HMFailClosed()
+        try await hmFinishAsync { self.updateEvents(events, completionHandler: $0) }
+    }
+
+    public func updateEndEvents(_ endEvents: [HMEvent], completionHandler completion: @escaping ((any Error)?) -> Void) {
+        self.endEvents = endEvents
+        hmNotifyHome(home) { $0.delegate?.home($0, didUpdate: self) }
+        completion(nil)
     }
 
     public func updateEndEvents(_ endEvents: [HMEvent]) async throws {
-        _ = endEvents
-        throw HMFailClosed()
+        try await hmFinishAsync { self.updateEndEvents(endEvents, completionHandler: $0) }
+    }
+
+    public func updatePredicate(
+        _ predicate: NSPredicate?,
+        completionHandler completion: @escaping ((any Error)?) -> Void
+    ) {
+        self.predicate = predicate
+        hmNotifyHome(home) { $0.delegate?.home($0, didUpdate: self) }
+        completion(nil)
     }
 
     public func updatePredicate(_ predicate: NSPredicate?) async throws {
-        _ = predicate
-        throw HMFailClosed()
+        try await hmFinishAsync { self.updatePredicate(predicate, completionHandler: $0) }
+    }
+
+    public func updateRecurrences(
+        _ recurrences: [DateComponents]?,
+        completionHandler completion: @escaping ((any Error)?) -> Void
+    ) {
+        self.recurrences = recurrences
+        hmNotifyHome(home) { $0.delegate?.home($0, didUpdate: self) }
+        completion(nil)
     }
 
     public func updateRecurrences(_ recurrences: [DateComponents]?) async throws {
-        _ = recurrences
-        throw HMFailClosed()
+        try await hmFinishAsync { self.updateRecurrences(recurrences, completionHandler: $0) }
+    }
+
+    public func updateExecuteOnce(_ executeOnce: Bool, completionHandler completion: @escaping ((any Error)?) -> Void) {
+        self.executeOnce = executeOnce
+        hmNotifyHome(home) { $0.delegate?.home($0, didUpdate: self) }
+        completion(nil)
     }
 
     public func updateExecuteOnce(_ executeOnce: Bool) async throws {
-        _ = executeOnce
-        throw HMFailClosed()
+        try await hmFinishAsync { self.updateExecuteOnce(executeOnce, completionHandler: $0) }
+    }
+
+    func host_refreshActivationState() {
+        if isEnabled {
+            triggerActivationState = .enabled
+            return
+        }
+        switch home?.homeHubState {
+        case .connected:
+            triggerActivationState = .disabled
+        case .disconnected:
+            triggerActivationState = .disabledNoCompatibleHomeHub
+        default:
+            triggerActivationState = .disabledNoHomeHub
+        }
     }
 
     open class func predicateForEvaluatingTrigger(occurringAfter dateComponents: DateComponents) -> NSPredicate {
         let captured = dateComponents
-        return NSPredicate { _, _ in captured.hour != nil || captured.minute != nil }
+        return NSPredicate { object, _ in
+            guard let threshold = HMLocalClock.minutesOfDay(from: captured) else { return false }
+            let date = object as? Date ?? HMLocalClock.date(hour: 23, minute: 59)
+            return HMLocalClock.minutesOfDay(from: date) > threshold
+        }
     }
 
     open class func predicateForEvaluatingTrigger(occurringBefore dateComponents: DateComponents) -> NSPredicate {
         let captured = dateComponents
-        return NSPredicate { _, _ in captured.hour != nil || captured.minute != nil }
+        return NSPredicate { object, _ in
+            guard let threshold = HMLocalClock.minutesOfDay(from: captured) else { return false }
+            let date = object as? Date ?? HMLocalClock.date(hour: 0, minute: 0)
+            return HMLocalClock.minutesOfDay(from: date) < threshold
+        }
     }
 
     open class func predicateForEvaluatingTrigger(occurringOn dateComponents: DateComponents) -> NSPredicate {
         let captured = dateComponents
-        return NSPredicate { _, _ in captured.hour != nil || captured.day != nil }
+        return NSPredicate { object, _ in
+            guard let threshold = HMLocalClock.minutesOfDay(from: captured) else { return false }
+            let date = object as? Date ?? HMLocalClock.date(hour: captured.hour ?? 0, minute: captured.minute ?? 0)
+            return HMLocalClock.minutesOfDay(from: date) == threshold
+        }
     }
 
     open class func predicateForEvaluatingTriggerOccurringBetweenDate(
         with firstDateComponents: DateComponents,
         secondDateWith secondDateWithComponents: DateComponents
     ) -> NSPredicate {
-        _ = (firstDateComponents, secondDateWithComponents)
-        return NSPredicate { _, _ in true }
+        let first = firstDateComponents
+        let second = secondDateWithComponents
+        return NSPredicate { object, _ in
+            guard let start = HMLocalClock.minutesOfDay(from: first),
+                  let end = HMLocalClock.minutesOfDay(from: second)
+            else { return false }
+            let date = object as? Date ?? HMLocalClock.date(hour: first.hour ?? 0, minute: first.minute ?? 0)
+            let minutes = HMLocalClock.minutesOfDay(from: date)
+            if start <= end {
+                return minutes >= start && minutes <= end
+            }
+            return minutes >= start || minutes <= end
+        }
     }
 
     open class func predicateForEvaluatingTrigger(
         occurringAfter significantEvent: String,
         applyingOffset offset: DateComponents?
     ) -> NSPredicate {
-        _ = (significantEvent, offset)
-        return NSPredicate { _, _ in true }
+        let captured = significantEvent
+        _ = offset
+        return NSPredicate { _, _ in
+            captured == HMSignificantEvent.sunrise.rawValue || captured == HMSignificantEvent.sunset.rawValue
+        }
     }
 
     open class func predicateForEvaluatingTrigger(
         occurringBefore significantEvent: String,
         applyingOffset offset: DateComponents?
     ) -> NSPredicate {
-        _ = (significantEvent, offset)
-        return NSPredicate { _, _ in true }
+        let captured = significantEvent
+        _ = offset
+        return NSPredicate { _, _ in
+            captured == HMSignificantEvent.sunrise.rawValue || captured == HMSignificantEvent.sunset.rawValue
+        }
     }
 
     open class func predicateForEvaluatingTriggerOccurring(
         afterSignificantEvent significantEvent: HMSignificantTimeEvent
     ) -> NSPredicate {
-        _ = significantEvent
-        return NSPredicate { _, _ in true }
+        let name = significantEvent.significantEvent.rawValue
+        return predicateForEvaluatingTrigger(occurringAfter: name, applyingOffset: significantEvent.offset)
     }
 
     open class func predicateForEvaluatingTriggerOccurring(
         beforeSignificantEvent significantEvent: HMSignificantTimeEvent
     ) -> NSPredicate {
-        _ = significantEvent
-        return NSPredicate { _, _ in true }
+        let name = significantEvent.significantEvent.rawValue
+        return predicateForEvaluatingTrigger(occurringBefore: name, applyingOffset: significantEvent.offset)
     }
 
     open class func predicate(
         forEvaluatingTriggerOccurringBetweenSignificantEvent firstSignificantEvent: HMSignificantTimeEvent,
         secondSignificantEvent: HMSignificantTimeEvent
     ) -> NSPredicate {
-        _ = (firstSignificantEvent, secondSignificantEvent)
-        return NSPredicate { _, _ in true }
+        let first = firstSignificantEvent.significantEvent
+        let second = secondSignificantEvent.significantEvent
+        return NSPredicate { _, _ in
+            (first == .sunrise || first == .sunset) && (second == .sunrise || second == .sunset)
+        }
     }
 
     open class func predicateForEvaluatingTrigger(withPresence presenceEvent: HMPresenceEvent) -> NSPredicate {
         let captured = presenceEvent.presenceEventType
-        return NSPredicate { _, _ in captured == .atHome || captured == .firstEntry || true }
+        let users = presenceEvent.presenceUserType
+        return NSPredicate { object, _ in
+            if let event = object as? HMPresenceEvent {
+                return event.presenceEventType == captured && event.presenceUserType == users
+            }
+            if let type = object as? NSNumber {
+                return type.uintValue == captured.rawValue
+            }
+            return captured == .atHome || captured == .firstEntry || captured == .everyEntry
+                || captured == .everyExit || captured == .lastExit || captured == .notAtHome
+        }
     }
 }
 

@@ -97,6 +97,12 @@ public protocol UITableViewDelegate: UIScrollViewDelegate {
     func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath)
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath)
+    func tableView(_ tableView: UITableView,
+                   leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+        -> UISwipeActionsConfiguration?
+    func tableView(_ tableView: UITableView,
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+        -> UISwipeActionsConfiguration?
 }
 
 public extension UITableViewDelegate {
@@ -117,6 +123,12 @@ public extension UITableViewDelegate {
     func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {}
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {}
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {}
+    func tableView(_ tableView: UITableView,
+                   leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+        -> UISwipeActionsConfiguration? { nil }
+    func tableView(_ tableView: UITableView,
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+        -> UISwipeActionsConfiguration? { nil }
 }
 
 // MARK: - Card view (inset-grouped section background)

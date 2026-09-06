@@ -183,12 +183,19 @@ public struct Rectangle: View {
     public var body: some View { EmptyView() }
 }
 
-public struct Circle: View, Shape {
+public struct Circle: View, Shape, InsettableShape {
     public init() {}
     public var body: some View { EmptyView() }
     public func path(in rect: CGRect) -> Path {
-        _ = rect
-        return Path()
+        var path = Path()
+        if rect.width > 0 && rect.height > 0 {
+            path.addEllipse(in: rect)
+        }
+        return path
+    }
+    public func inset(by amount: CGFloat) -> Circle {
+        _ = amount
+        return Circle()
     }
 }
 
@@ -418,6 +425,10 @@ public struct Path: Equatable, Sendable {
 
 public protocol Shape: View {
     func path(in rect: CGRect) -> Path
+}
+
+public protocol InsettableShape: Shape {
+    func inset(by amount: CGFloat) -> Self
 }
 
 public struct FillStyle: Hashable, Sendable {

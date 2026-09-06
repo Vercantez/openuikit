@@ -51,6 +51,20 @@ func testPlayerQueue() {
     precondition(inserted.startTime == 1)
     precondition(inserted.endTime == 10)
     precondition(inserted.isTransient == true)
+    let queueItem = MusicPlayer.Queue.Entry.Item.song(song)
+    precondition(queueItem.id.rawValue == "1")
+    precondition(entries == entries)
+    precondition(inserted == inserted)
+    precondition(queueItem == queueItem)
+    var hasher = Hasher()
+    entries.hash(into: &hasher)
+    inserted.hash(into: &hasher)
+    queueItem.hash(into: &hasher)
+    playerQueue.hash(into: &hasher)
+    _ = entries.hashValue
+    _ = inserted.hashValue
+    _ = queueItem.hashValue
+    _ = playerQueue.hashValue
 }
 
 func testPlayerTransition() {
@@ -64,6 +78,13 @@ func testPlayerTransition() {
     precondition(options.duration == 2)
     ApplicationMusicPlayer.shared.transition = timed
     precondition(ApplicationMusicPlayer.shared.transition == timed)
+    var hasher = Hasher()
+    none.hash(into: &hasher)
+    timed.hash(into: &hasher)
+    options.hash(into: &hasher)
+    _ = none.hashValue
+    _ = timed.hashValue
+    _ = options.hashValue
 }
 
 func testApplicationAndSystemPlayers() {
@@ -101,6 +122,10 @@ func testCatalogSearchRequest() {
     charts.limit = 5
     precondition(charts.kinds.contains(.cityTop))
     precondition(charts.limit == 5)
+    precondition(charts == charts)
+    var hasher = Hasher()
+    charts.hash(into: &hasher)
+    _ = charts.hashValue
     var suggestions = MusicCatalogSearchSuggestionsRequest(term: "help", includingTopResultsOfTypes: [Song.self])
     suggestions.limit = 3
     precondition(suggestions.term == "help")
@@ -123,6 +148,10 @@ func testLibraryRequestBuilder() {
     let search = MusicLibrarySearchRequest(term: "fleet", types: [Song.self])
     precondition(search.term == "fleet")
     precondition(MusicLibrary.shared === MusicLibrary.shared)
+    precondition(search == search)
+    var hasher = Hasher()
+    search.hash(into: &hasher)
+    _ = search.hashValue
 }
 
 func testSubscriptionOffer() {
@@ -151,6 +180,12 @@ func testSubscriptionOffer() {
     precondition(subscription.canPlayCatalogContent == false)
     precondition(subscription.canBecomeSubscriber == false)
     precondition(subscription.hasCloudLibraryEnabled == false)
+    precondition(subscription == subscription)
+    var hasher = Hasher()
+    subscription.hash(into: &hasher)
+    options.hash(into: &hasher)
+    _ = subscription.hashValue
+    _ = options.hashValue
 }
 
 func testMusicDataRequest() {
@@ -160,6 +195,9 @@ func testMusicDataRequest() {
     precondition(request.urlRequest.url?.path.contains("search") == true)
     precondition(request.description.contains("search"))
     precondition(request == request)
+    var hasher = Hasher()
+    request.hash(into: &hasher)
+    _ = request.hashValue
     let options: MusicTokenRequestOptions = [.ignoreCache]
     precondition(options.contains(.ignoreCache))
     precondition(MusicTokenRequestOptions(rawValue: 1).rawValue == 1)

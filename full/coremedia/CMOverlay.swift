@@ -524,6 +524,305 @@ extension CMFormatDescription.Extensions.Value {
             )
         }
     }
+
+    public static func qtTextColor(
+        red: CGFloat,
+        green: CGFloat,
+        blue: CGFloat,
+        alpha: CGFloat
+    ) -> CMFormatDescription.Extensions.Value {
+        cmTextColorValue(red: red, green: green, blue: blue, alpha: alpha)
+    }
+
+    public static func mobile3GPPTextColor(
+        red: CGFloat,
+        green: CGFloat,
+        blue: CGFloat,
+        alpha: CGFloat
+    ) -> CMFormatDescription.Extensions.Value {
+        cmTextColorValue(red: red, green: green, blue: blue, alpha: alpha)
+    }
+
+    public static func textDisplayFlags(
+        _ textDisplayFlags: Set<TextDisplayFlags>
+    ) -> CMFormatDescription.Extensions.Value {
+        var raw: CMTextDisplayFlags = 0
+        for flag in textDisplayFlags {
+            raw |= flag.rawValue
+        }
+        var stored = Int32(bitPattern: raw)
+        return CMFormatDescription.Extensions.Value(
+            CFNumberCreate(kCFAllocatorDefault, .sInt32Type, &stored)!
+        )
+    }
+
+    public static func mpeg2VideoProfile(
+        _ mpeg2VideoProfile: MPEG2VideoProfile
+    ) -> CMFormatDescription.Extensions.Value {
+        .number(Int(bitPattern: UInt(mpeg2VideoProfile.rawValue)))
+    }
+
+    public static func textRect(
+        top: Int,
+        left: Int,
+        bottom: Int,
+        right: Int
+    ) -> CMFormatDescription.Extensions.Value {
+        CMFormatDescription.Extensions.Value(
+            cmCFDictionary([
+                (kCMTextFormatDescriptionRect_Top, cmCFNumberFromNumeric(top)),
+                (kCMTextFormatDescriptionRect_Left, cmCFNumberFromNumeric(left)),
+                (kCMTextFormatDescriptionRect_Bottom, cmCFNumberFromNumeric(bottom)),
+                (kCMTextFormatDescriptionRect_Right, cmCFNumberFromNumeric(right))
+            ])
+        )
+    }
+
+    public static func qtTextDefaultStyle(
+        startChar: Int,
+        height: Int,
+        ascent: Int,
+        localFontID: Int,
+        fontFace: FontFace,
+        fontSize: Int,
+        foregroundColor: CMFormatDescription.Extensions.Value,
+        defaultFontName: String?
+    ) -> CMFormatDescription.Extensions.Value {
+        var pairs: [(CFString, CFTypeRef)] = [
+            (kCMTextFormatDescriptionStyle_StartChar, cmCFNumberFromNumeric(startChar)),
+            (kCMTextFormatDescriptionStyle_Height, cmCFNumberFromNumeric(height)),
+            (kCMTextFormatDescriptionStyle_Ascent, cmCFNumberFromNumeric(ascent)),
+            (kCMTextFormatDescriptionStyle_Font, cmCFNumberFromNumeric(localFontID)),
+            (kCMTextFormatDescriptionStyle_FontFace, cmCFNumberFromNumeric(Int(fontFace.rawValue))),
+            (kCMTextFormatDescriptionStyle_FontSize, cmCFNumberFromNumeric(fontSize)),
+        ]
+        if let stored = foregroundColor.stored {
+            pairs.append((kCMTextFormatDescriptionStyle_ForegroundColor, stored))
+        }
+        if let defaultFontName {
+            pairs.append((kCMTextFormatDescriptionExtension_DefaultFontName, cmMakeCFString(defaultFontName)))
+        }
+        return CMFormatDescription.Extensions.Value(cmCFDictionary(pairs))
+    }
+
+    public static func mobile3GPPTextDefaultStyle(
+        startChar: Int,
+        endChar: Int,
+        localFontID: Int,
+        fontFace: FontFace,
+        fontSize: Int,
+        foregroundColor: CMFormatDescription.Extensions.Value
+    ) -> CMFormatDescription.Extensions.Value {
+        var pairs: [(CFString, CFTypeRef)] = [
+            (kCMTextFormatDescriptionStyle_StartChar, cmCFNumberFromNumeric(startChar)),
+            (kCMTextFormatDescriptionStyle_EndChar, cmCFNumberFromNumeric(endChar)),
+            (kCMTextFormatDescriptionStyle_Font, cmCFNumberFromNumeric(localFontID)),
+            (kCMTextFormatDescriptionStyle_FontFace, cmCFNumberFromNumeric(Int(fontFace.rawValue))),
+            (kCMTextFormatDescriptionStyle_FontSize, cmCFNumberFromNumeric(fontSize))
+        ]
+        if let stored = foregroundColor.stored {
+            pairs.append((kCMTextFormatDescriptionStyle_ForegroundColor, stored))
+        }
+        return CMFormatDescription.Extensions.Value(cmCFDictionary(pairs))
+    }
+
+    public enum CameraCalibrationDataLensCollection {
+        public typealias RawValue = CFArray
+
+        public enum LensRole: RawRepresentable, Hashable {
+            public typealias RawValue = CFString
+            case mono
+            case left
+            case right
+
+            public init?(rawValue: CFString) {
+                if CFEqual(rawValue, kCMFormatDescriptionCameraCalibrationLensRole_Mono) {
+                    self = .mono
+                } else if CFEqual(rawValue, kCMFormatDescriptionCameraCalibrationLensRole_Left) {
+                    self = .left
+                } else if CFEqual(rawValue, kCMFormatDescriptionCameraCalibrationLensRole_Right) {
+                    self = .right
+                } else {
+                    return nil
+                }
+            }
+
+            public var rawValue: CFString {
+                switch self {
+                case .mono: return kCMFormatDescriptionCameraCalibrationLensRole_Mono
+                case .left: return kCMFormatDescriptionCameraCalibrationLensRole_Left
+                case .right: return kCMFormatDescriptionCameraCalibrationLensRole_Right
+                }
+            }
+        }
+
+        public enum LensDomain: RawRepresentable, Hashable {
+            public typealias RawValue = CFString
+            case color
+
+            public init?(rawValue: CFString) {
+                if CFEqual(rawValue, kCMFormatDescriptionCameraCalibrationLensDomain_Color) {
+                    self = .color
+                } else {
+                    return nil
+                }
+            }
+
+            public var rawValue: CFString { kCMFormatDescriptionCameraCalibrationLensDomain_Color }
+        }
+
+        public enum AlgorithmKind: RawRepresentable, Hashable {
+            public typealias RawValue = CFString
+            case parametric
+
+            public init?(rawValue: CFString) {
+                if CFEqual(rawValue, kCMFormatDescriptionCameraCalibrationLensAlgorithmKind_ParametricLens) {
+                    self = .parametric
+                } else {
+                    return nil
+                }
+            }
+
+            public var rawValue: CFString {
+                kCMFormatDescriptionCameraCalibrationLensAlgorithmKind_ParametricLens
+            }
+        }
+
+        public enum ExtrinsicOriginSource: RawRepresentable, Hashable {
+            public typealias RawValue = CFString
+            case stereoCameraSystemBaseline
+
+            public init?(rawValue: CFString) {
+                if CFEqual(
+                    rawValue,
+                    kCMFormatDescriptionCameraCalibrationExtrinsicOriginSource_StereoCameraSystemBaseline
+                ) {
+                    self = .stereoCameraSystemBaseline
+                } else {
+                    return nil
+                }
+            }
+
+            public var rawValue: CFString {
+                kCMFormatDescriptionCameraCalibrationExtrinsicOriginSource_StereoCameraSystemBaseline
+            }
+        }
+
+        public struct Calibration {
+            public typealias RawValue = CFDictionary
+            public var algorithmKind: AlgorithmKind
+            public var identifier: Int32
+            public var domain: LensDomain
+            public var role: LensRole
+            public var distortionCoefficients: SIMD4<Float>
+            public var xFrameAdjustmentsPolynomial: SIMD3<Float>
+            public var yFrameAdjustmentsPolynomial: SIMD3<Float>
+            public var radialAngleLimit: Float
+            public var intrinsicMatrixProjectionOffset: Float
+            public var intrinsicMatrixReferenceDimensions: CGSize
+            public var extrinsicOriginSource: ExtrinsicOriginSource
+            public var extrinsicOrientationQuaternion: SIMD3<Float>
+
+            public init(
+                algorithmKind: AlgorithmKind,
+                identifier: Int32,
+                domain: LensDomain,
+                role: LensRole,
+                distortionCoefficients: SIMD4<Float> = .zero,
+                xFrameAdjustmentsPolynomial: SIMD3<Float> = .zero,
+                yFrameAdjustmentsPolynomial: SIMD3<Float> = .zero,
+                radialAngleLimit: Float = 0,
+                intrinsicMatrixProjectionOffset: Float = 0,
+                intrinsicMatrixReferenceDimensions: CGSize = .zero,
+                extrinsicOriginSource: ExtrinsicOriginSource = .stereoCameraSystemBaseline,
+                extrinsicOrientationQuaternion: SIMD3<Float> = .zero
+            ) {
+                self.algorithmKind = algorithmKind
+                self.identifier = identifier
+                self.domain = domain
+                self.role = role
+                self.distortionCoefficients = distortionCoefficients
+                self.xFrameAdjustmentsPolynomial = xFrameAdjustmentsPolynomial
+                self.yFrameAdjustmentsPolynomial = yFrameAdjustmentsPolynomial
+                self.radialAngleLimit = radialAngleLimit
+                self.intrinsicMatrixProjectionOffset = intrinsicMatrixProjectionOffset
+                self.intrinsicMatrixReferenceDimensions = intrinsicMatrixReferenceDimensions
+                self.extrinsicOriginSource = extrinsicOriginSource
+                self.extrinsicOrientationQuaternion = extrinsicOrientationQuaternion
+            }
+
+            public init?(rawValue: CFDictionary) {
+                self.init(
+                    algorithmKind: .parametric,
+                    identifier: 0,
+                    domain: .color,
+                    role: .mono
+                )
+                _ = rawValue
+            }
+
+            public var rawValue: CFDictionary {
+                cmCFDictionary([
+                    (kCMFormatDescriptionCameraCalibration_LensIdentifier, cmCFNumberFromNumeric(Int(identifier))),
+                    (kCMFormatDescriptionCameraCalibration_LensRole, role.rawValue),
+                    (kCMFormatDescriptionCameraCalibration_LensDomain, domain.rawValue),
+                    (kCMFormatDescriptionCameraCalibration_LensAlgorithmKind, algorithmKind.rawValue),
+                    (
+                        kCMFormatDescriptionCameraCalibration_ExtrinsicOriginSource,
+                        extrinsicOriginSource.rawValue
+                    )
+                ])
+            }
+        }
+
+        case mono(Calibration)
+        case stereo(left: Calibration, right: Calibration)
+
+        public init?(rawValue: CFArray) {
+            let count = CFArrayGetCount(rawValue)
+            if count == 1 {
+                self = .mono(Calibration(algorithmKind: .parametric, identifier: 0, domain: .color, role: .mono))
+            } else if count >= 2 {
+                self = .stereo(
+                    left: Calibration(algorithmKind: .parametric, identifier: 0, domain: .color, role: .left),
+                    right: Calibration(algorithmKind: .parametric, identifier: 1, domain: .color, role: .right)
+                )
+            } else {
+                return nil
+            }
+        }
+
+        public var rawValue: CFArray {
+            let calibrations: [Calibration]
+            switch self {
+            case .mono(let calibration):
+                calibrations = [calibration]
+            case .stereo(let left, let right):
+                calibrations = [left, right]
+            }
+            let array = CFArrayCreateMutable(kCFAllocatorDefault, CFIndex(calibrations.count), nil)!
+            for calibration in calibrations {
+                CFArrayAppendValue(array, unsafeBitCast(calibration.rawValue, to: UnsafeRawPointer.self))
+            }
+            return array
+        }
+    }
+}
+
+private func cmTextColorValue(
+    red: CGFloat,
+    green: CGFloat,
+    blue: CGFloat,
+    alpha: CGFloat
+) -> CMFormatDescription.Extensions.Value {
+    CMFormatDescription.Extensions.Value(
+        cmCFDictionary([
+            (kCMTextFormatDescriptionColor_Red, cmCFNumberFromNumeric(red)),
+            (kCMTextFormatDescriptionColor_Green, cmCFNumberFromNumeric(green)),
+            (kCMTextFormatDescriptionColor_Blue, cmCFNumberFromNumeric(blue)),
+            (kCMTextFormatDescriptionColor_Alpha, cmCFNumberFromNumeric(alpha))
+        ])
+    )
 }
 
 extension CMFormatDescription.Extensions {
@@ -534,9 +833,6 @@ extension CMFormatDescription.Extensions {
     }
 
     public typealias Element = (key: Key, value: Value)
-    public typealias SubSequence = ArraySlice<Element>
-    public typealias Indices = Range<Index>
-    public typealias Iterator = IndexingIterator<[(key: Key, value: Value)]>
 
     public var startIndex: Index { Index(0) }
     public var endIndex: Index { Index(pairs.count) }
@@ -544,7 +840,8 @@ extension CMFormatDescription.Extensions {
     public func index(after i: Index) -> Index { Index(i.rawValue + 1) }
 
     public subscript(position: Index) -> Element {
-        pairs[position.rawValue]
+        let pair = pairs[position.rawValue]
+        return (key: pair.0, value: pair.1)
     }
 
     public subscript(key: Key) -> Value? {
@@ -580,6 +877,72 @@ extension CMFormatDescription.Extensions {
         for (key, _) in pairs {
             hasher.combine(key.rawValue)
         }
+    }
+}
+
+extension CMFormatDescription.Extensions: BidirectionalCollection {
+    public func index(before i: Index) -> Index {
+        Index(i.rawValue - 1)
+    }
+}
+
+extension CMFormatDescription {
+    public func presentationDimensions(
+        usePixelAspectRatio: Bool = true,
+        useCleanAperture: Bool = true
+    ) -> CGSize {
+        CMVideoFormatDescriptionGetPresentationDimensions(
+            self,
+            usePixelAspectRatio: usePixelAspectRatio,
+            useCleanAperture: useCleanAperture
+        )
+    }
+
+    public static var extensionKeysCommonWithImageBuffers: [Extensions.Key] {
+        let array = CMVideoFormatDescriptionGetExtensionKeysCommonWithImageBuffers()
+        let count = Int(CFArrayGetCount(array))
+        var keys: [Extensions.Key] = []
+        keys.reserveCapacity(count)
+        for index in 0..<count {
+            guard let pointer = CFArrayGetValueAtIndex(array, CFIndex(index)) else { continue }
+            let string = unsafeBitCast(pointer, to: NSString.self) as String
+            keys.append(Extensions.Key(rawValue: string))
+        }
+        return keys
+    }
+
+    public func fontName(localFontID: Int) throws -> String {
+        var name: CFString?
+        let status = CMTextFormatDescriptionGetFontName(
+            self,
+            localFontID: UInt16(clamping: localFontID),
+            fontNameOut: &name
+        )
+        if status != 0 { throw Error.valueNotAvailable }
+        guard let name else { throw Error.valueNotAvailable }
+        return unsafeBitCast(name, to: NSString.self) as String
+    }
+
+    public func keyWithLocalID(_ localKeyID: UInt32) -> [String: CFPropertyList]? {
+        guard let dictionary = CMMetadataFormatDescriptionGetKeyWithLocalID(self, localKeyID: localKeyID) else {
+            return nil
+        }
+        let count = Int(CFDictionaryGetCount(dictionary))
+        if count <= 0 { return [:] }
+        var keys = Array<UnsafeRawPointer?>(repeating: nil, count: count)
+        var values = Array<UnsafeRawPointer?>(repeating: nil, count: count)
+        keys.withUnsafeMutableBufferPointer { keyBuf in
+            values.withUnsafeMutableBufferPointer { valBuf in
+                CFDictionaryGetKeysAndValues(dictionary, keyBuf.baseAddress, valBuf.baseAddress)
+            }
+        }
+        var result: [String: CFPropertyList] = [:]
+        for index in 0..<count {
+            guard let keyPtr = keys[index], let valPtr = values[index] else { continue }
+            let name = unsafeBitCast(keyPtr, to: NSString.self) as String
+            result[name] = unsafeBitCast(valPtr, to: CFPropertyList.self)
+        }
+        return result
     }
 }
 

@@ -187,7 +187,7 @@ func visionTranslationalAlignment(
 
 func visionTrackObject(
     in raster: VisionRaster,
-    request: VNTrackObjectRequest
+    request: VNTrackingRequest
 ) -> VNDetectedObjectObservation {
     let box = request.inputObservation.boundingBox
     let imageRect = VNImageRectForNormalizedRect(box, raster.width, raster.height)

@@ -102,6 +102,16 @@ final class TableEditorRootViewController: UITableViewController {
                             animated: false, scrollPosition: .none)
     }
 
+    func openListScreen() {
+        navigationController?.pushViewController(TableEditorListViewController(),
+                                                 animated: false)
+    }
+
+    func selectListFirst() {
+        (navigationController?.topViewController as? TableEditorListViewController)?
+            .selectFirst()
+    }
+
     private func refreshEditButton() {
         let editing = tableView.isEditing
         navigationItem.rightBarButtonItem = UIBarButtonItem(

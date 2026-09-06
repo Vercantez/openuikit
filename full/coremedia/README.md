@@ -43,6 +43,9 @@ This directory is a clean-room Linux implementation of Apple's public
   buffers, duration/size/PTS getters, end-of-data, validation, and
   rising-edge triggers). `CMBufferQueueCreateWithHandlers` fails closed:
   Linux has no ABI for Apple's internal handlers blob.
+- `CMTag` / `CMTypedTag` / sample-buffer `CMTaggedBuffer` with Linux
+  category FourCC stand-ins, and `CMReadySampleBuffer` wrapping a
+  data-ready `CMSampleBuffer` (data-buffer and marker inits).
 - Public `kCMTime*` / `kCMSampleAttachment*` / `kCMFormatDescription*`
   CFString keys (suffix payloads; color aliases match this repo's CoreVideo
   strings) and OSStatus integers from the public headers.
@@ -76,12 +79,13 @@ color/matrix, sample attachments, metadata key spaces).
 
 ## Deferred
 
-- `CMTag`, `CMReadySampleBuffer`, tagged-buffer groups, and packing
-  attached to sample buffers (the packing/projection *enums* are implemented).
-- APIs that require `AudioStreamBasicDescription` / `CVImageBuffer` until
-  the central build supplies CoreAudioTypes and CoreVideo.
-- Remaining Swift overlay Collection/camera-calibration helpers on
-  `CMFormatDescription.Extensions.Value`.
+- Pixel-buffer `CMTaggedBuffer` groups and `CMReadySampleBuffer` specializations
+  that need `CVPixelBuffer` / tagged-buffer groups until CoreVideo supplies them.
+- `CMTag` C `__CMTag` layout and Apple category FourCC integers (Linux uses
+  stand-in FourCCs `stvw`/`pack`/`pixf`/`mdia`/`msub`/`vlyr`/`proj`/`svi `/`trak`/`chnl`).
+- Camera-calibration `intrinsicMatrix` (`simd_float3x3`) until `import simd` exists.
+- APIs that require `AudioStreamBasicDescription` / `CVImageBuffer` /
+  `AudioBufferList` until the central build supplies CoreAudioTypes and CoreVideo.
 - C-callable `@_cdecl` entry points are not emitted: Swift `CMTime` structs
   are not Clang-imported C types. Layout is reconstructed in
   `tests/agent/cm_value_layout.c`.
@@ -179,6 +183,37 @@ overloads stay `declared` because constructing a live `DispatchSource` in this
 Linux gate aborts libdispatch on release. `AudioBufferList` DataBlockBuffer
 inits and `CVImageBuffer` sample-buffer entry points remain deferred. SwiftUI
 cross-import overlay IDs are not in this module's public surface.
+
+This run (depth pass 2026-09 wave 8, next pass on starting commit
+`6bf18072`) keeps the earlier surface and adds honest Linux behavior for
+`CMTag` / `CMTypedTag` / `CMTaggedBuffer` (sample-buffer only),
+`CMReadySampleBuffer` over `CMReadOnlyDataBlockBuffer`, format-description
+`Extensions` as a `BidirectionalCollection`, camera-calibration lens overlay
+(without `simd_float3x3`), font-name / local-key / presentation-dimension
+getters, remaining format-type FourCCs, HEVC temporal-level keys, metadata
+format-description keys, and timebase notification strings.
+
+| status | before (this seed) | after |
+| --- | ---: | ---: |
+| implemented | 1573 | 2111 |
+| declared | 1511 | 1126 |
+| deferred | 420 | 267 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Top-5 `implemented` evidence distribution after this pass:
+
+1. `CMFormatDescriptionSurfaceTests.swift#testCMFormatDescriptionMediaSubTypeTable` — 115 (5.4%)
+2. `CMTimebaseAndAlgebraTests.swift#testCMOptionSetAlgebra` — 89 (4.2%)
+3. `CMFormatDescriptionExtensionOverlayTests.swift#testCMFormatDescriptionExtensionKeyRawValues` — 59 (2.8%)
+4. `CMDataBlockBufferTests.swift#testCMMutableDataBlockBufferReplaceAppendAndPointer` — 52 (2.5%)
+5. `CMSampleBufferOverlayTests.swift#testCMSampleBufferSamplePropertiesAndAttachments` — 52 (2.5%)
+
+No non-constant test owns more than 40% of implemented rows. DispatchSourceTimer
+overloads stay `declared` because constructing a live `DispatchSource` in this
+Linux gate aborts libdispatch on release. `AudioBufferList` / `CVImageBuffer`
+sample-buffer entry points remain deferred. SwiftUI cross-import overlay IDs
+are not in this module's public surface.
 
 Sealed gate `bash full/coremedia/tests/acceptance/test_host.sh` (this snapshot):
 

@@ -239,6 +239,33 @@ public enum MusicCatalogChartKind: Hashable, Sendable, Codable, CaseIterable, Cu
         case .cityTop: return "cityTop"
         }
     }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let raw = try container.decode(String.self)
+        switch raw {
+        case "most-played", "mostPlayed":
+            self = .mostPlayed
+        case "daily-global-top", "dailyGlobalTop":
+            self = .dailyGlobalTop
+        case "city-top", "cityTop":
+            self = .cityTop
+        default:
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "unknown MusicCatalogChartKind \(raw)"
+            )
+        }
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .mostPlayed: try container.encode("most-played")
+        case .dailyGlobalTop: try container.encode("daily-global-top")
+        case .cityTop: try container.encode("city-top")
+        }
+    }
 }
 
 public struct EditorialNotes: Hashable, Sendable, Codable, CustomStringConvertible, CustomDebugStringConvertible {

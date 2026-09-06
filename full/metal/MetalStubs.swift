@@ -4,7 +4,10 @@ import Foundation
 /// and pipeline surface. None of these execute GPU, ray-tracing, tensor, or
 /// Metal 4 work.
 
-public protocol MTLAccelerationStructure: MTLResource {}
+public protocol MTLAccelerationStructure: MTLResource {
+    var gpuResourceID: MTLResourceID { get }
+    var size: Int { get }
+}
 
 public protocol MTLVisibleFunctionTable: MTLResource {
     var gpuResourceID: MTLResourceID { get }
@@ -109,14 +112,40 @@ public protocol MTLBufferBinding: MTLBinding {
 public protocol MTL4BinaryFunction: NSObjectProtocol, Sendable {}
 
 open class MTL4PipelineDescriptor: NSObject, @unchecked Sendable {
+    public var label: String?
+    public var options: MTL4PipelineOptions?
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTL4PipelineOptions: NSObject, @unchecked Sendable {
+    public var shaderReflection: MTL4ShaderReflection = []
+    public var shaderValidation: MTLShaderValidation = .default
+
     public override init() {
         super.init()
     }
 }
 
 open class MTL4RenderPipelineBinaryFunctionsDescriptor: NSObject, @unchecked Sendable {
+    public var fragmentAdditionalBinaryFunctions: [any MTL4BinaryFunction]?
+    public var meshAdditionalBinaryFunctions: [any MTL4BinaryFunction]?
+    public var objectAdditionalBinaryFunctions: [any MTL4BinaryFunction]?
+    public var tileAdditionalBinaryFunctions: [any MTL4BinaryFunction]?
+    public var vertexAdditionalBinaryFunctions: [any MTL4BinaryFunction]?
+
     public override init() {
         super.init()
+    }
+
+    public func reset() {
+        fragmentAdditionalBinaryFunctions = nil
+        meshAdditionalBinaryFunctions = nil
+        objectAdditionalBinaryFunctions = nil
+        tileAdditionalBinaryFunctions = nil
+        vertexAdditionalBinaryFunctions = nil
     }
 }
 
@@ -207,7 +236,7 @@ public protocol MTLIndirectRenderCommand: NSObjectProtocol {
     )
 }
 
-open class LinuxMTLDrawable: NSObject, MTLDrawable, @unchecked Sendable {
+public final class LinuxMTLDrawable: NSObject, MTLDrawable, @unchecked Sendable {
     public var drawableID: Int = 0
     public var presentedTime: CFTimeInterval = 0
     private var handlers: [MTLDrawablePresentedHandler] = []

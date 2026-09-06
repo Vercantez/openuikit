@@ -197,6 +197,8 @@ public struct ChartLayoutAttributes: Equatable, Sendable {
     public var maskName: String?
     public var symbolBy: String?
     public var lineStyleBy: String?
+    public var overflowX: String?
+    public var overflowY: String?
 
     public init(
         offsetX: Double = 0,
@@ -220,7 +222,9 @@ public struct ChartLayoutAttributes: Equatable, Sendable {
         positionBy: String? = nil,
         maskName: String? = nil,
         symbolBy: String? = nil,
-        lineStyleBy: String? = nil
+        lineStyleBy: String? = nil,
+        overflowX: String? = nil,
+        overflowY: String? = nil
     ) {
         self.offsetX = offsetX
         self.offsetY = offsetY
@@ -244,6 +248,8 @@ public struct ChartLayoutAttributes: Equatable, Sendable {
         self.maskName = maskName
         self.symbolBy = symbolBy
         self.lineStyleBy = lineStyleBy
+        self.overflowX = overflowX
+        self.overflowY = overflowY
     }
 }
 
@@ -1322,6 +1328,8 @@ public struct ChartScaleStorage: Equatable, Sendable {
     public var domainMax: Double?
     public var categories: [String]
     public var range: PlotDimensionScaleRange?
+    public var includesZero: Bool?
+    public var reversed: Bool?
 
     public init(
         axis: String,
@@ -1329,7 +1337,9 @@ public struct ChartScaleStorage: Equatable, Sendable {
         domainMin: Double? = nil,
         domainMax: Double? = nil,
         categories: [String] = [],
-        range: PlotDimensionScaleRange? = nil
+        range: PlotDimensionScaleRange? = nil,
+        includesZero: Bool? = nil,
+        reversed: Bool? = nil
     ) {
         self.axis = axis
         self.type = type
@@ -1337,6 +1347,8 @@ public struct ChartScaleStorage: Equatable, Sendable {
         self.domainMax = domainMax
         self.categories = categories
         self.range = range
+        self.includesZero = includesZero
+        self.reversed = reversed
     }
 }
 

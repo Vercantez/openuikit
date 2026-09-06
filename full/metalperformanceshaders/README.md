@@ -35,6 +35,19 @@ is a separate central review step.
   data. Encode stays fail-closed except host Adam/SGD/RMSProp on vectors and
   matrices.
 - Host float32 Adam, SGD, and RMSProp on `MPSVector` / `MPSMatrix`.
+- Host float32 `MPSMatrixNeuron` (ReLU/linear/sigmoid and related activations
+  with optional bias/alpha/PReLU), `MPSMatrixFullyConnected` (GEMM + bias +
+  neuron) and its gradient, `MPSMatrixBatchNormalization` (per-channel
+  population mean/var + gamma/beta) and its gradient, and
+  `MPSMatrixSoftMaxGradient`. `MPSMatrixRandom` / MTGP32 / Philox fill
+  float32 host buffers with a documented LCG (not Apple's generators).
+- `MPSAccelerationStructure` and polygon/triangle/instance subclasses are
+  constructable host objects; `rebuild` / `refit` stay unbuilt and refuse GPU
+  work. `MPSCommandBuffer` wraps a host command buffer; `MPSKeyedUnarchiver`
+  never fabricates decoded kernels.
+- CNN convolution-gradient / arithmetic-gradient / dropout / instance and
+  group-norm / RNN inference layers / EDLines / guided filter / SVGF denoiser
+  are constructable validated data; encode stays fail-closed.
 - `MPSRayIntersector` is constructable; every `encodeIntersection` is
   fail-closed. `MPSSVGF` stores filter parameters and refuses every encode.
 - `MPSSupportsMTLDevice` is always `false` and `MPSGetPreferredDevice` is
@@ -56,7 +69,11 @@ encode, `MPSCNNBinaryKernel` / `MPSCNNMultiaryKernel`, `MPSSVGF`,
 and `MPSRayIntersector.encodeIntersection` record
 `MPSHostBoundary.lastRefusedAPI` and do not invent GPU results. CNN
 convolution encode is fail-closed; descriptors and weight state objects are
-real host data. `MPSAccelerationStructure` remains a declared stub.
+real host data. `MPSAccelerationStructure.rebuild` / `encodeRefit` leave
+status `.unbuilt` and refuse GPU work. `MPSKeyedUnarchiver` returns nil.
+RNN inference, EDLines, guided-filter, instance/group-norm, and SVGF
+denoiser encode record `MPSHostBoundary.lastRefusedAPI`. `MPSHandle` and
+`MPSHeapProvider` remain declared stubs.
 
 ## Tests
 
@@ -68,7 +85,9 @@ softmax, CNN fail-closed encode, and ray fail-closed intersection, then prints
 Focused `tests/agent/*Tests.swift` probes are the coverage evidence for
 `implemented` rows. Pixel-exact image kernels live in
 `MPSImageKernelCPUTests.swift`. Depth-pass CNN/optimizer tests live in
-`MPSDepthPassTests.swift`.
+`MPSDepthPassTests.swift`. Wave-9 matrix neuron/FC/BN and acceleration /
+CNN-gradient / RNN inference probes live in `MPSWave9MatrixTests.swift`
+and `MPSWave9SurfaceTests.swift`.
 
 Run:
 
@@ -147,3 +166,51 @@ fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`).
 `swiftc` is Swift 6.2.4 / linux and the sealed gate compiles with a clean
 product tree (`products=clean`). Starting commit
 `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b` matched.
+
+## Depth pass 2026-09 (wave 9)
+
+Coverage before this pass: **2282 implemented / 3 declared / 1097 deferred /
+0 unavailable / 0 not-applicable**.
+
+Coverage after this pass: **2795 implemented / 2 declared / 585 deferred /
+0 unavailable / 0 not-applicable**.
+
+This pass keeps the earlier host image/matrix/CNN kernels and extends the
+largest remaining families: `MPSMatrixNeuron` / `MPSMatrixFullyConnected` /
+`MPSMatrixBatchNormalization` (host float32 encode with hand-computed
+oracles), `MPSMatrixSoftMaxGradient`, `MPSMatrixRandom` (LCG host fill),
+`MPSAccelerationStructure` plus polygon/triangle/instance subclasses,
+`MPSCommandBuffer`, `MPSKeyedUnarchiver`, `MPSCNNConvolutionGradient`,
+`MPSNNArithmeticGradientNode`, instance/group-norm data sources,
+`MPSRNNMatrixInferenceLayer` / `MPSRNNImageInferenceLayer`,
+`MPSImageEDLines`, and `MPSSVGFDenoiser`.
+
+Host ReLU/FC/BN numerics run against hand-computed float32 rasters. CNN /
+RNN / EDLines / guided-filter / SVGF encode stays fail-closed. No
+`unavailable` rows: remaining deferred identifiers still lack a host
+oracle, not a hardware entitlement. Metal overlay methods on
+`MTLCommandBuffer` (`useResidencySets`, `logs`, `completed()`,
+`scheduled()`) stay deferred (no Apple Metal module). `MPSHandle` and
+`MPSHeapProvider` stay declared stubs. No SwiftUI overlay IDs. No
+`not-applicable` rows.
+
+Top-5 `implemented` evidence distribution after this pass:
+
+| citations | share | evidence |
+| ---: | ---: | --- |
+| 377 | 13.5% | `MPSTypesTests.swift#testMPSOptionSetAlgebra` (option-set members; shared table-driven test) |
+| 343 | 12.3% | `MPSTypesTests.swift#testMPSEnumRawValues` (enum members; shared table-driven test) |
+| 243 | 8.7% | `MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels` |
+| 135 | 4.8% | `MPSGeometryTests.swift#testMPSGeometryStructs` |
+| 104 | 3.7% | `MPSGeometryTests.swift#testMPSPackedAndRayStructs` |
+
+No non-enum/option-set test cites more than 40% of the remaining implemented
+rows (next highest is `testMPSCNNWave9Kernels` at 11.7% of remaining).
+Implemented gain versus the previous ledger: **+513**.
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
+is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this snapshot
+fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`).
+`swiftc` is Swift 6.2.4 / linux and the sealed gate compiles with a clean
+product tree (`products=clean`). Starting commit
+`6bf18072f4bc9ca119f4b0ad49dd8478f92dd5f0` matched.

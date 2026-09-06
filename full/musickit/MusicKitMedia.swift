@@ -284,7 +284,7 @@ public struct Playlist: MusicItem, PlayableMusicItem, FilterableMusicItem, Music
 
 public struct MusicVideo: MusicItem, PlayableMusicItem, FilterableMusicItem, MusicLibraryRequestable,
     MusicCatalogSearchable, MusicLibrarySearchable, MusicLibraryAddable, MusicPlaylistAddable,
-    MusicCatalogChartRequestable, MusicVideoFilter, LibraryMusicVideoFilter, LibraryMusicVideoSortProperties,
+    MusicCatalogChartRequestable, MusicVideoFilter,
     Hashable, Sendable, Codable, CustomStringConvertible, CustomDebugStringConvertible
 {
     public typealias FilterType = MusicVideoFilter
@@ -358,6 +358,11 @@ public struct MusicVideo: MusicItem, PlayableMusicItem, FilterableMusicItem, Mus
         } else {
             url = nil
         }
+        trackNumber = try attributes?.decodeIfPresent(Int.self, forKey: .trackNumber)
+        lastPlayedDate = MusicKitJSON.decodeDate(try attributes?.decodeIfPresent(String.self, forKey: .lastPlayedDate))
+        libraryAddedDate = MusicKitJSON.decodeDate(try attributes?.decodeIfPresent(String.self, forKey: .libraryAddedDate))
+        playCount = try attributes?.decodeIfPresent(Int.self, forKey: .playCount)
+        contentRating = try attributes?.decodeIfPresent(ContentRating.self, forKey: .contentRating)
     }
 
     public func encode(to encoder: any Encoder) throws {
@@ -371,7 +376,7 @@ public struct MusicVideo: MusicItem, PlayableMusicItem, FilterableMusicItem, Mus
 }
 
 public enum Track: MusicItem, PlayableMusicItem, MusicLibraryRequestable,
-    LibraryTrackFilter, LibraryTrackSortProperties, Hashable, Sendable, Codable,
+    LibraryTrackFilter, Hashable, Sendable, Codable,
     CustomStringConvertible, CustomDebugStringConvertible
 {
     case musicVideo(MusicVideo)

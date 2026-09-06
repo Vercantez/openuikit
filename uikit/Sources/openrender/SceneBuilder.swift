@@ -960,6 +960,9 @@ final class SceneCollectionDriver: UICollectionViewDataSource,
 
 @MainActor
 func makeCollectionView(_ j: SceneJSON) -> UICollectionView {
+    if let appearanceName = j["listAppearance"]?.stringValue {
+        return makeListCollectionView(j, appearanceName: appearanceName)
+    }
     let layout = UICollectionViewFlowLayout()
     switch j["scrollDirection"]?.stringValue ?? "vertical" {
     case "vertical": layout.scrollDirection = .vertical
@@ -994,6 +997,125 @@ func makeCollectionView(_ j: SceneJSON) -> UICollectionView {
     let driver = SceneCollectionDriver(sectionsJSON: j["sections"]?.arrayValue ?? [],
                                        cornerRadius: num(j["itemCornerRadius"]) ?? 0)
     sceneCollectionDrivers.append(driver)   // dataSource/delegate are weak
+    c.dataSource = driver
+    c.delegate = driver
+    return c
+}
+
+var sceneListDrivers: [SceneListDriver] = []
+
+final class SceneListDriver: UICollectionViewDataSource, UICollectionViewDelegate {
+    struct Item {
+        let text: String
+        let secondaryText: String?
+        let style: String
+        let accessories: [String]
+        let selected: Bool
+    }
+    struct Section {
+        let header: String?
+        let items: [Item]
+    }
+    let sections: [Section]
+    let trailingSwipe: [(title: String, style: String)]
+    let revealSwipe: String?
+
+    init(j: SceneJSON) {
+        trailingSwipe = (j["trailingSwipe"]?.arrayValue ?? []).compactMap { sv in
+            guard let o = sv.objectValue else { return nil }
+            return (o["title"]?.stringValue ?? "", o["style"]?.stringValue ?? "destructive")
+        }
+        revealSwipe = j["revealSwipe"]?.stringValue
+        sections = (j["sections"]?.arrayValue ?? []).map { sv in
+            guard let s = sv.objectValue else { fatalError("bad list section") }
+            let items = (s["items"]?.arrayValue ?? []).map { iv -> Item in
+                guard let i = iv.objectValue else { fatalError("bad list item") }
+                let accessories = (i["accessories"]?.arrayValue ?? []).compactMap { $0.stringValue }
+                return Item(text: i["text"]?.stringValue ?? "",
+                            secondaryText: i["secondaryText"]?.stringValue,
+                            style: i["style"]?.stringValue ?? "cell",
+                            accessories: accessories,
+                            selected: i["selected"]?.boolValue == true)
+            }
+            return Section(header: s["header"]?.stringValue, items: items)
+        }
+    }
+
+    func numberOfSections(in cv: UICollectionView) -> Int { sections.count }
+    func collectionView(_ cv: UICollectionView, numberOfItemsInSection s: Int) -> Int {
+        sections[s].items.count
+    }
+    func collectionView(_ cv: UICollectionView,
+                        cellForItemAt ip: IndexPath) -> UICollectionViewCell {
+        let cell = cv.dequeueReusableCell(withReuseIdentifier: "list", for: ip)
+            as! UICollectionViewListCell
+        let item = sections[ip.section].items[ip.item]
+        var cfg: UIListContentConfiguration
+        switch item.style {
+        case "subtitle": cfg = .subtitleCell()
+        case "value": cfg = .valueCell()
+        default: cfg = .cell()
+        }
+        cfg.text = item.text
+        cfg.secondaryText = item.secondaryText
+        cell.contentConfiguration = cfg
+        var accessories: [UICellAccessory] = []
+        for name in item.accessories {
+            switch name {
+            case "disclosureIndicator": accessories.append(.disclosureIndicator())
+            case "checkmark": accessories.append(.checkmark())
+            case "delete": accessories.append(.delete(displayed: .always))
+            case "insert": accessories.append(.insert(displayed: .always))
+            case "reorder": accessories.append(.reorder(displayed: .always))
+            case "multiselect": accessories.append(.multiselect(displayed: .always))
+            case "outlineDisclosure": accessories.append(.outlineDisclosure())
+            default: break
+            }
+        }
+        cell.accessories = accessories
+        if item.selected { cell.isSelected = true }
+        return cell
+    }
+
+    func collectionView(_ cv: UICollectionView, willDisplay cell: UICollectionViewCell,
+                        forItemAt ip: IndexPath) {
+        if revealSwipe == "trailing", ip.section == 0, ip.item == 0 {
+            cv._openRevealSwipeActions(at: ip, edge: .right, progress: 1)
+        }
+    }
+}
+
+func makeListCollectionView(_ j: SceneJSON, appearanceName: String) -> UICollectionView {
+    let appearance: UICollectionLayoutListConfiguration.Appearance
+    switch appearanceName {
+    case "plain": appearance = .plain
+    case "grouped": appearance = .grouped
+    case "insetGrouped": appearance = .insetGrouped
+    case "sidebar": appearance = .sidebar
+    case "sidebarPlain": appearance = .sidebarPlain
+    case let s: fatalError("bad listAppearance '\(s)'")
+    }
+    var config = UICollectionLayoutListConfiguration(appearance: appearance)
+    if j["showsSeparators"]?.boolValue == false { config.showsSeparators = false }
+    let driver = SceneListDriver(j: j)
+    if !driver.trailingSwipe.isEmpty {
+        config.trailingSwipeActionsConfigurationProvider = { _ in
+            let actions = driver.trailingSwipe.map { row -> UIContextualAction in
+                let style: UIContextualAction.Style =
+                    row.style == "destructive" ? .destructive : .normal
+                return UIContextualAction(style: style, title: row.title) { _, _, done in
+                    done(true)
+                }
+            }
+            return UISwipeActionsConfiguration(actions: actions)
+        }
+    }
+    let layout = UICollectionViewCompositionalLayout.list(using: config)
+    let c = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    c.showsVerticalScrollIndicator = false
+    c.showsHorizontalScrollIndicator = false
+    c.register(UICollectionViewListCell.self, forCellWithReuseIdentifier: "list")
+    sceneListDrivers.append(driver)
     c.dataSource = driver
     c.delegate = driver
     return c
