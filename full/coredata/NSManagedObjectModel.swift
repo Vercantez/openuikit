@@ -200,11 +200,20 @@ open class NSEntityDescription: NSObject {
     public var managedObjectModel: NSManagedObjectModel { _model ?? _CDDetachedModel }
     public var superentity: NSEntityDescription? { _superentity }
 
-    public var propertiesByName: [String: NSPropertyDescription] { _propertiesByName }
+    public var propertiesByName: [String: NSPropertyDescription] {
+        var result: [String: NSPropertyDescription] = [:]
+        if let superentity {
+            result.merge(superentity.propertiesByName) { _, current in current }
+        }
+        for (key, value) in _propertiesByName {
+            result[key] = value
+        }
+        return result
+    }
 
     public var attributesByName: [String: NSAttributeDescription] {
         var result: [String: NSAttributeDescription] = [:]
-        for (key, value) in _propertiesByName {
+        for (key, value) in propertiesByName {
             if let attribute = value as? NSAttributeDescription {
                 result[key] = attribute
             }
@@ -214,7 +223,7 @@ open class NSEntityDescription: NSObject {
 
     public var relationshipsByName: [String: NSRelationshipDescription] {
         var result: [String: NSRelationshipDescription] = [:]
-        for (key, value) in _propertiesByName {
+        for (key, value) in propertiesByName {
             if let relationship = value as? NSRelationshipDescription {
                 result[key] = relationship
             }
