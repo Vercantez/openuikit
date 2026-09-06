@@ -265,4 +265,77 @@ final class UIAlertLayoutTests: XCTestCase {
         XCTAssertEqual(frame.midY, 333.5, accuracy: 0.5)
         XCTAssertEqual(frame.minY, 201.5, accuracy: 0.5)
     }
+
+    /// MEASURED Ledger t6000.ax1 / Modal t5200.ax1, iPhone SE 2x / iOS 26.1:
+    /// title y **73**, message y **154.5**, header 233.5, one-pill card **329**
+    /// at y **169**. Three pills clip to window−2×(73+39.5+8) = **426**.
+    func testAlertHeaderPaddingAtAccessibilityLarge() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        let savedTraits = UITraitCollection.current
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .accessibilityLarge)
+        defer {
+            OpenUIKitRuntime.systemFontCut = saved
+            UITraitCollection.current = savedTraits
+        }
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
+        let base = UIViewController()
+        window.rootViewController = base
+        window.makeKeyAndVisible()
+
+        let one = UIAlertController(title: "Export",
+                                    message: "2026-09-04T10:30:00Z",
+                                    preferredStyle: .alert)
+        one.addAction(UIAlertAction(title: "OK", style: .cancel))
+        base.present(one, animated: false)
+        let labels = one.view.subviews.compactMap { $0 as? UILabel }
+        XCTAssertEqual(labels[0].frame.minY, 73, accuracy: 0.5)
+        XCTAssertEqual(labels[1].frame.minY, 154.5, accuracy: 1.0)
+        XCTAssertEqual(one.view.frame.height, 329, accuracy: 1.0)
+        XCTAssertEqual(one.view.frame.minY, 169, accuracy: 1.0)
+        base.dismiss(animated: false)
+
+        let three = UIAlertController(title: "Save changes?",
+                                       message: "This cannot be undone.",
+                                       preferredStyle: .alert)
+        three.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        three.addAction(UIAlertAction(title: "Save", style: .default))
+        three.addAction(UIAlertAction(title: "Discard", style: .destructive))
+        base.present(three, animated: false)
+        XCTAssertEqual(three.view.frame.height, 426, accuracy: 1.0)
+        XCTAssertEqual(three.view.frame.minY, 120.5, accuracy: 1.0)
+    }
+
+    /// MEASURED Ledger t6000.xxxl / Modal t5200.xxxl: title y **38**,
+    /// message y **82.5**, header 113, one-pill card **193**.
+    func testAlertHeaderPaddingAtXxxxl() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        let savedTraits = UITraitCollection.current
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .extraExtraExtraLarge)
+        defer {
+            OpenUIKitRuntime.systemFontCut = saved
+            UITraitCollection.current = savedTraits
+        }
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .extraExtraExtraLarge
+        let base = UIViewController()
+        window.rootViewController = base
+        window.makeKeyAndVisible()
+        let ac = UIAlertController(title: "Export",
+                                    message: "2026-09-04T10:30:00Z",
+                                    preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .cancel))
+        base.present(ac, animated: false)
+        let labels = ac.view.subviews.compactMap { $0 as? UILabel }
+        XCTAssertEqual(labels[0].frame.minY, 38, accuracy: 0.5)
+        XCTAssertEqual(labels[1].frame.minY, 82.5, accuracy: 1.0)
+        XCTAssertEqual(ac.view.frame.height, 193, accuracy: 1.0)
+        XCTAssertEqual(ac.view.frame.minY, 237, accuracy: 1.0)
+    }
 }
