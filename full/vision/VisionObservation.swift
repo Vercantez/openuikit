@@ -1,15 +1,21 @@
 import Foundation
 
-open class VNObservation: NSObject, NSCopying, NSSecureCoding {
+open class VNObservation: NSObject, NSCopying, NSSecureCoding, VNRequestRevisionProviding {
     public static var supportsSecureCoding: Bool { true }
 
     public let uuid: UUID
     public let confidence: VNConfidence
     public var timeRange: CMTimeRange = .zero
+    public var requestRevision: Int
 
-    public init(uuid: UUID = UUID(), confidence: VNConfidence = 1) {
+    public init(
+        uuid: UUID = UUID(),
+        confidence: VNConfidence = 1,
+        requestRevision: Int = VNRequestRevisionUnspecified
+    ) {
         self.uuid = uuid
         self.confidence = max(0, min(1, confidence))
+        self.requestRevision = requestRevision
         super.init()
     }
 
@@ -17,16 +23,18 @@ open class VNObservation: NSObject, NSCopying, NSSecureCoding {
         let uuidString = coder.decodeObject(of: NSString.self, forKey: "uuid") as String?
         uuid = UUID(uuidString: uuidString ?? "") ?? UUID()
         confidence = Float(coder.decodeDouble(forKey: "confidence"))
+        requestRevision = coder.decodeInteger(forKey: "requestRevision")
         super.init()
     }
 
     open func encode(with coder: NSCoder) {
         coder.encode(uuid.uuidString as NSString, forKey: "uuid")
         coder.encode(Double(confidence), forKey: "confidence")
+        coder.encode(requestRevision, forKey: "requestRevision")
     }
 
     open func copy(with zone: NSZone? = nil) -> Any {
-        VNObservation(uuid: uuid, confidence: confidence)
+        VNObservation(uuid: uuid, confidence: confidence, requestRevision: requestRevision)
     }
 }
 
@@ -40,8 +48,7 @@ open class VNDetectedObjectObservation: VNObservation {
 
     public init(requestRevision: Int, boundingBox: CGRect, confidence: VNConfidence = 1, uuid: UUID = UUID()) {
         self.boundingBox = boundingBox
-        _ = requestRevision
-        super.init(uuid: uuid, confidence: confidence)
+        super.init(uuid: uuid, confidence: confidence, requestRevision: requestRevision)
     }
 
     public required init?(coder: NSCoder) {
@@ -600,12 +607,120 @@ func visionHorizonCenteredTransform(angle: Double, width: Int, height: Int) -> C
 
 open class VNHumanObservation: VNDetectedObjectObservation {
     public var upperBodyOnly: Bool = false
+
+    public init(boundingBox: CGRect, upperBodyOnly: Bool = false, confidence: VNConfidence = 1, uuid: UUID = UUID()) {
+        self.upperBodyOnly = upperBodyOnly
+        super.init(requestRevision: VNRequestRevisionUnspecified, boundingBox: boundingBox, confidence: confidence, uuid: uuid)
+    }
+
+    public required init?(coder: NSCoder) {
+        upperBodyOnly = coder.decodeBool(forKey: "upperBodyOnly")
+        super.init(coder: coder)
+    }
+
+    open override func encode(with coder: NSCoder) {
+        super.encode(with: coder)
+        coder.encode(upperBodyOnly, forKey: "upperBodyOnly")
+    }
 }
 
-open class VNInstanceMaskObservation: VNObservation {}
-open class VNSaliencyImageObservation: VNPixelBufferObservation {}
+open class VNInstanceMaskObservation: VNObservation {
+    public let instanceMask: CVPixelBuffer
+
+    public var allInstances: IndexSet {
+        visionInstanceLabels(in: instanceMask)
+    }
+
+    public init(
+        instanceMask: CVPixelBuffer,
+        confidence: VNConfidence = 1,
+        uuid: UUID = UUID()
+    ) {
+        self.instanceMask = instanceMask
+        super.init(uuid: uuid, confidence: confidence)
+    }
+
+    public required init?(coder: NSCoder) {
+        instanceMask = CVPixelBuffer(width: 0, height: 0)
+        super.init(coder: coder)
+    }
+
+    public func generateMask(forInstances instances: IndexSet) throws -> CVPixelBuffer {
+        try visionGenerateInstanceMask(instanceMask, instances: instances)
+    }
+
+    public func generateMaskedImage(
+        ofInstances instances: IndexSet,
+        from requestHandler: VNImageRequestHandler,
+        croppedToInstancesExtent cropResult: Bool
+    ) throws -> CVPixelBuffer {
+        let mask = try generateMask(forInstances: instances)
+        return try visionApplyInstanceMask(
+            mask,
+            to: requestHandler.raster.makePixelBuffer(),
+            croppedToInstancesExtent: cropResult
+        )
+    }
+
+    public func generateScaledMaskForImage(
+        forInstances instances: IndexSet,
+        from requestHandler: VNImageRequestHandler
+    ) throws -> CVPixelBuffer {
+        let mask = try generateMask(forInstances: instances)
+        let target = requestHandler.raster
+        return visionScaleMask(mask, width: target.width, height: target.height)
+    }
+}
+
+open class VNSaliencyImageObservation: VNPixelBufferObservation {
+    public var salientObjects: [VNRectangleObservation]?
+
+    public init(
+        pixelBuffer: CVPixelBuffer,
+        salientObjects: [VNRectangleObservation]? = nil,
+        featureName: String? = "saliency",
+        confidence: VNConfidence = 1,
+        uuid: UUID = UUID()
+    ) {
+        self.salientObjects = salientObjects
+        super.init(pixelBuffer: pixelBuffer, featureName: featureName, confidence: confidence, uuid: uuid)
+    }
+
+    public required init?(coder: NSCoder) {
+        salientObjects = nil
+        super.init(coder: coder)
+    }
+}
+
 open class VNRecognizedObjectObservation: VNDetectedObjectObservation {}
-open class VNImageAestheticsScoresObservation: VNObservation {}
+
+open class VNImageAestheticsScoresObservation: VNObservation {
+    public let isUtility: Bool
+    public let overallScore: Float
+
+    public init(
+        overallScore: Float,
+        isUtility: Bool = false,
+        confidence: VNConfidence = 1,
+        uuid: UUID = UUID()
+    ) {
+        self.overallScore = max(-1, min(1, overallScore))
+        self.isUtility = isUtility
+        super.init(uuid: uuid, confidence: confidence)
+    }
+
+    public required init?(coder: NSCoder) {
+        isUtility = coder.decodeBool(forKey: "isUtility")
+        overallScore = coder.decodeFloat(forKey: "overallScore")
+        super.init(coder: coder)
+    }
+
+    open override func encode(with coder: NSCoder) {
+        super.encode(with: coder)
+        coder.encode(isUtility, forKey: "isUtility")
+        coder.encode(overallScore, forKey: "overallScore")
+    }
+}
 
 open class VNTrajectoryObservation: VNObservation {
     public var detectedPoints: [VNPoint]
@@ -660,4 +775,119 @@ private func appendContour(_ contour: VNContour, to path: CGPath) {
     for child in contour.childContours {
         appendContour(child, to: path)
     }
+}
+
+func visionInstanceLabels(in buffer: CVPixelBuffer) -> IndexSet {
+    var labels = IndexSet()
+    let width = buffer.width
+    let height = buffer.height
+    guard width > 0, height > 0 else { return labels }
+    for y in 0..<height {
+        for x in 0..<width {
+            let offset = (y * width + x) * 4
+            let label = Int(buffer.pixels[offset])
+            if label > 0 {
+                labels.insert(label)
+            }
+        }
+    }
+    return labels
+}
+
+func visionGenerateInstanceMask(_ buffer: CVPixelBuffer, instances: IndexSet) throws -> CVPixelBuffer {
+    let width = buffer.width
+    let height = buffer.height
+    guard width > 0, height > 0 else {
+        throw vnMakeError(.invalidImage, description: "instance mask is empty")
+    }
+    var pixels = [UInt8](repeating: 0, count: width * height * 4)
+    for y in 0..<height {
+        for x in 0..<width {
+            let offset = (y * width + x) * 4
+            let label = Int(buffer.pixels[offset])
+            if instances.contains(label) {
+                pixels[offset] = 255
+                pixels[offset + 1] = 255
+                pixels[offset + 2] = 255
+                pixels[offset + 3] = 255
+            } else {
+                pixels[offset + 3] = 255
+            }
+        }
+    }
+    return CVPixelBuffer(width: width, height: height, pixels: pixels)
+}
+
+func visionApplyInstanceMask(
+    _ mask: CVPixelBuffer,
+    to image: CVPixelBuffer,
+    croppedToInstancesExtent cropResult: Bool
+) throws -> CVPixelBuffer {
+    let width = image.width
+    let height = image.height
+    guard width > 0, height > 0 else {
+        throw vnMakeError(.invalidImage, description: "masked image source is empty")
+    }
+    let scaledMask = visionScaleMask(mask, width: width, height: height)
+    var minX = width
+    var minY = height
+    var maxX = 0
+    var maxY = 0
+    var pixels = [UInt8](repeating: 0, count: width * height * 4)
+    for y in 0..<height {
+        for x in 0..<width {
+            let offset = (y * width + x) * 4
+            let keep = scaledMask.pixels[offset] > 0
+            if keep {
+                pixels[offset] = image.pixels[offset]
+                pixels[offset + 1] = image.pixels[offset + 1]
+                pixels[offset + 2] = image.pixels[offset + 2]
+                pixels[offset + 3] = image.pixels[offset + 3]
+                minX = min(minX, x)
+                minY = min(minY, y)
+                maxX = max(maxX, x)
+                maxY = max(maxY, y)
+            } else {
+                pixels[offset + 3] = 255
+            }
+        }
+    }
+    if cropResult, maxX >= minX, maxY >= minY {
+        let cropWidth = maxX - minX + 1
+        let cropHeight = maxY - minY + 1
+        var cropped = [UInt8](repeating: 0, count: cropWidth * cropHeight * 4)
+        for y in 0..<cropHeight {
+            for x in 0..<cropWidth {
+                let src = ((y + minY) * width + (x + minX)) * 4
+                let dst = (y * cropWidth + x) * 4
+                cropped[dst] = pixels[src]
+                cropped[dst + 1] = pixels[src + 1]
+                cropped[dst + 2] = pixels[src + 2]
+                cropped[dst + 3] = pixels[src + 3]
+            }
+        }
+        return CVPixelBuffer(width: cropWidth, height: cropHeight, pixels: cropped)
+    }
+    return CVPixelBuffer(width: width, height: height, pixels: pixels)
+}
+
+func visionScaleMask(_ mask: CVPixelBuffer, width: Int, height: Int) -> CVPixelBuffer {
+    let srcW = max(1, mask.width)
+    let srcH = max(1, mask.height)
+    let dstW = max(1, width)
+    let dstH = max(1, height)
+    var pixels = [UInt8](repeating: 0, count: dstW * dstH * 4)
+    for y in 0..<dstH {
+        let srcY = min(srcH - 1, y * srcH / dstH)
+        for x in 0..<dstW {
+            let srcX = min(srcW - 1, x * srcW / dstW)
+            let src = (srcY * srcW + srcX) * 4
+            let dst = (y * dstW + x) * 4
+            pixels[dst] = mask.pixels[src]
+            pixels[dst + 1] = mask.pixels[src + 1]
+            pixels[dst + 2] = mask.pixels[src + 2]
+            pixels[dst + 3] = mask.pixels[src + 3]
+        }
+    }
+    return CVPixelBuffer(width: dstW, height: dstH, pixels: pixels)
 }
