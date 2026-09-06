@@ -32,6 +32,7 @@ public enum StoreKitTesting {
 
     public static func loadConfiguration(data: Data) throws {
         try LocalTestingStore.shared.load(data: data)
+        SKPaymentQueue.default().notifyStorefrontDidChange()
     }
 
     public static func loadConfiguration(from url: URL) throws {
@@ -148,6 +149,9 @@ public enum StoreKitTesting {
         reason: Transaction.RevocationReason
     ) {
         LocalTestingStore.shared.revoke(productID: productID, reason: reason)
+        SKPaymentQueue.default().notifyRevokedEntitlements(
+            productIdentifiers: [productID]
+        )
     }
 
     public static func expire(productID: String) {
@@ -209,6 +213,21 @@ public enum StoreKitTesting {
             throw StoreKitError.notAvailableInStorefront
         }
         LocalTestingStore.shared.setPromotionOrder(order)
+    }
+
+    public static func presentOfferCodeRedeemSheet() throws {
+        throw StoreKitError.notAvailableInStorefront
+    }
+
+    public static func subscriptionStatuses() -> [Product.SubscriptionInfo.Status] {
+        LocalTestingStore.shared.allSubscriptionStatuses()
+    }
+
+    public static func storefrontUpdates() -> [Storefront] {
+        if let current = LocalTestingStore.shared.currentStorefront {
+            return [current]
+        }
+        return []
     }
 }
 
@@ -795,6 +814,22 @@ final class LocalTestingStore: @unchecked Sendable {
             }
         }
         return Array(seen.values)
+    }
+
+    func subscriptionGroupIDs() -> [String] {
+        lock.lock()
+        defer { lock.unlock() }
+        return Array(Set(catalog.values.compactMap(\.subscriptionGroupID))).sorted()
+    }
+
+    func allSubscriptionStatuses() -> [Product.SubscriptionInfo.Status] {
+        var result: [Product.SubscriptionInfo.Status] = []
+        for group in subscriptionGroupIDs() {
+            if let statuses = try? Product.SubscriptionInfo.statusNow(for: group) {
+                result.append(contentsOf: statuses)
+            }
+        }
+        return result
     }
 
     private func entitles(_ stored: StoredTransaction) -> Bool {

@@ -50,8 +50,10 @@ public func chartNumericScalar<Value: Plottable>(_ value: Value) -> Double? {
     case let value as UInt32: return Double(value)
     case let value as UInt64: return Double(value)
     case let value as Float: return Double(value)
+    case let value as Float16: return Double(value)
     case let value as Double: return value
     case let value as Date: return value.timeIntervalSinceReferenceDate
+    case let value as Decimal: return NSDecimalNumber(decimal: value).doubleValue
     default: return nil
     }
 }
@@ -76,6 +78,8 @@ public func chartDecode<Value: Plottable>(
 private func chartDecodeNumeric<Value: Plottable>(_ scalar: Double, as type: Value.Type) -> Value? {
     if type == Double.self { return scalar as? Value }
     if type == Float.self { return Float(scalar) as? Value }
+    if type == Float16.self { return Float16(scalar) as? Value }
+    if type == Decimal.self { return Decimal(scalar) as? Value }
     if type == Int.self { return Int(scalar.rounded()) as? Value }
     if type == Int8.self { return Int8(scalar.rounded()) as? Value }
     if type == Int16.self { return Int16(scalar.rounded()) as? Value }

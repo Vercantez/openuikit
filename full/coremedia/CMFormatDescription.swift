@@ -266,7 +266,7 @@ public final class CMFormatDescription: CMAttachmentBearerProtocol, @unchecked S
         public static let timeCode = MediaSubType(rawValue: kCMTimeCodeFormatType_TimeCode32)
     }
 
-    public struct Extensions: Equatable {
+    public struct Extensions: Equatable, Hashable {
         public struct Key: RawRepresentable, Hashable, Sendable {
             public typealias RawValue = String
             public var rawValue: String
@@ -359,8 +359,38 @@ public final class CMFormatDescription: CMAttachmentBearerProtocol, @unchecked S
             }
         }
 
+        internal var pairs: [(Key, Value)] = []
+
         public init() {}
         public init(base: CMFormatDescription.Extensions) { self = base }
+        public init(base: CFDictionary?) {
+            if let base {
+                let count = Int(CFDictionaryGetCount(base))
+                if count <= 0 { return }
+                var keys = Array<UnsafeRawPointer?>(repeating: nil, count: count)
+                var values = Array<UnsafeRawPointer?>(repeating: nil, count: count)
+                keys.withUnsafeMutableBufferPointer { keyBuf in
+                    values.withUnsafeMutableBufferPointer { valBuf in
+                        CFDictionaryGetKeysAndValues(base, keyBuf.baseAddress, valBuf.baseAddress)
+                    }
+                }
+                for index in 0..<count {
+                    guard let keyPtr = keys[index], let valPtr = values[index] else { continue }
+                    let key = unsafeBitCast(keyPtr, to: CFString.self)
+                    let name = unsafeBitCast(key, to: NSString.self) as String
+                    pairs.append((Key(rawValue: name), Value(unsafeBitCast(valPtr, to: CFTypeRef.self))))
+                }
+            }
+        }
+
+        public static func == (lhs: Extensions, rhs: Extensions) -> Bool {
+            if lhs.pairs.count != rhs.pairs.count { return false }
+            for (left, right) in zip(lhs.pairs, rhs.pairs) {
+                if left.0.rawValue != right.0.rawValue { return false }
+                if left.1 != right.1 { return false }
+            }
+            return true
+        }
     }
 
     public typealias T = CMFormatDescription

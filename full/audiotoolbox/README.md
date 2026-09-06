@@ -189,3 +189,63 @@ Swift `6.2.4` / `x86_64-unknown-linux-gnu` compiled `libAudioToolbox.dylib`. `.c
 ### Unresolved behavioral questions
 
 See `oracle-questions.tsv`. New items this pass: mixer volume versus `SetRenderCallback`, AudioCodec null `OSStatus`, MusicDevice MIDI on non-music-device units, processing-tap/timeline fail-closed codes, and CAF packet-table flexible-array layout.
+
+## Depth pass 2026-09 (wave 10)
+
+Fourth SDK-depth pass on the wave-9 tree (keep existing tests green; do not rewrite). HEAD at start was `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b`. `.cursor/verify-cloud-environment.sh` still fails because `scratch/ladder-corpus/focus-ios` is absent; `swiftc` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`. The sealed gate is the authority for `FRAMEWORK_FANOUT_HOST_OK`.
+
+### Coverage before / after
+
+| status | after wave 9 | after wave 10 |
+| --- | ---: | ---: |
+| implemented | 1371 | 2619 |
+| declared | 158 | 90 |
+| deferred | 1704 | 524 |
+| unavailable | 1 | 1 |
+| not-applicable | 0 | 0 |
+
+No SwiftUI cross-import overlay IDs (`s:7SwiftUI4View…`) appear in this census. Remaining `unavailable` is `AUMIDICIProfileChangedBlock` (MIDI CI / Apple-service).
+
+### Top-5 implemented evidence distribution (after)
+
+1. `testEnumHashableInequalityCatalog` — 200 rows (7.6%) — table-driven enum `!=` / `hash(into:)` / `init(rawValue:)`
+2. `testOptionSetAlgebraAudioUnitAndQueue` — 200 (7.6%) — table-driven OptionSet algebra
+3. `testOptionSetAlgebraNewMixerFlags` — 168 (6.4%) — mixer/transport/slice flags
+4. `testOptionSetAlgebraAudioFileFamily` — 163 (6.2%) — AudioFile/CAF OptionSet algebra
+5. `testAudioToolboxConstantCatalog` — 146 (5.6%) — table-driven k…/err… payloads
+
+No non-table test exceeds 40% of implemented rows.
+
+### Public surface added this pass
+
+- **OptionSet / enum overlays.** Remaining mixer/spatial/host-transport/slice/settings flags plus corroborated enum cases; synthesized SetAlgebra/Hashable/`init(rawValue:)` members are exercised by table tests.
+- **Parameter/property IDs.** Sampler, EQ/filter/dynamics/delay/reverb2/random/round-trip AAC, VoiceIO, AudioMix, hardware-codec policy, converter prime method, render-quality, instrument-type, and preset/settings/configuration string keys.
+- **Overlay structs.** `AUChannelInfo`, `AudioUnitParameter`, `AUPreset`, `MIDIMetaEvent`/`MIDIRawData`/`ParameterEvent`, CAF-adjacent `AudioFileMarker`/`AudioFile_SMPTE_Time`, sampler instrument/bank records, `AUParameterAutomationEvent`.
+- **AUParameter tree.** Factory `createParameter`/`createGroup`/`createTree`, observer tokens, `setValue`, string conversion callbacks.
+- **Runtime.** In-memory AudioFile user-data chunks; `MusicSequenceReverse` plus meta/raw/parameter events and `SetEventInfo`; `AudioUnitProcess` delegates to Render; property listeners fire on `SetProperty`; converter `Prepare`; hardware I/O helpers stay fail-closed (`AudioOutputUnitPublish`, queue device time, MusicDevice MIDI list).
+
+### Fail-closed boundaries (wave 10)
+
+- No hardware I/O, system-sound server, RemoteIO / VoiceProcessingIO render, processing taps, or AudioQueue device clocks.
+- MIDI CI remains unavailable. Compressed codec objects never initialize.
+- Inter-app Audio Unit publish/icon APIs return `kAudioComponentErr_NotPermitted`.
+- `AudioStreamBasicDescription` / `AudioBufferList` names stay in CoreAudioTypes.
+
+### Tests and gate
+
+- Agent tests: `AudioToolboxCoreTests.swift`, `AudioToolboxDepthTests.swift`, `AudioToolboxWave2Tests.swift`, `AudioToolboxWave3Tests.swift`, `AudioToolboxWave4Tests.swift`, `AudioToolboxWave5Tests.swift`.
+- Only host script under `tests/`: `bash full/audiotoolbox/tests/acceptance/test_host.sh` (exit 0). Exact sealed-gate stdout:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AudioToolbox lane=large-partitioned symbols=3234
+FRAMEWORK_FANOUT_REFERENCE_OK
+AUDIOTOOLBOX_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AudioToolbox dylib=libAudioToolbox.dylib
+```
+
+- `swift --version` is `Swift 6.2.4` targeting `x86_64-unknown-linux-gnu`. `.cursor/verify-cloud-environment.sh` still fails (`scratch/ladder-corpus/focus-ios` missing) and therefore does not print `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`. The sealed gate is the authority for this pass.
+
+### Unresolved behavioral questions
+
+See `oracle-questions.tsv`. New items this pass: 3D mixer HeadYaw/decibel aliases, `AUParameterAutomationEvent` reserved/hostTime layout, and `AudioUnitProcess` versus `AudioUnitRender` pull semantics.
+
