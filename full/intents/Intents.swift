@@ -66,17 +66,22 @@ open class INIntentResponse: NSObject, @unchecked Sendable {
 
     public required convenience init?(coder: NSCoder) {
         self.init()
-        _ = coder
+        if let type = inDecodeString(coder, "userActivityType") {
+            userActivity = NSUserActivity(activityType: type)
+        }
     }
 }
 
-open class INExtension: NSObject {
+open class INExtension: NSObject, INIntentHandlerProviding {
+    @_spi(OpenIntentsHost)
+    open var hostHandler: Any?
+
     public override init() {
         super.init()
     }
 
-    open func handler(for intent: INIntent) -> Any {
-        self
+    open func handler(for intent: INIntent) -> Any? {
+        hostHandler ?? self
     }
 }
 
@@ -120,6 +125,12 @@ open class INInteraction: NSObject, @unchecked Sendable {
             ) ?? .unspecified
         }
         groupIdentifier = inDecodeString(coder, "groupIdentifier")
+        if coder.containsValue(forKey: "dateIntervalStart") {
+            let start = coder.decodeObject(of: NSDate.self, forKey: "dateIntervalStart") as Date?
+                ?? Date(timeIntervalSince1970: 0)
+            let duration = coder.decodeDouble(forKey: "dateIntervalDuration")
+            dateInterval = DateInterval(start: start, duration: duration)
+        }
     }
 
     open func donate(completion: ((Error?) -> Void)? = nil) {
@@ -145,7 +156,7 @@ open class INInteraction: NSObject, @unchecked Sendable {
         completion?(nil)
     }
 
-    public static func delete(with groupIdentifier: String) async throws {
+    public static func delete(with groupIdentifier: String, completion: ((Error?) -> Void)? = nil) {
         _interactionStore.withLock { state in
             let keys = state.interactions.compactMap { key, value in
                 value.groupIdentifier == groupIdentifier ? key : nil
@@ -154,6 +165,11 @@ open class INInteraction: NSObject, @unchecked Sendable {
                 state.interactions.removeValue(forKey: key)
             }
         }
+        completion?(nil)
+    }
+
+    public static func delete(with groupIdentifier: String) async throws {
+        delete(with: groupIdentifier, completion: { _ in })
     }
 
     open func parameterValue(for parameter: INParameter) -> Any? {
@@ -316,6 +332,15 @@ open class INObject: NSObject, @unchecked Sendable {
         self.pronunciationHint = pronunciationHint
         super.init()
     }
+
+    public required convenience init?(coder: NSCoder) {
+        guard let display = inDecodeString(coder, "displayString") else { return nil }
+        self.init(
+            identifier: inDecodeString(coder, "identifier"),
+            display: display,
+            pronunciationHint: inDecodeString(coder, "pronunciationHint")
+        )
+    }
 }
 
 public enum INIntentResolutionResultOutcome: Int, Sendable {
@@ -406,6 +431,11 @@ open class INIntegerResolutionResult: INIntentResolutionResult, @unchecked Senda
     open class func confirmationRequired(with valueToConfirm: NSNumber?) -> Self {
         self.init(outcome: .confirmationRequired, value: valueToConfirm)
     }
+
+    @nonobjc
+    open class func confirmationRequired(with valueToConfirm: Int?) -> Self {
+        self.init(outcome: .confirmationRequired, value: valueToConfirm)
+    }
 }
 
 open class INDoubleResolutionResult: INIntentResolutionResult, @unchecked Sendable {
@@ -433,6 +463,10 @@ open class INObjectCollection<Element>: NSObject, @unchecked Sendable {
         self.items = sections.flatMap(\.items)
         super.init()
     }
+
+    public required convenience init?(coder: NSCoder) {
+        self.init(items: [])
+    }
 }
 
 open class INObjectSection<Element>: NSObject, @unchecked Sendable {
@@ -443,6 +477,10 @@ open class INObjectSection<Element>: NSObject, @unchecked Sendable {
         self.title = title
         self.items = items
         super.init()
+    }
+
+    public required convenience init?(coder: NSCoder) {
+        self.init(title: inDecodeString(coder, "title"), items: [])
     }
 }
 
@@ -483,6 +521,15 @@ open class INVoiceShortcut: NSObject, @unchecked Sendable {
         self.invocationPhrase = invocationPhrase
         self.shortcut = shortcut
         super.init()
+    }
+
+    public required convenience init?(coder: NSCoder) {
+        guard let phrase = inDecodeString(coder, "invocationPhrase"),
+              let shortcut = coder.decodeObject(of: INShortcut.self, forKey: "shortcut") else {
+            return nil
+        }
+        let identifier = inDecodeString(coder, "identifier").flatMap(UUID.init(uuidString:)) ?? UUID()
+        self.init(identifier: identifier, invocationPhrase: phrase, shortcut: shortcut)
     }
 }
 
@@ -1077,6 +1124,14 @@ open class INMediaSearch: NSObject, @unchecked Sendable {
         self.reference = reference
         self.mediaIdentifier = mediaIdentifier
     }
+
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        mediaName = inDecodeString(coder, "mediaName")
+        artistName = inDecodeString(coder, "artistName")
+        albumName = inDecodeString(coder, "albumName")
+        mediaIdentifier = inDecodeString(coder, "mediaIdentifier")
+    }
 }
 
 // MARK: - Honest service availability
@@ -1093,6 +1148,14 @@ open class INFocusStatus: NSObject, @unchecked Sendable {
     public init(isFocused: Bool?) {
         self.isFocused = isFocused
         super.init()
+    }
+
+    public required convenience init?(coder: NSCoder) {
+        if coder.containsValue(forKey: "isFocused") {
+            self.init(isFocused: coder.decodeBool(forKey: "isFocused"))
+        } else {
+            self.init(isFocused: nil)
+        }
     }
 }
 

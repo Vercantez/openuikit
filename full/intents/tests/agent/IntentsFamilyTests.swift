@@ -1,37 +1,5 @@
-import Dispatch
 import Foundation
 @_spi(OpenIntentsHost) import Intents
-
-private final class INLocked<Value>: @unchecked Sendable {
-    private let lock = NSLock()
-    private var value: Value
-    init(_ value: Value) { self.value = value }
-    func load() -> Value {
-        lock.lock()
-        defer { lock.unlock() }
-        return value
-    }
-    func store(_ value: Value) {
-        lock.lock()
-        self.value = value
-        lock.unlock()
-    }
-}
-
-private func inAwait<T>(_ body: @escaping () async throws -> T) -> Result<T, Error> {
-    let semaphore = DispatchSemaphore(value: 0)
-    let box = INLocked<Result<T, Error>?>(nil)
-    Task {
-        do { box.store(.success(try await body())) }
-        catch { box.store(.failure(error)) }
-        semaphore.signal()
-    }
-    semaphore.wait()
-    guard let result = box.load() else {
-        preconditionFailure("async probe did not complete")
-    }
-    return result
-}
 
 private func inArchiveRoundTrip<T: NSObject & NSSecureCoding>(_ value: T) -> T {
     let data: Data
@@ -296,11 +264,9 @@ func testInteractionGroupDeleteAndParameterValue() {
     precondition(interaction.parameterValue(for: phrase) as? String == "Erase")
     let unknown = INParameter(for: INIntent.self, keyPath: "missing")
     precondition(interaction.parameterValue(for: unknown) == nil)
-    let deleted = inAwait { try await INInteraction.delete(with: "group-a") }
-    switch deleted {
-    case .success: break
-    case .failure(let error): preconditionFailure("group delete failed: \(error)")
-    }
+    var groupError: Error? = NSError(domain: "unset", code: 1)
+    INInteraction.delete(with: "group-a") { groupError = $0 }
+    precondition(groupError == nil)
     precondition(INInteraction.donatedInteractions.isEmpty)
     let restored = inArchiveRoundTrip(interaction)
     precondition(restored.identifier == "interaction-group")
@@ -327,31 +293,26 @@ func testVoiceShortcutSuggestionsAndEmptyGet() {
         precondition(values?.count == 1)
         precondition(values?[0].identifier == installed.identifier)
     }
-    let asyncAll = inAwait { try await INVoiceShortcutCenter.shared.allVoiceShortcuts() }
-    switch asyncAll {
-    case .success(let values):
-        precondition(values.count == 1)
-    case .failure(let error):
-        preconditionFailure("allVoiceShortcuts failed: \(error)")
+    var asyncAll: [INVoiceShortcut] = []
+    INVoiceShortcutCenter.shared.getAllVoiceShortcuts { values, error in
+        precondition(error == nil)
+        asyncAll = values ?? []
     }
-    let asyncOne = inAwait {
-        try await INVoiceShortcutCenter.shared.getVoiceShortcut(with: installed.identifier)
+    precondition(asyncAll.count == 1)
+    var asyncOne: INVoiceShortcut?
+    var oneError: Error?
+    INVoiceShortcutCenter.shared.getVoiceShortcut(with: installed.identifier) { value, error in
+        asyncOne = value
+        oneError = error
     }
-    switch asyncOne {
-    case .success(let value):
-        precondition(value.identifier == installed.identifier)
-    case .failure(let error):
-        preconditionFailure("getVoiceShortcut failed: \(error)")
+    precondition(oneError == nil)
+    precondition(asyncOne?.identifier == installed.identifier)
+    var missingError: Error?
+    INVoiceShortcutCenter.shared.getVoiceShortcut(with: UUID()) { value, error in
+        precondition(value == nil)
+        missingError = error
     }
-    let missing = inAwait {
-        try await INVoiceShortcutCenter.shared.getVoiceShortcut(with: UUID())
-    }
-    switch missing {
-    case .success:
-        preconditionFailure("missing shortcut must fail")
-    case .failure(let error):
-        precondition((error as? INIntentError)?.code == .voiceShortcutGetFailed)
-    }
+    precondition((missingError as? INIntentError)?.code == .voiceShortcutGetFailed)
     _ = INShortcut.supportsSecureCoding
     _ = inArchiveRoundTrip(shortcut)
 }
@@ -368,17 +329,12 @@ func testRelevantShortcutStore() {
     precondition(relevant.shortcutRole == .information)
     precondition(relevant.widgetKind == "LibraryWidget")
     precondition(relevant.watchTemplate?.title == "Library")
-    let stored = inAwait {
-        try await INRelevantShortcutStore.default.setRelevantShortcuts([relevant])
-        return INRelevantShortcutStore.default.storedShortcuts
-    }
-    switch stored {
-    case .success(let values):
-        precondition(values.count == 1)
-        precondition(values[0].widgetKind == "LibraryWidget")
-    case .failure(let error):
-        preconditionFailure("setRelevantShortcuts failed: \(error)")
-    }
+    var storedError: Error? = NSError(domain: "unset", code: 1)
+    INRelevantShortcutStore.default.setRelevantShortcuts([relevant]) { storedError = $0 }
+    precondition(storedError == nil)
+    let values = INRelevantShortcutStore.default.storedShortcuts
+    precondition(values.count == 1)
+    precondition(values[0].widgetKind == "LibraryWidget")
 }
 
 func testImageFailClosedRendering() {

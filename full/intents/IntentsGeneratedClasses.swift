@@ -18,6 +18,8 @@ open class INActivateCarSignalIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(carName: INSpeakableString?, signals: INCarSignalOptions = []) {
         self.init()
+        self.carName = carName
+        self.signals = signals
     }
 }
 
@@ -27,6 +29,8 @@ open class INActivateCarSignalIntentResponse: INIntentResponse, @unchecked Senda
     public required override init() { super.init() }
     public convenience init(code: INActivateCarSignalIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -37,6 +41,9 @@ open class INAddMediaIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(mediaItems: [INMediaItem]?, mediaSearch: INMediaSearch?, mediaDestination: INMediaDestination?) {
         self.init()
+        self.mediaItems = mediaItems
+        self.mediaSearch = mediaSearch
+        self.mediaDestination = mediaDestination
     }
 }
 
@@ -45,6 +52,8 @@ open class INAddMediaIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INAddMediaIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -78,9 +87,18 @@ open class INAddTasksIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(targetTaskList: INTaskList?, taskTitles: [INSpeakableString]?, spatialEventTrigger: INSpatialEventTrigger?, temporalEventTrigger: INTemporalEventTrigger?) {
         self.init()
+        self.targetTaskList = targetTaskList
+        self.taskTitles = taskTitles
+        self.spatialEventTrigger = spatialEventTrigger
+        self.temporalEventTrigger = temporalEventTrigger
     }
     public convenience init(targetTaskList: INTaskList?, taskTitles: [INSpeakableString]?, spatialEventTrigger: INSpatialEventTrigger?, temporalEventTrigger: INTemporalEventTrigger?, priority: INTaskPriority) {
         self.init()
+        self.targetTaskList = targetTaskList
+        self.taskTitles = taskTitles
+        self.spatialEventTrigger = spatialEventTrigger
+        self.temporalEventTrigger = temporalEventTrigger
+        self.priority = priority
     }
 }
 
@@ -91,6 +109,8 @@ open class INAddTasksIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INAddTasksIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -121,9 +141,13 @@ open class INAirline: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(name: String?, iataCode: String?, icaoCode: String?) {
         self.init()
+        self.name = name
+        self.iataCode = iataCode
+        self.icaoCode = icaoCode
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -134,9 +158,13 @@ open class INAirport: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(name: String?, iataCode: String?, icaoCode: String?) {
         self.init()
+        self.name = name
+        self.iataCode = iataCode
+        self.icaoCode = icaoCode
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -147,9 +175,13 @@ open class INAirportGate: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(airport: INAirport, terminal: String?, gate: String?) {
         self.init()
+        self.airport = airport
+        self.terminal = terminal
+        self.gate = gate
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -159,6 +191,8 @@ open class INAnswerCallIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(audioRoute: INCallAudioRoute, callIdentifier: String?) {
         self.init()
+        self.audioRoute = audioRoute
+        self.callIdentifier = callIdentifier
     }
 }
 
@@ -168,6 +202,8 @@ open class INAnswerCallIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INAnswerCallIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -177,6 +213,8 @@ open class INAppendToNoteIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(targetNote: INNote?, content: INNoteContent?) {
         self.init()
+        self.targetNote = targetNote
+        self.content = content
     }
 }
 
@@ -186,6 +224,8 @@ open class INAppendToNoteIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INAppendToNoteIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -196,12 +236,17 @@ open class INBalanceAmount: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init?(amount: NSDecimalNumber, balanceType: INBalanceType) {
         self.init()
+        self.amount = amount
+        self.balanceType = balanceType
     }
     public convenience init(amount: NSDecimalNumber, currencyCode: String) {
         self.init()
+        self.amount = amount
+        self.currencyCode = currencyCode
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -225,9 +270,18 @@ open class INBillDetails: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init?(billType: INBillType, paymentStatus: INPaymentStatus, billPayee: INBillPayee?, amountDue: INCurrencyAmount?, minimumDue: INCurrencyAmount?, lateFee: INCurrencyAmount?, dueDate: DateComponents?, paymentDate: DateComponents?) {
         self.init()
+        self.billType = billType
+        self.paymentStatus = paymentStatus
+        self.billPayee = billPayee
+        self.amountDue = amountDue
+        self.minimumDue = minimumDue
+        self.lateFee = lateFee
+        self.dueDate = dueDate
+        self.paymentDate = paymentDate
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -238,9 +292,12 @@ open class INBillPayee: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init?(nickname: INSpeakableString, number: String?, organizationName: INSpeakableString?) {
         self.init()
+        self.nickname = nickname
+        self.organizationName = organizationName
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -267,9 +324,13 @@ open class INBoatReservation: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, boatTrip: INBoatTrip?) {
         self.init()
+        self.reservedSeat = reservedSeat
+        self.boatTrip = boatTrip
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, URL: URL?, reservedSeat: INSeat?, boatTrip: INBoatTrip?) {
         self.init()
+        self.reservedSeat = reservedSeat
+        self.boatTrip = boatTrip
     }
 }
 
@@ -279,8 +340,9 @@ open class INBoatTrip: NSObject, @unchecked Sendable {
     open var provider: String? = nil
     open var tripDuration: INDateComponentsRange?
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -295,9 +357,23 @@ open class INBookRestaurantReservationIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(restaurant: INRestaurant, booking bookingDateComponents: DateComponents, partySize: Int, bookingIdentifier: String?, guest: INRestaurantGuest?, selectedOffer: INRestaurantOffer?, guestProvidedSpecialRequestText: String?) {
         self.init()
+        self.restaurant = restaurant
+        self.bookingDateComponents = bookingDateComponents
+        self.partySize = partySize
+        self.bookingIdentifier = bookingIdentifier
+        self.guest = guest
+        self.selectedOffer = selectedOffer
+        self.guestProvidedSpecialRequestText = guestProvidedSpecialRequestText
     }
     public convenience init(restaurant: INRestaurant, bookingDateComponents: DateComponents, partySize: Int, bookingIdentifier: String?, guest: INRestaurantGuest?, selectedOffer: INRestaurantOffer?, guestProvidedSpecialRequestText: String?) {
         self.init()
+        self.restaurant = restaurant
+        self.bookingDateComponents = bookingDateComponents
+        self.partySize = partySize
+        self.bookingIdentifier = bookingIdentifier
+        self.guest = guest
+        self.selectedOffer = selectedOffer
+        self.guestProvidedSpecialRequestText = guestProvidedSpecialRequestText
     }
 }
 
@@ -307,6 +383,8 @@ open class INBookRestaurantReservationIntentResponse: INIntentResponse, @uncheck
     public required override init() { super.init() }
     public convenience init(code: INBookRestaurantReservationIntentCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -316,9 +394,13 @@ open class INBusReservation: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, busTrip: INBusTrip?) {
         self.init()
+        self.reservedSeat = reservedSeat
+        self.busTrip = busTrip
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, URL: URL?, reservedSeat: INSeat?, busTrip: INBusTrip?) {
         self.init()
+        self.reservedSeat = reservedSeat
+        self.busTrip = busTrip
     }
 }
 
@@ -330,8 +412,9 @@ open class INBusTrip: NSObject, @unchecked Sendable {
     open var provider: String? = nil
     open var tripDuration: INDateComponentsRange?
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -357,9 +440,12 @@ open class INCallGroup: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(groupName: String?, groupId: String?) {
         self.init()
+        self.groupName = groupName
+        self.groupId = groupId
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -394,7 +480,7 @@ open class INCallRecord: NSObject, @unchecked Sendable {
         self.unseen = unseen
         self.numberOfCalls = numberOfCalls
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         guard let identifier = coder.decodeObject(of: NSString.self, forKey: "identifier") as String? else {
             return nil
         }
@@ -421,9 +507,9 @@ open class INCallRecordFilter: NSObject, @unchecked Sendable {
         self.callTypes = callTypes
         self.callCapability = callCapability
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
-        _ = coder
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -458,6 +544,7 @@ open class INCancelRideIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(rideIdentifier: String) {
         self.init()
+        self.rideIdentifier = rideIdentifier
     }
 }
 
@@ -468,6 +555,8 @@ open class INCancelRideIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INCancelRideIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -476,6 +565,7 @@ open class INCancelWorkoutIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(workoutName: INSpeakableString?) {
         self.init()
+        self.workoutName = workoutName
     }
 }
 
@@ -484,7 +574,24 @@ open class INCancelWorkoutIntentResponse: INIntentResponse, @unchecked Sendable 
     public required override init() { super.init() }
     public convenience init(code: INCancelWorkoutIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
+}
+
+open class INCarHeadUnit: NSObject, @unchecked Sendable {
+    public convenience init(bluetoothIdentifier: String?, iAP2Identifier: String?) {
+        self.init()
+        self.bluetoothIdentifier = bluetoothIdentifier
+        self.iAP2Identifier = iAP2Identifier
+    }
+    open var bluetoothIdentifier: String? = nil
+    open var iAP2Identifier: String? = nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
+    }
+    public required override init() { super.init() }
 }
 
 open class INCar: NSObject, @unchecked Sendable {
@@ -503,17 +610,7 @@ open class INCar: NSObject, @unchecked Sendable {
         public static let tesla = ChargingConnectorType(rawValue: "tesla")
     }
 
-    open class HeadUnit: NSObject, @unchecked Sendable {
-        public convenience init(bluetoothIdentifier: String?, iAP2Identifier: String?) {
-            self.init()
-        }
-        open var bluetoothIdentifier: String? = nil
-        open var iAP2Identifier: String? = nil
-        public convenience init?(coder: NSCoder) {
-            return nil
-        }
-        public required override init() { super.init() }
-    }
+    public typealias HeadUnit = INCarHeadUnit
 
     open func maximumPower(for chargingConnectorType: INCar.ChargingConnectorType) -> Measurement<UnitPower>? { nil }
     open func setMaximumPower(_ power: Measurement<UnitPower>, for chargingConnectorType: INCar.ChargingConnectorType) { }
@@ -525,8 +622,9 @@ open class INCar: NSObject, @unchecked Sendable {
     open var supportedChargingConnectors: [INCar.ChargingConnectorType] = []
     open var year: String? = nil
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -577,6 +675,9 @@ open class INCreateNoteIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(title: INSpeakableString?, content: INNoteContent?, groupName: INSpeakableString?) {
         self.init()
+        self.title = title
+        self.content = content
+        self.groupName = groupName
     }
 }
 
@@ -586,6 +687,8 @@ open class INCreateNoteIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INCreateNoteIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -596,6 +699,9 @@ open class INCreateTaskListIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(title: INSpeakableString?, taskTitles: [INSpeakableString]?, groupName: INSpeakableString?) {
         self.init()
+        self.title = title
+        self.taskTitles = taskTitles
+        self.groupName = groupName
     }
 }
 
@@ -605,6 +711,8 @@ open class INCreateTaskListIntentResponse: INIntentResponse, @unchecked Sendable
     public required override init() { super.init() }
     public convenience init(code: INCreateTaskListIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -614,9 +722,12 @@ open class INCurrencyAmount: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(amount: NSDecimalNumber, currencyCode: String) {
         self.init()
+        self.amount = amount
+        self.currencyCode = currencyCode
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -647,6 +758,7 @@ open class INDailyRoutineRelevanceProvider: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(situation: INDailyRoutineRelevanceProvider.Situation) {
         self.init()
+        self.situation = situation
     }
 }
 
@@ -677,9 +789,9 @@ open class INDateComponentsRange: NSObject, @unchecked Sendable {
         self.endDateComponents = endDateComponents
         self.recurrenceRule = recurrenceRule
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
-        _ = coder
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -708,9 +820,13 @@ open class INDateRelevanceProvider: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(start startDate: Date, end endDate: Date?) {
         self.init()
+        self.startDate = startDate
+        self.endDate = endDate
     }
     public convenience init(startDate: Date, endDate: Date?) {
         self.init()
+        self.startDate = startDate
+        self.endDate = endDate
     }
 }
 
@@ -731,9 +847,9 @@ open class INDefaultCardTemplate: NSObject, @unchecked Sendable {
         self.init()
         self.title = title
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         self.init()
-        _ = coder
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -750,6 +866,8 @@ open class INDeleteTasksIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INDeleteTasksIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -779,6 +897,8 @@ open class INEditMessageIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(messageIdentifier: String?, editedContent: String?) {
         self.init()
+        self.messageIdentifier = messageIdentifier
+        self.editedContent = editedContent
     }
 }
 
@@ -787,6 +907,8 @@ open class INEditMessageIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INEditMessageIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -795,6 +917,7 @@ open class INEndWorkoutIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(workoutName: INSpeakableString?) {
         self.init()
+        self.workoutName = workoutName
     }
 }
 
@@ -803,6 +926,8 @@ open class INEndWorkoutIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INEndWorkoutIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -824,12 +949,19 @@ open class INFile: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(data: Data, filename: String, typeIdentifier: String?) {
         self.init()
+        self.data = data
+        self.filename = filename
+        self.typeIdentifier = typeIdentifier
     }
     public convenience init(fileURL: URL, filename: String?, typeIdentifier: String?) {
         self.init()
+        self.fileURL = fileURL
+        self.filename = filename ?? ""
+        self.typeIdentifier = typeIdentifier
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -852,9 +984,16 @@ open class INFlight: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(airline: INAirline, flightNumber: String, boardingTime: INDateComponentsRange?, flightDuration: INDateComponentsRange, departureAirportGate: INAirportGate, arrivalAirportGate: INAirportGate) {
         self.init()
+        self.airline = airline
+        self.flightNumber = flightNumber
+        self.boardingTime = boardingTime
+        self.flightDuration = flightDuration
+        self.departureAirportGate = departureAirportGate
+        self.arrivalAirportGate = arrivalAirportGate
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -864,12 +1003,18 @@ open class INFlightReservation: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, flight: INFlight) {
         self.init()
+        self.reservedSeat = reservedSeat
+        self.flight = flight
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, URL: URL?, reservedSeat: INSeat?, flight: INFlight) {
         self.init()
+        self.reservedSeat = reservedSeat
+        self.flight = flight
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, reservedSeat: INSeat?, flight: INFlight) {
         self.init()
+        self.reservedSeat = reservedSeat
+        self.flight = flight
     }
 }
 
@@ -878,6 +1023,7 @@ open class INGetAvailableRestaurantReservationBookingDefaultsIntent: INIntent, @
     public required override init() { super.init() }
     public convenience init(restaurant: INRestaurant?) {
         self.init()
+        self.restaurant = restaurant
     }
 }
 
@@ -891,9 +1037,17 @@ open class INGetAvailableRestaurantReservationBookingDefaultsIntentResponse: INI
     public required override init() { super.init() }
     public convenience init(defaultPartySize: Int, defaultBooking defaultBookingDate: Date, code: INGetAvailableRestaurantReservationBookingDefaultsIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.defaultPartySize = defaultPartySize
+        self.defaultBookingDate = defaultBookingDate
+        self.code = code
+        self.userActivity = userActivity
     }
     public convenience init(defaultPartySize: Int, defaultBookingDate: Date, code: INGetAvailableRestaurantReservationBookingDefaultsIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.defaultPartySize = defaultPartySize
+        self.defaultBookingDate = defaultBookingDate
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -907,9 +1061,21 @@ open class INGetAvailableRestaurantReservationBookingsIntent: INIntent, @uncheck
     public required override init() { super.init() }
     public convenience init(restaurant: INRestaurant, partySize: Int, preferredBooking preferredBookingDateComponents: DateComponents?, maximumNumberOfResults: NSNumber?, earliestBookingDateForResults: Date?, latestBookingDateForResults: Date?) {
         self.init()
+        self.restaurant = restaurant
+        self.partySize = partySize
+        self.preferredBookingDateComponents = preferredBookingDateComponents
+        self.maximumNumberOfResults = maximumNumberOfResults
+        self.earliestBookingDateForResults = earliestBookingDateForResults
+        self.latestBookingDateForResults = latestBookingDateForResults
     }
     public convenience init(restaurant: INRestaurant, partySize: Int, preferredBookingDateComponents: DateComponents?, maximumNumberOfResults: NSNumber?, earliestBookingDateForResults: Date?, latestBookingDateForResults: Date?) {
         self.init()
+        self.restaurant = restaurant
+        self.partySize = partySize
+        self.preferredBookingDateComponents = preferredBookingDateComponents
+        self.maximumNumberOfResults = maximumNumberOfResults
+        self.earliestBookingDateForResults = earliestBookingDateForResults
+        self.latestBookingDateForResults = latestBookingDateForResults
     }
 }
 
@@ -922,6 +1088,9 @@ open class INGetAvailableRestaurantReservationBookingsIntentResponse: INIntentRe
     public required override init() { super.init() }
     public convenience init(availableBookings: [INRestaurantReservationBooking], code: INGetAvailableRestaurantReservationBookingsIntentCode, userActivity: NSUserActivity?) {
         self.init()
+        self.availableBookings = availableBookings
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -930,6 +1099,7 @@ open class INGetCarLockStatusIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(carName: INSpeakableString?) {
         self.init()
+        self.carName = carName
     }
 }
 
@@ -938,6 +1108,8 @@ open class INGetCarLockStatusIntentResponse: INIntentResponse, @unchecked Sendab
     public required override init() { super.init() }
     public convenience init(code: INGetCarLockStatusIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -946,14 +1118,18 @@ open class INGetCarPowerLevelStatusIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(carName: INSpeakableString?) {
         self.init()
+        self.carName = carName
     }
 }
 
 open class INGetCarPowerLevelStatusIntentResponse: INIntentResponse, @unchecked Sendable {
     open var activeConnector: INCar.ChargingConnectorType? = nil
     open var carIdentifier: String? = nil
+    open var charging: Bool? = nil
+    open var chargePercentRemaining: Float? = nil
     open var chargingFormulaArguments: [String : Any]? = nil
     open var code: INGetCarPowerLevelStatusIntentResponseCode?
+    open var fuelPercentRemaining: Float? = nil
     open var consumptionFormulaArguments: [String : Any]? = nil
     open var currentBatteryCapacity: Measurement<UnitEnergy>? = nil
     open var dateOfLastStateUpdate: DateComponents? = nil
@@ -968,6 +1144,8 @@ open class INGetCarPowerLevelStatusIntentResponse: INIntentResponse, @unchecked 
     public required override init() { super.init() }
     public convenience init(code: INGetCarPowerLevelStatusIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -977,6 +1155,8 @@ open class INGetReservationDetailsIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(reservationContainerReference: INSpeakableString?, reservationItemReferences: [INSpeakableString]?) {
         self.init()
+        self.reservationContainerReference = reservationContainerReference
+        self.reservationItemReferences = reservationItemReferences
     }
 }
 
@@ -986,6 +1166,8 @@ open class INGetReservationDetailsIntentResponse: INIntentResponse, @unchecked S
     public required override init() { super.init() }
     public convenience init(code: INGetReservationDetailsIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -1000,6 +1182,8 @@ open class INGetRestaurantGuestIntentResponse: INIntentResponse, @unchecked Send
     public required override init() { super.init() }
     public convenience init(code: INGetRestaurantGuestIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -1013,6 +1197,8 @@ open class INGetRideStatusIntentResponse: INIntentResponse, @unchecked Sendable 
     public required override init() { super.init() }
     public convenience init(code: INGetRideStatusIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -1024,6 +1210,10 @@ open class INGetUserCurrentRestaurantReservationBookingsIntent: INIntent, @unche
     public required override init() { super.init() }
     public convenience init(restaurant: INRestaurant?, reservationIdentifier: String?, maximumNumberOfResults: NSNumber?, earliestBookingDateForResults: Date?) {
         self.init()
+        self.restaurant = restaurant
+        self.reservationIdentifier = reservationIdentifier
+        self.maximumNumberOfResults = maximumNumberOfResults
+        self.earliestBookingDateForResults = earliestBookingDateForResults
     }
 }
 
@@ -1033,6 +1223,9 @@ open class INGetUserCurrentRestaurantReservationBookingsIntentResponse: INIntent
     public required override init() { super.init() }
     public convenience init(userCurrentBookings: [INRestaurantReservationUserBooking], code: INGetUserCurrentRestaurantReservationBookingsIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.userCurrentBookings = userCurrentBookings
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -1041,6 +1234,7 @@ open class INGetVisualCodeIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(visualCodeType: INVisualCodeType) {
         self.init()
+        self.visualCodeType = visualCodeType
     }
 }
 
@@ -1050,6 +1244,8 @@ open class INGetVisualCodeIntentResponse: INIntentResponse, @unchecked Sendable 
     public required override init() { super.init() }
     public convenience init(code: INGetVisualCodeIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -1058,6 +1254,7 @@ open class INHangUpCallIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(callIdentifier: String?) {
         self.init()
+        self.callIdentifier = callIdentifier
     }
 }
 
@@ -1066,6 +1263,8 @@ open class INHangUpCallIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INHangUpCallIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -1074,13 +1273,15 @@ open class INImageNoteContent: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(image: INImage) {
         self.init()
+        self.image = image
     }
 }
 
 open class INIntentDonationMetadata: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1106,6 +1307,8 @@ open class INListCarsIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INListCarsIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -1121,6 +1324,8 @@ open class INListRideOptionsIntentResponse: INIntentResponse, @unchecked Sendabl
     public required override init() { super.init() }
     public convenience init(code: INListRideOptionsIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -1164,8 +1369,9 @@ open class INMediaDestinationReference: NSObject, @unchecked Sendable {
     open var mediaDestinationType: INMediaDestinationType?
     open var playlistName: String? = nil
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1224,36 +1430,126 @@ open class INMessage: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(identifier: String, content: String?, dateSent: Date?, sender: INPerson?, recipients: [INPerson]?) {
         self.init()
+        self.identifier = identifier
+        self.content = content
+        self.dateSent = dateSent
+        self.sender = sender
+        self.recipients = recipients
     }
     public convenience init(identifier: String, conversationIdentifier: String?, content: String?, dateSent: Date?, sender: INPerson?, recipients: [INPerson]?, groupName: INSpeakableString?, messageType: INMessageType) {
         self.init()
+        self.identifier = identifier
+        self.conversationIdentifier = conversationIdentifier
+        self.content = content
+        self.dateSent = dateSent
+        self.sender = sender
+        self.recipients = recipients
+        self.groupName = groupName
+        self.messageType = messageType
     }
     public convenience init(identifier: String, conversationIdentifier: String?, content: String?, dateSent: Date?, sender: INPerson?, recipients: [INPerson]?, groupName: INSpeakableString?, messageType: INMessageType, serviceName: String?) {
         self.init()
+        self.identifier = identifier
+        self.conversationIdentifier = conversationIdentifier
+        self.content = content
+        self.dateSent = dateSent
+        self.sender = sender
+        self.recipients = recipients
+        self.groupName = groupName
+        self.messageType = messageType
+        self.serviceName = serviceName
     }
     public convenience init(identifier: String, conversationIdentifier: String?, content: String?, dateSent: Date?, sender: INPerson?, recipients: [INPerson]?, groupName: INSpeakableString?, messageType: INMessageType, serviceName: String?, attachmentFiles: [INFile]?) {
         self.init()
+        self.identifier = identifier
+        self.conversationIdentifier = conversationIdentifier
+        self.content = content
+        self.dateSent = dateSent
+        self.sender = sender
+        self.recipients = recipients
+        self.groupName = groupName
+        self.messageType = messageType
+        self.serviceName = serviceName
+        self.attachmentFiles = attachmentFiles
     }
     public convenience init(identifier: String, conversationIdentifier: String?, content: String?, dateSent: Date?, sender: INPerson?, recipients: [INPerson]?, groupName: INSpeakableString?, messageType: INMessageType, serviceName: String?, audioMessageFile: INFile?) {
         self.init()
+        self.identifier = identifier
+        self.conversationIdentifier = conversationIdentifier
+        self.content = content
+        self.dateSent = dateSent
+        self.sender = sender
+        self.recipients = recipients
+        self.groupName = groupName
+        self.messageType = messageType
+        self.serviceName = serviceName
+        self.audioMessageFile = audioMessageFile
     }
     public convenience init(identifier: String, conversationIdentifier: String?, content: String?, dateSent: Date?, sender: INPerson?, recipients: [INPerson]?, groupName: INSpeakableString?, serviceName: String?, linkMetadata: INMessageLinkMetadata?) {
         self.init()
+        self.identifier = identifier
+        self.conversationIdentifier = conversationIdentifier
+        self.content = content
+        self.dateSent = dateSent
+        self.sender = sender
+        self.recipients = recipients
+        self.groupName = groupName
+        self.serviceName = serviceName
+        self.linkMetadata = linkMetadata
     }
     public convenience init(identifier: String, conversationIdentifier: String?, content: String?, dateSent: Date?, sender: INPerson?, recipients: [INPerson]?, groupName: INSpeakableString?, serviceName: String?, messageType: INMessageType, numberOfAttachments: NSNumber?) {
         self.init()
+        self.identifier = identifier
+        self.conversationIdentifier = conversationIdentifier
+        self.content = content
+        self.dateSent = dateSent
+        self.sender = sender
+        self.recipients = recipients
+        self.groupName = groupName
+        self.serviceName = serviceName
+        self.messageType = messageType
+        self.numberOfAttachments = numberOfAttachments
     }
     public convenience init(identifier: String, conversationIdentifier: String?, content: String?, dateSent: Date?, sender: INPerson?, recipients: [INPerson]?, groupName: INSpeakableString?, serviceName: String?, messageType: INMessageType, referencedMessage: INMessage?, reaction: INMessageReaction?) {
         self.init()
+        self.identifier = identifier
+        self.conversationIdentifier = conversationIdentifier
+        self.content = content
+        self.dateSent = dateSent
+        self.sender = sender
+        self.recipients = recipients
+        self.groupName = groupName
+        self.serviceName = serviceName
+        self.messageType = messageType
+        self.reaction = reaction
     }
     public convenience init(identifier: String, conversationIdentifier: String?, content: String?, dateSent: Date?, sender: INPerson?, recipients: [INPerson]?, groupName: INSpeakableString?, serviceName: String?, messageType: INMessageType, referencedMessage: INMessage?, sticker: INSticker?, reaction: INMessageReaction?) {
         self.init()
+        self.identifier = identifier
+        self.conversationIdentifier = conversationIdentifier
+        self.content = content
+        self.dateSent = dateSent
+        self.sender = sender
+        self.recipients = recipients
+        self.groupName = groupName
+        self.serviceName = serviceName
+        self.messageType = messageType
+        self.sticker = sticker
+        self.reaction = reaction
     }
     public convenience init(identifier: String, conversationIdentifier: String?, content: String?, dateSent: Date?, sender: INPerson?, recipients: [INPerson]?, messageType: INMessageType) {
         self.init()
+        self.identifier = identifier
+        self.conversationIdentifier = conversationIdentifier
+        self.content = content
+        self.dateSent = dateSent
+        self.sender = sender
+        self.recipients = recipients
+        self.messageType = messageType
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1282,9 +1578,15 @@ open class INMessageLinkMetadata: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(siteName: String?, summary: String?, title: String?, openGraphType: String?, linkURL: URL?) {
         self.init()
+        self.siteName = siteName
+        self.summary = summary
+        self.title = title
+        self.openGraphType = openGraphType
+        self.linkURL = linkURL
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1295,9 +1597,13 @@ open class INMessageReaction: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(reactionType: INMessageReactionType, reactionDescription: String?, emoji: String?) {
         self.init()
+        self.reactionType = reactionType
+        self.reactionDescription = reactionDescription
+        self.emoji = emoji
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1311,16 +1617,24 @@ open class INNote: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(title: INSpeakableString, contents: [INNoteContent], groupName: INSpeakableString?, createdDateComponents: DateComponents?, modifiedDateComponents: DateComponents?, identifier: String?) {
         self.init()
+        self.title = title
+        self.contents = contents
+        self.groupName = groupName
+        self.createdDateComponents = createdDateComponents
+        self.modifiedDateComponents = modifiedDateComponents
+        self.identifier = identifier
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
 open class INNoteContent: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1406,7 +1720,7 @@ open class INParameter: NSObject, @unchecked Sendable {
     open func isEqual(to parameter: INParameter) -> Bool {
         parameterClass == parameter.parameterClass && parameterKeyPath == parameter.parameterKeyPath
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         let path = coder.decodeObject(of: NSString.self, forKey: "parameterKeyPath") as String? ?? ""
         self.init(for: INIntent.self, keyPath: path)
     }
@@ -1418,6 +1732,7 @@ open class INPauseWorkoutIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(workoutName: INSpeakableString?) {
         self.init()
+        self.workoutName = workoutName
     }
 }
 
@@ -1426,6 +1741,8 @@ open class INPauseWorkoutIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INPauseWorkoutIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -1440,9 +1757,23 @@ open class INPayBillIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(billPayee: INBillPayee?, from fromAccount: INPaymentAccount?, transactionAmount: INPaymentAmount?, transactionScheduledDate: INDateComponentsRange?, transactionNote: String?, billType: INBillType, dueDate: INDateComponentsRange?) {
         self.init()
+        self.billPayee = billPayee
+        self.fromAccount = fromAccount
+        self.transactionAmount = transactionAmount
+        self.transactionScheduledDate = transactionScheduledDate
+        self.transactionNote = transactionNote
+        self.billType = billType
+        self.dueDate = dueDate
     }
     public convenience init(billPayee: INBillPayee?, fromAccount: INPaymentAccount?, transactionAmount: INPaymentAmount?, transactionScheduledDate: INDateComponentsRange?, transactionNote: String?, billType: INBillType, dueDate: INDateComponentsRange?) {
         self.init()
+        self.billPayee = billPayee
+        self.fromAccount = fromAccount
+        self.transactionAmount = transactionAmount
+        self.transactionScheduledDate = transactionScheduledDate
+        self.transactionNote = transactionNote
+        self.billType = billType
+        self.dueDate = dueDate
     }
 }
 
@@ -1456,6 +1787,8 @@ open class INPayBillIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INPayBillIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -1469,12 +1802,21 @@ open class INPaymentAccount: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init?(nickname: INSpeakableString, number: String?, accountType: INAccountType, organizationName: INSpeakableString?) {
         self.init()
+        self.nickname = nickname
+        self.accountType = accountType
+        self.organizationName = organizationName
     }
     public convenience init(nickname: INSpeakableString, number: String?, accountType: INAccountType, organizationName: INSpeakableString?, balance: INBalanceAmount?, secondaryBalance: INBalanceAmount?) {
         self.init()
+        self.nickname = nickname
+        self.accountType = accountType
+        self.organizationName = organizationName
+        self.balance = balance
+        self.secondaryBalance = secondaryBalance
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1493,9 +1835,12 @@ open class INPaymentAmount: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(amountType: INAmountType, amount: INCurrencyAmount) {
         self.init()
+        self.amountType = amountType
+        self.amount = amount
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1517,9 +1862,14 @@ open class INPaymentMethod: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(type: INPaymentMethodType, name: String?, identificationHint: String?, icon: INImage?) {
         self.init()
+        self.type = type
+        self.name = name
+        self.identificationHint = identificationHint
+        self.icon = icon
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1543,12 +1893,26 @@ open class INPaymentRecord: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init?(payee: INPerson?, payer: INPerson?, currencyAmount: INCurrencyAmount?, paymentMethod: INPaymentMethod?, note: String?, status: INPaymentStatus) {
         self.init()
+        self.payee = payee
+        self.payer = payer
+        self.currencyAmount = currencyAmount
+        self.paymentMethod = paymentMethod
+        self.note = note
+        self.status = status
     }
     public convenience init?(payee: INPerson?, payer: INPerson?, currencyAmount: INCurrencyAmount?, paymentMethod: INPaymentMethod?, note: String?, status: INPaymentStatus, feeAmount: INCurrencyAmount?) {
         self.init()
+        self.payee = payee
+        self.payer = payer
+        self.currencyAmount = currencyAmount
+        self.paymentMethod = paymentMethod
+        self.note = note
+        self.status = status
+        self.feeAmount = feeAmount
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1673,21 +2037,29 @@ open class INPriceRange: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(maximumPrice: NSDecimalNumber, currencyCode: String) {
         self.init()
+        self.maximumPrice = maximumPrice
+        self.currencyCode = currencyCode
     }
     public convenience init(minimumPrice: NSDecimalNumber, currencyCode: String) {
         self.init()
+        self.minimumPrice = minimumPrice
+        self.currencyCode = currencyCode
     }
     public convenience init(price: NSDecimalNumber, currencyCode: String) {
         self.init()
+        self.currencyCode = currencyCode
     }
     public convenience init(firstPrice: NSDecimalNumber, secondPrice: NSDecimalNumber, currencyCode: String) {
         self.init()
+        self.currencyCode = currencyCode
     }
     public convenience init(rangeBetweenPrice firstPrice: NSDecimalNumber, andPrice secondPrice: NSDecimalNumber, currencyCode: String) {
         self.init()
+        self.currencyCode = currencyCode
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1706,12 +2078,18 @@ open class INRecurrenceRule: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(interval: Int, frequency: INRecurrenceFrequency) {
         self.init()
+        self.interval = interval
+        self.frequency = frequency
     }
     public convenience init(interval: Int, frequency: INRecurrenceFrequency, weeklyRecurrenceDays: INDayOfWeekOptions = []) {
         self.init()
+        self.interval = interval
+        self.frequency = frequency
+        self.weeklyRecurrenceDays = weeklyRecurrenceDays
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1733,8 +2111,9 @@ open class INRelativeSettingResolutionResult: INIntentResolutionResult, @uncheck
 
 open class INRelevanceProvider: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1748,7 +2127,7 @@ open class INRelevantShortcut: NSObject, @unchecked Sendable {
         self.shortcut = shortcut
         super.init()
     }
-    public convenience init?(coder: NSCoder) {
+    public required convenience init?(coder: NSCoder) {
         guard let shortcut = coder.decodeObject(of: INShortcut.self, forKey: "shortcut") else {
             return nil
         }
@@ -1785,9 +2164,15 @@ open class INRentalCar: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(rentalCompanyName: String, type: String?, make: String?, model: String?, rentalCarDescription: String?) {
         self.init()
+        self.rentalCompanyName = rentalCompanyName
+        self.type = type
+        self.make = make
+        self.model = model
+        self.rentalCarDescription = rentalCarDescription
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1814,6 +2199,9 @@ open class INRequestPaymentIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(payer: INPerson?, currencyAmount: INCurrencyAmount?, note: String?) {
         self.init()
+        self.payer = payer
+        self.currencyAmount = currencyAmount
+        self.note = note
     }
 }
 
@@ -1823,6 +2211,8 @@ open class INRequestPaymentIntentResponse: INIntentResponse, @unchecked Sendable
     public required override init() { super.init() }
     public convenience init(code: INRequestPaymentIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -1849,6 +2239,8 @@ open class INRequestRideIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INRequestRideIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -1861,8 +2253,9 @@ open class INReservation: NSObject, @unchecked Sendable {
     open var reservationNumber: String? = nil
     open var reservationStatus: INReservationStatus?
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1873,9 +2266,13 @@ open class INReservationAction: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(type: INReservationActionType, validDuration: INDateComponentsRange, userActivity: NSUserActivity) {
         self.init()
+        self.type = type
+        self.validDuration = validDuration
+        self.userActivity = userActivity
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1884,8 +2281,9 @@ open class INRestaurant: NSObject, @unchecked Sendable {
     open var restaurantIdentifier: String = ""
     open var vendorIdentifier: String = ""
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1895,6 +2293,8 @@ open class INRestaurantGuest: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(nameComponents: PersonNameComponents?, phoneNumber: String?, emailAddress: String?) {
         self.init()
+        self.phoneNumber = phoneNumber
+        self.emailAddress = emailAddress
     }
 }
 
@@ -1908,8 +2308,9 @@ open class INRestaurantGuestDisplayPreferences: NSObject, @unchecked Sendable {
     open var phoneNumberEditable: Bool = false
     open var phoneNumberFieldShouldBeDisplayed: Bool = false
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1927,8 +2328,9 @@ open class INRestaurantOffer: NSObject, @unchecked Sendable {
     open var offerIdentifier: String = ""
     open var offerTitleText: String = ""
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1952,12 +2354,21 @@ open class INRestaurantReservationBooking: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(restaurant: INRestaurant, booking bookingDate: Date, partySize: Int, bookingIdentifier: String) {
         self.init()
+        self.restaurant = restaurant
+        self.bookingDate = bookingDate
+        self.partySize = partySize
+        self.bookingIdentifier = bookingIdentifier
     }
     public convenience init(restaurant: INRestaurant, bookingDate: Date, partySize: Int, bookingIdentifier: String) {
         self.init()
+        self.restaurant = restaurant
+        self.bookingDate = bookingDate
+        self.partySize = partySize
+        self.bookingIdentifier = bookingIdentifier
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -1971,9 +2382,15 @@ open class INRestaurantReservationUserBooking: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(restaurant: INRestaurant, booking bookingDate: Date, partySize: Int, bookingIdentifier: String, guest: INRestaurantGuest, status: INRestaurantReservationUserBookingStatus, dateStatusModified: Date) {
         self.init()
+        self.guest = guest
+        self.status = status
+        self.dateStatusModified = dateStatusModified
     }
     public convenience init(restaurant: INRestaurant, bookingDate: Date, partySize: Int, bookingIdentifier: String, guest: INRestaurantGuest, status: INRestaurantReservationUserBookingStatus, dateStatusModified: Date) {
         self.init()
+        self.guest = guest
+        self.status = status
+        self.dateStatusModified = dateStatusModified
     }
 }
 
@@ -1991,6 +2408,7 @@ open class INResumeWorkoutIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(workoutName: INSpeakableString?) {
         self.init()
+        self.workoutName = workoutName
     }
 }
 
@@ -1999,14 +2417,33 @@ open class INResumeWorkoutIntentResponse: INIntentResponse, @unchecked Sendable 
     public required override init() { super.init() }
     public convenience init(code: INResumeWorkoutIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
 open class INRideCompletionStatus: NSObject, @unchecked Sendable {
-    open class func canceledByService() -> Self { self.init() }
-    open class func canceledByUser() -> Self { self.init() }
-    open class func canceledMissedPickup() -> Self { self.init() }
-    open class func completed() -> Self { self.init() }
+    open class func canceledByService() -> Self {
+        let value = self.init()
+        value.isCanceled = true
+        return value
+    }
+    open class func canceledByUser() -> Self {
+        let value = self.init()
+        value.isCanceled = true
+        return value
+    }
+    open class func canceledMissedPickup() -> Self {
+        let value = self.init()
+        value.isCanceled = true
+        value.isMissedPickup = true
+        return value
+    }
+    open class func completed() -> Self {
+        let value = self.init()
+        value.isCompleted = true
+        return value
+    }
     open var isCanceled: Bool = false
     open var isCompleted: Bool = false
     open var completionUserActivity: NSUserActivity? = nil
@@ -2016,8 +2453,9 @@ open class INRideCompletionStatus: NSObject, @unchecked Sendable {
     open var isOutstanding: Bool = false
     open var paymentAmount: INCurrencyAmount? = nil
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -2027,22 +2465,31 @@ open class INRideDriver: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(handle: String, displayName: String?, image: INImage?, rating: String?, phoneNumber: String?) {
         self.init()
+        self.rating = rating
+        self.phoneNumber = phoneNumber
     }
     public convenience init(handle: String, nameComponents: PersonNameComponents, image: INImage?, rating: String?, phoneNumber: String?) {
         self.init()
+        self.rating = rating
+        self.phoneNumber = phoneNumber
     }
     public convenience init(personHandle: INPersonHandle, nameComponents: PersonNameComponents?, displayName: String?, image: INImage?, rating: String?, phoneNumber: String?) {
         self.init()
+        self.rating = rating
+        self.phoneNumber = phoneNumber
     }
     public convenience init(phoneNumber: String, nameComponents: PersonNameComponents?, displayName: String?, image: INImage?, rating: String?) {
         self.init()
+        self.phoneNumber = phoneNumber
+        self.rating = rating
     }
 }
 
 open class INRideFareLineItem: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -2059,11 +2506,14 @@ open class INRideOption: NSObject, @unchecked Sendable {
     open var specialPricingBadgeImage: INImage? = nil
     open var userActivityForBookingInApplication: NSUserActivity? = nil
     public required override init() { super.init() }
-    public convenience init?(coder decoder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
     public convenience init(name: String, estimatedPickupDate: Date) {
         self.init()
+        self.name = name
+        self.estimatedPickupDate = estimatedPickupDate
     }
 }
 
@@ -2074,9 +2524,13 @@ open class INRidePartySizeOption: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(partySizeRange: NSRange, sizeDescription: String, priceRange: INPriceRange?) {
         self.init()
+        self.partySizeRange = partySizeRange
+        self.sizeDescription = sizeDescription
+        self.priceRange = priceRange
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -2094,8 +2548,9 @@ open class INRideStatus: NSObject, @unchecked Sendable {
     open var userActivityForCancelingInApplication: NSUserActivity? = nil
     open var vehicle: INRideVehicle? = nil
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -2105,8 +2560,9 @@ open class INRideVehicle: NSObject, @unchecked Sendable {
     open var model: String? = nil
     open var registrationPlate: String? = nil
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -2121,6 +2577,8 @@ open class INSaveProfileInCarIntentResponse: INIntentResponse, @unchecked Sendab
     public required override init() { super.init() }
     public convenience init(code: INSaveProfileInCarIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2133,6 +2591,10 @@ open class INSearchCallHistoryIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(call callType: INCallRecordType, dateCreated: INDateComponentsRange?, recipient: INPerson?, callCapabilities: INCallCapabilityOptions = []) {
         self.init()
+        self.callType = callType
+        self.dateCreated = dateCreated
+        self.recipient = recipient
+        self.callCapabilities = callCapabilities
     }
 }
 
@@ -2142,6 +2604,8 @@ open class INSearchCallHistoryIntentResponse: INIntentResponse, @unchecked Senda
     public required override init() { super.init() }
     public convenience init(code: INSearchCallHistoryIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2153,6 +2617,10 @@ open class INSearchForAccountsIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(accountNickname: INSpeakableString?, accountType: INAccountType, organizationName: INSpeakableString?, requestedBalanceType: INBalanceType) {
         self.init()
+        self.accountNickname = accountNickname
+        self.accountType = accountType
+        self.organizationName = organizationName
+        self.requestedBalanceType = requestedBalanceType
     }
 }
 
@@ -2162,6 +2630,8 @@ open class INSearchForAccountsIntentResponse: INIntentResponse, @unchecked Senda
     public required override init() { super.init() }
     public convenience init(code: INSearchForAccountsIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2174,6 +2644,11 @@ open class INSearchForBillsIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(billPayee: INBillPayee?, paymentDateRange: INDateComponentsRange?, billType: INBillType, status: INPaymentStatus, dueDateRange: INDateComponentsRange?) {
         self.init()
+        self.billPayee = billPayee
+        self.paymentDateRange = paymentDateRange
+        self.billType = billType
+        self.status = status
+        self.dueDateRange = dueDateRange
     }
 }
 
@@ -2183,6 +2658,8 @@ open class INSearchForBillsIntentResponse: INIntentResponse, @unchecked Sendable
     public required override init() { super.init() }
     public convenience init(code: INSearchForBillsIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2192,6 +2669,8 @@ open class INSearchForMediaIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(mediaItems: [INMediaItem]?, mediaSearch: INMediaSearch?) {
         self.init()
+        self.mediaItems = mediaItems
+        self.mediaSearch = mediaSearch
     }
 }
 
@@ -2201,6 +2680,8 @@ open class INSearchForMediaIntentResponse: INIntentResponse, @unchecked Sendable
     public required override init() { super.init() }
     public convenience init(code: INSearchForMediaIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2319,6 +2800,8 @@ open class INSearchForNotebookItemsIntentResponse: INIntentResponse, @unchecked 
     public required override init() { super.init() }
     public convenience init(code: INSearchForNotebookItemsIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2339,6 +2822,8 @@ open class INSearchForPhotosIntentResponse: INIntentResponse, @unchecked Sendabl
     public required override init() { super.init() }
     public convenience init(code: INSearchForPhotosIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2350,9 +2835,14 @@ open class INSeat: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(seatSection: String?, seatRow: String?, seatNumber: String?, seatingType: String?) {
         self.init()
+        self.seatSection = seatSection
+        self.seatRow = seatRow
+        self.seatNumber = seatNumber
+        self.seatingType = seatingType
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -2361,6 +2851,7 @@ open class INSendMessageAttachment: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(audioMessageFile: INFile) {
         self.init()
+        self.audioMessageFile = audioMessageFile
     }
 }
 
@@ -2464,6 +2955,9 @@ open class INSendPaymentIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(payee: INPerson?, currencyAmount: INCurrencyAmount?, note: String?) {
         self.init()
+        self.payee = payee
+        self.currencyAmount = currencyAmount
+        self.note = note
     }
 }
 
@@ -2473,6 +2967,8 @@ open class INSendPaymentIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INSendPaymentIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2493,6 +2989,7 @@ open class INSendRideFeedbackIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(rideIdentifier: String) {
         self.init()
+        self.rideIdentifier = rideIdentifier
     }
 }
 
@@ -2501,6 +2998,8 @@ open class INSendRideFeedbackIntentResponse: INIntentResponse, @unchecked Sendab
     public required override init() { super.init() }
     public convenience init(code: INSendRideFeedbackIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2510,6 +3009,8 @@ open class INSetAudioSourceInCarIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(audioSource: INCarAudioSource, relativeAudioSourceReference: INRelativeReference) {
         self.init()
+        self.audioSource = audioSource
+        self.relativeAudioSourceReference = relativeAudioSourceReference
     }
 }
 
@@ -2518,6 +3019,8 @@ open class INSetAudioSourceInCarIntentResponse: INIntentResponse, @unchecked Sen
     public required override init() { super.init() }
     public convenience init(code: INSetAudioSourceInCarIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2531,6 +3034,8 @@ open class INSetCarLockStatusIntentResponse: INIntentResponse, @unchecked Sendab
     public required override init() { super.init() }
     public convenience init(code: INSetCarLockStatusIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2549,6 +3054,8 @@ open class INSetClimateSettingsInCarIntentResponse: INIntentResponse, @unchecked
     public required override init() { super.init() }
     public convenience init(code: INSetClimateSettingsInCarIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2563,6 +3070,8 @@ open class INSetDefrosterSettingsInCarIntentResponse: INIntentResponse, @uncheck
     public required override init() { super.init() }
     public convenience init(code: INSetDefrosterSettingsInCarIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2572,6 +3081,8 @@ open class INSetMessageAttributeIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(identifiers: [String]?, attribute: INMessageAttribute) {
         self.init()
+        self.identifiers = identifiers
+        self.attribute = attribute
     }
 }
 
@@ -2580,6 +3091,8 @@ open class INSetMessageAttributeIntentResponse: INIntentResponse, @unchecked Sen
     public required override init() { super.init() }
     public convenience init(code: INSetMessageAttributeIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2593,36 +3106,61 @@ open class INSetProfileInCarIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(defaultProfile: Int?) {
         self.init()
+        self.defaultProfile = defaultProfile
     }
     public convenience init(profileName: String?, defaultProfile: Int?) {
         self.init()
+        self.profileName = profileName
+        self.defaultProfile = defaultProfile
     }
     public convenience init(profileLabel: String?, defaultProfile: Int?) {
         self.init()
+        self.profileLabel = profileLabel
+        self.defaultProfile = defaultProfile
     }
     public convenience init(profileLabel: String?, isDefaultProfile: Bool?) {
         self.init()
+        self.profileLabel = profileLabel
+        self.isDefaultProfile = isDefaultProfile
     }
     public convenience init(profileLabel: String?) {
         self.init()
+        self.profileLabel = profileLabel
     }
     public convenience init(profileNumber: Int?, defaultProfile: Int?) {
         self.init()
+        self.profileNumber = profileNumber
+        self.defaultProfile = defaultProfile
     }
     public convenience init(profileNumber: Int?, profileName: String?, defaultProfile: Int?) {
         self.init()
+        self.profileNumber = profileNumber
+        self.profileName = profileName
+        self.defaultProfile = defaultProfile
     }
     public convenience init(profileNumber: Int? = nil, profileName: String? = nil, isDefaultProfile: Bool? = nil, carName: INSpeakableString? = nil) {
         self.init()
+        self.profileNumber = profileNumber
+        self.profileName = profileName
+        self.isDefaultProfile = isDefaultProfile
+        self.carName = carName
     }
     public convenience init(profileNumber: Int?, profileLabel: String?, defaultProfile: Int?) {
         self.init()
+        self.profileNumber = profileNumber
+        self.profileLabel = profileLabel
+        self.defaultProfile = defaultProfile
     }
     public convenience init(profileNumber: Int?, profileLabel: String?, isDefaultProfile: Bool?) {
         self.init()
+        self.profileNumber = profileNumber
+        self.profileLabel = profileLabel
+        self.isDefaultProfile = isDefaultProfile
     }
     public convenience init(profileNumber: Int?, profileLabel: String?) {
         self.init()
+        self.profileNumber = profileNumber
+        self.profileLabel = profileLabel
     }
 }
 
@@ -2631,6 +3169,8 @@ open class INSetProfileInCarIntentResponse: INIntentResponse, @unchecked Sendabl
     public required override init() { super.init() }
     public convenience init(code: INSetProfileInCarIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2646,6 +3186,8 @@ open class INSetRadioStationIntentResponse: INIntentResponse, @unchecked Sendabl
     public required override init() { super.init() }
     public convenience init(code: INSetRadioStationIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2661,6 +3203,8 @@ open class INSetSeatSettingsInCarIntentResponse: INIntentResponse, @unchecked Se
     public required override init() { super.init() }
     public convenience init(code: INSetSeatSettingsInCarIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2674,9 +3218,19 @@ open class INSetTaskAttributeIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(targetTask: INTask?, status: INTaskStatus, spatialEventTrigger: INSpatialEventTrigger?, temporalEventTrigger: INTemporalEventTrigger?) {
         self.init()
+        self.targetTask = targetTask
+        self.status = status
+        self.spatialEventTrigger = spatialEventTrigger
+        self.temporalEventTrigger = temporalEventTrigger
     }
     public convenience init(targetTask: INTask?, taskTitle: INSpeakableString?, status: INTaskStatus, priority: INTaskPriority, spatialEventTrigger: INSpatialEventTrigger?, temporalEventTrigger: INTemporalEventTrigger?) {
         self.init()
+        self.targetTask = targetTask
+        self.taskTitle = taskTitle
+        self.status = status
+        self.priority = priority
+        self.spatialEventTrigger = spatialEventTrigger
+        self.temporalEventTrigger = temporalEventTrigger
     }
 }
 
@@ -2686,6 +3240,8 @@ open class INSetTaskAttributeIntentResponse: INIntentResponse, @unchecked Sendab
     public required override init() { super.init() }
     public convenience init(code: INSetTaskAttributeIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2704,6 +3260,7 @@ open class INShareFocusStatusIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(focusStatus: INFocusStatus?) {
         self.init()
+        self.focusStatus = focusStatus
     }
 }
 
@@ -2712,6 +3269,8 @@ open class INShareFocusStatusIntentResponse: INIntentResponse, @unchecked Sendab
     public required override init() { super.init() }
     public convenience init(code: INShareFocusStatusIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2721,12 +3280,15 @@ open class INShortcutReference: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init?(intent: INIntent) {
         self.init()
+        self.intent = intent
     }
     public convenience init(userActivity: NSUserActivity) {
         self.init()
+        self.userActivity = userActivity
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -2742,6 +3304,8 @@ open class INSnoozeTasksIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INSnoozeTasksIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2758,8 +3322,9 @@ open class INSnoozeTasksTaskResolutionResult: INIntentResolutionResult, @uncheck
 open class INSpatialEventTrigger: NSObject, @unchecked Sendable {
     open var event: INSpatialEvent?
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -2796,9 +3361,12 @@ open class INStartAudioCallIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(contacts: [INPerson]?) {
         self.init()
+        self.contacts = contacts
     }
     public convenience init(destinationType: INCallDestinationType, contacts: [INPerson]?) {
         self.init()
+        self.destinationType = destinationType
+        self.contacts = contacts
     }
 }
 
@@ -2807,6 +3375,8 @@ open class INStartAudioCallIntentResponse: INIntentResponse, @unchecked Sendable
     public required override init() { super.init() }
     public convenience init(code: INStartAudioCallIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2897,6 +3467,8 @@ open class INStartPhotoPlaybackIntentResponse: INIntentResponse, @unchecked Send
     public required override init() { super.init() }
     public convenience init(code: INStartPhotoPlaybackIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2905,6 +3477,7 @@ open class INStartVideoCallIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(contacts: [INPerson]?) {
         self.init()
+        self.contacts = contacts
     }
 }
 
@@ -2913,6 +3486,8 @@ open class INStartVideoCallIntentResponse: INIntentResponse, @unchecked Sendable
     public required override init() { super.init() }
     public convenience init(code: INStartVideoCallIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2928,6 +3503,8 @@ open class INStartWorkoutIntentResponse: INIntentResponse, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(code: INStartWorkoutIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -2943,9 +3520,12 @@ open class INSticker: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(type: INSticker.StickerType, emoji: String?) {
         self.init()
+        self.type = type
+        self.emoji = emoji
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -2962,12 +3542,30 @@ open class INTask: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(title: INSpeakableString, status: INTaskStatus, taskType: INTaskType, spatialEventTrigger: INSpatialEventTrigger?, temporalEventTrigger: INTemporalEventTrigger?, createdDateComponents: DateComponents?, modifiedDateComponents: DateComponents?, identifier: String?) {
         self.init()
+        self.title = title
+        self.status = status
+        self.taskType = taskType
+        self.spatialEventTrigger = spatialEventTrigger
+        self.temporalEventTrigger = temporalEventTrigger
+        self.createdDateComponents = createdDateComponents
+        self.modifiedDateComponents = modifiedDateComponents
+        self.identifier = identifier
     }
     public convenience init(title: INSpeakableString, status: INTaskStatus, taskType: INTaskType, spatialEventTrigger: INSpatialEventTrigger?, temporalEventTrigger: INTemporalEventTrigger?, createdDateComponents: DateComponents?, modifiedDateComponents: DateComponents?, identifier: String?, priority: INTaskPriority) {
         self.init()
+        self.title = title
+        self.status = status
+        self.taskType = taskType
+        self.spatialEventTrigger = spatialEventTrigger
+        self.temporalEventTrigger = temporalEventTrigger
+        self.createdDateComponents = createdDateComponents
+        self.modifiedDateComponents = modifiedDateComponents
+        self.identifier = identifier
+        self.priority = priority
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -2981,9 +3579,16 @@ open class INTaskList: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(title: INSpeakableString, tasks: [INTask], groupName: INSpeakableString?, createdDateComponents: DateComponents?, modifiedDateComponents: DateComponents?, identifier: String?) {
         self.init()
+        self.title = title
+        self.tasks = tasks
+        self.groupName = groupName
+        self.createdDateComponents = createdDateComponents
+        self.modifiedDateComponents = modifiedDateComponents
+        self.identifier = identifier
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -3035,9 +3640,11 @@ open class INTemporalEventTrigger: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(dateComponentsRange: INDateComponentsRange) {
         self.init()
+        self.dateComponentsRange = dateComponentsRange
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -3065,9 +3672,13 @@ open class INTermsAndConditions: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(localizedTermsAndConditionsText: String, privacyPolicyURL: URL?, termsAndConditionsURL: URL?) {
         self.init()
+        self.localizedTermsAndConditionsText = localizedTermsAndConditionsText
+        self.privacyPolicyURL = privacyPolicyURL
+        self.termsAndConditionsURL = termsAndConditionsURL
     }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -3076,6 +3687,7 @@ open class INTextNoteContent: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(text: String) {
         self.init()
+        self.text = text
     }
 }
 
@@ -3084,8 +3696,9 @@ open class INTicketedEvent: NSObject, @unchecked Sendable {
     open var eventDuration: INDateComponentsRange?
     open var name: String = ""
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -3095,12 +3708,18 @@ open class INTicketedEventReservation: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, event: INTicketedEvent) {
         self.init()
+        self.reservedSeat = reservedSeat
+        self.event = event
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, URL: URL?, reservedSeat: INSeat?, event: INTicketedEvent) {
         self.init()
+        self.reservedSeat = reservedSeat
+        self.event = event
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, reservedSeat: INSeat?, event: INTicketedEvent) {
         self.init()
+        self.reservedSeat = reservedSeat
+        self.event = event
     }
 }
 
@@ -3118,12 +3737,18 @@ open class INTrainReservation: NSObject, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, trainTrip: INTrainTrip) {
         self.init()
+        self.reservedSeat = reservedSeat
+        self.trainTrip = trainTrip
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, URL: URL?, reservedSeat: INSeat?, trainTrip: INTrainTrip) {
         self.init()
+        self.reservedSeat = reservedSeat
+        self.trainTrip = trainTrip
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, reservedSeat: INSeat?, trainTrip: INTrainTrip) {
         self.init()
+        self.reservedSeat = reservedSeat
+        self.trainTrip = trainTrip
     }
 }
 
@@ -3135,8 +3760,9 @@ open class INTrainTrip: NSObject, @unchecked Sendable {
     open var trainNumber: String? = nil
     open var tripDuration: INDateComponentsRange?
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -3149,9 +3775,19 @@ open class INTransferMoneyIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(from fromAccount: INPaymentAccount?, to toAccount: INPaymentAccount?, transactionAmount: INPaymentAmount?, transactionScheduledDate: INDateComponentsRange?, transactionNote: String?) {
         self.init()
+        self.fromAccount = fromAccount
+        self.toAccount = toAccount
+        self.transactionAmount = transactionAmount
+        self.transactionScheduledDate = transactionScheduledDate
+        self.transactionNote = transactionNote
     }
     public convenience init(fromAccount: INPaymentAccount?, toAccount: INPaymentAccount?, transactionAmount: INPaymentAmount?, transactionScheduledDate: INDateComponentsRange?, transactionNote: String?) {
         self.init()
+        self.fromAccount = fromAccount
+        self.toAccount = toAccount
+        self.transactionAmount = transactionAmount
+        self.transactionScheduledDate = transactionScheduledDate
+        self.transactionNote = transactionNote
     }
 }
 
@@ -3166,6 +3802,8 @@ open class INTransferMoneyIntentResponse: INIntentResponse, @unchecked Sendable 
     public required override init() { super.init() }
     public convenience init(code: INTransferMoneyIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -3183,6 +3821,7 @@ open class INUnsendMessagesIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(messageIdentifiers: [String]?) {
         self.init()
+        self.messageIdentifiers = messageIdentifiers
     }
 }
 
@@ -3191,6 +3830,8 @@ open class INUnsendMessagesIntentResponse: INIntentResponse, @unchecked Sendable
     public required override init() { super.init() }
     public convenience init(code: INUnsendMessagesIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -3208,6 +3849,9 @@ open class INUpdateMediaAffinityIntent: INIntent, @unchecked Sendable {
     public required override init() { super.init() }
     public convenience init(mediaItems: [INMediaItem]?, mediaSearch: INMediaSearch?, affinityType: INMediaAffinityType) {
         self.init()
+        self.mediaItems = mediaItems
+        self.mediaSearch = mediaSearch
+        self.affinityType = affinityType
     }
 }
 
@@ -3216,6 +3860,8 @@ open class INUpdateMediaAffinityIntentResponse: INIntentResponse, @unchecked Sen
     public required override init() { super.init() }
     public convenience init(code: INUpdateMediaAffinityIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
+        self.code = code
+        self.userActivity = userActivity
     }
 }
 
@@ -3233,8 +3879,9 @@ open class INUpdateMediaAffinityMediaItemResolutionResult: INIntentResolutionRes
 open class INUserContext: NSObject, @unchecked Sendable {
     open func becomeCurrent() { }
     public required override init() { super.init() }
-    public convenience init?(coder: NSCoder) {
-        return nil
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -3247,10 +3894,31 @@ open class INVisualCodeTypeResolutionResult: INIntentResolutionResult, @unchecke
 }
 
 open class INVocabulary: NSObject, @unchecked Sendable {
-    open class func shared() -> Self { self.init() }
-    open func removeAllVocabularyStrings() { }
-    open func setVocabulary(_ vocabulary: NSOrderedSet, of type: INVocabularyStringType) { }
-    open func setVocabularyStrings(_ vocabulary: NSOrderedSet, of type: INVocabularyStringType) { }
+    private static let sharedInstance = INVocabulary()
+    private static let store = Mutex<[INVocabularyStringType: [String]]>([:])
+
+    open class func shared() -> Self {
+        unsafeDowncast(sharedInstance, to: Self.self)
+    }
+
+    open func removeAllVocabularyStrings() {
+        Self.store.withLock { $0.removeAll(keepingCapacity: false) }
+    }
+
+    open func setVocabulary(_ vocabulary: NSOrderedSet, of type: INVocabularyStringType) {
+        setVocabularyStrings(vocabulary, of: type)
+    }
+
+    open func setVocabularyStrings(_ vocabulary: NSOrderedSet, of type: INVocabularyStringType) {
+        let values = vocabulary.array.compactMap { $0 as? String }
+        Self.store.withLock { $0[type] = values }
+    }
+
+    @_spi(OpenIntentsHost)
+    public func strings(of type: INVocabularyStringType) -> [String] {
+        Self.store.withLock { $0[type] ?? [] }
+    }
+
     public required override init() { super.init() }
 }
 
