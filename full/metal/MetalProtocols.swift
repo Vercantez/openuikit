@@ -422,6 +422,18 @@ public protocol MTLRenderCommandEncoder: MTLCommandEncoder {
         indirectBufferOffset: Int
     )
     func memoryBarrier(resources: [any MTLResource], after: MTLRenderStages, before: MTLRenderStages)
+    func sampleCounters(sampleBuffer: any MTLCounterSampleBuffer, sampleIndex: Int, barrier: Bool)
+    func setColorAttachmentMap(_ mapping: MTLLogicalToPhysicalColorAttachmentMap?)
+    func setVertexAccelerationStructure(_ accelerationStructure: (any MTLAccelerationStructure)?, bufferIndex: Int)
+    func setFragmentAccelerationStructure(_ accelerationStructure: (any MTLAccelerationStructure)?, bufferIndex: Int)
+    func setTileAccelerationStructure(_ accelerationStructure: (any MTLAccelerationStructure)?, bufferIndex: Int)
+    func setVertexIntersectionFunctionTable(_ intersectionFunctionTable: (any MTLIntersectionFunctionTable)?, bufferIndex: Int)
+    func setFragmentIntersectionFunctionTable(_ intersectionFunctionTable: (any MTLIntersectionFunctionTable)?, bufferIndex: Int)
+    func setTileIntersectionFunctionTable(_ intersectionFunctionTable: (any MTLIntersectionFunctionTable)?, bufferIndex: Int)
+    func setVertexVisibleFunctionTable(_ functionTable: (any MTLVisibleFunctionTable)?, bufferIndex: Int)
+    func setFragmentVisibleFunctionTable(_ functionTable: (any MTLVisibleFunctionTable)?, bufferIndex: Int)
+    func setTileVisibleFunctionTable(_ functionTable: (any MTLVisibleFunctionTable)?, bufferIndex: Int)
+    func setVertexAmplificationCount(_ count: Int, viewMappings: UnsafePointer<MTLVertexAmplificationViewMapping>?)
 }
 
 public protocol MTLCommandQueue: NSObjectProtocol, Sendable {
@@ -431,6 +443,8 @@ public protocol MTLCommandQueue: NSObjectProtocol, Sendable {
     func makeCommandBuffer(descriptor: MTLCommandBufferDescriptor) -> (any MTLCommandBuffer)?
     func makeCommandBufferWithUnretainedReferences() -> (any MTLCommandBuffer)?
     func insertDebugCaptureBoundary()
+    func addResidencySet(_ residencySet: any MTLResidencySet)
+    func removeResidencySet(_ residencySet: any MTLResidencySet)
 }
 
 public protocol MTLCommandBuffer: NSObjectProtocol {
@@ -468,6 +482,9 @@ public protocol MTLCommandBuffer: NSObjectProtocol {
     func makeParallelRenderCommandEncoder(descriptor renderPassDescriptor: MTLRenderPassDescriptor) -> (any MTLParallelRenderCommandEncoder)?
     func makeResourceStateCommandEncoder() -> (any MTLResourceStateCommandEncoder)?
     func resourceStateCommandEncoder(with resourceStatePassDescriptor: MTLResourceStatePassDescriptor) -> (any MTLResourceStateCommandEncoder)?
+    func makeAccelerationStructureCommandEncoder() -> (any MTLAccelerationStructureCommandEncoder)?
+    func makeAccelerationStructureCommandEncoder(descriptor: MTLAccelerationStructurePassDescriptor) -> any MTLAccelerationStructureCommandEncoder
+    func useResidencySet(_ residencySet: any MTLResidencySet)
 }
 
 public protocol MTLDevice: NSObjectProtocol, Sendable {
@@ -666,9 +683,29 @@ public protocol MTLDynamicLibrary: NSObjectProtocol, Sendable {
     var installName: String { get }
 }
 
-public protocol MTLLogState: NSObjectProtocol, Sendable {}
+public protocol MTLLogState: NSObjectProtocol, Sendable {
+    func addLogHandler(_ block: @escaping (String?, String?, MTLLogLevel, String) -> Void)
+}
 
-public protocol MTLFunctionLog: NSObjectProtocol {}
+public protocol MTLFunctionLog: NSObjectProtocol {
+    var type: MTLFunctionLogType { get }
+    var encoderLabel: String? { get }
+    var function: (any MTLFunction)? { get }
+    var debugLocation: (any MTLFunctionLogDebugLocation)? { get }
+}
+
+public protocol MTLFunctionLogDebugLocation: NSObjectProtocol {
+    var functionName: String? { get }
+    var url: URL? { get }
+    var line: Int { get }
+    var column: Int { get }
+}
+
+public protocol MTLCommandBufferEncoderInfo: NSObjectProtocol {
+    var label: String { get }
+    var debugSignposts: [String] { get }
+    var errorState: MTLCommandEncoderErrorState { get }
+}
 
 public protocol MTLCounterSet: NSObjectProtocol {
     var name: String { get }

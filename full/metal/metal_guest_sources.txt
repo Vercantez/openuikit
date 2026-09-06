@@ -13,5 +13,6 @@ full/metal/MetalOptionSets.swift
 full/metal/MetalOverlays.swift
 full/metal/MetalPixelFormat.swift
 full/metal/MetalProtocols.swift
+full/metal/MetalResidency.swift
 full/metal/MetalSoftware.swift
 full/metal/MetalStubs.swift

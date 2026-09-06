@@ -21,11 +21,24 @@ public protocol MTLCounterSampleBuffer: NSObjectProtocol, Sendable {
     var device: any MTLDevice { get }
     var label: String? { get }
     var sampleCount: Int { get }
+    func resolveCounterRange(_ range: Range<Int>) throws -> Data?
 }
 
 public protocol MTLResidencySet: NSObjectProtocol, Sendable {
     var device: any MTLDevice { get }
     var label: String? { get set }
+    var allocatedSize: UInt64 { get }
+    var allocationCount: Int { get }
+    var allAllocations: [any MTLAllocation] { get }
+    func addAllocation(_ allocation: any MTLAllocation)
+    func removeAllocation(_ allocation: any MTLAllocation)
+    func addAllocations(_ allocations: [any MTLAllocation])
+    func removeAllocations(_ allocations: [any MTLAllocation])
+    func containsAllocation(_ anAllocation: any MTLAllocation) -> Bool
+    func removeAllAllocations()
+    func commit()
+    func requestResidency()
+    func endResidency()
 }
 
 public protocol MTLResourceStateCommandEncoder: MTLCommandEncoder {
@@ -84,6 +97,24 @@ public protocol MTLFunctionHandle: NSObjectProtocol, Sendable {
 
 public protocol MTLTensor: MTLResource {
     var gpuResourceID: MTLResourceID { get }
+    var buffer: (any MTLBuffer)? { get }
+    var bufferOffset: Int { get }
+    var dataType: MTLTensorDataType { get }
+    var dimensions: MTLTensorExtents { get }
+    var strides: MTLTensorExtents? { get }
+    var usage: MTLTensorUsage { get }
+    func getBytes(
+        _ bytes: UnsafeMutableRawPointer,
+        strides: MTLTensorExtents,
+        sliceOrigin: MTLTensorExtents,
+        sliceDimensions: MTLTensorExtents
+    )
+    func replace(
+        sliceOrigin: MTLTensorExtents,
+        sliceDimensions: MTLTensorExtents,
+        withBytes bytes: UnsafeRawPointer,
+        strides: MTLTensorExtents
+    )
 }
 
 public protocol MTLBinaryArchive: NSObjectProtocol, Sendable {
@@ -263,4 +294,89 @@ public final class LinuxMTLDrawable: NSObject, MTLDrawable, @unchecked Sendable 
     public func addPresentedHandler(_ block: @escaping MTLDrawablePresentedHandler) {
         handlers.append(block)
     }
+}
+
+public protocol MTLAccelerationStructureCommandEncoder: MTLCommandEncoder {
+    func build(
+        accelerationStructure: any MTLAccelerationStructure,
+        descriptor: MTLAccelerationStructureDescriptor,
+        scratchBuffer: any MTLBuffer,
+        scratchBufferOffset: Int
+    )
+    func refit(
+        sourceAccelerationStructure: any MTLAccelerationStructure,
+        descriptor: MTLAccelerationStructureDescriptor,
+        destinationAccelerationStructure: (any MTLAccelerationStructure)?,
+        scratchBuffer: (any MTLBuffer)?,
+        scratchBufferOffset: Int
+    )
+    func refit(
+        sourceAccelerationStructure: any MTLAccelerationStructure,
+        descriptor: MTLAccelerationStructureDescriptor,
+        destinationAccelerationStructure: (any MTLAccelerationStructure)?,
+        scratchBuffer: (any MTLBuffer)?,
+        scratchBufferOffset: Int,
+        options: MTLAccelerationStructureRefitOptions
+    )
+    func copy(
+        sourceAccelerationStructure: any MTLAccelerationStructure,
+        destinationAccelerationStructure: any MTLAccelerationStructure
+    )
+    func copyAndCompact(
+        sourceAccelerationStructure: any MTLAccelerationStructure,
+        destinationAccelerationStructure: any MTLAccelerationStructure
+    )
+    func writeCompactedSize(
+        accelerationStructure: any MTLAccelerationStructure,
+        buffer: any MTLBuffer,
+        offset: Int
+    )
+    func writeCompactedSize(
+        accelerationStructure: any MTLAccelerationStructure,
+        buffer: any MTLBuffer,
+        offset: Int,
+        sizeDataType: MTLDataType
+    )
+    func updateFence(_ fence: any MTLFence)
+    func waitForFence(_ fence: any MTLFence)
+    func useResource(_ resource: any MTLResource, usage: MTLResourceUsage)
+    func useHeap(_ heap: any MTLHeap)
+    func sampleCounters(sampleBuffer: any MTLCounterSampleBuffer, sampleIndex: Int, barrier: Bool)
+}
+
+public protocol MTLRasterizationRateMap: NSObjectProtocol, Sendable {
+    var device: any MTLDevice { get }
+    var label: String? { get }
+    var screenSize: MTLSize { get }
+    var physicalGranularity: MTLSize { get }
+    var layerCount: Int { get }
+    var parameterBufferSizeAndAlign: MTLSizeAndAlign { get }
+    func physicalSize(layer layerIndex: Int) -> MTLSize
+    func screenCoordinates(physicalCoordinates: MTLCoordinate2D, layer layerIndex: Int) -> MTLCoordinate2D
+    func physicalCoordinates(screenCoordinates: MTLCoordinate2D, layer layerIndex: Int) -> MTLCoordinate2D
+    func copyParameterData(buffer: any MTLBuffer, offset: Int)
+}
+
+public protocol MTLResourceViewPool: NSObjectProtocol, Sendable {
+    var device: any MTLDevice { get }
+    var label: String? { get }
+    var resourceViewCount: Int { get }
+    var baseResourceID: MTLResourceID { get }
+    func copyResourceViews(
+        from sourcePool: any MTLResourceViewPool,
+        sourceRange: Range<Int>,
+        destinationIndex: Int
+    ) -> MTLResourceID
+}
+
+public protocol MTLTextureViewPool: MTLResourceViewPool {
+    func setTextureView(texture: any MTLTexture, index: Int) -> MTLResourceID
+    func setTextureView(texture: any MTLTexture, descriptor: MTLTextureViewDescriptor, index: Int) -> MTLResourceID
+    func setTextureView(
+        buffer: any MTLBuffer,
+        descriptor: MTLTextureDescriptor,
+        offset: Int,
+        bytesPerRow: Int,
+        index: Int
+    ) -> MTLResourceID
 }

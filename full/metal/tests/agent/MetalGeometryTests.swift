@@ -222,3 +222,224 @@ func testAccelerationStructureGeometryDescriptors() {
     precondition(indirect.maxInstanceCount == 8)
     precondition(indirect.instanceDescriptorType == .indirect)
 }
+
+func testTriangleAndInstanceAccelerationDescriptors() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let vertices = device.makeBuffer(length: 36, options: .storageModeShared)!
+    let indices = device.makeBuffer(length: 12, options: .storageModeShared)!
+    let boxes = device.makeBuffer(length: 24, options: .storageModeShared)!
+    let triangle = MTLAccelerationStructureTriangleGeometryDescriptor.descriptor()
+    triangle.vertexBuffer = vertices
+    triangle.vertexBufferOffset = 0
+    triangle.vertexStride = 12
+    triangle.vertexFormat = .float3
+    triangle.indexBuffer = indices
+    triangle.indexBufferOffset = 0
+    triangle.indexType = .uint16
+    triangle.triangleCount = 1
+    triangle.transformationMatrixBuffer = nil
+    triangle.transformationMatrixBufferOffset = 0
+    triangle.transformationMatrixLayout = .columnMajor
+    triangle.opaque = true
+    triangle.label = "tri"
+    precondition(triangle.triangleCount == 1)
+    precondition(triangle.vertexStride == 12)
+    let keyframe = MTLMotionKeyframeData.data()
+    keyframe.buffer = vertices
+    keyframe.offset = 0
+    let motionTri = MTLAccelerationStructureMotionTriangleGeometryDescriptor.descriptor()
+    motionTri.vertexBuffers = [keyframe]
+    motionTri.vertexStride = 12
+    motionTri.vertexFormat = .float3
+    motionTri.indexBuffer = indices
+    motionTri.indexBufferOffset = 0
+    motionTri.indexType = .uint32
+    motionTri.triangleCount = 2
+    motionTri.transformationMatrixBuffer = nil
+    motionTri.transformationMatrixBufferOffset = 0
+    motionTri.transformationMatrixLayout = .rowMajor
+    precondition(motionTri.vertexBuffers.count == 1)
+    precondition(motionTri.triangleCount == 2)
+    let box = MTLAccelerationStructureBoundingBoxGeometryDescriptor.descriptor()
+    box.boundingBoxBuffer = boxes
+    box.boundingBoxBufferOffset = 0
+    box.boundingBoxCount = 1
+    box.boundingBoxStride = 24
+    precondition(box.boundingBoxCount == 1)
+    let motionBox = MTLAccelerationStructureMotionBoundingBoxGeometryDescriptor.descriptor()
+    motionBox.boundingBoxBuffers = [keyframe]
+    motionBox.boundingBoxCount = 1
+    motionBox.boundingBoxStride = 24
+    precondition(motionBox.boundingBoxBuffers.count == 1)
+    let primitive = MTLPrimitiveAccelerationStructureDescriptor.descriptor()
+    primitive.geometryDescriptors = [triangle, box]
+    primitive.motionStartBorderMode = .clamp
+    primitive.motionEndBorderMode = .vanish
+    primitive.motionStartTime = 0
+    primitive.motionEndTime = 1
+    primitive.motionKeyframeCount = 1
+    primitive.usage = [.preferFastBuild]
+    precondition(primitive.geometryDescriptors?.count == 2)
+    let instance = MTLInstanceAccelerationStructureDescriptor.descriptor()
+    instance.instanceDescriptorBuffer = vertices
+    instance.instanceDescriptorBufferOffset = 0
+    instance.instanceDescriptorStride = 64
+    instance.instanceDescriptorType = .userID
+    instance.instanceCount = 2
+    instance.instancedAccelerationStructures = [device.makeAccelerationStructure(size: 0)!]
+    instance.instanceTransformationMatrixLayout = .columnMajor
+    instance.motionTransformBuffer = nil
+    instance.motionTransformBufferOffset = 0
+    instance.motionTransformStride = 48
+    instance.motionTransformType = .packedFloat4x3
+    instance.motionTransformCount = 0
+    precondition(instance.instanceCount == 2)
+    precondition(instance.instanceDescriptorType == .userID)
+    let sizes = device.accelerationStructureSizes(descriptor: primitive)
+    precondition(sizes.accelerationStructureSize == 0)
+
+    var quaternion = MTLPackedFloatQuaternion(x: 0, y: 0, z: 0, w: 1)
+    quaternion.x = 0.1
+    precondition(quaternion.w == 1)
+    precondition(MTLPackedFloatQuaternion() != quaternion)
+    var transform = MTLComponentTransform()
+    transform.scale = MTLPackedFloat3Make(1, 2, 3)
+    transform.shear = MTLPackedFloat3()
+    transform.pivot = MTLPackedFloat3()
+    transform.rotation = quaternion
+    transform.translation = MTLPackedFloat3Make(4, 5, 6)
+    precondition(transform.scale.y == 2)
+    precondition(transform == MTLComponentTransform(
+        scale: transform.scale,
+        shear: transform.shear,
+        pivot: transform.pivot,
+        rotation: transform.rotation,
+        translation: transform.translation
+    ))
+    var mapArgs = MTLMapIndirectArguments(
+        regionOriginX: 1, regionOriginY: 2, regionOriginZ: 0,
+        regionSizeWidth: 4, regionSizeHeight: 4, regionSizeDepth: 1,
+        mipMapLevel: 0, sliceId: 0
+    )
+    mapArgs.sliceId = 1
+    precondition(mapArgs.regionSizeWidth == 4)
+    precondition(MTLMapIndirectArguments().mipMapLevel == 0)
+    var draw = MTLDrawPrimitivesIndirectArguments(vertexCount: 3, instanceCount: 1, vertexStart: 0, baseInstance: 0)
+    draw.instanceCount = 2
+    precondition(draw.vertexCount == 3)
+    var indexed = MTLDrawIndexedPrimitivesIndirectArguments(
+        indexCount: 3, instanceCount: 1, indexStart: 0, baseVertex: 0, baseInstance: 0
+    )
+    indexed.baseVertex = -1
+    precondition(indexed.indexCount == 3)
+    var patch = MTLDrawPatchIndirectArguments(patchCount: 1, instanceCount: 1, patchStart: 0, baseInstance: 0)
+    patch.patchStart = 1
+    precondition(patch.patchCount == 1)
+}
+
+func testMetal4AccelerationStructureDescriptors() {
+    let geometry = MTL4AccelerationStructureGeometryDescriptor()
+    geometry.intersectionFunctionTableOffset = 2
+    geometry.opaque = true
+    geometry.allowDuplicateIntersectionFunctionInvocation = false
+    geometry.label = "g4"
+    geometry.primitiveDataBuffer = MTL4BufferRangeMake(8, 16)
+    geometry.primitiveDataStride = 16
+    geometry.primitiveDataElementSize = 4
+    precondition(geometry.opaque)
+    let curve = MTL4AccelerationStructureCurveGeometryDescriptor()
+    curve.controlPointBuffer = MTL4BufferRangeMake(0, 48)
+    curve.controlPointCount = 4
+    curve.controlPointStride = 12
+    curve.controlPointFormat = .float3
+    curve.radiusBuffer = MTL4BufferRangeMake(48, 16)
+    curve.radiusFormat = .float
+    curve.radiusStride = 4
+    curve.indexBuffer = MTL4BufferRangeMake(64, 8)
+    curve.indexType = .uint16
+    curve.segmentCount = 1
+    curve.segmentControlPointCount = 4
+    curve.curveType = .round
+    curve.curveBasis = .bSpline
+    curve.curveEndCaps = .none
+    precondition(curve.controlPointCount == 4)
+    let motionCurve = MTL4AccelerationStructureMotionCurveGeometryDescriptor()
+    motionCurve.controlPointBuffers = MTL4BufferRangeMake(0, 96)
+    motionCurve.controlPointCount = 4
+    motionCurve.controlPointStride = 12
+    motionCurve.controlPointFormat = .float3
+    motionCurve.radiusBuffers = MTL4BufferRangeMake(96, 32)
+    motionCurve.radiusFormat = .float
+    motionCurve.radiusStride = 4
+    motionCurve.indexBuffer = MTL4BufferRangeMake(128, 8)
+    motionCurve.indexType = .uint32
+    motionCurve.segmentCount = 1
+    motionCurve.segmentControlPointCount = 4
+    motionCurve.curveType = .flat
+    motionCurve.curveBasis = .bezier
+    motionCurve.curveEndCaps = .sphere
+    precondition(motionCurve.curveType == .flat)
+    let tri = MTL4AccelerationStructureTriangleGeometryDescriptor()
+    tri.vertexBuffer = MTL4BufferRangeMake(0, 36)
+    tri.vertexFormat = .float3
+    tri.vertexStride = 12
+    tri.indexBuffer = MTL4BufferRangeMake(36, 12)
+    tri.indexType = .uint16
+    tri.triangleCount = 1
+    tri.transformationMatrixBuffer = MTL4BufferRangeMake(48, 48)
+    tri.transformationMatrixLayout = .columnMajor
+    precondition(tri.triangleCount == 1)
+    let motionTri = MTL4AccelerationStructureMotionTriangleGeometryDescriptor()
+    motionTri.vertexBuffers = MTL4BufferRangeMake(0, 72)
+    motionTri.vertexFormat = .float3
+    motionTri.vertexStride = 12
+    motionTri.indexBuffer = MTL4BufferRangeMake(72, 12)
+    motionTri.indexType = .uint32
+    motionTri.triangleCount = 2
+    motionTri.transformationMatrixBuffer = MTL4BufferRange()
+    motionTri.transformationMatrixLayout = .rowMajor
+    precondition(motionTri.triangleCount == 2)
+    let box = MTL4AccelerationStructureBoundingBoxGeometryDescriptor()
+    box.boundingBoxBuffer = MTL4BufferRangeMake(0, 24)
+    box.boundingBoxCount = 1
+    box.boundingBoxStride = 24
+    precondition(box.boundingBoxCount == 1)
+    let motionBox = MTL4AccelerationStructureMotionBoundingBoxGeometryDescriptor()
+    motionBox.boundingBoxBuffers = MTL4BufferRangeMake(0, 48)
+    motionBox.boundingBoxCount = 2
+    motionBox.boundingBoxStride = 24
+    precondition(motionBox.boundingBoxCount == 2)
+    let primitive = MTL4PrimitiveAccelerationStructureDescriptor()
+    primitive.geometryDescriptors = [curve, tri, box]
+    primitive.motionStartBorderMode = .clamp
+    primitive.motionEndBorderMode = .vanish
+    primitive.motionStartTime = 0
+    primitive.motionEndTime = 1
+    primitive.motionKeyframeCount = 2
+    precondition(primitive.geometryDescriptors?.count == 3)
+    let instance = MTL4InstanceAccelerationStructureDescriptor()
+    instance.instanceDescriptorBuffer = MTL4BufferRangeMake(0, 128)
+    instance.instanceDescriptorStride = 64
+    instance.instanceDescriptorType = .default
+    instance.instanceCount = 2
+    instance.instanceTransformationMatrixLayout = .columnMajor
+    instance.motionTransformBuffer = MTL4BufferRange()
+    instance.motionTransformStride = 48
+    instance.motionTransformType = .packedFloat4x3
+    instance.motionTransformCount = 0
+    precondition(instance.instanceCount == 2)
+    let indirect = MTL4IndirectInstanceAccelerationStructureDescriptor()
+    indirect.instanceDescriptorBuffer = MTL4BufferRangeMake(0, 256)
+    indirect.instanceDescriptorStride = 64
+    indirect.instanceDescriptorType = .indirect
+    indirect.maxInstanceCount = 8
+    indirect.instanceCountBuffer = MTL4BufferRangeMake(256, 4)
+    indirect.instanceTransformationMatrixLayout = .columnMajor
+    indirect.motionTransformBuffer = MTL4BufferRange()
+    indirect.motionTransformStride = 48
+    indirect.motionTransformType = .component
+    indirect.maxMotionTransformCount = 2
+    indirect.motionTransformCountBuffer = MTL4BufferRangeMake(260, 4)
+    precondition(indirect.maxInstanceCount == 8)
+    precondition(indirect.instanceDescriptorType == .indirect)
+}
