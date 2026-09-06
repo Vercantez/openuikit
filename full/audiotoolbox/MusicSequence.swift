@@ -19,6 +19,8 @@ public struct MusicSequenceLoadFlags: OptionSet, Sendable, Hashable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     public static let channelsToTracks = MusicSequenceLoadFlags(rawValue: 1 << 0)
+    public static let smf_ChannelsToTracks = channelsToTracks
+    public static let smf_PreserveTracks = MusicSequenceLoadFlags(rawValue: 0)
 }
 
 public struct MusicSequenceFileFlags: OptionSet, Sendable, Hashable {
@@ -1232,6 +1234,127 @@ public func MusicEventIteratorSetEventTime(
             iterator.track.events[idx].time = inTimeStamp
         }
         iterator.snapshot[iterator.index].time = inTimeStamp
+        return 0
+    }
+}
+
+public func MusicEventIteratorSetEventInfo(
+    _ inIterator: MusicEventIterator?,
+    _ inEventType: MusicEventType,
+    _ inEventData: UnsafeRawPointer?
+) -> Int32 {
+    guard let iterator = ATRegistry.shared.lookup(inIterator, as: ATMusicEventIteratorObject.self) else {
+        return atParamError
+    }
+    guard iterator.index < iterator.snapshot.count else { return kAudioToolboxErr_EndOfTrack }
+    guard let inEventData else { return atParamError }
+    guard let sequence = iterator.track.sequence else { return kAudioToolboxErr_NoSequence }
+    let size = atMusicEventPayloadSize(inEventType, inEventData)
+    let payload = Data(bytes: inEventData, count: size)
+    let event = iterator.snapshot[iterator.index]
+    return atWithLock(sequence.lock) {
+        if let idx = iterator.track.events.firstIndex(where: {
+            $0.time == event.time && $0.type == event.type && $0.payload == event.payload
+        }) {
+            iterator.track.events[idx].type = inEventType
+            iterator.track.events[idx].payload = payload
+        }
+        iterator.snapshot[iterator.index].type = inEventType
+        iterator.snapshot[iterator.index].payload = payload
+        return 0
+    }
+}
+
+private func atMusicEventPayloadSize(_ type: MusicEventType, _ pointer: UnsafeRawPointer) -> Int {
+    switch type {
+    case kMusicEventType_MIDINoteMessage:
+        return MemoryLayout<MIDINoteMessage>.size
+    case kMusicEventType_MIDIChannelMessage:
+        return MemoryLayout<MIDIChannelMessage>.size
+    case kMusicEventType_ExtendedTempo:
+        return MemoryLayout<Float64>.size
+    case kMusicEventType_Parameter:
+        return MemoryLayout<ParameterEvent>.size
+    case kMusicEventType_MIDIRawData:
+        let length = Int(pointer.loadUnaligned(as: UInt32.self))
+        return MemoryLayout<UInt32>.size + max(length, 1)
+    case kMusicEventType_Meta:
+        let header = MemoryLayout<UInt32>.size + MemoryLayout<UInt32>.size
+        let length = Int(pointer.loadUnaligned(fromByteOffset: 4, as: UInt32.self))
+        return header + max(length, 1)
+    default:
+        return 8
+    }
+}
+
+public func MusicTrackNewMetaEvent(
+    _ inTrack: MusicTrack?,
+    _ inTimeStamp: MusicTimeStamp,
+    _ inMetaEvent: UnsafePointer<MIDIMetaEvent>?
+) -> Int32 {
+    guard let track = ATRegistry.shared.lookup(inTrack, as: ATMusicTrackObject.self) else {
+        return atParamError
+    }
+    guard let inMetaEvent else { return atParamError }
+    guard let sequence = track.sequence else { return atParamError }
+    let size = atMusicEventPayloadSize(kMusicEventType_Meta, UnsafeRawPointer(inMetaEvent))
+    let payload = Data(bytes: inMetaEvent, count: size)
+    return atWithLock(sequence.lock) {
+        track.events.append(ATMusicEvent(time: inTimeStamp, type: kMusicEventType_Meta, payload: payload))
+        return 0
+    }
+}
+
+public func MusicTrackNewMIDIRawDataEvent(
+    _ inTrack: MusicTrack?,
+    _ inTimeStamp: MusicTimeStamp,
+    _ inRawData: UnsafePointer<MIDIRawData>?
+) -> Int32 {
+    guard let track = ATRegistry.shared.lookup(inTrack, as: ATMusicTrackObject.self) else {
+        return atParamError
+    }
+    guard let inRawData else { return atParamError }
+    guard let sequence = track.sequence else { return atParamError }
+    let size = atMusicEventPayloadSize(kMusicEventType_MIDIRawData, UnsafeRawPointer(inRawData))
+    let payload = Data(bytes: inRawData, count: size)
+    return atWithLock(sequence.lock) {
+        track.events.append(ATMusicEvent(time: inTimeStamp, type: kMusicEventType_MIDIRawData, payload: payload))
+        return 0
+    }
+}
+
+public func MusicTrackNewParameterEvent(
+    _ inTrack: MusicTrack?,
+    _ inTimeStamp: MusicTimeStamp,
+    _ inInfo: UnsafePointer<ParameterEvent>?
+) -> Int32 {
+    guard let track = ATRegistry.shared.lookup(inTrack, as: ATMusicTrackObject.self) else {
+        return atParamError
+    }
+    guard let inInfo else { return atParamError }
+    guard let sequence = track.sequence else { return atParamError }
+    var info = inInfo.pointee
+    return atWithLock(sequence.lock) {
+        let payload = withUnsafeBytes(of: &info) { Data($0) }
+        track.events.append(ATMusicEvent(time: inTimeStamp, type: kMusicEventType_Parameter, payload: payload))
+        return 0
+    }
+}
+
+@_cdecl("MusicSequenceReverse")
+public func MusicSequenceReverse(_ inSequence: MusicSequence?) -> Int32 {
+    guard let sequence = ATRegistry.shared.lookup(inSequence, as: ATMusicSequenceObject.self) else {
+        return kAudioToolboxErr_NoSequence
+    }
+    return atWithLock(sequence.lock) {
+        var tracks = sequence.tracks
+        tracks.append(sequence.tempoTrack)
+        let end = tracks.flatMap(\.events).map(\.time).max() ?? 0
+        for track in tracks {
+            for index in track.events.indices {
+                track.events[index].time = end - track.events[index].time
+            }
+        }
         return 0
     }
 }

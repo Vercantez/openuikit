@@ -14,8 +14,10 @@ full/audiotoolbox/AudioServices.swift
 full/audiotoolbox/AudioSession.swift
 full/audiotoolbox/AudioToolbox.swift
 full/audiotoolbox/AudioToolboxCABI.swift
+full/audiotoolbox/AudioToolboxFlags.swift
 full/audiotoolbox/AudioToolboxCallbacks.swift
 full/audiotoolbox/AudioToolboxPCM.swift
+full/audiotoolbox/AudioToolboxOverlays.swift
 full/audiotoolbox/AudioToolboxParameters.swift
 full/audiotoolbox/AudioToolboxStatus.swift
 full/audiotoolbox/AudioToolboxSupport.swift
