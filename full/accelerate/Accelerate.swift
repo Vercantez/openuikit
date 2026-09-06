@@ -54,6 +54,11 @@ public protocol BNNSScalar {
 
 public protocol PixelFormat {
     associatedtype ComponentType: Equatable
+    static var channelCount: Int { get }
+}
+
+extension PixelFormat {
+    public static var channelCount: Int { 1 }
 }
 
 public protocol SinglePlanePixelFormat: PixelFormat {}
@@ -68,8 +73,12 @@ public protocol FusableLayerParameters {}
 
 public protocol BNNSOptimizer {}
 
-public protocol vDSP_IntegerConvertable {}
-public protocol vDSP_FloatingPointConvertable {}
+public protocol vDSP_IntegerConvertable {
+    init<T: BinaryFloatingPoint>(_ value: T)
+}
+public protocol vDSP_FloatingPointConvertable {
+    init<T: BinaryInteger>(_ value: T)
+}
 public protocol vDSP_FloatingPointGeneratable: BinaryFloatingPoint {}
 public protocol vDSP_FourierTransformable {}
 public protocol vDSP_DiscreteFourierTransformable {
@@ -129,10 +138,10 @@ extension Int64: BNNSScalar {
 extension UInt8: BNNSScalar, vDSP_IntegerConvertable {
     public static var bnnsDataType: BNNSDataType { BNNSDataType(rawValue: 0x20008) }
 }
-extension UInt16: BNNSScalar {
+extension UInt16: BNNSScalar, vDSP_IntegerConvertable {
     public static var bnnsDataType: BNNSDataType { BNNSDataType(rawValue: 0x20010) }
 }
-extension UInt32: BNNSScalar {
+extension UInt32: BNNSScalar, vDSP_IntegerConvertable {
     public static var bnnsDataType: BNNSDataType { BNNSDataType(rawValue: 0x20020) }
 }
 extension UInt64: BNNSScalar {
@@ -142,7 +151,8 @@ extension Int: BNNSScalar {
     public static var bnnsDataType: BNNSDataType { BNNSDataTypeInt32 }
 }
 extension Float: BNNSScalar, vDSP_FloatingPointConvertable, vDSP_FloatingPointGeneratable,
-    vDSP_FloatingPointBiquadFilterable, vDSP_FloatingPointDiscreteFourierTransformable
+    vDSP_FloatingPointBiquadFilterable, vDSP_FloatingPointDiscreteFourierTransformable,
+    vDSP_DiscreteFourierTransformable
 {
     public static var bnnsDataType: BNNSDataType { BNNSDataTypeFloat32 }
     public typealias DiscreteFourierTransformFunctions = vDSP.DFTSinglePrecisionSplitComplexFunctions
@@ -151,7 +161,8 @@ extension Float: BNNSScalar, vDSP_FloatingPointConvertable, vDSP_FloatingPointGe
     public typealias Element = Float
 }
 extension Double: BNNSScalar, vDSP_FloatingPointConvertable, vDSP_FloatingPointGeneratable,
-    vDSP_FloatingPointBiquadFilterable, vDSP_FloatingPointDiscreteFourierTransformable
+    vDSP_FloatingPointBiquadFilterable, vDSP_FloatingPointDiscreteFourierTransformable,
+    vDSP_DiscreteFourierTransformable
 {
     public static var bnnsDataType: BNNSDataType { BNNSDataTypeFloat32 }
     public typealias DiscreteFourierTransformFunctions = vDSP.DFTDoublePrecisionSplitComplexFunctions

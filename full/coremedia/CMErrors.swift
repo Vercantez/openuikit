@@ -68,6 +68,20 @@ public var kCMBufferQueueError_CannotModifyQueueFromTriggerCallback: OSStatus { 
 public var kCMBufferQueueError_InvalidTriggerCondition: OSStatus { -12767 }
 public var kCMBufferQueueError_InvalidTriggerToken: OSStatus { -12768 }
 public var kCMBufferQueueError_InvalidBuffer: OSStatus { -12769 }
+
+// Trigger-condition integers from the public CMBufferQueue.h enumeration.
+public var kCMBufferQueueTrigger_WhenDurationBecomesLessThan: CMBufferQueueTriggerCondition { 1 }
+public var kCMBufferQueueTrigger_WhenDurationBecomesLessThanOrEqualTo: CMBufferQueueTriggerCondition { 2 }
+public var kCMBufferQueueTrigger_WhenDurationBecomesGreaterThan: CMBufferQueueTriggerCondition { 3 }
+public var kCMBufferQueueTrigger_WhenDurationBecomesGreaterThanOrEqualTo: CMBufferQueueTriggerCondition { 4 }
+public var kCMBufferQueueTrigger_WhenMinPresentationTimeStampChanges: CMBufferQueueTriggerCondition { 5 }
+public var kCMBufferQueueTrigger_WhenMaxPresentationTimeStampChanges: CMBufferQueueTriggerCondition { 6 }
+public var kCMBufferQueueTrigger_WhenDataBecomesReady: CMBufferQueueTriggerCondition { 7 }
+public var kCMBufferQueueTrigger_WhenEndOfDataReached: CMBufferQueueTriggerCondition { 8 }
+public var kCMBufferQueueTrigger_WhenReset: CMBufferQueueTriggerCondition { 9 }
+public var kCMBufferQueueTrigger_WhenBufferCountBecomesLessThan: CMBufferQueueTriggerCondition { 10 }
+public var kCMBufferQueueTrigger_WhenBufferCountBecomesGreaterThan: CMBufferQueueTriggerCondition { 11 }
+public var kCMBufferQueueTrigger_WhenDurationBecomesGreaterThanOrEqualToAndBufferCountBecomesGreaterThan: CMBufferQueueTriggerCondition { 12 }
 public var kCMSimpleQueueError_AllocationFailed: OSStatus { -12770 }
 public var kCMSimpleQueueError_RequiredParameterMissing: OSStatus { -12771 }
 public var kCMSimpleQueueError_ParameterOutOfRange: OSStatus { -12772 }

@@ -4,3 +4,4 @@ full/charts/ChartsLookalikes.swift
 full/charts/ChartsModifiers.swift
 full/charts/ChartsSurface.swift
 full/charts/ChartsViewSurface.swift
+full/charts/ChartsWave8.swift

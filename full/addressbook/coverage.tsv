@@ -1,0 +1,226 @@
+precise	status	evidence	notes
+c:@ABAddressBookErrorDomain	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@E@ABAuthorizationStatus	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@E@ABAuthorizationStatus@kABAuthorizationStatusAuthorized	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@E@ABAuthorizationStatus@kABAuthorizationStatusDenied	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@E@ABAuthorizationStatus@kABAuthorizationStatusNotDetermined	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@E@ABAuthorizationStatus@kABAuthorizationStatusRestricted	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@EA@ABPersonImageFormat	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@EA@ABPersonImageFormat@kABPersonImageFormatOriginalSize	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@EA@ABPersonImageFormat@kABPersonImageFormatThumbnail	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABInvalidPropertyType@kABDateTimePropertyType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABInvalidPropertyType@kABDictionaryPropertyType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABInvalidPropertyType@kABIntegerPropertyType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABInvalidPropertyType@kABInvalidPropertyType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABInvalidPropertyType@kABMultiDateTimePropertyType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABInvalidPropertyType@kABMultiDictionaryPropertyType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABInvalidPropertyType@kABMultiIntegerPropertyType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABInvalidPropertyType@kABMultiRealPropertyType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABInvalidPropertyType@kABMultiStringPropertyType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABInvalidPropertyType@kABRealPropertyType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABInvalidPropertyType@kABStringPropertyType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABOperationNotPermittedByStoreError@kABOperationNotPermittedByStoreError	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABOperationNotPermittedByStoreError@kABOperationNotPermittedByUserError	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABPersonCompositeNameFormatFirstNameFirst@kABPersonCompositeNameFormatFirstNameFirst	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABPersonCompositeNameFormatFirstNameFirst@kABPersonCompositeNameFormatLastNameFirst	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABPersonSortByFirstName@kABPersonSortByFirstName	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABPersonSortByFirstName@kABPersonSortByLastName	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABPersonType@kABGroupType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABPersonType@kABPersonType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABPersonType@kABSourceType	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABSourceTypeLocal@kABSourceTypeCardDAV	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABSourceTypeLocal@kABSourceTypeCardDAVSearch	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABSourceTypeLocal@kABSourceTypeExchange	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABSourceTypeLocal@kABSourceTypeExchangeGAL	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABSourceTypeLocal@kABSourceTypeLDAP	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABSourceTypeLocal@kABSourceTypeLocal	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@Ea@kABSourceTypeLocal@kABSourceTypeMobileMe	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@F@ABAddressBookAddRecord	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookCopyArrayOfAllGroups	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookCopyArrayOfAllGroupsInSource	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookCopyArrayOfAllPeople	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookCopyArrayOfAllPeopleInSource	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonCompareAndSort	focused Linux behavior
+c:@F@ABAddressBookCopyArrayOfAllSources	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookCopyDefaultSource	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookCopyLocalizedLabel	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testCreateWithOptionsAndLocalizedLabel	focused Linux behavior
+c:@F@ABAddressBookCopyPeopleWithName	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testPeopleSearch	focused Linux behavior
+c:@F@ABAddressBookCreate	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookCreateWithOptions	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testCreateWithOptionsAndLocalizedLabel	focused Linux behavior
+c:@F@ABAddressBookGetAuthorizationStatus	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAuthorizationFailClosed	focused Linux behavior
+c:@F@ABAddressBookGetGroupCount	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookGetGroupWithRecordID	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookGetPersonCount	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookGetPersonWithRecordID	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookGetSourceWithRecordID	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookHasUnsavedChanges	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookRegisterExternalChangeCallback	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testExternalChangeCallback	focused Linux behavior
+c:@F@ABAddressBookRemoveRecord	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookRequestAccessWithCompletion	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAuthorizationFailClosed	focused Linux behavior
+c:@F@ABAddressBookRevert	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookSave	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testAddressBookStore	focused Linux behavior
+c:@F@ABAddressBookUnregisterExternalChangeCallback	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testExternalChangeCallback	focused Linux behavior
+c:@F@ABGroupAddMember	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
+c:@F@ABGroupCopyArrayOfAllMembers	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
+c:@F@ABGroupCopyArrayOfAllMembersWithSortOrdering	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
+c:@F@ABGroupCopySource	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
+c:@F@ABGroupCreate	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
+c:@F@ABGroupCreateInSource	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
+c:@F@ABGroupRemoveMember	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testGroupMembership	focused Linux behavior
+c:@F@ABMultiValueAddValueAndLabel	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueCopyArrayOfAllValues	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueCopyLabelAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueCopyValueAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueCreateMutable	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueCreateMutableCopy	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueGetCount	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueGetFirstIndexOfValue	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueGetIdentifierAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueGetIndexForIdentifier	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueGetPropertyType	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueInsertValueAndLabelAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueRemoveValueAndLabelAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueReplaceLabelAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABMultiValueReplaceValueAtIndex	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testMultiValueLifecycle	focused Linux behavior
+c:@F@ABPersonComparePeopleByName	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonCompareAndSort	focused Linux behavior
+c:@F@ABPersonCopyArrayOfAllLinkedPeople	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testLinkedPeopleAndPropertyMetadata	focused Linux behavior
+c:@F@ABPersonCopyCompositeNameDelimiterForRecord	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testCompositeName	focused Linux behavior
+c:@F@ABPersonCopyImageData	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
+c:@F@ABPersonCopyImageDataWithFormat	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
+c:@F@ABPersonCopyLocalizedPropertyName	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testLinkedPeopleAndPropertyMetadata	focused Linux behavior
+c:@F@ABPersonCopySource	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
+c:@F@ABPersonCreate	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
+c:@F@ABPersonCreateInSource	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
+c:@F@ABPersonCreatePeopleInSourceWithVCardRepresentation	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testVCardRoundTrip	focused Linux behavior
+c:@F@ABPersonCreateVCardRepresentationWithPeople	implemented	test:full/addressbook/tests/agent/AddressBookStoreTests.swift#testVCardRoundTrip	focused Linux behavior
+c:@F@ABPersonGetCompositeNameFormat	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testCompositeName	focused Linux behavior
+c:@F@ABPersonGetCompositeNameFormatForRecord	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testCompositeName	focused Linux behavior
+c:@F@ABPersonGetSortOrdering	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonCompareAndSort	focused Linux behavior
+c:@F@ABPersonGetTypeOfProperty	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testLinkedPeopleAndPropertyMetadata	focused Linux behavior
+c:@F@ABPersonHasImageData	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
+c:@F@ABPersonRemoveImageData	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
+c:@F@ABPersonSetImageData	implemented	test:full/addressbook/tests/agent/AddressBookPersonTests.swift#testPersonImageAndSource	focused Linux behavior
+c:@F@ABRecordCopyCompositeName	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testCompositeName	focused Linux behavior
+c:@F@ABRecordCopyValue	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
+c:@F@ABRecordGetRecordID	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
+c:@F@ABRecordGetRecordType	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
+c:@F@ABRecordRemoveValue	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
+c:@F@ABRecordSetValue	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
+c:@T@ABAddressBookRef	declared	source:full/addressbook/AddressBook.swift#ABAddressBook	CF typealias overlay
+c:@T@ABAddressBookRequestAccessCompletionHandler	declared	source:full/addressbook/AddressBook.swift#ABAddressBookRequestAccessCompletionHandler	CF typealias overlay
+c:@T@ABExternalChangeCallback	declared	source:full/addressbook/AddressBook.swift#ABExternalChangeCallback	CF typealias overlay
+c:@T@ABMultiValueIdentifier	declared	source:full/addressbook/AddressBook.swift#ABMultiValueIdentifier	CF typealias overlay
+c:@T@ABMultiValueRef	declared	source:full/addressbook/AddressBook.swift#ABMultiValue	CF typealias overlay
+c:@T@ABMutableMultiValueRef	declared	source:full/addressbook/AddressBook.swift#ABMutableMultiValue	CF typealias overlay
+c:@T@ABPersonCompositeNameFormat	declared	source:full/addressbook/AddressBook.swift#ABPersonCompositeNameFormat	CF typealias overlay
+c:@T@ABPersonSortOrdering	declared	source:full/addressbook/AddressBook.swift#ABPersonSortOrdering	CF typealias overlay
+c:@T@ABPropertyID	declared	source:full/addressbook/AddressBook.swift#ABPropertyID	CF typealias overlay
+c:@T@ABPropertyType	declared	source:full/addressbook/AddressBook.swift#ABPropertyType	CF typealias overlay
+c:@T@ABRecordID	declared	source:full/addressbook/AddressBook.swift#ABRecordID	CF typealias overlay
+c:@T@ABRecordRef	declared	source:full/addressbook/AddressBook.swift#ABRecord	CF typealias overlay
+c:@T@ABRecordType	declared	source:full/addressbook/AddressBook.swift#ABRecordType	CF typealias overlay
+c:@T@ABSourceType	declared	source:full/addressbook/AddressBook.swift#ABSourceType	CF typealias overlay
+c:@kABGroupNameProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABHomeLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABOtherLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAddressCityKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAddressCountryCodeKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAddressCountryKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAddressProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAddressStateKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAddressStreetKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAddressZIPKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAlternateBirthdayCalendarIdentifierKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAlternateBirthdayDayKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAlternateBirthdayEraKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAlternateBirthdayIsLeapMonthKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAlternateBirthdayMonthKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAlternateBirthdayProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAlternateBirthdayYearKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAnniversaryLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonAssistantLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonBirthdayProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonBrotherLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonChildLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonCreationDateProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonDateProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonDepartmentProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonEmailProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonFatherLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonFirstNamePhoneticProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonFirstNameProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonFriendLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonHomePageLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonInstantMessageProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonInstantMessageServiceAIM	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonInstantMessageServiceFacebook	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonInstantMessageServiceGaduGadu	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonInstantMessageServiceGoogleTalk	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonInstantMessageServiceICQ	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonInstantMessageServiceJabber	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonInstantMessageServiceKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonInstantMessageServiceMSN	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonInstantMessageServiceQQ	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonInstantMessageServiceSkype	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonInstantMessageServiceYahoo	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonInstantMessageUsernameKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonJobTitleProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonKindOrganization	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonKindPerson	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonKindProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonLastNamePhoneticProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonLastNameProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonManagerLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonMiddleNamePhoneticProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonMiddleNameProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonModificationDateProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonMotherLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonNicknameProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonNoteProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonOrganizationProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonParentLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonPartnerLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonPhoneHomeFAXLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonPhoneIPhoneLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonPhoneMainLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonPhoneMobileLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonPhoneOtherFAXLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonPhonePagerLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonPhoneProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonPhoneWorkFAXLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonPrefixProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonRelatedNamesProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSisterLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSocialProfileProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSocialProfileServiceFacebook	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSocialProfileServiceFlickr	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSocialProfileServiceGameCenter	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSocialProfileServiceKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSocialProfileServiceLinkedIn	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSocialProfileServiceMyspace	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSocialProfileServiceSinaWeibo	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSocialProfileServiceTwitter	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSocialProfileURLKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSocialProfileUserIdentifierKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSocialProfileUsernameKey	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSpouseLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonSuffixProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABPersonURLProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABSourceNameProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABSourceTypeProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@kABWorkLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@macro@kABMultiValueInvalidIdentifier	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@macro@kABMultiValueMask	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@macro@kABPropertyInvalidID	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@macro@kABRecordInvalidID	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+c:@macro@kABSourceTypeSearchableMask	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ABAuthorizationStatus	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@ABPersonImageFormat	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ABAuthorizationStatus	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@ABPersonImageFormat	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ABAuthorizationStatus	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@ABPersonImageFormat	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
+s:So19ABPersonImageFormata8rawValueABs6UInt32V_tcfc	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
+s:So19ABPersonImageFormata8rawValues6UInt32Vvp	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
+s:So19ABPersonImageFormatayABs6UInt32Vcfc	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init
+s:So21ABAuthorizationStatusV8rawValueABSgSi_tcfc	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testHashableAndEquatable	synthesized Equatable/Hashable/init

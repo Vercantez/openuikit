@@ -380,7 +380,12 @@ public final class CMFormatDescription: CMAttachmentBearerProtocol, @unchecked S
     public var extensions: Extensions
     public var attachments = CMAttachmentBearerAttachments()
     internal var extraIdentity: Any? = nil
-    fileprivate var extensionStore: [String: CFTypeRef] = [:]
+    internal var extensionStore: [String: CFTypeRef] = [:]
+    internal var timeCodeFrameDuration: CMTime = .invalid
+    internal var timeCodeFrameQuanta: UInt32 = 0
+    internal var timeCodeFlagBits: UInt32 = 0
+    internal var metadataIdentifiers: [CFString] = []
+    internal var magicCookieBytes: Data? = nil
 
     public init(
         mediaType: MediaType,
@@ -430,6 +435,11 @@ public final class CMFormatDescription: CMAttachmentBearerProtocol, @unchecked S
         self.attachments = object.attachments
         self.extensionStore = object.extensionStore
         self.extraIdentity = object.extraIdentity
+        self.timeCodeFrameDuration = object.timeCodeFrameDuration
+        self.timeCodeFrameQuanta = object.timeCodeFrameQuanta
+        self.timeCodeFlagBits = object.timeCodeFlagBits
+        self.metadataIdentifiers = object.metadataIdentifiers
+        self.magicCookieBytes = object.magicCookieBytes
     }
 
     public func equalTo(
@@ -567,7 +577,7 @@ public func CMMuxedFormatDescriptionCreate(
 }
 
 extension CMFormatDescription {
-    fileprivate func installExtensions(_ dictionary: CFDictionary) {
+    internal func installExtensions(_ dictionary: CFDictionary) {
         let count = Int(CFDictionaryGetCount(dictionary))
         if count <= 0 { return }
         var keys = Array<UnsafeRawPointer?>(repeating: nil, count: count)
@@ -585,7 +595,7 @@ extension CMFormatDescription {
         }
     }
 
-    fileprivate func copyExtensions() -> CFDictionary? {
+    internal func copyExtensions() -> CFDictionary? {
         if extensionStore.isEmpty { return nil }
         var pairs: [(CFString, CFTypeRef)] = []
         for (name, value) in extensionStore {
@@ -594,7 +604,7 @@ extension CMFormatDescription {
         return cmCFDictionary(pairs)
     }
 
-    fileprivate func `extension`(for key: CFString) -> CFPropertyList? {
+    internal func `extension`(for key: CFString) -> CFPropertyList? {
         let name = unsafeBitCast(key, to: NSString.self) as String
         return extensionStore[name]
     }
@@ -621,3 +631,168 @@ internal func cmFourCCString(_ value: UInt32) -> String {
     ]
     return String(bytes: bytes, encoding: .ascii) ?? String(value)
 }
+
+internal func cmCFNumberFromNumeric<T: Numeric>(_ value: T) -> CFNumber {
+    var stored = Double("\(value)") ?? 0
+    return CFNumberCreate(kCFAllocatorDefault, .doubleType, &stored)!
+}
+
+internal func cmCFNumberDouble(_ value: CFTypeRef?) -> Double? {
+    guard let value else { return nil }
+    var result: Double = 0
+    if CFNumberGetValue(unsafeBitCast(value, to: CFNumber.self), .doubleType, &result) {
+        return result
+    }
+    return nil
+}
+
+internal func cmCFNumberDouble(_ value: UnsafeRawPointer?) -> Double? {
+    guard let value else { return nil }
+    return cmCFNumberDouble(unsafeBitCast(value, to: CFTypeRef.self))
+}
+
+extension CMFormatDescription {
+    public var timeCodeFlags: TimeCode.Flag { TimeCode.Flag(rawValue: timeCodeFlagBits) }
+
+    public func cleanAperture(originIsAtTopLeft: Bool) -> CGRect {
+        CMVideoFormatDescriptionGetCleanAperture(self, originIsAtTopLeft: originIsAtTopLeft)
+    }
+
+    public func displayFlags() throws -> Extensions.Value.TextDisplayFlags {
+        var flags: CMTextDisplayFlags = 0
+        let status = CMTextFormatDescriptionGetDisplayFlags(self, displayFlagsOut: &flags)
+        if status != 0 { throw Error.valueNotAvailable }
+        return Extensions.Value.TextDisplayFlags(rawValue: flags)
+    }
+
+    public func justification() throws -> (
+        horizontal: Extensions.Value.TextJustification,
+        vertical: Extensions.Value.TextJustification
+    ) {
+        var horizontal: CMTextJustificationValue = 0
+        var vertical: CMTextJustificationValue = 0
+        let status = CMTextFormatDescriptionGetJustification(
+            self,
+            horizontalOut: &horizontal,
+            verticalOut: &vertical
+        )
+        if status != 0 { throw Error.valueNotAvailable }
+        return (
+            horizontal: Extensions.Value.TextJustification(rawValue: horizontal),
+            vertical: Extensions.Value.TextJustification(rawValue: vertical)
+        )
+    }
+
+    public func defaultTextBox(originIsAtTopLeft: Bool, heightOfTextTrack: CGFloat) throws -> CGRect {
+        var box = CGRect.zero
+        let status = CMTextFormatDescriptionGetDefaultTextBox(
+            self,
+            originIsAtTopLeft: originIsAtTopLeft,
+            heightOfTextTrack: heightOfTextTrack,
+            defaultTextBoxOut: &box
+        )
+        if status != 0 { throw Error.valueNotAvailable }
+        return box
+    }
+
+    public func defaultStyle() throws -> (
+        localFontID: Int,
+        bold: Bool,
+        italic: Bool,
+        underline: Bool,
+        fontSize: CGFloat,
+        colorComponents: [CGFloat]
+    ) {
+        var fontID: UInt16 = 0
+        var bold = false
+        var italic = false
+        var underline = false
+        var fontSize: CGFloat = 0
+        var color = [CGFloat](repeating: 0, count: 4)
+        let status = color.withUnsafeMutableBufferPointer { buffer in
+            CMTextFormatDescriptionGetDefaultStyle(
+                self,
+                localFontIDOut: &fontID,
+                boldOut: &bold,
+                italicOut: &italic,
+                underlineOut: &underline,
+                fontSizeOut: &fontSize,
+                colorComponentsOut: buffer.baseAddress
+            )
+        }
+        if status != 0 { throw Error.valueNotAvailable }
+        return (Int(fontID), bold, italic, underline, fontSize, color)
+    }
+}
+
+extension CMFormatDescription.Extensions.Value {
+    public static func pixelAspectRatio<Horizontal: Numeric, Vertical: Numeric>(
+        horizontalSpacing: Horizontal,
+        verticalSpacing: Vertical
+    ) -> CMFormatDescription.Extensions.Value {
+        CMFormatDescription.Extensions.Value(
+            cmCFDictionary([
+                (kCMFormatDescriptionKey_PixelAspectRatioHorizontalSpacing, cmCFNumberFromNumeric(horizontalSpacing)),
+                (kCMFormatDescriptionKey_PixelAspectRatioVerticalSpacing, cmCFNumberFromNumeric(verticalSpacing))
+            ])
+        )
+    }
+
+    public static func cleanAperture<Width: Numeric, Height: Numeric, Horizontal: Numeric, Vertical: Numeric>(
+        width: Width,
+        height: Height,
+        horizontalOffet: Horizontal,
+        verticalOffset: Vertical
+    ) -> CMFormatDescription.Extensions.Value {
+        CMFormatDescription.Extensions.Value(
+            cmCFDictionary([
+                (kCMFormatDescriptionKey_CleanApertureWidth, cmCFNumberFromNumeric(width)),
+                (kCMFormatDescriptionKey_CleanApertureHeight, cmCFNumberFromNumeric(height)),
+                (kCMFormatDescriptionKey_CleanApertureHorizontalOffset, cmCFNumberFromNumeric(horizontalOffet)),
+                (kCMFormatDescriptionKey_CleanApertureVerticalOffset, cmCFNumberFromNumeric(verticalOffset))
+            ])
+        )
+    }
+
+    public static func cleanAperture(
+        width: (numerator: Int, denominator: Int),
+        height: (numerator: Int, denominator: Int),
+        horizontalOffet: (numerator: Int, denominator: Int),
+        verticalOffset: (numerator: Int, denominator: Int)
+    ) -> CMFormatDescription.Extensions.Value {
+        func pair(_ key: CFString, _ value: (Int, Int)) -> (CFString, CFTypeRef) {
+            (key, cmCFDictionary([
+                (cmMakeCFString("numerator"), cmCFNumberFromNumeric(value.0)),
+                (cmMakeCFString("denominator"), cmCFNumberFromNumeric(value.1))
+            ]))
+        }
+        return CMFormatDescription.Extensions.Value(
+            cmCFDictionary([
+                pair(kCMFormatDescriptionKey_CleanApertureWidthRational, width),
+                pair(kCMFormatDescriptionKey_CleanApertureHeightRational, height),
+                pair(kCMFormatDescriptionKey_CleanApertureHorizontalOffsetRational, horizontalOffet),
+                pair(kCMFormatDescriptionKey_CleanApertureVerticalOffsetRational, verticalOffset)
+            ])
+        )
+    }
+
+    public static func textJustification(
+        _ justification: TextJustification
+    ) -> CMFormatDescription.Extensions.Value {
+        CMFormatDescription.Extensions.Value(cmCFNumberFromNumeric(Int(justification.rawValue)))
+    }
+
+    public static func fontTable(_ table: CFDictionary) -> CMFormatDescription.Extensions.Value {
+        CMFormatDescription.Extensions.Value(table)
+    }
+
+    public static func sourceReferenceName(value: String, langCode: Int) -> CMFormatDescription.Extensions.Value {
+        CMFormatDescription.Extensions.Value(
+            cmCFDictionary([
+                (cmMakeCFString("value"), cmMakeCFString(value)),
+                (cmMakeCFString("langCode"), cmCFNumberFromNumeric(langCode))
+            ])
+        )
+    }
+}
+

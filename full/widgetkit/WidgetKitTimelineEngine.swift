@@ -186,3 +186,149 @@ private func _snapshot<Entry: TimelineEntry>(
         nextReload: evaluation.nextReload
     )
 }
+
+/// Synchronous host engine. Completion-based providers must invoke their
+/// completion on the calling thread; Linux does not pump an Apple timeline
+/// queue and will fail closed if a provider defers.
+@_spi(OpenUIKitHost)
+public enum WidgetTimelineHost {
+    public static func placeholder<Provider: TimelineProvider>(
+        _ provider: Provider,
+        in context: TimelineProviderContext
+    ) -> Provider.Entry {
+        provider.placeholder(in: context)
+    }
+
+    public static func snapshot<Provider: TimelineProvider>(
+        _ provider: Provider,
+        in context: TimelineProviderContext
+    ) -> Provider.Entry {
+        takeSynchronous("TimelineProvider.getSnapshot") { completion in
+            provider.getSnapshot(in: context, completion: completion)
+        }
+    }
+
+    public static func timeline<Provider: TimelineProvider>(
+        _ provider: Provider,
+        in context: TimelineProviderContext
+    ) throws -> WidgetTimelineEvaluation<Provider.Entry> {
+        let timeline: Timeline<Provider.Entry> = takeSynchronous(
+            "TimelineProvider.getTimeline"
+        ) { completion in
+            provider.getTimeline(in: context, completion: completion)
+        }
+        return try WidgetTimelineValidation.evaluate(timeline)
+    }
+
+    public static func placeholder<Provider: IntentTimelineProvider>(
+        _ provider: Provider,
+        in context: TimelineProviderContext
+    ) -> Provider.Entry {
+        provider.placeholder(in: context)
+    }
+
+    public static func snapshot<Provider: IntentTimelineProvider>(
+        _ provider: Provider,
+        configuration: Provider.Intent,
+        in context: TimelineProviderContext
+    ) -> Provider.Entry {
+        takeSynchronous("IntentTimelineProvider.getSnapshot") { completion in
+            provider.getSnapshot(for: configuration, in: context, completion: completion)
+        }
+    }
+
+    public static func timeline<Provider: IntentTimelineProvider>(
+        _ provider: Provider,
+        configuration: Provider.Intent,
+        in context: TimelineProviderContext
+    ) throws -> WidgetTimelineEvaluation<Provider.Entry> {
+        let timeline: Timeline<Provider.Entry> = takeSynchronous(
+            "IntentTimelineProvider.getTimeline"
+        ) { completion in
+            provider.getTimeline(for: configuration, in: context, completion: completion)
+        }
+        return try WidgetTimelineValidation.evaluate(timeline)
+    }
+
+    public static func placeholder<Provider: AppIntentTimelineProvider>(
+        _ provider: Provider,
+        in context: TimelineProviderContext
+    ) -> Provider.Entry {
+        provider.placeholder(in: context)
+    }
+
+    public static func entry<Entry: TimelineEntry>(
+        at time: Date,
+        in timeline: Timeline<Entry>
+    ) -> Entry? {
+        WidgetTimelineValidation.entry(at: time, in: timeline)
+    }
+
+    private static func takeSynchronous<T>(
+        _ api: String,
+        _ body: (@escaping @Sendable (T) -> Void) -> Void
+    ) -> T {
+        let box = _SynchronousValue<T>()
+        body { box.value = $0 }
+        guard let value = box.value else {
+            fatalError(
+                "\(api) did not invoke its completion synchronously; Linux has no Apple timeline queue"
+            )
+        }
+        return value
+    }
+}
+
+private final class _SynchronousValue<T>: @unchecked Sendable {
+    var value: T?
+}
+
+/// Process-local widget registry that feeds `WidgetCenter` configurations.
+/// Linux has no SpringBoard gallery; a host installs descriptors here.
+@_spi(OpenUIKitHost)
+public final class WidgetHostRegistry: @unchecked Sendable {
+    public static let shared = WidgetHostRegistry()
+
+    private let lock = NSLock()
+    private var descriptors: [String: WidgetConfigurationDescriptor] = [:]
+
+    public init() {}
+
+    public func install(
+        _ descriptor: WidgetConfigurationDescriptor,
+        configuration: INIntent? = nil
+    ) {
+        lock.lock()
+        descriptors[descriptor.kind] = descriptor
+        let installed = descriptors
+        lock.unlock()
+
+        var infos: [WidgetInfo] = []
+        for item in installed.values.sorted(by: { $0.kind < $1.kind }) {
+            for family in item.supportedFamilies {
+                infos.append(
+                    WidgetInfo(
+                        kind: item.kind,
+                        family: family,
+                        configuration: item.kind == descriptor.kind ? configuration : nil
+                    )
+                )
+            }
+        }
+        WidgetCenter.shared.installCurrentConfigurations(infos)
+    }
+
+    public func descriptor(ofKind kind: String) -> WidgetConfigurationDescriptor? {
+        lock.lock()
+        let value = descriptors[kind]
+        lock.unlock()
+        return value
+    }
+
+    public func reset() {
+        lock.lock()
+        descriptors = [:]
+        lock.unlock()
+        WidgetCenter.shared.resetProcessLocalState()
+    }
+}

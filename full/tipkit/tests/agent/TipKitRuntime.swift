@@ -273,6 +273,26 @@ struct VisitDonation: Codable, Sendable {
     var city: String
     var count: Int
 }
+
+struct FrequencyIgnoreHostTip: Tip {
+    var id: String { "frequency-ignore-host" }
+
+    @Tips.OptionsBuilder
+    var options: [any TipOption] {
+        Tips.IgnoresDisplayFrequency(true)
+    }
+}
+
+func tipKitUniqueDirectory() -> URL {
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent(
+        "tipkit-host-\(UUID().uuidString)",
+        isDirectory: true
+    )
+    try! FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+    return url
+}
+
+final class TipKitHostCoder: NSCoder {}
 // --- TipsActionParameterTests.swift ---
 func testActionStringProtocolInit() {
     let fired = TipKitLocked(0)
@@ -293,7 +313,7 @@ func testActionStringProtocolInit() {
 }
 
 func testParameterAndRuleSPI() {
-    var parameter = Tips.Parameter(wrappedValue: true, id: "seen-onboarding", options: .transient)
+    let parameter = Tips.Parameter(wrappedValue: true, id: "seen-onboarding", options: .transient)
     precondition(parameter.id == "seen-onboarding")
     precondition(parameter.wrappedValue == true)
     parameter.wrappedValue = false
@@ -353,19 +373,17 @@ func testDatastoreLocationFailClosed() {
 
 func testConfigureOnceAndResetDatastore() {
     TipsHostControl.resetForHostTests()
+    let store = tipKitUniqueDirectory().appendingPathComponent("tips.store")
     try! Tips.configure([
         .displayFrequency(.daily),
-        .datastoreLocation(.url(URL(fileURLWithPath: "/tmp/tipkit-should-not-be-created.store"))),
+        .datastoreLocation(.url(store)),
         .cloudKitContainer(.named("iCloud.example")),
     ])
     let snapshot = TipsHostControl.snapshotConfig()
     precondition(snapshot.configured)
     precondition(snapshot.frequency == .daily)
-    precondition(
-        FileManager.default.fileExists(
-            atPath: "/tmp/tipkit-should-not-be-created.store"
-        ) == false
-    )
+    precondition(FileManager.default.fileExists(atPath: store.path))
+    precondition(TipsHostControl.cloudKitSyncEnabled() == false)
     do {
         try Tips.configure()
         fatalError("second configure must throw")
@@ -540,6 +558,267 @@ func testInvalidationReasonCases() {
     _ = Tips.InvalidationReason.tipClosed.hashValue
 }
 
+func testConfigureCreatesApplicationDefaultStore() {
+    TipsHostControl.resetForHostTests()
+    let root = tipKitUniqueDirectory()
+    TipsHostControl.setApplicationSupportRootForHost(root)
+    try! Tips.configure([.datastoreLocation(.applicationDefault)])
+    let url = root
+        .appendingPathComponent("TipKit", isDirectory: true)
+        .appendingPathComponent("datastore.json", isDirectory: false)
+    precondition(FileManager.default.fileExists(atPath: url.path))
+    precondition(TipsHostControl.datastoreFileURL()?.path == url.path)
+}
+
+func testURLDatastorePersistsDonationsAndParameters() {
+    TipsHostControl.resetForHostTests()
+    let store = tipKitUniqueDirectory().appendingPathComponent("tips.store")
+    try! Tips.configure([.datastoreLocation(.url(store))])
+    let event = Tips.Event<Tips.EmptyDonation>(id: "persist-open")
+    event.sendDonation()
+    let parameter = Tips.Parameter(wrappedValue: 0, id: "persist-count")
+    parameter.wrappedValue = 9
+    EligibleHostTip().invalidate(reason: .tipClosed)
+    precondition(FileManager.default.fileExists(atPath: store.path))
+    precondition(event.donations.count == 1)
+
+    TipsHostControl.resetForHostTests()
+    try! Tips.configure([.datastoreLocation(.url(store))])
+    precondition(Tips.Event<Tips.EmptyDonation>(id: "persist-open").donations.count == 1)
+    precondition(Tips.Parameter(wrappedValue: 0, id: "persist-count").wrappedValue == 9)
+    precondition(EligibleHostTip().status == .invalidated(.tipClosed))
+}
+
+func testResetDatastoreClearsOnDiskStore() {
+    TipsHostControl.resetForHostTests()
+    let store = tipKitUniqueDirectory().appendingPathComponent("reset.store")
+    try! Tips.configure([.datastoreLocation(.url(store))])
+    Tips.Event<Tips.EmptyDonation>(id: "reset-open").sendDonation()
+    EligibleHostTip().invalidate(reason: .actionPerformed)
+    try! Tips.resetDatastore()
+    precondition(Tips.Event<Tips.EmptyDonation>(id: "reset-open").donations.isEmpty)
+    precondition(EligibleHostTip().status == .available)
+
+    TipsHostControl.resetForHostTests()
+    try! Tips.configure([.datastoreLocation(.url(store))])
+    precondition(Tips.Event<Tips.EmptyDonation>(id: "reset-open").donations.isEmpty)
+    precondition(EligibleHostTip().status == .available)
+}
+
+func testTransientParameterDoesNotPersist() {
+    TipsHostControl.resetForHostTests()
+    let store = tipKitUniqueDirectory().appendingPathComponent("transient.store")
+    try! Tips.configure([.datastoreLocation(.url(store))])
+    let parameter = Tips.Parameter(
+        wrappedValue: true,
+        id: "transient-flag",
+        options: .transient
+    )
+    parameter.wrappedValue = false
+    precondition(parameter.wrappedValue == false)
+
+    TipsHostControl.resetForHostTests()
+    try! Tips.configure([.datastoreLocation(.url(store))])
+    let restored = Tips.Parameter(
+        wrappedValue: true,
+        id: "transient-flag",
+        options: .transient
+    )
+    precondition(restored.wrappedValue == true)
+}
+
+func testCloudKitContainerIsFailClosed() {
+    TipsHostControl.resetForHostTests()
+    try! Tips.configure([.cloudKitContainer(.named("iCloud.example"))])
+    let snapshot = TipsHostControl.snapshotConfig()
+    precondition(snapshot.configured)
+    precondition(TipsHostControl.cloudKitSyncEnabled() == false)
+}
+
+func testRuleParameterPredicate() {
+    TipsHostControl.resetForHostTests()
+    let seen = Tips.Parameter(wrappedValue: false, id: "onboarded-wave8")
+    let rule = Tips.Rule(seen) { $0 == true }
+    struct RuleParameterTip: Tip {
+        let rules: [Tips.Rule]
+        var id: String { "rule-parameter-tip" }
+    }
+    let tip = RuleParameterTip(rules: [rule])
+    precondition(tip.status == .pending)
+    precondition(tip.shouldDisplay == false)
+    seen.wrappedValue = true
+    precondition(seen.wrappedValue == true)
+    precondition(tip.status == .available)
+    precondition(tip.shouldDisplay)
+}
+
+func testRuleEventDonationCountPredicate() {
+    TipsHostControl.resetForHostTests()
+    let unlocked = Tips.Event<Tips.EmptyDonation>(id: "opened-editor")
+    let rule = Tips.Rule(unlocked) { $0.donations.count >= 2 }
+    struct RuleEventTip: Tip {
+        let rules: [Tips.Rule]
+        var id: String { "rule-event-tip" }
+    }
+    let tip = RuleEventTip(rules: [rule])
+    precondition(unlocked.donations.count == 0)
+    precondition(tip.status == .pending)
+    unlocked.sendDonation()
+    precondition(unlocked.donations.count == 1)
+    precondition(tip.status == .pending)
+    unlocked.sendDonation()
+    precondition(unlocked.donations.count == 2)
+    precondition(tip.status == .available)
+    precondition(tip.shouldDisplay)
+}
+
+func testDisplayFrequencyDailyAgainstFixedClock() {
+    TipsHostControl.resetForHostTests()
+    let start = Date(timeIntervalSince1970: 1_700_000_000)
+    TipsHostControl.setNow(start)
+    try! Tips.configure([.displayFrequency(.daily)])
+    let tip = EligibleHostTip()
+    precondition(tip.status == .available)
+    precondition(tip.shouldDisplay)
+    tip.recordDisplayForHost()
+    precondition(TipsHostControl.lastDisplayDate() == start)
+    precondition(tip.status == .available)
+    precondition(tip.shouldDisplay == false)
+    TipsHostControl.setNow(start.addingTimeInterval(86_399))
+    precondition(tip.shouldDisplay == false)
+    TipsHostControl.setNow(start.addingTimeInterval(86_400))
+    precondition(tip.shouldDisplay)
+}
+
+func testDisplayFrequencyHourlyWeeklyMonthlyImmediate() {
+    let start = Date(timeIntervalSince1970: 1_710_000_000)
+    let cases: [(Tips.ConfigurationOption.DisplayFrequency, TimeInterval?)] = [
+        (.immediate, nil),
+        (.hourly, 3_600),
+        (.weekly, 604_800),
+        (.monthly, 2_592_000),
+    ]
+    for (frequency, seconds) in cases {
+        TipsHostControl.resetForHostTests()
+        TipsHostControl.setNow(start)
+        try! Tips.configure([.displayFrequency(frequency)])
+        let tip = EligibleHostTip()
+        precondition(tip.shouldDisplay)
+        tip.recordDisplayForHost()
+        if let seconds {
+            TipsHostControl.setNow(start.addingTimeInterval(seconds - 1))
+            precondition(tip.shouldDisplay == false)
+            TipsHostControl.setNow(start.addingTimeInterval(seconds))
+            precondition(tip.shouldDisplay)
+        } else {
+            precondition(tip.shouldDisplay)
+        }
+    }
+}
+
+func testIgnoresDisplayFrequencyBypassesThrottle() {
+    TipsHostControl.resetForHostTests()
+    let start = Date(timeIntervalSince1970: 1_720_000_000)
+    TipsHostControl.setNow(start)
+    try! Tips.configure([.displayFrequency(.daily)])
+    EligibleHostTip().recordDisplayForHost()
+    precondition(EligibleHostTip().shouldDisplay == false)
+    precondition(FrequencyIgnoreHostTip().shouldDisplay)
+    precondition(FrequencyIgnoreHostTip().status == .available)
+}
+
+func testTipViewHoldsTipAndAction() {
+    let tip = EligibleHostTip()
+    var fired = 0
+    let view = TipView(tip) { _ in
+        fired += 1
+    }
+    precondition(view.tip?.id == "eligible-host")
+    view.actionHandler(Tips.Action(title: "do"))
+    precondition(fired == 1)
+    let erased = TipView(tip as (any Tip)?)
+    precondition(erased.tip?.id == "eligible-host")
+}
+
+func testMiniTipViewStyleMakeBody() {
+    let style = MiniTipViewStyle()
+    let configuration = TipViewStyleConfiguration(tip: EligibleHostTip())
+    let body = style.makeBody(configuration: configuration)
+    precondition(body.tip.id == "eligible-host")
+    let mini = MiniTipViewStyle.miniTip
+    _ = mini.makeBody(configuration: configuration)
+}
+
+func testTipViewStyleConfigurationActions() {
+    let configuration = TipViewStyleConfiguration(tip: OptionsHostTip())
+    precondition(configuration.tip.id == "options-host")
+    precondition(configuration.actions.count == 1)
+    precondition(configuration.actions[0].id == "ok")
+}
+
+func testTipUIViewConfiguration() {
+    let view = TipUIView(EligibleHostTip())
+    precondition(view.tip.id == "eligible-host")
+    view.cornerRadius = 8
+    view.imageSize = CGSize(width: 12, height: 16)
+    view.viewStyle = MiniTipViewStyle()
+    precondition(view.cornerRadius == 8)
+    precondition(view.imageSize.width == 12)
+    precondition(view.imageSize.height == 16)
+    let configuration = TipViewStyleConfiguration(tip: view.tip)
+    _ = MiniTipViewStyle().makeBody(configuration: configuration)
+}
+
+func testTipUICollectionViewCellFrameInit() {
+    let cell = TipUICollectionViewCell(
+        frame: CGRect(x: 1, y: 2, width: 30, height: 40)
+    )
+    precondition(cell.frame.width == 30)
+    precondition(cell.frame.height == 40)
+    cell.cornerRadius = 3
+    cell.imageSize = CGSize(width: 5, height: 6)
+    cell.viewStyle = MiniTipViewStyle()
+    _ = cell.configureTip(EligibleHostTip())
+    precondition(cell.tip?.id == "eligible-host")
+    precondition(cell.cornerRadius == 3)
+    precondition(cell.imageSize.width == 5)
+}
+
+func testTipUICollectionViewCellCoderInit() {
+    precondition(TipUICollectionViewCell(coder: TipKitHostCoder()) == nil)
+}
+
+func testTipUICollectionReusableViewFrameInit() {
+    let view = TipUICollectionReusableView(
+        frame: CGRect(x: 0, y: 0, width: 10, height: 20)
+    )
+    precondition(view.frame.height == 20)
+    view.cornerRadius = 1
+    view.imageSize = CGSize(width: 2, height: 3)
+    view.viewStyle = MiniTipViewStyle()
+    _ = view.configureTip(OptionsHostTip())
+    precondition(view.tip?.id == "options-host")
+}
+
+func testTipUICollectionReusableViewCoderInit() {
+    precondition(TipUICollectionReusableView(coder: TipKitHostCoder()) == nil)
+}
+
+func testTipUIPopoverViewControllerNibInit() {
+    let controller = TipUIPopoverViewController(nibName: "TipPopover", bundle: nil)
+    precondition(controller.nibName == "TipPopover")
+    precondition(controller.bundle == nil)
+    controller.imageSize = CGSize(width: 9, height: 9)
+    controller.viewStyle = MiniTipViewStyle()
+    controller.configure(EligibleHostTip())
+    precondition(controller.tip?.id == "eligible-host")
+    precondition(controller.imageSize.width == 9)
+}
+
+func testTipUIPopoverViewControllerCoderInit() {
+    precondition(TipUIPopoverViewController(coder: TipKitHostCoder()) == nil)
+}
+
 func tipKitRuntimeMain() {
     TipsHostControl.resetForHostTests()
     testTipKitErrorIdentities()
@@ -551,12 +830,22 @@ func tipKitRuntimeMain() {
     testConfigurationCloudKitAndFrequency()
     testDatastoreLocationFailClosed()
     testConfigureOnceAndResetDatastore()
+    testConfigureCreatesApplicationDefaultStore()
+    testURLDatastorePersistsDonationsAndParameters()
+    testResetDatastoreClearsOnDiskStore()
+    testTransientParameterDoesNotPersist()
+    testCloudKitContainerIsFailClosed()
     testEventDonateAndQuery()
     testEventEmptyDonationAndLimit()
     testEventSendDonationHop()
     testEventDonationAgeTrim()
     testActionStringProtocolInit()
     testParameterAndRuleSPI()
+    testRuleParameterPredicate()
+    testRuleEventDonationCountPredicate()
+    testDisplayFrequencyDailyAgainstFixedClock()
+    testDisplayFrequencyHourlyWeeklyMonthlyImmediate()
+    testIgnoresDisplayFrequencyBypassesThrottle()
     testTipProtocolIdentityAndDefaults()
     testTipInvalidateAndResetEligibility()
     testTipPendingRulesAndMaxDisplayCount()
@@ -565,6 +854,16 @@ func tipKitRuntimeMain() {
     testTipGroupPriority()
     testTipGroupCurrentTip()
     testHideShowAllAndTypedTestingFlags()
+    testTipViewHoldsTipAndAction()
+    testMiniTipViewStyleMakeBody()
+    testTipViewStyleConfigurationActions()
+    testTipUIViewConfiguration()
+    testTipUICollectionViewCellFrameInit()
+    testTipUICollectionViewCellCoderInit()
+    testTipUICollectionReusableViewFrameInit()
+    testTipUICollectionReusableViewCoderInit()
+    testTipUIPopoverViewControllerNibInit()
+    testTipUIPopoverViewControllerCoderInit()
     print("TIPKIT_AGENT_RUNTIME_OK")
 }
 

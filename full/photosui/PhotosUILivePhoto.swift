@@ -84,10 +84,18 @@ open class PHLivePhotoView: NSObject {
     public var isMuted = false
     public var contentsRect = CGRect.zero
     public let playbackGestureRecognizer = UIGestureRecognizer()
+    private var lastPlaybackStyle: PHLivePhotoViewPlaybackStyle = .undefined
+    private var playbackActive = false
 
     public override init() {
         super.init()
     }
+
+    @_spi(OpenUIKitHost)
+    public var _lastPlaybackStyle: PHLivePhotoViewPlaybackStyle { lastPlaybackStyle }
+
+    @_spi(OpenUIKitHost)
+    public var _playbackActive: Bool { playbackActive }
 
     open class func livePhotoBadgeImage(
         options badgeOptions: PHLivePhotoBadgeOptions = []
@@ -96,18 +104,22 @@ open class PHLivePhotoView: NSObject {
         return UIImage()
     }
 
-    /// Fail-closed: no Live Photo engine. `playbackStyle` is accepted and
-    /// discarded; `delegate` is not invoked. Apple's willBegin/didEnd timing
-    /// with a nil `livePhoto` is unobserved (oracle-questions.tsv).
+    /// Fail-closed: no Live Photo engine. Records the requested style for
+    /// host observation and does not invoke `delegate`. Apple's willBegin/didEnd
+    /// timing with a nil `livePhoto` is unobserved (oracle-questions.tsv).
     /// https://developer.apple.com/documentation/photosui/phlivephotoview
     open func startPlayback(with playbackStyle: PHLivePhotoViewPlaybackStyle) {
-        _ = playbackStyle
+        lastPlaybackStyle = playbackStyle
+        playbackActive = true
     }
 
-    open func stopPlayback() {}
+    open func stopPlayback() {
+        playbackActive = false
+        lastPlaybackStyle = .undefined
+    }
 }
 
-extension PHLivePhoto {
+extension PHLivePhoto: Transferable {
     public typealias Representation = DataRepresentation<PHLivePhoto>
 
     public static var transferRepresentation: some TransferRepresentation {
@@ -134,34 +146,35 @@ extension PHLivePhoto {
         []
     }
 
+    /// Linux host: throws inline. Apple's Transferable export is async.
     public func withExportedFile<Result>(
         contentType: UTType?,
-        fileHandler: (URL) async throws -> Result
-    ) async throws -> Result {
+        fileHandler: (URL) throws -> Result
+    ) throws -> Result {
         _ = contentType
         _ = fileHandler
         throw PhotosUIUnavailable.linuxHost(operation: "PHLivePhoto.withExportedFile")
     }
 
-    public func export(to destinationDirectory: URL, contentType: UTType?) async throws -> URL {
+    public func export(to destinationDirectory: URL, contentType: UTType?) throws -> URL {
         _ = destinationDirectory
         _ = contentType
         throw PhotosUIUnavailable.linuxHost(operation: "PHLivePhoto.export")
     }
 
-    public func exported(as contentType: UTType?) async throws -> Data {
+    public func exported(as contentType: UTType?) throws -> Data {
         _ = contentType
         throw PhotosUIUnavailable.linuxHost(operation: "PHLivePhoto.exported")
     }
 
-    public convenience init(importing file: URL, contentType: UTType?) async throws {
+    public convenience init(importing file: URL, contentType: UTType?) throws {
         _ = file
         _ = contentType
         self.init()
         throw PhotosUIUnavailable.linuxHost(operation: "PHLivePhoto.init(importing:file)")
     }
 
-    public convenience init(importing data: Data, contentType: UTType?) async throws {
+    public convenience init(importing data: Data, contentType: UTType?) throws {
         _ = data
         _ = contentType
         self.init()

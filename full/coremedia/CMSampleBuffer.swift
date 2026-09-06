@@ -44,6 +44,8 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
     fileprivate var sampleCount: Int
     public var attachments = CMAttachmentBearerAttachments()
     public var sampleAttachments: [[String: Any]] = []
+    fileprivate var dataFailedStatus: OSStatus? = nil
+    fileprivate var sampleAttachmentArray: NSMutableArray?
 
     public init(
         dataBuffer: CMBlockBuffer?,
@@ -135,6 +137,33 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
         self.attachments = object.attachments
         self.sampleAttachments = object.sampleAttachments
         self.outputPTS = object.outputPTS
+        self.dataFailedStatus = object.dataFailedStatus
+        self.sampleAttachmentArray = object.sampleAttachmentArray
+    }
+
+    internal func applyDataFailed(_ status: OSStatus) {
+        lock.locked {
+            dataFailedStatus = status
+            ready = false
+        }
+    }
+
+    internal func currentDataFailedStatus() -> OSStatus? {
+        lock.locked { dataFailedStatus }
+    }
+
+    internal func sampleAttachmentsArray(createIfNecessary: Bool) -> CFArray? {
+        lock.locked {
+            if sampleAttachmentArray == nil && createIfNecessary {
+                let array = NSMutableArray()
+                let n = max(0, sampleCount)
+                for _ in 0..<n {
+                    array.add(NSMutableDictionary())
+                }
+                sampleAttachmentArray = array
+            }
+            return sampleAttachmentArray.map { unsafeBitCast($0, to: CFArray.self) }
+        }
     }
 
     private func presentationTimeStampUnlocked() -> CMTime {

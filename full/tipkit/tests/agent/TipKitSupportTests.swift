@@ -71,3 +71,23 @@ struct VisitDonation: Codable, Sendable {
     var city: String
     var count: Int
 }
+
+struct FrequencyIgnoreHostTip: Tip {
+    var id: String { "frequency-ignore-host" }
+
+    @Tips.OptionsBuilder
+    var options: [any TipOption] {
+        Tips.IgnoresDisplayFrequency(true)
+    }
+}
+
+func tipKitUniqueDirectory() -> URL {
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent(
+        "tipkit-host-\(UUID().uuidString)",
+        isDirectory: true
+    )
+    try! FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+    return url
+}
+
+final class TipKitHostCoder: NSCoder {}

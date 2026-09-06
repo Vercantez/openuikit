@@ -236,11 +236,12 @@ private func _units(in string: NSAttributedString, range: NSRange, font: CTFont)
     var units: [_CTGlyphUnit] = []
     units.reserveCapacity(substring.utf16.count)
     for scalar in substring.unicodeScalars {
+        let glyph = _ctGlyphForCharacter(font, scalar.value)
         let advance = _ctCharAdvance(font, scalar: scalar.value)
         units.append(
             _CTGlyphUnit(
                 scalar: scalar.value,
-                glyph: CGGlyph(truncatingIfNeeded: scalar.value),
+                glyph: glyph,
                 advance: advance
             )
         )
@@ -375,7 +376,7 @@ public func CTLineCreateWithAttributedString(_ attrString: CFAttributedString) -
 }
 
 public func CTLineGetTypeID() -> CFTypeID { 0x4354_4C4E }
-public func CTLineGetGlyphCount(_ line: CTLine) -> CFIndex { line.range.length }
+public func CTLineGetGlyphCount(_ line: CTLine) -> CFIndex { line.units.count }
 public func CTLineGetStringRange(_ line: CTLine) -> CFRange {
     CFRange(location: line.range.location, length: line.range.length)
 }
@@ -443,16 +444,23 @@ public func CTLineCreateJustifiedLine(
     _ justificationFactor: CGFloat,
     _ justificationWidth: Double
 ) -> CTLine? {
-    _ = justificationFactor
+    let extra = CGFloat(justificationWidth) - line.width
+    var units = line.units
+    if extra != 0, !units.isEmpty, justificationFactor != 0 {
+        let per = extra * justificationFactor / CGFloat(units.count)
+        for i in units.indices {
+            units[i].advance += per
+        }
+    }
     return CTLine(
         string: line.string,
         range: line.range,
-        width: CGFloat(justificationWidth),
+        width: _width(units),
         ascent: line.ascent,
         descent: line.descent,
         leading: line.leading,
         font: line.font,
-        units: line.units
+        units: units
     )
 }
 public func CTLineCreateTruncatedLine(
@@ -509,7 +517,7 @@ public func CTLineGetImageBounds(_ line: CTLine, _ context: CGContext?) -> CGRec
 }
 
 public func CTRunGetTypeID() -> CFTypeID { 0x4354_5255 }
-public func CTRunGetGlyphCount(_ run: CTRun) -> CFIndex { run.range.length }
+public func CTRunGetGlyphCount(_ run: CTRun) -> CFIndex { run.line.units.count }
 public func CTRunGetStringRange(_ run: CTRun) -> CFRange {
     CFRange(location: run.range.location, length: run.range.length)
 }

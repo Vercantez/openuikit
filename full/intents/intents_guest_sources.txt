@@ -1,5 +1,7 @@
 full/intents/Intents.swift
+full/intents/IntentsCoding.swift
 full/intents/IntentsConstants.swift
+full/intents/IntentsDepth.swift
 full/intents/IntentsEnums.swift
 full/intents/IntentsExtraStructs.swift
 full/intents/IntentsFamilies.swift

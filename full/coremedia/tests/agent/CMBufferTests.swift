@@ -368,3 +368,270 @@ func testSampleBufferErrorContracts() {
 func testCMPersistentTrackIDInvalid() {
     precondition(kCMPersistentTrackID_Invalid == 0)
 }
+
+func testCMBlockBufferGetDataPointerInterior() {
+    let buffer = CMBlockBuffer(data: Data([9, 8, 7, 6]))
+    var lengthAtOffset = 0
+    var total = 0
+    var pointer: UnsafeMutablePointer<CChar>?
+    precondition(
+        CMBlockBufferGetDataPointer(
+            buffer,
+            atOffset: 1,
+            lengthAtOffsetOut: &lengthAtOffset,
+            totalLengthOut: &total,
+            dataPointerOut: &pointer
+        ) == 0
+    )
+    precondition(total == 4)
+    precondition(lengthAtOffset == 3)
+    precondition(pointer != nil)
+    precondition(UInt8(bitPattern: pointer!.pointee) == 8)
+    precondition(CMBlockBufferGetTypeID() == CMBlockBuffer.typeID)
+}
+
+func testCMBlockBufferAppendMemoryAndReference() {
+    var dest: CMBlockBuffer?
+    precondition(CMBlockBufferCreateEmpty(allocator: nil, capacity: 4, flags: 0, blockBufferOut: &dest) == 0)
+    var bytes: [UInt8] = [1, 2, 3]
+    bytes.withUnsafeMutableBytes { raw in
+        precondition(
+            CMBlockBufferAppendMemoryBlock(
+                dest!,
+                memoryBlock: raw.baseAddress,
+                length: 3,
+                blockAllocator: nil,
+                customBlockSource: nil,
+                offsetToData: 0,
+                dataLength: 3,
+                flags: 0
+            ) == 0
+        )
+    }
+    let extra = CMBlockBuffer(data: Data([4, 5]))
+    precondition(
+        CMBlockBufferAppendBufferReference(
+            dest!,
+            targetBBuf: extra,
+            offsetToData: 0,
+            dataLength: 0,
+            flags: 0
+        ) == 0
+    )
+    precondition(CMBlockBufferGetDataLength(dest!) == 5)
+    var referenced: CMBlockBuffer?
+    precondition(
+        CMBlockBufferCreateWithBufferReference(
+            allocator: nil,
+            referenceBuffer: extra,
+            offsetToData: 0,
+            dataLength: 2,
+            flags: 0,
+            blockBufferOut: &referenced
+        ) == 0
+    )
+    precondition(referenced!.dataLength == 2)
+    try! dest!.append(bufferReference: extra)
+}
+
+func testCMSampleBufferCreateNotReadyAndSizes() {
+    let data = CMBlockBuffer(data: Data([1, 2, 3, 4]))
+    var timing = CMSampleTimingInfo(
+        duration: CMTime(value: 1, timescale: 1),
+        presentationTimeStamp: .zero,
+        decodeTimeStamp: .invalid
+    )
+    var size = 4
+    var sample: CMSampleBuffer?
+    precondition(
+        withUnsafePointer(to: &timing) { timingPtr in
+            withUnsafePointer(to: &size) { sizePtr in
+                CMSampleBufferCreate(
+                    allocator: nil,
+                    dataBuffer: data,
+                    dataReady: false,
+                    makeDataReadyCallback: nil,
+                    makeDataReadyRefcon: nil,
+                    formatDescription: nil,
+                    sampleCount: 1,
+                    sampleTimingEntryCount: 1,
+                    sampleTimingArray: timingPtr,
+                    sampleSizeEntryCount: 1,
+                    sampleSizeArray: sizePtr,
+                    sampleBufferOut: &sample
+                )
+            }
+        } == 0
+    )
+    precondition(!CMSampleBufferDataIsReady(sample!))
+    precondition(CMSampleBufferGetDataBuffer(sample!) === data)
+    precondition(CMSampleBufferGetSampleSize(sample!, at: 0) == 4)
+    var needed: CMItemCount = 0
+    var sizes = [0]
+    precondition(
+        CMSampleBufferGetSampleSizeArray(
+            sample!,
+            sizeArrayEntries: 1,
+            sizeArrayOut: &sizes,
+            sizeArrayEntriesNeededOut: &needed
+        ) == 0
+    )
+    precondition(sizes[0] == 4)
+    precondition(CMSampleBufferSetDataReady(sample!) == 0)
+    precondition(CMSampleBufferGetTypeID() == CMSampleBuffer.typeID)
+}
+
+func testCMSampleBufferTimingArraysAndCopyRange() {
+    let sample = try! CMSampleBuffer(
+        dataBuffer: CMBlockBuffer(data: Data([1, 2])),
+        formatDescription: nil,
+        numSamples: 1,
+        sampleTimings: [
+            CMSampleTimingInfo(
+                duration: CMTime(value: 2, timescale: 1),
+                presentationTimeStamp: CMTime(value: 4, timescale: 1),
+                decodeTimeStamp: CMTime(value: 3, timescale: 1)
+            )
+        ],
+        sampleSizes: [2]
+    )
+    var needed: CMItemCount = 0
+    var info = CMSampleTimingInfo()
+    precondition(
+        CMSampleBufferGetSampleTimingInfoArray(
+            sample,
+            entryCount: 1,
+            arrayToFill: &info,
+            entriesNeededOut: &needed
+        ) == 0
+    )
+    precondition(info.presentationTimeStamp.value == 4)
+    precondition(
+        CMSampleBufferGetOutputSampleTimingInfoArray(
+            sample,
+            entryCount: 1,
+            arrayToFill: &info,
+            entriesNeededOut: &needed
+        ) == 0
+    )
+    precondition(CMSampleBufferGetOutputDuration(sample).value == 2)
+    precondition(CMSampleBufferGetOutputDecodeTimeStamp(sample).value == 3)
+    var copy: CMSampleBuffer?
+    precondition(
+        CMSampleBufferCopySampleBufferForRange(
+            allocator: nil,
+            sampleBuffer: sample,
+            sampleRange: CFRange(location: 0, length: 1),
+            sampleBufferOut: &copy
+        ) == 0
+    )
+    var retimed: CMSampleBuffer?
+    precondition(
+        CMSampleBufferCreateCopyWithNewTiming(
+            allocator: nil,
+            sampleBuffer: sample,
+            sampleTimingEntryCount: 0,
+            sampleTimingArray: nil,
+            sampleBufferOut: &retimed
+        ) == 0
+    )
+    var visits = 0
+    precondition(
+        CMSampleBufferCallForEachSample(sample, callback: { _, _, _ in
+            visits += 1
+            return 0
+        }, refcon: nil) == 0
+    )
+    precondition(visits == 1)
+    precondition(CMSampleBufferCallBlockForEachSample(sample) { _, _ in 0 } == 0)
+}
+
+func testCMSampleBufferInvalidateCallbackAndAttachmentsArray() {
+    let sample = try! CMSampleBuffer(
+        dataBuffer: CMBlockBuffer(data: Data([1])),
+        formatDescription: nil,
+        numSamples: 1,
+        sampleTimings: [CMSampleTimingInfo(duration: .zero, presentationTimeStamp: .zero, decodeTimeStamp: .invalid)],
+        sampleSizes: [1]
+    )
+    var callbackFires = 0
+    precondition(
+        CMSampleBufferSetInvalidateCallback(sample, callback: { _, _ in callbackFires += 1 }, refcon: 9) == 0
+    )
+    var handlerFires = 0
+    precondition(CMSampleBufferSetInvalidateHandler(sample, invalidateHandler: { _ in handlerFires += 1 }) == 0)
+    precondition(CMSampleBufferGetSampleAttachmentsArray(sample, createIfNecessary: false) == nil)
+    let attachments = CMSampleBufferGetSampleAttachmentsArray(sample, createIfNecessary: true)
+    precondition(attachments != nil)
+    precondition(CFArrayGetCount(attachments!) == 1)
+    precondition(CMSampleBufferInvalidate(sample) == 0)
+    precondition(callbackFires == 1)
+    precondition(handlerFires == 1)
+}
+
+func testCMSampleBufferDataFailedAndTrackReadiness() {
+    let ready = try! CMSampleBuffer(
+        dataBuffer: CMBlockBuffer(data: Data([1, 2])),
+        formatDescription: nil,
+        numSamples: 1,
+        sampleTimings: [CMSampleTimingInfo(duration: .zero, presentationTimeStamp: .zero, decodeTimeStamp: .invalid)],
+        sampleSizes: [2],
+        dataReady: true
+    )
+    let pending = try! CMSampleBuffer(
+        dataBuffer: nil,
+        formatDescription: nil,
+        numSamples: 1,
+        sampleTimings: [CMSampleTimingInfo(duration: .zero, presentationTimeStamp: .zero, decodeTimeStamp: .invalid)],
+        sampleSizes: [2],
+        dataReady: false
+    )
+    precondition(CMSampleBufferSetDataFailed(pending, status: kCMSampleBufferError_DataFailed) == 0)
+    var status: OSStatus = 0
+    precondition(CMSampleBufferHasDataFailed(pending, statusOut: &status))
+    precondition(status == kCMSampleBufferError_DataFailed)
+    let follower = try! CMSampleBuffer(
+        dataBuffer: nil,
+        formatDescription: nil,
+        numSamples: 0,
+        sampleTimings: [],
+        sampleSizes: [],
+        dataReady: false
+    )
+    precondition(CMSampleBufferTrackDataReadiness(follower, sampleBufferToTrack: ready) == 0)
+    precondition(CMSampleBufferDataIsReady(follower))
+    let empty = try! CMSampleBuffer(
+        dataBuffer: nil,
+        formatDescription: nil,
+        numSamples: 0,
+        sampleTimings: [],
+        sampleSizes: [],
+        dataReady: false
+    )
+    precondition(
+        CMSampleBufferSetDataBuffer(empty, dataBuffer: CMBlockBuffer(data: Data([9]))) == 0
+    )
+    var created: CMSampleBuffer?
+    precondition(
+        CMSampleBufferCreateWithMakeDataReadyHandler(
+            nil,
+            CMBlockBuffer(data: Data([1])),
+            true,
+            nil,
+            1,
+            0,
+            nil,
+            0,
+            nil,
+            &created,
+            { _ in 0 }
+        ) == 0
+    )
+}
+
+func testCMDoesBigEndianSoundDescriptionFailClosed() {
+    let buffer = CMBlockBuffer(data: Data([0, 1, 2, 3]))
+    precondition(
+        CMDoesBigEndianSoundDescriptionRequireLegacyCBRSampleTableLayout(buffer, flavor: nil) == false
+    )
+}

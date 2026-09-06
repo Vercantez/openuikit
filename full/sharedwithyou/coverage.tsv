@@ -1,0 +1,142 @@
+precise	status	evidence	notes
+c:@E@SWAttributionViewBackgroundStyle	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWAttributionViewBackgroundStyle@SWAttributionViewBackgroundStyleColor	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWAttributionViewBackgroundStyle@SWAttributionViewBackgroundStyleDefault	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWAttributionViewBackgroundStyle@SWAttributionViewBackgroundStyleMaterial	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWAttributionViewDisplayContext	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWAttributionViewDisplayContext@SWAttributionViewDisplayContextDetail	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWAttributionViewDisplayContext@SWAttributionViewDisplayContextSummary	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWAttributionViewHorizontalAlignment	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWAttributionViewHorizontalAlignment@SWAttributionViewHorizontalAlignmentCenter	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWAttributionViewHorizontalAlignment@SWAttributionViewHorizontalAlignmentDefault	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWAttributionViewHorizontalAlignment@SWAttributionViewHorizontalAlignmentLeading	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWAttributionViewHorizontalAlignment@SWAttributionViewHorizontalAlignmentTrailing	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightCenterErrorCode	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightCenterErrorCode@SWHighlightCenterErrorCodeAccessDenied	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightCenterErrorCode@SWHighlightCenterErrorCodeInternalError	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightCenterErrorCode@SWHighlightCenterErrorCodeInvalidURL	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightCenterErrorCode@SWHighlightCenterErrorCodeNoError	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightChangeEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightChangeEventTrigger@SWHighlightChangeEventTriggerComment	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightChangeEventTrigger@SWHighlightChangeEventTriggerEdit	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightMembershipEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightMembershipEventTrigger@SWHighlightMembershipEventTriggerAddedCollaborator	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightMembershipEventTrigger@SWHighlightMembershipEventTriggerRemovedCollaborator	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightPersistenceEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightPersistenceEventTrigger@SWHighlightPersistenceEventTriggerCreated	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightPersistenceEventTrigger@SWHighlightPersistenceEventTriggerDeleted	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightPersistenceEventTrigger@SWHighlightPersistenceEventTriggerMoved	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@E@SWHighlightPersistenceEventTrigger@SWHighlightPersistenceEventTriggerRenamed	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+c:@SWCollaborationMetadataTypeIdentifier	declared	source:full/sharedwithyou/SharedWithYou.swift#SWCollaborationMetadataTypeIdentifier	Provisional UTI; Darwin bytes unobserved.
+c:objc(cs)SWAttributionView	implemented	test:full/sharedwithyou/tests/agent/SWAttributionViewTests.swift#testAttributionViewClass	
+c:objc(cs)SWAttributionView(py)backgroundStyle	implemented	test:full/sharedwithyou/tests/agent/SWAttributionViewTests.swift#testAttributionViewBackgroundStyleProperty	
+c:objc(cs)SWAttributionView(py)displayContext	implemented	test:full/sharedwithyou/tests/agent/SWAttributionViewTests.swift#testAttributionViewDisplayContextProperty	
+c:objc(cs)SWAttributionView(py)highlight	implemented	test:full/sharedwithyou/tests/agent/SWAttributionViewTests.swift#testAttributionViewHighlightProperty	
+c:objc(cs)SWAttributionView(py)highlightMenu	implemented	test:full/sharedwithyou/tests/agent/SWAttributionViewTests.swift#testAttributionViewHighlightMenuEmpty	
+c:objc(cs)SWAttributionView(py)horizontalAlignment	implemented	test:full/sharedwithyou/tests/agent/SWAttributionViewTests.swift#testAttributionViewHorizontalAlignmentProperty	
+c:objc(cs)SWAttributionView(py)menuTitleForHideAction	implemented	test:full/sharedwithyou/tests/agent/SWAttributionViewTests.swift#testAttributionViewMenuTitleForHideActionProperty	
+c:objc(cs)SWAttributionView(py)preferredMaxLayoutWidth	implemented	test:full/sharedwithyou/tests/agent/SWAttributionViewTests.swift#testAttributionViewPreferredMaxLayoutWidthProperty	
+c:objc(cs)SWAttributionView(py)supplementalMenu	implemented	test:full/sharedwithyou/tests/agent/SWAttributionViewTests.swift#testAttributionViewSupplementalMenuProperty	
+c:objc(cs)SWCollaborationHighlight	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationHighlightTests.swift#testCollaborationHighlightClass	
+c:objc(cs)SWCollaborationHighlight(py)collaborationIdentifier	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationHighlightTests.swift#testCollaborationIdentifierProperty	
+c:objc(cs)SWCollaborationHighlight(py)contentType	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationHighlightTests.swift#testCollaborationContentTypeProperty	
+c:objc(cs)SWCollaborationHighlight(py)creationDate	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationHighlightTests.swift#testCollaborationCreationDateProperty	
+c:objc(cs)SWCollaborationHighlight(py)title	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationHighlightTests.swift#testCollaborationTitleProperty	
+c:objc(cs)SWCollaborationView	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewInitItemProvider	
+c:objc(cs)SWCollaborationView(im)dismissPopover:	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewDismissPopoverRunsCompletion	
+c:objc(cs)SWCollaborationView(im)initWithItemProvider:	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewInitItemProvider	
+c:objc(cs)SWCollaborationView(im)setContentView:	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewSetContent	
+c:objc(cs)SWCollaborationView(im)setShowManageButton:	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewSetShowManageButton	
+c:objc(cs)SWCollaborationView(py)activeParticipantCount	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewActiveParticipantCount	
+c:objc(cs)SWCollaborationView(py)cloudSharingControllerDelegate	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewCloudSharingDelegates	
+c:objc(cs)SWCollaborationView(py)cloudSharingDelegate	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewCloudSharingDelegates	
+c:objc(cs)SWCollaborationView(py)delegate	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewDelegateProperty	
+c:objc(cs)SWCollaborationView(py)headerImage	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewHeaderImage	
+c:objc(cs)SWCollaborationView(py)headerSubtitle	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewHeaderSubtitle	
+c:objc(cs)SWCollaborationView(py)headerTitle	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewHeaderTitle	
+c:objc(cs)SWCollaborationView(py)manageButtonTitle	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewManageButtonTitle	
+c:objc(cs)SWHighlight	implemented	test:full/sharedwithyou/tests/agent/SWHighlightTests.swift#testHighlightURL	
+c:objc(cs)SWHighlight(py)URL	implemented	test:full/sharedwithyou/tests/agent/SWHighlightTests.swift#testHighlightURL	
+c:objc(cs)SWHighlight(py)identifier	implemented	test:full/sharedwithyou/tests/agent/SWHighlightTests.swift#testHighlightIdentifier	
+c:objc(cs)SWHighlightCenter	implemented	test:full/sharedwithyou/tests/agent/SWHighlightCenterTests.swift#testHighlightCenterEmptyHighlights	
+c:objc(cs)SWHighlightCenter(cpy)highlightCollectionTitle	implemented	test:full/sharedwithyou/tests/agent/SWHighlightCenterTests.swift#testHighlightCollectionTitleEmpty	
+c:objc(cs)SWHighlightCenter(cpy)systemCollaborationSupportAvailable	implemented	test:full/sharedwithyou/tests/agent/SWHighlightCenterTests.swift#testSystemCollaborationSupportUnavailable	
+c:objc(cs)SWHighlightCenter(im)clearNoticesForHighlight:	implemented	test:full/sharedwithyou/tests/agent/SWHighlightCenterTests.swift#testClearNoticesRemovesMatching	
+c:objc(cs)SWHighlightCenter(im)collaborationHighlightForIdentifier:error:	implemented	test:full/sharedwithyou/tests/agent/SWHighlightCenterTests.swift#testCollaborationHighlightForIdentifierThrows	
+c:objc(cs)SWHighlightCenter(im)getCollaborationHighlightForURL:completionHandler:	declared	source:full/sharedwithyou/SWHighlightCenter.swift#collaborationHighlight	Async throws overlay; sealed runner cannot await. Implementation fail-closes with accessDenied.
+c:objc(cs)SWHighlightCenter(im)getHighlightForURL:completionHandler:	implemented	test:full/sharedwithyou/tests/agent/SWHighlightCenterTests.swift#testGetHighlightForCompletesAccessDenied	
+c:objc(cs)SWHighlightCenter(im)getSignedIdentityProofForCollaborationHighlight:usingData:completionHandler:	implemented	test:full/sharedwithyou/tests/agent/SWHighlightCenterTests.swift#testGetSignedIdentityProofFailsClosed	
+c:objc(cs)SWHighlightCenter(im)postNoticeForHighlightEvent:	implemented	test:full/sharedwithyou/tests/agent/SWHighlightCenterTests.swift#testPostNoticeRecordsLocally	
+c:objc(cs)SWHighlightCenter(py)delegate	implemented	test:full/sharedwithyou/tests/agent/SWHighlightCenterTests.swift#testHighlightCenterDelegateProperty	
+c:objc(cs)SWHighlightCenter(py)highlights	implemented	test:full/sharedwithyou/tests/agent/SWHighlightCenterTests.swift#testHighlightCenterEmptyHighlights	
+c:objc(cs)SWHighlightChangeEvent	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testChangeEventInit	
+c:objc(cs)SWHighlightChangeEvent(im)initWithHighlight:trigger:	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testChangeEventInit	
+c:objc(cs)SWHighlightChangeEvent(py)changeEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testChangeEventInit	
+c:objc(cs)SWHighlightChangeEvent(py)highlightURL	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testChangeEventHighlightURL	
+c:objc(cs)SWHighlightMembershipEvent	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testMembershipEventInit	
+c:objc(cs)SWHighlightMembershipEvent(im)initWithHighlight:trigger:	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testMembershipEventInit	
+c:objc(cs)SWHighlightMembershipEvent(py)membershipEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testMembershipEventInit	
+c:objc(cs)SWHighlightMentionEvent	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testMentionEventHandleInit	
+c:objc(cs)SWHighlightMentionEvent(im)initWithHighlight:mentionedPersonCloudKitShareHandle:	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testMentionEventHandleInit	
+c:objc(cs)SWHighlightMentionEvent(im)initWithHighlight:mentionedPersonIdentity:	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testMentionEventIdentityInit	
+c:objc(cs)SWHighlightMentionEvent(py)mentionedPersonHandle	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testMentionEventHandleInit	
+c:objc(cs)SWHighlightPersistenceEvent	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testPersistenceEventInit	
+c:objc(cs)SWHighlightPersistenceEvent(im)initWithHighlight:trigger:	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testPersistenceEventInit	
+c:objc(cs)SWHighlightPersistenceEvent(py)persistenceEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testPersistenceEventInit	
+c:objc(cs)SWRemoveParticipantAlertController	implemented	test:full/sharedwithyou/tests/agent/SWRemoveParticipantAlertTests.swift#testRemoveParticipantAlertInit	
+c:objc(cs)SWRemoveParticipantAlertController(cm)alertControllerWithParticipant:highlight:	implemented	test:full/sharedwithyou/tests/agent/SWRemoveParticipantAlertTests.swift#testRemoveParticipantAlertInit	
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWHighlight	implemented	test:full/sharedwithyou/tests/agent/SWHighlightTests.swift#testHighlightCoderRejectsEmpty	
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWHighlightChangeEvent	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testChangeEventCoderRejectsEmpty	
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWHighlightMembershipEvent	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testMembershipEventCoderRejectsEmpty	
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWHighlightMentionEvent	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testMentionEventCoderRejectsEmpty	
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)SWHighlightPersistenceEvent	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testPersistenceEventCoderRejectsEmpty	
+c:objc(pl)SWCollaborationViewDelegate	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewDelegateProperty	
+c:objc(pl)SWCollaborationViewDelegate(im)collaborationViewDidDismissPopover:	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewDidDismissDefault	
+c:objc(pl)SWCollaborationViewDelegate(im)collaborationViewShouldPresentPopover:	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewShouldPresentDefault	
+c:objc(pl)SWCollaborationViewDelegate(im)collaborationViewWillPresentPopover:	implemented	test:full/sharedwithyou/tests/agent/SWCollaborationViewTests.swift#testCollaborationViewWillPresentDefault	
+c:objc(pl)SWHighlightCenterDelegate	implemented	test:full/sharedwithyou/tests/agent/SWHighlightCenterTests.swift#testHighlightCenterDelegateProtocolCall	
+c:objc(pl)SWHighlightCenterDelegate(im)highlightCenterHighlightsDidChange:	implemented	test:full/sharedwithyou/tests/agent/SWHighlightCenterTests.swift#testHighlightCenterDelegateProtocolCall	
+c:objc(pl)SWHighlightEvent	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testHighlightEventProtocolURL	
+c:objc(pl)SWHighlightEvent(py)highlightURL	implemented	test:full/sharedwithyou/tests/agent/SWHighlightEventTests.swift#testHighlightEventProtocolURL	
+s:16CoreTransferable0B0PAAE16withExportedFile11contentType11fileHandlerqd__07UniformG11Identifiers6UTTypeVSg_qd__10Foundation3URLVYaKXEtYaKlF::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	deferred		CoreTransferable.Transferable default; CoreTransferable is not a declared isolated-host dependency.
+s:16CoreTransferable0B0PAAE17suggestedFilenameSSSgvp::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	deferred		CoreTransferable.Transferable default; CoreTransferable is not a declared isolated-host dependency.
+s:16CoreTransferable0B0PAAE20exportedContentTypes10visibilitySay22UniformTypeIdentifiers6UTTypeVGAA32TransferRepresentationVisibilityV_tFZ::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	deferred		CoreTransferable.Transferable default; requires TransferRepresentationVisibility.
+s:16CoreTransferable0B0PAAE20exportedContentTypesySay22UniformTypeIdentifiers6UTTypeVGAA32TransferRepresentationVisibilityVF::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	deferred		CoreTransferable.Transferable default; requires TransferRepresentationVisibility.
+s:16CoreTransferable0B0PAAE20importedContentTypesSay22UniformTypeIdentifiers6UTTypeVGyF::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	deferred		CoreTransferable.Transferable default; CoreTransferable is not a declared isolated-host dependency.
+s:16CoreTransferable0B0PAAE6export2to11contentType10Foundation3URLVAI_07UniformF11Identifiers6UTTypeVSgtYaKF::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	deferred		CoreTransferable.Transferable default; async export requires CoreTransferable.
+s:16CoreTransferable0B0PAAE8exported2as10Foundation4DataV22UniformTypeIdentifiers6UTTypeVSg_tYaKF::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	deferred		CoreTransferable.Transferable default; async export requires CoreTransferable.
+s:16CoreTransferable0B0PAAE9importing11contentTypex10Foundation3URLV_07UniformE11Identifiers6UTTypeVSgtYaKcfc::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	deferred		CoreTransferable.Transferable default; async importing requires CoreTransferable.
+s:16CoreTransferable0B0PAAE9importing11contentTypex10Foundation4DataV_07UniformE11Identifiers6UTTypeVSgtYaKcfc::SYNTHESIZED::c:objc(cs)SWCollaborationMetadata	deferred		CoreTransferable.Transferable default; async importing requires CoreTransferable.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWAttributionViewBackgroundStyle	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWAttributionViewDisplayContext	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWAttributionViewHorizontalAlignment	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWHighlightCenterErrorCode	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWHighlightChangeEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWHighlightMembershipEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SWHighlightPersistenceEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWAttributionViewBackgroundStyle	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWAttributionViewDisplayContext	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWAttributionViewHorizontalAlignment	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWHighlightCenterErrorCode	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWHighlightChangeEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWHighlightMembershipEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SWHighlightPersistenceEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWAttributionViewBackgroundStyle	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWAttributionViewDisplayContext	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWAttributionViewHorizontalAlignment	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWHighlightCenterErrorCode	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWHighlightChangeEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWHighlightMembershipEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SWHighlightPersistenceEventTrigger	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:So17SWHighlightCenterC13SharedWithYouE22collaborationHighlight13forIdentifierSo015SWCollaborationG0CSS_tKF	implemented	test:full/sharedwithyou/tests/agent/SWHighlightCenterTests.swift#testCollaborationHighlightForIdentifierStringThrows	
+s:So19SWCollaborationViewC13SharedWithYouE09setDetailB11ListContentyyx7SwiftUI0B0RzlF	deferred		SwiftUI View generic overlay; SwiftUI is not a declared isolated-host dependency.
+s:So19SWCollaborationViewC13SharedWithYouE09setDetailB11ListContentyyxyXE7SwiftUI0B0RzlF	deferred		SwiftUI ViewBuilder overlay; SwiftUI is not a declared isolated-host dependency.
+s:So23SWCollaborationMetadataC13SharedWithYouE14Representationa	deferred		typealias Representation = some TransferRepresentation; CoreTransferable is not a declared dependency.
+s:So23SWCollaborationMetadataC13SharedWithYouE22transferRepresentationQrvpZ	deferred		static transferRepresentation requires CoreTransferable.Transferable.
+s:So26SWHighlightCenterErrorCodeV8rawValueABSgSi_tcfc	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:So29SWHighlightChangeEventTriggerV8rawValueABSgSi_tcfc	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:So31SWAttributionViewDisplayContextV8rawValueABSgSi_tcfc	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:So32SWAttributionViewBackgroundStyleV8rawValueABSgSi_tcfc	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:So33SWHighlightMembershipEventTriggerV8rawValueABSgSi_tcfc	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:So34SWHighlightPersistenceEventTriggerV8rawValueABSgSi_tcfc	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	
+s:So36SWAttributionViewHorizontalAlignmentV8rawValueABSgSi_tcfc	implemented	test:full/sharedwithyou/tests/agent/SharedWithYouEnumTests.swift#testEnumRawValues	

@@ -164,7 +164,6 @@ public struct DynamicIsland: @unchecked Sendable {
     }
 }
 
-@MainActor
 public struct ActivityConfiguration<Attributes: ActivityAttributes>: @unchecked Sendable {
     @_spi(OpenUIKitHost) public let portableDescriptor: WidgetConfigurationDescriptor
 
