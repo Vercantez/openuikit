@@ -309,3 +309,79 @@ Swift `6.2.4` / `x86_64-unknown-linux-gnu` compiled `libAudioToolbox.dylib`. `.c
 See `oracle-questions.tsv`. New items this pass: 3D-mixer BusEnable alias versus bindgen IDs 20–26, DRC GeneralCompression 6 versus sequential 4, `AudioUnitParameterEvent` unnamed-union layout, `ScheduledAudioSlice` timestamp packing, and `AURenderEvent` C-union size with `MIDIEventList`.
 
 
+## Depth pass 2026-09 (wave-18 local repair)
+
+Repair branch: `agent/fw-audiotoolbox-r`. At inspection, the requested cloud
+head `platform/cursor/port-audiotoolbox-to-linux-0d11` (`a94e23fb`) was already
+an ancestor of current `origin/main` (`8332a8f2`), with an identical AudioToolbox
+tree. Both requested merges therefore reported `Already up to date`; no
+conflict resolution was needed. The supplied
+`/tmp/fw_merge_gate-audiotoolbox.log` contained no `error:` or `REFUSING` line
+and already ended in `FRAMEWORK_FANOUT_HOST_OK`. A fresh baseline run in the
+operator's `uikit-linux` container also passed. No compiler or runtime failure
+was reproduced, so this repair adds missing evidence rather than claiming a
+product-code fix.
+
+### Coverage before / after
+
+| status | current main | local repair |
+| --- | ---: | ---: |
+| implemented | 2927 | 2931 |
+| declared | 44 | 40 |
+| deferred | 262 | 262 |
+| unavailable | 1 | 1 |
+| not-applicable | 0 | 0 |
+
+The gain is **4 implemented rows**, with all previous implemented rows and
+agent tests preserved. `AudioToolboxFileCallbackTests.swift` adds four top-level,
+synchronous, no-argument tests, each cited by exactly one callback typedef:
+
+- `testAudioFileReadProcPartialTransfer`: client context, position `2^40 + 7`,
+  requested/actual byte counts `4/2`, exact bytes `12 AB`, untouched buffer tail,
+  and signed failure return `-123` with zero bytes transferred.
+- `testAudioFileWriteProcPartialTransfer`: client context, position `2^40 + 11`,
+  requested/actual byte counts `4/2`, exact bytes `34 CD`, unchanged input buffer,
+  and signed failure return `-456` with zero bytes transferred.
+- `testAudioFileGetSizeProcWideResult`: client context and exact `Int64` results
+  `0`, `2^40 + 13`, and `Int64.max`.
+- `testAudioFileSetSizeProcWideArgument`: client context and exact `Int64`
+  arguments `0`, `2^40 + 17`, and `Int64.max`; signed failure return `-789`
+  leaves the fixture's size unchanged.
+
+These are invocation tests of the exported C callback types. Positions, payloads,
+and statuses are explicit test inputs, not Apple-oracle measurements. The exact
+`c:@T@AudioFile_*Proc` declarations come from the sealed public surface; the
+API-digester has no matching exact-USR nodes for these typedefs. Product callback
+declarations are unchanged. `AudioFileOpenWithCallbacks` and
+`AudioFileInitializeWithCallbacks` remain deferred; these tests do not claim
+callback-backed file I/O, callback scheduling, or hardware support. All pointer
+lifetimes are scoped, and no new test waits, threads, files, or services are used.
+
+There are **110 distinct cited tests**, all synchronous with no arguments. The
+largest evidence anchors are `testEnumHashableInequalityCatalog` and
+`testOptionSetAlgebraAudioUnitAndQueue`, each **200/2931 rows (6.82%)**; even this
+maximum across all tests is below the 40% non-table limit. No row was reclassified
+to `not-applicable`.
+
+### Validation
+
+The baseline sealed gate exited 0 in the operator's container using Swift
+**6.2.4**, target **aarch64-unknown-linux-gnu**. The changed-tree sealed gate
+also exited **0**, compiling and invoking all **110** cited tests (baseline:
+**106**). Both runs ended with:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AudioToolbox lane=large-partitioned symbols=3234
+FRAMEWORK_FANOUT_REFERENCE_OK
+AUDIOTOOLBOX_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AudioToolbox dylib=libAudioToolbox.dylib
+```
+
+Run command in `/gate-codex-audiotoolbox` after copying the framework and sealed
+harness into `uikit-linux` and committing that snapshot:
+`timeout 3600 bash full/audiotoolbox/tests/acceptance/test_host.sh`.
+Local logs: `/tmp/fw-audiotoolbox-r-baseline.log` and
+`/tmp/fw-audiotoolbox-r-final.log`. The immutable reference inputs, acceptance
+script, product sources, and source manifest are unchanged. `git diff --check`
+and the synchronous evidence-anchor / coverage-preservation audits also passed.
+All branch changes are confined to `full/audiotoolbox/`.
