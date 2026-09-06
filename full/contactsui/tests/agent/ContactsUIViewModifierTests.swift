@@ -1,6 +1,7 @@
 @_spi(OpenUIKitHost) import ContactsUI
 import Foundation
 
+@MainActor
 private func assertModifierTag(_ button: ContactAccessButton, contains needle: String) {
     let tags = ContactsUIHostControl.linuxModifierTags(button)
     precondition(tags.contains { $0.contains(needle) }, "missing \(needle) in \(tags)")
