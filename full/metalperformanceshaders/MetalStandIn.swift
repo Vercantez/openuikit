@@ -139,6 +139,17 @@ public enum MTLTextureType: UInt, Sendable, Hashable {
     case type3D = 7
 }
 
+public enum MTLCullMode: UInt, Sendable, Hashable {
+    case none = 0
+    case front = 1
+    case back = 2
+}
+
+public enum MTLWinding: UInt, Sendable, Hashable {
+    case clockwise = 0
+    case counterClockwise = 1
+}
+
 public final class MTLTextureDescriptor: NSObject {
     public var textureType: MTLTextureType = .type2D
     public var pixelFormat: MTLPixelFormat = .rgba8Unorm

@@ -19,6 +19,9 @@ extension CMFormatDescription {
             extensions: extensions
         )
         self.extraIdentity = audioStreamBasicDescription
+        if let magicCookie {
+            storeMagicCookie(magicCookie)
+        }
     }
 
     public var audioStreamBasicDescription: AudioStreamBasicDescription? {

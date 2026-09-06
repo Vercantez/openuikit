@@ -1,0 +1,6 @@
+full/telephonymessagingkit/HostShims.swift
+full/telephonymessagingkit/MMS.swift
+full/telephonymessagingkit/RCSMessage.swift
+full/telephonymessagingkit/RCSService.swift
+full/telephonymessagingkit/SMS.swift
+full/telephonymessagingkit/TelephonyMessagingKit.swift

@@ -52,3 +52,28 @@ func testLookAtDistanceBillboard() {
     _ = repl.orientationOffset
     _ = avoid.occluderCategoryBitMask
 }
+
+func testReplicatorConstraintMath() {
+    let scene = SCNScene()
+    let target = SCNNode()
+    target.position = SCNVector3(3, 4, 5)
+    target.scale = SCNVector3(2, 2, 2)
+    target.eulerAngles = SCNVector3(0, Float.pi / 2, 0)
+    let follower = SCNNode()
+    scene.rootNode.addChildNode(target)
+    scene.rootNode.addChildNode(follower)
+    let repl = SCNReplicatorConstraint(target: target)
+    repl.replicatesPosition = true
+    repl.replicatesOrientation = true
+    repl.replicatesScale = true
+    repl.positionOffset = SCNVector3(1, 0, 0)
+    repl.scaleOffset = SCNVector3(0.5, 0.5, 0.5)
+    repl.orientationOffset = SCNQuaternion(x: 0, y: 0, z: 0, w: 1)
+    repl.influenceFactor = 1
+    follower.constraints = [repl]
+    follower.linux_advanceTime(0)
+    precondition(abs(follower.worldPosition.x - 4) < 1e-3)
+    precondition(abs(follower.worldPosition.y - 4) < 1e-3)
+    precondition(abs(follower.scale.x - 2.5) < 1e-3)
+    precondition(abs(follower.worldOrientation.y - target.worldOrientation.y) < 0.05)
+}

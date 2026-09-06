@@ -378,7 +378,7 @@ internal func atConvertPCM(
 }
 
 internal func atMixPCM(
-    inputs: [(format: ATASBD, bytes: UnsafeRawPointer, byteCount: Int)],
+    inputs: [(format: ATASBD, bytes: UnsafeRawPointer, byteCount: Int, gain: Float)],
     dest: ATASBD,
     output: UnsafeMutableRawPointer,
     outputByteCapacity: Int
@@ -426,12 +426,13 @@ internal func atMixPCM(
                     floating: dest.isFloat,
                     bigEndian: dest.isBigEndian
                 )
-                let incoming = atSampleToFloat(
+                var incoming = atSampleToFloat(
                     bytes: converted.withUnsafeBytes { $0.baseAddress!.advanced(by: offset) },
                     bits: Int(dest.mBitsPerChannel),
                     floating: dest.isFloat,
                     bigEndian: dest.isBigEndian
                 )
+                incoming *= input.gain
                 atFloatToSample(
                     existing + incoming,
                     dest: output.advanced(by: offset),

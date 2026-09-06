@@ -137,4 +137,98 @@ let unary = MPSUnaryImageKernel(device: device)
 unary.encode(commandBuffer: commandBuffer, sourceImage: image, destinationImage: image)
 precondition(MPSHostBoundary.lastRefusedAPI != nil)
 
+func mpsRuntimeUnorm(_ width: Int, _ height: Int, _ pixels: [UInt8]) -> MPSImage {
+    let runtimeImage = MPSImage(
+        device: device,
+        imageDescriptor: MPSImageDescriptor(channelFormat: .unorm8, width: width, height: height, featureChannels: 1)
+    )
+    pixels.withUnsafeBytes { raw in
+        runtimeImage.writeBytes(raw.baseAddress!, dataLayout: .HeightxWidthxFeatureChannels, imageIndex: 0)
+    }
+    return runtimeImage
+}
+func mpsRuntimeRead(_ runtimeImage: MPSImage) -> [UInt8] {
+    var out = [UInt8](repeating: 0, count: runtimeImage.width * runtimeImage.height)
+    out.withUnsafeMutableBytes { raw in
+        runtimeImage.readBytes(raw.baseAddress!, dataLayout: .HeightxWidthxFeatureChannels, imageIndex: 0)
+    }
+    return out
+}
+
+var identity: [Float] = [0, 0, 0, 0, 1, 0, 0, 0, 0]
+let conv = MPSImageConvolution(device: device, kernelWidth: 3, kernelHeight: 3, weights: &identity)
+conv.edgeMode = .zero
+let convSrc = mpsRuntimeUnorm(3, 3, [10, 20, 30, 40, 50, 60, 70, 80, 90])
+let convDst = mpsRuntimeUnorm(3, 3, Array(repeating: 0, count: 9))
+conv.encode(commandBuffer: commandBuffer, sourceImage: convSrc, destinationImage: convDst)
+precondition(mpsRuntimeRead(convDst) == [10, 20, 30, 40, 50, 60, 70, 80, 90])
+let clipped = mpsRuntimeUnorm(3, 3, Array(repeating: 7, count: 9))
+conv.clipRect = MTLRegion.make2D(1, 1, 1, 1)
+conv.offset = MPSOffset(x: 1, y: 1, z: 0)
+conv.encode(commandBuffer: commandBuffer, sourceImage: convSrc, destinationImage: clipped)
+precondition(mpsRuntimeRead(clipped)[4] == 50)
+precondition(mpsRuntimeRead(clipped)[0] == 7)
+
+let layout = MPSImage(
+    device: device,
+    imageDescriptor: MPSImageDescriptor(channelFormat: .unorm8, width: 2, height: 2, featureChannels: 3)
+)
+let chw: [UInt8] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+chw.withUnsafeBytes { raw in
+    layout.writeBytes(raw.baseAddress!, dataLayout: .featureChannelsxHeightxWidth, imageIndex: 0)
+}
+var hwc = [UInt8](repeating: 0, count: 12)
+hwc.withUnsafeMutableBytes { raw in
+    layout.readBytes(raw.baseAddress!, dataLayout: .HeightxWidthxFeatureChannels, imageIndex: 0)
+}
+precondition(hwc[0] == 1 && hwc[1] == 5 && hwc[2] == 9)
+
+let softDesc = MPSMatrixDescriptor(rows: 1, columns: 3, rowBytes: 12, dataType: .float32)
+let softIn = MPSMatrix(device: device, descriptor: softDesc)
+let softOut = MPSMatrix(device: device, descriptor: softDesc)
+let sp = softIn.data.contents.bindMemory(to: Float.self, capacity: 3)
+sp[0] = 1; sp[1] = 2; sp[2] = 3
+let softmax = MPSMatrixSoftMax(device: device)
+softmax.sourceRows = 1
+softmax.sourceColumns = 3
+softmax.encode(commandBuffer: commandBuffer, inputMatrix: softIn, resultMatrix: softOut)
+let so = softOut.data.contents.bindMemory(to: Float.self, capacity: 3)
+precondition(abs(so[0] + so[1] + so[2] - 1) < 0.0001)
+precondition(so[2] > so[1] && so[1] > so[0])
+
+let cnnDesc = MPSCNNConvolutionDescriptor(
+    kernelWidth: 1,
+    kernelHeight: 1,
+    inputFeatureChannels: 1,
+    outputFeatureChannels: 1
+)
+precondition(cnnDesc.kernelWidth == 1)
+var cnnWeights: [Float] = [1]
+var cnnBias: [Float] = [0]
+let cnn = MPSCNNConvolution(
+    device: device,
+    convolutionDescriptor: cnnDesc,
+    kernelWeights: &cnnWeights,
+    biasTerms: &cnnBias,
+    flags: .none
+)
+MPSHostBoundary.reset()
+cnn.encode(commandBuffer: commandBuffer, sourceImage: convSrc, destinationImage: convDst)
+precondition(MPSHostBoundary.lastRefusedAPI != nil)
+
+let rays = MPSRayIntersector(device: device)
+rays.cullMode = .back
+MPSHostBoundary.reset()
+rays.encodeIntersection(
+    commandBuffer: commandBuffer,
+    intersectionType: .nearest,
+    rayBuffer: device.makeBuffer(length: 64),
+    rayBufferOffset: 0,
+    intersectionBuffer: device.makeBuffer(length: 64),
+    intersectionBufferOffset: 0,
+    rayCount: 1,
+    accelerationStructure: MPSAccelerationStructure(device: device)
+)
+precondition(MPSHostBoundary.lastRefusedAPI != nil)
+
 print("METALPERFORMANCESHADERS_AGENT_RUNTIME_OK")

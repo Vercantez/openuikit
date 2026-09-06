@@ -114,6 +114,24 @@ func testExportPresetConstants() {
     precondition(AVAssetExportPreset1280x720 == "AVAssetExportPreset1280x720")
     precondition(AVAssetExportPreset1920x1080 == "AVAssetExportPreset1920x1080")
     precondition(AVAssetExportPresetPassthrough == "AVAssetExportPresetPassthrough")
+    precondition(AVAssetExportPreset3840x2160 == "AVAssetExportPreset3840x2160")
+    precondition(AVAssetExportPreset640x480 == "AVAssetExportPreset640x480")
+    precondition(AVAssetExportPreset960x540 == "AVAssetExportPreset960x540")
+    precondition(AVAssetExportPresetAppleM4A == "AVAssetExportPresetAppleM4A")
+    precondition(AVAssetExportPresetAppleProRes422LPCM == "AVAssetExportPresetAppleProRes422LPCM")
+    precondition(AVAssetExportPresetAppleProRes4444LPCM == "AVAssetExportPresetAppleProRes4444LPCM")
+    precondition(AVAssetExportPresetHEVC1920x1080 == "AVAssetExportPresetHEVC1920x1080")
+    precondition(AVAssetExportPresetHEVC1920x1080WithAlpha == "AVAssetExportPresetHEVC1920x1080WithAlpha")
+    precondition(AVAssetExportPresetHEVC3840x2160 == "AVAssetExportPresetHEVC3840x2160")
+    precondition(AVAssetExportPresetHEVC3840x2160WithAlpha == "AVAssetExportPresetHEVC3840x2160WithAlpha")
+    precondition(AVAssetExportPresetHEVC4320x2160 == "AVAssetExportPresetHEVC4320x2160")
+    precondition(AVAssetExportPresetHEVC7680x4320 == "AVAssetExportPresetHEVC7680x4320")
+    precondition(AVAssetExportPresetHEVCHighestQuality == "AVAssetExportPresetHEVCHighestQuality")
+    precondition(AVAssetExportPresetHEVCHighestQualityWithAlpha == "AVAssetExportPresetHEVCHighestQualityWithAlpha")
+    precondition(AVAssetExportPresetMVHEVC1440x1440 == "AVAssetExportPresetMVHEVC1440x1440")
+    precondition(AVAssetExportPresetMVHEVC4320x4320 == "AVAssetExportPresetMVHEVC4320x4320")
+    precondition(AVAssetExportPresetMVHEVC7680x7680 == "AVAssetExportPresetMVHEVC7680x7680")
+    precondition(AVAssetExportPresetMVHEVC960x960 == "AVAssetExportPresetMVHEVC960x960")
 }
 
 func testExportSessionFailClosedAndCancel() {
@@ -272,12 +290,24 @@ func testCaptureDevicesEmptyAndLockFails() {
     do {
         try device.lockForConfiguration()
         preconditionFailure("lockForConfiguration must fail closed without capture hardware")
-    } catch let error as AVFoundationPortableError {
-        precondition(error == .mediaServiceUnavailable)
+    } catch let error as AVError {
+        precondition(error.code == .applicationIsNotAuthorizedToUseDevice)
     } catch {
         preconditionFailure("unexpected error \(error)")
     }
     device.unlockForConfiguration()
+    precondition(device.uniqueID.isEmpty)
+    precondition(device.modelID.isEmpty)
+    precondition(device.localizedName.isEmpty)
+    precondition(device.manufacturer.isEmpty)
+    precondition(!device.hasMediaType(.video))
+    precondition(!device.isConnected)
+    precondition(!device.supportsSessionPreset(.high))
+    precondition(!device.hasFlash)
+    precondition(!device.hasTorch)
+    precondition(device.torchLevel == 0)
+    precondition(device.formats.isEmpty)
+    precondition(device.position == .unspecified)
 }
 
 func testPlayerItemNotificationNames() {

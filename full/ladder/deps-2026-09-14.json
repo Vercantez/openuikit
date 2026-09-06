@@ -1,0 +1,4010 @@
+{
+ "Hackers": {
+  "in_tree": {
+   "Domain": 85,
+   "Shared": 47,
+   "DesignSystem": 19,
+   "Networking": 13,
+   "Data": 12,
+   "Comments": 6,
+   "Feed": 3,
+   "WhatsNew": 3,
+   "Authentication": 3,
+   "Settings": 2
+  },
+  "external": {
+   "SwiftSoup": 5,
+   "VariableBlur": 1
+  }
+ },
+ "NetNewsWire": {
+  "in_tree": {
+   "RSCore": 196,
+   "Account": 146,
+   "Articles": 114,
+   "RSWeb": 84,
+   "RSParser": 71,
+   "Images": 38,
+   "ActivityLog": 33,
+   "RSDatabase": 28,
+   "Secrets": 28,
+   "RSDatabaseObjC": 26,
+   "RSTree": 18,
+   "ArticlesDatabase": 17,
+   "ErrorLog": 16,
+   "CloudKitSync": 10,
+   "SyncDatabase": 10,
+   "FeedFinder": 7,
+   "HTMLMetadata": 6,
+   "NewsBlur": 5,
+   "CrashReporter": 2,
+   "RSCoreResources": 2,
+   "RSCoreObjC": 1
+  },
+  "external": {
+   "NetNewsWire": 12,
+   "Zip": 1,
+   "Sparkle": 1,
+   "Tidemark": 1
+  }
+ },
+ "ProtonMail-ios": {
+  "in_tree": {
+   "InboxCore": 283,
+   "InboxDesignSystem": 227,
+   "InboxCoreUI": 199,
+   "InboxTesting": 72,
+   "InboxSnapshotTesting": 53,
+   "InboxIAP": 45,
+   "InboxComposer": 40,
+   "InboxContacts": 28,
+   "InboxAttribution": 13,
+   "InboxRSVP": 9,
+   "InboxKeychain": 8,
+   "Lottie": 8,
+   "TestableShareExtension": 6,
+   "TestableNotificationService": 2,
+   "TryCatch": 1,
+   "InboxWebView": 1
+  },
+  "external": {
+   "proton_app_uniffi": 533,
+   "ProtonUIFoundations": 128,
+   "ProtonMail": 124,
+   "PaymentsNG": 21,
+   "AccountLogin": 7,
+   "Sentry": 5,
+   "SnapshotTesting": 5,
+   "AccountManager": 4,
+   "SwiftUIIntrospect": 4,
+   "ProtonCoreUtilities": 4,
+   "ViewInspector": 3,
+   "AdAttributionKit": 3,
+   "Scrypt": 2,
+   "AccountPassword": 2,
+   "PaymentsUI": 2,
+   "AccountChallenge": 2
+  }
+ },
+ "Signal-iOS": {
+  "in_tree": {
+   "SignalServiceKit": 1098,
+   "SignalUI": 513,
+   "Signal": 54,
+   "Lottie": 25,
+   "WiFiAware": 6
+  },
+  "external": {
+   "LibSignalClient": 417,
+   "GRDB": 183,
+   "SignalRingRTC": 59,
+   "SwiftProtobuf": 14,
+   "BonMot": 13,
+   "WebRTC": 11,
+   "SDWebImage": 10,
+   "MobileCoin": 10,
+   "PureLayout": 9,
+   "CocoaLumberjack": 5,
+   "SDWebImageWebPCoder": 2,
+   "blurhash": 1,
+   "libPhoneNumber_iOS": 1,
+   "LibMobileCoin": 1,
+   "Logging": 1,
+   "DeviceDiscoveryUI": 1
+  }
+ },
+ "Telegram-iOS": {
+  "in_tree": {
+   "Display": 1949,
+   "SwiftSignalKit": 1888,
+   "TelegramCore": 1518,
+   "TelegramPresentationData": 1459,
+   "AsyncDisplayKit": 1356,
+   "AccountContext": 1283,
+   "ComponentFlow": 813,
+   "Postbox": 755,
+   "TelegramUIPreferences": 471,
+   "PresentationDataUtils": 433,
+   "AppBundle": 366,
+   "MultilineTextComponent": 336,
+   "TextFormat": 336,
+   "TelegramApi": 330,
+   "ContextUI": 305,
+   "TelegramStringFormatting": 303,
+   "ItemListUI": 295,
+   "RichTextEditorCore": 256,
+   "BundleIconComponent": 242,
+   "UndoUI": 235,
+   "ComponentDisplayAdapters": 202,
+   "Markdown": 200,
+   "MtProtoKit": 191,
+   "AvatarNode": 190,
+   "RichTextEditorUIKit": 173,
+   "ViewControllerComponent": 170,
+   "LegacyComponents": 147,
+   "GlassBackgroundComponent": 142,
+   "ChatPresentationInterfaceState": 141,
+   "ChatControllerInteraction": 126,
+   "ButtonComponent": 124,
+   "PhotoResources": 109,
+   "LottieComponent": 102,
+   "AnimationCache": 101,
+   "GlassBarButtonComponent": 98,
+   "TelegramNotices": 96,
+   "AnimatedStickerNode": 92,
+   "MultiAnimationRenderer": 90,
+   "EmojiStatusComponent": 87,
+   "TelegramAnimatedStickerNode": 85,
+   "BalancedTextComponent": 84,
+   "PlainButtonComponent": 84,
+   "AlertUI": 82,
+   "MergeLists": 79,
+   "ChatMessageItemCommon": 74,
+   "OverlayStatusController": 73,
+   "WallpaperBackgroundNode": 70,
+   "TextNodeWithEntities": 70,
+   "ShimmerEffect": 67,
+   "AlertComponent": 66,
+   "ListSectionComponent": 65,
+   "LocalizedPeerData": 65,
+   "EdgeEffect": 64,
+   "StickerResources": 59,
+   "PremiumUI": 59,
+   "SheetComponent": 58,
+   "MediaEditor": 57,
+   "PhoneNumberFormat": 56,
+   "CheckNode": 54,
+   "MediaResources": 53,
+   "EntityKeyboard": 52,
+   "DeviceAccess": 52,
+   "TooltipUI": 52,
+   "RadialStatusNode": 50,
+   "ReactionSelectionNode": 50,
+   "ActivityIndicator": 50,
+   "EmojiTextAttachmentView": 50,
+   "AnimatedTextComponent": 47,
+   "UIKitRuntimeUtils": 47,
+   "UrlEscaping": 46,
+   "GalleryUI": 46,
+   "ListActionItemComponent": 45,
+   "TDShim": 44,
+   "ChatMessageBubbleContentNode": 44,
+   "LegacyMediaPickerUI": 43,
+   "SearchUI": 42,
+   "ItemListPeerItem": 40,
+   "HierarchyTrackingLayer": 40,
+   "ChatMessageItemView": 40,
+   "SearchBarNode": 39,
+   "ItemListPeerActionItem": 38,
+   "SolidRoundedButtonNode": 37,
+   "TelegramAudio": 37,
+   "ChatListUI": 36,
+   "TelegramUniversalVideoContent": 35,
+   "InstantPageUI": 34,
+   "AttachmentUI": 34,
+   "LegacyUI": 33,
+   "Pasteboard": 33,
+   "TelegramCallsUI": 32,
+   "TranslateUI": 31,
+   "OpenInExternalAppUI": 31,
+   "RangeSet": 30,
+   "GZip": 30,
+   "MultilineTextWithEntitiesComponent": 30,
+   "UrlHandling": 30,
+   "FlatBuffers": 30,
+   "FlatSerialization": 30,
+   "ChatEntityKeyboardInputNode": 29,
+   "StoryContainerScreen": 29,
+   "ChatInterfaceState": 29,
+   "ChatMessageDateAndStatusNode": 29,
+   "StickerPackPreviewUI": 28,
+   "GiftItemComponent": 28,
+   "TelegramVoip": 27,
+   "WallpaperResources": 27,
+   "TextFieldComponent": 27,
+   "InvisibleInkDustNode": 26,
+   "SaveToCameraRoll": 26,
+   "ManagedAnimationNode": 26,
+   "TextSelectionNode": 26,
+   "AvatarComponent": 25,
+   "Emoji": 25,
+   "LocationUI": 25,
+   "ListItemComponentAdaptor": 25,
+   "InviteLinksUI": 24,
+   "LocalMediaResources": 24,
+   "PeerInfoUI": 24,
+   "ChatListSearchItemHeader": 23,
+   "SettingsUI": 23,
+   "MetalEngine": 22,
+   "BlurredBackgroundComponent": 22,
+   "ProgressNavigationButtonNode": 22,
+   "ShareController": 22,
+   "LottieAnimationComponent": 22,
+   "ChatListHeaderComponent": 22,
+   "PagerComponent": 22,
+   "AnimatedCountLabelNode": 22,
+   "ChatSendMessageActionUI": 22,
+   "CountrySelectionUI": 21,
+   "WallpaperGalleryScreen": 21,
+   "MediaPickerUI": 21,
+   "ChatMessageItem": 21,
+   "AnimationUI": 20,
+   "ChatTimerScreen": 20,
+   "FFMpegBinding": 20,
+   "MediaEditorScreen": 20,
+   "PremiumStarComponent": 19,
+   "ResizableSheetComponent": 19,
+   "ImageBlur": 19,
+   "ChatContextQuery": 19,
+   "TelegramIntents": 18,
+   "ContactsPeerItem": 18,
+   "ManagedFile": 18,
+   "TelegramBaseController": 18,
+   "PeerAvatarGalleryUI": 18,
+   "ConfettiEffect": 17,
+   "PeerListItemComponent": 17,
+   "AnimatedAvatarSetNode": 17,
+   "WebsiteType": 17,
+   "ChatTitleView": 17,
+   "StorageUsageScreen": 16,
+   "QrCodeUI": 16,
+   "ImageTransparency": 16,
+   "LocationResources": 16,
+   "ChatMessageBubbleItemNode": 16,
+   "GalleryData": 16,
+   "RLottieBinding": 15,
+   "TableComponent": 15,
+   "PasswordSetupUI": 15,
+   "FeaturedStickersScreen": 15,
+   "DeviceLocationManager": 15,
+   "FastBlur": 15,
+   "GlassControls": 15,
+   "AudioWaveform": 15,
+   "Speak": 15,
+   "PeerPresenceStatusManager": 15,
+   "TemporaryCachedPeerDataManager": 15,
+   "OldChannelsController": 15,
+   "StickerPeekUI": 15,
+   "ChatMessageItemImpl": 15,
+   "ChatHistoryEntry": 15,
+   "ChatScheduleTimeController": 15,
+   "PeerInfoPaneNode": 15,
+   "WebUI": 15,
+   "AvatarEditorScreen": 14,
+   "PeerInfoVisualMediaPaneNode": 14,
+   "SSignalKit": 14,
+   "ChatRichTextEditorComposer": 14,
+   "UrlWhitelist": 14,
+   "TelegramPermissionsUI": 14,
+   "TopMessageReactions": 14,
+   "ChatInputPanelNode": 14,
+   "ICloudResources": 14,
+   "MoreHeaderButton": 14,
+   "StatisticsUI": 14,
+   "DeleteChatPeerActionSheetItem": 14,
+   "InAppPurchaseManager": 13,
+   "ListMessageItem": 13,
+   "BotPaymentsUI": 13,
+   "HashtagSearchUI": 13,
+   "ChatInputContextPanelNode": 13,
+   "ChatTextLinkEditUI": 13,
+   "WebPBinding": 12,
+   "PersistentStringHash": 12,
+   "WallpaperGridScreen": 12,
+   "Camera": 12,
+   "AttachmentTextInputPanelNode": 12,
+   "TabSelectorComponent": 12,
+   "ChatMessagePaymentAlertController": 12,
+   "ChatEmptyNode": 12,
+   "ChatMessageAnimatedStickerItemNode": 12,
+   "LegacyChatHeaderPanelComponent": 12,
+   "PeerNameColorScreen": 11,
+   "Geocoding": 11,
+   "ListSectionHeaderNode": 11,
+   "ImageCompression": 11,
+   "GradientBackground": 11,
+   "AlertTransferHeaderComponent": 11,
+   "ContactListUI": 11,
+   "PromptUI": 11,
+   "PeerInfoAvatarListNode": 11,
+   "MessageInputPanelComponent": 11,
+   "ChatMessagePollBubbleContentNode": 11,
+   "ChatAvatarNavigationNode": 11,
+   "ReplyAccessoryPanelNode": 11,
+   "PeerInfoScreen": 11,
+   "NotificationPeerExceptionController": 10,
+   "AuthorizationUtils": 10,
+   "AccountUtils": 10,
+   "AlertInputFieldComponent": 10,
+   "YuvConversion": 10,
+   "SemanticStatusNode": 10,
+   "CryptoUtils": 10,
+   "ScreenCaptureDetection": 10,
+   "GiftAnimationComponent": 10,
+   "PeerSelectionController": 10,
+   "GlobalControlPanelsContext": 10,
+   "VolumeButtons": 10,
+   "ChatNavigationButton": 10,
+   "ChatMediaInputStickerGridItem": 10,
+   "PeerReportScreen": 10,
+   "CalendarMessageScreen": 10,
+   "BrowserUI": 10,
+   "ReactionListContextMenuContent": 10,
+   "CallScreen": 9,
+   "LottieCpp": 9,
+   "SliderComponent": 9,
+   "ItemListAvatarAndNameInfoItem": 9,
+   "HexColor": 9,
+   "ChatMessageBackground": 9,
+   "MediaAssetsContext": 9,
+   "GridMessageSelectionNode": 9,
+   "GiftViewScreen": 9,
+   "BatchVideoRendering": 9,
+   "CheckComponent": 9,
+   "MediaPasteboardUI": 9,
+   "BuildConfig": 8,
+   "ScrollComponent": 8,
+   "AvatarStoryIndicatorComponent": 8,
+   "EmojiStatusSelectionComponent": 8,
+   "InstantPageCache": 8,
+   "ShareWithPeersScreen": 8,
+   "NotificationSoundSelectionUI": 8,
+   "DeviceModel": 8,
+   "CounterControllerTitleView": 8,
+   "DirectMediaImageCache": 8,
+   "TinyThumbnail": 8,
+   "SegmentedControlNode": 8,
+   "MusicAlbumArtResources": 8,
+   "GraphCore": 8,
+   "DrawingUI": 8,
+   "StarsAvatarComponent": 8,
+   "TextProcessingScreen": 8,
+   "VoiceChatActionButton": 8,
+   "AudioBlob": 8,
+   "ChatMessageAttachedContentNode": 8,
+   "MapResourceToAvatarSizes": 8,
+   "GameUI": 8,
+   "VideoMessageCameraScreen": 8,
+   "RaiseToListen": 8,
+   "CallsEmoji": 8,
+   "LocalAuth": 7,
+   "PassportUI": 7,
+   "PeerNameColorItem": 7,
+   "AlertCheckComponent": 7,
+   "MosaicLayout": 7,
+   "EncryptionProvider": 7,
+   "TelegramPermissions": 7,
+   "GenerateStickerPlaceholderImage": 7,
+   "MurMurHash32": 7,
+   "ObjCRuntimeUtils": 7,
+   "ChatInputTextNode": 7,
+   "MoreButtonNode": 7,
+   "DirectionalPanGesture": 7,
+   "AvatarVideoNode": 7,
+   "LiveLocationTimerNode": 7,
+   "ListMultilineTextFieldItemComponent": 7,
+   "PeerInfoCoverComponent": 7,
+   "MessageInlineBlockBackgroundView": 7,
+   "DeviceProximity": 7,
+   "TextLoadingEffect": 7,
+   "AccessoryPanelNode": 7,
+   "CameraScreen": 7,
+   "LottieAnimationCache": 6,
+   "OpenSSLEncryptionProvider": 6,
+   "SolidRoundedButtonComponent": 6,
+   "PremiumPeerShortcutComponent": 6,
+   "PhoneInputNode": 6,
+   "AuthorizationUI": 6,
+   "ItemListStickerPackItem": 6,
+   "ReactionImageComponent": 6,
+   "PeerInfoStoryGridScreen": 6,
+   "DynamicCornerRadiusView": 6,
+   "LottieComponentResourceContent": 6,
+   "LiquidLens": 6,
+   "HorizontalTabsComponent": 6,
+   "SoftwareVideo": 6,
+   "ChatListTitleView": 6,
+   "ZipArchive": 6,
+   "AnimatedStickerComponent": 6,
+   "SendInviteLinkScreen": 6,
+   "AdsReportScreen": 6,
+   "ToastComponent": 6,
+   "DebugSettingsUI": 6,
+   "AppLock": 6,
+   "ListTextFieldItemComponent": 6,
+   "BalanceNeededScreen": 6,
+   "PeerMessagesMediaPlaylist": 6,
+   "MergedAvatarsNode": 6,
+   "CameraButtonComponent": 6,
+   "StarsBalanceOverlayComponent": 6,
+   "ChatMessageTransitionNode": 6,
+   "ChatInputAccessoryPanel": 6,
+   "ChatMessageInteractiveMediaBadge": 6,
+   "ChatTextInputPanelNode": 6,
+   "BottomButtonPanelComponent": 6,
+   "ChatMessageNotificationItem": 6,
+   "ChatFolderLinkPreviewScreen": 6,
+   "LottieMetal": 5,
+   "WidgetItems": 5,
+   "OpusKit": 5,
+   "PremiumCoinComponent": 5,
+   "RoundedRectWithTailPath": 5,
+   "SegmentControlComponent": 5,
+   "TabSelectionRecognizer": 5,
+   "ImageObjectSeparation": 5,
+   "Tuples": 5,
+   "FileMediaResourceStatus": 5,
+   "SearchInputPanelComponent": 5,
+   "ReactionButtonListComponent": 5,
+   "DCTMultiAnimationRendererImpl": 5,
+   "Stripe": 5,
+   "BoostLevelIconComponent": 5,
+   "StarsWithdrawalScreen": 5,
+   "SliderContextItem": 5,
+   "SaveProgressScreen": 5,
+   "AdsInfoScreen": 5,
+   "SwitchComponent": 5,
+   "ContextControllerImpl": 5,
+   "AttachmentFileController": 5,
+   "GifVideoLayer": 5,
+   "ChatMessageInteractiveMediaNode": 5,
+   "WallpaperPreviewMedia": 5,
+   "ShimmeringLinkNode": 5,
+   "StoryLiveChatMessageComponent": 5,
+   "ChatMessageReplyInfoNode": 5,
+   "ChatMessageSelectionNode": 5,
+   "ChatMessageForwardInfoNode": 5,
+   "StarsParticleEffect": 5,
+   "EmojiSuggestionsComponent": 5,
+   "ListComposePollOptionComponent": 5,
+   "AlertTableComponent": 5,
+   "ForumCreateTopicScreen": 5,
+   "ChatTitleActivityNode": 5,
+   "AppLockState": 4,
+   "RLottieKit": 4,
+   "LegacyImpl": 4,
+   "EmojiActionIconComponent": 4,
+   "PeerTableCellComponent": 4,
+   "ThemeAccentColorScreen": 4,
+   "PeerSelectionScreen": 4,
+   "CallListUI": 4,
+   "FaceScanScreen": 4,
+   "DustEffect": 4,
+   "SelectablePeerNode": 4,
+   "PeerOnlineMarkerNode": 4,
+   "SwitchNode": 4,
+   "ItemListAddressItem": 4,
+   "ChatListFilterSettingsHeaderItem": 4,
+   "AvatarBackground": 4,
+   "SparseItemGrid": 4,
+   "GraphUI": 4,
+   "NavigationStackComponent": 4,
+   "RasterizedCompositionComponent": 4,
+   "AdUI": 4,
+   "PeerAllowedReactionsScreen": 4,
+   "ListItemSliderSelectorComponent": 4,
+   "PremiumLockButtonSubtitleComponent": 4,
+   "LegacyInstantVideoController": 4,
+   "ChatMessageAttachedContentButtonNode": 4,
+   "AudioTranscriptionButtonComponent": 4,
+   "InteractiveTextComponent": 4,
+   "ChatMessageInteractiveFileNode": 4,
+   "ChatMessageReactionsFooterContentNode": 4,
+   "ChatMessageSwipeToReplyNode": 4,
+   "ChatMessageActionButtonsNode": 4,
+   "ChatMessageDeliveryFailedNode": 4,
+   "ChatMessageShareButton": 4,
+   "ChatSwipeToReplyRecognizer": 4,
+   "ChatTextInputMediaRecordingButton": 4,
+   "ChatInputNode": 4,
+   "EntityKeyboardGifContent": 4,
+   "MultiplexedVideoNode": 4,
+   "HeaderPanelContainerComponent": 4,
+   "LegacyCamera": 4,
+   "InfoParagraphComponent": 4,
+   "ChatThemeScreen": 4,
+   "CreateExternalMediaStreamScreen": 4,
+   "ItemListVenueItem": 4,
+   "TgVoipWebrtc": 4,
+   "DCTAnimationCacheImpl": 3,
+   "VideoAnimationCache": 3,
+   "WebPKit": 3,
+   "ThemeCarouselItem": 3,
+   "PasskeysScreen": 3,
+   "MessagePriceItem": 3,
+   "PasscodeUI": 3,
+   "StickerPickerScreen": 3,
+   "MonotonicTime": 3,
+   "Pdf": 3,
+   "TextInputMenu": 3,
+   "LegacyMessageInputPanel": 3,
+   "LegacyMessageInputPanelInputView": 3,
+   "MinimizedContainer": 3,
+   "ActivityIndicatorComponent": 3,
+   "OwnershipTransferController": 3,
+   "EncryptionKeyVisualization": 3,
+   "AnimationCompression": 3,
+   "MetalImageView": 3,
+   "StickerPackEditTitleController": 3,
+   "ImageContentAnalysis": 3,
+   "QrCode": 3,
+   "ContextReferenceButtonComponent": 3,
+   "Svg": 3,
+   "ChatHistorySearchContainerNode": 3,
+   "AlertMultilineInputFieldComponent": 3,
+   "DatePickerNode": 3,
+   "SettingsThemeWallpaperNode": 3,
+   "BackButtonComponent": 3,
+   "ListItemSwipeOptionContainer": 3,
+   "GiftLoadingShimmerView": 3,
+   "AnimatableProperty": 3,
+   "ChatSendButtonRadialStatusNode": 3,
+   "ForwardInfoPanelComponent": 3,
+   "MediaScrubberComponent": 3,
+   "ChatMessageStickerItemNode": 3,
+   "AudioWaveformComponent": 3,
+   "ChatMessageSuggestedPostInfoNode": 3,
+   "ChatMessageThreadInfoNode": 3,
+   "ChatMessageTextBubbleContentNode": 3,
+   "CompositeTextNode": 3,
+   "AdminUserActionsSheet": 3,
+   "JoinLinkPreviewUI": 3,
+   "ChatLoadingNode": 3,
+   "ChatMessageInteractiveInstantVideoNode": 3,
+   "RankChatPreviewItem": 3,
+   "AsyncListComponent": 3,
+   "TextBadgeComponent": 3,
+   "ComposePollScreen": 3,
+   "RichTextEditorMediaView": 3,
+   "StoryPeerListComponent": 3,
+   "ForwardAccessoryPanelNode": 3,
+   "ChatListFilterTabContainerNode": 3,
+   "SubcodecObjC": 3,
+   "PeerNameTextComponent": 3,
+   "LokiRng": 3,
+   "ChatSendStarsScreen": 3,
+   "ProfileLevelRatingBarComponent": 3,
+   "TokenListTextField": 3,
+   "ChatMessageSelectionInputPanelNode": 3,
+   "BirthdayPickerScreen": 3,
+   "PostSuggestionsSettingsScreen": 3,
+   "FetchManagerImpl": 3,
+   "ChatListSearchRecentPeersNode": 3,
+   "LottieSwift": 2,
+   "SoftwareLottieRenderer": 2,
+   "ConvertOpusToAAC": 2,
+   "NotificationsPresentationData": 2,
+   "WidgetItemsUtils": 2,
+   "COpus": 2,
+   "COgg": 2,
+   "TelegramUI": 2,
+   "MozjpegBinding": 2,
+   "ItemListDatePickerItem": 2,
+   "ThemeSettingsThemeItem": 2,
+   "HorizontalPeerItem": 2,
+   "QuickReactionSetupController": 2,
+   "GenerateThemeName": 2,
+   "Sunrise": 2,
+   "ChatbotSetupScreen": 2,
+   "StorySetIndicatorComponent": 2,
+   "PlatformRestrictionMatching": 2,
+   "ShimmeringMask": 2,
+   "LiveLocationPositionNode": 2,
+   "ShareItemsImpl": 2,
+   "StringTransliteration": 2,
+   "sqlcipher": 2,
+   "Crc32": 2,
+   "DarwinDirStat": 2,
+   "TouchDownGesture": 2,
+   "MimeTypes": 2,
+   "PasscodeInputFieldNode": 2,
+   "NetworkLogging": 2,
+   "NotificationMuteSettingsUI": 2,
+   "SlotMachineAnimationNode": 2,
+   "TabBarComponent": 2,
+   "DctHuffman": 2,
+   "SectionHeaderItem": 2,
+   "AuthConfirmationScreen": 2,
+   "BadgeComponent": 2,
+   "SectionTitleContextItem": 2,
+   "AlertWebpagePreviewComponent": 2,
+   "ImageDCT": 2,
+   "ContextMenuScreen": 2,
+   "NavigationBarImpl": 2,
+   "TelegramUIDeclareEncodables": 2,
+   "TelegramAccountAuxiliaryMethods": 2,
+   "QuickReplyNameAlertController": 2,
+   "CollectionTabItemComponent": 2,
+   "ListSwitchItemComponent": 2,
+   "Weather": 2,
+   "AudioTranscriptionPendingIndicatorComponent": 2,
+   "StreamingTextReveal": 2,
+   "PremiumAlertController": 2,
+   "ChatMessageWebpageBubbleContentNode": 2,
+   "ChatMessageMediaBubbleContentNode": 2,
+   "ManagedDiceAnimationNode": 2,
+   "ChatMessageInstantVideoItemNode": 2,
+   "LanguageLinkPreviewUI": 2,
+   "ChatRecordingViewOnceButtonNode": 2,
+   "VideoChatMicButtonComponent": 2,
+   "InstantVideoRadialStatusNode": 2,
+   "PollBubbleTimerNode": 2,
+   "AnimatedCounterComponent": 2,
+   "AccountPeerContextItem": 2,
+   "CommunityEditScreen": 2,
+   "CommunityPrivateChatScreen": 2,
+   "GiftOptionsScreen": 2,
+   "MiniAppListScreen": 2,
+   "StarsImageComponent": 2,
+   "ItemShimmeringLoadingComponent": 2,
+   "MeshTransform": 2,
+   "StoryFooterPanelComponent": 2,
+   "ChatSendAsContextMenu": 2,
+   "StoryStealthModeSheetScreen": 2,
+   "MessageInputActionButtonComponent": 2,
+   "SearchPeerMembers": 2,
+   "GiftRemainingCountComponent": 2,
+   "GiftSetupScreen": 2,
+   "GiftStoreScreen": 2,
+   "AnimatedNavigationStripeNode": 2,
+   "MarqueeComponent": 2,
+   "NotificationExceptionsScreen": 2,
+   "ActionSheetPeerItem": 2,
+   "PeerInfoChatListPaneNode": 2,
+   "PeerInfoChatPaneNode": 2,
+   "ChatSendAudioMessageContextPreview": 2,
+   "SavedTagNameAlertController": 2,
+   "ChatSideTopicsPanel": 2,
+   "ProxyServerPreviewScreen": 2,
+   "CreateBotScreen": 2,
+   "SuggestPostAccessoryPanelNode": 2,
+   "RichTextAttachmentScreen": 2,
+   "AutomaticBusinessMessageSetupScreen": 2,
+   "ChatOverscrollControl": 2,
+   "LiveLocationHeaderPanelComponent": 2,
+   "ChatRecentActionsController": 2,
+   "ChatSearchNavigationContentNode": 2,
+   "MediaPlaybackHeaderPanelComponent": 2,
+   "QuickShareScreen": 2,
+   "EditableTokenListNode": 2,
+   "libphonenumber": 2,
+   "ActionPanelComponent": 2,
+   "ArchiveInfoScreen": 2,
+   "LibYuvBinding": 2,
+   "QOILoader": 1,
+   "WebPCore": 1,
+   "COpusHelpers": 1,
+   "RLottieCore": 1,
+   "BroadcastUploadHelpers": 1,
+   "ShareExtensionContext": 1,
+   "RingBuffer": 1,
+   "OverlayStatusControllerImpl": 1,
+   "SwiftMath": 1,
+   "ShelfPack": 1,
+   "libprisma": 1,
+   "Reachability": 1,
+   "CloudData": 1,
+   "SinglePhoneInputNode": 1,
+   "CreditCardInputComponent": 1,
+   "TextInputComponent": 1,
+   "PrefixSectionGroupComponent": 1,
+   "EncryptionKeyVisualizationImpl": 1,
+   "RaiseToListenImpl": 1,
+   "LegacyReachability": 1,
+   "SwipeToDismissGesture": 1,
+   "VideoPlaybackControlsComponent": 1,
+   "CodeInputView": 1,
+   "RMIntro": 1,
+   "NumberPluralizationForm": 1,
+   "ShareItems": 1,
+   "ChatImportUI": 1,
+   "GroupStickerPackSetupController": 1,
+   "TimezoneSelectionScreen": 1,
+   "VolumeSliderContextItem": 1,
+   "LocalAudioTranscription": 1,
+   "ChatMessageContactBubbleContentNode": 1,
+   "ChatMessageCallBubbleContentNode": 1,
+   "ChatMessageGiveawayBubbleContentNode": 1,
+   "ChatMessageBirthdateSuggestionContentNode": 1,
+   "ChatMessageWallpaperBubbleContentNode": 1,
+   "ChatMessageActionBubbleContentNode": 1,
+   "ChatMessageGameBubbleContentNode": 1,
+   "ChatMessageInvoiceBubbleContentNode": 1,
+   "ChatMessageGiftBubbleContentNode": 1,
+   "ChatMessageRichDataBubbleContentNode": 1,
+   "ChatMessageStoryMentionContentNode": 1,
+   "ChatMessageFactCheckBubbleContentNode": 1,
+   "ChatMessageRestrictedBubbleContentNode": 1,
+   "ChatMessageJoinedChannelBubbleContentNode": 1,
+   "ChatMessageGiftOfferBubbleContentNode": 1,
+   "ChatMessageInstantVideoBubbleContentNode": 1,
+   "ChatMessageProfilePhotoSuggestionContentNode": 1,
+   "ChatMessageDisableCopyProtectionBubbleContentNode": 1,
+   "ChatMessageFileBubbleContentNode": 1,
+   "ChatMessageCommentFooterContentNode": 1,
+   "ChatMessageEventLogPreviousMessageContentNode": 1,
+   "ChatMessageMapBubbleContentNode": 1,
+   "ChatMessageUnlockMediaNode": 1,
+   "ChatMessageCommunityChangedBubbleContentNode": 1,
+   "ChatMessageTodoBubbleContentNode": 1,
+   "ChatMessageUnsupportedBubbleContentNode": 1,
+   "ChatMessageStarsMediaInfoNode": 1,
+   "ChatMessageEventLogPreviousDescriptionContentNode": 1,
+   "ChatMessageEventLogPreviousLinkContentNode": 1,
+   "MessageHaptics": 1,
+   "AudioWaveformNode": 1,
+   "ChatTextInputSlowmodePlaceholderNode": 1,
+   "ChatRecordingPreviewInputPanelNode": 1,
+   "ChatTextInputAudioRecordingTimeNode": 1,
+   "ChatTextInputAudioRecordingCancelIndicator": 1,
+   "EditableChatTextNode": 1,
+   "ChatTextInputActionButtonsNode": 1,
+   "ChatInputAutocompletePanel": 1,
+   "MaskedContainerComponent": 1,
+   "ChatInstantVideoMessageDurationNode": 1,
+   "ChatInputTextViewImpl": 1,
+   "FetchAudioMediaResource": 1,
+   "FetchVideoMediaResource": 1,
+   "LensTransition": 1,
+   "PremiumDiamondComponent": 1,
+   "StoryQualityUpgradeSheetScreen": 1,
+   "OptionButtonComponent": 1,
+   "NavigationSearchComponent": 1,
+   "TranslationLanguagesContextMenuContent": 1,
+   "SubcodecAnimationCacheImpl": 1,
+   "MeshTransformApi": 1,
+   "TooltipComponent": 1,
+   "LottieComponentEmojiContent": 1,
+   "AlertPeerComponent": 1,
+   "GiftUnpinScreen": 1,
+   "LanguageSelectionScreen": 1,
+   "EmptyStateIndicatorComponent": 1,
+   "ProfileLevelInfoScreen": 1,
+   "PeerInfoRatingComponent": 1,
+   "MultiScaleTextNode": 1,
+   "VerifyAlertController": 1,
+   "PaymentMethodUI": 1,
+   "TelegramUpdateUI": 1,
+   "ImportStickerPackUI": 1,
+   "ChatShareMessageTagView": 1,
+   "ChatInputMessageAccessoryPanel": 1,
+   "RichTextEditorMessageConversion": 1,
+   "ComposeTodoScreen": 1,
+   "PremiumGiftAttachmentScreen": 1,
+   "ChatContextResultPeekContent": 1,
+   "TranslateHeaderPanelComponent": 1,
+   "ChatInlineSearchResultsListComponent": 1,
+   "SpaceWarpView": 1,
+   "ChatInputPanelContainer": 1,
+   "GroupCallHeaderPanelComponent": 1,
+   "AdPanelHeaderPanelComponent": 1,
+   "MessageFeeHeaderPanelComponent": 1,
+   "ChatAgeRestrictionAlertController": 1,
+   "SuggestedPostApproveAlert": 1,
+   "OpusBinding": 1,
+   "SavedMessagesScreen": 1,
+   "EmojiGameStakeScreen": 1,
+   "TabBarUI": 1,
+   "ContactsHelper": 1,
+   "BusinessLinkNameAlertController": 1,
+   "AccountFreezeInfoScreen": 1,
+   "JoinSubjectScreen": 1,
+   "AffiliateProgramSetupScreen": 1,
+   "ChatRankInfoScreen": 1,
+   "PeerCopyProtectionInfoScreen": 1,
+   "ChatParticipantRightsScreen": 1,
+   "CollectibleItemInfoScreen": 1,
+   "ChatQrCodeScreen": 1,
+   "NewContactScreen": 1,
+   "StarsTransactionsScreen": 1,
+   "CocoonInfoScreen": 1,
+   "BotSettingsScreen": 1,
+   "OpenUserGeneratedUrl": 1,
+   "CommunityAddScreen": 1,
+   "GiftDemoScreen": 1,
+   "StarsIntroScreen": 1,
+   "PollStatsScreen": 1,
+   "StarsTransactionScreen": 1,
+   "BusinessHoursSetupScreen": 1,
+   "GiftCraftScreen": 1,
+   "ContentReportScreen": 1,
+   "CommunityViewScreen": 1,
+   "BusinessLocationSetupScreen": 1,
+   "CommunitiesScreen": 1,
+   "StarsTransferScreen": 1,
+   "StarsPurchaseScreen": 1,
+   "ForumSettingsScreen": 1,
+   "BusinessIntroSetupScreen": 1,
+   "CommunityRequestsScreen": 1,
+   "BuildConfigExtra": 1,
+   "ChatButtonKeyboardInputNode": 1,
+   "ChatBotInfoItem": 1,
+   "ChatUserInfoItem": 1,
+   "ChatNewThreadInfoItem": 1,
+   "LiveLocationManager": 1,
+   "ChatChannelSubscriberInputPanelNode": 1,
+   "FactCheckAlertController": 1,
+   "ChatListHeaderNoticeComponent": 1,
+   "AvatarUploadToastScreen": 1,
+   "AlertHeaderComponent": 1,
+   "ProgressIndicatorComponent": 1,
+   "LanguageSuggestionUI": 1,
+   "ChatListSearchFiltersContainerNode": 1,
+   "NewSessionInfoScreen": 1,
+   "TdBinding": 1,
+   "UndoPanelComponent": 1
+  },
+  "external": {
+   "UniversalMediaPlayer": 96,
+   "Lottie": 11,
+   "PathKit": 6,
+   "TGUIKit": 5,
+   "PresentationStrings": 5,
+   "XcodeProj": 4,
+   "GeneratedSources": 3,
+   "IOSurface": 2,
+   "ArgumentParser": 2,
+   "QRCodeGenerator": 1,
+   "TDLibFramework": 1,
+   "AddressBook": 1,
+   "AppCenter": 1,
+   "AppCenterCrashes": 1,
+   "RecaptchaEnterprise": 1,
+   "FoundationXML": 1,
+   "OpenCombine": 1
+  }
+ },
+ "WordPress-iOS": {
+  "in_tree": {
+   "WordPressData": 831,
+   "WordPressShared": 755,
+   "WordPressKit": 544,
+   "WordPressUI": 464,
+   "WordPress": 315,
+   "WordPressCore": 82,
+   "DesignSystem": 80,
+   "WordPressFlux": 79,
+   "BuildSettingsKit": 78,
+   "AsyncImageKit": 69,
+   "FormattableContentKit": 68,
+   "WordPressSharedUI": 51,
+   "WordPressKitObjC": 40,
+   "JetpackStatsWidgetsCore": 39,
+   "JetpackStats": 37,
+   "Aztec": 28,
+   "JetpackSocial": 26,
+   "WordPressReader": 18,
+   "ShareExtensionCore": 17,
+   "Gutenberg": 16,
+   "Gravatar": 16,
+   "Support": 15,
+   "WordPressIntelligence": 12,
+   "WordPressComments": 11,
+   "WordPressMediaLibrary": 11,
+   "WordPressKitModels": 10,
+   "TracksMini": 10,
+   "Logging": 9,
+   "WordPressCoreProtocols": 7,
+   "GutenbergProcessors": 6,
+   "AztecExtensions": 5,
+   "WordPressSharedObjC": 5,
+   "Lottie": 5,
+   "SFHFKeychainUtils": 5,
+   "WordPressSharedObjCUI": 5,
+   "WordPressLegacy": 4,
+   "NotificationServiceExtensionCore": 2,
+   "TextBundle": 1,
+   "Miniature": 1,
+   "WordPressTesting": 1
+  },
+  "external": {
+   "WordPressAPI": 119,
+   "OHHTTPStubs": 69,
+   "OHHTTPStubsSwift": 69,
+   "Gridicons": 66,
+   "WordPressAPIInternal": 63,
+   "AutomatticTracks": 44,
+   "SVProgressHUD": 32,
+   "CocoaLumberjackSwift": 24,
+   "DGCharts": 14,
+   "GutenbergKit": 12,
+   "wpxmlrpc": 9,
+   "WordPressApiCache": 7,
+   "Gifu": 7,
+   "SwiftSoup": 6,
+   "AutomatticEncryptedLogs": 6,
+   "CocoaLumberjack": 6,
+   "MediaEditor": 6,
+   "CoreAPI": 6,
+   "WordPressEditor": 5,
+   "NSObject_SafeExpectations": 5,
+   "Pulse": 4,
+   "ColorStudio": 4,
+   "PulseUI": 4,
+   "Alamofire": 4,
+   "AutomatticAbout": 3,
+   "ZendeskCoreSDK": 3,
+   "ImagePlayground": 3,
+   "GravatarUI": 3,
+   "Starscream": 2,
+   "Sentry": 2,
+   "React": 2,
+   "SupportProvidersSDK": 2,
+   "UIDeviceIdentifier": 1,
+   "CocoaLumberjackSwiftLogBackend": 1,
+   "FSInteractiveMap": 1,
+   "SupportSDK": 1,
+   "ZIPFoundation": 1,
+   "Down": 1,
+   "APIInterface": 1,
+   "AutomatticTracksEvents": 1,
+   "NSURL_IDN": 1
+  }
+ },
+ "duckduckgo-ios": {
+  "in_tree": {
+   "Core": 486,
+   "DuckDuckGo": 173,
+   "Subscription": 54,
+   "DuckUI": 44,
+   "NetworkProtection": 37,
+   "UserScript": 30,
+   "Configuration": 24,
+   "PrivacyDashboard": 22,
+   "MaliciousSiteProtection": 21,
+   "AIChat": 17,
+   "Waitlist": 10,
+   "SyncUI_iOS": 10,
+   "DuckPlayer": 7,
+   "PageRefreshMonitor": 4,
+   "WaitlistMocks": 3,
+   "VPNWidgetSupport": 3
+  },
+  "external": {
+   "BrowserServicesKit": 246,
+   "Common": 137,
+   "Bookmarks": 92,
+   "Persistence": 90,
+   "DesignResourcesKit": 88,
+   "DDGSync": 46,
+   "Networking": 30,
+   "RemoteMessaging": 20,
+   "Onboarding": 20,
+   "SpecialErrorPages": 17,
+   "TrackerRadarKit": 16,
+   "History": 14,
+   "PersistenceTestingUtils": 14,
+   "Lottie": 13,
+   "SecureStorage": 12,
+   "PixelExperimentKit": 11,
+   "Kingfisher": 11,
+   "Suggestions": 11,
+   "SubscriptionTestingUtilities": 11,
+   "PixelKit": 9,
+   "SyncDataProviders": 7,
+   "Crashes": 6,
+   "OHHTTPStubs": 6,
+   "GRDB": 5,
+   "ContentScopeScripts": 5,
+   "OHHTTPStubsSwift": 5,
+   "ContentBlocking": 4,
+   "AdAttributionKit": 2,
+   "SwiftSoup": 2,
+   "BrokenSitePrompt": 2,
+   "NetworkProtectionTestUtils": 2,
+   "Swifter": 1,
+   "BareBonesBrowserKit": 1,
+   "Navigation": 1,
+   "ZIPFoundation": 1,
+   "FindInPageIOSJSSupport": 1,
+   "AdServices": 1,
+   "WireGuard": 1,
+   "NetworkingTestingUtils": 1
+  }
+ },
+ "eidolon": {
+  "in_tree": {
+   "Kiosk": 49
+  },
+  "external": {
+   "RxSwift": 87,
+   "Nimble": 49,
+   "Quick": 49,
+   "Moya": 32,
+   "Action": 20,
+   "Nimble_Snapshots": 19,
+   "SwiftyJSON": 14,
+   "RxOptional": 11,
+   "Artsy_UILabels": 9,
+   "RxNimble": 8,
+   "Keys": 7,
+   "Stripe": 7,
+   "RxCocoa": 7,
+   "Artsy_UIButtons": 7,
+   "ARAnalytics": 6,
+   "ORStackView": 6,
+   "RxBlocking": 5,
+   "Artsy_UIFonts": 4,
+   "SDWebImage": 3,
+   "CardFlight": 2,
+   "NSObject_Rx": 2,
+   "Alamofire": 2,
+   "FLKAutoLayout": 2,
+   "ARTiledImageView": 2,
+   "Forgeries": 1,
+   "SVProgressHUD": 1,
+   "XNGMarkdownParser": 1,
+   "Reachability": 1,
+   "Result": 1,
+   "ARCollectionViewMasonryLayout": 1,
+   "DZNWebViewController": 1,
+   "UIImageViewAligned": 1,
+   "ECPhoneNumberFormatter": 1
+  }
+ },
+ "eigen": {
+  "in_tree": {
+   "Artsy": 29
+  },
+  "external": {
+   "Interstellar": 44,
+   "Nimble": 27,
+   "Quick": 27,
+   "Nimble_Snapshots": 14,
+   "Then": 6,
+   "SwiftyJSON": 5,
+   "Starscream": 3,
+   "ReactAppDependencyProvider": 1,
+   "React": 1,
+   "JWTDecode": 1
+  }
+ },
+ "element-ios": {
+  "in_tree": {
+   "RiotSwiftUI": 113,
+   "MatrixSDK": 89,
+   "CommonKit": 50,
+   "DesignKit": 21,
+   "SideMenu": 1
+  },
+  "external": {
+   "Reusable": 89,
+   "Element": 41,
+   "AnalyticsEvents": 18,
+   "WysiwygComposer": 15,
+   "Mapbox": 7,
+   "KeychainAccess": 5,
+   "PostHog": 4,
+   "WeakDictionary": 3,
+   "DSWaveformImage": 3,
+   "ZXingObjC": 3,
+   "libPhoneNumber_iOS": 3,
+   "AFNetworking": 2,
+   "JitsiMeetSDK": 2,
+   "DTCoreText": 2,
+   "HTMLParser": 2,
+   "GBDeviceInfo": 2,
+   "SwiftJWT": 2,
+   "FlowCommoniOS": 2,
+   "Introspect": 2,
+   "zxcvbn_ios": 1,
+   "SwiftBase32": 1,
+   "libcmark": 1,
+   "Down": 1,
+   "SwiftOGG": 1,
+   "ReadMoreTextView": 1,
+   "UICollectionViewLeftAlignedLayout": 1,
+   "UICollectionViewRightAlignedLayout": 1,
+   "FLEX": 1,
+   "Sentry": 1,
+   "MatrixSDKCrypto": 1,
+   "DeviceKit": 1
+  }
+ },
+ "firefox-ios": {
+  "in_tree": {
+   "Common": 1178,
+   "Shared": 569,
+   "Client": 559,
+   "MozillaAppServices": 237,
+   "Redux": 201,
+   "Storage": 189,
+   "Glean": 163,
+   "ComponentLibrary": 92,
+   "WebEngine": 85,
+   "TestKit": 57,
+   "SiteImageView": 55,
+   "MozillaRustComponents": 52,
+   "SummarizeKit": 51,
+   "QuickAnswersKit": 40,
+   "ToolbarKit": 24,
+   "OnboardingKit": 22,
+   "Account": 21,
+   "TabDataStore": 19,
+   "LLMKit": 18,
+   "WebCompatReporterKit": 17,
+   "AppAttestKit": 16,
+   "MLPAKit": 11,
+   "MenuKit": 9,
+   "UIHelpers": 7,
+   "Onboarding": 7,
+   "AppShortcuts": 6,
+   "JWTKit": 5,
+   "DesignSystem": 5,
+   "Sync": 4,
+   "FocusAppServices": 4,
+   "Deferred": 3,
+   "ContentBlockingGenerator": 3,
+   "UIComponents": 3,
+   "ActionExtensionKit": 2,
+   "UnifiedSearchKit": 2,
+   "DeferredMac": 1,
+   "Licenses": 1
+  },
+  "external": {
+   "ModifiedCopy": 33,
+   "MappaMundi": 23,
+   "GCDWebServers": 15,
+   "X509": 10,
+   "Kingfisher": 10,
+   "Firefox_Klar": 10,
+   "Firefox_Focus": 10,
+   "Sentry": 7,
+   "SnapKit": 7,
+   "Localizations": 5,
+   "SwiftASN1": 4,
+   "SwiftDraw": 3,
+   "Down": 3,
+   "Fuzi": 2,
+   "Dip": 2,
+   "DangerSwiftCoverage": 1,
+   "Danger": 1,
+   "KIF": 1,
+   "Crypto": 1,
+   "XCGLogger": 1,
+   "Accounts": 1,
+   "SwiftyBeaver": 1
+  }
+ },
+ "focus-ios": {
+  "in_tree": {
+   "UIHelpers": 7,
+   "Onboarding": 7,
+   "AppShortcuts": 6,
+   "DesignSystem": 5,
+   "Widget": 3,
+   "UIComponents": 3,
+   "ContentBlockerGenLib": 2,
+   "Licenses": 1
+  },
+  "external": {
+   "Glean": 15,
+   "Firefox_Klar": 8,
+   "Firefox_Focus": 8,
+   "SnapKit": 7,
+   "FocusAppServices": 4,
+   "Sentry": 2,
+   "Fuzi": 1
+  }
+ },
+ "home-assistant-ios": {
+  "in_tree": {
+   "Shared": 939,
+   "HomeAssistant": 120,
+   "HAWatchComplications": 27,
+   "HAIconic": 25,
+   "SharedTesting": 17,
+   "HADesignSystem": 12,
+   "SharedPush": 11,
+   "WebRTC": 5,
+   "App": 5,
+   "HANetworking": 4,
+   "HAModels": 3,
+   "HAUtilities": 1,
+   "HAWatchCommunicationMessages": 1,
+   "Dependencies": 1
+  },
+  "external": {
+   "PromiseKit": 249,
+   "SFSafeSymbols": 170,
+   "HAKit": 164,
+   "GRDB": 160,
+   "ObjectMapper": 28,
+   "Alamofire": 24,
+   "Vapor": 14,
+   "HAKit_PromiseKit": 12,
+   "HAKit_Mocks": 11,
+   "KeychainAccess": 10,
+   "SnapshotTesting": 9,
+   "XCGLogger": 8,
+   "OHHTTPStubs": 6,
+   "APNS": 5,
+   "Improv_iOS": 4,
+   "OHHTTPStubsSwift": 4,
+   "XCTVapor": 4,
+   "Sodium": 3,
+   "CallbackURLKit": 3,
+   "FirebaseMessaging": 3,
+   "RealmSwift": 2,
+   "APNSwift": 2,
+   "Redis": 2,
+   "FirebaseCore": 1,
+   "DebugSwift": 1,
+   "FoundationNetworking": 1,
+   "ZIPFoundation": 1
+  }
+ },
+ "ios-oss": {
+  "in_tree": {
+   "KsApi": 828,
+   "Library": 669,
+   "KsApiTestHelpers": 392,
+   "GraphAPI": 332,
+   "KDS": 322,
+   "LibraryTestHelpers": 273,
+   "Kickstarter_Framework": 107,
+   "GraphAPITestMocks": 24,
+   "Experimentation": 22,
+   "ServerDrivenUI": 16,
+   "ServerDrivenUITestHelpers": 7,
+   "ExperimentationTestHelpers": 2,
+   "StringsScriptCore": 2,
+   "Statsig": 1,
+   "StringsScriptTests": 1
+  },
+  "external": {
+   "Prelude": 703,
+   "ReactiveSwift": 434,
+   "ApolloAPI": 309,
+   "ReactiveExtensions_TestHelpers": 165,
+   "ApolloTestSupport": 153,
+   "ReactiveExtensions": 117,
+   "SnapshotTesting": 70,
+   "Apollo": 38,
+   "Prelude_UIKit": 33,
+   "Kingfisher": 15,
+   "FacebookLogin": 7,
+   "Stripe": 7,
+   "StripePaymentSheet": 7,
+   "FirebaseCrashlytics": 6,
+   "SwiftSoup": 5,
+   "FacebookCore": 4,
+   "AlamofireImage": 4,
+   "Lottie": 4,
+   "Segment": 3,
+   "ViewInspector": 3,
+   "FirebaseRemoteConfig": 3,
+   "SegmentBrazeUI": 2,
+   "BrazeUI": 1,
+   "Firebase": 1,
+   "BrazeKit": 1,
+   "KingfisherWebP": 1
+  }
+ },
+ "mastodon-ios": {
+  "in_tree": {
+   "MastodonSDK": 255,
+   "MastodonLocalization": 180,
+   "MastodonCore": 157,
+   "MastodonAsset": 149,
+   "MastodonUI": 84,
+   "CoreDataStack": 23,
+   "MastodonCommon": 12,
+   "MastodonExtension": 5,
+   "Mastodon": 1
+  },
+  "external": {
+   "MetaTextKit": 31,
+   "MastodonMeta": 26,
+   "AlamofireImage": 15,
+   "Meta": 13,
+   "SDWebImageSwiftUI": 9,
+   "Kanna": 3,
+   "MastoParse": 3,
+   "SDWebImage": 3,
+   "NIOHTTP1": 3,
+   "FLAnimatedImage": 3,
+   "Nuke": 3,
+   "UITextView_Placeholder": 2,
+   "KeychainAccess": 2,
+   "Alamofire": 2,
+   "UIHostingConfigurationBackport": 2,
+   "LightChart": 1,
+   "MBProgressHUD": 1,
+   "Pageboy": 1,
+   "Bodega": 1,
+   "FaviconFinder": 1,
+   "TwitterMeta": 1,
+   "SessionExporter": 1
+  }
+ },
+ "nextcloud-ios": {
+  "in_tree": {
+   "LucidBanner": 31
+  },
+  "external": {
+   "NextcloudKit": 262,
+   "RealmSwift": 63,
+   "Alamofire": 25,
+   "Nextcloud": 10,
+   "EasyTipView": 5,
+   "MobileVLCKit": 4,
+   "MarkdownKit": 3,
+   "SwiftyJSON": 3,
+   "DropDown": 3,
+   "PopupView": 2,
+   "Mantis": 2,
+   "TLPhotoPicker": 2,
+   "TagListView": 2,
+   "Firebase": 1,
+   "KeychainAccess": 1,
+   "FirebaseCrashlytics": 1,
+   "SwiftRichString": 1,
+   "OpenSSL": 1,
+   "Swifter": 1,
+   "Gzip": 1,
+   "QRCodeReader": 1
+  }
+ },
+ "pocket-casts-ios": {
+  "in_tree": {
+   "PocketCastsDataModel": 603,
+   "PocketCastsUtils": 575,
+   "PocketCastsServer": 449,
+   "podcasts": 66,
+   "EndOfYear": 58,
+   "GRDB": 39,
+   "GoogleCast": 6,
+   "GRDBMacros": 6,
+   "Fingerprint": 2,
+   "EventHorizonSDK": 1,
+   "Modules": 1,
+   "GRDBMacrosPlugin": 1
+  },
+  "external": {
+   "SwiftProtobuf": 49,
+   "Kingfisher": 31,
+   "Lottie": 18,
+   "DifferenceKit": 17,
+   "SwipeCellKit": 10,
+   "AutomatticTracks": 5,
+   "Firebase": 5,
+   "AutomatticRemoteLogging": 4,
+   "JLRoutes": 3,
+   "FirebaseRemoteConfig": 2,
+   "Sentry": 2,
+   "FirebasePerformance": 2,
+   "SwiftSyntaxMacros": 2,
+   "Swift": 1,
+   "Agrume": 1,
+   "SwiftSubtitles": 1,
+   "UIDeviceIdentifier": 1,
+   "GoogleSignIn": 1,
+   "AutomatticEncryptedLogs": 1,
+   "WrappingHStack": 1,
+   "AutomatticTracksModel": 1,
+   "AutomatticTracksEvents": 1,
+   "SwiftSyntaxMacrosTestSupport": 1,
+   "SwiftCompilerPlugin": 1,
+   "SwiftSoup": 1,
+   "Swime": 1,
+   "Fuse": 1
+  }
+ },
+ "simplenote-ios": {
+  "in_tree": {
+   "Simplenote": 36,
+   "Simperium": 4,
+   "UITestsFoundation": 2
+  },
+  "external": {
+   "SimplenoteEndpoints": 11,
+   "SimplenoteFoundation": 9,
+   "SimplenoteSearch": 5,
+   "Gridicons": 3,
+   "XCUITestHelpers": 2,
+   "AutomatticTracks": 2,
+   "ZIPFoundation": 1,
+   "SimplenoteInterlinks": 1,
+   "ScreenObject": 1
+  }
+ },
+ "vlc-ios": {
+  "in_tree": {},
+  "external": {
+   "VLCMediaLibraryKit": 9,
+   "PCloudSDKSwift": 3,
+   "VLC": 2,
+   "VLCKit": 2,
+   "GoogleSignIn": 2,
+   "MediaIntents": 1,
+   "MarqueeLabel": 1
+  }
+ },
+ "wikipedia-ios": {
+  "in_tree": {
+   "WMFData": 291,
+   "WMFComponents": 277,
+   "WMFNativeLocalizations": 259,
+   "Wikipedia": 38,
+   "WMFDataMocks": 37,
+   "WMFTestKitchen": 31,
+   "WMFDataTestSupport": 21,
+   "WMFTranslateWikiLocalizations": 1
+  },
+  "external": {
+   "WMF": 164,
+   "CocoaLumberjackSwift": 85,
+   "HCaptcha": 2,
+   "SDWebImage": 1,
+   "Lottie": 1
+  }
+ },
+ "_union_external": [
+  {
+   "module": "Sentry",
+   "apps": 6,
+   "importing_files": 19,
+   "in": [
+    "ProtonMail-ios",
+    "WordPress-iOS",
+    "element-ios",
+    "firefox-ios",
+    "focus-ios",
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "Alamofire",
+   "apps": 5,
+   "importing_files": 57,
+   "in": [
+    "WordPress-iOS",
+    "eidolon",
+    "home-assistant-ios",
+    "mastodon-ios",
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "Lottie",
+   "apps": 5,
+   "importing_files": 47,
+   "in": [
+    "Telegram-iOS",
+    "duckduckgo-ios",
+    "ios-oss",
+    "pocket-casts-ios",
+    "wikipedia-ios"
+   ]
+  },
+  {
+   "module": "SwiftSoup",
+   "apps": 5,
+   "importing_files": 19,
+   "in": [
+    "Hackers",
+    "WordPress-iOS",
+    "duckduckgo-ios",
+    "ios-oss",
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "Kingfisher",
+   "apps": 4,
+   "importing_files": 67,
+   "in": [
+    "duckduckgo-ios",
+    "firefox-ios",
+    "ios-oss",
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "KeychainAccess",
+   "apps": 4,
+   "importing_files": 18,
+   "in": [
+    "element-ios",
+    "home-assistant-ios",
+    "mastodon-ios",
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "SDWebImage",
+   "apps": 4,
+   "importing_files": 17,
+   "in": [
+    "Signal-iOS",
+    "eidolon",
+    "mastodon-ios",
+    "wikipedia-ios"
+   ]
+  },
+  {
+   "module": "ZIPFoundation",
+   "apps": 4,
+   "importing_files": 4,
+   "in": [
+    "WordPress-iOS",
+    "duckduckgo-ios",
+    "home-assistant-ios",
+    "simplenote-ios"
+   ]
+  },
+  {
+   "module": "GRDB",
+   "apps": 3,
+   "importing_files": 348,
+   "in": [
+    "Signal-iOS",
+    "duckduckgo-ios",
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "SnapshotTesting",
+   "apps": 3,
+   "importing_files": 84,
+   "in": [
+    "ProtonMail-ios",
+    "home-assistant-ios",
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "OHHTTPStubs",
+   "apps": 3,
+   "importing_files": 81,
+   "in": [
+    "WordPress-iOS",
+    "duckduckgo-ios",
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "OHHTTPStubsSwift",
+   "apps": 3,
+   "importing_files": 78,
+   "in": [
+    "WordPress-iOS",
+    "duckduckgo-ios",
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "AutomatticTracks",
+   "apps": 3,
+   "importing_files": 51,
+   "in": [
+    "WordPress-iOS",
+    "pocket-casts-ios",
+    "simplenote-ios"
+   ]
+  },
+  {
+   "module": "SwiftyJSON",
+   "apps": 3,
+   "importing_files": 22,
+   "in": [
+    "eidolon",
+    "eigen",
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "Firebase",
+   "apps": 3,
+   "importing_files": 7,
+   "in": [
+    "ios-oss",
+    "nextcloud-ios",
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "Down",
+   "apps": 3,
+   "importing_files": 5,
+   "in": [
+    "WordPress-iOS",
+    "element-ios",
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "CocoaLumberjackSwift",
+   "apps": 2,
+   "importing_files": 109,
+   "in": [
+    "WordPress-iOS",
+    "wikipedia-ios"
+   ]
+  },
+  {
+   "module": "Nimble",
+   "apps": 2,
+   "importing_files": 76,
+   "in": [
+    "eidolon",
+    "eigen"
+   ]
+  },
+  {
+   "module": "Quick",
+   "apps": 2,
+   "importing_files": 76,
+   "in": [
+    "eidolon",
+    "eigen"
+   ]
+  },
+  {
+   "module": "Gridicons",
+   "apps": 2,
+   "importing_files": 69,
+   "in": [
+    "WordPress-iOS",
+    "simplenote-ios"
+   ]
+  },
+  {
+   "module": "RealmSwift",
+   "apps": 2,
+   "importing_files": 65,
+   "in": [
+    "home-assistant-ios",
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "SwiftProtobuf",
+   "apps": 2,
+   "importing_files": 63,
+   "in": [
+    "Signal-iOS",
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "SVProgressHUD",
+   "apps": 2,
+   "importing_files": 33,
+   "in": [
+    "WordPress-iOS",
+    "eidolon"
+   ]
+  },
+  {
+   "module": "Nimble_Snapshots",
+   "apps": 2,
+   "importing_files": 33,
+   "in": [
+    "eidolon",
+    "eigen"
+   ]
+  },
+  {
+   "module": "AlamofireImage",
+   "apps": 2,
+   "importing_files": 19,
+   "in": [
+    "ios-oss",
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "Firefox_Klar",
+   "apps": 2,
+   "importing_files": 18,
+   "in": [
+    "firefox-ios",
+    "focus-ios"
+   ]
+  },
+  {
+   "module": "Firefox_Focus",
+   "apps": 2,
+   "importing_files": 18,
+   "in": [
+    "firefox-ios",
+    "focus-ios"
+   ]
+  },
+  {
+   "module": "Stripe",
+   "apps": 2,
+   "importing_files": 14,
+   "in": [
+    "eidolon",
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "SnapKit",
+   "apps": 2,
+   "importing_files": 14,
+   "in": [
+    "firefox-ios",
+    "focus-ios"
+   ]
+  },
+  {
+   "module": "CocoaLumberjack",
+   "apps": 2,
+   "importing_files": 11,
+   "in": [
+    "Signal-iOS",
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "XCGLogger",
+   "apps": 2,
+   "importing_files": 9,
+   "in": [
+    "firefox-ios",
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "AutomatticEncryptedLogs",
+   "apps": 2,
+   "importing_files": 7,
+   "in": [
+    "WordPress-iOS",
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "FirebaseCrashlytics",
+   "apps": 2,
+   "importing_files": 7,
+   "in": [
+    "ios-oss",
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "ViewInspector",
+   "apps": 2,
+   "importing_files": 6,
+   "in": [
+    "ProtonMail-ios",
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "AdAttributionKit",
+   "apps": 2,
+   "importing_files": 5,
+   "in": [
+    "ProtonMail-ios",
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "Starscream",
+   "apps": 2,
+   "importing_files": 5,
+   "in": [
+    "WordPress-iOS",
+    "eigen"
+   ]
+  },
+  {
+   "module": "FirebaseRemoteConfig",
+   "apps": 2,
+   "importing_files": 5,
+   "in": [
+    "ios-oss",
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "libPhoneNumber_iOS",
+   "apps": 2,
+   "importing_files": 4,
+   "in": [
+    "Signal-iOS",
+    "element-ios"
+   ]
+  },
+  {
+   "module": "React",
+   "apps": 2,
+   "importing_files": 3,
+   "in": [
+    "WordPress-iOS",
+    "eigen"
+   ]
+  },
+  {
+   "module": "Fuzi",
+   "apps": 2,
+   "importing_files": 3,
+   "in": [
+    "firefox-ios",
+    "focus-ios"
+   ]
+  },
+  {
+   "module": "GoogleSignIn",
+   "apps": 2,
+   "importing_files": 3,
+   "in": [
+    "pocket-casts-ios",
+    "vlc-ios"
+   ]
+  },
+  {
+   "module": "UIDeviceIdentifier",
+   "apps": 2,
+   "importing_files": 2,
+   "in": [
+    "WordPress-iOS",
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "AutomatticTracksEvents",
+   "apps": 2,
+   "importing_files": 2,
+   "in": [
+    "WordPress-iOS",
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "Swifter",
+   "apps": 2,
+   "importing_files": 2,
+   "in": [
+    "duckduckgo-ios",
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "Prelude",
+   "apps": 1,
+   "importing_files": 703,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "proton_app_uniffi",
+   "apps": 1,
+   "importing_files": 533,
+   "in": [
+    "ProtonMail-ios"
+   ]
+  },
+  {
+   "module": "ReactiveSwift",
+   "apps": 1,
+   "importing_files": 434,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "LibSignalClient",
+   "apps": 1,
+   "importing_files": 417,
+   "in": [
+    "Signal-iOS"
+   ]
+  },
+  {
+   "module": "ApolloAPI",
+   "apps": 1,
+   "importing_files": 309,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "NextcloudKit",
+   "apps": 1,
+   "importing_files": 262,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "PromiseKit",
+   "apps": 1,
+   "importing_files": 249,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "BrowserServicesKit",
+   "apps": 1,
+   "importing_files": 246,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "SFSafeSymbols",
+   "apps": 1,
+   "importing_files": 170,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "ReactiveExtensions_TestHelpers",
+   "apps": 1,
+   "importing_files": 165,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "HAKit",
+   "apps": 1,
+   "importing_files": 164,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "WMF",
+   "apps": 1,
+   "importing_files": 164,
+   "in": [
+    "wikipedia-ios"
+   ]
+  },
+  {
+   "module": "ApolloTestSupport",
+   "apps": 1,
+   "importing_files": 153,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "Common",
+   "apps": 1,
+   "importing_files": 137,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "ProtonUIFoundations",
+   "apps": 1,
+   "importing_files": 128,
+   "in": [
+    "ProtonMail-ios"
+   ]
+  },
+  {
+   "module": "ProtonMail",
+   "apps": 1,
+   "importing_files": 124,
+   "in": [
+    "ProtonMail-ios"
+   ]
+  },
+  {
+   "module": "WordPressAPI",
+   "apps": 1,
+   "importing_files": 119,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "ReactiveExtensions",
+   "apps": 1,
+   "importing_files": 117,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "UniversalMediaPlayer",
+   "apps": 1,
+   "importing_files": 96,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "Bookmarks",
+   "apps": 1,
+   "importing_files": 92,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "Persistence",
+   "apps": 1,
+   "importing_files": 90,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "Reusable",
+   "apps": 1,
+   "importing_files": 89,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "DesignResourcesKit",
+   "apps": 1,
+   "importing_files": 88,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "RxSwift",
+   "apps": 1,
+   "importing_files": 87,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "WordPressAPIInternal",
+   "apps": 1,
+   "importing_files": 63,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "SignalRingRTC",
+   "apps": 1,
+   "importing_files": 59,
+   "in": [
+    "Signal-iOS"
+   ]
+  },
+  {
+   "module": "DDGSync",
+   "apps": 1,
+   "importing_files": 46,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "Interstellar",
+   "apps": 1,
+   "importing_files": 44,
+   "in": [
+    "eigen"
+   ]
+  },
+  {
+   "module": "Element",
+   "apps": 1,
+   "importing_files": 41,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "Apollo",
+   "apps": 1,
+   "importing_files": 38,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "ModifiedCopy",
+   "apps": 1,
+   "importing_files": 33,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "Prelude_UIKit",
+   "apps": 1,
+   "importing_files": 33,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "Moya",
+   "apps": 1,
+   "importing_files": 32,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "MetaTextKit",
+   "apps": 1,
+   "importing_files": 31,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "Networking",
+   "apps": 1,
+   "importing_files": 30,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "ObjectMapper",
+   "apps": 1,
+   "importing_files": 28,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "MastodonMeta",
+   "apps": 1,
+   "importing_files": 26,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "MappaMundi",
+   "apps": 1,
+   "importing_files": 23,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "PaymentsNG",
+   "apps": 1,
+   "importing_files": 21,
+   "in": [
+    "ProtonMail-ios"
+   ]
+  },
+  {
+   "module": "RemoteMessaging",
+   "apps": 1,
+   "importing_files": 20,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "Onboarding",
+   "apps": 1,
+   "importing_files": 20,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "Action",
+   "apps": 1,
+   "importing_files": 20,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "AnalyticsEvents",
+   "apps": 1,
+   "importing_files": 18,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "SpecialErrorPages",
+   "apps": 1,
+   "importing_files": 17,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "DifferenceKit",
+   "apps": 1,
+   "importing_files": 17,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "TrackerRadarKit",
+   "apps": 1,
+   "importing_files": 16,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "WysiwygComposer",
+   "apps": 1,
+   "importing_files": 15,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "GCDWebServers",
+   "apps": 1,
+   "importing_files": 15,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "Glean",
+   "apps": 1,
+   "importing_files": 15,
+   "in": [
+    "focus-ios"
+   ]
+  },
+  {
+   "module": "DGCharts",
+   "apps": 1,
+   "importing_files": 14,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "History",
+   "apps": 1,
+   "importing_files": 14,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "PersistenceTestingUtils",
+   "apps": 1,
+   "importing_files": 14,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "Vapor",
+   "apps": 1,
+   "importing_files": 14,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "BonMot",
+   "apps": 1,
+   "importing_files": 13,
+   "in": [
+    "Signal-iOS"
+   ]
+  },
+  {
+   "module": "Meta",
+   "apps": 1,
+   "importing_files": 13,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "NetNewsWire",
+   "apps": 1,
+   "importing_files": 12,
+   "in": [
+    "NetNewsWire"
+   ]
+  },
+  {
+   "module": "GutenbergKit",
+   "apps": 1,
+   "importing_files": 12,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "SecureStorage",
+   "apps": 1,
+   "importing_files": 12,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "HAKit_PromiseKit",
+   "apps": 1,
+   "importing_files": 12,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "WebRTC",
+   "apps": 1,
+   "importing_files": 11,
+   "in": [
+    "Signal-iOS"
+   ]
+  },
+  {
+   "module": "PixelExperimentKit",
+   "apps": 1,
+   "importing_files": 11,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "Suggestions",
+   "apps": 1,
+   "importing_files": 11,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "SubscriptionTestingUtilities",
+   "apps": 1,
+   "importing_files": 11,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "RxOptional",
+   "apps": 1,
+   "importing_files": 11,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "HAKit_Mocks",
+   "apps": 1,
+   "importing_files": 11,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "SimplenoteEndpoints",
+   "apps": 1,
+   "importing_files": 11,
+   "in": [
+    "simplenote-ios"
+   ]
+  },
+  {
+   "module": "MobileCoin",
+   "apps": 1,
+   "importing_files": 10,
+   "in": [
+    "Signal-iOS"
+   ]
+  },
+  {
+   "module": "X509",
+   "apps": 1,
+   "importing_files": 10,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "Nextcloud",
+   "apps": 1,
+   "importing_files": 10,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "SwipeCellKit",
+   "apps": 1,
+   "importing_files": 10,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "PureLayout",
+   "apps": 1,
+   "importing_files": 9,
+   "in": [
+    "Signal-iOS"
+   ]
+  },
+  {
+   "module": "wpxmlrpc",
+   "apps": 1,
+   "importing_files": 9,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "PixelKit",
+   "apps": 1,
+   "importing_files": 9,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "Artsy_UILabels",
+   "apps": 1,
+   "importing_files": 9,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "SDWebImageSwiftUI",
+   "apps": 1,
+   "importing_files": 9,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "SimplenoteFoundation",
+   "apps": 1,
+   "importing_files": 9,
+   "in": [
+    "simplenote-ios"
+   ]
+  },
+  {
+   "module": "VLCMediaLibraryKit",
+   "apps": 1,
+   "importing_files": 9,
+   "in": [
+    "vlc-ios"
+   ]
+  },
+  {
+   "module": "RxNimble",
+   "apps": 1,
+   "importing_files": 8,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "AccountLogin",
+   "apps": 1,
+   "importing_files": 7,
+   "in": [
+    "ProtonMail-ios"
+   ]
+  },
+  {
+   "module": "WordPressApiCache",
+   "apps": 1,
+   "importing_files": 7,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "Gifu",
+   "apps": 1,
+   "importing_files": 7,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "SyncDataProviders",
+   "apps": 1,
+   "importing_files": 7,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "Keys",
+   "apps": 1,
+   "importing_files": 7,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "RxCocoa",
+   "apps": 1,
+   "importing_files": 7,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "Artsy_UIButtons",
+   "apps": 1,
+   "importing_files": 7,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "Mapbox",
+   "apps": 1,
+   "importing_files": 7,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "FacebookLogin",
+   "apps": 1,
+   "importing_files": 7,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "StripePaymentSheet",
+   "apps": 1,
+   "importing_files": 7,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "PathKit",
+   "apps": 1,
+   "importing_files": 6,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "MediaEditor",
+   "apps": 1,
+   "importing_files": 6,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "CoreAPI",
+   "apps": 1,
+   "importing_files": 6,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "Crashes",
+   "apps": 1,
+   "importing_files": 6,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "ARAnalytics",
+   "apps": 1,
+   "importing_files": 6,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "ORStackView",
+   "apps": 1,
+   "importing_files": 6,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "Then",
+   "apps": 1,
+   "importing_files": 6,
+   "in": [
+    "eigen"
+   ]
+  },
+  {
+   "module": "TGUIKit",
+   "apps": 1,
+   "importing_files": 5,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "PresentationStrings",
+   "apps": 1,
+   "importing_files": 5,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "WordPressEditor",
+   "apps": 1,
+   "importing_files": 5,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "NSObject_SafeExpectations",
+   "apps": 1,
+   "importing_files": 5,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "ContentScopeScripts",
+   "apps": 1,
+   "importing_files": 5,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "RxBlocking",
+   "apps": 1,
+   "importing_files": 5,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "Localizations",
+   "apps": 1,
+   "importing_files": 5,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "APNS",
+   "apps": 1,
+   "importing_files": 5,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "EasyTipView",
+   "apps": 1,
+   "importing_files": 5,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "SimplenoteSearch",
+   "apps": 1,
+   "importing_files": 5,
+   "in": [
+    "simplenote-ios"
+   ]
+  },
+  {
+   "module": "AccountManager",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "ProtonMail-ios"
+   ]
+  },
+  {
+   "module": "SwiftUIIntrospect",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "ProtonMail-ios"
+   ]
+  },
+  {
+   "module": "ProtonCoreUtilities",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "ProtonMail-ios"
+   ]
+  },
+  {
+   "module": "XcodeProj",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "Pulse",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "ColorStudio",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "PulseUI",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "ContentBlocking",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "Artsy_UIFonts",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "PostHog",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "SwiftASN1",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "FocusAppServices",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "focus-ios"
+   ]
+  },
+  {
+   "module": "Improv_iOS",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "XCTVapor",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "FacebookCore",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "MobileVLCKit",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "AutomatticRemoteLogging",
+   "apps": 1,
+   "importing_files": 4,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "GeneratedSources",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "AutomatticAbout",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "ZendeskCoreSDK",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "ImagePlayground",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "GravatarUI",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "WeakDictionary",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "DSWaveformImage",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "ZXingObjC",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "SwiftDraw",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "Sodium",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "CallbackURLKit",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "FirebaseMessaging",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "Segment",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "Kanna",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "MastoParse",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "NIOHTTP1",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "FLAnimatedImage",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "Nuke",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "MarkdownKit",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "DropDown",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "JLRoutes",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "PCloudSDKSwift",
+   "apps": 1,
+   "importing_files": 3,
+   "in": [
+    "vlc-ios"
+   ]
+  },
+  {
+   "module": "Scrypt",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "ProtonMail-ios"
+   ]
+  },
+  {
+   "module": "AccountPassword",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "ProtonMail-ios"
+   ]
+  },
+  {
+   "module": "PaymentsUI",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "ProtonMail-ios"
+   ]
+  },
+  {
+   "module": "AccountChallenge",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "ProtonMail-ios"
+   ]
+  },
+  {
+   "module": "SDWebImageWebPCoder",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "Signal-iOS"
+   ]
+  },
+  {
+   "module": "IOSurface",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "ArgumentParser",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "SupportProvidersSDK",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "BrokenSitePrompt",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "NetworkProtectionTestUtils",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "CardFlight",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "NSObject_Rx",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "FLKAutoLayout",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "ARTiledImageView",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "AFNetworking",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "JitsiMeetSDK",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "DTCoreText",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "HTMLParser",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "GBDeviceInfo",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "SwiftJWT",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "FlowCommoniOS",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "Introspect",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "Dip",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "APNSwift",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "Redis",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "SegmentBrazeUI",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "UITextView_Placeholder",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "UIHostingConfigurationBackport",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "PopupView",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "Mantis",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "TLPhotoPicker",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "TagListView",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "FirebasePerformance",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "SwiftSyntaxMacros",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "XCUITestHelpers",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "simplenote-ios"
+   ]
+  },
+  {
+   "module": "VLC",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "vlc-ios"
+   ]
+  },
+  {
+   "module": "VLCKit",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "vlc-ios"
+   ]
+  },
+  {
+   "module": "HCaptcha",
+   "apps": 1,
+   "importing_files": 2,
+   "in": [
+    "wikipedia-ios"
+   ]
+  },
+  {
+   "module": "VariableBlur",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "Hackers"
+   ]
+  },
+  {
+   "module": "Zip",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "NetNewsWire"
+   ]
+  },
+  {
+   "module": "Sparkle",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "NetNewsWire"
+   ]
+  },
+  {
+   "module": "Tidemark",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "NetNewsWire"
+   ]
+  },
+  {
+   "module": "blurhash",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "Signal-iOS"
+   ]
+  },
+  {
+   "module": "LibMobileCoin",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "Signal-iOS"
+   ]
+  },
+  {
+   "module": "Logging",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "Signal-iOS"
+   ]
+  },
+  {
+   "module": "DeviceDiscoveryUI",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "Signal-iOS"
+   ]
+  },
+  {
+   "module": "QRCodeGenerator",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "TDLibFramework",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "AddressBook",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "AppCenter",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "AppCenterCrashes",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "RecaptchaEnterprise",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "FoundationXML",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "OpenCombine",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "Telegram-iOS"
+   ]
+  },
+  {
+   "module": "CocoaLumberjackSwiftLogBackend",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "FSInteractiveMap",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "SupportSDK",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "APIInterface",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "NSURL_IDN",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "WordPress-iOS"
+   ]
+  },
+  {
+   "module": "BareBonesBrowserKit",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "Navigation",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "FindInPageIOSJSSupport",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "AdServices",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "WireGuard",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "NetworkingTestingUtils",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "duckduckgo-ios"
+   ]
+  },
+  {
+   "module": "Forgeries",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "XNGMarkdownParser",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "Reachability",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "Result",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "ARCollectionViewMasonryLayout",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "DZNWebViewController",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "UIImageViewAligned",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "ECPhoneNumberFormatter",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "eidolon"
+   ]
+  },
+  {
+   "module": "ReactAppDependencyProvider",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "eigen"
+   ]
+  },
+  {
+   "module": "JWTDecode",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "eigen"
+   ]
+  },
+  {
+   "module": "zxcvbn_ios",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "SwiftBase32",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "libcmark",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "SwiftOGG",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "ReadMoreTextView",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "UICollectionViewLeftAlignedLayout",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "UICollectionViewRightAlignedLayout",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "FLEX",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "MatrixSDKCrypto",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "DeviceKit",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "element-ios"
+   ]
+  },
+  {
+   "module": "DangerSwiftCoverage",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "Danger",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "KIF",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "Crypto",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "Accounts",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "SwiftyBeaver",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "firefox-ios"
+   ]
+  },
+  {
+   "module": "FirebaseCore",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "DebugSwift",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "FoundationNetworking",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "home-assistant-ios"
+   ]
+  },
+  {
+   "module": "BrazeUI",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "BrazeKit",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "KingfisherWebP",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "ios-oss"
+   ]
+  },
+  {
+   "module": "LightChart",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "MBProgressHUD",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "Pageboy",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "Bodega",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "FaviconFinder",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "TwitterMeta",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "SessionExporter",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "mastodon-ios"
+   ]
+  },
+  {
+   "module": "SwiftRichString",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "OpenSSL",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "Gzip",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "QRCodeReader",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "nextcloud-ios"
+   ]
+  },
+  {
+   "module": "Swift",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "Agrume",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "SwiftSubtitles",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "WrappingHStack",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "AutomatticTracksModel",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "SwiftSyntaxMacrosTestSupport",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "SwiftCompilerPlugin",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "Swime",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "Fuse",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "pocket-casts-ios"
+   ]
+  },
+  {
+   "module": "SimplenoteInterlinks",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "simplenote-ios"
+   ]
+  },
+  {
+   "module": "ScreenObject",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "simplenote-ios"
+   ]
+  },
+  {
+   "module": "MediaIntents",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "vlc-ios"
+   ]
+  },
+  {
+   "module": "MarqueeLabel",
+   "apps": 1,
+   "importing_files": 1,
+   "in": [
+    "vlc-ios"
+   ]
+  }
+ ]
+}

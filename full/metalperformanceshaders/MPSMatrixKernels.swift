@@ -359,8 +359,8 @@ open class MPSMatrixCopyToImage: MPSKernel {
     }
 }
 
-func mpsFloatBuffer(_ buffer: any MTLBuffer) -> UnsafeMutablePointer<Float> {
-    buffer.contents.bindMemory(to: Float.self, capacity: max(buffer.length / 4, 1))
+func mpsFloatBuffer(_ buffer: any MTLBuffer, offset: Int = 0) -> UnsafeMutablePointer<Float> {
+    buffer.contents.advanced(by: max(offset, 0)).bindMemory(to: Float.self, capacity: max((buffer.length - offset) / 4, 1))
 }
 
 func mpsGEMM(
@@ -378,9 +378,9 @@ func mpsGEMM(
     rightOrigin: MTLOrigin,
     resultOrigin: MTLOrigin
 ) {
-    let a = mpsFloatBuffer(left.data)
-    let b = mpsFloatBuffer(right.data)
-    let c = mpsFloatBuffer(result.data)
+    let a = mpsFloatBuffer(left.data, offset: left.offset)
+    let b = mpsFloatBuffer(right.data, offset: right.offset)
+    let c = mpsFloatBuffer(result.data, offset: result.offset)
     let lda = max(left.rowBytes / 4, 1)
     let ldb = max(right.rowBytes / 4, 1)
     let ldc = max(result.rowBytes / 4, 1)
@@ -410,9 +410,9 @@ func mpsGEMV(
     alpha: Float,
     beta: Float
 ) {
-    let a = mpsFloatBuffer(matrix.data)
-    let x = mpsFloatBuffer(vector.data)
-    let y = mpsFloatBuffer(result.data)
+    let a = mpsFloatBuffer(matrix.data, offset: matrix.offset)
+    let x = mpsFloatBuffer(vector.data, offset: vector.offset)
+    let y = mpsFloatBuffer(result.data, offset: result.offset)
     let lda = max(matrix.rowBytes / 4, 1)
     let outCount = transpose ? columns : rows
     let innerCount = transpose ? rows : columns
@@ -423,6 +423,240 @@ func mpsGEMV(
             acc += aVal * x[j]
         }
         y[i] = alpha * acc + beta * y[i]
+    }
+}
+
+open class MPSMatrixFindTopK: MPSKernel {
+    public private(set) var numberOfTopKValues: Int
+    public var indexOffset: Int = 0
+    public var sourceRows: Int = 0
+    public var sourceColumns: Int = 0
+
+    public required init(device: any MTLDevice) {
+        self.numberOfTopKValues = 1
+        super.init(device: device)
+    }
+
+    public init(device: any MTLDevice, numberOfTopKValues: Int) {
+        self.numberOfTopKValues = max(numberOfTopKValues, 1)
+        super.init(device: device)
+    }
+
+    public override init?(coder aDecoder: NSCoder, device: any MTLDevice) {
+        return nil
+    }
+
+    open override func copy(with zone: NSZone? = nil, device: (any MTLDevice)?) -> Self {
+        let copied = MPSMatrixFindTopK(device: device ?? self.device, numberOfTopKValues: numberOfTopKValues)
+        copied.options = options
+        copied.label = label
+        copied.indexOffset = indexOffset
+        copied.sourceRows = sourceRows
+        copied.sourceColumns = sourceColumns
+        return copied as! Self
+    }
+
+    open func encode(
+        commandBuffer: any MTLCommandBuffer,
+        inputMatrix: MPSMatrix,
+        resultIndexMatrix: MPSMatrix,
+        resultValueMatrix: MPSMatrix
+    ) {
+        _ = commandBuffer
+        guard inputMatrix.dataType == .float32, resultValueMatrix.dataType == .float32 else {
+            MPSHostBoundary.refuseGPUEncode("MPSMatrixFindTopK.encode")
+            return
+        }
+        let rows = sourceRows > 0 ? sourceRows : inputMatrix.rows
+        let columns = sourceColumns > 0 ? sourceColumns : inputMatrix.columns
+        let k = min(numberOfTopKValues, columns)
+        let a = mpsFloatBuffer(inputMatrix.data, offset: inputMatrix.offset)
+        let lda = max(inputMatrix.rowBytes / 4, 1)
+        let values = mpsFloatBuffer(resultValueMatrix.data, offset: resultValueMatrix.offset)
+        let ldc = max(resultValueMatrix.rowBytes / 4, 1)
+        let indices = resultIndexMatrix.data.contents.advanced(by: resultIndexMatrix.offset).bindMemory(
+            to: UInt32.self,
+            capacity: max(resultIndexMatrix.data.length / 4, 1)
+        )
+        let ldi = max(resultIndexMatrix.rowBytes / 4, 1)
+        for row in 0..<rows {
+            var pairs: [(Float, Int)] = []
+            pairs.reserveCapacity(columns)
+            for col in 0..<columns {
+                pairs.append((a[row * lda + col], col))
+            }
+            pairs.sort { lhs, rhs in
+                if lhs.0 == rhs.0 { return lhs.1 < rhs.1 }
+                return lhs.0 > rhs.0
+            }
+            for i in 0..<k {
+                values[row * ldc + i] = pairs[i].0
+                indices[row * ldi + i] = UInt32(pairs[i].1 + indexOffset)
+            }
+        }
+    }
+}
+
+open class MPSMatrixSoftMax: MPSKernel {
+    public var sourceRows: Int = 0
+    public var sourceColumns: Int = 0
+
+    public required init(device: any MTLDevice) {
+        super.init(device: device)
+    }
+
+    public override init?(coder aDecoder: NSCoder, device: any MTLDevice) {
+        return nil
+    }
+
+    open override func copy(with zone: NSZone? = nil, device: (any MTLDevice)?) -> Self {
+        let copied = MPSMatrixSoftMax(device: device ?? self.device)
+        copied.options = options
+        copied.label = label
+        copied.sourceRows = sourceRows
+        copied.sourceColumns = sourceColumns
+        return copied as! Self
+    }
+
+    open func encode(commandBuffer: any MTLCommandBuffer, inputMatrix: MPSMatrix, resultMatrix: MPSMatrix) {
+        _ = commandBuffer
+        guard inputMatrix.dataType == .float32, resultMatrix.dataType == .float32 else {
+            MPSHostBoundary.refuseGPUEncode("MPSMatrixSoftMax.encode")
+            return
+        }
+        let rows = sourceRows > 0 ? sourceRows : inputMatrix.rows
+        let columns = sourceColumns > 0 ? sourceColumns : inputMatrix.columns
+        let a = mpsFloatBuffer(inputMatrix.data, offset: inputMatrix.offset)
+        let c = mpsFloatBuffer(resultMatrix.data, offset: resultMatrix.offset)
+        let lda = max(inputMatrix.rowBytes / 4, 1)
+        let ldc = max(resultMatrix.rowBytes / 4, 1)
+        for row in 0..<rows {
+            var maxValue = a[row * lda]
+            for col in 1..<columns {
+                maxValue = max(maxValue, a[row * lda + col])
+            }
+            var sum: Float = 0
+            for col in 0..<columns {
+                let e = exp(a[row * lda + col] - maxValue)
+                c[row * ldc + col] = e
+                sum += e
+            }
+            if sum == 0 { continue }
+            for col in 0..<columns {
+                c[row * ldc + col] /= sum
+            }
+        }
+    }
+}
+
+open class MPSMatrixSum: MPSKernel {
+    public private(set) var count: Int
+    public private(set) var rows: Int
+    public private(set) var columns: Int
+    public private(set) var transpose: Bool
+    public var resultMatrixOrigin: MTLOrigin = MTLOrigin(x: 0, y: 0, z: 0)
+    private var neuron: MPSCNNNeuronType = .none
+    private var neuronA: Float = 0
+    private var neuronB: Float = 0
+    private var neuronC: Float = 0
+
+    public required init(device: any MTLDevice) {
+        self.count = 1
+        self.rows = 1
+        self.columns = 1
+        self.transpose = false
+        super.init(device: device)
+    }
+
+    public init(device: any MTLDevice, count: Int, rows: Int, columns: Int, transpose: Bool) {
+        self.count = max(count, 0)
+        self.rows = max(rows, 0)
+        self.columns = max(columns, 0)
+        self.transpose = transpose
+        super.init(device: device)
+    }
+
+    public override init?(coder aDecoder: NSCoder, device: any MTLDevice) {
+        return nil
+    }
+
+    open func neuronType() -> MPSCNNNeuronType { neuron }
+    public var neuronParameterA: Float { neuronA }
+    public var neuronParameterB: Float { neuronB }
+    public var neuronParameterC: Float { neuronC }
+
+    open func setNeuronType(_ neuronType: MPSCNNNeuronType, parameterA: Float, parameterB: Float, parameterC: Float) {
+        neuron = neuronType
+        neuronA = parameterA
+        neuronB = parameterB
+        neuronC = parameterC
+    }
+
+    open func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceMatrices: [MPSMatrix],
+        resultMatrix: MPSMatrix,
+        scaleVector: MPSVector?,
+        offsetVector: MPSVector?,
+        biasVector: MPSVector?,
+        startIndex: Int
+    ) {
+        _ = commandBuffer
+        guard resultMatrix.dataType == .float32 else {
+            MPSHostBoundary.refuseGPUEncode("MPSMatrixSum.encode")
+            return
+        }
+        let c = mpsFloatBuffer(resultMatrix.data, offset: resultMatrix.offset)
+        let ldc = max(resultMatrix.rowBytes / 4, 1)
+        let origin = resultMatrixOrigin
+        for row in 0..<rows {
+            for col in 0..<columns {
+                c[(row + origin.y) * ldc + (col + origin.x)] = 0
+            }
+        }
+        let limit = min(count, sourceMatrices.count)
+        for index in 0..<limit {
+            let matrix = sourceMatrices[index]
+            guard matrix.dataType == .float32 else { continue }
+            let a = mpsFloatBuffer(matrix.data, offset: matrix.offset)
+            let lda = max(matrix.rowBytes / 4, 1)
+            var scale: Float = 1
+            if let scaleVector {
+                scale = mpsFloatBuffer(scaleVector.data, offset: scaleVector.offset)[startIndex + index]
+            }
+            var rowOff = 0
+            var colOff = 0
+            if let offsetVector {
+                let offs = offsetVector.data.contents.advanced(by: offsetVector.offset).bindMemory(
+                    to: Int32.self,
+                    capacity: max(offsetVector.data.length / 4, 1)
+                )
+                rowOff = Int(offs[(startIndex + index) * 2])
+                colOff = Int(offs[(startIndex + index) * 2 + 1])
+            }
+            for row in 0..<rows {
+                for col in 0..<columns {
+                    let src = transpose ? a[(col + colOff) * lda + (row + rowOff)] : a[(row + rowOff) * lda + (col + colOff)]
+                    c[(row + origin.y) * ldc + (col + origin.x)] += scale * src
+                }
+            }
+        }
+        if let biasVector, biasVector.dataType == .float32 {
+            let bias = mpsFloatBuffer(biasVector.data, offset: biasVector.offset)
+            for row in 0..<rows {
+                for col in 0..<columns {
+                    c[(row + origin.y) * ldc + (col + origin.x)] += bias[col]
+                }
+            }
+        }
+        if neuron == .reLU {
+            for row in 0..<rows {
+                for col in 0..<columns {
+                    let idx = (row + origin.y) * ldc + (col + origin.x)
+                    if c[idx] < 0 { c[idx] *= neuronA }
+                }
+            }
+        }
     }
 }
 

@@ -47,13 +47,20 @@ public enum AVCaptureColorSpace: Int, Hashable, Sendable {
 }
 
 open class AVCaptureConnection: NSObject, @unchecked Sendable {
+  private var storedPorts: [AVCaptureInput.Port] = []
+  private var storedOutput: AVCaptureOutput?
+  private var storedEnabled = true
   public override init() { super.init() }
-  convenience init(inputPorts ports: [AVCaptureInput.Port], output: AVCaptureOutput) { self.init() }
-  public var inputPorts: [AVCaptureInput.Port] { [] }
-  public var output: AVCaptureOutput? { nil }
+  public convenience init(inputPorts ports: [AVCaptureInput.Port], output: AVCaptureOutput) {
+    self.init()
+    storedPorts = ports
+    storedOutput = output
+  }
+  public var inputPorts: [AVCaptureInput.Port] { storedPorts }
+  public var output: AVCaptureOutput? { storedOutput }
   public var isEnabled: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedEnabled }
+      set { storedEnabled = newValue }
     }
   public var isActive: Bool { false }
   public var audioChannels: [AVCaptureAudioChannel] { [] }
@@ -384,7 +391,9 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
   public var localizedName: String { "" }
   public var manufacturer: String { "" }
   public func hasMediaType(_ mediaType: AVMediaType) -> Bool { false }
-  public func lockForConfiguration() throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+  public func lockForConfiguration() throws {
+    throw AVError(.applicationIsNotAuthorizedToUseDevice)
+  }
   public func unlockForConfiguration() {}
   public func supportsSessionPreset(_ preset: AVCaptureSession.Preset) -> Bool { false }
   public var isConnected: Bool { false }
@@ -450,7 +459,10 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
       get { AVCaptureDevice.TorchMode(rawValue: 0)! }
       set { _ = newValue }
     }
-  public func setTorchModeOn(level torchLevel: Float) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+  public func setTorchModeOn(level torchLevel: Float) throws {
+    _ = torchLevel
+    throw AVError(.torchLevelUnavailable)
+  }
   public func isFocusModeSupported(_ focusMode: AVCaptureDevice.FocusMode) -> Bool { false }
   public var isLockingFocusWithCustomLensPositionSupported: Bool { false }
   public var focusMode: AVCaptureDevice.FocusMode {
@@ -562,9 +574,10 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
       get { false }
       set { _ = newValue }
     }
+  private var storedVideoZoomFactor: CGFloat = 1
   public var videoZoomFactor: CGFloat {
-      get { 0 }
-      set { _ = newValue }
+      get { storedVideoZoomFactor }
+      set { storedVideoZoomFactor = newValue }
     }
   public func ramp(toVideoZoomFactor factor: CGFloat, withRate rate: Float) {}
   public var isRampingVideoZoom: Bool { false }
@@ -601,8 +614,8 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
       get { .zero }
       set { _ = newValue }
     }
-  public var minAvailableVideoZoomFactor: CGFloat { 0 }
-  public var maxAvailableVideoZoomFactor: CGFloat { 0 }
+  public var minAvailableVideoZoomFactor: CGFloat { 1 }
+  public var maxAvailableVideoZoomFactor: CGFloat { 1 }
   public var isGeometricDistortionCorrectionSupported: Bool { false }
   public var isGeometricDistortionCorrectionEnabled: Bool {
       get { false }
@@ -656,9 +669,9 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
   public static let currentISO: Float = 0
   public static let currentExposureTargetBias: Float = 0
   public static let currentWhiteBalanceGains: AVCaptureDevice.WhiteBalanceGains = AVCaptureDevice.WhiteBalanceGains()
-  public static let wasConnectedNotification: Notification.Name = Notification.Name("wasConnectedNotification")
-  public static let wasDisconnectedNotification: Notification.Name = Notification.Name("wasDisconnectedNotification")
-  public static let subjectAreaDidChangeNotification: Notification.Name = Notification.Name("subjectAreaDidChangeNotification")
+  public static let wasConnectedNotification: Notification.Name = Notification.Name("AVCaptureDeviceWasConnectedNotification")
+  public static let wasDisconnectedNotification: Notification.Name = Notification.Name("AVCaptureDeviceWasDisconnectedNotification")
+  public static let subjectAreaDidChangeNotification: Notification.Name = Notification.Name("AVCaptureDeviceSubjectAreaDidChangeNotification")
 }
 
 open class AVCaptureDeviceInput: AVCaptureInput, @unchecked Sendable {
@@ -1345,25 +1358,41 @@ open class AVCaptureSession: NSObject, @unchecked Sendable {
     public static let iFrame1280x720 = Preset(rawValue: "iFrame1280x720")
     public static let inputPriority = Preset(rawValue: "inputPriority")
   }
-  public func canSetSessionPreset(_ preset: AVCaptureSession.Preset) -> Bool { false }
+  private var storedPreset = AVCaptureSession.Preset.high
+  private var storedUsesApplicationAudioSession = true
+  private var storedAutomaticallyConfiguresApplicationAudioSession = true
+  private var storedConfiguresMixWithOthers = false
+  private var storedConfiguresBluetoothHQ = false
+  private var storedAutomaticallyConfiguresWideColor = true
+  private var storedMultitaskingCameraAccessEnabled = false
+  public func canSetSessionPreset(_ preset: AVCaptureSession.Preset) -> Bool {
+    _ = preset
+    return false
+  }
   public var sessionPreset: AVCaptureSession.Preset {
-      get { AVCaptureSession.Preset(rawValue: "") }
-      set { _ = newValue }
+      get { storedPreset }
+      set { storedPreset = newValue }
     }
   public var inputs: [AVCaptureInput] { [] }
-  public func canAddInput(_ input: AVCaptureInput) -> Bool { false }
-  public func addInput(_ input: AVCaptureInput) {}
-  public func removeInput(_ input: AVCaptureInput) {}
+  public func canAddInput(_ input: AVCaptureInput) -> Bool {
+    _ = input
+    return false
+  }
+  public func addInput(_ input: AVCaptureInput) { _ = input }
+  public func removeInput(_ input: AVCaptureInput) { _ = input }
   public var outputs: [AVCaptureOutput] { [] }
-  public func canAddOutput(_ output: AVCaptureOutput) -> Bool { false }
-  public func addOutput(_ output: AVCaptureOutput) {}
-  public func removeOutput(_ output: AVCaptureOutput) {}
-  public func addInputWithNoConnections(_ input: AVCaptureInput) {}
-  public func addOutputWithNoConnections(_ output: AVCaptureOutput) {}
+  public func canAddOutput(_ output: AVCaptureOutput) -> Bool {
+    _ = output
+    return false
+  }
+  public func addOutput(_ output: AVCaptureOutput) { _ = output }
+  public func removeOutput(_ output: AVCaptureOutput) { _ = output }
+  public func addInputWithNoConnections(_ input: AVCaptureInput) { _ = input }
+  public func addOutputWithNoConnections(_ output: AVCaptureOutput) { _ = output }
   public var connections: [AVCaptureConnection] { [] }
   public func canAddConnection(_ connection: AVCaptureConnection) -> Bool { false }
-  public func addConnection(_ connection: AVCaptureConnection) {}
-  public func removeConnection(_ connection: AVCaptureConnection) {}
+  public func addConnection(_ connection: AVCaptureConnection) { _ = connection }
+  public func removeConnection(_ connection: AVCaptureConnection) { _ = connection }
   public var supportsControls: Bool { false }
   public var maxControlsCount: Int { 0 }
   public func setControlsDelegate(_ controlsDelegate: (any AVCaptureSessionControlsDelegate)?, queue controlsDelegateCallbackQueue: DispatchQueue?) {}
@@ -1371,8 +1400,8 @@ open class AVCaptureSession: NSObject, @unchecked Sendable {
   public var controlsDelegateCallbackQueue: DispatchQueue? { nil }
   public var controls: [AVCaptureControl] { [] }
   public func canAddControl(_ control: AVCaptureControl) -> Bool { false }
-  public func addControl(_ control: AVCaptureControl) {}
-  public func removeControl(_ control: AVCaptureControl) {}
+  public func addControl(_ control: AVCaptureControl) { _ = control }
+  public func removeControl(_ control: AVCaptureControl) { _ = control }
   public func beginConfiguration() {}
   public func commitConfiguration() {}
   // Measured testAVCaptureSessionFailClosed: startRunning() leaves isRunning false.
@@ -1380,28 +1409,28 @@ open class AVCaptureSession: NSObject, @unchecked Sendable {
   public var isInterrupted: Bool { false }
   public var isMultitaskingCameraAccessSupported: Bool { false }
   public var isMultitaskingCameraAccessEnabled: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedMultitaskingCameraAccessEnabled }
+      set { storedMultitaskingCameraAccessEnabled = newValue }
     }
   public var usesApplicationAudioSession: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedUsesApplicationAudioSession }
+      set { storedUsesApplicationAudioSession = newValue }
     }
   public var automaticallyConfiguresApplicationAudioSession: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedAutomaticallyConfiguresApplicationAudioSession }
+      set { storedAutomaticallyConfiguresApplicationAudioSession = newValue }
     }
   public var configuresApplicationAudioSessionToMixWithOthers: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedConfiguresMixWithOthers }
+      set { storedConfiguresMixWithOthers = newValue }
     }
   public var configuresApplicationAudioSessionForBluetoothHighQualityRecording: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedConfiguresBluetoothHQ }
+      set { storedConfiguresBluetoothHQ = newValue }
     }
   public var automaticallyConfiguresCaptureDeviceForWideColor: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedAutomaticallyConfiguresWideColor }
+      set { storedAutomaticallyConfiguresWideColor = newValue }
     }
   public func startRunning() {}
   public func stopRunning() {}
@@ -1417,11 +1446,11 @@ open class AVCaptureSession: NSObject, @unchecked Sendable {
   public var deferredStartDelegate: (any AVCaptureSessionDeferredStartDelegate)? { nil }
   public var deferredStartDelegateCallbackQueue: DispatchQueue? { nil }
   public func setDeferredStartDelegate(_ deferredStartDelegate: (any AVCaptureSessionDeferredStartDelegate)?, deferredStartDelegateCallbackQueue: DispatchQueue?) {}
-  public static let runtimeErrorNotification: Notification.Name = Notification.Name("runtimeErrorNotification")
-  public static let didStartRunningNotification: Notification.Name = Notification.Name("didStartRunningNotification")
-  public static let didStopRunningNotification: Notification.Name = Notification.Name("didStopRunningNotification")
-  public static let wasInterruptedNotification: Notification.Name = Notification.Name("wasInterruptedNotification")
-  public static let interruptionEndedNotification: Notification.Name = Notification.Name("interruptionEndedNotification")
+  public static let runtimeErrorNotification: Notification.Name = Notification.Name("AVCaptureSessionRuntimeErrorNotification")
+  public static let didStartRunningNotification: Notification.Name = Notification.Name("AVCaptureSessionDidStartRunningNotification")
+  public static let didStopRunningNotification: Notification.Name = Notification.Name("AVCaptureSessionDidStopRunningNotification")
+  public static let wasInterruptedNotification: Notification.Name = Notification.Name("AVCaptureSessionWasInterruptedNotification")
+  public static let interruptionEndedNotification: Notification.Name = Notification.Name("AVCaptureSessionInterruptionEndedNotification")
 }
 
 public protocol AVCaptureSessionControlsDelegate : AnyObject {

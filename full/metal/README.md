@@ -19,10 +19,19 @@ iPhoneOS 26.1 symbol graph. It is not wired into the shared guest package.
   and applies render-pass load/store without rasterizing.
 - Command buffers transition
   `.notEnqueued → .enqueued → .committed → .scheduled → .completed` in order
-  on `commit()`, with `error == nil` and GPU/kernel timestamps from
-  `ProcessInfo.processInfo.systemUptime`.
-- Sampler, heap, fence, and event objects store configuration / CPU signaling.
-  They do not execute GPU work.
+  on `commit()`, with `error == nil` when only CPU blit / builtin compute /
+  render load-store ran. GPU/kernel timestamps come from
+  `ProcessInfo.processInfo.systemUptime`. Dispatch without a CPU-builtin
+  pipeline completes with `status == .error` and `MTLCommandBufferError.notPermitted`.
+- Sampler, heap, fence, event, and **shared-event** objects store configuration
+  and host-clock signaling. Listeners fire on the signaling thread.
+- Argument encoders write 16-byte slots into a bound `MTLBuffer`.
+  Indirect command buffers store compute/render commands as CPU data;
+  compute `executeCommandsInBuffer` runs CPU-builtin kernels.
+- Parallel render encoders create child render encoders that apply the same
+  CPU load/store path. Resource-state encoders signal CPU fences and
+  fail closed for sparse mapping.
+- Buffer-backed textures honor `bytesPerRow` on `replace`/`getBytes`.
 
 ## Fail-closed boundaries
 
@@ -40,8 +49,13 @@ iPhoneOS 26.1 symbol graph. It is not wired into the shared guest package.
   (`.clear` writes `clearColor` / `clearDepth`). There is **no rasterization**.
 - GPU capture (`MTLCaptureManager`) reports no supported destinations and
   `startCapture(with:)` throws `MTLCaptureError.notSupported`.
-- `makeArgumentEncoder` returns an inert encoder (`encodedLength == 0`).
-- `makeIndirectCommandBuffer` returns `nil`.
+- Compute dispatch without a CPU-builtin pipeline, and render pipelines
+  that name MSL vertex/fragment functions, fail closed (`MTLCommandBufferError.notPermitted`
+  at commit, or `MTLLibraryError.compileFailure` at pipeline creation).
+- Sparse texture mapping on a resource-state encoder fails closed with
+  `MTLCommandBufferError.notPermitted` (this CPU device is not sparse).
+- Shared-event listeners fire on the signaling thread, not the listener
+  dispatch queue (no run loop).
 - Ray tracing, Metal 4 command queues, tensors, IO command queues,
   acceleration structures, and IOSurface-backed textures are not implemented.
   `MTL4RenderPassDescriptor` exists as a nominal type so MetalKit can compile
@@ -126,9 +140,10 @@ the CPU executor stay nondeferred where a focused test exercises them.
 - No shader compiler: `MTLLibraryError.compileFailure` + `"no shader compiler"`.
 - No default / metallib libraries.
 - No GPU capture destinations.
-- Argument encoder inert (`encodedLength == 0`); ICB factory returns `nil`.
 - `supportsFamily` always `false`; ray tracing / Metal 4 / IO / tensors /
   acceleration structures remain unimplemented.
+- Compute dispatch without a CPU-builtin pipeline: `MTLCommandBufferError.notPermitted`.
+- Render pipeline with MSL functions: `MTLLibraryError.compileFailure`.
 
 ### Tests and markers
 
@@ -148,7 +163,10 @@ inlines the `test*` functions from `*Tests.swift` and prints
 `METAL_AGENT_RUNTIME_OK`. Focused files cover geometry, enum/option-set
 raw values, the six documented texture formats, box-filter mipgen, blit
 fill/copy, builtin compute kernels, render-pass clear/load, heap/event/fence,
-library compileFailure, capture fail-closed, argument encoder, and ICB `nil`.
+library compileFailure, capture fail-closed, argument-encoder buffer writes,
+shared events, texture views (2D/array/cube/3D), ICB data + CPU-builtin
+execute, compute dispatch fail-closed, parallel render encoders, resource-state
+fences, and fail-closed sparse mapping.
 
 The sealed gate does not print the Swift environment marker; that line is
 produced by `.cursor/verify-cloud-environment.sh` / the Swift 6.2.4 linux
@@ -162,5 +180,50 @@ for: default-device nil vs software adapter on devices without Metal;
 `MTLGPUFamily.metal4` / `apple10` raw values; `MTLPixelFormat.unspecialized`
 raw value; whether a missing AIR compiler is `.compileFailure` vs
 `.unsupported` on iPhoneOS 26.1; capture `supportsDestination` with an
-attached debugger; and `MTLStages` bit layout including `MTLStageAll`.
+attached debugger; `MTLStages` bit layout including `MTLStageAll`;
+argument-buffer slot stride; ICB execute semantics; shared-event listener
+queues; texture-view format compatibility; parallel-encoder load ordering;
+and the Apple error for sparse mapping on a non-sparse device.
 This port does not fabricate those Apple-only outcomes.
+
+## Depth pass 2026-09 (wave 8)
+
+Campaign `ios26.1-fwdepth-r15`, framework `Metal`, lane `large-partitioned`.
+Second pass on the existing CPU reference: keep the first-pass tests green,
+then add host-clock shared events, ICB/argument-encoder data, texture views
+with compatible formats, 2DArray/cube/3D byte-exact layouts, pipeline
+validation, fail-closed shader dispatch at commit, a parallel render encoder
+with CPU load/store, resource-state fences, fail-closed sparse mapping, and
+buffer-backed textures that honor `bytesPerRow`.
+
+| Status | Before (first pass in tree) | After |
+| --- | ---: | ---: |
+| implemented | 1991 | 2128 |
+| declared | 389 | 312 |
+| deferred | 2164 | 2104 |
+| unavailable | 3 | 3 |
+
+Implemented gain: **+137**. Evidence is `test:full/metal/tests/agent/<File>Tests.swift#testName`
+naming a real synchronous `test*` function.
+
+Top-5 implemented evidence distribution (of 2128):
+
+1. `MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues` — 1319 (enum / option-set / C constant table)
+2. `MetalDescriptorTests.swift#testDescriptorValueSemantics` — 224
+3. `MetalGeometryTests.swift#testGeometryHelpers` — 106
+4. `MetalRenderTests.swift#testRenderPassClearAndLoad` — 60
+5. `MetalComputeTests.swift#testCPUBuiltinCompute` — 60
+
+No non-table test exceeds 40% of the remaining 809 implemented rows
+(cap 323; largest family test is 224). New focused tests:
+`testSharedEventHostClock`, `testIndirectCommandBufferAsData`,
+`testTextureViewsAndDimensionalLayouts`, `testPipelineDescriptorValidation`,
+`testComputeDispatchFailClosed`, `testParallelRenderEncoderAndSamplerState`,
+`testResourceStateEncoder`.
+
+`.cursor/verify-cloud-environment.sh` on this snapshot fails earlier
+(`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 /
+linux and the sealed gate compiles with a clean product tree (`products=clean`).
+

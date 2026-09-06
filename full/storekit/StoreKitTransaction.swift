@@ -63,11 +63,11 @@ extension VerificationResult where SignedType == Transaction {
 }
 
 extension VerificationResult where SignedType == AppTransaction {
-    public var jwsRepresentation: String { "" }
-    public var headerData: Data { Data() }
-    public var payloadData: Data { Data() }
-    public var signatureData: Data { Data() }
-    public var signedData: Data { Data() }
+    public var jwsRepresentation: String { unsafePayloadValue.jwsRepresentation }
+    public var headerData: Data { unsafePayloadValue.jwsHeaderData }
+    public var payloadData: Data { unsafePayloadValue.jwsPayloadData }
+    public var signatureData: Data { unsafePayloadValue.jwsSignatureData }
+    public var signedData: Data { headerData + payloadData }
     public var signedDate: Date { unsafePayloadValue.signedDate }
     public var deviceVerification: Data { unsafePayloadValue.deviceVerification }
     public var deviceVerificationNonce: UUID { unsafePayloadValue.deviceVerificationNonce }

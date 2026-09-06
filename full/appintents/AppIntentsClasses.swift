@@ -207,7 +207,35 @@ public class GreaterThanComparator<Property, PropertyType, ComparatorMappingType
 }
 
 public class RelevantIntentManager: NSObject, @unchecked Sendable {
+    public static let shared = RelevantIntentManager()
+    private static let lock = NSLock()
+    private static var stored: [RelevantIntent] = []
+
     public override init() { super.init() }
+
+    public func updateRelevantIntents(_ relevantIntents: [RelevantIntent]) async throws {
+        updateRelevantIntentsSync(relevantIntents)
+    }
+
+    /// Linux has no WidgetKit relevance daemon. This records the payload
+    /// in-process and never claims a timeline reload.
+    public func updateRelevantIntentsSync(_ relevantIntents: [RelevantIntent]) {
+        Self.lock.lock()
+        Self.stored = relevantIntents
+        Self.lock.unlock()
+    }
+
+    public static var recordedRelevantIntents: [RelevantIntent] {
+        lock.lock()
+        defer { lock.unlock() }
+        return stored
+    }
+
+    public static func reset() {
+        lock.lock()
+        stored.removeAll()
+        lock.unlock()
+    }
 }
 
 public class LessThanOrEqualToComparator<Property, PropertyType, ComparatorMappingType>: NSObject, @unchecked Sendable {

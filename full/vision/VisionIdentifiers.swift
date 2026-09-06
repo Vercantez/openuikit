@@ -81,3 +81,42 @@ public struct VNComputeStage: RawRepresentable, Hashable, Sendable {
     public static let main = VNComputeStage(rawValue: "VNComputeStageMain")
     public static let postProcessing = VNComputeStage(rawValue: "VNComputeStagePostProcessing")
 }
+
+public struct VNRecognizedPointKey: RawRepresentable, Hashable, Sendable {
+    public let rawValue: String
+    public init(rawValue: String) { self.rawValue = rawValue }
+
+    public static let bodyLandmarkKeyLeftAnkle = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyLeftAnkle")
+    public static let bodyLandmarkKeyLeftEar = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyLeftEar")
+    public static let bodyLandmarkKeyLeftElbow = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyLeftElbow")
+    public static let bodyLandmarkKeyLeftEye = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyLeftEye")
+    public static let bodyLandmarkKeyLeftHip = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyLeftHip")
+    public static let bodyLandmarkKeyLeftKnee = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyLeftKnee")
+    public static let bodyLandmarkKeyLeftShoulder = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyLeftShoulder")
+    public static let bodyLandmarkKeyLeftWrist = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyLeftWrist")
+    public static let bodyLandmarkKeyNeck = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyNeck")
+    public static let bodyLandmarkKeyNose = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyNose")
+    public static let bodyLandmarkKeyRightAnkle = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyRightAnkle")
+    public static let bodyLandmarkKeyRightEar = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyRightEar")
+    public static let bodyLandmarkKeyRightElbow = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyRightElbow")
+    public static let bodyLandmarkKeyRightEye = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyRightEye")
+    public static let bodyLandmarkKeyRightHip = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyRightHip")
+    public static let bodyLandmarkKeyRightKnee = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyRightKnee")
+    public static let bodyLandmarkKeyRightShoulder = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyRightShoulder")
+    public static let bodyLandmarkKeyRightWrist = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyRightWrist")
+    public static let bodyLandmarkKeyRoot = VNRecognizedPointKey(rawValue: "VNBodyLandmarkKeyRoot")
+}
+
+public struct VNRecognizedPointGroupKey: RawRepresentable, Hashable, Sendable {
+    public let rawValue: String
+    public init(rawValue: String) { self.rawValue = rawValue }
+
+    public static let bodyLandmarkRegionKeyFace = VNRecognizedPointGroupKey(rawValue: "VNBodyLandmarkRegionKeyFace")
+    public static let bodyLandmarkRegionKeyLeftArm = VNRecognizedPointGroupKey(rawValue: "VNBodyLandmarkRegionKeyLeftArm")
+    public static let bodyLandmarkRegionKeyLeftLeg = VNRecognizedPointGroupKey(rawValue: "VNBodyLandmarkRegionKeyLeftLeg")
+    public static let bodyLandmarkRegionKeyRightArm = VNRecognizedPointGroupKey(rawValue: "VNBodyLandmarkRegionKeyRightArm")
+    public static let bodyLandmarkRegionKeyRightLeg = VNRecognizedPointGroupKey(rawValue: "VNBodyLandmarkRegionKeyRightLeg")
+    public static let bodyLandmarkRegionKeyTorso = VNRecognizedPointGroupKey(rawValue: "VNBodyLandmarkRegionKeyTorso")
+    public static let all = VNRecognizedPointGroupKey(rawValue: "VNRecognizedPointGroupKeyAll")
+    public static let point3DGroupKeyAll = VNRecognizedPointGroupKey(rawValue: "VNRecognizedPoint3DGroupKeyAll")
+}

@@ -194,16 +194,19 @@ open class AVAsset: NSObject, @unchecked Sendable {
 open class AVURLAsset: AVAsset, @unchecked Sendable {
     public let url: URL
     public let options: [String: Any]?
+    public let httpSessionIdentifier: UUID
 
     public override init() {
         self.url = URL(fileURLWithPath: "/dev/null")
         self.options = nil
+        self.httpSessionIdentifier = UUID()
         super.init()
     }
 
     public init(url: URL, options: [String: Any]? = nil) {
         self.url = url
         self.options = options
+        self.httpSessionIdentifier = UUID()
         super.init()
         if url.isFileURL, let probe = AVLocalMediaProbe.probe(url: url) {
             attachPortableProbe(probe)
@@ -238,6 +241,23 @@ open class AVPlayerItem: NSObject, @unchecked Sendable {
         self.init(asset: asset)
         _ = automaticallyLoadedAssetKeys
     }
+
+    var portableOutputs: [AVPlayerItemOutput] = []
+    var portableCollectors: [AVPlayerItemMediaDataCollector] = []
+    var portableAudioMix: AVAudioMix?
+    var portableVideoComposition: AVVideoComposition?
+    var portablePreferredForwardBufferDuration: TimeInterval = 0
+    var portableSeekingWaitsForVideoCompositionRendering = false
+    var portableVideoApertureMode = AVVideoApertureMode(rawValue: "")
+    var portableAudioTimePitchAlgorithm = AVAudioTimePitchAlgorithm(rawValue: "")
+    var portablePreferredPeakBitRate: Double = 0
+    var portablePreferredPeakBitRateForExpensiveNetworks: Double = 0
+    var portablePreferredMaximumResolution: CGSize = .zero
+    var portablePreferredMaximumResolutionForExpensiveNetworks: CGSize = .zero
+    var portableStartsOnFirstEligibleVariant = false
+    var portableForwardPlaybackEndTime = CMTime.zero
+    var portableReversePlaybackEndTime = CMTime.zero
+    var portableAutomaticallyPreservesTimeOffsetFromLive = false
 
     func _portableSetCurrentTime(_ time: CMTime) {
         itemLock.withLock { storedTime = time }
@@ -512,6 +532,8 @@ open class AVAssetExportSession: NSObject, @unchecked Sendable {
     public var outputURL: URL?
     public var outputFileType: AVFileType?
     public var shouldOptimizeForNetworkUse = false
+    var portableTimeRange = CMTimeRange.zero
+    var portableFileLengthLimit: Int64 = 0
 
     private let stateLock = NSLock()
     private var storedStatus = Status.unknown
@@ -534,6 +556,22 @@ open class AVAssetExportSession: NSObject, @unchecked Sendable {
             cancelled = true
             storedStatus = .cancelled
         }
+    }
+
+    func failClosedExport(_ handler: @escaping () -> Void) {
+        stateLock.withLock {
+            storedStatus = .failed
+            storedError = AVError(.exportFailed)
+        }
+        handler()
+    }
+
+    public func exportAsynchronously(completionHandler handler: @escaping () -> Void) {
+        failClosedExport(handler)
+    }
+
+    public func determineCompatibleFileTypes(completionHandler handler: @escaping ([AVFileType]) -> Void) {
+        handler([])
     }
 
     public func export(to outputURL: URL, as fileType: AVFileType) async throws {
