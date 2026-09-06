@@ -973,6 +973,39 @@ public protocol AVCapturePhotoCaptureDelegate : AnyObject {
   func photoOutput(_ output: AVCapturePhotoOutput, didFinishCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings, error: (any Error)?)
 }
 
+extension AVCapturePhotoCaptureDelegate {
+  public func photoOutput(_ output: AVCapturePhotoOutput, willBeginCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+    _ = (output, resolvedSettings)
+  }
+  public func photoOutput(_ output: AVCapturePhotoOutput, willCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+    _ = (output, resolvedSettings)
+  }
+  public func photoOutput(_ output: AVCapturePhotoOutput, didCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+    _ = (output, resolvedSettings)
+  }
+  public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: (any Error)?) {
+    _ = (output, photo, error)
+  }
+  public func photoOutput(_ output: AVCapturePhotoOutput, didFinishCapturingDeferredPhotoProxy deferredPhotoProxy: AVCaptureDeferredPhotoProxy?, error: (any Error)?) {
+    _ = (output, deferredPhotoProxy, error)
+  }
+  public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: (any Error)?) {
+    _ = (output, photoSampleBuffer, previewPhotoSampleBuffer, resolvedSettings, bracketSettings, error)
+  }
+  public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingRawPhoto rawSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: (any Error)?) {
+    _ = (output, rawSampleBuffer, previewPhotoSampleBuffer, resolvedSettings, bracketSettings, error)
+  }
+  public func photoOutput(_ output: AVCapturePhotoOutput, didFinishRecordingLivePhotoMovieForEventualFileAt outputFileURL: URL, resolvedSettings: AVCaptureResolvedPhotoSettings) {
+    _ = (output, outputFileURL, resolvedSettings)
+  }
+  public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingLivePhotoToMovieFileAt outputFileURL: URL, duration: CMTime, photoDisplayTime: CMTime, resolvedSettings: AVCaptureResolvedPhotoSettings, error: (any Error)?) {
+    _ = (output, outputFileURL, duration, photoDisplayTime, resolvedSettings, error)
+  }
+  public func photoOutput(_ output: AVCapturePhotoOutput, didFinishCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings, error: (any Error)?) {
+    _ = (output, resolvedSettings, error)
+  }
+}
+
 public protocol AVCapturePhotoFileDataRepresentationCustomizer : AnyObject {
   func replacementMetadata(for photo: AVCapturePhoto) -> [String : Any]?
   func replacementDepthData(for photo: AVCapturePhoto) -> AVDepthData?
@@ -982,6 +1015,32 @@ public protocol AVCapturePhotoFileDataRepresentationCustomizer : AnyObject {
 }
 
 open class AVCapturePhotoOutput: AVCaptureOutput, @unchecked Sendable {
+  final class PortableState {
+    var appleProRAWEnabled = false
+    var autoDeferredPhotoDeliveryEnabled = false
+    var fastCapturePrioritizationEnabled = false
+    var virtualDeviceConstituentPhotoDeliveryEnabled = false
+    var dualCameraDualPhotoDeliveryEnabled = false
+    var highResolutionCaptureEnabled = false
+    var livePhotoCaptureEnabled = false
+    var livePhotoCaptureSuspended = false
+    var preservesLivePhotoCaptureSuspendedOnSessionStop = false
+    var livePhotoAutoTrimmingEnabled = false
+    var contentAwareDistortionCorrectionEnabled = false
+    var zeroShutterLagEnabled = false
+    var responsiveCaptureEnabled = false
+    var constantColorEnabled = false
+    var cameraSensorOrientationCompensationEnabled = false
+    var depthDataDeliveryEnabled = false
+    var portraitEffectsMatteDeliveryEnabled = false
+    var maxPhotoQualityPrioritization = AVCapturePhotoOutput.QualityPrioritization.speed
+    var maxPhotoDimensions = CMVideoDimensions(width: 0, height: 0)
+    var photoSettingsForSceneMonitoring: AVCapturePhotoSettings?
+    var enabledSemanticSegmentationMatteTypes: [AVSemanticSegmentationMatte.MatteType] = []
+  }
+
+  let portableState = PortableState()
+
   public override init() { super.init() }
   public enum CaptureReadiness: Int, Hashable, Sendable {
     case sessionNotRunning = 0
@@ -998,41 +1057,68 @@ open class AVCapturePhotoOutput: AVCaptureOutput, @unchecked Sendable {
   public var supportedFlashModes: [AVCaptureDevice.FlashMode] { [] }
   public var availablePhotoPixelFormatTypes: [OSType] { [] }
   public var availableRawPhotoPixelFormatTypes: [OSType] { [] }
-  public func supportedPhotoPixelFormatTypes(for fileType: AVFileType) -> [OSType] { [] }
-  public func supportedRawPhotoPixelFormatTypes(for fileType: AVFileType) -> [OSType] { [] }
-  public func capturePhoto(with settings: AVCapturePhotoSettings, delegate: any AVCapturePhotoCaptureDelegate) {}
+  public func supportedPhotoPixelFormatTypes(for fileType: AVFileType) -> [OSType] {
+    _ = fileType
+    return []
+  }
+  public func supportedRawPhotoPixelFormatTypes(for fileType: AVFileType) -> [OSType] {
+    _ = fileType
+    return []
+  }
+  public func capturePhoto(with settings: AVCapturePhotoSettings, delegate: any AVCapturePhotoCaptureDelegate) {
+    let resolved = AVCaptureResolvedPhotoSettings()
+    resolved.portableUniqueID = settings.uniqueID
+    let error = AVError(.applicationIsNotAuthorizedToUseDevice)
+    delegate.photoOutput(self, didFinishProcessingPhoto: AVCapturePhoto(), error: error)
+    delegate.photoOutput(self, didFinishCaptureFor: resolved, error: error)
+  }
   public var preparedPhotoSettingsArray: [AVCapturePhotoSettings] { [] }
-  public func setPreparedPhotoSettingsArray(_ preparedPhotoSettingsArray: [AVCapturePhotoSettings]) async throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+  public func setPreparedPhotoSettingsArray(_ preparedPhotoSettingsArray: [AVCapturePhotoSettings]) async throws {
+    _ = preparedPhotoSettingsArray
+    throw AVFoundationPortableError.mediaServiceUnavailable
+  }
   public var availablePhotoCodecTypes: [AVVideoCodecType] { [] }
   public var availableRawPhotoCodecTypes: [AVVideoCodecType] { [] }
   public var isAppleProRAWSupported: Bool { false }
   public var isAppleProRAWEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
-  public class func isBayerRAWPixelFormat(_ pixelFormat: OSType) -> Bool { false }
-  public class func isAppleProRAWPixelFormat(_ pixelFormat: OSType) -> Bool { false }
+    get { portableState.appleProRAWEnabled }
+    set { portableState.appleProRAWEnabled = newValue }
+  }
+  public class func isBayerRAWPixelFormat(_ pixelFormat: OSType) -> Bool {
+    _ = pixelFormat
+    return false
+  }
+  public class func isAppleProRAWPixelFormat(_ pixelFormat: OSType) -> Bool {
+    _ = pixelFormat
+    return false
+  }
   public var availablePhotoFileTypes: [AVFileType] { [] }
   public var availableRawPhotoFileTypes: [AVFileType] { [] }
-  public func supportedPhotoCodecTypes(for fileType: AVFileType) -> [AVVideoCodecType] { [] }
-  public func supportedRawPhotoCodecTypes(forRawPhotoPixelFormatType pixelFormatType: OSType, fileType: AVFileType) -> [AVVideoCodecType] { [] }
+  public func supportedPhotoCodecTypes(for fileType: AVFileType) -> [AVVideoCodecType] {
+    _ = fileType
+    return []
+  }
+  public func supportedRawPhotoCodecTypes(forRawPhotoPixelFormatType pixelFormatType: OSType, fileType: AVFileType) -> [AVVideoCodecType] {
+    _ = (pixelFormatType, fileType)
+    return []
+  }
   public var maxPhotoQualityPrioritization: AVCapturePhotoOutput.QualityPrioritization {
-      get { AVCapturePhotoOutput.QualityPrioritization(rawValue: 0)! }
-      set { _ = newValue }
-    }
+    get { portableState.maxPhotoQualityPrioritization }
+    set { portableState.maxPhotoQualityPrioritization = newValue }
+  }
   public var isFastCapturePrioritizationSupported: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { false }
+    set { _ = newValue }
+  }
   public var isFastCapturePrioritizationEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.fastCapturePrioritizationEnabled }
+    set { portableState.fastCapturePrioritizationEnabled = newValue }
+  }
   public var isAutoDeferredPhotoDeliverySupported: Bool { false }
   public var isAutoDeferredPhotoDeliveryEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.autoDeferredPhotoDeliveryEnabled }
+    set { portableState.autoDeferredPhotoDeliveryEnabled = newValue }
+  }
   public var isStillImageStabilizationSupported: Bool { false }
   public var isStillImageStabilizationScene: Bool { false }
   public var isVirtualDeviceFusionSupported: Bool { false }
@@ -1040,104 +1126,122 @@ open class AVCapturePhotoOutput: AVCaptureOutput, @unchecked Sendable {
   public var isVirtualDeviceConstituentPhotoDeliverySupported: Bool { false }
   public var isDualCameraDualPhotoDeliverySupported: Bool { false }
   public var isVirtualDeviceConstituentPhotoDeliveryEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.virtualDeviceConstituentPhotoDeliveryEnabled }
+    set { portableState.virtualDeviceConstituentPhotoDeliveryEnabled = newValue }
+  }
   public var isDualCameraDualPhotoDeliveryEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.dualCameraDualPhotoDeliveryEnabled }
+    set { portableState.dualCameraDualPhotoDeliveryEnabled = newValue }
+  }
   public var isCameraCalibrationDataDeliverySupported: Bool { false }
   public var isAutoRedEyeReductionSupported: Bool { false }
   public var isFlashScene: Bool { false }
   public var photoSettingsForSceneMonitoring: AVCapturePhotoSettings? {
-      get { nil }
-      set { _ = newValue }
-    }
+    get { portableState.photoSettingsForSceneMonitoring }
+    set { portableState.photoSettingsForSceneMonitoring = newValue }
+  }
   public var isHighResolutionCaptureEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.highResolutionCaptureEnabled }
+    set { portableState.highResolutionCaptureEnabled = newValue }
+  }
   public var maxPhotoDimensions: CMVideoDimensions {
-      get { CMVideoDimensions(width: 0, height: 0) }
-      set { _ = newValue }
-    }
+    get { portableState.maxPhotoDimensions }
+    set { portableState.maxPhotoDimensions = newValue }
+  }
   public var maxBracketedCapturePhotoCount: Int { 0 }
   public var isLensStabilizationDuringBracketedCaptureSupported: Bool { false }
   public var isLivePhotoCaptureSupported: Bool { false }
   public var isLivePhotoCaptureEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.livePhotoCaptureEnabled }
+    set { portableState.livePhotoCaptureEnabled = newValue }
+  }
   public var isLivePhotoCaptureSuspended: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.livePhotoCaptureSuspended }
+    set { portableState.livePhotoCaptureSuspended = newValue }
+  }
   public var preservesLivePhotoCaptureSuspendedOnSessionStop: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.preservesLivePhotoCaptureSuspendedOnSessionStop }
+    set { portableState.preservesLivePhotoCaptureSuspendedOnSessionStop = newValue }
+  }
   public var isLivePhotoAutoTrimmingEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.livePhotoAutoTrimmingEnabled }
+    set { portableState.livePhotoAutoTrimmingEnabled = newValue }
+  }
   public var availableLivePhotoVideoCodecTypes: [AVVideoCodecType] { [] }
-  public class func jpegPhotoDataRepresentation(forJPEGSampleBuffer JPEGSampleBuffer: CMSampleBuffer, previewPhotoSampleBuffer: CMSampleBuffer?) -> Data? { nil }
-  public class func dngPhotoDataRepresentation(forRawSampleBuffer rawSampleBuffer: CMSampleBuffer, previewPhotoSampleBuffer: CMSampleBuffer?) -> Data? { nil }
+  public class func jpegPhotoDataRepresentation(forJPEGSampleBuffer JPEGSampleBuffer: CMSampleBuffer, previewPhotoSampleBuffer: CMSampleBuffer?) -> Data? {
+    _ = (JPEGSampleBuffer, previewPhotoSampleBuffer)
+    return nil
+  }
+  public class func dngPhotoDataRepresentation(forRawSampleBuffer rawSampleBuffer: CMSampleBuffer, previewPhotoSampleBuffer: CMSampleBuffer?) -> Data? {
+    _ = (rawSampleBuffer, previewPhotoSampleBuffer)
+    return nil
+  }
   public var isContentAwareDistortionCorrectionSupported: Bool { false }
   public var isContentAwareDistortionCorrectionEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.contentAwareDistortionCorrectionEnabled }
+    set { portableState.contentAwareDistortionCorrectionEnabled = newValue }
+  }
   public var isZeroShutterLagSupported: Bool { false }
   public var isZeroShutterLagEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.zeroShutterLagEnabled }
+    set { portableState.zeroShutterLagEnabled = newValue }
+  }
   public var isResponsiveCaptureSupported: Bool { false }
   public var isResponsiveCaptureEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
-  public var captureReadiness: AVCapturePhotoOutput.CaptureReadiness { AVCapturePhotoOutput.CaptureReadiness(rawValue: 0)! }
+    get { portableState.responsiveCaptureEnabled }
+    set { portableState.responsiveCaptureEnabled = newValue }
+  }
+  public var captureReadiness: AVCapturePhotoOutput.CaptureReadiness { .sessionNotRunning }
   public var isConstantColorSupported: Bool { false }
   public var isConstantColorEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.constantColorEnabled }
+    set { portableState.constantColorEnabled = newValue }
+  }
   public var isShutterSoundSuppressionSupported: Bool { false }
   public var isCameraSensorOrientationCompensationSupported: Bool { false }
   public var isCameraSensorOrientationCompensationEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.cameraSensorOrientationCompensationEnabled }
+    set { portableState.cameraSensorOrientationCompensationEnabled = newValue }
+  }
   public var isDepthDataDeliverySupported: Bool { false }
   public var isDepthDataDeliveryEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.depthDataDeliveryEnabled }
+    set { portableState.depthDataDeliveryEnabled = newValue }
+  }
   public var isPortraitEffectsMatteDeliverySupported: Bool { false }
   public var isPortraitEffectsMatteDeliveryEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableState.portraitEffectsMatteDeliveryEnabled }
+    set { portableState.portraitEffectsMatteDeliveryEnabled = newValue }
+  }
   public var availableSemanticSegmentationMatteTypes: [AVSemanticSegmentationMatte.MatteType] { [] }
   public var enabledSemanticSegmentationMatteTypes: [AVSemanticSegmentationMatte.MatteType] {
-      get { [] }
-      set { _ = newValue }
-    }
+    get { portableState.enabledSemanticSegmentationMatteTypes }
+    set { portableState.enabledSemanticSegmentationMatteTypes = newValue }
+  }
 }
 
 open class AVCapturePhotoOutputReadinessCoordinator: NSObject, @unchecked Sendable {
+  var portableDelegate: (any AVCapturePhotoOutputReadinessCoordinatorDelegate)?
+  var portableReadiness = AVCapturePhotoOutput.CaptureReadiness.sessionNotRunning
+  var portableTracked: Set<Int64> = []
+
   public override init() { super.init() }
-  convenience init(photoOutput: AVCapturePhotoOutput) { self.init() }
+  convenience init(photoOutput: AVCapturePhotoOutput) {
+    self.init()
+    portableReadiness = photoOutput.captureReadiness
+  }
   public var delegate: (any AVCapturePhotoOutputReadinessCoordinatorDelegate)? {
-      get { nil }
-      set { _ = newValue }
-    }
-  public var captureReadiness: AVCapturePhotoOutput.CaptureReadiness { AVCapturePhotoOutput.CaptureReadiness(rawValue: 0)! }
-  public func startTrackingCaptureRequest(using settings: AVCapturePhotoSettings) {}
-  public func stopTrackingCaptureRequest(using settingsUniqueID: Int64) {}
+    get { portableDelegate }
+    set { portableDelegate = newValue }
+  }
+  public var captureReadiness: AVCapturePhotoOutput.CaptureReadiness { portableReadiness }
+  public func startTrackingCaptureRequest(using settings: AVCapturePhotoSettings) {
+    portableTracked.insert(settings.uniqueID)
+    portableDelegate?.readinessCoordinator(self, captureReadinessDidChange: portableReadiness)
+  }
+  public func stopTrackingCaptureRequest(using settingsUniqueID: Int64) {
+    portableTracked.remove(settingsUniqueID)
+  }
 }
 
 public protocol AVCapturePhotoOutputReadinessCoordinatorDelegate : AnyObject {
@@ -1145,139 +1249,228 @@ public protocol AVCapturePhotoOutputReadinessCoordinatorDelegate : AnyObject {
 }
 
 open class AVCapturePhotoSettings: NSObject, @unchecked Sendable {
-  public override init() { super.init() }
+  private static let idLock = NSLock()
+  private static var nextUniqueID: Int64 = 1
+
+  static func allocateUniqueID() -> Int64 {
+    idLock.lock()
+    defer { idLock.unlock() }
+    let value = nextUniqueID
+    nextUniqueID += 1
+    return value
+  }
+
+  var portableUniqueID: Int64
+  var portableFormat: [String: Any]?
+  var portableRawFileFormat: [String: Any]?
+  var portableProcessedFileType: AVFileType?
+  var portableRawFileType: AVFileType?
+  var portableFlashMode = AVCaptureDevice.FlashMode.off
+  var portableAutoRedEyeReductionEnabled = false
+  var portablePhotoQualityPrioritization = AVCapturePhotoOutput.QualityPrioritization.speed
+  var portableAutoStillImageStabilizationEnabled = false
+  var portableAutoVirtualDeviceFusionEnabled = false
+  var portableAutoDualCameraFusionEnabled = false
+  var portableVirtualDeviceConstituentPhotoDeliveryEnabledDevices: [AVCaptureDevice] = []
+  var portableDualCameraDualPhotoDeliveryEnabled = false
+  var portableHighResolutionPhotoEnabled = false
+  var portableMaxPhotoDimensions = CMVideoDimensions(width: 0, height: 0)
+  var portableDepthDataDeliveryEnabled = false
+  var portableEmbedsDepthDataInPhoto = false
+  var portableDepthDataFiltered = false
+  var portableCameraCalibrationDataDeliveryEnabled = false
+  var portablePortraitEffectsMatteDeliveryEnabled = false
+  var portableEmbedsPortraitEffectsMatteInPhoto = false
+  var portableEnabledSemanticSegmentationMatteTypes: [AVSemanticSegmentationMatte.MatteType] = []
+  var portableEmbedsSemanticSegmentationMattesInPhoto = false
+  var portableMetadata: [String: Any] = [:]
+  var portableLivePhotoMovieFileURL: URL?
+  var portableLivePhotoVideoCodecType = AVVideoCodecType(rawValue: "")
+  var portableLivePhotoMovieMetadata: [AVMetadataItem] = []
+  var portablePreviewPhotoFormat: [String: Any]?
+  var portableEmbeddedThumbnailPhotoFormat: [String: Any]?
+  var portableRawEmbeddedThumbnailPhotoFormat: [String: Any]?
+  var portableAutoContentAwareDistortionCorrectionEnabled = false
+  var portableConstantColorEnabled = false
+  var portableConstantColorFallbackPhotoDeliveryEnabled = false
+  var portableShutterSoundSuppressionEnabled = false
+
+  public override init() {
+    portableUniqueID = AVCapturePhotoSettings.allocateUniqueID()
+    super.init()
+  }
+
   public var availablePreviewPhotoPixelFormatTypes: [OSType] { [] }
-  convenience init(format: [String : Any]?) { self.init() }
-  convenience init(rawPixelFormatType: OSType) { self.init() }
-  convenience init(rawPixelFormatType: OSType, processedFormat: [String : Any]?) { self.init() }
-  convenience init(rawPixelFormatType: OSType, rawFileType: AVFileType?, processedFormat: [String : Any]?, processedFileType: AVFileType?) { self.init() }
-  convenience init(from photoSettings: AVCapturePhotoSettings) { self.init() }
-  public var uniqueID: Int64 { 0 }
-  public var format: [String : Any]? { nil }
+
+  public convenience init(format: [String : Any]?) {
+    self.init()
+    portableFormat = format
+  }
+
+  public convenience init(rawPixelFormatType: OSType) {
+    self.init()
+    _ = rawPixelFormatType
+  }
+
+  public convenience init(rawPixelFormatType: OSType, processedFormat: [String : Any]?) {
+    self.init(format: processedFormat)
+    _ = rawPixelFormatType
+  }
+
+  public convenience init(
+    rawPixelFormatType: OSType,
+    rawFileType: AVFileType?,
+    processedFormat: [String : Any]?,
+    processedFileType: AVFileType?
+  ) {
+    self.init(format: processedFormat)
+    _ = rawPixelFormatType
+    portableRawFileType = rawFileType
+    portableProcessedFileType = processedFileType
+  }
+
+  public convenience init(from photoSettings: AVCapturePhotoSettings) {
+    self.init(format: photoSettings.format)
+    portableRawFileFormat = photoSettings.rawFileFormat
+    portableProcessedFileType = photoSettings.processedFileType
+    portableRawFileType = photoSettings.rawFileType
+    portableFlashMode = photoSettings.flashMode
+    portableAutoRedEyeReductionEnabled = photoSettings.isAutoRedEyeReductionEnabled
+    portablePhotoQualityPrioritization = photoSettings.photoQualityPrioritization
+    portableHighResolutionPhotoEnabled = photoSettings.isHighResolutionPhotoEnabled
+    portableMaxPhotoDimensions = photoSettings.maxPhotoDimensions
+    portableDepthDataDeliveryEnabled = photoSettings.isDepthDataDeliveryEnabled
+    portableMetadata = photoSettings.metadata
+    portableLivePhotoMovieFileURL = photoSettings.livePhotoMovieFileURL
+    portablePreviewPhotoFormat = photoSettings.previewPhotoFormat
+  }
+
+  public var uniqueID: Int64 { portableUniqueID }
+  public var format: [String : Any]? { portableFormat }
   public var rawFileFormat: [String : Any]? {
-      get { nil }
-      set { _ = newValue }
-    }
-  public var processedFileType: AVFileType? { nil }
-  public var rawFileType: AVFileType? { nil }
+    get { portableRawFileFormat }
+    set { portableRawFileFormat = newValue }
+  }
+  public var processedFileType: AVFileType? { portableProcessedFileType }
+  public var rawFileType: AVFileType? { portableRawFileType }
   public var flashMode: AVCaptureDevice.FlashMode {
-      get { AVCaptureDevice.FlashMode(rawValue: 0)! }
-      set { _ = newValue }
-    }
+    get { portableFlashMode }
+    set { portableFlashMode = newValue }
+  }
   public var isAutoRedEyeReductionEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableAutoRedEyeReductionEnabled }
+    set { portableAutoRedEyeReductionEnabled = newValue }
+  }
   public var photoQualityPrioritization: AVCapturePhotoOutput.QualityPrioritization {
-      get { AVCapturePhotoOutput.QualityPrioritization(rawValue: 0)! }
-      set { _ = newValue }
-    }
+    get { portablePhotoQualityPrioritization }
+    set { portablePhotoQualityPrioritization = newValue }
+  }
   public var isAutoStillImageStabilizationEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableAutoStillImageStabilizationEnabled }
+    set { portableAutoStillImageStabilizationEnabled = newValue }
+  }
   public var isAutoVirtualDeviceFusionEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableAutoVirtualDeviceFusionEnabled }
+    set { portableAutoVirtualDeviceFusionEnabled = newValue }
+  }
   public var isAutoDualCameraFusionEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableAutoDualCameraFusionEnabled }
+    set { portableAutoDualCameraFusionEnabled = newValue }
+  }
   public var virtualDeviceConstituentPhotoDeliveryEnabledDevices: [AVCaptureDevice] {
-      get { [] }
-      set { _ = newValue }
-    }
+    get { portableVirtualDeviceConstituentPhotoDeliveryEnabledDevices }
+    set { portableVirtualDeviceConstituentPhotoDeliveryEnabledDevices = newValue }
+  }
   public var isDualCameraDualPhotoDeliveryEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableDualCameraDualPhotoDeliveryEnabled }
+    set { portableDualCameraDualPhotoDeliveryEnabled = newValue }
+  }
   public var isHighResolutionPhotoEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableHighResolutionPhotoEnabled }
+    set { portableHighResolutionPhotoEnabled = newValue }
+  }
   public var maxPhotoDimensions: CMVideoDimensions {
-      get { CMVideoDimensions(width: 0, height: 0) }
-      set { _ = newValue }
-    }
+    get { portableMaxPhotoDimensions }
+    set { portableMaxPhotoDimensions = newValue }
+  }
   public var isDepthDataDeliveryEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableDepthDataDeliveryEnabled }
+    set { portableDepthDataDeliveryEnabled = newValue }
+  }
   public var embedsDepthDataInPhoto: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableEmbedsDepthDataInPhoto }
+    set { portableEmbedsDepthDataInPhoto = newValue }
+  }
   public var isDepthDataFiltered: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableDepthDataFiltered }
+    set { portableDepthDataFiltered = newValue }
+  }
   public var isCameraCalibrationDataDeliveryEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableCameraCalibrationDataDeliveryEnabled }
+    set { portableCameraCalibrationDataDeliveryEnabled = newValue }
+  }
   public var isPortraitEffectsMatteDeliveryEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portablePortraitEffectsMatteDeliveryEnabled }
+    set { portablePortraitEffectsMatteDeliveryEnabled = newValue }
+  }
   public var embedsPortraitEffectsMatteInPhoto: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableEmbedsPortraitEffectsMatteInPhoto }
+    set { portableEmbedsPortraitEffectsMatteInPhoto = newValue }
+  }
   public var enabledSemanticSegmentationMatteTypes: [AVSemanticSegmentationMatte.MatteType] {
-      get { [] }
-      set { _ = newValue }
-    }
+    get { portableEnabledSemanticSegmentationMatteTypes }
+    set { portableEnabledSemanticSegmentationMatteTypes = newValue }
+  }
   public var embedsSemanticSegmentationMattesInPhoto: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableEmbedsSemanticSegmentationMattesInPhoto }
+    set { portableEmbedsSemanticSegmentationMattesInPhoto = newValue }
+  }
   public var metadata: [String : Any] {
-      get { [:] }
-      set { _ = newValue }
-    }
+    get { portableMetadata }
+    set { portableMetadata = newValue }
+  }
   public var livePhotoMovieFileURL: URL? {
-      get { nil }
-      set { _ = newValue }
-    }
+    get { portableLivePhotoMovieFileURL }
+    set { portableLivePhotoMovieFileURL = newValue }
+  }
   public var livePhotoVideoCodecType: AVVideoCodecType {
-      get { AVVideoCodecType(rawValue: "") }
-      set { _ = newValue }
-    }
+    get { portableLivePhotoVideoCodecType }
+    set { portableLivePhotoVideoCodecType = newValue }
+  }
   public var livePhotoMovieMetadata: [AVMetadataItem]! {
-      get { [] }
-      set { _ = newValue }
-    }
+    get { portableLivePhotoMovieMetadata }
+    set { portableLivePhotoMovieMetadata = newValue ?? [] }
+  }
   public var previewPhotoFormat: [String : Any]? {
-      get { nil }
-      set { _ = newValue }
-    }
+    get { portablePreviewPhotoFormat }
+    set { portablePreviewPhotoFormat = newValue }
+  }
   public var availableEmbeddedThumbnailPhotoCodecTypes: [AVVideoCodecType] { [] }
   public var embeddedThumbnailPhotoFormat: [String : Any]? {
-      get { nil }
-      set { _ = newValue }
-    }
+    get { portableEmbeddedThumbnailPhotoFormat }
+    set { portableEmbeddedThumbnailPhotoFormat = newValue }
+  }
   public var availableRawEmbeddedThumbnailPhotoCodecTypes: [AVVideoCodecType] { [] }
   public var rawEmbeddedThumbnailPhotoFormat: [String : Any]? {
-      get { nil }
-      set { _ = newValue }
-    }
+    get { portableRawEmbeddedThumbnailPhotoFormat }
+    set { portableRawEmbeddedThumbnailPhotoFormat = newValue }
+  }
   public var isAutoContentAwareDistortionCorrectionEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableAutoContentAwareDistortionCorrectionEnabled }
+    set { portableAutoContentAwareDistortionCorrectionEnabled = newValue }
+  }
   public var isConstantColorEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableConstantColorEnabled }
+    set { portableConstantColorEnabled = newValue }
+  }
   public var isConstantColorFallbackPhotoDeliveryEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableConstantColorFallbackPhotoDeliveryEnabled }
+    set { portableConstantColorFallbackPhotoDeliveryEnabled = newValue }
+  }
   public var isShutterSoundSuppressionEnabled: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableShutterSoundSuppressionEnabled }
+    set { portableShutterSoundSuppressionEnabled = newValue }
+  }
 }
 
 open class AVCaptureReactionEffectState: NSObject, @unchecked Sendable {
@@ -1302,8 +1495,9 @@ public struct AVCaptureReactionType: RawRepresentable, Hashable, Sendable, Expre
 }
 
 open class AVCaptureResolvedPhotoSettings: NSObject, @unchecked Sendable {
+  var portableUniqueID: Int64 = 0
   public override init() { super.init() }
-  public var uniqueID: Int64 { 0 }
+  public var uniqueID: Int64 { portableUniqueID }
   public var photoDimensions: CMVideoDimensions { CMVideoDimensions(width: 0, height: 0) }
   public var rawPhotoDimensions: CMVideoDimensions { CMVideoDimensions(width: 0, height: 0) }
   public var previewDimensions: CMVideoDimensions { CMVideoDimensions(width: 0, height: 0) }

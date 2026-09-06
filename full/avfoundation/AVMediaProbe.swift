@@ -42,6 +42,10 @@ struct AVLocalMediaProbe {
         guard let data = try? Data(contentsOf: url, options: [.mappedIfSafe]) else {
             return nil
         }
+        return probe(data: data)
+    }
+
+    static func probe(data: Data) -> AVLocalMediaProbe? {
         if data.count < 12 { return nil }
         if data.starts(with: Data([0x52, 0x49, 0x46, 0x46])) {
             return parseWAV(data)

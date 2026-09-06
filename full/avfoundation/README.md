@@ -174,3 +174,43 @@ seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). The framework tree
 itself has no stale `.build` / `build` / `scratch` products. Swift 6.2.4
 typechecks Foundation. `tests/test_avfoundation_host.sh` is a Darwin
 IceCubes/`xcrun` consumer and is not runnable on this Linux host.
+
+### Pass 4 (wave 8 next)
+
+Fourth SDK-depth pass on `cursor/port-avfoundation-to-linux-6e1e`. Passes 1–3
+(277 / 1188 / 1784) are kept and stay green. This pass adds local `AVMovie` /
+`AVMutableMovie` header probing and duration-only edits, an
+`AVCapturePhotoOutput` / `AVCapturePhotoSettings` fail-closed discovery model,
+`AVComposition.naturalSize` / initialization options, and table-driven
+Hashable / Equatable / OptionSet / SetAlgebra witnesses for the remaining
+enum and option-set families.
+
+| | before (pass 3) | after (pass 4) |
+|---|---|---|
+| `implemented` | 1784 | 2727 |
+| `declared` | 3582 | 2639 |
+| `deferred` | 266 | 266 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 `implemented` evidence distribution after pass 4 (table-driven enum /
+option-set / metadata-constant tests may share a value test; no other single
+test exceeds 40% of the remaining implemented rows):
+
+| citations | test |
+|---|---|
+| 292 | `testAVMetadataIdentifierRawValues` (identifier constants) |
+| 279 | `testAVMetadataKeyRawValues` (key constants) |
+| 267 | `testOptionSetAlgebraSynthesis` (OptionSet / SetAlgebra) |
+| 253 | `testRawRepresentableEnumHashableSynthesis` (enum Hashable / `!=`) |
+| 132 | `testAVCaptureDeviceFailClosedDiscoveryModel` (capture device fail-closed) |
+
+`AVSpeechSynthesizer` remains extra portable AVFAudio surface; it is not in
+this module's public census. No SwiftUI cross-import overlay rows exist in
+this seed. Concurrency `AsyncSequence` witnesses stay `declared` because a
+blocking wait would hang the sealed gate. `AVMovie.writeHeader` /
+`makeMovieHeader` throw `AVError.encoderNotFound`. Photo capture invokes the
+delegate synchronously with `AVError.applicationIsNotAuthorizedToUseDevice`.
+`AVMutableMovie.insertTimeRange(..., copySampleData: true)` throws
+`AVError.decoderNotFound`.
+
