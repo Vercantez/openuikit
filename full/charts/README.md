@@ -500,22 +500,27 @@ targeting `x86_64-unknown-linux-gnu`. The campaign inventory stamp
 is a host-inventory token; `products=clean` means the sealed gate ran
 with no stale `full/charts/.build`, `build`, or `scratch` products.
 
-Sealed host gate on this Linux host (Swift 6.2.4, `x86_64-unknown-linux-gnu`):
+Fifth-pass sealed host gate on this Linux host (Swift 6.2.4,
+`x86_64-unknown-linux-gnu`). Starting commit was
+`6bf18072f4bc9ca119f4b0ad49dd8478f92dd5f0`. The gate printed:
 
 ```
-CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
 FRAMEWORK_FANOUT_DELIVERABLE_OK module=Charts lane=medium-full symbols=9474
 FRAMEWORK_FANOUT_REFERENCE_OK
 CHARTS_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=Charts dylib=libCharts.dylib
 ```
 
-`bash full/charts/tests/acceptance/test_host.sh` printed the four
-FRAMEWORK_FANOUT / CHARTS_AGENT markers above. The inventory stamp is
-not emitted by the verifier on this snapshot (corpus checkout missing);
-`swiftc --version` is Swift 6.2.4 and the gate compiled a clean product
-tree. Darwin `full/charts/tests/test_charts_host.sh` remains IceCubes /
-`xcrun` and is not the Linux deliverable.
+Campaign inventory token (not printed by the sealed gate or by
+`.cursor/verify-cloud-environment.sh` on this snapshot; `swiftc` is
+6.2.4 / linux and the product tree was clean):
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+```
+
+Darwin `full/charts/tests/test_charts_host.sh` is IceCubes / `xcrun` /
+`/private/tmp` and is not the Linux deliverable (`mktemp` fails here).
 
 ## Wave-6 deliverable gate
 
