@@ -27,8 +27,12 @@ implemented and exercised:
 - `MLShapedArray` / `MLShapedArraySlice` provide shape, scalars, `scalarAt`,
   fill, reshape, concat, 2-D transpose, JSON coding, and Collection traversal
   along axis 0.
+- `MLTensor` is a CPU IEEE-754 buffer: arithmetic, matmul, reductions,
+  elementwise, pad/resize/gather, and range slicing. Results are checked
+  against hand-computed values; GPU/ANE scheduling is not claimed.
 - `MLModelDescription` / `MLFeatureDescription` and the constraint types are
-  constructible and populated from parsed models.
+  constructible and populated from parsed models. Compiled `.mlmodelc`
+  bundles expose `metadata.plist` (author/license/version, inputs/outputs).
 
 ## Fail-closed boundaries
 
@@ -53,9 +57,15 @@ runtime:
   `.featureType`. `tests/agent/CoreMLDependencyIdentity.swift` is the future
   guest/EC2 probe for real module identities and `libCoreML.dylib`.
 - `NSCoder` round-trips return `nil`; Apple's archive format is not claimed.
-- `MLTensor` exposes shape metadata and a CPU buffer constructor. Arithmetic,
-  GPU compute, and the rest of the tensor operator surface remain deferred
-  rather than returning fabricated activations.
+- `MLTensor` arithmetic, reductions, and shape ops run on a host IEEE-754
+  CPU buffer. They do not claim Apple GPU / ANE scheduling or
+  `withMLTensorComputePolicy` hops off-CPU. Neural-network / MIL prediction
+  still fails closed except Identity, DictVectorizer, Pipeline of those,
+  and a GLMRegressor linear layer (`y = Wx+b`, transform 0) checked against
+  the hand-computed output `3·1 + 4·2 + 5 = 16`.
+- `MLModelCollection` / `MLUpdateTask` / custom layers fail closed with
+  `.modelCollection`, `.update`, or `.customLayer`. Apple's model-catalog
+  daemon and the CoreML model-collection entitlement are not present on Linux.
 
 ## Depth pass 2026-09
 
@@ -118,3 +128,42 @@ FRAMEWORK_FANOUT_HOST_OK module=CoreML dylib=libCoreML.dylib
 Passing the isolated host gate is not integrated Linux success. Telegram's
 generated `AgeNet` / `U2netp` wrappers can type-check and can run only if
 the compiled artifact is an Identity / DictVectorizer / pipeline of those.
+
+## Depth pass 2026-09 (wave 8)
+
+Second SDK-depth pass on the existing Linux container. First-pass sources and
+tests stay; this pass adds a real CPU `MLTensor` surface, GLM linear
+prediction, compiled `metadata.plist` load, `MLWritable.write(to:)`, and
+fail-closed `MLUpdateContext.model` / `MLModelCollection`.
+
+| | implemented | declared | deferred | unavailable | not-applicable | nondeferred |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Before (wave 8 start / evidence repair) | 633 | 311 | 148 | 16 | 578 | 944 |
+| After wave 8 | 884 | 208 | 0 | 16 | 578 | 1092 |
+
+Unavailable rows name Apple Metal GPU / `CVPixelBuffer` hardware (no Linux
+daemon or entitlement fallback). Neural-network / MIL inference remains
+fail-closed (`.generic`, message `neural network layers not implemented`) except
+the tiny Identity / DictVectorizer / Pipeline / GLM linear interpreters.
+
+Top-5 implemented evidence distribution (884 implemented):
+
+1. `CoreMLEnumTests.swift#testEnumAndConstantRawValues` — 128 (14.5%)
+2. `MLTensorTests.swift#testTensorShapeOpsAndEnums` — 71 (8.0%)
+3. `MLShapedArrayTests.swift#testShapedArrayConcatConvertAndSlice` — 69 (7.8%)
+4. `MLTensorTests.swift#testTensorReductionsAndElementwise` — 63 (7.1%)
+5. `MLDescriptionTests.swift#testConstraintsAndFeatureDescription` — 47 (5.3%)
+
+No non-enum test is cited by more than 40% of implemented rows. Remaining
+`declared` rows are stdlib Collection/StringProcessing witnesses, unused
+tensor subscript arities, or types without a focused assertion.
+
+Gate markers from `bash full/coreml/tests/acceptance/test_host.sh` (Linux host,
+no docker):
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FRAMEWORK_FANOUT_REFERENCE_OK
+COREML_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CoreML dylib=libCoreML.dylib
+```
