@@ -135,6 +135,13 @@ public protocol SFSafariViewControllerDelegate: NSObjectProtocol {
         _ controller: SFSafariViewController,
         didCompleteInitialLoad didLoadSuccessfully: Bool
     )
+    func safariViewController(_ controller: SFSafariViewController,
+                              activityItemsFor URL: URL, title: String?) -> [UIActivity]
+    func safariViewController(_ controller: SFSafariViewController,
+                              excludedActivityTypesFor URL: URL, title: String?) -> [UIActivity.ActivityType]
+    func safariViewController(_ controller: SFSafariViewController,
+                              initialLoadDidRedirectTo URL: URL)
+    func safariViewControllerWillOpenInBrowser(_ controller: SFSafariViewController)
 }
 
 public extension SFSafariViewControllerDelegate {
@@ -143,6 +150,13 @@ public extension SFSafariViewControllerDelegate {
         _ controller: SFSafariViewController,
         didCompleteInitialLoad didLoadSuccessfully: Bool
     ) {}
+    func safariViewController(_ controller: SFSafariViewController,
+                              activityItemsFor URL: URL, title: String?) -> [UIActivity] { [] }
+    func safariViewController(_ controller: SFSafariViewController,
+                              excludedActivityTypesFor URL: URL, title: String?) -> [UIActivity.ActivityType] { [] }
+    func safariViewController(_ controller: SFSafariViewController,
+                              initialLoadDidRedirectTo URL: URL) {}
+    func safariViewControllerWillOpenInBrowser(_ controller: SFSafariViewController) {}
 }
 
 open class SFSafariViewController: UIViewController {

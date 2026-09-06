@@ -44,6 +44,10 @@ open class UIActivity {
         public static let airDrop = ActivityType("com.apple.UIKit.activity.AirDrop")
         public static let openInIBooks = ActivityType("com.apple.UIKit.activity.OpenInIBooks")
         public static let markupAsPDF = ActivityType("com.apple.UIKit.activity.MarkupAsPDF")
+        public static let sharePlay = ActivityType("com.apple.UIKit.activity.SharePlay")
+        public static let collaborationInviteWithLink = ActivityType("com.apple.UIKit.activity.CollaborationInviteWithLink")
+        public static let collaborationCopyLink = ActivityType("com.apple.UIKit.activity.CollaborationCopyLink")
+        public static let addToHomeScreen = ActivityType("com.apple.UIKit.activity.AddToHomeScreen")
     }
 
     public enum Category: Sendable { case action, share }

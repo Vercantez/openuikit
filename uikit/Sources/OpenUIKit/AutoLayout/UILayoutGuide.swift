@@ -112,6 +112,16 @@ public struct NSDirectionalEdgeInsets: Equatable, Sendable {
     public static let zero = NSDirectionalEdgeInsets()
 }
 
+public struct NSDirectionalRectEdge: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+    public init(rawValue: UInt) { self.rawValue = rawValue }
+    public static let top = NSDirectionalRectEdge(rawValue: 1 << 0)
+    public static let leading = NSDirectionalRectEdge(rawValue: 1 << 1)
+    public static let bottom = NSDirectionalRectEdge(rawValue: 1 << 2)
+    public static let trailing = NSDirectionalRectEdge(rawValue: 1 << 3)
+    public static let all: NSDirectionalRectEdge = [.top, .leading, .bottom, .trailing]
+}
+
 // MARK: - UILayoutGuide
 
 /// A rectangle that participates in Auto Layout without being a view.

@@ -56,6 +56,19 @@ public class UINavigationItem {
         public static var inline: LargeTitleDisplayMode { .never }
     }
 
+    /// iOS 16 / 26 placement of `searchController`'s bar. Ledger/Tabs
+    /// chrome is a separate measured rule (`usesBottomSearch`); this enum
+    /// is the stored preferred placement the search controller reports.
+    public enum SearchBarPlacement: Int, Sendable {
+        case automatic = 0
+        case integrated = 1
+        case stacked = 2
+        case integratedCentered = 3
+        case integratedButton = 4
+        /// iOS 16 name for `.integrated`.
+        public static var `inline`: SearchBarPlacement { .integrated }
+    }
+
     public var leftBarButtonItems: [UIBarButtonItem]? {
         didSet { _bar?._navigationItemChanged(self) }
     }
@@ -104,6 +117,38 @@ public class UINavigationItem {
     public var hidesSearchBarWhenScrolling: Bool = true {
         didSet { _bar?._navigationItemChanged(self) }
     }
+
+    /// Preferred search-bar placement. Default `.automatic`. Ledger bottom
+    /// dock does not read this (MEASURED Ledger t200, iPhone SE 2x / iOS
+    /// 26.1: `usesBottomSearch` is the phone-without-tab-bar rule).
+    public var preferredSearchBarPlacement: SearchBarPlacement = .automatic {
+        didSet {
+            guard preferredSearchBarPlacement != oldValue else { return }
+            searchController?._placementWillChange(to: preferredSearchBarPlacement)
+            _resolvedSearchBarPlacement = preferredSearchBarPlacement
+            searchController?._placementDidChange(from: oldValue)
+            _bar?._navigationItemChanged(self)
+        }
+    }
+    /// Resolved placement. With `.automatic` this stays `.automatic` —
+    /// the Ledger bottom dock is not a case of this enum.
+    public var searchBarPlacement: SearchBarPlacement {
+        _resolvedSearchBarPlacement
+    }
+    private var _resolvedSearchBarPlacement: SearchBarPlacement = .automatic
+
+    /// iOS 26 toolbar token for integrated search. Ignored when
+    /// `searchController` is nil (header).
+    public var searchBarPlacementBarButtonItem: UIBarButtonItem {
+        if let item = _searchBarPlacementBarButtonItem { return item }
+        let item = UIBarButtonItem(barButtonSystemItem: .search)
+        _searchBarPlacementBarButtonItem = item
+        return item
+    }
+    private var _searchBarPlacementBarButtonItem: UIBarButtonItem?
+
+    public var searchBarPlacementAllowsToolbarIntegration: Bool = true
+    public var searchBarPlacementAllowsExternalIntegration: Bool = true
 
     /// Per-item appearance overrides (UIKit lets a single screen restyle the
     /// bar without touching the shared bar appearance).
