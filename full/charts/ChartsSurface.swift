@@ -15,8 +15,6 @@ public protocol ScaleDomain {}
 public protocol PositionScaleRange: ScaleRange where VisualValue == CGFloat {}
 public protocol VectorizedChartContent: ChartContent { associatedtype DataElement }
 public protocol ChartScrollTargetBehavior: ScrollTargetBehavior {}
-public protocol PrimitivePlottableProtocol: Plottable {}
-
 public struct AnyChartSymbolShape: Hashable, Sendable, View, ChartSymbolShape {
     private let shape: BasicChartSymbolShape
     public init(_ shape: BasicChartSymbolShape = .circle) { self.shape = shape }
@@ -483,31 +481,414 @@ public struct AnnotationOverflowResolution: Hashable, Sendable {
     public init() {}
 }
 
-public struct ChartBinRange<Bound: Comparable & Hashable>: Hashable {
+public struct ChartBinRange<Bound: Comparable & Hashable>: Hashable, RangeExpression {
     public let lowerBound: Bound
     public let upperBound: Bound
     public init(uncheckedBounds: (lower: Bound, upper: Bound)) {
         lowerBound = uncheckedBounds.lower
         upperBound = uncheckedBounds.upper
     }
-}
 
-public struct NumberBins<Value: Comparable & Numeric & Hashable>: Hashable {
-    public let thresholds: [Value]
-    public init(thresholds: [Value] = []) { self.thresholds = thresholds }
-    public init(range: ClosedRange<Value>, count: Int) {
-        _ = range
-        _ = count
-        self.thresholds = []
+    /// Half-open `[lowerBound, upperBound)`. The last histogram bin still
+    /// receives the final threshold through `NumberBins.index(for:)` /
+    /// `DateBins.index(for:)`, which clamp onto the last index.
+    public func contains(_ element: Bound) -> Bool {
+        element >= lowerBound && element < upperBound
+    }
+
+    public func relative<C: Collection>(to collection: C) -> Range<Bound>
+        where Bound == C.Index
+    {
+        let start: Bound
+        if lowerBound < collection.startIndex {
+            start = collection.startIndex
+        } else if lowerBound > collection.endIndex {
+            start = collection.endIndex
+        } else {
+            start = lowerBound
+        }
+        let end: Bound
+        if upperBound < collection.startIndex {
+            end = collection.startIndex
+        } else if upperBound > collection.endIndex {
+            end = collection.endIndex
+        } else {
+            end = upperBound
+        }
+        return start < end ? start..<end : end..<end
+    }
+
+    public static func ~= (pattern: ChartBinRange<Bound>, value: Bound) -> Bool {
+        pattern.contains(value)
     }
 }
 
-public struct DateBins: Hashable, Sendable {
+/// Sequential numeric bins. Thresholds are the inclusive-left edges; `count`
+/// bins from `n` thresholds (`n >= 2`) yield `endIndex == n - 1`.
+///
+/// Equal-width `init(range:count:)` splits the closed range into `count`
+/// bins, snapping the last threshold onto `range.upperBound`.
+/// `init(size:range:)` walks `size` from `lowerBound` until the last edge
+/// is at or past `upperBound`.
+/// `init(range:desiredCount:minimumStride:)` and the data-inference init
+/// use the same 1-2-5×10^n nice ticks as `ChartNiceNumbers` (`0.2...9.7`,
+/// desired 5 → thresholds `0, 2, 4, 6, 8, 10`).
+public struct NumberBins<Value: Comparable & Numeric & Hashable>: Hashable, RandomAccessCollection {
+    public typealias Index = Int
+    public typealias Element = ChartBinRange<Value>
+    public typealias SubSequence = Slice<NumberBins<Value>>
+    public typealias Indices = DefaultIndices<NumberBins<Value>>
+    public typealias Iterator = IndexingIterator<NumberBins<Value>>
+
+    public let thresholds: [Value]
+
+    public init(thresholds: [Value] = []) {
+        self.thresholds = thresholds
+    }
+
+    public init(range: ClosedRange<Value>, count: Int) where Value: BinaryFloatingPoint {
+        self.thresholds = ChartBinning.equalWidth(range: range, count: count)
+    }
+
+    public init(range: ClosedRange<Value>, count: Int) where Value: BinaryInteger {
+        self.thresholds = ChartBinning.equalWidth(range: range, count: count)
+    }
+
+    public init(size: Value, range: ClosedRange<Value>) where Value: BinaryFloatingPoint {
+        self.thresholds = ChartBinning.strideSize(size: size, range: range)
+    }
+
+    public init(size: Value, range: ClosedRange<Value>) where Value: BinaryInteger {
+        self.thresholds = ChartBinning.strideSize(size: size, range: range)
+    }
+
+    public init(
+        range: ClosedRange<Value>,
+        desiredCount: Int = 10,
+        minimumStride: Value = 0
+    ) where Value: BinaryFloatingPoint {
+        self.thresholds = ChartBinning.nice(
+            range: range,
+            desiredCount: desiredCount,
+            minimumStride: minimumStride
+        )
+    }
+
+    public init(
+        range: ClosedRange<Value>,
+        desiredCount: Int = 10,
+        minimumStride: Value = 0
+    ) where Value: BinaryInteger {
+        self.thresholds = ChartBinning.nice(
+            range: range,
+            desiredCount: desiredCount,
+            minimumStride: minimumStride
+        )
+    }
+
+    public init(
+        data: [Value],
+        desiredCount: Int? = nil,
+        minimumStride: Value = 0
+    ) where Value: BinaryFloatingPoint {
+        guard let lo = data.min(), let hi = data.max() else {
+            self.thresholds = []
+            return
+        }
+        self.thresholds = ChartBinning.nice(
+            range: lo...Swift.max(hi, lo),
+            desiredCount: desiredCount ?? 10,
+            minimumStride: minimumStride
+        )
+    }
+
+    public init(
+        data: [Value],
+        desiredCount: Int? = nil,
+        minimumStride: Value = 0
+    ) where Value: BinaryInteger {
+        guard let lo = data.min(), let hi = data.max() else {
+            self.thresholds = []
+            return
+        }
+        self.thresholds = ChartBinning.nice(
+            range: lo...Swift.max(hi, lo),
+            desiredCount: desiredCount ?? 10,
+            minimumStride: minimumStride
+        )
+    }
+
+    public var startIndex: Int { 0 }
+    public var endIndex: Int { Swift.max(thresholds.count - 1, 0) }
+
+    public func index(after i: Int) -> Int { i + 1 }
+    public func index(before i: Int) -> Int { i - 1 }
+
+    public subscript(position: Int) -> ChartBinRange<Value> {
+        ChartBinRange(uncheckedBounds: (lower: thresholds[position], upper: thresholds[position + 1]))
+    }
+
+    /// Returns the bin index containing `value`. Values below the first
+    /// threshold clamp to `0`; values at or above the last threshold clamp
+    /// to `endIndex - 1`.
+    public func index(for value: Value) -> Int {
+        ChartBinning.index(for: value, thresholds: thresholds)
+    }
+}
+
+/// Sequential date bins. Extra `unit` / `range` fields are portable metadata
+/// for the existing `init(unit:range:)` convenience used by first-pass tests;
+/// they are not Apple TBD exports.
+public struct DateBins: Hashable, Sendable, RandomAccessCollection {
+    public typealias Index = Int
+    public typealias Element = ChartBinRange<Date>
+    public typealias SubSequence = Slice<DateBins>
+    public typealias Indices = DefaultIndices<DateBins>
+    public typealias Iterator = IndexingIterator<DateBins>
+
+    public let thresholds: [Date]
     public let unit: Calendar.Component
     public let range: ClosedRange<Date>?
+
+    public init(thresholds: [Date]) {
+        self.thresholds = thresholds
+        self.unit = .second
+        self.range = nil
+    }
+
     public init(unit: Calendar.Component, range: ClosedRange<Date>? = nil) {
         self.unit = unit
         self.range = range
+        if let range {
+            self.thresholds = ChartBinning.calendarStride(
+                unit: unit,
+                by: 1,
+                range: range,
+                calendar: .autoupdatingCurrent
+            )
+        } else {
+            self.thresholds = []
+        }
+    }
+
+    public init(timeInterval: TimeInterval, range: ClosedRange<Date>) {
+        self.unit = .second
+        self.range = range
+        self.thresholds = ChartBinning.timeIntervalStride(timeInterval, range: range)
+    }
+
+    public init(
+        data: [Date],
+        desiredCount: Int? = nil,
+        calendar: Calendar = .autoupdatingCurrent
+    ) {
+        _ = calendar
+        self.unit = .second
+        guard let lo = data.min(), let hi = data.max() else {
+            self.range = nil
+            self.thresholds = []
+            return
+        }
+        let span = lo...hi
+        self.range = span
+        self.thresholds = ChartBinning.equalTime(range: span, count: Swift.max(desiredCount ?? 10, 1))
+    }
+
+    public init(
+        unit: Calendar.Component,
+        by stride: Int = 1,
+        range: ClosedRange<Date>,
+        calendar: Calendar = .autoupdatingCurrent
+    ) {
+        self.unit = unit
+        self.range = range
+        self.thresholds = ChartBinning.calendarStride(
+            unit: unit,
+            by: stride,
+            range: range,
+            calendar: calendar
+        )
+    }
+
+    public init(
+        range: ClosedRange<Date>,
+        desiredCount: Int = 10,
+        calendar: Calendar = .autoupdatingCurrent
+    ) {
+        _ = calendar
+        self.unit = .second
+        self.range = range
+        self.thresholds = ChartBinning.equalTime(range: range, count: Swift.max(desiredCount, 1))
+    }
+
+    public var startIndex: Int { 0 }
+    public var endIndex: Int { Swift.max(thresholds.count - 1, 0) }
+
+    public func index(after i: Int) -> Int { i + 1 }
+    public func index(before i: Int) -> Int { i - 1 }
+
+    public subscript(position: Int) -> ChartBinRange<Date> {
+        ChartBinRange(uncheckedBounds: (lower: thresholds[position], upper: thresholds[position + 1]))
+    }
+
+    public func index(for value: Date) -> Int {
+        ChartBinning.index(for: value, thresholds: thresholds)
+    }
+}
+
+enum ChartBinning {
+    static func equalWidth<Value: BinaryFloatingPoint>(
+        range: ClosedRange<Value>,
+        count: Int
+    ) -> [Value] {
+        let n = max(count, 1)
+        let lower = range.lowerBound
+        let upper = range.upperBound
+        let width = (upper - lower) / Value(n)
+        var result: [Value] = []
+        result.reserveCapacity(n + 1)
+        for i in 0...n {
+            result.append(lower + width * Value(i))
+        }
+        if !result.isEmpty {
+            result[result.count - 1] = upper
+        }
+        return result
+    }
+
+    static func equalWidth<Value: BinaryInteger>(
+        range: ClosedRange<Value>,
+        count: Int
+    ) -> [Value] {
+        let n = Value(max(count, 1))
+        let lower = range.lowerBound
+        let upper = range.upperBound
+        let span = upper - lower
+        var result: [Value] = []
+        result.reserveCapacity(Int(n) + 1)
+        for i in 0...Int(n) {
+            result.append(lower + span * Value(i) / n)
+        }
+        return result
+    }
+
+    static func strideSize<Value: Numeric & Comparable>(
+        size: Value,
+        range: ClosedRange<Value>
+    ) -> [Value] {
+        if size <= .zero {
+            return [range.lowerBound, range.upperBound]
+        }
+        var values: [Value] = [range.lowerBound]
+        var current = range.lowerBound
+        var guardCount = 0
+        while current < range.upperBound && guardCount < 10_000 {
+            current = current + size
+            values.append(current)
+            guardCount += 1
+        }
+        return values
+    }
+
+    static func nice<Value: BinaryFloatingPoint>(
+        range: ClosedRange<Value>,
+        desiredCount: Int,
+        minimumStride: Value
+    ) -> [Value] {
+        var ticks = ChartNiceNumbers.ticks(
+            min: Double(range.lowerBound),
+            max: Double(range.upperBound),
+            desired: max(desiredCount, 1)
+        )
+        if ticks.count < 2 {
+            ticks = [Double(range.lowerBound), Double(range.upperBound)]
+        }
+        if minimumStride > 0, ticks.count >= 2 {
+            let step = ticks[1] - ticks[0]
+            if step + 1e-12 < Double(minimumStride) {
+                return strideSize(size: minimumStride, range: range)
+            }
+        }
+        return ticks.map { Value($0) }
+    }
+
+    static func nice<Value: BinaryInteger>(
+        range: ClosedRange<Value>,
+        desiredCount: Int,
+        minimumStride: Value
+    ) -> [Value] {
+        let ticks = nice(
+            range: Double(range.lowerBound)...Double(range.upperBound),
+            desiredCount: desiredCount,
+            minimumStride: Double(minimumStride)
+        )
+        return ticks.map { Value($0.rounded()) }
+    }
+
+    static func equalTime(range: ClosedRange<Date>, count: Int) -> [Date] {
+        let n = max(count, 1)
+        let lower = range.lowerBound.timeIntervalSinceReferenceDate
+        let upper = range.upperBound.timeIntervalSinceReferenceDate
+        let width = (upper - lower) / Double(n)
+        var result: [Date] = []
+        result.reserveCapacity(n + 1)
+        for i in 0...n {
+            result.append(Date(timeIntervalSinceReferenceDate: lower + width * Double(i)))
+        }
+        result[n] = range.upperBound
+        return result
+    }
+
+    static func timeIntervalStride(_ interval: TimeInterval, range: ClosedRange<Date>) -> [Date] {
+        let step = interval > 0 ? interval : 1
+        var values: [Date] = [range.lowerBound]
+        var current = range.lowerBound
+        var guardCount = 0
+        while current < range.upperBound && guardCount < 10_000 {
+            current = current.addingTimeInterval(step)
+            values.append(current)
+            guardCount += 1
+        }
+        return values
+    }
+
+    static func calendarStride(
+        unit: Calendar.Component,
+        by stride: Int,
+        range: ClosedRange<Date>,
+        calendar: Calendar
+    ) -> [Date] {
+        let step = stride == 0 ? 1 : stride
+        var values: [Date] = [range.lowerBound]
+        var current = range.lowerBound
+        var guardCount = 0
+        while current < range.upperBound && guardCount < 10_000 {
+            guard let next = calendar.date(byAdding: unit, value: step, to: current) else {
+                break
+            }
+            values.append(next)
+            current = next
+            guardCount += 1
+        }
+        return values
+    }
+
+    static func index<Value: Comparable>(for value: Value, thresholds: [Value]) -> Int {
+        let binCount = max(thresholds.count - 1, 0)
+        guard binCount > 0 else { return 0 }
+        if value < thresholds[0] { return 0 }
+        if value >= thresholds[binCount] { return binCount - 1 }
+        var lo = 0
+        var hi = binCount - 1
+        while lo < hi {
+            let mid = (lo + hi + 1) / 2
+            if thresholds[mid] <= value {
+                lo = mid
+            } else {
+                hi = mid - 1
+            }
+        }
+        return lo
     }
 }
 
