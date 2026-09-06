@@ -23,8 +23,9 @@ The first-pass census was 1507 implemented / 1873 declared / 780
 deferred. After the wave-8 depth pass plus coverage-ledger repair it was
 1800 implemented / 1583 declared / 777 deferred. After the third behavioral
 pass plus merge repair it was **2249 implemented / 1141 declared / 770
-deferred**. After the fourth behavioral pass it is **2950 implemented /
-741 declared / 469 deferred**. The
+deferred**. After the fourth behavioral pass it was **2950 implemented /
+741 declared / 469 deferred**. After the fifth behavioral pass it is
+**3340 implemented / 369 declared / 451 deferred**. The
 in-process donation, voice-shortcut, relevant-shortcut, resolution,
 person/image/media/call-record, notebook/payment/photos/climate families,
 Siri-denied, and identifier-constant slice is `implemented` with
