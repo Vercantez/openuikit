@@ -1,0 +1,2 @@
+full/stickerkit/AvatarEditorViewController.swift
+full/stickerkit/StickerKit.swift
