@@ -1,0 +1,238 @@
+precise	kind	title	path	declaration
+c:@CNCinematicErrorDomain	swift.var	CNCinematicErrorDomain	CNCinematicErrorDomain	let CNCinematicErrorDomain: String
+c:@E@CNCinematicErrorCode	swift.enum	CNCinematicError.Code	CNCinematicError.Code	enum Code
+c:@E@CNCinematicErrorCode@CNCinematicErrorCodeCancelled	swift.enum.case	CNCinematicError.Code.cancelled	CNCinematicError.Code.cancelled	case cancelled
+c:@E@CNCinematicErrorCode@CNCinematicErrorCodeIncompatible	swift.enum.case	CNCinematicError.Code.incompatible	CNCinematicError.Code.incompatible	case incompatible
+c:@E@CNCinematicErrorCode@CNCinematicErrorCodeIncomplete	swift.enum.case	CNCinematicError.Code.incomplete	CNCinematicError.Code.incomplete	case incomplete
+c:@E@CNCinematicErrorCode@CNCinematicErrorCodeMalformed	swift.enum.case	CNCinematicError.Code.malformed	CNCinematicError.Code.malformed	case malformed
+c:@E@CNCinematicErrorCode@CNCinematicErrorCodeUnknown	swift.enum.case	CNCinematicError.Code.unknown	CNCinematicError.Code.unknown	case unknown
+c:@E@CNCinematicErrorCode@CNCinematicErrorCodeUnreadable	swift.enum.case	CNCinematicError.Code.unreadable	CNCinematicError.Code.unreadable	case unreadable
+c:@E@CNCinematicErrorCode@CNCinematicErrorCodeUnsupported	swift.enum.case	CNCinematicError.Code.unsupported	CNCinematicError.Code.unsupported	case unsupported
+c:@E@CNDetectionType	swift.enum	CNDetectionType	CNDetectionType	enum CNDetectionType
+c:@E@CNDetectionType@CNDetectionTypeAutoFocus	swift.enum.case	CNDetectionType.autoFocus	CNDetectionType.autoFocus	case autoFocus
+c:@E@CNDetectionType@CNDetectionTypeCatBody	swift.enum.case	CNDetectionType.catBody	CNDetectionType.catBody	case catBody
+c:@E@CNDetectionType@CNDetectionTypeCatHead	swift.enum.case	CNDetectionType.catHead	CNDetectionType.catHead	case catHead
+c:@E@CNDetectionType@CNDetectionTypeCustom	swift.enum.case	CNDetectionType.custom	CNDetectionType.custom	case custom
+c:@E@CNDetectionType@CNDetectionTypeDogBody	swift.enum.case	CNDetectionType.dogBody	CNDetectionType.dogBody	case dogBody
+c:@E@CNDetectionType@CNDetectionTypeDogHead	swift.enum.case	CNDetectionType.dogHead	CNDetectionType.dogHead	case dogHead
+c:@E@CNDetectionType@CNDetectionTypeFixedFocus	swift.enum.case	CNDetectionType.fixedFocus	CNDetectionType.fixedFocus	case fixedFocus
+c:@E@CNDetectionType@CNDetectionTypeHumanFace	swift.enum.case	CNDetectionType.humanFace	CNDetectionType.humanFace	case humanFace
+c:@E@CNDetectionType@CNDetectionTypeHumanHead	swift.enum.case	CNDetectionType.humanHead	CNDetectionType.humanHead	case humanHead
+c:@E@CNDetectionType@CNDetectionTypeHumanTorso	swift.enum.case	CNDetectionType.humanTorso	CNDetectionType.humanTorso	case humanTorso
+c:@E@CNDetectionType@CNDetectionTypeSportsBall	swift.enum.case	CNDetectionType.sportsBall	CNDetectionType.sportsBall	case sportsBall
+c:@E@CNDetectionType@CNDetectionTypeUnknown	swift.enum.case	CNDetectionType.unknown	CNDetectionType.unknown	case unknown
+c:@E@CNRenderingQuality	swift.enum	CNRenderingQuality	CNRenderingQuality	enum CNRenderingQuality
+c:@E@CNRenderingQuality@CNRenderingQualityExport	swift.enum.case	CNRenderingQuality.export	CNRenderingQuality.export	case export
+c:@E@CNRenderingQuality@CNRenderingQualityExportHigh	swift.enum.case	CNRenderingQuality.exportHigh	CNRenderingQuality.exportHigh	case exportHigh
+c:@E@CNRenderingQuality@CNRenderingQualityPreview	swift.enum.case	CNRenderingQuality.preview	CNRenderingQuality.preview	case preview
+c:@E@CNRenderingQuality@CNRenderingQualityThumbnail	swift.enum.case	CNRenderingQuality.thumbnail	CNRenderingQuality.thumbnail	case thumbnail
+c:@E@CNSpatialAudioContentType	swift.enum	CNSpatialAudioContentType	CNSpatialAudioContentType	enum CNSpatialAudioContentType
+c:@E@CNSpatialAudioContentType@CNSpatialAudioContentTypeSpatial	swift.enum.case	CNSpatialAudioContentType.spatial	CNSpatialAudioContentType.spatial	case spatial
+c:@E@CNSpatialAudioContentType@CNSpatialAudioContentTypeStereo	swift.enum.case	CNSpatialAudioContentType.stereo	CNSpatialAudioContentType.stereo	case stereo
+c:@E@CNSpatialAudioRenderingStyle	swift.enum	CNSpatialAudioRenderingStyle	CNSpatialAudioRenderingStyle	enum CNSpatialAudioRenderingStyle
+c:@E@CNSpatialAudioRenderingStyle@CNSpatialAudioRenderingStyleCinematic	swift.enum.case	CNSpatialAudioRenderingStyle.cinematic	CNSpatialAudioRenderingStyle.cinematic	case cinematic
+c:@E@CNSpatialAudioRenderingStyle@CNSpatialAudioRenderingStyleCinematicBackgroundStem	swift.enum.case	CNSpatialAudioRenderingStyle.cinematicBackgroundStem	CNSpatialAudioRenderingStyle.cinematicBackgroundStem	case cinematicBackgroundStem
+c:@E@CNSpatialAudioRenderingStyle@CNSpatialAudioRenderingStyleCinematicForegroundStem	swift.enum.case	CNSpatialAudioRenderingStyle.cinematicForegroundStem	CNSpatialAudioRenderingStyle.cinematicForegroundStem	case cinematicForegroundStem
+c:@E@CNSpatialAudioRenderingStyle@CNSpatialAudioRenderingStyleInFrame	swift.enum.case	CNSpatialAudioRenderingStyle.inFrame	CNSpatialAudioRenderingStyle.inFrame	case inFrame
+c:@E@CNSpatialAudioRenderingStyle@CNSpatialAudioRenderingStyleInFrameBackgroundStem	swift.enum.case	CNSpatialAudioRenderingStyle.inFrameBackgroundStem	CNSpatialAudioRenderingStyle.inFrameBackgroundStem	case inFrameBackgroundStem
+c:@E@CNSpatialAudioRenderingStyle@CNSpatialAudioRenderingStyleInFrameForegroundStem	swift.enum.case	CNSpatialAudioRenderingStyle.inFrameForegroundStem	CNSpatialAudioRenderingStyle.inFrameForegroundStem	case inFrameForegroundStem
+c:@E@CNSpatialAudioRenderingStyle@CNSpatialAudioRenderingStyleStandard	swift.enum.case	CNSpatialAudioRenderingStyle.standard	CNSpatialAudioRenderingStyle.standard	case standard
+c:@E@CNSpatialAudioRenderingStyle@CNSpatialAudioRenderingStyleStudio	swift.enum.case	CNSpatialAudioRenderingStyle.studio	CNSpatialAudioRenderingStyle.studio	case studio
+c:@E@CNSpatialAudioRenderingStyle@CNSpatialAudioRenderingStyleStudioBackgroundStem	swift.enum.case	CNSpatialAudioRenderingStyle.studioBackgroundStem	CNSpatialAudioRenderingStyle.studioBackgroundStem	case studioBackgroundStem
+c:@E@CNSpatialAudioRenderingStyle@CNSpatialAudioRenderingStyleStudioForegroundStem	swift.enum.case	CNSpatialAudioRenderingStyle.studioForegroundStem	CNSpatialAudioRenderingStyle.studioForegroundStem	case studioForegroundStem
+c:@T@CNDetectionGroupID	swift.struct	CNDetectionGroupID	CNDetectionGroupID	struct CNDetectionGroupID
+c:@T@CNDetectionID	swift.struct	CNDetectionID	CNDetectionID	struct CNDetectionID
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.type.property	errorDomain	CNCinematicError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.property	errorUserInfo	CNCinematicError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.property	errorCode	CNCinematicError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.func.op	~=(_:_:)	CNCinematicError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.property	errorUserInfo	CNCinematicError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.func.op	==(_:_:)	CNCinematicError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.property	code	CNCinematicError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.method	hash(into:)	CNCinematicError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.property	userInfo	CNCinematicError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.property	errorCode	CNCinematicError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.property	hashValue	CNCinematicError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.init	init(_:userInfo:)	CNCinematicError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:9Cinematic10CNDecisionV	swift.struct	CNDecision	CNDecision	struct CNDecision
+s:9Cinematic10CNDecisionV14isUserDecisionSbvp	swift.property	isUserDecision	CNDecision.isUserDecision	var isUserDecision: Bool { get }
+s:9Cinematic10CNDecisionV16FocusDetectionIDO	swift.enum	CNDecision.FocusDetectionID	CNDecision.FocusDetectionID	enum FocusDetectionID
+s:9Cinematic10CNDecisionV16FocusDetectionIDO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	CNDecision.FocusDetectionID.==(_:_:)	static func == (a: CNDecision.FocusDetectionID, b: CNDecision.FocusDetectionID) -> Bool
+s:9Cinematic10CNDecisionV16FocusDetectionIDO5groupyAESo016CNDetectionGroupE0acAEmF	swift.enum.case	CNDecision.FocusDetectionID.group(_:)	CNDecision.FocusDetectionID.group(_:)	case group(CNDetectionGroupID)
+s:9Cinematic10CNDecisionV16FocusDetectionIDO6singleyAESo011CNDetectionE0acAEmF	swift.enum.case	CNDecision.FocusDetectionID.single(_:)	CNDecision.FocusDetectionID.single(_:)	case single(CNDetectionID)
+s:9Cinematic10CNDecisionV16focusDetectionIDAC05FocusdE0Ovp	swift.property	focusDetectionID	CNDecision.focusDetectionID	var focusDetectionID: CNDecision.FocusDetectionID { get }
+s:9Cinematic10CNDecisionV16isStrongDecisionSbvp	swift.property	isStrongDecision	CNDecision.isStrongDecision	var isStrongDecision: Bool { get }
+s:9Cinematic10CNDecisionV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	CNDecision.==(_:_:)	static func == (a: CNDecision, b: CNDecision) -> Bool
+s:9Cinematic10CNDecisionV4time11detectionID6strongACSo6CMTimea_So011CNDetectionE0aSbtcfc	swift.init	init(time:detectionID:strong:)	CNDecision.init(time:detectionID:strong:)	init(time: CMTime, detectionID: CNDetectionID, strong isStrong: Bool)
+s:9Cinematic10CNDecisionV4time16detectionGroupID6strongACSo6CMTimea_So011CNDetectioneF0aSbtcfc	swift.init	init(time:detectionGroupID:strong:)	CNDecision.init(time:detectionGroupID:strong:)	init(time: CMTime, detectionGroupID: CNDetectionGroupID, strong isStrong: Bool)
+s:9Cinematic10CNDecisionV4timeSo6CMTimeavp	swift.property	time	CNDecision.time	var time: CMTime { get }
+s:9Cinematic11CNAssetInfoC	swift.class	CNAssetInfo	CNAssetInfo	class CNAssetInfo
+s:9Cinematic11CNAssetInfoC02isA05assetSbSo7AVAssetC_tYaFZ	swift.type.method	isCinematic(asset:)	CNAssetInfo.isCinematic(asset:)	class func isCinematic(asset: AVAsset) async -> Bool
+s:9Cinematic11CNAssetInfoC03allA6TracksSaySo12AVAssetTrackCGvp	swift.property	allCinematicTracks	CNAssetInfo.allCinematicTracks	var allCinematicTracks: [AVAssetTrack] { get }
+s:9Cinematic11CNAssetInfoC11naturalSizeSo6CGSizeVvp	swift.property	naturalSize	CNAssetInfo.naturalSize	var naturalSize: CGSize { get }
+s:9Cinematic11CNAssetInfoC13preferredSizeSo6CGSizeVvp	swift.property	preferredSize	CNAssetInfo.preferredSize	var preferredSize: CGSize { get }
+s:9Cinematic11CNAssetInfoC16frameTimingTrackSo07AVAssetF0Cvp	swift.property	frameTimingTrack	CNAssetInfo.frameTimingTrack	var frameTimingTrack: AVAssetTrack { get }
+s:9Cinematic11CNAssetInfoC18preferredTransformSo08CGAffineE0Vvp	swift.property	preferredTransform	CNAssetInfo.preferredTransform	var preferredTransform: CGAffineTransform { get }
+s:9Cinematic11CNAssetInfoC18sampleDataTrackIDsSays5Int32VGvp	swift.property	sampleDataTrackIDs	CNAssetInfo.sampleDataTrackIDs	var sampleDataTrackIDs: [CMPersistentTrackID] { get }
+s:9Cinematic11CNAssetInfoC19cinematicVideoTrackSo07AVAssetF0Cvp	swift.property	cinematicVideoTrack	CNAssetInfo.cinematicVideoTrack	var cinematicVideoTrack: AVAssetTrack { get }
+s:9Cinematic11CNAssetInfoC22cinematicMetadataTrackSo07AVAssetF0Cvp	swift.property	cinematicMetadataTrack	CNAssetInfo.cinematicMetadataTrack	var cinematicMetadataTrack: AVAssetTrack { get }
+s:9Cinematic11CNAssetInfoC22videoCompositionTracksSaySo12AVAssetTrackCGvp	swift.property	videoCompositionTracks	CNAssetInfo.videoCompositionTracks	var videoCompositionTracks: [AVAssetTrack] { get }
+s:9Cinematic11CNAssetInfoC23cinematicDisparityTrackSo07AVAssetF0Cvp	swift.property	cinematicDisparityTrack	CNAssetInfo.cinematicDisparityTrack	var cinematicDisparityTrack: AVAssetTrack { get }
+s:9Cinematic11CNAssetInfoC24videoCompositionTrackIDsSays5Int32VGvp	swift.property	videoCompositionTrackIDs	CNAssetInfo.videoCompositionTrackIDs	var videoCompositionTrackIDs: [CMPersistentTrackID] { get }
+s:9Cinematic11CNAssetInfoC5assetACSo7AVAssetC_tYaKcfc	swift.init	init(asset:)	CNAssetInfo.init(asset:)	init(asset: AVAsset) async throws
+s:9Cinematic11CNAssetInfoC5assetSo7AVAssetCvp	swift.property	asset	CNAssetInfo.asset	final let asset: AVAsset
+s:9Cinematic11CNAssetInfoC9timeRangeSo06CMTimeE0avp	swift.property	timeRange	CNAssetInfo.timeRange	var timeRange: CMTimeRange { get }
+s:9Cinematic11CNDetectionV	swift.struct	CNDetection	CNDetection	struct CNDetection
+s:9Cinematic11CNDetectionV11detectionIDSo0bD0aSgvp	swift.property	detectionID	CNDetection.detectionID	var detectionID: CNDetectionID? { get }
+s:9Cinematic11CNDetectionV13detectionTypeSo0bD0Vvp	swift.property	detectionType	CNDetection.detectionType	var detectionType: CNDetectionType { get }
+s:9Cinematic11CNDetectionV14focusDisparitySfvp	swift.property	focusDisparity	CNDetection.focusDisparity	var focusDisparity: Float { get }
+s:9Cinematic11CNDetectionV14normalizedRectSo6CGRectVvp	swift.property	normalizedRect	CNDetection.normalizedRect	var normalizedRect: CGRect { get }
+s:9Cinematic11CNDetectionV16detectionGroupIDSo0bdE0aSgvp	swift.property	detectionGroupID	CNDetection.detectionGroupID	var detectionGroupID: CNDetectionGroupID? { get }
+s:9Cinematic11CNDetectionV18accessibilityLabel3forSSSo0B4TypeV_tFZ	swift.type.method	accessibilityLabel(for:)	CNDetection.accessibilityLabel(for:)	static func accessibilityLabel(for detectionType: CNDetectionType) -> String
+s:9Cinematic11CNDetectionV4time13detectionType14normalizedRect14focusDisparityACSo6CMTimea_So0bE0VSo6CGRectVSftcfc	swift.init	init(time:detectionType:normalizedRect:focusDisparity:)	CNDetection.init(time:detectionType:normalizedRect:focusDisparity:)	init(time: CMTime, detectionType: CNDetectionType, normalizedRect: CGRect, focusDisparity: Float)
+s:9Cinematic11CNDetectionV4timeSo6CMTimeavp	swift.property	time	CNDetection.time	var time: CMTime { get }
+s:9Cinematic11CNDetectionV9disparity2in15sourceDisparity13detectionType05priorF0SfSo6CGRectV_So11CVBufferRefaSo0bH0VSfSgtFZ	swift.type.method	disparity(in:sourceDisparity:detectionType:priorDisparity:)	CNDetection.disparity(in:sourceDisparity:detectionType:priorDisparity:)	static func disparity(in normalizedRect: CGRect, sourceDisparity: CVPixelBuffer, detectionType: CNDetectionType, priorDisparity: Float? = nil) -> Float
+s:9Cinematic15CNObjectTrackerC	swift.class	CNObjectTracker	CNObjectTracker	class CNObjectTracker
+s:9Cinematic15CNObjectTrackerC10findObject2at11sourceImageAA18CNBoundsPredictionVSgSo7CGPointV_So11CVBufferRefatF	swift.method	findObject(at:sourceImage:)	CNObjectTracker.findObject(at:sourceImage:)	func findObject(at point: CGPoint, sourceImage: CVPixelBuffer) -> CNBoundsPrediction?
+s:9Cinematic15CNObjectTrackerC11isSupportedSbvpZ	swift.type.property	isSupported	CNObjectTracker.isSupported	static var isSupported: Bool { get }
+s:9Cinematic15CNObjectTrackerC12commandQueueACSo010MTLCommandE0_p_tcfc	swift.init	init(commandQueue:)	CNObjectTracker.init(commandQueue:)	init(commandQueue: any MTLCommandQueue)
+s:9Cinematic15CNObjectTrackerC13startTracking2at6within11sourceImage0H9DisparitySbSo6CMTimea_So6CGRectVSo11CVBufferRefaANtF	swift.method	startTracking(at:within:sourceImage:sourceDisparity:)	CNObjectTracker.startTracking(at:within:sourceImage:sourceDisparity:)	func startTracking(at time: CMTime, within normalizedBounds: CGRect, sourceImage: CVPixelBuffer, sourceDisparity: CVPixelBuffer) -> Bool
+s:9Cinematic15CNObjectTrackerC16continueTracking2at11sourceImage0G9DisparityAA18CNBoundsPredictionVSgSo6CMTimea_So11CVBufferRefaANtF	swift.method	continueTracking(at:sourceImage:sourceDisparity:)	CNObjectTracker.continueTracking(at:sourceImage:sourceDisparity:)	func continueTracking(at time: CMTime, sourceImage: CVPixelBuffer, sourceDisparity: CVPixelBuffer) -> CNBoundsPrediction?
+s:9Cinematic15CNObjectTrackerC19resetDetectionTrackyyF	swift.method	resetDetectionTrack()	CNObjectTracker.resetDetectionTrack()	func resetDetectionTrack()
+s:9Cinematic15CNObjectTrackerC20finishDetectionTrackAA011CNDetectionF0CyF	swift.method	finishDetectionTrack()	CNObjectTracker.finishDetectionTrack()	func finishDetectionTrack() -> CNDetectionTrack
+s:9Cinematic16CNDetectionTrackC	swift.class	CNDetectionTrack	CNDetectionTrack	class CNDetectionTrack
+s:9Cinematic16CNDetectionTrackC10detections2inSayAA0B0VGSo11CMTimeRangea_tF	swift.method	detections(in:)	CNDetectionTrack.detections(in:)	func detections(in timeRange: CMTimeRange) -> [CNDetection]
+s:9Cinematic16CNDetectionTrackC10isDiscreteSbvp	swift.property	isDiscrete	CNDetectionTrack.isDiscrete	var isDiscrete: Bool { get }
+s:9Cinematic16CNDetectionTrackC11detectionIDSo0bE0avp	swift.property	detectionID	CNDetectionTrack.detectionID	var detectionID: CNDetectionID { get }
+s:9Cinematic16CNDetectionTrackC13detectionTypeSo0bE0Vvp	swift.property	detectionType	CNDetectionTrack.detectionType	var detectionType: CNDetectionType { get }
+s:9Cinematic16CNDetectionTrackC13isUserCreatedSbvp	swift.property	isUserCreated	CNDetectionTrack.isUserCreated	var isUserCreated: Bool { get }
+s:9Cinematic16CNDetectionTrackC16detectionGroupIDSo0beF0avp	swift.property	detectionGroupID	CNDetectionTrack.detectionGroupID	var detectionGroupID: CNDetectionGroupID { get }
+s:9Cinematic16CNDetectionTrackC9detection10atOrBeforeAA0B0VSgSo6CMTimea_tF	swift.method	detection(atOrBefore:)	CNDetectionTrack.detection(atOrBefore:)	func detection(atOrBefore time: CMTime) -> CNDetection?
+s:9Cinematic16CNDetectionTrackC9detection7nearestAA0B0VSgSo6CMTimea_tF	swift.method	detection(nearest:)	CNDetectionTrack.detection(nearest:)	func detection(nearest time: CMTime) -> CNDetection?
+s:9Cinematic17CNCompositionInfoC	swift.class	CNCompositionInfo	CNCompositionInfo	class CNCompositionInfo
+s:9Cinematic17CNCompositionInfoC15insertTimeRange_2of2atySo06CMTimeF0a_AA07CNAssetC0CSo0I0atKF	swift.method	insertTimeRange(_:of:at:)	CNCompositionInfo.insertTimeRange(_:of:at:)	func insertTimeRange(_ timeRange: CMTimeRange, of cinematicAssetInfo: CNAssetInfo, at startTime: CMTime) throws
+s:9Cinematic18CNBoundsPredictionV	swift.struct	CNBoundsPrediction	CNBoundsPrediction	struct CNBoundsPrediction
+s:9Cinematic18CNBoundsPredictionV10confidenceSfvp	swift.property	confidence	CNBoundsPrediction.confidence	var confidence: Float
+s:9Cinematic18CNBoundsPredictionV16normalizedBoundsSo6CGRectVvp	swift.property	normalizedBounds	CNBoundsPrediction.normalizedBounds	var normalizedBounds: CGRect
+s:9Cinematic18CNRenderingSessionC	swift.class	CNRenderingSession	CNRenderingSession	class CNRenderingSession
+s:9Cinematic18CNRenderingSessionC10AttributesV	swift.struct	CNRenderingSession.Attributes	CNRenderingSession.Attributes	struct Attributes
+s:9Cinematic18CNRenderingSessionC10AttributesV16renderingVersionSivp	swift.property	renderingVersion	CNRenderingSession.Attributes.renderingVersion	let renderingVersion: Int
+s:9Cinematic18CNRenderingSessionC10AttributesV5assetAESo7AVAssetC_tYaKcfc	swift.init	init(asset:)	CNRenderingSession.Attributes.init(asset:)	init(asset: AVAsset) async throws
+s:9Cinematic18CNRenderingSessionC12commandQueue17sessionAttributes18preferredTransform7qualityACSo010MTLCommandE0_p_AC0G0VSo08CGAffineI0VSo0B7QualityVtcfc	swift.init	init(commandQueue:sessionAttributes:preferredTransform:quality:)	CNRenderingSession.init(commandQueue:sessionAttributes:preferredTransform:quality:)	init(commandQueue: any MTLCommandQueue, sessionAttributes: CNRenderingSession.Attributes, preferredTransform: CGAffineTransform, quality: CNRenderingQuality)
+s:9Cinematic18CNRenderingSessionC12commandQueueSo010MTLCommandE0_pvp	swift.property	commandQueue	CNRenderingSession.commandQueue	final let commandQueue: any MTLCommandQueue
+s:9Cinematic18CNRenderingSessionC12encodeRender2to15frameAttributes11sourceImage0I9Disparity011destinationJ0SbSo16MTLCommandBuffer_p_AC05FrameH0VSo11CVBufferRefaA2NtF	swift.method	encodeRender(to:frameAttributes:sourceImage:sourceDisparity:destinationImage:)	CNRenderingSession.encodeRender(to:frameAttributes:sourceImage:sourceDisparity:destinationImage:)	func encodeRender(to commandBuffer: any MTLCommandBuffer, frameAttributes: CNRenderingSession.FrameAttributes, sourceImage: CVPixelBuffer, sourceDisparity: CVPixelBuffer, destinationImage: CVPixelBuffer) -> Bool
+s:9Cinematic18CNRenderingSessionC12encodeRender2to15frameAttributes11sourceImage0I9Disparity15destinationLuma0L6ChromaSbSo16MTLCommandBuffer_p_AC05FrameH0VSo11CVBufferRefaAOSo10MTLTexture_pSoAP_ptF	swift.method	encodeRender(to:frameAttributes:sourceImage:sourceDisparity:destinationLuma:destinationChroma:)	CNRenderingSession.encodeRender(to:frameAttributes:sourceImage:sourceDisparity:destinationLuma:destinationChroma:)	func encodeRender(to commandBuffer: any MTLCommandBuffer, frameAttributes: CNRenderingSession.FrameAttributes, sourceImage: CVPixelBuffer, sourceDisparity: CVPixelBuffer, destinationLuma: any MTLTexture, destinationChroma: any MTLTexture) -> Bool
+s:9Cinematic18CNRenderingSessionC12encodeRender2to15frameAttributes11sourceImage0I9Disparity15destinationRGBASbSo16MTLCommandBuffer_p_AC05FrameH0VSo11CVBufferRefaANSo10MTLTexture_ptF	swift.method	encodeRender(to:frameAttributes:sourceImage:sourceDisparity:destinationRGBA:)	CNRenderingSession.encodeRender(to:frameAttributes:sourceImage:sourceDisparity:destinationRGBA:)	func encodeRender(to commandBuffer: any MTLCommandBuffer, frameAttributes: CNRenderingSession.FrameAttributes, sourceImage: CVPixelBuffer, sourceDisparity: CVPixelBuffer, destinationRGBA: any MTLTexture) -> Bool
+s:9Cinematic18CNRenderingSessionC15FrameAttributesV	swift.struct	CNRenderingSession.FrameAttributes	CNRenderingSession.FrameAttributes	struct FrameAttributes
+s:9Cinematic18CNRenderingSessionC15FrameAttributesV12sampleBuffer07sessionE0AESgSo08CMSampleG3Refa_AC0E0Vtcfc	swift.init	init(sampleBuffer:sessionAttributes:)	CNRenderingSession.FrameAttributes.init(sampleBuffer:sessionAttributes:)	init?(sampleBuffer: CMSampleBuffer, sessionAttributes: CNRenderingSession.Attributes)
+s:9Cinematic18CNRenderingSessionC15FrameAttributesV14focusDisparitySfvp	swift.property	focusDisparity	CNRenderingSession.FrameAttributes.focusDisparity	var focusDisparity: Float
+s:9Cinematic18CNRenderingSessionC15FrameAttributesV18timedMetadataGroup07sessionE0AESgSo07AVTimedgH0C_AC0E0Vtcfc	swift.init	init(timedMetadataGroup:sessionAttributes:)	CNRenderingSession.FrameAttributes.init(timedMetadataGroup:sessionAttributes:)	init?(timedMetadataGroup metadataGroup: AVTimedMetadataGroup, sessionAttributes: CNRenderingSession.Attributes)
+s:9Cinematic18CNRenderingSessionC15FrameAttributesV7fNumberSfvp	swift.property	fNumber	CNRenderingSession.FrameAttributes.fNumber	var fNumber: Float
+s:9Cinematic18CNRenderingSessionC17sessionAttributesAC0E0Vvp	swift.property	sessionAttributes	CNRenderingSession.sessionAttributes	final let sessionAttributes: CNRenderingSession.Attributes
+s:9Cinematic18CNRenderingSessionC18preferredTransformSo08CGAffineE0Vvp	swift.property	preferredTransform	CNRenderingSession.preferredTransform	final let preferredTransform: CGAffineTransform
+s:9Cinematic18CNRenderingSessionC22sourcePixelFormatTypesSays6UInt32VGvpZ	swift.type.property	sourcePixelFormatTypes	CNRenderingSession.sourcePixelFormatTypes	static var sourcePixelFormatTypes: [OSType] { get }
+s:9Cinematic18CNRenderingSessionC27destinationPixelFormatTypesSays6UInt32VGvpZ	swift.type.property	destinationPixelFormatTypes	CNRenderingSession.destinationPixelFormatTypes	static var destinationPixelFormatTypes: [OSType] { get }
+s:9Cinematic18CNRenderingSessionC7qualitySo0B7QualityVvp	swift.property	quality	CNRenderingSession.quality	final let quality: CNRenderingQuality
+s:9Cinematic21CNFixedDetectionTrackC	swift.class	CNFixedDetectionTrack	CNFixedDetectionTrack	class CNFixedDetectionTrack
+s:9Cinematic21CNFixedDetectionTrackC08originalC0AA11CNDetectionVSgvp	swift.property	originalDetection	CNFixedDetectionTrack.originalDetection	var originalDetection: CNDetection? { get }
+s:9Cinematic21CNFixedDetectionTrackC08originalC0AcA11CNDetectionV_tcfc	swift.init	init(originalDetection:)	CNFixedDetectionTrack.init(originalDetection:)	init(originalDetection: CNDetection)
+s:9Cinematic21CNFixedDetectionTrackC14focusDisparityACSf_tcfc	swift.init	init(focusDisparity:)	CNFixedDetectionTrack.init(focusDisparity:)	init(focusDisparity: Float)
+s:9Cinematic21CNFixedDetectionTrackC14focusDisparitySfvp	swift.property	focusDisparity	CNFixedDetectionTrack.focusDisparity	var focusDisparity: Float { get }
+s:9Cinematic22CNCustomDetectionTrackC	swift.class	CNCustomDetectionTrack	CNCustomDetectionTrack	class CNCustomDetectionTrack
+s:9Cinematic22CNCustomDetectionTrackC10detections6smoothACSayAA11CNDetectionVG_Sbtcfc	swift.init	init(detections:smooth:)	CNCustomDetectionTrack.init(detections:smooth:)	init(detections: [CNDetection], smooth applySmoothing: Bool)
+s:9Cinematic22CNCustomDetectionTrackC13allDetectionsSayAA11CNDetectionVGvp	swift.property	allDetections	CNCustomDetectionTrack.allDetections	var allDetections: [CNDetection] { get }
+s:9Cinematic23CNAssetSpatialAudioInfoC	swift.class	CNAssetSpatialAudioInfo	CNAssetSpatialAudioInfo	class CNAssetSpatialAudioInfo
+s:9Cinematic23CNAssetSpatialAudioInfoC013assetContainscD00F0SbSo7AVAssetC_tYaFZ	swift.type.method	assetContainsSpatialAudio(asset:)	CNAssetSpatialAudioInfo.assetContainsSpatialAudio(asset:)	class func assetContainsSpatialAudio(asset: AVAsset) async -> Bool
+s:9Cinematic23CNAssetSpatialAudioInfoC015checkIfContainscD05asset17completionHandlerySo7AVAssetC_ySbctFZ	swift.type.method	checkIfContainsSpatialAudio(asset:completionHandler:)	CNAssetSpatialAudioInfo.checkIfContainsSpatialAudio(asset:completionHandler:)	class func checkIfContainsSpatialAudio(asset: AVAsset, completionHandler: @escaping (Bool) -> Void)
+s:9Cinematic23CNAssetSpatialAudioInfoC07defaultcD5TrackSo07AVAssetG0Cvp	swift.property	defaultSpatialAudioTrack	CNAssetSpatialAudioInfo.defaultSpatialAudioTrack	var defaultSpatialAudioTrack: AVAssetTrack { get }
+s:9Cinematic23CNAssetSpatialAudioInfoC07spatialD11MixMetadata10Foundation4DataVvp	swift.property	spatialAudioMixMetadata	CNAssetSpatialAudioInfo.spatialAudioMixMetadata	var spatialAudioMixMetadata: Data { get }
+s:9Cinematic23CNAssetSpatialAudioInfoC11isSupportedSbvpZ	swift.type.property	isSupported	CNAssetSpatialAudioInfo.isSupported	static var isSupported: Bool { get }
+s:9Cinematic23CNAssetSpatialAudioInfoC21defaultRenderingStyleSo09CNSpatialdgH0Vvp	swift.property	defaultRenderingStyle	CNAssetSpatialAudioInfo.defaultRenderingStyle	var defaultRenderingStyle: CNSpatialAudioRenderingStyle { get }
+s:9Cinematic23CNAssetSpatialAudioInfoC22defaultEffectIntensitySfvp	swift.property	defaultEffectIntensity	CNAssetSpatialAudioInfo.defaultEffectIntensity	var defaultEffectIntensity: Float32 { get }
+s:9Cinematic23CNAssetSpatialAudioInfoC24assetWriterInputSettings3forSDySSypGSo09CNSpatialD11ContentTypeV_tF	swift.method	assetWriterInputSettings(for:)	CNAssetSpatialAudioInfo.assetWriterInputSettings(for:)	func assetWriterInputSettings(for contentType: CNSpatialAudioContentType) -> Dictionary<String, Any>
+s:9Cinematic23CNAssetSpatialAudioInfoC25assetReaderOutputSettings3forSDySSypGSo09CNSpatialD11ContentTypeV_tF	swift.method	assetReaderOutputSettings(for:)	CNAssetSpatialAudioInfo.assetReaderOutputSettings(for:)	func assetReaderOutputSettings(for contentType: CNSpatialAudioContentType) -> Dictionary<String, Any>
+s:9Cinematic23CNAssetSpatialAudioInfoC5assetACSo7AVAssetC_tYaKcfc	swift.init	init(asset:)	CNAssetSpatialAudioInfo.init(asset:)	init(asset: AVAsset) async throws
+s:9Cinematic23CNAssetSpatialAudioInfoC8audioMix15effectIntensity14renderingStyleSo07AVAudioG0CSf_So09CNSpatiald9RenderingK0VtF	swift.method	audioMix(effectIntensity:renderingStyle:)	CNAssetSpatialAudioInfo.audioMix(effectIntensity:renderingStyle:)	func audioMix(effectIntensity: Float32, renderingStyle: CNSpatialAudioRenderingStyle) -> AVAudioMix
+s:9Cinematic8CNScriptC	swift.class	CNScript	CNScript	final class CNScript
+s:9Cinematic8CNScriptC13baseDecisions2inSayAA10CNDecisionVGSo11CMTimeRangea_tF	swift.method	baseDecisions(in:)	CNScript.baseDecisions(in:)	final func baseDecisions(in timeRange: CMTimeRange) -> [CNDecision]
+s:9Cinematic8CNScriptC13userDecisions2inSayAA10CNDecisionVGSo11CMTimeRangea_tF	swift.method	userDecisions(in:)	CNScript.userDecisions(in:)	final func userDecisions(in timeRange: CMTimeRange) -> [CNDecision]
+s:9Cinematic8CNScriptC14detectionTrack3forAA011CNDetectionD0CSgAA10CNDecisionV_tF	swift.method	detectionTrack(for:)	CNScript.detectionTrack(for:)	final func detectionTrack(for decision: CNDecision) -> CNDetectionTrack?
+s:9Cinematic8CNScriptC14detectionTrack3forAA011CNDetectionD0CSgSo0F2IDa_tF	swift.method	detectionTrack(for:)	CNScript.detectionTrack(for:)	final func detectionTrack(for detectionID: CNDetectionID) -> CNDetectionTrack?
+s:9Cinematic8CNScriptC15addUserDecisionySbAA10CNDecisionVF	swift.method	addUserDecision(_:)	CNScript.addUserDecision(_:)	final func addUserDecision(_ decision: CNDecision) -> Bool
+s:9Cinematic8CNScriptC15primaryDecision2atAA10CNDecisionVSgSo6CMTimea_tF	swift.method	primaryDecision(at:)	CNScript.primaryDecision(at:)	final func primaryDecision(at time: CMTime) -> CNDecision?
+s:9Cinematic8CNScriptC17addDetectionTrackySo13CNDetectionIDaAA0fE0CF	swift.method	addDetectionTrack(_:)	CNScript.addDetectionTrack(_:)	final func addDetectionTrack(_ detectionTrack: CNDetectionTrack) -> CNDetectionID
+s:9Cinematic8CNScriptC17secondaryDecision2atAA10CNDecisionVSgSo6CMTimea_tF	swift.method	secondaryDecision(at:)	CNScript.secondaryDecision(at:)	final func secondaryDecision(at time: CMTime) -> CNDecision?
+s:9Cinematic8CNScriptC18removeUserDecisionySbAA10CNDecisionVF	swift.method	removeUserDecision(_:)	CNScript.removeUserDecision(_:)	final func removeUserDecision(_ decision: CNDecision) -> Bool
+s:9Cinematic8CNScriptC20addedDetectionTracksSayAA16CNDetectionTrackCGvp	swift.property	addedDetectionTracks	CNScript.addedDetectionTracks	final var addedDetectionTracks: [CNDetectionTrack] { get }
+s:9Cinematic8CNScriptC20removeDetectionTrackySbAA011CNDetectionE0CF	swift.method	removeDetectionTrack(_:)	CNScript.removeDetectionTrack(_:)	final func removeDetectionTrack(_ detectionTrack: CNDetectionTrack) -> Bool
+s:9Cinematic8CNScriptC21timeRangeOfTransition5afterSo06CMTimeD0aAA10CNDecisionV_tF	swift.method	timeRangeOfTransition(after:)	CNScript.timeRangeOfTransition(after:)	final func timeRangeOfTransition(after decision: CNDecision) -> CMTimeRange
+s:9Cinematic8CNScriptC21timeRangeOfTransition6beforeSo06CMTimeD0aAA10CNDecisionV_tF	swift.method	timeRangeOfTransition(before:)	CNScript.timeRangeOfTransition(before:)	final func timeRangeOfTransition(before decision: CNDecision) -> CMTimeRange
+s:9Cinematic8CNScriptC22removeAllUserDecisionsyyF	swift.method	removeAllUserDecisions()	CNScript.removeAllUserDecisions()	final func removeAllUserDecisions()
+s:9Cinematic8CNScriptC5FrameV	swift.struct	CNScript.Frame	CNScript.Frame	struct Frame
+s:9Cinematic8CNScriptC5FrameV13allDetectionsSayAA11CNDetectionVGvp	swift.property	allDetections	CNScript.Frame.allDetections	var allDetections: [CNDetection] { get }
+s:9Cinematic8CNScriptC5FrameV13bestDetection3forAA11CNDetectionVSgSo0G7GroupIDa_tF	swift.method	bestDetection(for:)	CNScript.Frame.bestDetection(for:)	func bestDetection(for detectionGroupID: CNDetectionGroupID) -> CNDetection?
+s:9Cinematic8CNScriptC5FrameV14focusDetectionAA11CNDetectionVvp	swift.property	focusDetection	CNScript.Frame.focusDetection	var focusDetection: CNDetection { get }
+s:9Cinematic8CNScriptC5FrameV14focusDisparitySfvp	swift.property	focusDisparity	CNScript.Frame.focusDisparity	var focusDisparity: Float { get }
+s:9Cinematic8CNScriptC5FrameV4timeSo6CMTimeavp	swift.property	time	CNScript.Frame.time	var time: CMTime { get }
+s:9Cinematic8CNScriptC5FrameV9detection3forAA11CNDetectionVSgSo0F2IDa_tF	swift.method	detection(for:)	CNScript.Frame.detection(for:)	func detection(for detectionID: CNDetectionID) -> CNDetection?
+s:9Cinematic8CNScriptC5asset7changes8progressACSo7AVAssetC_AC7ChangesVSgSo10NSProgressCSgtYaKcfc	swift.init	init(asset:changes:progress:)	CNScript.init(asset:changes:progress:)	init(asset: AVAsset, changes: CNScript.Changes? = nil, progress: Progress? = nil) async throws
+s:9Cinematic8CNScriptC5frame2at9toleranceAC5FrameVSgSo6CMTimea_AKtF	swift.method	frame(at:tolerance:)	CNScript.frame(at:tolerance:)	final func frame(at time: CMTime, tolerance: CMTime) -> CNScript.Frame?
+s:9Cinematic8CNScriptC6frames2inSayAC5FrameVGSo11CMTimeRangea_tF	swift.method	frames(in:)	CNScript.frames(in:)	final func frames(in timeRange: CMTimeRange) -> [CNScript.Frame]
+s:9Cinematic8CNScriptC6reload7changesyAC7ChangesVSg_tF	swift.method	reload(changes:)	CNScript.reload(changes:)	final func reload(changes: CNScript.Changes?)
+s:9Cinematic8CNScriptC7ChangesV	swift.struct	CNScript.Changes	CNScript.Changes	struct Changes
+s:9Cinematic8CNScriptC7ChangesV13userDecisionsSayAA10CNDecisionVGvp	swift.property	userDecisions	CNScript.Changes.userDecisions	var userDecisions: [CNDecision] { get }
+s:9Cinematic8CNScriptC7ChangesV18dataRepresentation10Foundation4DataVvp	swift.property	dataRepresentation	CNScript.Changes.dataRepresentation	var dataRepresentation: Data { get }
+s:9Cinematic8CNScriptC7ChangesV18dataRepresentationAESg10Foundation4DataV_tcfc	swift.init	init(dataRepresentation:)	CNScript.Changes.init(dataRepresentation:)	init?(dataRepresentation: Data)
+s:9Cinematic8CNScriptC7ChangesV20addedDetectionTracksSayAA16CNDetectionTrackCGvp	swift.property	addedDetectionTracks	CNScript.Changes.addedDetectionTracks	var addedDetectionTracks: [CNDetectionTrack] { get }
+s:9Cinematic8CNScriptC7ChangesV7fNumberSfvp	swift.property	fNumber	CNScript.Changes.fNumber	var fNumber: Float { get }
+s:9Cinematic8CNScriptC7changes9trimmedByAC7ChangesVSo11CMTimeRangea_tF	swift.method	changes(trimmedBy:)	CNScript.changes(trimmedBy:)	final func changes(trimmedBy timeRange: CMTimeRange) -> CNScript.Changes
+s:9Cinematic8CNScriptC7changesAC7ChangesVyF	swift.method	changes()	CNScript.changes()	final func changes() -> CNScript.Changes
+s:9Cinematic8CNScriptC7fNumberSfvp	swift.property	fNumber	CNScript.fNumber	final var fNumber: Float { get set }
+s:9Cinematic8CNScriptC8decision2at9toleranceAA10CNDecisionVSgSo6CMTimea_AKtF	swift.method	decision(at:tolerance:)	CNScript.decision(at:tolerance:)	final func decision(at time: CMTime, tolerance: CMTime) -> CNDecision?
+s:9Cinematic8CNScriptC8decision5afterAA10CNDecisionVSgSo6CMTimea_tF	swift.method	decision(after:)	CNScript.decision(after:)	final func decision(after time: CMTime) -> CNDecision?
+s:9Cinematic8CNScriptC8decision6beforeAA10CNDecisionVSgSo6CMTimea_tF	swift.method	decision(before:)	CNScript.decision(before:)	final func decision(before time: CMTime) -> CNDecision?
+s:9Cinematic8CNScriptC9decisions2inSayAA10CNDecisionVGSo11CMTimeRangea_tF	swift.method	decisions(in:)	CNScript.decisions(in:)	final func decisions(in timeRange: CMTimeRange) -> [CNDecision]
+s:9Cinematic8CNScriptC9timeRangeSo06CMTimeD0avp	swift.property	timeRange	CNScript.timeRange	final var timeRange: CMTimeRange { get }
+s:SC20CNCinematicErrorCodeLeV	swift.struct	CNCinematicError	CNCinematicError	struct CNCinematicError
+s:SC20CNCinematicErrorCodeLeV10incompleteSoAAVvpZ	swift.type.property	incomplete	CNCinematicError.incomplete	static var incomplete: CNCinematicError.Code { get }
+s:SC20CNCinematicErrorCodeLeV10unreadableSoAAVvpZ	swift.type.property	unreadable	CNCinematicError.unreadable	static var unreadable: CNCinematicError.Code { get }
+s:SC20CNCinematicErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	CNCinematicError.errorDomain	static var errorDomain: String { get }
+s:SC20CNCinematicErrorCodeLeV11unsupportedSoAAVvpZ	swift.type.property	unsupported	CNCinematicError.unsupported	static var unsupported: CNCinematicError.Code { get }
+s:SC20CNCinematicErrorCodeLeV12incompatibleSoAAVvpZ	swift.type.property	incompatible	CNCinematicError.incompatible	static var incompatible: CNCinematicError.Code { get }
+s:SC20CNCinematicErrorCodeLeV7unknownSoAAVvpZ	swift.type.property	unknown	CNCinematicError.unknown	static var unknown: CNCinematicError.Code { get }
+s:SC20CNCinematicErrorCodeLeV9cancelledSoAAVvpZ	swift.type.property	cancelled	CNCinematicError.cancelled	static var cancelled: CNCinematicError.Code { get }
+s:SC20CNCinematicErrorCodeLeV9malformedSoAAVvpZ	swift.type.property	malformed	CNCinematicError.malformed	static var malformed: CNCinematicError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.func.op	!=(_:_:)	CNCinematicError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CNDetectionType	swift.func.op	!=(_:_:)	CNDetectionType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CNRenderingQuality	swift.func.op	!=(_:_:)	CNRenderingQuality.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CNSpatialAudioContentType	swift.func.op	!=(_:_:)	CNSpatialAudioContentType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CNSpatialAudioRenderingStyle	swift.func.op	!=(_:_:)	CNSpatialAudioRenderingStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CNDetectionGroupID	swift.func.op	!=(_:_:)	CNDetectionGroupID.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CNDetectionID	swift.func.op	!=(_:_:)	CNDetectionID.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9Cinematic10CNDecisionV	swift.func.op	!=(_:_:)	CNDecision.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9Cinematic10CNDecisionV16FocusDetectionIDO	swift.func.op	!=(_:_:)	CNDecision.FocusDetectionID.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.property	hashValue	CNCinematicError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CNDetectionType	swift.property	hashValue	CNDetectionType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CNRenderingQuality	swift.property	hashValue	CNRenderingQuality.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CNSpatialAudioContentType	swift.property	hashValue	CNSpatialAudioContentType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CNSpatialAudioRenderingStyle	swift.property	hashValue	CNSpatialAudioRenderingStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.method	hash(into:)	CNCinematicError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CNDetectionType	swift.method	hash(into:)	CNDetectionType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CNRenderingQuality	swift.method	hash(into:)	CNRenderingQuality.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CNSpatialAudioContentType	swift.method	hash(into:)	CNSpatialAudioContentType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CNSpatialAudioRenderingStyle	swift.method	hash(into:)	CNSpatialAudioRenderingStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:So13CNDetectionIDa8rawValueABs5Int64V_tcfc	swift.init	init(rawValue:)	CNDetectionID.init(rawValue:)	init(rawValue: Int64)
+s:So13CNDetectionIDayABs5Int64Vcfc	swift.init	init(_:)	CNDetectionID.init(_:)	init(_ rawValue: Int64)
+s:So15CNDetectionTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CNDetectionType.init(rawValue:)	init?(rawValue: Int)
+s:So18CNDetectionGroupIDa8rawValueABs5Int64V_tcfc	swift.init	init(rawValue:)	CNDetectionGroupID.init(rawValue:)	init(rawValue: Int64)
+s:So18CNDetectionGroupIDayABs5Int64Vcfc	swift.init	init(_:)	CNDetectionGroupID.init(_:)	init(_ rawValue: Int64)
+s:So18CNRenderingQualityV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CNRenderingQuality.init(rawValue:)	init?(rawValue: Int)
+s:So20AVMutableCompositionC9CinematicE9addTracks3for24preferredStartingTrackIDAC17CNCompositionInfoCAC07CNAssetL0C_s5Int32VtF	swift.method	addTracks(for:preferredStartingTrackID:)	AVMutableComposition.addTracks(for:preferredStartingTrackID:)	func addTracks(for cinematicAssetInfo: CNAssetInfo, preferredStartingTrackID: CMPersistentTrackID) -> CNCompositionInfo
+s:So20CNCinematicErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CNCinematicError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So25CNSpatialAudioContentTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CNSpatialAudioContentType.init(rawValue:)	init?(rawValue: Int)
+s:So28CNSpatialAudioRenderingStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CNSpatialAudioRenderingStyle.init(rawValue:)	init?(rawValue: Int)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CNDetectionGroupID	swift.property	hashValue	CNDetectionGroupID.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CNDetectionID	swift.property	hashValue	CNDetectionID.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CNDetectionGroupID	swift.method	hash(into:)	CNDetectionGroupID.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CNDetectionID	swift.method	hash(into:)	CNDetectionID.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CNCinematicErrorCode	swift.property	localizedDescription	CNCinematicError.localizedDescription	var localizedDescription: String { get }

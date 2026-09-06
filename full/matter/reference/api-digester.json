@@ -1,0 +1,5410 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRAccessGrant",
+        "printedName": "Matter.MTRAccessGrant"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRAsyncCallbackWorkQueue",
+        "printedName": "Matter.MTRAsyncCallbackWorkQueue"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRAttributeValueWaiter",
+        "printedName": "Matter.MTRAttributeValueWaiter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRBackwardsCompatShims",
+        "printedName": "Matter.MTRBackwardsCompatShims"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRBaseClusters",
+        "printedName": "Matter.MTRBaseClusters"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRBaseDevice",
+        "printedName": "Matter.MTRBaseDevice"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRCSRInfo",
+        "printedName": "Matter.MTRCSRInfo"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRCertificateInfo",
+        "printedName": "Matter.MTRCertificateInfo"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRCertificates",
+        "printedName": "Matter.MTRCertificates"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRCluster",
+        "printedName": "Matter.MTRCluster"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRClusterConstants",
+        "printedName": "Matter.MTRClusterConstants"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRClusterNames",
+        "printedName": "Matter.MTRClusterNames"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRClusterStateCacheContainer",
+        "printedName": "Matter.MTRClusterStateCacheContainer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRClusters",
+        "printedName": "Matter.MTRClusters"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRCommandPayloadsObjc",
+        "printedName": "Matter.MTRCommandPayloadsObjc"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRCommandWithRequiredResponse",
+        "printedName": "Matter.MTRCommandWithRequiredResponse"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRCommissionableBrowserDelegate",
+        "printedName": "Matter.MTRCommissionableBrowserDelegate"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRCommissionableBrowserResult",
+        "printedName": "Matter.MTRCommissionableBrowserResult"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRCommissioneeInfo",
+        "printedName": "Matter.MTRCommissioneeInfo"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRCommissioningDelegate",
+        "printedName": "Matter.MTRCommissioningDelegate"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRCommissioningOperation",
+        "printedName": "Matter.MTRCommissioningOperation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRCommissioningParameters",
+        "printedName": "Matter.MTRCommissioningParameters"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDefines",
+        "printedName": "Matter.MTRDefines"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDevice",
+        "printedName": "Matter.MTRDevice"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDeviceAttestationDelegate",
+        "printedName": "Matter.MTRDeviceAttestationDelegate"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDeviceAttestationInfo",
+        "printedName": "Matter.MTRDeviceAttestationInfo"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDeviceController_XPC",
+        "printedName": "Matter.MTRDeviceController_XPC"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDeviceController",
+        "printedName": "Matter.MTRDeviceController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDeviceControllerDelegate",
+        "printedName": "Matter.MTRDeviceControllerDelegate"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDeviceControllerFactory",
+        "printedName": "Matter.MTRDeviceControllerFactory"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDeviceControllerParameters",
+        "printedName": "Matter.MTRDeviceControllerParameters"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDeviceControllerStartupParams",
+        "printedName": "Matter.MTRDeviceControllerStartupParams"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDeviceControllerStorageDelegate",
+        "printedName": "Matter.MTRDeviceControllerStorageDelegate"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDeviceStorageBehaviorConfiguration",
+        "printedName": "Matter.MTRDeviceStorageBehaviorConfiguration"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDeviceType",
+        "printedName": "Matter.MTRDeviceType"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDeviceTypeRevision",
+        "printedName": "Matter.MTRDeviceTypeRevision"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRDiagnosticLogsType",
+        "printedName": "Matter.MTRDiagnosticLogsType"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTREndpointInfo",
+        "printedName": "Matter.MTREndpointInfo"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRError",
+        "printedName": "Matter.MTRError"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRFabricInfo",
+        "printedName": "Matter.MTRFabricInfo"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRKeypair",
+        "printedName": "Matter.MTRKeypair"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRLogging",
+        "printedName": "Matter.MTRLogging"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRManualSetupPayloadParser",
+        "printedName": "Matter.MTRManualSetupPayloadParser"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRMetrics",
+        "printedName": "Matter.MTRMetrics"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTROTAHeader",
+        "printedName": "Matter.MTROTAHeader"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTROTAProviderDelegate",
+        "printedName": "Matter.MTROTAProviderDelegate"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTROnboardingPayloadParser",
+        "printedName": "Matter.MTROnboardingPayloadParser"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTROperationalCertificateIssuer",
+        "printedName": "Matter.MTROperationalCertificateIssuer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRProductIdentity",
+        "printedName": "Matter.MTRProductIdentity"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRQRCodeSetupPayloadParser",
+        "printedName": "Matter.MTRQRCodeSetupPayloadParser"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRServerAttribute",
+        "printedName": "Matter.MTRServerAttribute"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRServerCluster",
+        "printedName": "Matter.MTRServerCluster"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRServerEndpoint",
+        "printedName": "Matter.MTRServerEndpoint"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRSetupPayload",
+        "printedName": "Matter.MTRSetupPayload"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRStorage",
+        "printedName": "Matter.MTRStorage"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRStructsObjc",
+        "printedName": "Matter.MTRStructsObjc"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRThreadOperationalDataset",
+        "printedName": "Matter.MTRThreadOperationalDataset"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRXPCClientProtocol",
+        "printedName": "Matter.MTRXPCClientProtocol"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "Matter",
+        "name": "Matter.MTRXPCServerProtocol",
+        "printedName": "Matter.MTRXPCServerProtocol"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV8_nsErrorSo7NSErrorCvg",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC12MTRErrorCodeLeV8_nsErrorSo7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC12MTRErrorCodeLeV8_nsErrorSo7NSErrorCvp",
+            "moduleName": "Matter",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC12MTRErrorCodeLeV8_nsErrorSo7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MTRError",
+                "printedName": "Matter.MTRError",
+                "usr": "c:@E@MTRErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC12MTRErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc",
+            "moduleName": "Matter",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC12MTRErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC12MTRErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "Matter",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC12MTRErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Matter.MTRError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo12MTRErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "Matter",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So12MTRErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo12MTRErrorCodeV8rawValueSivg",
+                    "moduleName": "Matter",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So12MTRErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo12MTRErrorCodeV8rawValueSivp",
+                "moduleName": "Matter",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So12MTRErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo12MTRErrorCodeV8RawValuea",
+                "moduleName": "Matter",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So12MTRErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MTRError",
+                    "printedName": "Matter.MTRError",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "Matter",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@MTRErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "generalError",
+                "printedName": "generalError",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeGeneralError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "invalidStringLength",
+                "printedName": "invalidStringLength",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeInvalidStringLength"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "invalidIntegerValue",
+                "printedName": "invalidIntegerValue",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeInvalidIntegerValue"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "invalidArgument",
+                "printedName": "invalidArgument",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeInvalidArgument"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "invalidMessageLength",
+                "printedName": "invalidMessageLength",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeInvalidMessageLength"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "invalidState",
+                "printedName": "invalidState",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeInvalidState"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "wrongAddressType",
+                "printedName": "wrongAddressType",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeWrongAddressType"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "integrityCheckFailed",
+                "printedName": "integrityCheckFailed",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeIntegrityCheckFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "timeout",
+                "printedName": "timeout",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeTimeout"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "bufferTooSmall",
+                "printedName": "bufferTooSmall",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeBufferTooSmall"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "fabricExists",
+                "printedName": "fabricExists",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeFabricExists"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "17.0",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "unknownSchema",
+                "printedName": "unknownSchema",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeUnknownSchema"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "17.0",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "schemaMismatch",
+                "printedName": "schemaMismatch",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeSchemaMismatch"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "17.0",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "tlvDecodeFailed",
+                "printedName": "tlvDecodeFailed",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeTLVDecodeFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "17.2",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "dnssdUnauthorized",
+                "printedName": "dnssdUnauthorized",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeDNSSDUnauthorized"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "17.6",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "cancelled",
+                "printedName": "cancelled",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeCancelled"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "18.4",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "accessDenied",
+                "printedName": "accessDenied",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeAccessDenied"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "18.4",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "busy",
+                "printedName": "busy",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeBusy"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRError.Code",
+                        "usr": "c:@E@MTRErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRError.Code",
+                            "usr": "c:@E@MTRErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRError.Code.Type) -> Matter.MTRError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "18.4",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "notFound",
+                "printedName": "notFound",
+                "usr": "c:@E@MTRErrorCode@MTRErrorCodeNotFound"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "Matter.MTRError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "16.1",
+            "kind": "TypeDecl",
+            "moduleName": "Matter",
+            "name": "Code",
+            "objc_name": "MTRErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@MTRErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV12generalErrorSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV12generalErrorSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "generalError",
+            "printedName": "generalError",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeGeneralError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV19invalidStringLengthSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV19invalidStringLengthSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "invalidStringLength",
+            "printedName": "invalidStringLength",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeInvalidStringLength"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV19invalidIntegerValueSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV19invalidIntegerValueSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "invalidIntegerValue",
+            "printedName": "invalidIntegerValue",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeInvalidIntegerValue"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV15invalidArgumentSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV15invalidArgumentSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "invalidArgument",
+            "printedName": "invalidArgument",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeInvalidArgument"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV20invalidMessageLengthSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV20invalidMessageLengthSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "invalidMessageLength",
+            "printedName": "invalidMessageLength",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeInvalidMessageLength"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV12invalidStateSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV12invalidStateSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "invalidState",
+            "printedName": "invalidState",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeInvalidState"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV16wrongAddressTypeSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV16wrongAddressTypeSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "wrongAddressType",
+            "printedName": "wrongAddressType",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeWrongAddressType"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV20integrityCheckFailedSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV20integrityCheckFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "integrityCheckFailed",
+            "printedName": "integrityCheckFailed",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeIntegrityCheckFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV7timeoutSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV7timeoutSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "timeout",
+            "printedName": "timeout",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeTimeout"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV14bufferTooSmallSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV14bufferTooSmallSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "bufferTooSmall",
+            "printedName": "bufferTooSmall",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeBufferTooSmall"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV12fabricExistsSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV12fabricExistsSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "fabricExists",
+            "printedName": "fabricExists",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeFabricExists"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV13unknownSchemaSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV13unknownSchemaSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.0",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "unknownSchema",
+            "printedName": "unknownSchema",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeUnknownSchema"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV14schemaMismatchSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV14schemaMismatchSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.0",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "schemaMismatch",
+            "printedName": "schemaMismatch",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeSchemaMismatch"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV15tlvDecodeFailedSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV15tlvDecodeFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.0",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "tlvDecodeFailed",
+            "printedName": "tlvDecodeFailed",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeTLVDecodeFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV17dnssdUnauthorizedSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV17dnssdUnauthorizedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.2",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "dnssdUnauthorized",
+            "printedName": "dnssdUnauthorized",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeDNSSDUnauthorized"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV9cancelledSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV9cancelledSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.6",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "cancelled",
+            "printedName": "cancelled",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeCancelled"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV12accessDeniedSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV12accessDeniedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "18.4",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "accessDenied",
+            "printedName": "accessDenied",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeAccessDenied"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV4busySoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV4busySoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "18.4",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "busy",
+            "printedName": "busy",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeBusy"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRError.Code",
+                    "usr": "c:@E@MTRErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC12MTRErrorCodeLeV8notFoundSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC12MTRErrorCodeLeV8notFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRError.Code",
+                "usr": "c:@E@MTRErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "18.4",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "notFound",
+            "printedName": "notFound",
+            "static": true,
+            "usr": "c:@E@MTRErrorCode@MTRErrorCodeNotFound"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "16.1",
+        "kind": "TypeDecl",
+        "moduleName": "Matter",
+        "name": "MTRError",
+        "printedName": "MTRError",
+        "usr": "c:@E@MTRErrorCode"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV03_nsB0So7NSErrorCvg",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC23MTRInteractionErrorCodeLeV03_nsB0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC23MTRInteractionErrorCodeLeV03_nsB0So7NSErrorCvp",
+            "moduleName": "Matter",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC23MTRInteractionErrorCodeLeV03_nsB0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MTRInteractionError",
+                "printedName": "Matter.MTRInteractionError",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC23MTRInteractionErrorCodeLeV03_nsB0ABSo7NSErrorC_tcfc",
+            "moduleName": "Matter",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC23MTRInteractionErrorCodeLeV03_nsB0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC23MTRInteractionErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "Matter",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC23MTRInteractionErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Matter.MTRInteractionError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo23MTRInteractionErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "Matter",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So23MTRInteractionErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo23MTRInteractionErrorCodeV8rawValueSivg",
+                    "moduleName": "Matter",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So23MTRInteractionErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo23MTRInteractionErrorCodeV8rawValueSivp",
+                "moduleName": "Matter",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So23MTRInteractionErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo23MTRInteractionErrorCodeV8RawValuea",
+                "moduleName": "Matter",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So23MTRInteractionErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MTRInteractionError",
+                    "printedName": "Matter.MTRInteractionError",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "Matter",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "failure",
+                "printedName": "failure",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeFailure"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "invalidSubscription",
+                "printedName": "invalidSubscription",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeInvalidSubscription"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "unsupportedAccess",
+                "printedName": "unsupportedAccess",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedAccess"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "unsupportedEndpoint",
+                "printedName": "unsupportedEndpoint",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedEndpoint"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "invalidAction",
+                "printedName": "invalidAction",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeInvalidAction"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "unsupportedCommand",
+                "printedName": "unsupportedCommand",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedCommand"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "invalidCommand",
+                "printedName": "invalidCommand",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeInvalidCommand"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "unsupportedAttribute",
+                "printedName": "unsupportedAttribute",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedAttribute"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "constraintError",
+                "printedName": "constraintError",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeConstraintError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "unsupportedWrite",
+                "printedName": "unsupportedWrite",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedWrite"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "resourceExhausted",
+                "printedName": "resourceExhausted",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeResourceExhausted"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "notFound",
+                "printedName": "notFound",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeNotFound"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "unreportableAttribute",
+                "printedName": "unreportableAttribute",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnreportableAttribute"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "invalidDataType",
+                "printedName": "invalidDataType",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeInvalidDataType"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "unsupportedRead",
+                "printedName": "unsupportedRead",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedRead"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "dataVersionMismatch",
+                "printedName": "dataVersionMismatch",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeDataVersionMismatch"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "timeout",
+                "printedName": "timeout",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeTimeout"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "busy",
+                "printedName": "busy",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeBusy"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "26.0",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "accessRestricted",
+                "printedName": "accessRestricted",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeAccessRestricted"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "unsupportedCluster",
+                "printedName": "unsupportedCluster",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedCluster"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "noUpstreamSubscription",
+                "printedName": "noUpstreamSubscription",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeNoUpstreamSubscription"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "needsTimedInteraction",
+                "printedName": "needsTimedInteraction",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeNeedsTimedInteraction"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "unsupportedEvent",
+                "printedName": "unsupportedEvent",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedEvent"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "pathsExhausted",
+                "printedName": "pathsExhausted",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodePathsExhausted"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "timedRequestMismatch",
+                "printedName": "timedRequestMismatch",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeTimedRequestMismatch"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "failsafeRequired",
+                "printedName": "failsafeRequired",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeFailsafeRequired"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "17.6",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "invalidInState",
+                "printedName": "invalidInState",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeInvalidInState"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "Matter.MTRInteractionError.Code",
+                        "usr": "c:@E@MTRInteractionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "Matter.MTRInteractionError.Code",
+                            "usr": "c:@E@MTRInteractionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "Matter.MTRInteractionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Matter.MTRInteractionError.Code.Type) -> Matter.MTRInteractionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "17.6",
+                "kind": "Var",
+                "moduleName": "Matter",
+                "name": "noCommandResponse",
+                "printedName": "noCommandResponse",
+                "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeNoCommandResponse"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "Matter.MTRInteractionError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "16.1",
+            "kind": "TypeDecl",
+            "moduleName": "Matter",
+            "name": "Code",
+            "objc_name": "MTRInteractionErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@MTRInteractionErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV7failureSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV7failureSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "failure",
+            "printedName": "failure",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeFailure"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV19invalidSubscriptionSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV19invalidSubscriptionSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "invalidSubscription",
+            "printedName": "invalidSubscription",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeInvalidSubscription"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV17unsupportedAccessSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV17unsupportedAccessSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "unsupportedAccess",
+            "printedName": "unsupportedAccess",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedAccess"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV19unsupportedEndpointSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV19unsupportedEndpointSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "unsupportedEndpoint",
+            "printedName": "unsupportedEndpoint",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedEndpoint"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV13invalidActionSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV13invalidActionSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "invalidAction",
+            "printedName": "invalidAction",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeInvalidAction"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV18unsupportedCommandSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV18unsupportedCommandSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "unsupportedCommand",
+            "printedName": "unsupportedCommand",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedCommand"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV14invalidCommandSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV14invalidCommandSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "invalidCommand",
+            "printedName": "invalidCommand",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeInvalidCommand"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV20unsupportedAttributeSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV20unsupportedAttributeSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "unsupportedAttribute",
+            "printedName": "unsupportedAttribute",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedAttribute"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV010constraintB0SoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV010constraintB0SoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "constraintError",
+            "printedName": "constraintError",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeConstraintError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV16unsupportedWriteSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV16unsupportedWriteSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "unsupportedWrite",
+            "printedName": "unsupportedWrite",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedWrite"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV17resourceExhaustedSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV17resourceExhaustedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "resourceExhausted",
+            "printedName": "resourceExhausted",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeResourceExhausted"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV8notFoundSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV8notFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "notFound",
+            "printedName": "notFound",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeNotFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV21unreportableAttributeSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV21unreportableAttributeSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "unreportableAttribute",
+            "printedName": "unreportableAttribute",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnreportableAttribute"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV15invalidDataTypeSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV15invalidDataTypeSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "invalidDataType",
+            "printedName": "invalidDataType",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeInvalidDataType"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV15unsupportedReadSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV15unsupportedReadSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "unsupportedRead",
+            "printedName": "unsupportedRead",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedRead"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV19dataVersionMismatchSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV19dataVersionMismatchSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "dataVersionMismatch",
+            "printedName": "dataVersionMismatch",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeDataVersionMismatch"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV7timeoutSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV7timeoutSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "timeout",
+            "printedName": "timeout",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeTimeout"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV4busySoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV4busySoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "busy",
+            "printedName": "busy",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeBusy"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV16accessRestrictedSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV16accessRestrictedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "26.0",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "accessRestricted",
+            "printedName": "accessRestricted",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeAccessRestricted"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV18unsupportedClusterSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV18unsupportedClusterSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "unsupportedCluster",
+            "printedName": "unsupportedCluster",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedCluster"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV22noUpstreamSubscriptionSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV22noUpstreamSubscriptionSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "noUpstreamSubscription",
+            "printedName": "noUpstreamSubscription",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeNoUpstreamSubscription"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV21needsTimedInteractionSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV21needsTimedInteractionSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "needsTimedInteraction",
+            "printedName": "needsTimedInteraction",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeNeedsTimedInteraction"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV16unsupportedEventSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV16unsupportedEventSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "unsupportedEvent",
+            "printedName": "unsupportedEvent",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeUnsupportedEvent"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV14pathsExhaustedSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV14pathsExhaustedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "pathsExhausted",
+            "printedName": "pathsExhausted",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodePathsExhausted"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV20timedRequestMismatchSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV20timedRequestMismatchSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "timedRequestMismatch",
+            "printedName": "timedRequestMismatch",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeTimedRequestMismatch"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV16failsafeRequiredSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV16failsafeRequiredSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "failsafeRequired",
+            "printedName": "failsafeRequired",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeFailsafeRequired"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV14invalidInStateSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV14invalidInStateSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.6",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "invalidInState",
+            "printedName": "invalidInState",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeInvalidInState"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "Matter.MTRInteractionError.Code",
+                    "usr": "c:@E@MTRInteractionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC23MTRInteractionErrorCodeLeV17noCommandResponseSoAAVvgZ",
+                "moduleName": "Matter",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC23MTRInteractionErrorCodeLeV17noCommandResponseSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "Matter.MTRInteractionError.Code",
+                "usr": "c:@E@MTRInteractionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.6",
+            "kind": "Var",
+            "moduleName": "Matter",
+            "name": "noCommandResponse",
+            "printedName": "noCommandResponse",
+            "static": true,
+            "usr": "c:@E@MTRInteractionErrorCode@MTRInteractionErrorCodeNoCommandResponse"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "16.1",
+        "kind": "TypeDecl",
+        "moduleName": "Matter",
+        "name": "MTRInteractionError",
+        "printedName": "MTRInteractionError",
+        "usr": "c:@E@MTRInteractionErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "Matter",
+    "printedName": "Matter"
+  }
+}

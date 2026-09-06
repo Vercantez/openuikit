@@ -1,0 +1,3 @@
+precise	payloadSHA256	graphPath	ownershipTier	occurrenceCount	canonicalSelection	kind	title	symbolPath	declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CNCinematicErrorCode	396f0fe3c87d53ad349a0baa5de1c8dfd51fee9339ed6c9815f9ca7988e704a3	reference/symbol-graphs/Cinematic.symbols.json	0	1	1	swift.func.op	!=(_:_:)	CNCinematicError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CNCinematicErrorCode	d5aac1169cbdc18b251e564f8d994340eba7abd8efa55b298c0d23f4e3fa25b8	reference/symbol-graphs/Cinematic.symbols.json	0	1	0	swift.func.op	!=(_:_:)	CNCinematicError.Code.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool

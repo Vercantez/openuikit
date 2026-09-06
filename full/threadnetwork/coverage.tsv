@@ -1,0 +1,24 @@
+precise	status	evidence	notes
+c:objc(cs)THClient	implemented	test:full/threadnetwork/tests/agent/THClientTests.swift#testTHClientType	
+c:objc(cs)THClient(im)checkPreferredNetworkForActiveOperationalDataset:completion:	implemented	test:full/threadnetwork/tests/agent/THClientTests.swift#testTHClientCheckPreferredNetwork	
+c:objc(cs)THClient(im)deleteCredentialsForBorderAgent:completion:	implemented	test:full/threadnetwork/tests/agent/THClientTests.swift#testTHClientDeleteCredentials	
+c:objc(cs)THClient(im)init	implemented	test:full/threadnetwork/tests/agent/THClientTests.swift#testTHClientInit	
+c:objc(cs)THClient(im)isPreferredNetworkAvailableWithCompletion:	implemented	test:full/threadnetwork/tests/agent/THClientTests.swift#testTHClientIsPreferredAvailable	
+c:objc(cs)THClient(im)retrieveAllActiveCredentials:	implemented	test:full/threadnetwork/tests/agent/THClientTests.swift#testTHClientAllActiveCredentials	
+c:objc(cs)THClient(im)retrieveAllCredentials:	implemented	test:full/threadnetwork/tests/agent/THClientTests.swift#testTHClientAllCredentials	
+c:objc(cs)THClient(im)retrieveCredentialsForBorderAgent:completion:	implemented	test:full/threadnetwork/tests/agent/THClientTests.swift#testTHClientCredentialsForBorderAgentID	
+c:objc(cs)THClient(im)retrieveCredentialsForExtendedPANID:completion:	implemented	test:full/threadnetwork/tests/agent/THClientTests.swift#testTHClientCredentialsForExtendedPANID	
+c:objc(cs)THClient(im)retrievePreferredCredentials:	implemented	test:full/threadnetwork/tests/agent/THClientTests.swift#testTHClientPreferredCredentials	
+c:objc(cs)THClient(im)storeCredentialsForBorderAgent:activeOperationalDataSet:completion:	implemented	test:full/threadnetwork/tests/agent/THClientTests.swift#testTHClientStoreCredentials	
+c:objc(cs)THCredentials	implemented	test:full/threadnetwork/tests/agent/THCredentialsTests.swift#testTHCredentialsType	
+c:objc(cs)THCredentials(py)PSKC	implemented	test:full/threadnetwork/tests/agent/THCredentialsTests.swift#testTHCredentialsPSKC	
+c:objc(cs)THCredentials(py)activeOperationalDataSet	implemented	test:full/threadnetwork/tests/agent/THCredentialsTests.swift#testTHCredentialsActiveOperationalDataSet	
+c:objc(cs)THCredentials(py)borderAgentID	implemented	test:full/threadnetwork/tests/agent/THCredentialsTests.swift#testTHCredentialsBorderAgentID	
+c:objc(cs)THCredentials(py)channel	implemented	test:full/threadnetwork/tests/agent/THCredentialsTests.swift#testTHCredentialsChannel	
+c:objc(cs)THCredentials(py)creationDate	implemented	test:full/threadnetwork/tests/agent/THCredentialsTests.swift#testTHCredentialsCreationDate	
+c:objc(cs)THCredentials(py)extendedPANID	implemented	test:full/threadnetwork/tests/agent/THCredentialsTests.swift#testTHCredentialsExtendedPANID	
+c:objc(cs)THCredentials(py)lastModificationDate	implemented	test:full/threadnetwork/tests/agent/THCredentialsTests.swift#testTHCredentialsLastModificationDate	
+c:objc(cs)THCredentials(py)networkKey	implemented	test:full/threadnetwork/tests/agent/THCredentialsTests.swift#testTHCredentialsNetworkKey	
+c:objc(cs)THCredentials(py)networkName	implemented	test:full/threadnetwork/tests/agent/THCredentialsTests.swift#testTHCredentialsNetworkName	
+c:objc(cs)THCredentials(py)panID	implemented	test:full/threadnetwork/tests/agent/THCredentialsTests.swift#testTHCredentialsPANID	
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)THCredentials	implemented	test:full/threadnetwork/tests/agent/THCredentialsTests.swift#testTHCredentialsInitCoder	

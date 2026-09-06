@@ -182,6 +182,24 @@ open class UITableView: UIScrollView {
     //                 16 inside the card; detail right edge 16 in; chevron
     //                 right edge 20 in; separators inset 16 / 16.
     static var isIOSChrome: Bool { OpenUIKitRuntime.systemFontCut == .iOS }
+
+    /// The navigation bar this table underlaps, if any. Walks the
+    /// responder chain so a UITableViewController's table (root view)
+    /// and a hosted table both resolve. Used to tell a large-title
+    /// overlay (NavFlow t200, SA.top 116, header 38) from an inactive
+    /// search slot (Notes t6000, SA.top 124, header 55.5).
+    var _hostingViewController: UIViewController? {
+        var r: UIResponder? = self
+        while let cur = r {
+            if let vc = cur as? UIViewController { return vc }
+            r = cur.next
+        }
+        return nil
+    }
+
+    var _hostingNavigationBar: UINavigationBar? {
+        _hostingViewController?.navigationController?.navigationBar
+    }
     /// iOS cut AND pad idiom. Guard for iPad (A16) chrome
     /// (realapp_settings_light_ipad, 820×1180 @2x). Unspecified idiom
     /// does not count, so the phone goldens stay on the phone numbers.
@@ -679,6 +697,12 @@ open class UITableView: UIScrollView {
 
             var headerH = tableDelegate?.tableView(self, heightForHeaderInSection: s)
                 ?? UITableView.automaticDimension
+            let rows = ds.tableView(self, numberOfRowsInSection: s)
+            var rowsH: CGFloat = 0
+            for r in 0..<rows {
+                rowsH += resolveRowHeight(IndexPath(row: r, section: s))
+                rowsH += valueCellPadding(IndexPath(row: r, section: s))
+            }
             if headerH < 0 {
                 if let view = delegateHeaderView(for: s),
                    let selfSized = sectionHeaderHeight >= 0
@@ -700,41 +724,48 @@ open class UITableView: UIScrollView {
                     // noNav first 55.5 / later 38; navLarge first 38 / later
                     // 38; navLargeWithFooters later 45.5 (previous footer
                     // has text, so not compact).
+                    // MEASURED Notes t6000, iPhone SE 2x / iOS 26.1: after
+                    // cancel the inactive search slot makes SA.top **124**
+                    // (10+114), which is ≥ the large-title expanded inset
+                    // 116, but the bar is inline + 60 pt slot (header **55.5**,
+                    // label y 29.5). `displaysLargeTitles` is the discriminator
+                    // — Notes has none; NavFlow t200 (large titles, inset 116)
+                    // stays compact 38.
+                    let hostingBar = _hostingNavigationBar
                     let underlapsLargeTitle = UITableView.isIOSChrome
+                        && hostingBar?.displaysLargeTitles == true
                         && safeAreaInsets.top >= UINavigationBar.largeTitleExpandedInset(
                             compatibleWith: traitCollection)
-                    // MEASURED Notes t4000.xxxl, iPhone SE 2x / iOS 26.1:
-                    // inset-grouped first header is **38** (label y 12)
-                    // under the search overlay (table y 84, bar 74, field
-                    // 58). Inline rest SA.top **64** stays on the 55.5
-                    // path (Notes t200.xxxl golden is 38 — OPEN). Grouped
-                    // first header at SA.top 64 is **55.5** (Forms
-                    // t200.xxxl Account).
-                    // Compact-height landscape (NavFlow t200.landscape)
-                    // SA.top is **78** = 24+54. Comparing against
-                    // iOSMinimumBarTop+54 (64) treated that as a search
-                    // overlay and compactified the first header
-                    // (96.71 → 81.13). Use the compact-height bar origin
-                    // so 78 > 78 is false. `.large` search (Notes t5000,
-                    // SA.top 70) keeps 55.5 — only xxxl / accessibility
-                    // overlays were measured at 38.
-                    let barTop = UINavigationBar.isCompactHeight
-                        ? UINavigationBar.iOSCompactHeightBarTop
-                        : UINavigationBar.iOSMinimumBarTop
-                    let cat = traitCollection.preferredContentSizeCategory
-                    let scaledSearchOverlay = cat.isAccessibilityCategory
-                        || cat == .extraExtraExtraLarge
-                    let insetGroupedUnderNav = UITableView.isIOSChrome
-                        && style == .insetGrouped
-                        && s == 0
-                        && !UINavigationBar.isPad
-                        && scaledSearchOverlay
-                        && safeAreaInsets.top
-                            > barTop + UINavigationBar.iOSBarContentHeight
                     let afterUntitledFooter = s > 0 && !metrics[s - 1].footerHasView
                         && metrics[s - 1].footerHeight > 0
+                    // MEASURED Notes t200 / t4000 / t5000, iPhone SE 2x /
+                    // iOS 26.1: inset-grouped first header under a tab-bar
+                    // hosted search is compact **38** (label y 12) when
+                    // the rows overflow the viewport (t200 / t4000, 8
+                    // notes, SA.top 64 / 70), and full **55.5** when they
+                    // don't (t5000 one row after "Meet", t5000.ax1 /
+                    // t5000.xxxl also 55.5). Inactive slot (Notes t6000
+                    // SA.top 124, 8 notes) stays 55.5. Ledger (no tab bar)
+                    // t200 overflows and stays 55.5. Forms (no search)
+                    // stays 55.5. NavFlow t200.landscape (no search, SA.top
+                    // 78) stays 55.5.
+                    let searchOverflowCompact: Bool = {
+                        guard UITableView.isIOSChrome, style == .insetGrouped,
+                              s == 0, !UINavigationBar.isPad,
+                              let vc = _hostingViewController,
+                              vc.navigationItem.searchController != nil,
+                              vc.tabBarController != nil,
+                              hostingBar?.showsInactiveSearchSlot != true,
+                              m.headerTitle != nil else { return false }
+                        let viewport = bounds.height - safeAreaInsets.top
+                            - safeAreaInsets.bottom
+                        let full = UITableView.headerHeight(
+                            style: style, firstSection: true, compact: false)
+                        return rowsH + full
+                            + UITableView.untitledGroupedFooterHeight > viewport
+                    }()
                     let compact = UITableView.isIOSChrome && style != .plain
-                        && ((s == 0 && (underlapsLargeTitle || insetGroupedUnderNav))
+                        && ((s == 0 && (underlapsLargeTitle || searchOverflowCompact))
                             || afterUntitledFooter)
                     m.compactHeader = compact
                     headerH = m.headerTitle != nil
@@ -750,14 +781,14 @@ open class UITableView: UIScrollView {
             m.headerHeight = headerH
             y += headerH
             m.rowsStart = y
-
-            let rows = ds.tableView(self, numberOfRowsInSection: s)
             m.rowEnds.reserveCapacity(rows)
+            var rowY = y
             for r in 0..<rows {
-                y += resolveRowHeight(IndexPath(row: r, section: s))
-                y += valueCellPadding(IndexPath(row: r, section: s))
-                m.rowEnds.append(y)
+                rowY += resolveRowHeight(IndexPath(row: r, section: s))
+                rowY += valueCellPadding(IndexPath(row: r, section: s))
+                m.rowEnds.append(rowY)
             }
+            y = rowY
 
             var footerH = tableDelegate?.tableView(self, heightForFooterInSection: s)
                 ?? UITableView.automaticDimension

@@ -1,0 +1,508 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraph",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraph"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphDevice",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphDevice"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphExecutable",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphExecutable"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphAutomaticDifferentiation",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphAutomaticDifferentiation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphActivationOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphActivationOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphArithmeticOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphArithmeticOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphCallOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphCallOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphConvolutionOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphConvolutionOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphConvolutionTransposeOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphConvolutionTransposeOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphControlFlowOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphControlFlowOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphCumulativeOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphCumulativeOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphDepthwiseConvolutionOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphDepthwiseConvolutionOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphFourierTransformOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphFourierTransformOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphGatherOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphGatherOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphImToColOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphImToColOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphLinearAlgebraOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphLinearAlgebraOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphLossOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphLossOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphMatrixInverseOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphMatrixInverseOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphMatrixMultiplicationOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphMatrixMultiplicationOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphMemoryOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphMemoryOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphNonMaximumSuppressionOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphNonMaximumSuppressionOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphNonZeroOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphNonZeroOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphNormalizationOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphNormalizationOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphOneHotOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphOneHotOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphOptimizerOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphOptimizerOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphPoolingOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphPoolingOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphQuantizationOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphQuantizationOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphRandomOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphRandomOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphReductionOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphReductionOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphResizeOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphResizeOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphRNNOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphRNNOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphSampleGridOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphSampleGridOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphScatterNDOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphScatterNDOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphSortOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphSortOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphSparseOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphSparseOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphStencilOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphStencilOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphTensorShapeOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphTensorShapeOps"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph.MPSGraphTopKOps",
+        "printedName": "MetalPerformanceShadersGraph.MPSGraphTopKOps"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "MetalPerformanceShadersGraph",
+        "printedName": "MetalPerformanceShadersGraph"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MetalPerformanceShadersGraph",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "MetalPerformanceShadersGraph",
+    "printedName": "MetalPerformanceShadersGraph"
+  }
+}

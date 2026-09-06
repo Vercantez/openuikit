@@ -1,0 +1,39 @@
+precise	kind	title	path	declaration
+c:@E@SCSensitivityAnalysisPolicy	swift.enum	SCSensitivityAnalysisPolicy	SCSensitivityAnalysisPolicy	enum SCSensitivityAnalysisPolicy
+c:@E@SCSensitivityAnalysisPolicy@SCSensitivityAnalysisPolicyDescriptiveInterventions	swift.enum.case	SCSensitivityAnalysisPolicy.descriptiveInterventions	SCSensitivityAnalysisPolicy.descriptiveInterventions	case descriptiveInterventions
+c:@E@SCSensitivityAnalysisPolicy@SCSensitivityAnalysisPolicyDisabled	swift.enum.case	SCSensitivityAnalysisPolicy.disabled	SCSensitivityAnalysisPolicy.disabled	case disabled
+c:@E@SCSensitivityAnalysisPolicy@SCSensitivityAnalysisPolicySimpleInterventions	swift.enum.case	SCSensitivityAnalysisPolicy.simpleInterventions	SCSensitivityAnalysisPolicy.simpleInterventions	case simpleInterventions
+c:@E@SCVideoStreamAnalyzerStreamDirection	swift.enum	SCVideoStreamAnalyzer.StreamDirection	SCVideoStreamAnalyzer.StreamDirection	enum StreamDirection
+c:@E@SCVideoStreamAnalyzerStreamDirection@SCVideoStreamAnalyzerStreamDirectionIncoming	swift.enum.case	SCVideoStreamAnalyzer.StreamDirection.incoming	SCVideoStreamAnalyzer.StreamDirection.incoming	case incoming
+c:@E@SCVideoStreamAnalyzerStreamDirection@SCVideoStreamAnalyzerStreamDirectionOutgoing	swift.enum.case	SCVideoStreamAnalyzer.StreamDirection.outgoing	SCVideoStreamAnalyzer.StreamDirection.outgoing	case outgoing
+c:objc(cs)SCSensitivityAnalysis	swift.class	SCSensitivityAnalysis	SCSensitivityAnalysis	class SCSensitivityAnalysis
+c:objc(cs)SCSensitivityAnalysis(py)sensitive	swift.property	isSensitive	SCSensitivityAnalysis.isSensitive	var isSensitive: Bool { get }
+c:objc(cs)SCSensitivityAnalysis(py)shouldIndicateSensitivity	swift.property	shouldIndicateSensitivity	SCSensitivityAnalysis.shouldIndicateSensitivity	var shouldIndicateSensitivity: Bool { get }
+c:objc(cs)SCSensitivityAnalysis(py)shouldInterruptVideo	swift.property	shouldInterruptVideo	SCSensitivityAnalysis.shouldInterruptVideo	var shouldInterruptVideo: Bool { get }
+c:objc(cs)SCSensitivityAnalysis(py)shouldMuteAudio	swift.property	shouldMuteAudio	SCSensitivityAnalysis.shouldMuteAudio	var shouldMuteAudio: Bool { get }
+c:objc(cs)SCSensitivityAnalyzer	swift.class	SCSensitivityAnalyzer	SCSensitivityAnalyzer	class SCSensitivityAnalyzer
+c:objc(cs)SCSensitivityAnalyzer(im)analyzeCGImage:completionHandler:	swift.method	analyzeImage(_:)	SCSensitivityAnalyzer.analyzeImage(_:)	func analyzeImage(_ image: CGImage) async throws -> SCSensitivityAnalysis
+c:objc(cs)SCSensitivityAnalyzer(im)analyzeImageFile:completionHandler:	swift.method	analyzeImage(at:)	SCSensitivityAnalyzer.analyzeImage(at:)	func analyzeImage(at fileURL: URL) async throws -> SCSensitivityAnalysis
+c:objc(cs)SCSensitivityAnalyzer(im)init	swift.init	init()	SCSensitivityAnalyzer.init()	init()
+c:objc(cs)SCSensitivityAnalyzer(py)analysisPolicy	swift.property	analysisPolicy	SCSensitivityAnalyzer.analysisPolicy	var analysisPolicy: SCSensitivityAnalysisPolicy { get }
+c:objc(cs)SCVideoStreamAnalyzer	swift.class	SCVideoStreamAnalyzer	SCVideoStreamAnalyzer	class SCVideoStreamAnalyzer
+c:objc(cs)SCVideoStreamAnalyzer(im)analyzePixelBuffer:	swift.method	analyze(_:)	SCVideoStreamAnalyzer.analyze(_:)	func analyze(_ pixelBuffer: CVPixelBuffer)
+c:objc(cs)SCVideoStreamAnalyzer(im)beginAnalysisOfCaptureDeviceInput:error:	swift.method	beginAnalysis(of:)	SCVideoStreamAnalyzer.beginAnalysis(of:)	func beginAnalysis(of captureDeviceInput: AVCaptureDeviceInput) throws
+c:objc(cs)SCVideoStreamAnalyzer(im)beginAnalysisOfDecompressionSession:error:	swift.method	beginAnalysis(of:)	SCVideoStreamAnalyzer.beginAnalysis(of:)	func beginAnalysis(of decompressionSession: VTDecompressionSession) throws
+c:objc(cs)SCVideoStreamAnalyzer(im)continueStream	swift.method	continueStream()	SCVideoStreamAnalyzer.continueStream()	func continueStream()
+c:objc(cs)SCVideoStreamAnalyzer(im)endAnalysis	swift.method	endAnalysis()	SCVideoStreamAnalyzer.endAnalysis()	func endAnalysis()
+c:objc(cs)SCVideoStreamAnalyzer(im)initWithParticipantUUID:streamDirection:error:	swift.init	init(participantUUID:streamDirection:)	SCVideoStreamAnalyzer.init(participantUUID:streamDirection:)	init(participantUUID: String, streamDirection: SCVideoStreamAnalyzer.StreamDirection) throws
+c:objc(cs)SCVideoStreamAnalyzer(py)analysis	swift.property	analysis	SCVideoStreamAnalyzer.analysis	var analysis: SCSensitivityAnalysis? { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SCSensitivityAnalysisPolicy	swift.func.op	!=(_:_:)	SCSensitivityAnalysisPolicy.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SCVideoStreamAnalyzerStreamDirection	swift.func.op	!=(_:_:)	SCVideoStreamAnalyzer.StreamDirection.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SCSensitivityAnalysisPolicy	swift.property	hashValue	SCSensitivityAnalysisPolicy.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SCVideoStreamAnalyzerStreamDirection	swift.property	hashValue	SCVideoStreamAnalyzer.StreamDirection.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SCSensitivityAnalysisPolicy	swift.method	hash(into:)	SCSensitivityAnalysisPolicy.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SCVideoStreamAnalyzerStreamDirection	swift.method	hash(into:)	SCVideoStreamAnalyzer.StreamDirection.hash(into:)	func hash(into hasher: inout Hasher)
+s:So021SCVideoStreamAnalyzerB9DirectionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SCVideoStreamAnalyzer.StreamDirection.init(rawValue:)	init?(rawValue: Int)
+s:So21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC	swift.class	SCSensitivityAnalyzer.VideoAnalysisHandler	SCSensitivityAnalyzer.VideoAnalysisHandler	final class VideoAnalysisHandler
+s:So21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC03hascD0So0aE0CyYaKF	swift.method	hasSensitiveContent()	SCSensitivityAnalyzer.VideoAnalysisHandler.hasSensitiveContent()	final func hasSensitiveContent() async throws -> SCSensitivityAnalysis
+s:So21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05VideoE7HandlerC8progressSo10NSProgressCvp	swift.property	progress	SCSensitivityAnalyzer.VideoAnalysisHandler.progress	final var progress: Progress
+s:So21SCSensitivityAnalyzerC24SensitiveContentAnalysisE05videoE09forFileAtAbCE05VideoE7HandlerC10Foundation3URLV_tF	swift.method	videoAnalysis(forFileAt:)	SCSensitivityAnalyzer.videoAnalysis(forFileAt:)	func videoAnalysis(forFileAt fileURL: URL) -> SCSensitivityAnalyzer.VideoAnalysisHandler
+s:So21SCVideoStreamAnalyzerC24SensitiveContentAnalysisE15analysisChangesQrvp	swift.property	analysisChanges	SCVideoStreamAnalyzer.analysisChanges	var analysisChanges: some AsyncSequence<SCSensitivityAnalysis, any Error> { get }
+s:So27SCSensitivityAnalysisPolicyV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SCSensitivityAnalysisPolicy.init(rawValue:)	init?(rawValue: Int)

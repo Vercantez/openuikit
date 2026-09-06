@@ -1,0 +1,46 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave8-repair-5",
+    "maxActive": 24,
+    "maxRuns": 2
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "contactsui": {
+      "agentId": "bc-9992df72-cd8f-5750-8c6e-5552dbaa5aeb",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T00:36:21Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/153",
+      "expectedPriorHead": "8a9b09d0425a0d1add252e0871213123511ea6bf",
+      "idempotencyKey": "6bfaa0eb-2eb2-5f94-8266-b47e24cc9bf1",
+      "launchStatus": "SENT",
+      "module": "ContactsUI",
+      "promptBytes": 1405,
+      "promptSha256": "a79380d41cf820d4d2ca786135486cfd2400db20484766624c100894b9af3794",
+      "runId": "run-13dbc6bc-2a16-4e24-a2eb-0e3e179b85c0",
+      "runStatus": "running",
+      "slug": "contactsui"
+    },
+    "network": {
+      "agentId": "bc-e93f4a76-7415-5abb-8aa2-2bdeba2eb73c",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T00:36:16Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/158",
+      "expectedPriorHead": "439384b4cbb6398619e8d5bfc7c93a02f9fc3e91",
+      "idempotencyKey": "10005d97-38c5-508d-a6cf-be1943209830",
+      "launchStatus": "SENT",
+      "module": "Network",
+      "promptBytes": 1393,
+      "promptSha256": "f0162226fdea869a35191655e6872ff61679753f5abee1f7fa6e6818e184b4f5",
+      "runId": "run-9c450041-ffb9-4ca3-84a3-b9ff8713a065",
+      "runStatus": "running",
+      "slug": "network"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

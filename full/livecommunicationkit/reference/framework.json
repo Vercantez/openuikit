@@ -1,0 +1,81 @@
+{
+  "apiCrosswalk": "reference/api-crosswalk.tsv",
+  "apiDigester": "reference/api-digester.json",
+  "corpusSummary": "reference/corpus-summary.json",
+  "coveragePolicy": {
+    "allowedStatuses": [
+      "implemented",
+      "declared",
+      "deferred",
+      "unavailable",
+      "not-applicable"
+    ],
+    "minimumNondeferredCount": 145,
+    "nondeferredStatuses": [
+      "implemented",
+      "declared"
+    ],
+    "rule": "ceil(50% of exact public symbols)"
+  },
+  "dependencies": [
+    "Foundation"
+  ],
+  "externalEvidence": "reference/external-evidence.json",
+  "guestManifest": "livecommunicationkit_guest_sources.txt",
+  "lane": "medium-full",
+  "module": "LiveCommunicationKit",
+  "moduleLocation": {
+    "kind": "framework",
+    "reason": "public iPhoneOS framework bundle is present at System/Library/Frameworks/LiveCommunicationKit.framework",
+    "sdkRelativePath": "System/Library/Frameworks/LiveCommunicationKit.framework"
+  },
+  "provenance": {
+    "apiCrosswalkAmbiguousCount": 0,
+    "apiCrosswalkExactUSRCount": 232,
+    "apiCrosswalkImportNameCount": 0,
+    "apiCrosswalkUnmatchedCount": 57,
+    "apiDeclarationNodeCount": 329,
+    "apiDigesterFormatVersion": 8,
+    "apiDigesterNodeCount": 1159,
+    "apiDigesterPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-api-digester",
+    "apiDigesterSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "apiDigesterVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "apiOwnedDeclarationNodeCount": 328,
+    "arm64TBDExportCount": 921,
+    "externalEvidenceLockPath": "full/framework-fanout/external-evidence-sources.json",
+    "externalEvidenceLockSHA256": "a0b7ebf22affede443bc79ae75fb8ac7b9f450a407f666147efa3ba93878b752",
+    "frameworkSDKRelativePath": "System/Library/Frameworks/LiveCommunicationKit.framework",
+    "generatorPath": "scripts/framework-fanout/generate_seed_v2.py",
+    "generatorSHA256": "e56ee6e70b5464f6e1d76679652d670222bf6200daf198d2f4c6aea67d7421e6",
+    "rawSDKInputCount": 2,
+    "roadmapPath": "full/framework-roadmap/framework-roadmap.json",
+    "roadmapSHA256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a",
+    "sdkName": "iphoneos",
+    "sdkVersion": "26.1",
+    "symbolGraphExtractorPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-symbolgraph-extract",
+    "symbolGraphExtractorSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "symbolGraphExtractorVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "symbolGraphRelationshipMultisetSHA256": "edf6b003441e348ea82bb198458e4c0e5d681db4146492986b0f20ed71a32d95",
+    "symbolGraphSymbolMultisetSHA256": "15a6fb1e341d1c9153c8a90cc5267e927296508d8f61b8e86eef9a654fefce81",
+    "target": "arm64-apple-ios26.0",
+    "tbdInputCount": 1,
+    "xcodeBuild": "17B55",
+    "xcodeVersion": "26.1"
+  },
+  "publicSurface": "reference/public-surface.tsv",
+  "relationshipCount": 399,
+  "risks": [
+    "telephony",
+    "os-service",
+    "fail-closed"
+  ],
+  "roadmap": "none (operator override)",
+  "runtimeMarker": "LIVECOMMUNICATIONKIT_AGENT_RUNTIME_OK",
+  "schema": 2,
+  "sdkInputs": "reference/sdk-inputs.tsv",
+  "slug": "livecommunicationkit",
+  "symbolConflicts": "reference/symbol-conflicts.tsv",
+  "symbolCount": 289,
+  "symbolGraph": "reference/symbol-graphs.json",
+  "tbdExports": "reference/tbd-exports.tsv"
+}

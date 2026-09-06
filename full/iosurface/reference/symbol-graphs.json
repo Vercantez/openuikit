@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/IOSurface.symbols.json",
+      "relationshipCount": 262,
+      "sha256": "4e5b09d5cc0882a5e6d156ae2af218b367686cb84ac6f4c51daa0708eea49d29",
+      "symbolCount": 298
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "IOSurface",
+  "relationshipCount": 262,
+  "relationshipMultisetSHA256": "e854bcf7856ff4e06fce3b7807c09d2a26375b0f7a01a9d7cf043c8ead6db540",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 298,
+  "symbolMultisetSHA256": "57b9565b682d5f098fcda78806decb61a164b481dac96d34d93988eaaffbfaa9",
+  "target": "arm64-apple-ios26.0"
+}

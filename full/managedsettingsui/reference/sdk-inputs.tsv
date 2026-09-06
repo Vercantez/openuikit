@@ -1,0 +1,3 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/ManagedSettingsUI.framework/ManagedSettingsUI.tbd	4960	f57b587a345434e370e18e8aa164851e53426b813f04f533d47e051853243620
+swiftinterface	System/Library/Frameworks/ManagedSettingsUI.framework/Modules/ManagedSettingsUI.swiftmodule/arm64e-apple-ios.swiftinterface	3011	86f8cf46a2afe60154a6adbde34e014082702ec9b79e398a58afccd2e41d5c14

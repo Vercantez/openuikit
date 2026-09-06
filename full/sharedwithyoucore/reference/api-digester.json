@@ -1,0 +1,485 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWDefines",
+        "printedName": "SharedWithYouCore.SWDefines"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWAction",
+        "printedName": "SharedWithYouCore.SWAction"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWCollaborationActionHandler",
+        "printedName": "SharedWithYouCore.SWCollaborationActionHandler"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWCollaborationCoordinator",
+        "printedName": "SharedWithYouCore.SWCollaborationCoordinator"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWCollaborationOption",
+        "printedName": "SharedWithYouCore.SWCollaborationOption"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWCollaborationOptionsGroup",
+        "printedName": "SharedWithYouCore.SWCollaborationOptionsGroup"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWCollaborationOptionsPickerGroup",
+        "printedName": "SharedWithYouCore.SWCollaborationOptionsPickerGroup"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWCollaborationShareOptions",
+        "printedName": "SharedWithYouCore.SWCollaborationShareOptions"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWCollaborationMetadata",
+        "printedName": "SharedWithYouCore.SWCollaborationMetadata"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWPerson",
+        "printedName": "SharedWithYouCore.SWPerson"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWPersonIdentity",
+        "printedName": "SharedWithYouCore.SWPersonIdentity"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWPersonIdentityProof",
+        "printedName": "SharedWithYouCore.SWPersonIdentityProof"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWStartCollaborationAction",
+        "printedName": "SharedWithYouCore.SWStartCollaborationAction"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWUpdateCollaborationParticipantsAction",
+        "printedName": "SharedWithYouCore.SWUpdateCollaborationParticipantsAction"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Double",
+            "printedName": "Swift.Double",
+            "usr": "s:Sd"
+          }
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "kind": "Var",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCoreVersionNumber",
+        "printedName": "SharedWithYouCoreVersionNumber",
+        "usr": "c:@SharedWithYouCoreVersionNumber"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Error",
+            "printedName": "<<error type>>"
+          }
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "isLet": true,
+        "kind": "Var",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCoreVersionString",
+        "printedName": "SharedWithYouCoreVersionString",
+        "usr": "c:@SharedWithYouCoreVersionString"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore.SWCollaborationOption",
+        "printedName": "SharedWithYouCore.SWCollaborationOption"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "SharedWithYouCore",
+        "printedName": "SharedWithYouCore"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SharedWithYouCore",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "SWCollaborationOption",
+                "printedName": "SharedWithYouCore.SWCollaborationOption",
+                "usr": "c:objc(cs)SWCollaborationOption"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Swift.String]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Convenience",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$sSo21SWCollaborationOptionC17SharedWithYouCoreE5title10identifier8subtitle8selected26requiredOptionsIdentifiersABSS_S2SSbSaySSGtcfc",
+            "moduleName": "SharedWithYouCore",
+            "name": "init",
+            "printedName": "init(title:identifier:subtitle:selected:requiredOptionsIdentifiers:)",
+            "usr": "s:So21SWCollaborationOptionC17SharedWithYouCoreE5title10identifier8subtitle8selected26requiredOptionsIdentifiersABSS_S2SSbSaySSGtcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "16.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "SharedWithYouCore",
+        "name": "SWCollaborationOption",
+        "objc_name": "SWCollaborationOption",
+        "printedName": "SWCollaborationOption",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)SWCollaborationOption"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "SharedWithYouCore",
+    "printedName": "SharedWithYouCore"
+  }
+}

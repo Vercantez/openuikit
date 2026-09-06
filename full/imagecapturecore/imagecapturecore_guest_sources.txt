@@ -1,0 +1,8 @@
+full/imagecapturecore/ICCameraDevice.swift
+full/imagecapturecore/ICCameraItem.swift
+full/imagecapturecore/ICDevice.swift
+full/imagecapturecore/ICDeviceBrowser.swift
+full/imagecapturecore/ICEnums.swift
+full/imagecapturecore/ICErrors.swift
+full/imagecapturecore/ICTypedValues.swift
+full/imagecapturecore/ImageCaptureCore.swift

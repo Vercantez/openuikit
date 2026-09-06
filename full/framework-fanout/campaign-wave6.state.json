@@ -24,11 +24,12 @@
     "accelerate": {
       "agentId": "bc-726aa992-df93-515f-bd1a-500bc4367f66",
       "agentName": "Port Accelerate to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-726aa992-df93-515f-bd1a-500bc4367f66",
       "branches": [
         {
           "branch": "cursor/port-accelerate-to-linux-c20e",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/181",
           "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
         }
       ],
@@ -37,10 +38,13 @@
       "launchStatus": "CREATED",
       "module": "Accelerate",
       "priority": 100,
+      "resultBytes": 1228,
+      "resultSha256": "e48acfdc7326dd1957b6ddb562973e8df60e5a78f06551b8de725c1166522170",
       "runCreatedAt": "2026-09-05T21:34:24.132Z",
+      "runDurationMs": 6836366,
       "runId": "run-cc875d9d-d42e-422a-a57f-7a4b7d300166",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-05T21:34:24.835Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-05T23:28:21.014Z"
     },
     "callkit": {
       "agentId": "bc-32b37a92-4e85-5e8e-b181-324524c6c849",
@@ -303,5 +307,5 @@
     "url": "https://github.com/Vercantez/openuikit-linux-platform"
   },
   "schema": "openuikit.cursor-framework-campaign-state.v1",
-  "updatedAt": "2026-09-05T23:00:47Z"
+  "updatedAt": "2026-09-06T02:12:20Z"
 }

@@ -1,0 +1,1081 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedSettingsUI",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedSettingsUI",
+        "name": "ManagedSettings",
+        "printedName": "ManagedSettings"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedSettingsUI",
+        "name": "UIKit",
+        "printedName": "UIKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedSettingsUI",
+        "name": "UniformTypeIdentifiers",
+        "printedName": "UniformTypeIdentifiers"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedSettingsUI",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedSettingsUI",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedSettingsUI",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedSettingsUI",
+        "name": "os.log",
+        "printedName": "os.log"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ManagedSettingsUI",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ShieldConfiguration",
+                "printedName": "ManagedSettingsUI.ShieldConfiguration",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Application",
+                "printedName": "ManagedSettings.Application",
+                "usr": "s:15ManagedSettings11ApplicationV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s17ManagedSettingsUI29ShieldConfigurationDataSourceC13configuration9shieldingAA0dE0V0aB011ApplicationV_tF",
+            "moduleName": "ManagedSettingsUI",
+            "name": "configuration",
+            "printedName": "configuration(shielding:)",
+            "usr": "s:17ManagedSettingsUI29ShieldConfigurationDataSourceC13configuration9shieldingAA0dE0V0aB011ApplicationV_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ShieldConfiguration",
+                "printedName": "ManagedSettingsUI.ShieldConfiguration",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Application",
+                "printedName": "ManagedSettings.Application",
+                "usr": "s:15ManagedSettings11ApplicationV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ActivityCategory",
+                "printedName": "ManagedSettings.ActivityCategory",
+                "usr": "s:15ManagedSettings16ActivityCategoryV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s17ManagedSettingsUI29ShieldConfigurationDataSourceC13configuration9shielding2inAA0dE0V0aB011ApplicationV_AI16ActivityCategoryVtF",
+            "moduleName": "ManagedSettingsUI",
+            "name": "configuration",
+            "printedName": "configuration(shielding:in:)",
+            "usr": "s:17ManagedSettingsUI29ShieldConfigurationDataSourceC13configuration9shielding2inAA0dE0V0aB011ApplicationV_AI16ActivityCategoryVtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ShieldConfiguration",
+                "printedName": "ManagedSettingsUI.ShieldConfiguration",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "WebDomain",
+                "printedName": "ManagedSettings.WebDomain",
+                "usr": "s:15ManagedSettings9WebDomainV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s17ManagedSettingsUI29ShieldConfigurationDataSourceC13configuration9shieldingAA0dE0V0aB09WebDomainV_tF",
+            "moduleName": "ManagedSettingsUI",
+            "name": "configuration",
+            "printedName": "configuration(shielding:)",
+            "usr": "s:17ManagedSettingsUI29ShieldConfigurationDataSourceC13configuration9shieldingAA0dE0V0aB09WebDomainV_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ShieldConfiguration",
+                "printedName": "ManagedSettingsUI.ShieldConfiguration",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "WebDomain",
+                "printedName": "ManagedSettings.WebDomain",
+                "usr": "s:15ManagedSettings9WebDomainV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ActivityCategory",
+                "printedName": "ManagedSettings.ActivityCategory",
+                "usr": "s:15ManagedSettings16ActivityCategoryV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s17ManagedSettingsUI29ShieldConfigurationDataSourceC13configuration9shielding2inAA0dE0V0aB09WebDomainV_AI16ActivityCategoryVtF",
+            "moduleName": "ManagedSettingsUI",
+            "name": "configuration",
+            "printedName": "configuration(shielding:in:)",
+            "usr": "s:17ManagedSettingsUI29ShieldConfigurationDataSourceC13configuration9shielding2inAA0dE0V0aB09WebDomainV_AI16ActivityCategoryVtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ShieldConfigurationDataSource",
+                "printedName": "ManagedSettingsUI.ShieldConfigurationDataSource",
+                "usr": "c:@M@ManagedSettingsUI@objc(cs)ShieldConfigurationDataSource"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Override"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s17ManagedSettingsUI29ShieldConfigurationDataSourceCACycfc",
+            "moduleName": "ManagedSettingsUI",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:@M@ManagedSettingsUI@objc(cs)ShieldConfigurationDataSource(im)init"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "ObjC",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s17ManagedSettingsUI29ShieldConfigurationDataSourceC",
+        "moduleName": "ManagedSettingsUI",
+        "name": "ShieldConfigurationDataSource",
+        "printedName": "ShieldConfigurationDataSource",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:@M@ManagedSettingsUI@objc(cs)ShieldConfigurationDataSource"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV5LabelV4textSSvg",
+                    "moduleName": "ManagedSettingsUI",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV4textSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV5LabelV4textSSvp",
+                "moduleName": "ManagedSettingsUI",
+                "name": "text",
+                "printedName": "text",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV4textSSvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UIColor",
+                        "printedName": "UIKit.UIColor",
+                        "usr": "c:objc(cs)UIColor"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV5LabelV5colorSo7UIColorCvg",
+                    "moduleName": "ManagedSettingsUI",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV5colorSo7UIColorCvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UIColor",
+                    "printedName": "UIKit.UIColor",
+                    "usr": "c:objc(cs)UIColor"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV5LabelV5colorSo7UIColorCvp",
+                "moduleName": "ManagedSettingsUI",
+                "name": "color",
+                "printedName": "color",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV5colorSo7UIColorCvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Label",
+                    "printedName": "ManagedSettingsUI.ShieldConfiguration.Label",
+                    "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UIColor",
+                    "printedName": "UIKit.UIColor",
+                    "usr": "c:objc(cs)UIColor"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV5LabelV4text5colorAESS_So7UIColorCtcfc",
+                "moduleName": "ManagedSettingsUI",
+                "name": "init",
+                "printedName": "init(text:color:)",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV4text5colorAESS_So7UIColorCtcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Struct",
+            "kind": "TypeDecl",
+            "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV5LabelV",
+            "moduleName": "ManagedSettingsUI",
+            "name": "Label",
+            "printedName": "Label",
+            "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Style",
+                        "printedName": "UIKit.UIBlurEffect.Style",
+                        "usr": "c:@E@UIBlurEffectStyle"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "UIKit.UIBlurEffect.Style?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV19backgroundBlurStyleSo012UIBlurEffectH0VSgvg",
+                "moduleName": "ManagedSettingsUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV19backgroundBlurStyleSo012UIBlurEffectH0VSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Style",
+                    "printedName": "UIKit.UIBlurEffect.Style",
+                    "usr": "c:@E@UIBlurEffectStyle"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "UIKit.UIBlurEffect.Style?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV19backgroundBlurStyleSo012UIBlurEffectH0VSgvp",
+            "moduleName": "ManagedSettingsUI",
+            "name": "backgroundBlurStyle",
+            "printedName": "backgroundBlurStyle",
+            "usr": "s:17ManagedSettingsUI19ShieldConfigurationV19backgroundBlurStyleSo012UIBlurEffectH0VSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UIColor",
+                        "printedName": "UIKit.UIColor",
+                        "usr": "c:objc(cs)UIColor"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "UIKit.UIColor?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV15backgroundColorSo7UIColorCSgvg",
+                "moduleName": "ManagedSettingsUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV15backgroundColorSo7UIColorCSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UIColor",
+                    "printedName": "UIKit.UIColor",
+                    "usr": "c:objc(cs)UIColor"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "UIKit.UIColor?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV15backgroundColorSo7UIColorCSgvp",
+            "moduleName": "ManagedSettingsUI",
+            "name": "backgroundColor",
+            "printedName": "backgroundColor",
+            "usr": "s:17ManagedSettingsUI19ShieldConfigurationV15backgroundColorSo7UIColorCSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UIImage",
+                        "printedName": "UIKit.UIImage",
+                        "usr": "c:objc(cs)UIImage"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "UIKit.UIImage?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV4iconSo7UIImageCSgvg",
+                "moduleName": "ManagedSettingsUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV4iconSo7UIImageCSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UIImage",
+                    "printedName": "UIKit.UIImage",
+                    "usr": "c:objc(cs)UIImage"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "UIKit.UIImage?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV4iconSo7UIImageCSgvp",
+            "moduleName": "ManagedSettingsUI",
+            "name": "icon",
+            "printedName": "icon",
+            "usr": "s:17ManagedSettingsUI19ShieldConfigurationV4iconSo7UIImageCSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Label",
+                        "printedName": "ManagedSettingsUI.ShieldConfiguration.Label",
+                        "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "ManagedSettingsUI.ShieldConfiguration.Label?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV5titleAC5LabelVSgvg",
+                "moduleName": "ManagedSettingsUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5titleAC5LabelVSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Label",
+                    "printedName": "ManagedSettingsUI.ShieldConfiguration.Label",
+                    "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "ManagedSettingsUI.ShieldConfiguration.Label?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV5titleAC5LabelVSgvp",
+            "moduleName": "ManagedSettingsUI",
+            "name": "title",
+            "printedName": "title",
+            "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5titleAC5LabelVSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Label",
+                        "printedName": "ManagedSettingsUI.ShieldConfiguration.Label",
+                        "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "ManagedSettingsUI.ShieldConfiguration.Label?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV8subtitleAC5LabelVSgvg",
+                "moduleName": "ManagedSettingsUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV8subtitleAC5LabelVSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Label",
+                    "printedName": "ManagedSettingsUI.ShieldConfiguration.Label",
+                    "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "ManagedSettingsUI.ShieldConfiguration.Label?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV8subtitleAC5LabelVSgvp",
+            "moduleName": "ManagedSettingsUI",
+            "name": "subtitle",
+            "printedName": "subtitle",
+            "usr": "s:17ManagedSettingsUI19ShieldConfigurationV8subtitleAC5LabelVSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Label",
+                        "printedName": "ManagedSettingsUI.ShieldConfiguration.Label",
+                        "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "ManagedSettingsUI.ShieldConfiguration.Label?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV18primaryButtonLabelAC0H0VSgvg",
+                "moduleName": "ManagedSettingsUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV18primaryButtonLabelAC0H0VSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Label",
+                    "printedName": "ManagedSettingsUI.ShieldConfiguration.Label",
+                    "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "ManagedSettingsUI.ShieldConfiguration.Label?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV18primaryButtonLabelAC0H0VSgvp",
+            "moduleName": "ManagedSettingsUI",
+            "name": "primaryButtonLabel",
+            "printedName": "primaryButtonLabel",
+            "usr": "s:17ManagedSettingsUI19ShieldConfigurationV18primaryButtonLabelAC0H0VSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UIColor",
+                        "printedName": "UIKit.UIColor",
+                        "usr": "c:objc(cs)UIColor"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "UIKit.UIColor?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV28primaryButtonBackgroundColorSo7UIColorCSgvg",
+                "moduleName": "ManagedSettingsUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV28primaryButtonBackgroundColorSo7UIColorCSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UIColor",
+                    "printedName": "UIKit.UIColor",
+                    "usr": "c:objc(cs)UIColor"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "UIKit.UIColor?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV28primaryButtonBackgroundColorSo7UIColorCSgvp",
+            "moduleName": "ManagedSettingsUI",
+            "name": "primaryButtonBackgroundColor",
+            "printedName": "primaryButtonBackgroundColor",
+            "usr": "s:17ManagedSettingsUI19ShieldConfigurationV28primaryButtonBackgroundColorSo7UIColorCSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Label",
+                        "printedName": "ManagedSettingsUI.ShieldConfiguration.Label",
+                        "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "ManagedSettingsUI.ShieldConfiguration.Label?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV20secondaryButtonLabelAC0H0VSgvg",
+                "moduleName": "ManagedSettingsUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV20secondaryButtonLabelAC0H0VSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Label",
+                    "printedName": "ManagedSettingsUI.ShieldConfiguration.Label",
+                    "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "ManagedSettingsUI.ShieldConfiguration.Label?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV20secondaryButtonLabelAC0H0VSgvp",
+            "moduleName": "ManagedSettingsUI",
+            "name": "secondaryButtonLabel",
+            "printedName": "secondaryButtonLabel",
+            "usr": "s:17ManagedSettingsUI19ShieldConfigurationV20secondaryButtonLabelAC0H0VSgvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ShieldConfiguration",
+                "printedName": "ManagedSettingsUI.ShieldConfiguration",
+                "usr": "s:17ManagedSettingsUI19ShieldConfigurationV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Style",
+                    "printedName": "UIKit.UIBlurEffect.Style",
+                    "usr": "c:@E@UIBlurEffectStyle"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "UIKit.UIBlurEffect.Style?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UIColor",
+                    "printedName": "UIKit.UIColor",
+                    "usr": "c:objc(cs)UIColor"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "UIKit.UIColor?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UIImage",
+                    "printedName": "UIKit.UIImage",
+                    "usr": "c:objc(cs)UIImage"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "UIKit.UIImage?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Label",
+                    "printedName": "ManagedSettingsUI.ShieldConfiguration.Label",
+                    "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "ManagedSettingsUI.ShieldConfiguration.Label?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Label",
+                    "printedName": "ManagedSettingsUI.ShieldConfiguration.Label",
+                    "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "ManagedSettingsUI.ShieldConfiguration.Label?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Label",
+                    "printedName": "ManagedSettingsUI.ShieldConfiguration.Label",
+                    "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "ManagedSettingsUI.ShieldConfiguration.Label?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UIColor",
+                    "printedName": "UIKit.UIColor",
+                    "usr": "c:objc(cs)UIColor"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "UIKit.UIColor?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Label",
+                    "printedName": "ManagedSettingsUI.ShieldConfiguration.Label",
+                    "usr": "s:17ManagedSettingsUI19ShieldConfigurationV5LabelV"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "ManagedSettingsUI.ShieldConfiguration.Label?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV19backgroundBlurStyle0F5Color4icon5title8subtitle18primaryButtonLabel0mn10BackgroundI009secondarynO0ACSo012UIBlurEffectH0VSg_So7UIColorCSgSo7UIImageCSgAC0O0VSgA2wqWtcfc",
+            "moduleName": "ManagedSettingsUI",
+            "name": "init",
+            "printedName": "init(backgroundBlurStyle:backgroundColor:icon:title:subtitle:primaryButtonLabel:primaryButtonBackgroundColor:secondaryButtonLabel:)",
+            "usr": "s:17ManagedSettingsUI19ShieldConfigurationV19backgroundBlurStyle0F5Color4icon5title8subtitle18primaryButtonLabel0mn10BackgroundI009secondarynO0ACSo012UIBlurEffectH0VSg_So7UIColorCSgSo7UIImageCSgAC0O0VSgA2wqWtcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "15.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s17ManagedSettingsUI19ShieldConfigurationV",
+        "moduleName": "ManagedSettingsUI",
+        "name": "ShieldConfiguration",
+        "printedName": "ShieldConfiguration",
+        "usr": "s:17ManagedSettingsUI19ShieldConfigurationV"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "ManagedSettingsUI",
+    "printedName": "ManagedSettingsUI"
+  }
+}

@@ -562,6 +562,8 @@ public final class UITabBar: UIView {
     /// **packed** icon+title pills, not the portrait equal-pitch stack.
     /// Library/Tools/Scroll buttons **86.5 / 76.5 / 78.5** with 4 pt
     /// gaps; platter width 257.5, x = round((667−257.5)/2) = **205**.
+    /// MEASURED Notes t200.landscape 2-up: platter `[240, 0, 187.5, 44]`,
+    /// same 4 pt side pad / 4 pt gaps / 36 pt pills at y 4 (Notes + Settings).
     func layoutCompactHeightItems() {
         platter.backgroundColor = UITabBar.platterColor.resolvedColor(with: traitCollection)
         platter._usesIOSGlass = true

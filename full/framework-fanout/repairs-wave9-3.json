@@ -1,0 +1,23 @@
+{
+  "schema": "openuikit.cursor-framework-repair-manifest.v1",
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave9-repair-3",
+    "maxActive": 24,
+    "maxRuns": 1
+  },
+  "model": {
+    "id": "grok-4.6",
+    "effort": "high",
+    "fast": false
+  },
+  "repairs": [
+    {
+      "module": "DeviceActivity",
+      "slug": "deviceactivity",
+      "agentId": "bc-3bdb0716-c0ae-56c4-8ed3-2ff674a733a4",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/171",
+      "expectedPriorHead": "1fb3e2ca8096c5fc0781a1713f27a37a37ed1e0a",
+      "prompt": "Continue repairing DeviceActivity in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at 1fb3e2ca8096:\nFW_MERGE REFUSED: 3 not-applicable rows are not SwiftUI cross-import overlay IDs (e.g. s:Sci10Foundations5UInt8V7ElementRtzrlE10charactersAA22AsyncCharacterSequenceVyx) \u2014 they must be implemented/declared/deferred/unavailable\n\nFix the coverage ledger, not just the code: every `implemented` row in full/deviceactivity/coverage.tsv must cite evidence of the exact form `test:full/deviceactivity/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/deviceactivity/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/deviceactivity/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    }
+  ]
+}

@@ -1,0 +1,640 @@
+precise	kind	title	path	declaration
+c:@E@PHASEAssetError	swift.enum	PHASEAssetError.Code	PHASEAssetError.Code	enum Code
+c:@E@PHASEAssetError@PHASEAssetErrorAlreadyExists	swift.enum.case	PHASEAssetError.Code.alreadyExists	PHASEAssetError.Code.alreadyExists	case alreadyExists
+c:@E@PHASEAssetError@PHASEAssetErrorBadParameters	swift.enum.case	PHASEAssetError.Code.badParameters	PHASEAssetError.Code.badParameters	case badParameters
+c:@E@PHASEAssetError@PHASEAssetErrorFailedToLoad	swift.enum.case	PHASEAssetError.Code.failedToLoad	PHASEAssetError.Code.failedToLoad	case failedToLoad
+c:@E@PHASEAssetError@PHASEAssetErrorGeneralError	swift.enum.case	PHASEAssetError.Code.generalError	PHASEAssetError.Code.generalError	case generalError
+c:@E@PHASEAssetError@PHASEAssetErrorInvalidEngineInstance	swift.enum.case	PHASEAssetError.Code.invalidEngineInstance	PHASEAssetError.Code.invalidEngineInstance	case invalidEngineInstance
+c:@E@PHASEAssetError@PHASEAssetErrorMemoryAllocation	swift.enum.case	PHASEAssetError.Code.memoryAllocation	PHASEAssetError.Code.memoryAllocation	case memoryAllocation
+c:@E@PHASEAssetType	swift.enum	PHASEAsset.AssetType	PHASEAsset.AssetType	enum AssetType
+c:@E@PHASEAssetType@PHASEAssetTypeResident	swift.enum.case	PHASEAsset.AssetType.resident	PHASEAsset.AssetType.resident	case resident
+c:@E@PHASEAssetType@PHASEAssetTypeStreamed	swift.enum.case	PHASEAsset.AssetType.streamed	PHASEAsset.AssetType.streamed	case streamed
+c:@E@PHASEAutomaticHeadTrackingFlags	swift.struct	PHASEAutomaticHeadTrackingFlags	PHASEAutomaticHeadTrackingFlags	struct PHASEAutomaticHeadTrackingFlags
+c:@E@PHASEAutomaticHeadTrackingFlags@PHASEAutomaticHeadTrackingFlagOrientation	swift.type.property	orientation	PHASEAutomaticHeadTrackingFlags.orientation	static var orientation: PHASEAutomaticHeadTrackingFlags { get }
+c:@E@PHASEAutomaticHeadTrackingFlags@PHASEAutomaticHeadTrackingFlagPosition	swift.type.property	position	PHASEAutomaticHeadTrackingFlags.position	static var position: PHASEAutomaticHeadTrackingFlags { get }
+c:@E@PHASECalibrationMode	swift.enum	PHASECalibrationMode	PHASECalibrationMode	enum PHASECalibrationMode
+c:@E@PHASECalibrationMode@PHASECalibrationModeAbsoluteSpl	swift.enum.case	PHASECalibrationMode.absoluteSpl	PHASECalibrationMode.absoluteSpl	case absoluteSpl
+c:@E@PHASECalibrationMode@PHASECalibrationModeNone	swift.enum.case	PHASECalibrationMode.none	PHASECalibrationMode.none	case none
+c:@E@PHASECalibrationMode@PHASECalibrationModeRelativeSpl	swift.enum.case	PHASECalibrationMode.relativeSpl	PHASECalibrationMode.relativeSpl	case relativeSpl
+c:@E@PHASECullOption	swift.enum	PHASECullOption	PHASECullOption	enum PHASECullOption
+c:@E@PHASECullOption@PHASECullOptionDoNotCull	swift.enum.case	PHASECullOption.doNotCull	PHASECullOption.doNotCull	case doNotCull
+c:@E@PHASECullOption@PHASECullOptionSleepWakeAtRandomOffset	swift.enum.case	PHASECullOption.sleepWakeAtRandomOffset	PHASECullOption.sleepWakeAtRandomOffset	case sleepWakeAtRandomOffset
+c:@E@PHASECullOption@PHASECullOptionSleepWakeAtRealtimeOffset	swift.enum.case	PHASECullOption.sleepWakeAtRealtimeOffset	PHASECullOption.sleepWakeAtRealtimeOffset	case sleepWakeAtRealtimeOffset
+c:@E@PHASECullOption@PHASECullOptionSleepWakeAtZero	swift.enum.case	PHASECullOption.sleepWakeAtZero	PHASECullOption.sleepWakeAtZero	case sleepWakeAtZero
+c:@E@PHASECullOption@PHASECullOptionTerminate	swift.enum.case	PHASECullOption.terminate	PHASECullOption.terminate	case terminate
+c:@E@PHASECurveType	swift.enum	PHASECurveType	PHASECurveType	enum PHASECurveType
+c:@E@PHASECurveType@PHASECurveTypeCubed	swift.enum.case	PHASECurveType.cubed	PHASECurveType.cubed	case cubed
+c:@E@PHASECurveType@PHASECurveTypeHoldStartValue	swift.enum.case	PHASECurveType.holdStartValue	PHASECurveType.holdStartValue	case holdStartValue
+c:@E@PHASECurveType@PHASECurveTypeInverseCubed	swift.enum.case	PHASECurveType.inverseCubed	PHASECurveType.inverseCubed	case inverseCubed
+c:@E@PHASECurveType@PHASECurveTypeInverseSigmoid	swift.enum.case	PHASECurveType.inverseSigmoid	PHASECurveType.inverseSigmoid	case inverseSigmoid
+c:@E@PHASECurveType@PHASECurveTypeInverseSine	swift.enum.case	PHASECurveType.inverseSine	PHASECurveType.inverseSine	case inverseSine
+c:@E@PHASECurveType@PHASECurveTypeInverseSquared	swift.enum.case	PHASECurveType.inverseSquared	PHASECurveType.inverseSquared	case inverseSquared
+c:@E@PHASECurveType@PHASECurveTypeJumpToEndValue	swift.enum.case	PHASECurveType.jumpToEndValue	PHASECurveType.jumpToEndValue	case jumpToEndValue
+c:@E@PHASECurveType@PHASECurveTypeLinear	swift.enum.case	PHASECurveType.linear	PHASECurveType.linear	case linear
+c:@E@PHASECurveType@PHASECurveTypeSigmoid	swift.enum.case	PHASECurveType.sigmoid	PHASECurveType.sigmoid	case sigmoid
+c:@E@PHASECurveType@PHASECurveTypeSine	swift.enum.case	PHASECurveType.sine	PHASECurveType.sine	case sine
+c:@E@PHASECurveType@PHASECurveTypeSquared	swift.enum.case	PHASECurveType.squared	PHASECurveType.squared	case squared
+c:@E@PHASEError	swift.enum	PHASEError.Code	PHASEError.Code	enum Code
+c:@E@PHASEError@PHASEErrorInitializeFailed	swift.enum.case	PHASEError.Code.initializeFailed	PHASEError.Code.initializeFailed	case initializeFailed
+c:@E@PHASEError@PHASEErrorInvalidObject	swift.enum.case	PHASEError.Code.invalidObject	PHASEError.Code.invalidObject	case invalidObject
+c:@E@PHASEMaterialPreset	swift.enum	PHASEMaterialPreset	PHASEMaterialPreset	enum PHASEMaterialPreset
+c:@E@PHASEMaterialPreset@PHASEMaterialPresetBrick	swift.enum.case	PHASEMaterialPreset.brick	PHASEMaterialPreset.brick	case brick
+c:@E@PHASEMaterialPreset@PHASEMaterialPresetCardboard	swift.enum.case	PHASEMaterialPreset.cardboard	PHASEMaterialPreset.cardboard	case cardboard
+c:@E@PHASEMaterialPreset@PHASEMaterialPresetConcrete	swift.enum.case	PHASEMaterialPreset.concrete	PHASEMaterialPreset.concrete	case concrete
+c:@E@PHASEMaterialPreset@PHASEMaterialPresetDrywall	swift.enum.case	PHASEMaterialPreset.drywall	PHASEMaterialPreset.drywall	case drywall
+c:@E@PHASEMaterialPreset@PHASEMaterialPresetGlass	swift.enum.case	PHASEMaterialPreset.glass	PHASEMaterialPreset.glass	case glass
+c:@E@PHASEMaterialPreset@PHASEMaterialPresetWood	swift.enum.case	PHASEMaterialPreset.wood	PHASEMaterialPreset.wood	case wood
+c:@E@PHASEMediumPreset	swift.enum	PHASEMedium.Preset	PHASEMedium.Preset	enum Preset
+c:@E@PHASEMediumPreset@PHASEMediumPresetAir	swift.enum.case	PHASEMedium.Preset.air	PHASEMedium.Preset.air	case air
+c:@E@PHASENormalizationMode	swift.enum	PHASENormalizationMode	PHASENormalizationMode	enum PHASENormalizationMode
+c:@E@PHASENormalizationMode@PHASENormalizationModeDynamic	swift.enum.case	PHASENormalizationMode.dynamic	PHASENormalizationMode.dynamic	case dynamic
+c:@E@PHASENormalizationMode@PHASENormalizationModeNone	swift.enum.case	PHASENormalizationMode.none	PHASENormalizationMode.none	case none
+c:@E@PHASEPlaybackMode	swift.enum	PHASEPlaybackMode	PHASEPlaybackMode	enum PHASEPlaybackMode
+c:@E@PHASEPlaybackMode@PHASEPlaybackModeLooping	swift.enum.case	PHASEPlaybackMode.looping	PHASEPlaybackMode.looping	case looping
+c:@E@PHASEPlaybackMode@PHASEPlaybackModeOneShot	swift.enum.case	PHASEPlaybackMode.oneShot	PHASEPlaybackMode.oneShot	case oneShot
+c:@E@PHASEPushStreamBufferOptions	swift.struct	PHASEPushStreamBufferOptions	PHASEPushStreamBufferOptions	struct PHASEPushStreamBufferOptions
+c:@E@PHASEPushStreamBufferOptions@PHASEPushStreamBufferDefault	swift.type.property	default	PHASEPushStreamBufferOptions.default	static var `default`: PHASEPushStreamBufferOptions { get }
+c:@E@PHASEPushStreamBufferOptions@PHASEPushStreamBufferInterrupts	swift.type.property	interrupts	PHASEPushStreamBufferOptions.interrupts	static var interrupts: PHASEPushStreamBufferOptions { get }
+c:@E@PHASEPushStreamBufferOptions@PHASEPushStreamBufferInterruptsAtLoop	swift.type.property	interruptsAtLoop	PHASEPushStreamBufferOptions.interruptsAtLoop	static var interruptsAtLoop: PHASEPushStreamBufferOptions { get }
+c:@E@PHASEPushStreamBufferOptions@PHASEPushStreamBufferLoops	swift.type.property	loops	PHASEPushStreamBufferOptions.loops	static var loops: PHASEPushStreamBufferOptions { get }
+c:@E@PHASEPushStreamCompletionCallbackCondition	swift.enum	PHASEPushStreamCompletionCallbackCondition	PHASEPushStreamCompletionCallbackCondition	enum PHASEPushStreamCompletionCallbackCondition
+c:@E@PHASEPushStreamCompletionCallbackCondition@PHASEPushStreamCompletionDataRendered	swift.enum.case	PHASEPushStreamCompletionCallbackCondition.dataRendered	PHASEPushStreamCompletionCallbackCondition.dataRendered	case dataRendered
+c:@E@PHASERenderingState	swift.enum	PHASESoundEvent.RenderingState	PHASESoundEvent.RenderingState	enum RenderingState
+c:@E@PHASERenderingState@PHASERenderingStatePaused	swift.enum.case	PHASESoundEvent.RenderingState.paused	PHASESoundEvent.RenderingState.paused	case paused
+c:@E@PHASERenderingState@PHASERenderingStateStarted	swift.enum.case	PHASESoundEvent.RenderingState.started	PHASESoundEvent.RenderingState.started	case started
+c:@E@PHASERenderingState@PHASERenderingStateStopped	swift.enum.case	PHASESoundEvent.RenderingState.stopped	PHASESoundEvent.RenderingState.stopped	case stopped
+c:@E@PHASEReverbPreset	swift.enum	PHASEReverbPreset	PHASEReverbPreset	enum PHASEReverbPreset
+c:@E@PHASEReverbPreset@PHASEReverbPresetCathedral	swift.enum.case	PHASEReverbPreset.cathedral	PHASEReverbPreset.cathedral	case cathedral
+c:@E@PHASEReverbPreset@PHASEReverbPresetLargeChamber	swift.enum.case	PHASEReverbPreset.largeChamber	PHASEReverbPreset.largeChamber	case largeChamber
+c:@E@PHASEReverbPreset@PHASEReverbPresetLargeHall	swift.enum.case	PHASEReverbPreset.largeHall	PHASEReverbPreset.largeHall	case largeHall
+c:@E@PHASEReverbPreset@PHASEReverbPresetLargeHall2	swift.enum.case	PHASEReverbPreset.largeHall2	PHASEReverbPreset.largeHall2	case largeHall2
+c:@E@PHASEReverbPreset@PHASEReverbPresetLargeRoom	swift.enum.case	PHASEReverbPreset.largeRoom	PHASEReverbPreset.largeRoom	case largeRoom
+c:@E@PHASEReverbPreset@PHASEReverbPresetLargeRoom2	swift.enum.case	PHASEReverbPreset.largeRoom2	PHASEReverbPreset.largeRoom2	case largeRoom2
+c:@E@PHASEReverbPreset@PHASEReverbPresetMediumChamber	swift.enum.case	PHASEReverbPreset.mediumChamber	PHASEReverbPreset.mediumChamber	case mediumChamber
+c:@E@PHASEReverbPreset@PHASEReverbPresetMediumHall	swift.enum.case	PHASEReverbPreset.mediumHall	PHASEReverbPreset.mediumHall	case mediumHall
+c:@E@PHASEReverbPreset@PHASEReverbPresetMediumHall2	swift.enum.case	PHASEReverbPreset.mediumHall2	PHASEReverbPreset.mediumHall2	case mediumHall2
+c:@E@PHASEReverbPreset@PHASEReverbPresetMediumHall3	swift.enum.case	PHASEReverbPreset.mediumHall3	PHASEReverbPreset.mediumHall3	case mediumHall3
+c:@E@PHASEReverbPreset@PHASEReverbPresetMediumRoom	swift.enum.case	PHASEReverbPreset.mediumRoom	PHASEReverbPreset.mediumRoom	case mediumRoom
+c:@E@PHASEReverbPreset@PHASEReverbPresetNone	swift.enum.case	PHASEReverbPreset.none	PHASEReverbPreset.none	case none
+c:@E@PHASEReverbPreset@PHASEReverbPresetSmallRoom	swift.enum.case	PHASEReverbPreset.smallRoom	PHASEReverbPreset.smallRoom	case smallRoom
+c:@E@PHASESoundEventError	swift.enum	PHASESoundEventError.Code	PHASESoundEventError.Code	enum Code
+c:@E@PHASESoundEventError@PHASESoundEventErrorAPIMisuse	swift.enum.case	PHASESoundEventError.Code.apiMisuse	PHASESoundEventError.Code.apiMisuse	case apiMisuse
+c:@E@PHASESoundEventError@PHASESoundEventErrorBadData	swift.enum.case	PHASESoundEventError.Code.badData	PHASESoundEventError.Code.badData	case badData
+c:@E@PHASESoundEventError@PHASESoundEventErrorInvalidInstance	swift.enum.case	PHASESoundEventError.Code.invalidInstance	PHASESoundEventError.Code.invalidInstance	case invalidInstance
+c:@E@PHASESoundEventError@PHASESoundEventErrorNotFound	swift.enum.case	PHASESoundEventError.Code.notFound	PHASESoundEventError.Code.notFound	case notFound
+c:@E@PHASESoundEventError@PHASESoundEventErrorOutOfMemory	swift.enum.case	PHASESoundEventError.Code.outOfMemory	PHASESoundEventError.Code.outOfMemory	case outOfMemory
+c:@E@PHASESoundEventError@PHASESoundEventErrorSystemNotInitialized	swift.enum.case	PHASESoundEventError.Code.systemNotInitialized	PHASESoundEventError.Code.systemNotInitialized	case systemNotInitialized
+c:@E@PHASESoundEventPrepareHandlerReason	swift.enum	PHASESoundEvent.PrepareHandlerReason	PHASESoundEvent.PrepareHandlerReason	enum PrepareHandlerReason
+c:@E@PHASESoundEventPrepareHandlerReason@PHASESoundEventPrepareHandlerReasonFailure	swift.enum.case	PHASESoundEvent.PrepareHandlerReason.failure	PHASESoundEvent.PrepareHandlerReason.failure	case failure
+c:@E@PHASESoundEventPrepareHandlerReason@PHASESoundEventPrepareHandlerReasonPrepared	swift.enum.case	PHASESoundEvent.PrepareHandlerReason.prepared	PHASESoundEvent.PrepareHandlerReason.prepared	case prepared
+c:@E@PHASESoundEventPrepareHandlerReason@PHASESoundEventPrepareHandlerReasonTerminated	swift.enum.case	PHASESoundEvent.PrepareHandlerReason.terminated	PHASESoundEvent.PrepareHandlerReason.terminated	case terminated
+c:@E@PHASESoundEventPrepareState	swift.enum	PHASESoundEvent.PrepareState	PHASESoundEvent.PrepareState	enum PrepareState
+c:@E@PHASESoundEventPrepareState@PHASESoundEventPrepareStatePrepareInProgress	swift.enum.case	PHASESoundEvent.PrepareState.prepareInProgress	PHASESoundEvent.PrepareState.prepareInProgress	case prepareInProgress
+c:@E@PHASESoundEventPrepareState@PHASESoundEventPrepareStatePrepareNotStarted	swift.enum.case	PHASESoundEvent.PrepareState.prepareNotStarted	PHASESoundEvent.PrepareState.prepareNotStarted	case prepareNotStarted
+c:@E@PHASESoundEventPrepareState@PHASESoundEventPrepareStatePrepared	swift.enum.case	PHASESoundEvent.PrepareState.prepared	PHASESoundEvent.PrepareState.prepared	case prepared
+c:@E@PHASESoundEventSeekHandlerReason	swift.enum	PHASESoundEvent.SeekHandlerReason	PHASESoundEvent.SeekHandlerReason	enum SeekHandlerReason
+c:@E@PHASESoundEventSeekHandlerReason@PHASESoundEventSeekHandlerReasonFailure	swift.enum.case	PHASESoundEvent.SeekHandlerReason.failure	PHASESoundEvent.SeekHandlerReason.failure	case failure
+c:@E@PHASESoundEventSeekHandlerReason@PHASESoundEventSeekHandlerReasonFailureSeekAlreadyInProgress	swift.enum.case	PHASESoundEvent.SeekHandlerReason.failureSeekAlreadyInProgress	PHASESoundEvent.SeekHandlerReason.failureSeekAlreadyInProgress	case failureSeekAlreadyInProgress
+c:@E@PHASESoundEventSeekHandlerReason@PHASESoundEventSeekHandlerReasonSeekSuccessful	swift.enum.case	PHASESoundEvent.SeekHandlerReason.seekSuccessful	PHASESoundEvent.SeekHandlerReason.seekSuccessful	case seekSuccessful
+c:@E@PHASESoundEventStartHandlerReason	swift.enum	PHASESoundEvent.StartHandlerReason	PHASESoundEvent.StartHandlerReason	enum StartHandlerReason
+c:@E@PHASESoundEventStartHandlerReason@PHASESoundEventStartHandlerReasonFailure	swift.enum.case	PHASESoundEvent.StartHandlerReason.failure	PHASESoundEvent.StartHandlerReason.failure	case failure
+c:@E@PHASESoundEventStartHandlerReason@PHASESoundEventStartHandlerReasonFinishedPlaying	swift.enum.case	PHASESoundEvent.StartHandlerReason.finishedPlaying	PHASESoundEvent.StartHandlerReason.finishedPlaying	case finishedPlaying
+c:@E@PHASESoundEventStartHandlerReason@PHASESoundEventStartHandlerReasonTerminated	swift.enum.case	PHASESoundEvent.StartHandlerReason.terminated	PHASESoundEvent.StartHandlerReason.terminated	case terminated
+c:@E@PHASESpatialPipelineFlags	swift.struct	PHASESpatialPipeline.Flags	PHASESpatialPipeline.Flags	struct Flags
+c:@E@PHASESpatialPipelineFlags@PHASESpatialPipelineFlagDirectPathTransmission	swift.type.property	directPathTransmission	PHASESpatialPipeline.Flags.directPathTransmission	static var directPathTransmission: PHASESpatialPipeline.Flags { get }
+c:@E@PHASESpatialPipelineFlags@PHASESpatialPipelineFlagEarlyReflections	swift.type.property	earlyReflections	PHASESpatialPipeline.Flags.earlyReflections	static var earlyReflections: PHASESpatialPipeline.Flags { get }
+c:@E@PHASESpatialPipelineFlags@PHASESpatialPipelineFlagLateReverb	swift.type.property	lateReverb	PHASESpatialPipeline.Flags.lateReverb	static var lateReverb: PHASESpatialPipeline.Flags { get }
+c:@E@PHASESpatializationMode	swift.enum	PHASESpatializationMode	PHASESpatializationMode	enum PHASESpatializationMode
+c:@E@PHASESpatializationMode@PHASESpatializationModeAlwaysUseBinaural	swift.enum.case	PHASESpatializationMode.alwaysUseBinaural	PHASESpatializationMode.alwaysUseBinaural	case alwaysUseBinaural
+c:@E@PHASESpatializationMode@PHASESpatializationModeAlwaysUseChannelBased	swift.enum.case	PHASESpatializationMode.alwaysUseChannelBased	PHASESpatializationMode.alwaysUseChannelBased	case alwaysUseChannelBased
+c:@E@PHASESpatializationMode@PHASESpatializationModeAutomatic	swift.enum.case	PHASESpatializationMode.automatic	PHASESpatializationMode.automatic	case automatic
+c:@E@PHASEUpdateMode	swift.enum	PHASEEngine.UpdateMode	PHASEEngine.UpdateMode	enum UpdateMode
+c:@E@PHASEUpdateMode@PHASEUpdateModeAutomatic	swift.enum.case	PHASEEngine.UpdateMode.automatic	PHASEEngine.UpdateMode.automatic	case automatic
+c:@E@PHASEUpdateMode@PHASEUpdateModeManual	swift.enum.case	PHASEEngine.UpdateMode.manual	PHASEEngine.UpdateMode.manual	case manual
+c:@PHASEAssetErrorDomain	swift.var	PHASEAssetErrorDomain	PHASEAssetErrorDomain	let PHASEAssetErrorDomain: String
+c:@PHASEErrorDomain	swift.var	PHASEErrorDomain	PHASEErrorDomain	let PHASEErrorDomain: String
+c:@PHASESoundEventErrorDomain	swift.var	PHASESoundEventErrorDomain	PHASESoundEventErrorDomain	let PHASESoundEventErrorDomain: String
+c:@PHASESpatialCategoryDirectPathTransmission	swift.type.property	directPathTransmission	PHASESpatialCategory.directPathTransmission	static let directPathTransmission: PHASESpatialCategory
+c:@PHASESpatialCategoryEarlyReflections	swift.type.property	earlyReflections	PHASESpatialCategory.earlyReflections	static let earlyReflections: PHASESpatialCategory
+c:@PHASESpatialCategoryLateReverb	swift.type.property	lateReverb	PHASESpatialCategory.lateReverb	static let lateReverb: PHASESpatialCategory
+c:@T@PHASEPullStreamRenderBlock	swift.typealias	PHASEPullStreamRenderHandler	PHASEPullStreamRenderHandler	typealias PHASEPullStreamRenderHandler = (UnsafeMutablePointer<ObjCBool>, UnsafePointer<AudioTimeStamp>, AVAudioFrameCount, UnsafeMutablePointer<AudioBufferList>) -> OSStatus
+c:@T@PHASESpatialCategory	swift.struct	PHASESpatialCategory	PHASESpatialCategory	struct PHASESpatialCategory
+c:objc(cs)PHASEAmbientMixerDefinition	swift.class	PHASEAmbientMixerDefinition	PHASEAmbientMixerDefinition	class PHASEAmbientMixerDefinition
+c:objc(cs)PHASEAmbientMixerDefinition(im)initWithChannelLayout:orientation:	swift.init	init(channelLayout:orientation:)	PHASEAmbientMixerDefinition.init(channelLayout:orientation:)	init(channelLayout layout: AVAudioChannelLayout, orientation: simd_quatf)
+c:objc(cs)PHASEAmbientMixerDefinition(im)initWithChannelLayout:orientation:identifier:	swift.init	init(channelLayout:orientation:identifier:)	PHASEAmbientMixerDefinition.init(channelLayout:orientation:identifier:)	convenience init(channelLayout layout: AVAudioChannelLayout, orientation: simd_quatf, identifier: String)
+c:objc(cs)PHASEAmbientMixerDefinition(py)inputChannelLayout	swift.property	inputChannelLayout	PHASEAmbientMixerDefinition.inputChannelLayout	var inputChannelLayout: AVAudioChannelLayout { get }
+c:objc(cs)PHASEAmbientMixerDefinition(py)orientation	swift.property	orientation	PHASEAmbientMixerDefinition.orientation	var orientation: simd_quatf { get }
+c:objc(cs)PHASEAsset	swift.class	PHASEAsset	PHASEAsset	class PHASEAsset
+c:objc(cs)PHASEAsset(py)identifier	swift.property	identifier	PHASEAsset.identifier	var identifier: String { get }
+c:objc(cs)PHASEAssetRegistry	swift.class	PHASEAssetRegistry	PHASEAssetRegistry	class PHASEAssetRegistry
+c:objc(cs)PHASEAssetRegistry(im)assetForIdentifier:	swift.method	asset(forIdentifier:)	PHASEAssetRegistry.asset(forIdentifier:)	func asset(forIdentifier identifier: String) -> PHASEAsset?
+c:objc(cs)PHASEAssetRegistry(im)registerGlobalMetaParameter:error:	swift.method	registerGlobalMetaParameter(metaParameterDefinition:)	PHASEAssetRegistry.registerGlobalMetaParameter(metaParameterDefinition:)	func registerGlobalMetaParameter(metaParameterDefinition: PHASEMetaParameterDefinition) throws -> PHASEGlobalMetaParameterAsset
+c:objc(cs)PHASEAssetRegistry(im)registerSoundAssetAtURL:identifier:assetType:channelLayout:normalizationMode:error:	swift.method	registerSoundAsset(url:identifier:assetType:channelLayout:normalizationMode:)	PHASEAssetRegistry.registerSoundAsset(url:identifier:assetType:channelLayout:normalizationMode:)	func registerSoundAsset(url: URL, identifier: String?, assetType: PHASEAsset.AssetType, channelLayout: AVAudioChannelLayout?, normalizationMode: PHASENormalizationMode) throws -> PHASESoundAsset
+c:objc(cs)PHASEAssetRegistry(im)registerSoundAssetWithData:identifier:format:normalizationMode:error:	swift.method	registerSoundAsset(data:identifier:format:normalizationMode:)	PHASEAssetRegistry.registerSoundAsset(data:identifier:format:normalizationMode:)	func registerSoundAsset(data: Data, identifier: String?, format: AVAudioFormat, normalizationMode: PHASENormalizationMode) throws -> PHASESoundAsset
+c:objc(cs)PHASEAssetRegistry(im)registerSoundEventAssetWithRootNode:identifier:error:	swift.method	registerSoundEventAsset(rootNode:identifier:)	PHASEAssetRegistry.registerSoundEventAsset(rootNode:identifier:)	func registerSoundEventAsset(rootNode: PHASESoundEventNodeDefinition, identifier: String?) throws -> PHASESoundEventNodeAsset
+c:objc(cs)PHASEAssetRegistry(im)unregisterAssetWithIdentifier:completion:	swift.method	unregisterAsset(identifier:)	PHASEAssetRegistry.unregisterAsset(identifier:)	func unregisterAsset(identifier: String) async -> Bool
+c:objc(cs)PHASEAssetRegistry(py)globalMetaParameters	swift.property	globalMetaParameters	PHASEAssetRegistry.globalMetaParameters	var globalMetaParameters: [String : PHASEMetaParameter] { get }
+c:objc(cs)PHASEBlendNodeDefinition	swift.class	PHASEBlendNodeDefinition	PHASEBlendNodeDefinition	class PHASEBlendNodeDefinition
+c:objc(cs)PHASEBlendNodeDefinition(im)addRangeForInputValuesAbove:fullGainAtValue:fadeCurveType:subtree:	swift.method	addRangeForInputValuesAbove(value:fullGainAtValue:fadeCurveType:subtree:)	PHASEBlendNodeDefinition.addRangeForInputValuesAbove(value:fullGainAtValue:fadeCurveType:subtree:)	func addRangeForInputValuesAbove(value: Double, fullGainAtValue: Double, fadeCurveType: PHASECurveType, subtree: PHASESoundEventNodeDefinition)
+c:objc(cs)PHASEBlendNodeDefinition(im)addRangeForInputValuesBelow:fullGainAtValue:fadeCurveType:subtree:	swift.method	addRangeForInputValuesBelow(value:fullGainAtValue:fadeCurveType:subtree:)	PHASEBlendNodeDefinition.addRangeForInputValuesBelow(value:fullGainAtValue:fadeCurveType:subtree:)	func addRangeForInputValuesBelow(value: Double, fullGainAtValue: Double, fadeCurveType: PHASECurveType, subtree: PHASESoundEventNodeDefinition)
+c:objc(cs)PHASEBlendNodeDefinition(im)addRangeForInputValuesBetween:highValue:fullGainAtLowValue:fullGainAtHighValue:lowFadeCurveType:highFadeCurveType:subtree:	swift.method	addRangeForInputValuesBetween(lowValue:highValue:fullGainAtLowValue:fullGainAtHighValue:lowFadeCurveType:highFadeCurveType:subtree:)	PHASEBlendNodeDefinition.addRangeForInputValuesBetween(lowValue:highValue:fullGainAtLowValue:fullGainAtHighValue:lowFadeCurveType:highFadeCurveType:subtree:)	func addRangeForInputValuesBetween(lowValue: Double, highValue: Double, fullGainAtLowValue: Double, fullGainAtHighValue: Double, lowFadeCurveType: PHASECurveType, highFadeCurveType: PHASECurveType, subtree: PHASESoundEventNodeDefinition)
+c:objc(cs)PHASEBlendNodeDefinition(im)addRangeWithEnvelope:subtree:	swift.method	addRange(envelope:subtree:)	PHASEBlendNodeDefinition.addRange(envelope:subtree:)	func addRange(envelope: PHASEEnvelope, subtree: PHASESoundEventNodeDefinition)
+c:objc(cs)PHASEBlendNodeDefinition(im)initDistanceBlendWithSpatialMixerDefinition:	swift.init	init(spatialMixerDefinition:)	PHASEBlendNodeDefinition.init(spatialMixerDefinition:)	init(spatialMixerDefinition: PHASESpatialMixerDefinition)
+c:objc(cs)PHASEBlendNodeDefinition(im)initDistanceBlendWithSpatialMixerDefinition:::SYNTHESIZED::c:objc(cs)PHASEBlendNodeDefinition	swift.init	init(distanceBlendWithSpatialMixerDefinition:)	PHASEBlendNodeDefinition.init(distanceBlendWithSpatialMixerDefinition:)	init(distanceBlendWithSpatialMixerDefinition spatialMixerDefinition: PHASESpatialMixerDefinition)
+c:objc(cs)PHASEBlendNodeDefinition(im)initDistanceBlendWithSpatialMixerDefinition:identifier:	swift.init	init(spatialMixerDefinition:identifier:)	PHASEBlendNodeDefinition.init(spatialMixerDefinition:identifier:)	convenience init(spatialMixerDefinition: PHASESpatialMixerDefinition, identifier: String)
+c:objc(cs)PHASEBlendNodeDefinition(im)initDistanceBlendWithSpatialMixerDefinition:identifier:::SYNTHESIZED::c:objc(cs)PHASEBlendNodeDefinition	swift.init	init(distanceBlendWithSpatialMixerDefinition:identifier:)	PHASEBlendNodeDefinition.init(distanceBlendWithSpatialMixerDefinition:identifier:)	convenience init(distanceBlendWithSpatialMixerDefinition spatialMixerDefinition: PHASESpatialMixerDefinition, identifier: String)
+c:objc(cs)PHASEBlendNodeDefinition(im)initWithBlendMetaParameterDefinition:	swift.init	init(blendMetaParameterDefinition:)	PHASEBlendNodeDefinition.init(blendMetaParameterDefinition:)	init(blendMetaParameterDefinition: PHASENumberMetaParameterDefinition)
+c:objc(cs)PHASEBlendNodeDefinition(im)initWithBlendMetaParameterDefinition:identifier:	swift.init	init(blendMetaParameterDefinition:identifier:)	PHASEBlendNodeDefinition.init(blendMetaParameterDefinition:identifier:)	convenience init(blendMetaParameterDefinition: PHASENumberMetaParameterDefinition, identifier: String)
+c:objc(cs)PHASEBlendNodeDefinition(py)blendParameterDefinition	swift.property	blendParameterDefinition	PHASEBlendNodeDefinition.blendParameterDefinition	var blendParameterDefinition: PHASENumberMetaParameterDefinition? { get }
+c:objc(cs)PHASEBlendNodeDefinition(py)spatialMixerDefinitionForDistance	swift.property	spatialMixerDefinitionForDistance	PHASEBlendNodeDefinition.spatialMixerDefinitionForDistance	var spatialMixerDefinitionForDistance: PHASESpatialMixerDefinition? { get }
+c:objc(cs)PHASECardioidDirectivityModelParameters	swift.class	PHASECardioidDirectivityModelParameters	PHASECardioidDirectivityModelParameters	class PHASECardioidDirectivityModelParameters
+c:objc(cs)PHASECardioidDirectivityModelParameters(im)initWithSubbandParameters:	swift.init	init(subbandParameters:)	PHASECardioidDirectivityModelParameters.init(subbandParameters:)	init(subbandParameters: [PHASECardioidDirectivityModelSubbandParameters])
+c:objc(cs)PHASECardioidDirectivityModelParameters(py)subbandParameters	swift.property	subbandParameters	PHASECardioidDirectivityModelParameters.subbandParameters	var subbandParameters: [PHASECardioidDirectivityModelSubbandParameters] { get }
+c:objc(cs)PHASECardioidDirectivityModelSubbandParameters	swift.class	PHASECardioidDirectivityModelSubbandParameters	PHASECardioidDirectivityModelSubbandParameters	class PHASECardioidDirectivityModelSubbandParameters
+c:objc(cs)PHASECardioidDirectivityModelSubbandParameters(im)init	swift.init	init()	PHASECardioidDirectivityModelSubbandParameters.init()	init()
+c:objc(cs)PHASECardioidDirectivityModelSubbandParameters(py)frequency	swift.property	frequency	PHASECardioidDirectivityModelSubbandParameters.frequency	var frequency: Double { get set }
+c:objc(cs)PHASECardioidDirectivityModelSubbandParameters(py)pattern	swift.property	pattern	PHASECardioidDirectivityModelSubbandParameters.pattern	var pattern: Double { get set }
+c:objc(cs)PHASECardioidDirectivityModelSubbandParameters(py)sharpness	swift.property	sharpness	PHASECardioidDirectivityModelSubbandParameters.sharpness	var sharpness: Double { get set }
+c:objc(cs)PHASEChannelMixerDefinition	swift.class	PHASEChannelMixerDefinition	PHASEChannelMixerDefinition	class PHASEChannelMixerDefinition
+c:objc(cs)PHASEChannelMixerDefinition(im)initWithChannelLayout:	swift.init	init(channelLayout:)	PHASEChannelMixerDefinition.init(channelLayout:)	init(channelLayout layout: AVAudioChannelLayout)
+c:objc(cs)PHASEChannelMixerDefinition(im)initWithChannelLayout:identifier:	swift.init	init(channelLayout:identifier:)	PHASEChannelMixerDefinition.init(channelLayout:identifier:)	convenience init(channelLayout layout: AVAudioChannelLayout, identifier: String)
+c:objc(cs)PHASEChannelMixerDefinition(py)inputChannelLayout	swift.property	inputChannelLayout	PHASEChannelMixerDefinition.inputChannelLayout	var inputChannelLayout: AVAudioChannelLayout { get }
+c:objc(cs)PHASEConeDirectivityModelParameters	swift.class	PHASEConeDirectivityModelParameters	PHASEConeDirectivityModelParameters	class PHASEConeDirectivityModelParameters
+c:objc(cs)PHASEConeDirectivityModelParameters(im)initWithSubbandParameters:	swift.init	init(subbandParameters:)	PHASEConeDirectivityModelParameters.init(subbandParameters:)	init(subbandParameters: [PHASEConeDirectivityModelSubbandParameters])
+c:objc(cs)PHASEConeDirectivityModelParameters(py)subbandParameters	swift.property	subbandParameters	PHASEConeDirectivityModelParameters.subbandParameters	var subbandParameters: [PHASEConeDirectivityModelSubbandParameters] { get }
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters	swift.class	PHASEConeDirectivityModelSubbandParameters	PHASEConeDirectivityModelSubbandParameters	class PHASEConeDirectivityModelSubbandParameters
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters(im)init	swift.init	init()	PHASEConeDirectivityModelSubbandParameters.init()	init()
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters(im)setInnerAngle:outerAngle:	swift.method	setAngles(innerAngle:outerAngle:)	PHASEConeDirectivityModelSubbandParameters.setAngles(innerAngle:outerAngle:)	func setAngles(innerAngle: Double, outerAngle: Double)
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters(py)frequency	swift.property	frequency	PHASEConeDirectivityModelSubbandParameters.frequency	var frequency: Double { get set }
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters(py)innerAngle	swift.property	innerAngle	PHASEConeDirectivityModelSubbandParameters.innerAngle	var innerAngle: Double { get }
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters(py)outerAngle	swift.property	outerAngle	PHASEConeDirectivityModelSubbandParameters.outerAngle	var outerAngle: Double { get }
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters(py)outerGain	swift.property	outerGain	PHASEConeDirectivityModelSubbandParameters.outerGain	var outerGain: Double { get set }
+c:objc(cs)PHASEContainerNodeDefinition	swift.class	PHASEContainerNodeDefinition	PHASEContainerNodeDefinition	class PHASEContainerNodeDefinition
+c:objc(cs)PHASEContainerNodeDefinition(cm)new	swift.type.method	new()	PHASEContainerNodeDefinition.new()	class func new() -> Self
+c:objc(cs)PHASEContainerNodeDefinition(im)addSubtree:	swift.method	addSubtree(_:)	PHASEContainerNodeDefinition.addSubtree(_:)	func addSubtree(_ subtree: PHASESoundEventNodeDefinition)
+c:objc(cs)PHASEContainerNodeDefinition(im)init	swift.init	init()	PHASEContainerNodeDefinition.init()	init()
+c:objc(cs)PHASEContainerNodeDefinition(im)initWithIdentifier:	swift.init	init(identifier:)	PHASEContainerNodeDefinition.init(identifier:)	init(identifier: String)
+c:objc(cs)PHASEDefinition	swift.class	PHASEDefinition	PHASEDefinition	class PHASEDefinition
+c:objc(cs)PHASEDefinition(py)identifier	swift.property	identifier	PHASEDefinition.identifier	var identifier: String { get }
+c:objc(cs)PHASEDirectivityModelParameters	swift.class	PHASEDirectivityModelParameters	PHASEDirectivityModelParameters	class PHASEDirectivityModelParameters
+c:objc(cs)PHASEDistanceModelFadeOutParameters	swift.class	PHASEDistanceModelFadeOutParameters	PHASEDistanceModelFadeOutParameters	class PHASEDistanceModelFadeOutParameters
+c:objc(cs)PHASEDistanceModelFadeOutParameters(im)initWithCullDistance:	swift.init	init(cullDistance:)	PHASEDistanceModelFadeOutParameters.init(cullDistance:)	init(cullDistance: Double)
+c:objc(cs)PHASEDistanceModelFadeOutParameters(py)cullDistance	swift.property	cullDistance	PHASEDistanceModelFadeOutParameters.cullDistance	var cullDistance: Double { get }
+c:objc(cs)PHASEDistanceModelParameters	swift.class	PHASEDistanceModelParameters	PHASEDistanceModelParameters	class PHASEDistanceModelParameters
+c:objc(cs)PHASEDistanceModelParameters(py)fadeOutParameters	swift.property	fadeOutParameters	PHASEDistanceModelParameters.fadeOutParameters	var fadeOutParameters: PHASEDistanceModelFadeOutParameters? { get set }
+c:objc(cs)PHASEDucker	swift.class	PHASEDucker	PHASEDucker	class PHASEDucker
+c:objc(cs)PHASEDucker(im)activate	swift.method	activate()	PHASEDucker.activate()	func activate()
+c:objc(cs)PHASEDucker(im)deactivate	swift.method	deactivate()	PHASEDucker.deactivate()	func deactivate()
+c:objc(cs)PHASEDucker(im)initWithEngine:sourceGroups:targetGroups:gain:attackTime:releaseTime:attackCurve:releaseCurve:	swift.init	init(engine:sourceGroups:targetGroups:gain:attackTime:releaseTime:attackCurve:releaseCurve:)	PHASEDucker.init(engine:sourceGroups:targetGroups:gain:attackTime:releaseTime:attackCurve:releaseCurve:)	init(engine: PHASEEngine, sourceGroups: Set<PHASEGroup>, targetGroups: Set<PHASEGroup>, gain: Double, attackTime: Double, releaseTime: Double, attackCurve: PHASECurveType, releaseCurve: PHASECurveType)
+c:objc(cs)PHASEDucker(py)active	swift.property	isActive	PHASEDucker.isActive	var isActive: Bool { get }
+c:objc(cs)PHASEDucker(py)attackCurve	swift.property	attackCurve	PHASEDucker.attackCurve	var attackCurve: PHASECurveType { get }
+c:objc(cs)PHASEDucker(py)attackTime	swift.property	attackTime	PHASEDucker.attackTime	var attackTime: Double { get }
+c:objc(cs)PHASEDucker(py)gain	swift.property	gain	PHASEDucker.gain	var gain: Double { get }
+c:objc(cs)PHASEDucker(py)identifier	swift.property	identifier	PHASEDucker.identifier	var identifier: String { get }
+c:objc(cs)PHASEDucker(py)releaseCurve	swift.property	releaseCurve	PHASEDucker.releaseCurve	var releaseCurve: PHASECurveType { get }
+c:objc(cs)PHASEDucker(py)releaseTime	swift.property	releaseTime	PHASEDucker.releaseTime	var releaseTime: Double { get }
+c:objc(cs)PHASEDucker(py)sourceGroups	swift.property	sourceGroups	PHASEDucker.sourceGroups	var sourceGroups: Set<PHASEGroup> { get }
+c:objc(cs)PHASEDucker(py)targetGroups	swift.property	targetGroups	PHASEDucker.targetGroups	var targetGroups: Set<PHASEGroup> { get }
+c:objc(cs)PHASEEngine	swift.class	PHASEEngine	PHASEEngine	class PHASEEngine
+c:objc(cs)PHASEEngine(im)initWithUpdateMode:	swift.init	init(updateMode:)	PHASEEngine.init(updateMode:)	init(updateMode: PHASEEngine.UpdateMode)
+c:objc(cs)PHASEEngine(im)pause	swift.method	pause()	PHASEEngine.pause()	func pause()
+c:objc(cs)PHASEEngine(im)startAndReturnError:	swift.method	start()	PHASEEngine.start()	func start() throws
+c:objc(cs)PHASEEngine(im)stop	swift.method	stop()	PHASEEngine.stop()	func stop()
+c:objc(cs)PHASEEngine(im)update	swift.method	update()	PHASEEngine.update()	func update()
+c:objc(cs)PHASEEngine(py)activeGroupPreset	swift.property	activeGroupPreset	PHASEEngine.activeGroupPreset	var activeGroupPreset: PHASEGroupPreset? { get }
+c:objc(cs)PHASEEngine(py)assetRegistry	swift.property	assetRegistry	PHASEEngine.assetRegistry	var assetRegistry: PHASEAssetRegistry { get }
+c:objc(cs)PHASEEngine(py)defaultMedium	swift.property	defaultMedium	PHASEEngine.defaultMedium	var defaultMedium: PHASEMedium { get set }
+c:objc(cs)PHASEEngine(py)defaultReverbPreset	swift.property	defaultReverbPreset	PHASEEngine.defaultReverbPreset	var defaultReverbPreset: PHASEReverbPreset { get set }
+c:objc(cs)PHASEEngine(py)duckers	swift.property	duckers	PHASEEngine.duckers	var duckers: [PHASEDucker] { get }
+c:objc(cs)PHASEEngine(py)groups	swift.property	groups	PHASEEngine.groups	var groups: [String : PHASEGroup] { get }
+c:objc(cs)PHASEEngine(py)lastRenderTime	swift.property	lastRenderTime	PHASEEngine.lastRenderTime	var lastRenderTime: AVAudioTime? { get }
+c:objc(cs)PHASEEngine(py)outputSpatializationMode	swift.property	outputSpatializationMode	PHASEEngine.outputSpatializationMode	var outputSpatializationMode: PHASESpatializationMode { get set }
+c:objc(cs)PHASEEngine(py)renderingState	swift.property	renderingState	PHASEEngine.renderingState	var renderingState: PHASESoundEvent.RenderingState { get }
+c:objc(cs)PHASEEngine(py)rootObject	swift.property	rootObject	PHASEEngine.rootObject	var rootObject: PHASEObject { get }
+c:objc(cs)PHASEEngine(py)soundEvents	swift.property	soundEvents	PHASEEngine.soundEvents	var soundEvents: [PHASESoundEvent] { get }
+c:objc(cs)PHASEEngine(py)unitsPerMeter	swift.property	unitsPerMeter	PHASEEngine.unitsPerMeter	var unitsPerMeter: Double { get set }
+c:objc(cs)PHASEEngine(py)unitsPerSecond	swift.property	unitsPerSecond	PHASEEngine.unitsPerSecond	var unitsPerSecond: Double { get set }
+c:objc(cs)PHASEEnvelope	swift.class	PHASEEnvelope	PHASEEnvelope	class PHASEEnvelope
+c:objc(cs)PHASEEnvelope(im)evaluateForValue:	swift.method	evaluate(x:)	PHASEEnvelope.evaluate(x:)	func evaluate(x: Double) -> Double
+c:objc(cs)PHASEEnvelope(im)initWithStartPoint:segments:	swift.init	init(startPoint:segments:)	PHASEEnvelope.init(startPoint:segments:)	init?(startPoint: simd_double2, segments: [PHASEEnvelopeSegment])
+c:objc(cs)PHASEEnvelope(py)domain	swift.property	domain	PHASEEnvelope.domain	var domain: PHASENumericPair { get }
+c:objc(cs)PHASEEnvelope(py)range	swift.property	range	PHASEEnvelope.range	var range: PHASENumericPair { get }
+c:objc(cs)PHASEEnvelope(py)segments	swift.property	segments	PHASEEnvelope.segments	var segments: [PHASEEnvelopeSegment] { get }
+c:objc(cs)PHASEEnvelope(py)startPoint	swift.property	startPoint	PHASEEnvelope.startPoint	var startPoint: simd_double2 { get }
+c:objc(cs)PHASEEnvelopeDistanceModelParameters	swift.class	PHASEEnvelopeDistanceModelParameters	PHASEEnvelopeDistanceModelParameters	class PHASEEnvelopeDistanceModelParameters
+c:objc(cs)PHASEEnvelopeDistanceModelParameters(im)initWithEnvelope:	swift.init	init(envelope:)	PHASEEnvelopeDistanceModelParameters.init(envelope:)	init(envelope: PHASEEnvelope)
+c:objc(cs)PHASEEnvelopeDistanceModelParameters(py)envelope	swift.property	envelope	PHASEEnvelopeDistanceModelParameters.envelope	var envelope: PHASEEnvelope { get }
+c:objc(cs)PHASEEnvelopeSegment	swift.class	PHASEEnvelopeSegment	PHASEEnvelopeSegment	class PHASEEnvelopeSegment
+c:objc(cs)PHASEEnvelopeSegment(im)initWithEndPoint:curveType:	swift.init	init(endPoint:curveType:)	PHASEEnvelopeSegment.init(endPoint:curveType:)	init(endPoint: simd_double2, curveType: PHASECurveType)
+c:objc(cs)PHASEEnvelopeSegment(py)curveType	swift.property	curveType	PHASEEnvelopeSegment.curveType	var curveType: PHASECurveType { get set }
+c:objc(cs)PHASEEnvelopeSegment(py)endPoint	swift.property	endPoint	PHASEEnvelopeSegment.endPoint	var endPoint: simd_double2 { get set }
+c:objc(cs)PHASEGeneratorNodeDefinition	swift.class	PHASEGeneratorNodeDefinition	PHASEGeneratorNodeDefinition	class PHASEGeneratorNodeDefinition
+c:objc(cs)PHASEGeneratorNodeDefinition(im)setCalibrationMode:level:	swift.method	setCalibrationMode(calibrationMode:level:)	PHASEGeneratorNodeDefinition.setCalibrationMode(calibrationMode:level:)	func setCalibrationMode(calibrationMode: PHASECalibrationMode, level: Double)
+c:objc(cs)PHASEGeneratorNodeDefinition(py)calibrationMode	swift.property	calibrationMode	PHASEGeneratorNodeDefinition.calibrationMode	var calibrationMode: PHASECalibrationMode { get }
+c:objc(cs)PHASEGeneratorNodeDefinition(py)gainMetaParameterDefinition	swift.property	gainMetaParameterDefinition	PHASEGeneratorNodeDefinition.gainMetaParameterDefinition	var gainMetaParameterDefinition: PHASENumberMetaParameterDefinition? { get set }
+c:objc(cs)PHASEGeneratorNodeDefinition(py)group	swift.property	group	PHASEGeneratorNodeDefinition.group	weak var group: PHASEGroup? { get set }
+c:objc(cs)PHASEGeneratorNodeDefinition(py)level	swift.property	level	PHASEGeneratorNodeDefinition.level	var level: Double { get }
+c:objc(cs)PHASEGeneratorNodeDefinition(py)mixerDefinition	swift.property	mixerDefinition	PHASEGeneratorNodeDefinition.mixerDefinition	var mixerDefinition: PHASEMixerDefinition { get }
+c:objc(cs)PHASEGeneratorNodeDefinition(py)rate	swift.property	rate	PHASEGeneratorNodeDefinition.rate	var rate: Double { get set }
+c:objc(cs)PHASEGeneratorNodeDefinition(py)rateMetaParameterDefinition	swift.property	rateMetaParameterDefinition	PHASEGeneratorNodeDefinition.rateMetaParameterDefinition	var rateMetaParameterDefinition: PHASENumberMetaParameterDefinition? { get set }
+c:objc(cs)PHASEGeometricSpreadingDistanceModelParameters	swift.class	PHASEGeometricSpreadingDistanceModelParameters	PHASEGeometricSpreadingDistanceModelParameters	class PHASEGeometricSpreadingDistanceModelParameters
+c:objc(cs)PHASEGeometricSpreadingDistanceModelParameters(im)init	swift.init	init()	PHASEGeometricSpreadingDistanceModelParameters.init()	init()
+c:objc(cs)PHASEGeometricSpreadingDistanceModelParameters(py)rolloffFactor	swift.property	rolloffFactor	PHASEGeometricSpreadingDistanceModelParameters.rolloffFactor	var rolloffFactor: Double { get set }
+c:objc(cs)PHASEGlobalMetaParameterAsset	swift.class	PHASEGlobalMetaParameterAsset	PHASEGlobalMetaParameterAsset	class PHASEGlobalMetaParameterAsset
+c:objc(cs)PHASEGroup	swift.class	PHASEGroup	PHASEGroup	class PHASEGroup
+c:objc(cs)PHASEGroup(im)fadeGain:duration:curveType:	swift.method	fadeGain(gain:duration:curveType:)	PHASEGroup.fadeGain(gain:duration:curveType:)	func fadeGain(gain: Double, duration: Double, curveType: PHASECurveType)
+c:objc(cs)PHASEGroup(im)fadeRate:duration:curveType:	swift.method	fadeRate(rate:duration:curveType:)	PHASEGroup.fadeRate(rate:duration:curveType:)	func fadeRate(rate: Double, duration: Double, curveType: PHASECurveType)
+c:objc(cs)PHASEGroup(im)initWithIdentifier:	swift.init	init(identifier:)	PHASEGroup.init(identifier:)	init(identifier: String)
+c:objc(cs)PHASEGroup(im)mute	swift.method	mute()	PHASEGroup.mute()	func mute()
+c:objc(cs)PHASEGroup(im)registerWithEngine:	swift.method	register(engine:)	PHASEGroup.register(engine:)	func register(engine: PHASEEngine)
+c:objc(cs)PHASEGroup(im)solo	swift.method	solo()	PHASEGroup.solo()	func solo()
+c:objc(cs)PHASEGroup(im)unmute	swift.method	unmute()	PHASEGroup.unmute()	func unmute()
+c:objc(cs)PHASEGroup(im)unregisterFromEngine	swift.method	unregisterFromEngine()	PHASEGroup.unregisterFromEngine()	func unregisterFromEngine()
+c:objc(cs)PHASEGroup(im)unsolo	swift.method	unsolo()	PHASEGroup.unsolo()	func unsolo()
+c:objc(cs)PHASEGroup(py)gain	swift.property	gain	PHASEGroup.gain	var gain: Double { get set }
+c:objc(cs)PHASEGroup(py)identifier	swift.property	identifier	PHASEGroup.identifier	var identifier: String { get }
+c:objc(cs)PHASEGroup(py)muted	swift.property	isMuted	PHASEGroup.isMuted	var isMuted: Bool { get }
+c:objc(cs)PHASEGroup(py)rate	swift.property	rate	PHASEGroup.rate	var rate: Double { get set }
+c:objc(cs)PHASEGroup(py)soloed	swift.property	isSoloed	PHASEGroup.isSoloed	var isSoloed: Bool { get }
+c:objc(cs)PHASEGroupPreset	swift.class	PHASEGroupPreset	PHASEGroupPreset	class PHASEGroupPreset
+c:objc(cs)PHASEGroupPreset(im)activate	swift.method	activate()	PHASEGroupPreset.activate()	func activate()
+c:objc(cs)PHASEGroupPreset(im)activateWithTimeToTargetOverride:	swift.method	activate(timeToTargetOverride:)	PHASEGroupPreset.activate(timeToTargetOverride:)	func activate(timeToTargetOverride: Double)
+c:objc(cs)PHASEGroupPreset(im)deactivate	swift.method	deactivate()	PHASEGroupPreset.deactivate()	func deactivate()
+c:objc(cs)PHASEGroupPreset(im)deactivateWithTimeToResetOverride:	swift.method	deactivate(timeToResetOverride:)	PHASEGroupPreset.deactivate(timeToResetOverride:)	func deactivate(timeToResetOverride: Double)
+c:objc(cs)PHASEGroupPreset(im)initWithEngine:settings:timeToTarget:timeToReset:	swift.init	init(engine:settings:timeToTarget:timeToReset:)	PHASEGroupPreset.init(engine:settings:timeToTarget:timeToReset:)	init(engine: PHASEEngine, settings: [String : PHASEGroupPresetSetting], timeToTarget: Double, timeToReset: Double)
+c:objc(cs)PHASEGroupPreset(py)settings	swift.property	settings	PHASEGroupPreset.settings	var settings: [String : PHASEGroupPresetSetting] { get }
+c:objc(cs)PHASEGroupPreset(py)timeToReset	swift.property	timeToReset	PHASEGroupPreset.timeToReset	var timeToReset: Double { get }
+c:objc(cs)PHASEGroupPreset(py)timeToTarget	swift.property	timeToTarget	PHASEGroupPreset.timeToTarget	var timeToTarget: Double { get }
+c:objc(cs)PHASEGroupPresetSetting	swift.class	PHASEGroupPresetSetting	PHASEGroupPresetSetting	class PHASEGroupPresetSetting
+c:objc(cs)PHASEGroupPresetSetting(im)initWithGain:rate:gainCurveType:rateCurveType:	swift.init	init(gain:rate:gainCurveType:rateCurveType:)	PHASEGroupPresetSetting.init(gain:rate:gainCurveType:rateCurveType:)	init(gain: Double, rate: Double, gainCurveType: PHASECurveType, rateCurveType: PHASECurveType)
+c:objc(cs)PHASEGroupPresetSetting(py)gain	swift.property	gain	PHASEGroupPresetSetting.gain	var gain: Double { get }
+c:objc(cs)PHASEGroupPresetSetting(py)gainCurveType	swift.property	gainCurveType	PHASEGroupPresetSetting.gainCurveType	var gainCurveType: PHASECurveType { get }
+c:objc(cs)PHASEGroupPresetSetting(py)rate	swift.property	rate	PHASEGroupPresetSetting.rate	var rate: Double { get }
+c:objc(cs)PHASEGroupPresetSetting(py)rateCurveType	swift.property	rateCurveType	PHASEGroupPresetSetting.rateCurveType	var rateCurveType: PHASECurveType { get }
+c:objc(cs)PHASEListener	swift.class	PHASEListener	PHASEListener	class PHASEListener
+c:objc(cs)PHASEListener(im)initWithEngine:	swift.init	init(engine:)	PHASEListener.init(engine:)	init(engine: PHASEEngine)
+c:objc(cs)PHASEListener(py)automaticHeadTrackingFlags	swift.property	automaticHeadTrackingFlags	PHASEListener.automaticHeadTrackingFlags	var automaticHeadTrackingFlags: PHASEAutomaticHeadTrackingFlags { get set }
+c:objc(cs)PHASEListener(py)gain	swift.property	gain	PHASEListener.gain	var gain: Double { get set }
+c:objc(cs)PHASEMappedMetaParameterDefinition	swift.class	PHASEMappedMetaParameterDefinition	PHASEMappedMetaParameterDefinition	class PHASEMappedMetaParameterDefinition
+c:objc(cs)PHASEMappedMetaParameterDefinition(im)initWithInputMetaParameterDefinition:envelope:	swift.init	init(inputMetaParameterDefinition:envelope:)	PHASEMappedMetaParameterDefinition.init(inputMetaParameterDefinition:envelope:)	init(inputMetaParameterDefinition: PHASENumberMetaParameterDefinition, envelope: PHASEEnvelope)
+c:objc(cs)PHASEMappedMetaParameterDefinition(im)initWithInputMetaParameterDefinition:envelope:identifier:	swift.init	init(inputMetaParameterDefinition:envelope:identifier:)	PHASEMappedMetaParameterDefinition.init(inputMetaParameterDefinition:envelope:identifier:)	convenience init(inputMetaParameterDefinition: PHASENumberMetaParameterDefinition, envelope: PHASEEnvelope, identifier: String)
+c:objc(cs)PHASEMappedMetaParameterDefinition(py)envelope	swift.property	envelope	PHASEMappedMetaParameterDefinition.envelope	var envelope: PHASEEnvelope { get }
+c:objc(cs)PHASEMappedMetaParameterDefinition(py)inputMetaParameterDefinition	swift.property	inputMetaParameterDefinition	PHASEMappedMetaParameterDefinition.inputMetaParameterDefinition	var inputMetaParameterDefinition: PHASENumberMetaParameterDefinition { get }
+c:objc(cs)PHASEMaterial	swift.class	PHASEMaterial	PHASEMaterial	class PHASEMaterial
+c:objc(cs)PHASEMaterial(im)initWithEngine:preset:	swift.init	init(engine:preset:)	PHASEMaterial.init(engine:preset:)	init(engine: PHASEEngine, preset: PHASEMaterialPreset)
+c:objc(cs)PHASEMedium	swift.class	PHASEMedium	PHASEMedium	class PHASEMedium
+c:objc(cs)PHASEMedium(im)initWithEngine:preset:	swift.init	init(engine:preset:)	PHASEMedium.init(engine:preset:)	init(engine: PHASEEngine, preset: PHASEMedium.Preset)
+c:objc(cs)PHASEMetaParameter	swift.class	PHASEMetaParameter	PHASEMetaParameter	class PHASEMetaParameter
+c:objc(cs)PHASEMetaParameter(py)identifier	swift.property	identifier	PHASEMetaParameter.identifier	var identifier: String { get }
+c:objc(cs)PHASEMetaParameter(py)value	swift.property	value	PHASEMetaParameter.value	var value: Any { get set }
+c:objc(cs)PHASEMetaParameterDefinition	swift.class	PHASEMetaParameterDefinition	PHASEMetaParameterDefinition	class PHASEMetaParameterDefinition
+c:objc(cs)PHASEMetaParameterDefinition(py)value	swift.property	value	PHASEMetaParameterDefinition.value	var value: Any { get }
+c:objc(cs)PHASEMixer	swift.class	PHASEMixer	PHASEMixer	class PHASEMixer
+c:objc(cs)PHASEMixer(py)gain	swift.property	gain	PHASEMixer.gain	var gain: Double { get }
+c:objc(cs)PHASEMixer(py)gainMetaParameter	swift.property	gainMetaParameter	PHASEMixer.gainMetaParameter	var gainMetaParameter: PHASEMetaParameter? { get }
+c:objc(cs)PHASEMixer(py)identifier	swift.property	identifier	PHASEMixer.identifier	var identifier: String { get }
+c:objc(cs)PHASEMixerDefinition	swift.class	PHASEMixerDefinition	PHASEMixerDefinition	class PHASEMixerDefinition
+c:objc(cs)PHASEMixerDefinition(py)gain	swift.property	gain	PHASEMixerDefinition.gain	var gain: Double { get set }
+c:objc(cs)PHASEMixerDefinition(py)gainMetaParameterDefinition	swift.property	gainMetaParameterDefinition	PHASEMixerDefinition.gainMetaParameterDefinition	var gainMetaParameterDefinition: PHASENumberMetaParameterDefinition? { get set }
+c:objc(cs)PHASEMixerParameters	swift.class	PHASEMixerParameters	PHASEMixerParameters	class PHASEMixerParameters
+c:objc(cs)PHASEMixerParameters(im)addAmbientMixerParametersWithIdentifier:listener:	swift.method	addAmbientMixerParameters(identifier:listener:)	PHASEMixerParameters.addAmbientMixerParameters(identifier:listener:)	func addAmbientMixerParameters(identifier: String, listener: PHASEListener)
+c:objc(cs)PHASEMixerParameters(im)addSpatialMixerParametersWithIdentifier:source:listener:	swift.method	addSpatialMixerParameters(identifier:source:listener:)	PHASEMixerParameters.addSpatialMixerParameters(identifier:source:listener:)	func addSpatialMixerParameters(identifier: String, source: PHASESource, listener: PHASEListener)
+c:objc(cs)PHASENumberMetaParameter	swift.class	PHASENumberMetaParameter	PHASENumberMetaParameter	class PHASENumberMetaParameter
+c:objc(cs)PHASENumberMetaParameter(im)fadeToValue:duration:	swift.method	fade(value:duration:)	PHASENumberMetaParameter.fade(value:duration:)	func fade(value: Double, duration: TimeInterval)
+c:objc(cs)PHASENumberMetaParameter(py)maximum	swift.property	maximum	PHASENumberMetaParameter.maximum	var maximum: Double { get }
+c:objc(cs)PHASENumberMetaParameter(py)minimum	swift.property	minimum	PHASENumberMetaParameter.minimum	var minimum: Double { get }
+c:objc(cs)PHASENumberMetaParameterDefinition	swift.class	PHASENumberMetaParameterDefinition	PHASENumberMetaParameterDefinition	class PHASENumberMetaParameterDefinition
+c:objc(cs)PHASENumberMetaParameterDefinition(im)initWithValue:	swift.init	init(value:)	PHASENumberMetaParameterDefinition.init(value:)	convenience init(value: Double)
+c:objc(cs)PHASENumberMetaParameterDefinition(im)initWithValue:identifier:	swift.init	init(value:identifier:)	PHASENumberMetaParameterDefinition.init(value:identifier:)	convenience init(value: Double, identifier: String)
+c:objc(cs)PHASENumberMetaParameterDefinition(im)initWithValue:minimum:maximum:	swift.init	init(value:minimum:maximum:)	PHASENumberMetaParameterDefinition.init(value:minimum:maximum:)	init(value: Double, minimum: Double, maximum: Double)
+c:objc(cs)PHASENumberMetaParameterDefinition(im)initWithValue:minimum:maximum:identifier:	swift.init	init(value:minimum:maximum:identifier:)	PHASENumberMetaParameterDefinition.init(value:minimum:maximum:identifier:)	convenience init(value: Double, minimum: Double, maximum: Double, identifier: String)
+c:objc(cs)PHASENumberMetaParameterDefinition(py)maximum	swift.property	maximum	PHASENumberMetaParameterDefinition.maximum	var maximum: Double { get }
+c:objc(cs)PHASENumberMetaParameterDefinition(py)minimum	swift.property	minimum	PHASENumberMetaParameterDefinition.minimum	var minimum: Double { get }
+c:objc(cs)PHASENumericPair	swift.class	PHASENumericPair	PHASENumericPair	class PHASENumericPair
+c:objc(cs)PHASENumericPair(im)initWithFirstValue:secondValue:	swift.init	init(firstValue:secondValue:)	PHASENumericPair.init(firstValue:secondValue:)	init(firstValue first: Double, secondValue second: Double)
+c:objc(cs)PHASENumericPair(py)first	swift.property	first	PHASENumericPair.first	var first: Double { get set }
+c:objc(cs)PHASENumericPair(py)second	swift.property	second	PHASENumericPair.second	var second: Double { get set }
+c:objc(cs)PHASEObject	swift.class	PHASEObject	PHASEObject	class PHASEObject
+c:objc(cs)PHASEObject(cpy)forward	swift.type.property	forward	PHASEObject.forward	class var forward: simd_float3 { get }
+c:objc(cs)PHASEObject(cpy)right	swift.type.property	right	PHASEObject.right	class var right: simd_float3 { get }
+c:objc(cs)PHASEObject(cpy)up	swift.type.property	up	PHASEObject.up	class var up: simd_float3 { get }
+c:objc(cs)PHASEObject(im)addChild:error:	swift.method	addChild(_:)	PHASEObject.addChild(_:)	func addChild(_ child: PHASEObject) throws
+c:objc(cs)PHASEObject(im)initWithEngine:	swift.init	init(engine:)	PHASEObject.init(engine:)	init(engine: PHASEEngine)
+c:objc(cs)PHASEObject(im)removeChild:	swift.method	removeChild(_:)	PHASEObject.removeChild(_:)	func removeChild(_ child: PHASEObject)
+c:objc(cs)PHASEObject(im)removeChildren	swift.method	removeChildren()	PHASEObject.removeChildren()	func removeChildren()
+c:objc(cs)PHASEObject(py)children	swift.property	children	PHASEObject.children	var children: [PHASEObject] { get }
+c:objc(cs)PHASEObject(py)parent	swift.property	parent	PHASEObject.parent	weak var parent: PHASEObject? { get }
+c:objc(cs)PHASEObject(py)transform	swift.property	transform	PHASEObject.transform	var transform: simd_float4x4 { get set }
+c:objc(cs)PHASEObject(py)worldTransform	swift.property	worldTransform	PHASEObject.worldTransform	var worldTransform: simd_float4x4 { get set }
+c:objc(cs)PHASEOccluder	swift.class	PHASEOccluder	PHASEOccluder	class PHASEOccluder
+c:objc(cs)PHASEOccluder(im)initWithEngine:shapes:	swift.init	init(engine:shapes:)	PHASEOccluder.init(engine:shapes:)	init(engine: PHASEEngine, shapes: [PHASEShape])
+c:objc(cs)PHASEOccluder(py)shapes	swift.property	shapes	PHASEOccluder.shapes	var shapes: [PHASEShape] { get }
+c:objc(cs)PHASEPullStreamNode	swift.class	PHASEPullStreamNode	PHASEPullStreamNode	class PHASEPullStreamNode
+c:objc(cs)PHASEPullStreamNode(py)renderBlock	swift.property	renderHandler	PHASEPullStreamNode.renderHandler	var renderHandler: PHASEPullStreamRenderHandler { get set }
+c:objc(cs)PHASEPullStreamNodeDefinition	swift.class	PHASEPullStreamNodeDefinition	PHASEPullStreamNodeDefinition	class PHASEPullStreamNodeDefinition
+c:objc(cs)PHASEPullStreamNodeDefinition(im)initWithMixerDefinition:format:	swift.init	init(mixerDefinition:format:)	PHASEPullStreamNodeDefinition.init(mixerDefinition:format:)	init(mixerDefinition: PHASEMixerDefinition, format: AVAudioFormat)
+c:objc(cs)PHASEPullStreamNodeDefinition(im)initWithMixerDefinition:format:identifier:	swift.init	init(mixerDefinition:format:identifier:)	PHASEPullStreamNodeDefinition.init(mixerDefinition:format:identifier:)	convenience init(mixerDefinition: PHASEMixerDefinition, format: AVAudioFormat, identifier: String)
+c:objc(cs)PHASEPullStreamNodeDefinition(py)format	swift.property	format	PHASEPullStreamNodeDefinition.format	var format: AVAudioFormat { get }
+c:objc(cs)PHASEPullStreamNodeDefinition(py)normalize	swift.property	normalize	PHASEPullStreamNodeDefinition.normalize	var normalize: Bool { get set }
+c:objc(cs)PHASEPushStreamNode	swift.class	PHASEPushStreamNode	PHASEPushStreamNode	class PHASEPushStreamNode
+c:objc(cs)PHASEPushStreamNode(im)scheduleBuffer:	swift.method	scheduleBuffer(buffer:)	PHASEPushStreamNode.scheduleBuffer(buffer:)	func scheduleBuffer(buffer: AVAudioPCMBuffer)
+c:objc(cs)PHASEPushStreamNode(im)scheduleBuffer:atTime:options:	swift.method	scheduleBuffer(buffer:time:options:)	PHASEPushStreamNode.scheduleBuffer(buffer:time:options:)	func scheduleBuffer(buffer: AVAudioPCMBuffer, time when: AVAudioTime?, options: PHASEPushStreamBufferOptions = [])
+c:objc(cs)PHASEPushStreamNode(im)scheduleBuffer:atTime:options:completionCallbackType:completionHandler:	swift.method	scheduleBuffer(buffer:time:options:completionCallbackType:)	PHASEPushStreamNode.scheduleBuffer(buffer:time:options:completionCallbackType:)	func scheduleBuffer(buffer: AVAudioPCMBuffer, time when: AVAudioTime?, options: PHASEPushStreamBufferOptions = [], completionCallbackType: PHASEPushStreamCompletionCallbackCondition) async -> PHASEPushStreamCompletionCallbackCondition
+c:objc(cs)PHASEPushStreamNode(im)scheduleBuffer:completionCallbackType:completionHandler:	swift.method	scheduleBuffer(buffer:completionCallbackType:)	PHASEPushStreamNode.scheduleBuffer(buffer:completionCallbackType:)	func scheduleBuffer(buffer: AVAudioPCMBuffer, completionCallbackType: PHASEPushStreamCompletionCallbackCondition) async -> PHASEPushStreamCompletionCallbackCondition
+c:objc(cs)PHASEPushStreamNode(py)format	swift.property	format	PHASEPushStreamNode.format	var format: AVAudioFormat { get }
+c:objc(cs)PHASEPushStreamNode(py)gainMetaParameter	swift.property	gainMetaParameter	PHASEPushStreamNode.gainMetaParameter	var gainMetaParameter: PHASENumberMetaParameter? { get }
+c:objc(cs)PHASEPushStreamNode(py)mixer	swift.property	mixer	PHASEPushStreamNode.mixer	var mixer: PHASEMixer { get }
+c:objc(cs)PHASEPushStreamNode(py)rateMetaParameter	swift.property	rateMetaParameter	PHASEPushStreamNode.rateMetaParameter	var rateMetaParameter: PHASENumberMetaParameter? { get }
+c:objc(cs)PHASEPushStreamNodeDefinition	swift.class	PHASEPushStreamNodeDefinition	PHASEPushStreamNodeDefinition	class PHASEPushStreamNodeDefinition
+c:objc(cs)PHASEPushStreamNodeDefinition(im)initWithMixerDefinition:format:	swift.init	init(mixerDefinition:format:)	PHASEPushStreamNodeDefinition.init(mixerDefinition:format:)	init(mixerDefinition: PHASEMixerDefinition, format: AVAudioFormat)
+c:objc(cs)PHASEPushStreamNodeDefinition(im)initWithMixerDefinition:format:identifier:	swift.init	init(mixerDefinition:format:identifier:)	PHASEPushStreamNodeDefinition.init(mixerDefinition:format:identifier:)	convenience init(mixerDefinition: PHASEMixerDefinition, format: AVAudioFormat, identifier: String)
+c:objc(cs)PHASEPushStreamNodeDefinition(py)format	swift.property	format	PHASEPushStreamNodeDefinition.format	var format: AVAudioFormat { get }
+c:objc(cs)PHASEPushStreamNodeDefinition(py)normalize	swift.property	normalize	PHASEPushStreamNodeDefinition.normalize	var normalize: Bool { get set }
+c:objc(cs)PHASERandomNodeDefinition	swift.class	PHASERandomNodeDefinition	PHASERandomNodeDefinition	class PHASERandomNodeDefinition
+c:objc(cs)PHASERandomNodeDefinition(im)addSubtree:weight:	swift.method	addSubtree(_:weight:)	PHASERandomNodeDefinition.addSubtree(_:weight:)	func addSubtree(_ subtree: PHASESoundEventNodeDefinition, weight: NSNumber)
+c:objc(cs)PHASERandomNodeDefinition(im)init	swift.init	init()	PHASERandomNodeDefinition.init()	init()
+c:objc(cs)PHASERandomNodeDefinition(im)initWithIdentifier:	swift.init	init(identifier:)	PHASERandomNodeDefinition.init(identifier:)	convenience init(identifier: String)
+c:objc(cs)PHASERandomNodeDefinition(py)uniqueSelectionQueueLength	swift.property	uniqueSelectionQueueLength	PHASERandomNodeDefinition.uniqueSelectionQueueLength	var uniqueSelectionQueueLength: Int { get set }
+c:objc(cs)PHASESamplerNodeDefinition	swift.class	PHASESamplerNodeDefinition	PHASESamplerNodeDefinition	class PHASESamplerNodeDefinition
+c:objc(cs)PHASESamplerNodeDefinition(im)initWithSoundAssetIdentifier:mixerDefinition:	swift.init	init(soundAssetIdentifier:mixerDefinition:)	PHASESamplerNodeDefinition.init(soundAssetIdentifier:mixerDefinition:)	init(soundAssetIdentifier: String, mixerDefinition: PHASEMixerDefinition)
+c:objc(cs)PHASESamplerNodeDefinition(im)initWithSoundAssetIdentifier:mixerDefinition:identifier:	swift.init	init(soundAssetIdentifier:mixerDefinition:identifier:)	PHASESamplerNodeDefinition.init(soundAssetIdentifier:mixerDefinition:identifier:)	convenience init(soundAssetIdentifier: String, mixerDefinition: PHASEMixerDefinition, identifier: String)
+c:objc(cs)PHASESamplerNodeDefinition(py)assetIdentifier	swift.property	assetIdentifier	PHASESamplerNodeDefinition.assetIdentifier	var assetIdentifier: String { get }
+c:objc(cs)PHASESamplerNodeDefinition(py)cullOption	swift.property	cullOption	PHASESamplerNodeDefinition.cullOption	var cullOption: PHASECullOption { get set }
+c:objc(cs)PHASESamplerNodeDefinition(py)playbackMode	swift.property	playbackMode	PHASESamplerNodeDefinition.playbackMode	var playbackMode: PHASEPlaybackMode { get set }
+c:objc(cs)PHASEShape	swift.class	PHASEShape	PHASEShape	class PHASEShape
+c:objc(cs)PHASEShape(im)initWithEngine:mesh:	swift.init	init(engine:mesh:)	PHASEShape.init(engine:mesh:)	init(engine: PHASEEngine, mesh: MDLMesh)
+c:objc(cs)PHASEShape(im)initWithEngine:mesh:materials:	swift.init	init(engine:mesh:materials:)	PHASEShape.init(engine:mesh:materials:)	convenience init(engine: PHASEEngine, mesh: MDLMesh, materials: [PHASEMaterial])
+c:objc(cs)PHASEShape(py)elements	swift.property	elements	PHASEShape.elements	var elements: [PHASEShape.Element] { get }
+c:objc(cs)PHASEShapeElement	swift.class	PHASEShape.Element	PHASEShape.Element	class Element
+c:objc(cs)PHASEShapeElement(py)material	swift.property	material	PHASEShape.Element.material	var material: PHASEMaterial? { get set }
+c:objc(cs)PHASESoundAsset	swift.class	PHASESoundAsset	PHASESoundAsset	class PHASESoundAsset
+c:objc(cs)PHASESoundAsset(py)data	swift.property	data	PHASESoundAsset.data	var data: Data? { get }
+c:objc(cs)PHASESoundAsset(py)type	swift.property	type	PHASESoundAsset.type	var type: PHASEAsset.AssetType { get }
+c:objc(cs)PHASESoundAsset(py)url	swift.property	url	PHASESoundAsset.url	var url: URL? { get }
+c:objc(cs)PHASESoundEvent	swift.class	PHASESoundEvent	PHASESoundEvent	class PHASESoundEvent
+c:objc(cs)PHASESoundEvent(im)initWithEngine:assetIdentifier:error:	swift.init	init(engine:assetIdentifier:)	PHASESoundEvent.init(engine:assetIdentifier:)	init(engine: PHASEEngine, assetIdentifier: String) throws
+c:objc(cs)PHASESoundEvent(im)initWithEngine:assetIdentifier:mixerParameters:error:	swift.init	init(engine:assetIdentifier:mixerParameters:)	PHASESoundEvent.init(engine:assetIdentifier:mixerParameters:)	init(engine: PHASEEngine, assetIdentifier: String, mixerParameters: PHASEMixerParameters) throws
+c:objc(cs)PHASESoundEvent(im)pause	swift.method	pause()	PHASESoundEvent.pause()	func pause()
+c:objc(cs)PHASESoundEvent(im)prepareWithCompletion:	swift.method	prepare(completion:)	PHASESoundEvent.prepare(completion:)	func prepare(completion handler: ((PHASESoundEvent.PrepareHandlerReason) -> Void)? = nil)
+c:objc(cs)PHASESoundEvent(im)resume	swift.method	resume()	PHASESoundEvent.resume()	func resume()
+c:objc(cs)PHASESoundEvent(im)resumeAtTime:	swift.method	resume(at:)	PHASESoundEvent.resume(at:)	func resume(at time: AVAudioTime?)
+c:objc(cs)PHASESoundEvent(im)seekToTime:completion:	swift.method	seek(to:)	PHASESoundEvent.seek(to:)	func seek(to time: Double) async -> PHASESoundEvent.SeekHandlerReason
+c:objc(cs)PHASESoundEvent(im)seekToTime:resumeAtEngineTime:completion:	swift.method	seek(to:resumeAt:)	PHASESoundEvent.seek(to:resumeAt:)	func seek(to time: Double, resumeAt engineTime: AVAudioTime) async -> PHASESoundEvent.SeekHandlerReason
+c:objc(cs)PHASESoundEvent(im)startAtTime:completion:	swift.method	start(at:)	PHASESoundEvent.start(at:)	func start(at when: AVAudioTime?) async -> PHASESoundEvent.StartHandlerReason
+c:objc(cs)PHASESoundEvent(im)startWithCompletion:	swift.method	start(completion:)	PHASESoundEvent.start(completion:)	func start(completion handler: ((PHASESoundEvent.StartHandlerReason) -> Void)? = nil)
+c:objc(cs)PHASESoundEvent(im)stopAndInvalidate	swift.method	stopAndInvalidate()	PHASESoundEvent.stopAndInvalidate()	func stopAndInvalidate()
+c:objc(cs)PHASESoundEvent(py)indefinite	swift.property	isIndefinite	PHASESoundEvent.isIndefinite	var isIndefinite: Bool { get }
+c:objc(cs)PHASESoundEvent(py)metaParameters	swift.property	metaParameters	PHASESoundEvent.metaParameters	var metaParameters: [String : PHASEMetaParameter] { get }
+c:objc(cs)PHASESoundEvent(py)mixers	swift.property	mixers	PHASESoundEvent.mixers	var mixers: [String : PHASEMixer] { get }
+c:objc(cs)PHASESoundEvent(py)prepareState	swift.property	prepareState	PHASESoundEvent.prepareState	var prepareState: PHASESoundEvent.PrepareState { get }
+c:objc(cs)PHASESoundEvent(py)pullStreamNodes	swift.property	pullStreamNodes	PHASESoundEvent.pullStreamNodes	var pullStreamNodes: [String : PHASEPullStreamNode] { get }
+c:objc(cs)PHASESoundEvent(py)pushStreamNodes	swift.property	pushStreamNodes	PHASESoundEvent.pushStreamNodes	var pushStreamNodes: [String : PHASEPushStreamNode] { get }
+c:objc(cs)PHASESoundEvent(py)renderingState	swift.property	renderingState	PHASESoundEvent.renderingState	var renderingState: PHASESoundEvent.RenderingState { get }
+c:objc(cs)PHASESoundEventNodeAsset	swift.class	PHASESoundEventNodeAsset	PHASESoundEventNodeAsset	class PHASESoundEventNodeAsset
+c:objc(cs)PHASESoundEventNodeDefinition	swift.class	PHASESoundEventNodeDefinition	PHASESoundEventNodeDefinition	class PHASESoundEventNodeDefinition
+c:objc(cs)PHASESoundEventNodeDefinition(py)children	swift.property	children	PHASESoundEventNodeDefinition.children	var children: [PHASESoundEventNodeDefinition] { get }
+c:objc(cs)PHASESource	swift.class	PHASESource	PHASESource	class PHASESource
+c:objc(cs)PHASESource(im)initWithEngine:	swift.init	init(engine:)	PHASESource.init(engine:)	init(engine: PHASEEngine)
+c:objc(cs)PHASESource(im)initWithEngine:shapes:	swift.init	init(engine:shapes:)	PHASESource.init(engine:shapes:)	init(engine: PHASEEngine, shapes: [PHASEShape])
+c:objc(cs)PHASESource(py)gain	swift.property	gain	PHASESource.gain	var gain: Double { get set }
+c:objc(cs)PHASESource(py)shapes	swift.property	shapes	PHASESource.shapes	var shapes: [PHASEShape] { get }
+c:objc(cs)PHASESpatialMixerDefinition	swift.class	PHASESpatialMixerDefinition	PHASESpatialMixerDefinition	class PHASESpatialMixerDefinition
+c:objc(cs)PHASESpatialMixerDefinition(im)initWithSpatialPipeline:	swift.init	init(spatialPipeline:)	PHASESpatialMixerDefinition.init(spatialPipeline:)	init(spatialPipeline: PHASESpatialPipeline)
+c:objc(cs)PHASESpatialMixerDefinition(im)initWithSpatialPipeline:identifier:	swift.init	init(spatialPipeline:identifier:)	PHASESpatialMixerDefinition.init(spatialPipeline:identifier:)	convenience init(spatialPipeline: PHASESpatialPipeline, identifier: String)
+c:objc(cs)PHASESpatialMixerDefinition(py)distanceModelParameters	swift.property	distanceModelParameters	PHASESpatialMixerDefinition.distanceModelParameters	var distanceModelParameters: PHASEDistanceModelParameters? { get set }
+c:objc(cs)PHASESpatialMixerDefinition(py)listenerDirectivityModelParameters	swift.property	listenerDirectivityModelParameters	PHASESpatialMixerDefinition.listenerDirectivityModelParameters	var listenerDirectivityModelParameters: PHASEDirectivityModelParameters? { get set }
+c:objc(cs)PHASESpatialMixerDefinition(py)sourceDirectivityModelParameters	swift.property	sourceDirectivityModelParameters	PHASESpatialMixerDefinition.sourceDirectivityModelParameters	var sourceDirectivityModelParameters: PHASEDirectivityModelParameters? { get set }
+c:objc(cs)PHASESpatialMixerDefinition(py)spatialPipeline	swift.property	spatialPipeline	PHASESpatialMixerDefinition.spatialPipeline	var spatialPipeline: PHASESpatialPipeline { get }
+c:objc(cs)PHASESpatialPipeline	swift.class	PHASESpatialPipeline	PHASESpatialPipeline	class PHASESpatialPipeline
+c:objc(cs)PHASESpatialPipeline(im)initWithFlags:	swift.init	init(flags:)	PHASESpatialPipeline.init(flags:)	init?(flags: PHASESpatialPipeline.Flags)
+c:objc(cs)PHASESpatialPipeline(py)entries	swift.property	entries	PHASESpatialPipeline.entries	var entries: [PHASESpatialCategory : PHASESpatialPipelineEntry] { get }
+c:objc(cs)PHASESpatialPipeline(py)flags	swift.property	flags	PHASESpatialPipeline.flags	var flags: PHASESpatialPipeline.Flags { get }
+c:objc(cs)PHASESpatialPipelineEntry	swift.class	PHASESpatialPipelineEntry	PHASESpatialPipelineEntry	class PHASESpatialPipelineEntry
+c:objc(cs)PHASESpatialPipelineEntry(py)sendLevel	swift.property	sendLevel	PHASESpatialPipelineEntry.sendLevel	var sendLevel: Double { get set }
+c:objc(cs)PHASESpatialPipelineEntry(py)sendLevelMetaParameterDefinition	swift.property	sendLevelMetaParameterDefinition	PHASESpatialPipelineEntry.sendLevelMetaParameterDefinition	var sendLevelMetaParameterDefinition: PHASENumberMetaParameterDefinition? { get set }
+c:objc(cs)PHASEStreamNode	swift.class	PHASEStreamNode	PHASEStreamNode	class PHASEStreamNode
+c:objc(cs)PHASEStreamNode(py)format	swift.property	format	PHASEStreamNode.format	var format: AVAudioFormat { get }
+c:objc(cs)PHASEStreamNode(py)gainMetaParameter	swift.property	gainMetaParameter	PHASEStreamNode.gainMetaParameter	var gainMetaParameter: PHASENumberMetaParameter? { get }
+c:objc(cs)PHASEStreamNode(py)mixer	swift.property	mixer	PHASEStreamNode.mixer	var mixer: PHASEMixer { get }
+c:objc(cs)PHASEStreamNode(py)rateMetaParameter	swift.property	rateMetaParameter	PHASEStreamNode.rateMetaParameter	var rateMetaParameter: PHASENumberMetaParameter? { get }
+c:objc(cs)PHASEStringMetaParameter	swift.class	PHASEStringMetaParameter	PHASEStringMetaParameter	class PHASEStringMetaParameter
+c:objc(cs)PHASEStringMetaParameterDefinition	swift.class	PHASEStringMetaParameterDefinition	PHASEStringMetaParameterDefinition	class PHASEStringMetaParameterDefinition
+c:objc(cs)PHASEStringMetaParameterDefinition(im)initWithValue:	swift.init	init(value:)	PHASEStringMetaParameterDefinition.init(value:)	init(value: String)
+c:objc(cs)PHASEStringMetaParameterDefinition(im)initWithValue:identifier:	swift.init	init(value:identifier:)	PHASEStringMetaParameterDefinition.init(value:identifier:)	convenience init(value: String, identifier: String)
+c:objc(cs)PHASESwitchNodeDefinition	swift.class	PHASESwitchNodeDefinition	PHASESwitchNodeDefinition	class PHASESwitchNodeDefinition
+c:objc(cs)PHASESwitchNodeDefinition(im)addSubtree:switchValue:	swift.method	addSubtree(_:switchValue:)	PHASESwitchNodeDefinition.addSubtree(_:switchValue:)	func addSubtree(_ subtree: PHASESoundEventNodeDefinition, switchValue: String)
+c:objc(cs)PHASESwitchNodeDefinition(im)initWithSwitchMetaParameterDefinition:	swift.init	init(switchMetaParameterDefinition:)	PHASESwitchNodeDefinition.init(switchMetaParameterDefinition:)	init(switchMetaParameterDefinition: PHASEStringMetaParameterDefinition)
+c:objc(cs)PHASESwitchNodeDefinition(im)initWithSwitchMetaParameterDefinition:identifier:	swift.init	init(switchMetaParameterDefinition:identifier:)	PHASESwitchNodeDefinition.init(switchMetaParameterDefinition:identifier:)	convenience init(switchMetaParameterDefinition: PHASEStringMetaParameterDefinition, identifier: String)
+c:objc(cs)PHASESwitchNodeDefinition(py)switchMetaParameterDefinition	swift.property	switchMetaParameterDefinition	PHASESwitchNodeDefinition.switchMetaParameterDefinition	var switchMetaParameterDefinition: PHASEStringMetaParameterDefinition { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@PHASEAssetError	swift.type.property	errorDomain	PHASEAssetError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@PHASEError	swift.type.property	errorDomain	PHASEError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@PHASESoundEventError	swift.type.property	errorDomain	PHASESoundEventError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASEAssetError	swift.property	errorUserInfo	PHASEAssetError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASEError	swift.property	errorUserInfo	PHASEError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASESoundEventError	swift.property	errorUserInfo	PHASESoundEventError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHASEAssetError	swift.property	errorCode	PHASEAssetError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHASEError	swift.property	errorCode	PHASEError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHASESoundEventError	swift.property	errorCode	PHASESoundEventError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@PHASEAssetError	swift.func.op	~=(_:_:)	PHASEAssetError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@PHASEError	swift.func.op	~=(_:_:)	PHASEError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@PHASESoundEventError	swift.func.op	~=(_:_:)	PHASESoundEventError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASEAssetError	swift.property	errorUserInfo	PHASEAssetError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASEError	swift.property	errorUserInfo	PHASEError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASESoundEventError	swift.property	errorUserInfo	PHASESoundEventError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEAssetError	swift.func.op	==(_:_:)	PHASEAssetError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEError	swift.func.op	==(_:_:)	PHASEError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESoundEventError	swift.func.op	==(_:_:)	PHASESoundEventError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@PHASEAssetError	swift.property	code	PHASEAssetError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@PHASEError	swift.property	code	PHASEError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@PHASESoundEventError	swift.property	code	PHASESoundEventError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEAssetError	swift.method	hash(into:)	PHASEAssetError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEError	swift.method	hash(into:)	PHASEError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESoundEventError	swift.method	hash(into:)	PHASESoundEventError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASEAssetError	swift.property	userInfo	PHASEAssetError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASEError	swift.property	userInfo	PHASEError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASESoundEventError	swift.property	userInfo	PHASESoundEventError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHASEAssetError	swift.property	errorCode	PHASEAssetError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHASEError	swift.property	errorCode	PHASEError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHASESoundEventError	swift.property	errorCode	PHASESoundEventError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@PHASEAssetError	swift.property	hashValue	PHASEAssetError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@PHASEError	swift.property	hashValue	PHASEError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@PHASESoundEventError	swift.property	hashValue	PHASESoundEventError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@PHASEAssetError	swift.init	init(_:userInfo:)	PHASEAssetError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@PHASEError	swift.init	init(_:userInfo:)	PHASEError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@PHASESoundEventError	swift.init	init(_:userInfo:)	PHASESoundEventError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC10PHASEErrorLeV	swift.struct	PHASEError	PHASEError	struct PHASEError
+s:SC10PHASEErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	PHASEError.errorDomain	static var errorDomain: String { get }
+s:SC10PHASEErrorLeV13invalidObjectSoAAVvpZ	swift.type.property	invalidObject	PHASEError.invalidObject	static var invalidObject: PHASEError.Code { get }
+s:SC10PHASEErrorLeV16initializeFailedSoAAVvpZ	swift.type.property	initializeFailed	PHASEError.initializeFailed	static var initializeFailed: PHASEError.Code { get }
+s:SC15PHASEAssetErrorLeV	swift.struct	PHASEAssetError	PHASEAssetError	struct PHASEAssetError
+s:SC15PHASEAssetErrorLeV07generalB0SoAAVvpZ	swift.type.property	generalError	PHASEAssetError.generalError	static var generalError: PHASEAssetError.Code { get }
+s:SC15PHASEAssetErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	PHASEAssetError.errorDomain	static var errorDomain: String { get }
+s:SC15PHASEAssetErrorLeV12failedToLoadSoAAVvpZ	swift.type.property	failedToLoad	PHASEAssetError.failedToLoad	static var failedToLoad: PHASEAssetError.Code { get }
+s:SC15PHASEAssetErrorLeV13alreadyExistsSoAAVvpZ	swift.type.property	alreadyExists	PHASEAssetError.alreadyExists	static var alreadyExists: PHASEAssetError.Code { get }
+s:SC15PHASEAssetErrorLeV13badParametersSoAAVvpZ	swift.type.property	badParameters	PHASEAssetError.badParameters	static var badParameters: PHASEAssetError.Code { get }
+s:SC15PHASEAssetErrorLeV16memoryAllocationSoAAVvpZ	swift.type.property	memoryAllocation	PHASEAssetError.memoryAllocation	static var memoryAllocation: PHASEAssetError.Code { get }
+s:SC15PHASEAssetErrorLeV21invalidEngineInstanceSoAAVvpZ	swift.type.property	invalidEngineInstance	PHASEAssetError.invalidEngineInstance	static var invalidEngineInstance: PHASEAssetError.Code { get }
+s:SC20PHASESoundEventErrorLeV	swift.struct	PHASESoundEventError	PHASESoundEventError	struct PHASESoundEventError
+s:SC20PHASESoundEventErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	PHASESoundEventError.errorDomain	static var errorDomain: String { get }
+s:SC20PHASESoundEventErrorLeV11outOfMemorySoAAVvpZ	swift.type.property	outOfMemory	PHASESoundEventError.outOfMemory	static var outOfMemory: PHASESoundEventError.Code { get }
+s:SC20PHASESoundEventErrorLeV15invalidInstanceSoAAVvpZ	swift.type.property	invalidInstance	PHASESoundEventError.invalidInstance	static var invalidInstance: PHASESoundEventError.Code { get }
+s:SC20PHASESoundEventErrorLeV20systemNotInitializedSoAAVvpZ	swift.type.property	systemNotInitialized	PHASESoundEventError.systemNotInitialized	static var systemNotInitialized: PHASESoundEventError.Code { get }
+s:SC20PHASESoundEventErrorLeV7badDataSoAAVvpZ	swift.type.property	badData	PHASESoundEventError.badData	static var badData: PHASESoundEventError.Code { get }
+s:SC20PHASESoundEventErrorLeV8notFoundSoAAVvpZ	swift.type.property	notFound	PHASESoundEventError.notFound	static var notFound: PHASESoundEventError.Code { get }
+s:SC20PHASESoundEventErrorLeV9apiMisuseSoAAVvpZ	swift.type.property	apiMisuse	PHASESoundEventError.apiMisuse	static var apiMisuse: PHASESoundEventError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEAssetError	swift.func.op	!=(_:_:)	PHASEAssetError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEAssetType	swift.func.op	!=(_:_:)	PHASEAsset.AssetType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.func.op	!=(_:_:)	PHASEAutomaticHeadTrackingFlags.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASECalibrationMode	swift.func.op	!=(_:_:)	PHASECalibrationMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASECullOption	swift.func.op	!=(_:_:)	PHASECullOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASECurveType	swift.func.op	!=(_:_:)	PHASECurveType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEError	swift.func.op	!=(_:_:)	PHASEError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEMaterialPreset	swift.func.op	!=(_:_:)	PHASEMaterialPreset.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEMediumPreset	swift.func.op	!=(_:_:)	PHASEMedium.Preset.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASENormalizationMode	swift.func.op	!=(_:_:)	PHASENormalizationMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEPlaybackMode	swift.func.op	!=(_:_:)	PHASEPlaybackMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.func.op	!=(_:_:)	PHASEPushStreamBufferOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEPushStreamCompletionCallbackCondition	swift.func.op	!=(_:_:)	PHASEPushStreamCompletionCallbackCondition.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASERenderingState	swift.func.op	!=(_:_:)	PHASESoundEvent.RenderingState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEReverbPreset	swift.func.op	!=(_:_:)	PHASEReverbPreset.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESoundEventError	swift.func.op	!=(_:_:)	PHASESoundEventError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESoundEventPrepareHandlerReason	swift.func.op	!=(_:_:)	PHASESoundEvent.PrepareHandlerReason.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESoundEventPrepareState	swift.func.op	!=(_:_:)	PHASESoundEvent.PrepareState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESoundEventSeekHandlerReason	swift.func.op	!=(_:_:)	PHASESoundEvent.SeekHandlerReason.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESoundEventStartHandlerReason	swift.func.op	!=(_:_:)	PHASESoundEvent.StartHandlerReason.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.func.op	!=(_:_:)	PHASESpatialPipeline.Flags.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESpatializationMode	swift.func.op	!=(_:_:)	PHASESpatializationMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEUpdateMode	swift.func.op	!=(_:_:)	PHASEEngine.UpdateMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PHASESpatialCategory	swift.func.op	!=(_:_:)	PHASESpatialCategory.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEAssetError	swift.property	hashValue	PHASEAssetError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEAssetType	swift.property	hashValue	PHASEAsset.AssetType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASECalibrationMode	swift.property	hashValue	PHASECalibrationMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASECullOption	swift.property	hashValue	PHASECullOption.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASECurveType	swift.property	hashValue	PHASECurveType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEError	swift.property	hashValue	PHASEError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEMaterialPreset	swift.property	hashValue	PHASEMaterialPreset.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEMediumPreset	swift.property	hashValue	PHASEMedium.Preset.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASENormalizationMode	swift.property	hashValue	PHASENormalizationMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEPlaybackMode	swift.property	hashValue	PHASEPlaybackMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEPushStreamCompletionCallbackCondition	swift.property	hashValue	PHASEPushStreamCompletionCallbackCondition.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASERenderingState	swift.property	hashValue	PHASESoundEvent.RenderingState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEReverbPreset	swift.property	hashValue	PHASEReverbPreset.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASESoundEventError	swift.property	hashValue	PHASESoundEventError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASESoundEventPrepareHandlerReason	swift.property	hashValue	PHASESoundEvent.PrepareHandlerReason.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASESoundEventPrepareState	swift.property	hashValue	PHASESoundEvent.PrepareState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASESoundEventSeekHandlerReason	swift.property	hashValue	PHASESoundEvent.SeekHandlerReason.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASESoundEventStartHandlerReason	swift.property	hashValue	PHASESoundEvent.StartHandlerReason.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASESpatializationMode	swift.property	hashValue	PHASESpatializationMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEUpdateMode	swift.property	hashValue	PHASEEngine.UpdateMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEAssetError	swift.method	hash(into:)	PHASEAssetError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEAssetType	swift.method	hash(into:)	PHASEAsset.AssetType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASECalibrationMode	swift.method	hash(into:)	PHASECalibrationMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASECullOption	swift.method	hash(into:)	PHASECullOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASECurveType	swift.method	hash(into:)	PHASECurveType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEError	swift.method	hash(into:)	PHASEError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEMaterialPreset	swift.method	hash(into:)	PHASEMaterialPreset.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEMediumPreset	swift.method	hash(into:)	PHASEMedium.Preset.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASENormalizationMode	swift.method	hash(into:)	PHASENormalizationMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEPlaybackMode	swift.method	hash(into:)	PHASEPlaybackMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEPushStreamCompletionCallbackCondition	swift.method	hash(into:)	PHASEPushStreamCompletionCallbackCondition.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASERenderingState	swift.method	hash(into:)	PHASESoundEvent.RenderingState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEReverbPreset	swift.method	hash(into:)	PHASEReverbPreset.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESoundEventError	swift.method	hash(into:)	PHASESoundEventError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESoundEventPrepareHandlerReason	swift.method	hash(into:)	PHASESoundEvent.PrepareHandlerReason.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESoundEventPrepareState	swift.method	hash(into:)	PHASESoundEvent.PrepareState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESoundEventSeekHandlerReason	swift.method	hash(into:)	PHASESoundEvent.SeekHandlerReason.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESoundEventStartHandlerReason	swift.method	hash(into:)	PHASESoundEvent.StartHandlerReason.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESpatializationMode	swift.method	hash(into:)	PHASESpatializationMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEUpdateMode	swift.method	hash(into:)	PHASEEngine.UpdateMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:So10PHASEErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASEError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So14PHASEAssetTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASEAsset.AssetType.init(rawValue:)	init?(rawValue: Int)
+s:So14PHASECurveTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASECurveType.init(rawValue:)	init?(rawValue: Int)
+s:So15PHASEAssetErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASEAssetError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So15PHASECullOptionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASECullOption.init(rawValue:)	init?(rawValue: Int)
+s:So15PHASEUpdateModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASEEngine.UpdateMode.init(rawValue:)	init?(rawValue: Int)
+s:So17PHASEMediumPresetV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASEMedium.Preset.init(rawValue:)	init?(rawValue: Int)
+s:So17PHASEPlaybackModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASEPlaybackMode.init(rawValue:)	init?(rawValue: Int)
+s:So17PHASEReverbPresetV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASEReverbPreset.init(rawValue:)	init?(rawValue: Int)
+s:So19PHASEMaterialPresetV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASEMaterialPreset.init(rawValue:)	init?(rawValue: Int)
+s:So19PHASERenderingStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASESoundEvent.RenderingState.init(rawValue:)	init?(rawValue: Int)
+s:So20PHASECalibrationModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASECalibrationMode.init(rawValue:)	init?(rawValue: Int)
+s:So20PHASESoundEventErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASESoundEventError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So20PHASESpatialCategorya8rawValueABSS_tcfc	swift.init	init(rawValue:)	PHASESpatialCategory.init(rawValue:)	init(rawValue: String)
+s:So22PHASENormalizationModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASENormalizationMode.init(rawValue:)	init?(rawValue: Int)
+s:So23PHASESpatializationModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASESpatializationMode.init(rawValue:)	init?(rawValue: Int)
+s:So25PHASESpatialPipelineFlagsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	PHASESpatialPipeline.Flags.init(rawValue:)	init(rawValue: UInt)
+s:So27PHASESoundEventPrepareStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASESoundEvent.PrepareState.init(rawValue:)	init?(rawValue: Int)
+s:So28PHASEPushStreamBufferOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	PHASEPushStreamBufferOptions.init(rawValue:)	init(rawValue: UInt)
+s:So31PHASEAutomaticHeadTrackingFlagsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	PHASEAutomaticHeadTrackingFlags.init(rawValue:)	init(rawValue: UInt)
+s:So32PHASESoundEventSeekHandlerReasonV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASESoundEvent.SeekHandlerReason.init(rawValue:)	init?(rawValue: Int)
+s:So33PHASESoundEventStartHandlerReasonV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASESoundEvent.StartHandlerReason.init(rawValue:)	init?(rawValue: Int)
+s:So35PHASESoundEventPrepareHandlerReasonV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASESoundEvent.PrepareHandlerReason.init(rawValue:)	init?(rawValue: Int)
+s:So42PHASEPushStreamCompletionCallbackConditionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PHASEPushStreamCompletionCallbackCondition.init(rawValue:)	init?(rawValue: Int)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.init	init(arrayLiteral:)	PHASEAutomaticHeadTrackingFlags.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.init	init(arrayLiteral:)	PHASEPushStreamBufferOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.init	init(arrayLiteral:)	PHASESpatialPipeline.Flags.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	isDisjoint(with:)	PHASEAutomaticHeadTrackingFlags.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	isDisjoint(with:)	PHASEPushStreamBufferOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	isDisjoint(with:)	PHASESpatialPipeline.Flags.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	isSuperset(of:)	PHASEAutomaticHeadTrackingFlags.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	isSuperset(of:)	PHASEPushStreamBufferOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	isSuperset(of:)	PHASESpatialPipeline.Flags.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	subtracting(_:)	PHASEAutomaticHeadTrackingFlags.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	subtracting(_:)	PHASEPushStreamBufferOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	subtracting(_:)	PHASESpatialPipeline.Flags.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	isStrictSubset(of:)	PHASEAutomaticHeadTrackingFlags.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	isStrictSubset(of:)	PHASEPushStreamBufferOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	isStrictSubset(of:)	PHASESpatialPipeline.Flags.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	isStrictSuperset(of:)	PHASEAutomaticHeadTrackingFlags.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	isStrictSuperset(of:)	PHASEPushStreamBufferOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	isStrictSuperset(of:)	PHASESpatialPipeline.Flags.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.property	isEmpty	PHASEAutomaticHeadTrackingFlags.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.property	isEmpty	PHASEPushStreamBufferOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.property	isEmpty	PHASESpatialPipeline.Flags.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	isSubset(of:)	PHASEAutomaticHeadTrackingFlags.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	isSubset(of:)	PHASEPushStreamBufferOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	isSubset(of:)	PHASESpatialPipeline.Flags.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	subtract(_:)	PHASEAutomaticHeadTrackingFlags.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	subtract(_:)	PHASEPushStreamBufferOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	subtract(_:)	PHASESpatialPipeline.Flags.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.init	init(_:)	PHASEAutomaticHeadTrackingFlags.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.init	init(_:)	PHASEPushStreamBufferOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.init	init(_:)	PHASESpatialPipeline.Flags.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PHASESpatialCategory	swift.property	hashValue	PHASESpatialCategory.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PHASESpatialCategory	swift.method	hash(into:)	PHASESpatialCategory.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@PHASEAssetError	swift.property	localizedDescription	PHASEAssetError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@PHASEError	swift.property	localizedDescription	PHASEError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@PHASESoundEventError	swift.property	localizedDescription	PHASESoundEventError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	insert(_:)	PHASEAutomaticHeadTrackingFlags.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	insert(_:)	PHASEPushStreamBufferOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	insert(_:)	PHASESpatialPipeline.Flags.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	remove(_:)	PHASEAutomaticHeadTrackingFlags.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	remove(_:)	PHASEPushStreamBufferOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	remove(_:)	PHASESpatialPipeline.Flags.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	update(with:)	PHASEAutomaticHeadTrackingFlags.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	update(with:)	PHASEPushStreamBufferOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	update(with:)	PHASESpatialPipeline.Flags.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	contains(_:)	PHASEAutomaticHeadTrackingFlags.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	contains(_:)	PHASEPushStreamBufferOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	contains(_:)	PHASESpatialPipeline.Flags.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	intersection(_:)	PHASEAutomaticHeadTrackingFlags.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	intersection(_:)	PHASEPushStreamBufferOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	intersection(_:)	PHASESpatialPipeline.Flags.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	symmetricDifference(_:)	PHASEAutomaticHeadTrackingFlags.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	symmetricDifference(_:)	PHASEPushStreamBufferOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	symmetricDifference(_:)	PHASESpatialPipeline.Flags.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	union(_:)	PHASEAutomaticHeadTrackingFlags.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	union(_:)	PHASEPushStreamBufferOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	union(_:)	PHASESpatialPipeline.Flags.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	formIntersection(_:)	PHASEAutomaticHeadTrackingFlags.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	formIntersection(_:)	PHASEPushStreamBufferOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	formIntersection(_:)	PHASESpatialPipeline.Flags.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	formSymmetricDifference(_:)	PHASEAutomaticHeadTrackingFlags.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	formSymmetricDifference(_:)	PHASEPushStreamBufferOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	formSymmetricDifference(_:)	PHASESpatialPipeline.Flags.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.method	formUnion(_:)	PHASEAutomaticHeadTrackingFlags.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.method	formUnion(_:)	PHASEPushStreamBufferOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.method	formUnion(_:)	PHASESpatialPipeline.Flags.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	swift.init	init()	PHASEAutomaticHeadTrackingFlags.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	swift.init	init()	PHASEPushStreamBufferOptions.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	swift.init	init()	PHASESpatialPipeline.Flags.init()	init()

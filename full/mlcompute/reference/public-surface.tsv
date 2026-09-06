@@ -1,0 +1,788 @@
+precise	kind	title	path	declaration
+c:@E@MLCActivationType	swift.enum	MLCActivationType	MLCActivationType	enum MLCActivationType
+c:@E@MLCActivationType@MLCActivationTypeAbsolute	swift.enum.case	MLCActivationType.absolute	MLCActivationType.absolute	case absolute
+c:@E@MLCActivationType@MLCActivationTypeCELU	swift.enum.case	MLCActivationType.celu	MLCActivationType.celu	case celu
+c:@E@MLCActivationType@MLCActivationTypeClamp	swift.enum.case	MLCActivationType.clamp	MLCActivationType.clamp	case clamp
+c:@E@MLCActivationType@MLCActivationTypeELU	swift.enum.case	MLCActivationType.elu	MLCActivationType.elu	case elu
+c:@E@MLCActivationType@MLCActivationTypeGELU	swift.enum.case	MLCActivationType.gelu	MLCActivationType.gelu	case gelu
+c:@E@MLCActivationType@MLCActivationTypeHardShrink	swift.enum.case	MLCActivationType.hardShrink	MLCActivationType.hardShrink	case hardShrink
+c:@E@MLCActivationType@MLCActivationTypeHardSigmoid	swift.enum.case	MLCActivationType.hardSigmoid	MLCActivationType.hardSigmoid	case hardSigmoid
+c:@E@MLCActivationType@MLCActivationTypeHardSwish	swift.enum.case	MLCActivationType.hardSwish	MLCActivationType.hardSwish	case hardSwish
+c:@E@MLCActivationType@MLCActivationTypeLinear	swift.enum.case	MLCActivationType.linear	MLCActivationType.linear	case linear
+c:@E@MLCActivationType@MLCActivationTypeLogSigmoid	swift.enum.case	MLCActivationType.logSigmoid	MLCActivationType.logSigmoid	case logSigmoid
+c:@E@MLCActivationType@MLCActivationTypeNone	swift.enum.case	MLCActivationType.none	MLCActivationType.none	case none
+c:@E@MLCActivationType@MLCActivationTypeReLU	swift.enum.case	MLCActivationType.relu	MLCActivationType.relu	case relu
+c:@E@MLCActivationType@MLCActivationTypeReLUN	swift.enum.case	MLCActivationType.relun	MLCActivationType.relun	case relun
+c:@E@MLCActivationType@MLCActivationTypeSELU	swift.enum.case	MLCActivationType.selu	MLCActivationType.selu	case selu
+c:@E@MLCActivationType@MLCActivationTypeSigmoid	swift.enum.case	MLCActivationType.sigmoid	MLCActivationType.sigmoid	case sigmoid
+c:@E@MLCActivationType@MLCActivationTypeSoftPlus	swift.enum.case	MLCActivationType.softPlus	MLCActivationType.softPlus	case softPlus
+c:@E@MLCActivationType@MLCActivationTypeSoftShrink	swift.enum.case	MLCActivationType.softShrink	MLCActivationType.softShrink	case softShrink
+c:@E@MLCActivationType@MLCActivationTypeSoftSign	swift.enum.case	MLCActivationType.softSign	MLCActivationType.softSign	case softSign
+c:@E@MLCActivationType@MLCActivationTypeTanh	swift.enum.case	MLCActivationType.tanh	MLCActivationType.tanh	case tanh
+c:@E@MLCActivationType@MLCActivationTypeTanhShrink	swift.enum.case	MLCActivationType.tanhShrink	MLCActivationType.tanhShrink	case tanhShrink
+c:@E@MLCActivationType@MLCActivationTypeThreshold	swift.enum.case	MLCActivationType.threshold	MLCActivationType.threshold	case threshold
+c:@E@MLCArithmeticOperation	swift.enum	MLCArithmeticOperation	MLCArithmeticOperation	enum MLCArithmeticOperation
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationAcos	swift.enum.case	MLCArithmeticOperation.acos	MLCArithmeticOperation.acos	case acos
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationAcosh	swift.enum.case	MLCArithmeticOperation.acosh	MLCArithmeticOperation.acosh	case acosh
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationAdd	swift.enum.case	MLCArithmeticOperation.add	MLCArithmeticOperation.add	case add
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationAsin	swift.enum.case	MLCArithmeticOperation.asin	MLCArithmeticOperation.asin	case asin
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationAsinh	swift.enum.case	MLCArithmeticOperation.asinh	MLCArithmeticOperation.asinh	case asinh
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationAtan	swift.enum.case	MLCArithmeticOperation.atan	MLCArithmeticOperation.atan	case atan
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationAtanh	swift.enum.case	MLCArithmeticOperation.atanh	MLCArithmeticOperation.atanh	case atanh
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationCeil	swift.enum.case	MLCArithmeticOperation.ceil	MLCArithmeticOperation.ceil	case ceil
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationCos	swift.enum.case	MLCArithmeticOperation.cos	MLCArithmeticOperation.cos	case cos
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationCosh	swift.enum.case	MLCArithmeticOperation.cosh	MLCArithmeticOperation.cosh	case cosh
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationDivide	swift.enum.case	MLCArithmeticOperation.divide	MLCArithmeticOperation.divide	case divide
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationDivideNoNaN	swift.enum.case	MLCArithmeticOperation.divideNoNaN	MLCArithmeticOperation.divideNoNaN	case divideNoNaN
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationExp	swift.enum.case	MLCArithmeticOperation.exp	MLCArithmeticOperation.exp	case exp
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationExp2	swift.enum.case	MLCArithmeticOperation.exp2	MLCArithmeticOperation.exp2	case exp2
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationFloor	swift.enum.case	MLCArithmeticOperation.floor	MLCArithmeticOperation.floor	case floor
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationLog	swift.enum.case	MLCArithmeticOperation.log	MLCArithmeticOperation.log	case log
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationLog2	swift.enum.case	MLCArithmeticOperation.log2	MLCArithmeticOperation.log2	case log2
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationMax	swift.enum.case	MLCArithmeticOperation.max	MLCArithmeticOperation.max	case max
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationMin	swift.enum.case	MLCArithmeticOperation.min	MLCArithmeticOperation.min	case min
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationMultiply	swift.enum.case	MLCArithmeticOperation.multiply	MLCArithmeticOperation.multiply	case multiply
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationMultiplyNoNaN	swift.enum.case	MLCArithmeticOperation.multiplyNoNaN	MLCArithmeticOperation.multiplyNoNaN	case multiplyNoNaN
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationPow	swift.enum.case	MLCArithmeticOperation.pow	MLCArithmeticOperation.pow	case pow
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationRound	swift.enum.case	MLCArithmeticOperation.round	MLCArithmeticOperation.round	case round
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationRsqrt	swift.enum.case	MLCArithmeticOperation.rsqrt	MLCArithmeticOperation.rsqrt	case rsqrt
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationSin	swift.enum.case	MLCArithmeticOperation.sin	MLCArithmeticOperation.sin	case sin
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationSinh	swift.enum.case	MLCArithmeticOperation.sinh	MLCArithmeticOperation.sinh	case sinh
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationSqrt	swift.enum.case	MLCArithmeticOperation.sqrt	MLCArithmeticOperation.sqrt	case sqrt
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationSubtract	swift.enum.case	MLCArithmeticOperation.subtract	MLCArithmeticOperation.subtract	case subtract
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationTan	swift.enum.case	MLCArithmeticOperation.tan	MLCArithmeticOperation.tan	case tan
+c:@E@MLCArithmeticOperation@MLCArithmeticOperationTanh	swift.enum.case	MLCArithmeticOperation.tanh	MLCArithmeticOperation.tanh	case tanh
+c:@E@MLCComparisonOperation	swift.enum	MLCComparisonOperation	MLCComparisonOperation	enum MLCComparisonOperation
+c:@E@MLCComparisonOperation@MLCComparisonOperationEqual	swift.enum.case	MLCComparisonOperation.equal	MLCComparisonOperation.equal	case equal
+c:@E@MLCComparisonOperation@MLCComparisonOperationGreater	swift.enum.case	MLCComparisonOperation.greater	MLCComparisonOperation.greater	case greater
+c:@E@MLCComparisonOperation@MLCComparisonOperationGreaterOrEqual	swift.enum.case	MLCComparisonOperation.greaterOrEqual	MLCComparisonOperation.greaterOrEqual	case greaterOrEqual
+c:@E@MLCComparisonOperation@MLCComparisonOperationLess	swift.enum.case	MLCComparisonOperation.less	MLCComparisonOperation.less	case less
+c:@E@MLCComparisonOperation@MLCComparisonOperationLessOrEqual	swift.enum.case	MLCComparisonOperation.lessOrEqual	MLCComparisonOperation.lessOrEqual	case lessOrEqual
+c:@E@MLCComparisonOperation@MLCComparisonOperationLogicalAND	swift.enum.case	MLCComparisonOperation.logicalAND	MLCComparisonOperation.logicalAND	case logicalAND
+c:@E@MLCComparisonOperation@MLCComparisonOperationLogicalNAND	swift.enum.case	MLCComparisonOperation.logicalNAND	MLCComparisonOperation.logicalNAND	case logicalNAND
+c:@E@MLCComparisonOperation@MLCComparisonOperationLogicalNOR	swift.enum.case	MLCComparisonOperation.logicalNOR	MLCComparisonOperation.logicalNOR	case logicalNOR
+c:@E@MLCComparisonOperation@MLCComparisonOperationLogicalNOT	swift.enum.case	MLCComparisonOperation.logicalNOT	MLCComparisonOperation.logicalNOT	case logicalNOT
+c:@E@MLCComparisonOperation@MLCComparisonOperationLogicalOR	swift.enum.case	MLCComparisonOperation.logicalOR	MLCComparisonOperation.logicalOR	case logicalOR
+c:@E@MLCComparisonOperation@MLCComparisonOperationLogicalXOR	swift.enum.case	MLCComparisonOperation.logicalXOR	MLCComparisonOperation.logicalXOR	case logicalXOR
+c:@E@MLCComparisonOperation@MLCComparisonOperationNotEqual	swift.enum.case	MLCComparisonOperation.notEqual	MLCComparisonOperation.notEqual	case notEqual
+c:@E@MLCConvolutionType	swift.enum	MLCConvolutionType	MLCConvolutionType	enum MLCConvolutionType
+c:@E@MLCConvolutionType@MLCConvolutionTypeDepthwise	swift.enum.case	MLCConvolutionType.depthwise	MLCConvolutionType.depthwise	case depthwise
+c:@E@MLCConvolutionType@MLCConvolutionTypeStandard	swift.enum.case	MLCConvolutionType.standard	MLCConvolutionType.standard	case standard
+c:@E@MLCConvolutionType@MLCConvolutionTypeTransposed	swift.enum.case	MLCConvolutionType.transposed	MLCConvolutionType.transposed	case transposed
+c:@E@MLCDataType	swift.enum	MLCDataType	MLCDataType	enum MLCDataType
+c:@E@MLCDataType@MLCDataTypeBoolean	swift.enum.case	MLCDataType.boolean	MLCDataType.boolean	case boolean
+c:@E@MLCDataType@MLCDataTypeFloat16	swift.enum.case	MLCDataType.float16	MLCDataType.float16	case float16
+c:@E@MLCDataType@MLCDataTypeFloat32	swift.enum.case	MLCDataType.float32	MLCDataType.float32	case float32
+c:@E@MLCDataType@MLCDataTypeInt32	swift.enum.case	MLCDataType.int32	MLCDataType.int32	case int32
+c:@E@MLCDataType@MLCDataTypeInt64	swift.enum.case	MLCDataType.int64	MLCDataType.int64	case int64
+c:@E@MLCDataType@MLCDataTypeInt8	swift.enum.case	MLCDataType.int8	MLCDataType.int8	case int8
+c:@E@MLCDataType@MLCDataTypeUInt8	swift.enum.case	MLCDataType.uint8	MLCDataType.uint8	case uint8
+c:@E@MLCDeviceType	swift.enum	MLCDeviceType	MLCDeviceType	enum MLCDeviceType
+c:@E@MLCDeviceType@MLCDeviceTypeANE	swift.enum.case	MLCDeviceType.ane	MLCDeviceType.ane	case ane
+c:@E@MLCDeviceType@MLCDeviceTypeAny	swift.enum.case	MLCDeviceType.any	MLCDeviceType.any	case any
+c:@E@MLCDeviceType@MLCDeviceTypeCPU	swift.enum.case	MLCDeviceType.cpu	MLCDeviceType.cpu	case cpu
+c:@E@MLCDeviceType@MLCDeviceTypeGPU	swift.enum.case	MLCDeviceType.gpu	MLCDeviceType.gpu	case gpu
+c:@E@MLCExecutionOptions	swift.struct	MLCExecutionOptions	MLCExecutionOptions	struct MLCExecutionOptions
+c:@E@MLCExecutionOptions@MLCExecutionOptionsForwardForInference	swift.type.property	forwardForInference	MLCExecutionOptions.forwardForInference	static var forwardForInference: MLCExecutionOptions { get }
+c:@E@MLCExecutionOptions@MLCExecutionOptionsPerLayerProfiling	swift.type.property	perLayerProfiling	MLCExecutionOptions.perLayerProfiling	static var perLayerProfiling: MLCExecutionOptions { get }
+c:@E@MLCExecutionOptions@MLCExecutionOptionsProfiling	swift.type.property	profiling	MLCExecutionOptions.profiling	static var profiling: MLCExecutionOptions { get }
+c:@E@MLCExecutionOptions@MLCExecutionOptionsSkipWritingInputDataToDevice	swift.type.property	skipWritingInputDataToDevice	MLCExecutionOptions.skipWritingInputDataToDevice	static var skipWritingInputDataToDevice: MLCExecutionOptions { get }
+c:@E@MLCExecutionOptions@MLCExecutionOptionsSynchronous	swift.type.property	synchronous	MLCExecutionOptions.synchronous	static var synchronous: MLCExecutionOptions { get }
+c:@E@MLCGradientClippingType	swift.enum	MLCGradientClippingType	MLCGradientClippingType	enum MLCGradientClippingType
+c:@E@MLCGradientClippingType@MLCGradientClippingTypeByGlobalNorm	swift.enum.case	MLCGradientClippingType.byGlobalNorm	MLCGradientClippingType.byGlobalNorm	case byGlobalNorm
+c:@E@MLCGradientClippingType@MLCGradientClippingTypeByNorm	swift.enum.case	MLCGradientClippingType.byNorm	MLCGradientClippingType.byNorm	case byNorm
+c:@E@MLCGradientClippingType@MLCGradientClippingTypeByValue	swift.enum.case	MLCGradientClippingType.byValue	MLCGradientClippingType.byValue	case byValue
+c:@E@MLCGraphCompilationOptions	swift.struct	MLCGraphCompilationOptions	MLCGraphCompilationOptions	struct MLCGraphCompilationOptions
+c:@E@MLCGraphCompilationOptions@MLCGraphCompilationOptionsComputeAllGradients	swift.type.property	computeAllGradients	MLCGraphCompilationOptions.computeAllGradients	static var computeAllGradients: MLCGraphCompilationOptions { get }
+c:@E@MLCGraphCompilationOptions@MLCGraphCompilationOptionsDebugLayers	swift.type.property	debugLayers	MLCGraphCompilationOptions.debugLayers	static var debugLayers: MLCGraphCompilationOptions { get }
+c:@E@MLCGraphCompilationOptions@MLCGraphCompilationOptionsDisableLayerFusion	swift.type.property	disableLayerFusion	MLCGraphCompilationOptions.disableLayerFusion	static var disableLayerFusion: MLCGraphCompilationOptions { get }
+c:@E@MLCGraphCompilationOptions@MLCGraphCompilationOptionsLinkGraphs	swift.type.property	linkGraphs	MLCGraphCompilationOptions.linkGraphs	static var linkGraphs: MLCGraphCompilationOptions { get }
+c:@E@MLCLSTMResultMode	swift.enum	MLCLSTMResultMode	MLCLSTMResultMode	enum MLCLSTMResultMode
+c:@E@MLCLSTMResultMode@MLCLSTMResultModeOutput	swift.enum.case	MLCLSTMResultMode.output	MLCLSTMResultMode.output	case output
+c:@E@MLCLSTMResultMode@MLCLSTMResultModeOutputAndStates	swift.enum.case	MLCLSTMResultMode.outputAndStates	MLCLSTMResultMode.outputAndStates	case outputAndStates
+c:@E@MLCLossType	swift.enum	MLCLossType	MLCLossType	enum MLCLossType
+c:@E@MLCLossType@MLCLossTypeCategoricalCrossEntropy	swift.enum.case	MLCLossType.categoricalCrossEntropy	MLCLossType.categoricalCrossEntropy	case categoricalCrossEntropy
+c:@E@MLCLossType@MLCLossTypeCosineDistance	swift.enum.case	MLCLossType.cosineDistance	MLCLossType.cosineDistance	case cosineDistance
+c:@E@MLCLossType@MLCLossTypeHinge	swift.enum.case	MLCLossType.hinge	MLCLossType.hinge	case hinge
+c:@E@MLCLossType@MLCLossTypeHuber	swift.enum.case	MLCLossType.huber	MLCLossType.huber	case huber
+c:@E@MLCLossType@MLCLossTypeLog	swift.enum.case	MLCLossType.log	MLCLossType.log	case log
+c:@E@MLCLossType@MLCLossTypeMeanAbsoluteError	swift.enum.case	MLCLossType.meanAbsoluteError	MLCLossType.meanAbsoluteError	case meanAbsoluteError
+c:@E@MLCLossType@MLCLossTypeMeanSquaredError	swift.enum.case	MLCLossType.meanSquaredError	MLCLossType.meanSquaredError	case meanSquaredError
+c:@E@MLCLossType@MLCLossTypeSigmoidCrossEntropy	swift.enum.case	MLCLossType.sigmoidCrossEntropy	MLCLossType.sigmoidCrossEntropy	case sigmoidCrossEntropy
+c:@E@MLCLossType@MLCLossTypeSoftmaxCrossEntropy	swift.enum.case	MLCLossType.softmaxCrossEntropy	MLCLossType.softmaxCrossEntropy	case softmaxCrossEntropy
+c:@E@MLCPaddingType	swift.enum	MLCPaddingType	MLCPaddingType	enum MLCPaddingType
+c:@E@MLCPaddingType@MLCPaddingTypeConstant	swift.enum.case	MLCPaddingType.constant	MLCPaddingType.constant	case constant
+c:@E@MLCPaddingType@MLCPaddingTypeReflect	swift.enum.case	MLCPaddingType.reflect	MLCPaddingType.reflect	case reflect
+c:@E@MLCPaddingType@MLCPaddingTypeSymmetric	swift.enum.case	MLCPaddingType.symmetric	MLCPaddingType.symmetric	case symmetric
+c:@E@MLCPaddingType@MLCPaddingTypeZero	swift.enum.case	MLCPaddingType.zero	MLCPaddingType.zero	case zero
+c:@E@MLCRandomInitializerType	swift.enum	MLCRandomInitializerType	MLCRandomInitializerType	enum MLCRandomInitializerType
+c:@E@MLCRandomInitializerType@MLCRandomInitializerTypeGlorotUniform	swift.enum.case	MLCRandomInitializerType.glorotUniform	MLCRandomInitializerType.glorotUniform	case glorotUniform
+c:@E@MLCRandomInitializerType@MLCRandomInitializerTypeUniform	swift.enum.case	MLCRandomInitializerType.uniform	MLCRandomInitializerType.uniform	case uniform
+c:@E@MLCRandomInitializerType@MLCRandomInitializerTypeXavier	swift.enum.case	MLCRandomInitializerType.xavier	MLCRandomInitializerType.xavier	case xavier
+c:@E@MLCReductionType	swift.enum	MLCReductionType	MLCReductionType	enum MLCReductionType
+c:@E@MLCReductionType@MLCReductionTypeAll	swift.enum.case	MLCReductionType.all	MLCReductionType.all	case all
+c:@E@MLCReductionType@MLCReductionTypeAny	swift.enum.case	MLCReductionType.any	MLCReductionType.any	case any
+c:@E@MLCReductionType@MLCReductionTypeArgMax	swift.enum.case	MLCReductionType.argMax	MLCReductionType.argMax	case argMax
+c:@E@MLCReductionType@MLCReductionTypeArgMin	swift.enum.case	MLCReductionType.argMin	MLCReductionType.argMin	case argMin
+c:@E@MLCReductionType@MLCReductionTypeL1Norm	swift.enum.case	MLCReductionType.l1Norm	MLCReductionType.l1Norm	case l1Norm
+c:@E@MLCReductionType@MLCReductionTypeMax	swift.enum.case	MLCReductionType.max	MLCReductionType.max	case max
+c:@E@MLCReductionType@MLCReductionTypeMean	swift.enum.case	MLCReductionType.mean	MLCReductionType.mean	case mean
+c:@E@MLCReductionType@MLCReductionTypeMin	swift.enum.case	MLCReductionType.min	MLCReductionType.min	case min
+c:@E@MLCReductionType@MLCReductionTypeNone	swift.enum.case	MLCReductionType.none	MLCReductionType.none	case none
+c:@E@MLCReductionType@MLCReductionTypeSum	swift.enum.case	MLCReductionType.sum	MLCReductionType.sum	case sum
+c:@E@MLCRegularizationType	swift.enum	MLCRegularizationType	MLCRegularizationType	enum MLCRegularizationType
+c:@E@MLCRegularizationType@MLCRegularizationTypeL1	swift.enum.case	MLCRegularizationType.l1	MLCRegularizationType.l1	case l1
+c:@E@MLCRegularizationType@MLCRegularizationTypeL2	swift.enum.case	MLCRegularizationType.l2	MLCRegularizationType.l2	case l2
+c:@E@MLCRegularizationType@MLCRegularizationTypeNone	swift.enum.case	MLCRegularizationType.none	MLCRegularizationType.none	case none
+c:@E@MLCSampleMode	swift.enum	MLCSampleMode	MLCSampleMode	enum MLCSampleMode
+c:@E@MLCSampleMode@MLCSampleModeLinear	swift.enum.case	MLCSampleMode.linear	MLCSampleMode.linear	case linear
+c:@E@MLCSampleMode@MLCSampleModeNearest	swift.enum.case	MLCSampleMode.nearest	MLCSampleMode.nearest	case nearest
+c:@E@MLCSoftmaxOperation	swift.enum	MLCSoftmaxOperation	MLCSoftmaxOperation	enum MLCSoftmaxOperation
+c:@E@MLCSoftmaxOperation@MLCSoftmaxOperationLogSoftmax	swift.enum.case	MLCSoftmaxOperation.logSoftmax	MLCSoftmaxOperation.logSoftmax	case logSoftmax
+c:@E@MLCSoftmaxOperation@MLCSoftmaxOperationSoftmax	swift.enum.case	MLCSoftmaxOperation.softmax	MLCSoftmaxOperation.softmax	case softmax
+c:@F@MLCActivationTypeDebugDescription	swift.property	debugDescription	MLCActivationType.debugDescription	var debugDescription: String { get }
+c:@F@MLCArithmeticOperationDebugDescription	swift.property	debugDescription	MLCArithmeticOperation.debugDescription	var debugDescription: String { get }
+c:@F@MLCComparisonOperationDebugDescription	swift.property	debugDescription	MLCComparisonOperation.debugDescription	var debugDescription: String { get }
+c:@F@MLCConvolutionTypeDebugDescription	swift.property	debugDescription	MLCConvolutionType.debugDescription	var debugDescription: String { get }
+c:@F@MLCGradientClippingTypeDebugDescription	swift.property	debugDescription	MLCGradientClippingType.debugDescription	var debugDescription: String { get }
+c:@F@MLCLSTMResultModeDebugDescription	swift.property	debugDescription	MLCLSTMResultMode.debugDescription	var debugDescription: String { get }
+c:@F@MLCLossTypeDebugDescription	swift.property	debugDescription	MLCLossType.debugDescription	var debugDescription: String { get }
+c:@F@MLCPaddingTypeDebugDescription	swift.property	debugDescription	MLCPaddingType.debugDescription	var debugDescription: String { get }
+c:@F@MLCReductionTypeDebugDescription	swift.property	debugDescription	MLCReductionType.debugDescription	var debugDescription: String { get }
+c:@F@MLCSampleModeDebugDescription	swift.property	debugDescription	MLCSampleMode.debugDescription	var debugDescription: String { get }
+c:@F@MLCSoftmaxOperationDebugDescription	swift.property	debugDescription	MLCSoftmaxOperation.debugDescription	var debugDescription: String { get }
+c:@T@MLCGraphCompletionHandler	swift.typealias	MLCGraphCompletionHandler	MLCGraphCompletionHandler	typealias MLCGraphCompletionHandler = (MLCTensor?, (any Error)?, TimeInterval) -> Void
+c:objc(cs)MLCActivationDescriptor	swift.class	MLCActivationDescriptor	MLCActivationDescriptor	class MLCActivationDescriptor
+c:objc(cs)MLCActivationDescriptor(cm)descriptorWithType:	swift.init	init(type:)	MLCActivationDescriptor.init(type:)	convenience init?(type activationType: MLCActivationType)
+c:objc(cs)MLCActivationDescriptor(cm)descriptorWithType:a:	swift.init	init(type:a:)	MLCActivationDescriptor.init(type:a:)	convenience init?(type activationType: MLCActivationType, a: Float)
+c:objc(cs)MLCActivationDescriptor(cm)descriptorWithType:a:b:	swift.init	init(type:a:b:)	MLCActivationDescriptor.init(type:a:b:)	convenience init?(type activationType: MLCActivationType, a: Float, b: Float)
+c:objc(cs)MLCActivationDescriptor(cm)descriptorWithType:a:b:c:	swift.init	init(type:a:b:c:)	MLCActivationDescriptor.init(type:a:b:c:)	convenience init?(type activationType: MLCActivationType, a: Float, b: Float, c: Float)
+c:objc(cs)MLCActivationDescriptor(py)a	swift.property	a	MLCActivationDescriptor.a	var a: Float { get }
+c:objc(cs)MLCActivationDescriptor(py)activationType	swift.property	activationType	MLCActivationDescriptor.activationType	var activationType: MLCActivationType { get }
+c:objc(cs)MLCActivationDescriptor(py)b	swift.property	b	MLCActivationDescriptor.b	var b: Float { get }
+c:objc(cs)MLCActivationDescriptor(py)c	swift.property	c	MLCActivationDescriptor.c	var c: Float { get }
+c:objc(cs)MLCActivationLayer	swift.class	MLCActivationLayer	MLCActivationLayer	class MLCActivationLayer
+c:objc(cs)MLCActivationLayer(cm)celuLayerWithA:	swift.type.method	celu(a:)	MLCActivationLayer.celu(a:)	class func celu(a: Float) -> Self
+c:objc(cs)MLCActivationLayer(cm)clampLayerWithMinValue:maxValue:	swift.type.method	clamp(min:max:)	MLCActivationLayer.clamp(min:max:)	class func clamp(min minValue: Float, max maxValue: Float) -> Self
+c:objc(cs)MLCActivationLayer(cm)eluLayerWithA:	swift.type.method	elu(a:)	MLCActivationLayer.elu(a:)	class func elu(a: Float) -> Self
+c:objc(cs)MLCActivationLayer(cm)hardShrinkLayerWithA:	swift.type.method	hardShrink(a:)	MLCActivationLayer.hardShrink(a:)	class func hardShrink(a: Float) -> Self
+c:objc(cs)MLCActivationLayer(cm)layerWithDescriptor:	swift.init	init(descriptor:)	MLCActivationLayer.init(descriptor:)	convenience init(descriptor: MLCActivationDescriptor)
+c:objc(cs)MLCActivationLayer(cm)leakyReLULayerWithNegativeSlope:	swift.type.method	leakyReLU(negativeSlope:)	MLCActivationLayer.leakyReLU(negativeSlope:)	class func leakyReLU(negativeSlope: Float) -> Self
+c:objc(cs)MLCActivationLayer(cm)linearLayerWithScale:bias:	swift.type.method	linear(scale:bias:)	MLCActivationLayer.linear(scale:bias:)	class func linear(scale: Float, bias: Float) -> Self
+c:objc(cs)MLCActivationLayer(cm)relunLayerWithA:b:	swift.type.method	relun(a:b:)	MLCActivationLayer.relun(a:b:)	class func relun(a: Float, b: Float) -> Self
+c:objc(cs)MLCActivationLayer(cm)softPlusLayerWithBeta:	swift.type.method	softPlus(beta:)	MLCActivationLayer.softPlus(beta:)	class func softPlus(beta: Float) -> Self
+c:objc(cs)MLCActivationLayer(cm)softShrinkLayerWithA:	swift.type.method	softShrink(a:)	MLCActivationLayer.softShrink(a:)	class func softShrink(a: Float) -> Self
+c:objc(cs)MLCActivationLayer(cm)thresholdLayerWithThreshold:replacement:	swift.type.method	threshold(_:replacement:)	MLCActivationLayer.threshold(_:replacement:)	class func threshold(_ threshold: Float, replacement: Float) -> Self
+c:objc(cs)MLCActivationLayer(cpy)absoluteLayer	swift.type.property	absolute	MLCActivationLayer.absolute	class var absolute: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)celuLayer	swift.type.property	celu	MLCActivationLayer.celu	class var celu: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)eluLayer	swift.type.property	elu	MLCActivationLayer.elu	class var elu: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)geluLayer	swift.type.property	gelu	MLCActivationLayer.gelu	class var gelu: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)hardShrinkLayer	swift.type.property	hardShrink	MLCActivationLayer.hardShrink	class var hardShrink: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)hardSigmoidLayer	swift.type.property	hardSigmoid	MLCActivationLayer.hardSigmoid	class var hardSigmoid: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)hardSwishLayer	swift.type.property	hardSwish	MLCActivationLayer.hardSwish	class var hardSwish: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)leakyReLULayer	swift.type.property	leakyReLU	MLCActivationLayer.leakyReLU	class var leakyReLU: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)logSigmoidLayer	swift.type.property	logSigmoid	MLCActivationLayer.logSigmoid	class var logSigmoid: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)relu6Layer	swift.type.property	relu6	MLCActivationLayer.relu6	class var relu6: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)reluLayer	swift.type.property	relu	MLCActivationLayer.relu	class var relu: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)seluLayer	swift.type.property	selu	MLCActivationLayer.selu	class var selu: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)sigmoidLayer	swift.type.property	sigmoid	MLCActivationLayer.sigmoid	class var sigmoid: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)softPlusLayer	swift.type.property	softPlus	MLCActivationLayer.softPlus	class var softPlus: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)softShrinkLayer	swift.type.property	softShrink	MLCActivationLayer.softShrink	class var softShrink: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)softSignLayer	swift.type.property	softSign	MLCActivationLayer.softSign	class var softSign: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)tanhLayer	swift.type.property	tanh	MLCActivationLayer.tanh	class var tanh: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(cpy)tanhShrinkLayer	swift.type.property	tanhShrink	MLCActivationLayer.tanhShrink	class var tanhShrink: MLCActivationLayer { get }
+c:objc(cs)MLCActivationLayer(py)descriptor	swift.property	descriptor	MLCActivationLayer.descriptor	@NSCopying var descriptor: MLCActivationDescriptor { get }
+c:objc(cs)MLCAdamOptimizer	swift.class	MLCAdamOptimizer	MLCAdamOptimizer	class MLCAdamOptimizer
+c:objc(cs)MLCAdamOptimizer(cm)optimizerWithDescriptor:	swift.init	init(descriptor:)	MLCAdamOptimizer.init(descriptor:)	convenience init(descriptor optimizerDescriptor: MLCOptimizerDescriptor)
+c:objc(cs)MLCAdamOptimizer(cm)optimizerWithDescriptor:beta1:beta2:epsilon:timeStep:	swift.init	init(descriptor:beta1:beta2:epsilon:timeStep:)	MLCAdamOptimizer.init(descriptor:beta1:beta2:epsilon:timeStep:)	convenience init(descriptor optimizerDescriptor: MLCOptimizerDescriptor, beta1: Float, beta2: Float, epsilon: Float, timeStep: Int)
+c:objc(cs)MLCAdamOptimizer(cm)optimizerWithDescriptor:beta1:beta2:epsilon:usesAMSGrad:timeStep:	swift.init	init(descriptor:beta1:beta2:epsilon:usesAMSGrad:timeStep:)	MLCAdamOptimizer.init(descriptor:beta1:beta2:epsilon:usesAMSGrad:timeStep:)	convenience init(descriptor optimizerDescriptor: MLCOptimizerDescriptor, beta1: Float, beta2: Float, epsilon: Float, usesAMSGrad: Bool, timeStep: Int)
+c:objc(cs)MLCAdamOptimizer(py)beta1	swift.property	beta1	MLCAdamOptimizer.beta1	var beta1: Float { get }
+c:objc(cs)MLCAdamOptimizer(py)beta2	swift.property	beta2	MLCAdamOptimizer.beta2	var beta2: Float { get }
+c:objc(cs)MLCAdamOptimizer(py)epsilon	swift.property	epsilon	MLCAdamOptimizer.epsilon	var epsilon: Float { get }
+c:objc(cs)MLCAdamOptimizer(py)timeStep	swift.property	timeStep	MLCAdamOptimizer.timeStep	var timeStep: Int { get }
+c:objc(cs)MLCAdamOptimizer(py)usesAMSGrad	swift.property	usesAMSGrad	MLCAdamOptimizer.usesAMSGrad	var usesAMSGrad: Bool { get }
+c:objc(cs)MLCAdamWOptimizer	swift.class	MLCAdamWOptimizer	MLCAdamWOptimizer	class MLCAdamWOptimizer
+c:objc(cs)MLCAdamWOptimizer(cm)optimizerWithDescriptor:	swift.init	init(descriptor:)	MLCAdamWOptimizer.init(descriptor:)	convenience init(descriptor optimizerDescriptor: MLCOptimizerDescriptor)
+c:objc(cs)MLCAdamWOptimizer(cm)optimizerWithDescriptor:beta1:beta2:epsilon:usesAMSGrad:timeStep:	swift.init	init(descriptor:beta1:beta2:epsilon:usesAMSGrad:timeStep:)	MLCAdamWOptimizer.init(descriptor:beta1:beta2:epsilon:usesAMSGrad:timeStep:)	convenience init(descriptor optimizerDescriptor: MLCOptimizerDescriptor, beta1: Float, beta2: Float, epsilon: Float, usesAMSGrad: Bool, timeStep: Int)
+c:objc(cs)MLCAdamWOptimizer(py)beta1	swift.property	beta1	MLCAdamWOptimizer.beta1	var beta1: Float { get }
+c:objc(cs)MLCAdamWOptimizer(py)beta2	swift.property	beta2	MLCAdamWOptimizer.beta2	var beta2: Float { get }
+c:objc(cs)MLCAdamWOptimizer(py)epsilon	swift.property	epsilon	MLCAdamWOptimizer.epsilon	var epsilon: Float { get }
+c:objc(cs)MLCAdamWOptimizer(py)timeStep	swift.property	timeStep	MLCAdamWOptimizer.timeStep	var timeStep: Int { get }
+c:objc(cs)MLCAdamWOptimizer(py)usesAMSGrad	swift.property	usesAMSGrad	MLCAdamWOptimizer.usesAMSGrad	var usesAMSGrad: Bool { get }
+c:objc(cs)MLCArithmeticLayer	swift.class	MLCArithmeticLayer	MLCArithmeticLayer	class MLCArithmeticLayer
+c:objc(cs)MLCArithmeticLayer(cm)layerWithOperation:	swift.init	init(operation:)	MLCArithmeticLayer.init(operation:)	convenience init(operation: MLCArithmeticOperation)
+c:objc(cs)MLCArithmeticLayer(py)operation	swift.property	operation	MLCArithmeticLayer.operation	var operation: MLCArithmeticOperation { get }
+c:objc(cs)MLCBatchNormalizationLayer	swift.class	MLCBatchNormalizationLayer	MLCBatchNormalizationLayer	class MLCBatchNormalizationLayer
+c:objc(cs)MLCBatchNormalizationLayer(cm)layerWithFeatureChannelCount:mean:variance:beta:gamma:varianceEpsilon:	swift.init	init(featureChannelCount:mean:variance:beta:gamma:varianceEpsilon:)	MLCBatchNormalizationLayer.init(featureChannelCount:mean:variance:beta:gamma:varianceEpsilon:)	convenience init?(featureChannelCount: Int, mean: MLCTensor, variance: MLCTensor, beta: MLCTensor?, gamma: MLCTensor?, varianceEpsilon: Float)
+c:objc(cs)MLCBatchNormalizationLayer(cm)layerWithFeatureChannelCount:mean:variance:beta:gamma:varianceEpsilon:momentum:	swift.init	init(featureChannelCount:mean:variance:beta:gamma:varianceEpsilon:momentum:)	MLCBatchNormalizationLayer.init(featureChannelCount:mean:variance:beta:gamma:varianceEpsilon:momentum:)	convenience init?(featureChannelCount: Int, mean: MLCTensor, variance: MLCTensor, beta: MLCTensor?, gamma: MLCTensor?, varianceEpsilon: Float, momentum: Float)
+c:objc(cs)MLCBatchNormalizationLayer(py)beta	swift.property	beta	MLCBatchNormalizationLayer.beta	var beta: MLCTensor? { get }
+c:objc(cs)MLCBatchNormalizationLayer(py)betaParameter	swift.property	betaParameter	MLCBatchNormalizationLayer.betaParameter	var betaParameter: MLCTensorParameter? { get }
+c:objc(cs)MLCBatchNormalizationLayer(py)featureChannelCount	swift.property	featureChannelCount	MLCBatchNormalizationLayer.featureChannelCount	var featureChannelCount: Int { get }
+c:objc(cs)MLCBatchNormalizationLayer(py)gamma	swift.property	gamma	MLCBatchNormalizationLayer.gamma	var gamma: MLCTensor? { get }
+c:objc(cs)MLCBatchNormalizationLayer(py)gammaParameter	swift.property	gammaParameter	MLCBatchNormalizationLayer.gammaParameter	var gammaParameter: MLCTensorParameter? { get }
+c:objc(cs)MLCBatchNormalizationLayer(py)mean	swift.property	mean	MLCBatchNormalizationLayer.mean	var mean: MLCTensor { get }
+c:objc(cs)MLCBatchNormalizationLayer(py)momentum	swift.property	momentum	MLCBatchNormalizationLayer.momentum	var momentum: Float { get }
+c:objc(cs)MLCBatchNormalizationLayer(py)variance	swift.property	variance	MLCBatchNormalizationLayer.variance	var variance: MLCTensor { get }
+c:objc(cs)MLCBatchNormalizationLayer(py)varianceEpsilon	swift.property	varianceEpsilon	MLCBatchNormalizationLayer.varianceEpsilon	var varianceEpsilon: Float { get }
+c:objc(cs)MLCComparisonLayer	swift.class	MLCComparisonLayer	MLCComparisonLayer	class MLCComparisonLayer
+c:objc(cs)MLCComparisonLayer(cm)layerWithOperation:	swift.init	init(operation:)	MLCComparisonLayer.init(operation:)	convenience init(operation: MLCComparisonOperation)
+c:objc(cs)MLCComparisonLayer(py)operation	swift.property	operation	MLCComparisonLayer.operation	var operation: MLCComparisonOperation { get }
+c:objc(cs)MLCConcatenationLayer	swift.class	MLCConcatenationLayer	MLCConcatenationLayer	class MLCConcatenationLayer
+c:objc(cs)MLCConcatenationLayer(cm)layer	swift.init	init()	MLCConcatenationLayer.init()	convenience init()
+c:objc(cs)MLCConcatenationLayer(cm)layerWithDimension:	swift.init	init(dimension:)	MLCConcatenationLayer.init(dimension:)	convenience init(dimension: Int)
+c:objc(cs)MLCConcatenationLayer(py)dimension	swift.property	dimension	MLCConcatenationLayer.dimension	var dimension: Int { get }
+c:objc(cs)MLCConvolutionDescriptor	swift.class	MLCConvolutionDescriptor	MLCConvolutionDescriptor	class MLCConvolutionDescriptor
+c:objc(cs)MLCConvolutionDescriptor(cm)convolutionTransposeDescriptorWithKernelWidth:kernelHeight:inputFeatureChannelCount:outputFeatureChannelCount:	swift.init	init(transposeWithKernelWidth:kernelHeight:inputFeatureChannelCount:outputFeatureChannelCount:)	MLCConvolutionDescriptor.init(transposeWithKernelWidth:kernelHeight:inputFeatureChannelCount:outputFeatureChannelCount:)	convenience init(transposeWithKernelWidth kernelWidth: Int, kernelHeight: Int, inputFeatureChannelCount: Int, outputFeatureChannelCount: Int)
+c:objc(cs)MLCConvolutionDescriptor(cm)depthwiseConvolutionDescriptorWithKernelWidth:kernelHeight:inputFeatureChannelCount:channelMultiplier:	swift.init	init(depthwiseWithKernelWidth:kernelHeight:inputFeatureChannelCount:channelMultiplier:)	MLCConvolutionDescriptor.init(depthwiseWithKernelWidth:kernelHeight:inputFeatureChannelCount:channelMultiplier:)	convenience init(depthwiseWithKernelWidth kernelWidth: Int, kernelHeight: Int, inputFeatureChannelCount: Int, channelMultiplier: Int)
+c:objc(cs)MLCConvolutionDescriptor(py)convolutionType	swift.property	convolutionType	MLCConvolutionDescriptor.convolutionType	var convolutionType: MLCConvolutionType { get }
+c:objc(cs)MLCConvolutionDescriptor(py)groupCount	swift.property	groupCount	MLCConvolutionDescriptor.groupCount	var groupCount: Int { get }
+c:objc(cs)MLCConvolutionDescriptor(py)inputFeatureChannelCount	swift.property	inputFeatureChannelCount	MLCConvolutionDescriptor.inputFeatureChannelCount	var inputFeatureChannelCount: Int { get }
+c:objc(cs)MLCConvolutionDescriptor(py)isConvolutionTranspose	swift.property	isConvolutionTranspose	MLCConvolutionDescriptor.isConvolutionTranspose	var isConvolutionTranspose: Bool { get }
+c:objc(cs)MLCConvolutionDescriptor(py)outputFeatureChannelCount	swift.property	outputFeatureChannelCount	MLCConvolutionDescriptor.outputFeatureChannelCount	var outputFeatureChannelCount: Int { get }
+c:objc(cs)MLCConvolutionDescriptor(py)usesDepthwiseConvolution	swift.property	usesDepthwiseConvolution	MLCConvolutionDescriptor.usesDepthwiseConvolution	var usesDepthwiseConvolution: Bool { get }
+c:objc(cs)MLCConvolutionLayer	swift.class	MLCConvolutionLayer	MLCConvolutionLayer	class MLCConvolutionLayer
+c:objc(cs)MLCConvolutionLayer(cm)layerWithWeights:biases:descriptor:	swift.init	init(weights:biases:descriptor:)	MLCConvolutionLayer.init(weights:biases:descriptor:)	convenience init?(weights: MLCTensor, biases: MLCTensor?, descriptor: MLCConvolutionDescriptor)
+c:objc(cs)MLCConvolutionLayer(py)biases	swift.property	biases	MLCConvolutionLayer.biases	var biases: MLCTensor? { get }
+c:objc(cs)MLCConvolutionLayer(py)biasesParameter	swift.property	biasesParameter	MLCConvolutionLayer.biasesParameter	var biasesParameter: MLCTensorParameter? { get }
+c:objc(cs)MLCConvolutionLayer(py)descriptor	swift.property	descriptor	MLCConvolutionLayer.descriptor	@NSCopying var descriptor: MLCConvolutionDescriptor { get }
+c:objc(cs)MLCConvolutionLayer(py)weights	swift.property	weights	MLCConvolutionLayer.weights	var weights: MLCTensor { get }
+c:objc(cs)MLCConvolutionLayer(py)weightsParameter	swift.property	weightsParameter	MLCConvolutionLayer.weightsParameter	var weightsParameter: MLCTensorParameter { get }
+c:objc(cs)MLCDevice	swift.class	MLCDevice	MLCDevice	class MLCDevice
+c:objc(cs)MLCDevice(cm)aneDevice	swift.type.method	ane()	MLCDevice.ane()	class func ane() -> Self?
+c:objc(cs)MLCDevice(cm)cpuDevice	swift.type.method	cpu()	MLCDevice.cpu()	class func cpu() -> Self
+c:objc(cs)MLCDevice(cm)deviceWithGPUDevices:	swift.init	init(gpuDevices:)	MLCDevice.init(gpuDevices:)	convenience init?(gpuDevices gpus: [any MTLDevice])
+c:objc(cs)MLCDevice(cm)deviceWithGPUDevices:::SYNTHESIZED::c:objc(cs)MLCDevice	swift.init	init(GPUDevices:)	MLCDevice.init(GPUDevices:)	convenience init?(GPUDevices gpus: [any MTLDevice])
+c:objc(cs)MLCDevice(cm)deviceWithType:	swift.init	init(type:)	MLCDevice.init(type:)	convenience init?(type: MLCDeviceType)
+c:objc(cs)MLCDevice(cm)deviceWithType:selectsMultipleComputeDevices:	swift.init	init(type:selectsMultipleComputeDevices:)	MLCDevice.init(type:selectsMultipleComputeDevices:)	convenience init?(type: MLCDeviceType, selectsMultipleComputeDevices: Bool)
+c:objc(cs)MLCDevice(cm)gpuDevice	swift.type.method	gpu()	MLCDevice.gpu()	class func gpu() -> Self?
+c:objc(cs)MLCDevice(py)actualDeviceType	swift.property	actualDeviceType	MLCDevice.actualDeviceType	var actualDeviceType: MLCDeviceType { get }
+c:objc(cs)MLCDevice(py)gpuDevices	swift.property	gpuDevices	MLCDevice.gpuDevices	var gpuDevices: [any MTLDevice] { get }
+c:objc(cs)MLCDevice(py)type	swift.property	type	MLCDevice.type	var type: MLCDeviceType { get }
+c:objc(cs)MLCDropoutLayer	swift.class	MLCDropoutLayer	MLCDropoutLayer	class MLCDropoutLayer
+c:objc(cs)MLCDropoutLayer(cm)layerWithRate:seed:	swift.init	init(rate:seed:)	MLCDropoutLayer.init(rate:seed:)	convenience init(rate: Float, seed: Int)
+c:objc(cs)MLCDropoutLayer(py)rate	swift.property	rate	MLCDropoutLayer.rate	var rate: Float { get }
+c:objc(cs)MLCDropoutLayer(py)seed	swift.property	seed	MLCDropoutLayer.seed	var seed: Int { get }
+c:objc(cs)MLCEmbeddingDescriptor	swift.class	MLCEmbeddingDescriptor	MLCEmbeddingDescriptor	class MLCEmbeddingDescriptor
+c:objc(cs)MLCEmbeddingDescriptor(py)scalesGradientByFrequency	swift.property	scalesGradientByFrequency	MLCEmbeddingDescriptor.scalesGradientByFrequency	var scalesGradientByFrequency: Bool { get }
+c:objc(cs)MLCEmbeddingLayer	swift.class	MLCEmbeddingLayer	MLCEmbeddingLayer	class MLCEmbeddingLayer
+c:objc(cs)MLCEmbeddingLayer(cm)layerWithDescriptor:weights:	swift.init	init(descriptor:weights:)	MLCEmbeddingLayer.init(descriptor:weights:)	convenience init(descriptor: MLCEmbeddingDescriptor, weights: MLCTensor)
+c:objc(cs)MLCEmbeddingLayer(py)descriptor	swift.property	descriptor	MLCEmbeddingLayer.descriptor	@NSCopying var descriptor: MLCEmbeddingDescriptor { get }
+c:objc(cs)MLCEmbeddingLayer(py)weights	swift.property	weights	MLCEmbeddingLayer.weights	var weights: MLCTensor { get }
+c:objc(cs)MLCEmbeddingLayer(py)weightsParameter	swift.property	weightsParameter	MLCEmbeddingLayer.weightsParameter	var weightsParameter: MLCTensorParameter { get }
+c:objc(cs)MLCFullyConnectedLayer	swift.class	MLCFullyConnectedLayer	MLCFullyConnectedLayer	class MLCFullyConnectedLayer
+c:objc(cs)MLCFullyConnectedLayer(cm)layerWithWeights:biases:descriptor:	swift.init	init(weights:biases:descriptor:)	MLCFullyConnectedLayer.init(weights:biases:descriptor:)	convenience init?(weights: MLCTensor, biases: MLCTensor?, descriptor: MLCConvolutionDescriptor)
+c:objc(cs)MLCFullyConnectedLayer(py)biases	swift.property	biases	MLCFullyConnectedLayer.biases	var biases: MLCTensor? { get }
+c:objc(cs)MLCFullyConnectedLayer(py)biasesParameter	swift.property	biasesParameter	MLCFullyConnectedLayer.biasesParameter	var biasesParameter: MLCTensorParameter? { get }
+c:objc(cs)MLCFullyConnectedLayer(py)descriptor	swift.property	descriptor	MLCFullyConnectedLayer.descriptor	@NSCopying var descriptor: MLCConvolutionDescriptor { get }
+c:objc(cs)MLCFullyConnectedLayer(py)weights	swift.property	weights	MLCFullyConnectedLayer.weights	var weights: MLCTensor { get }
+c:objc(cs)MLCFullyConnectedLayer(py)weightsParameter	swift.property	weightsParameter	MLCFullyConnectedLayer.weightsParameter	var weightsParameter: MLCTensorParameter { get }
+c:objc(cs)MLCGatherLayer	swift.class	MLCGatherLayer	MLCGatherLayer	class MLCGatherLayer
+c:objc(cs)MLCGatherLayer(cm)layerWithDimension:	swift.init	init(dimension:)	MLCGatherLayer.init(dimension:)	convenience init(dimension: Int)
+c:objc(cs)MLCGatherLayer(py)dimension	swift.property	dimension	MLCGatherLayer.dimension	var dimension: Int { get }
+c:objc(cs)MLCGramMatrixLayer	swift.class	MLCGramMatrixLayer	MLCGramMatrixLayer	class MLCGramMatrixLayer
+c:objc(cs)MLCGramMatrixLayer(cm)layerWithScale:	swift.init	init(scale:)	MLCGramMatrixLayer.init(scale:)	convenience init(scale: Float)
+c:objc(cs)MLCGramMatrixLayer(py)scale	swift.property	scale	MLCGramMatrixLayer.scale	var scale: Float { get }
+c:objc(cs)MLCGraph	swift.class	MLCGraph	MLCGraph	class MLCGraph
+c:objc(cs)MLCGraph(cm)graph::SYNTHESIZED::c:objc(cs)MLCInferenceGraph	swift.init	init()	MLCInferenceGraph.init()	convenience init()
+c:objc(cs)MLCGraph(im)bindAndWriteData:forInputs:toDevice:batchSize:synchronous:	swift.method	bindAndWriteData(_:forInputs:to:batchSize:synchronous:)	MLCGraph.bindAndWriteData(_:forInputs:to:batchSize:synchronous:)	func bindAndWriteData(_ inputsData: [String : MLCTensorData], forInputs inputTensors: [String : MLCTensor], to device: MLCDevice, batchSize: Int, synchronous: Bool) -> Bool
+c:objc(cs)MLCGraph(im)bindAndWriteData:forInputs:toDevice:synchronous:	swift.method	bindAndWriteData(_:forInputs:to:synchronous:)	MLCGraph.bindAndWriteData(_:forInputs:to:synchronous:)	func bindAndWriteData(_ inputsData: [String : MLCTensorData], forInputs inputTensors: [String : MLCTensor], to device: MLCDevice, synchronous: Bool) -> Bool
+c:objc(cs)MLCGraph(im)concatenateWithSources:dimension:	swift.method	concatenate(sources:dimension:)	MLCGraph.concatenate(sources:dimension:)	func concatenate(sources: [MLCTensor], dimension: Int) -> MLCTensor?
+c:objc(cs)MLCGraph(im)gatherWithDimension:source:indices:	swift.method	gather(withDimension:source:indices:)	MLCGraph.gather(withDimension:source:indices:)	func gather(withDimension dimension: Int, source: MLCTensor, indices: MLCTensor) -> MLCTensor?
+c:objc(cs)MLCGraph(im)nodeWithLayer:source:	swift.method	node(with:source:)	MLCGraph.node(with:source:)	func node(with layer: MLCLayer, source: MLCTensor) -> MLCTensor?
+c:objc(cs)MLCGraph(im)nodeWithLayer:sources:	swift.method	node(with:sources:)	MLCGraph.node(with:sources:)	func node(with layer: MLCLayer, sources: [MLCTensor]) -> MLCTensor?
+c:objc(cs)MLCGraph(im)nodeWithLayer:sources:disableUpdate:	swift.method	node(with:sources:disableUpdate:)	MLCGraph.node(with:sources:disableUpdate:)	func node(with layer: MLCLayer, sources: [MLCTensor], disableUpdate: Bool) -> MLCTensor?
+c:objc(cs)MLCGraph(im)nodeWithLayer:sources:lossLabels:	swift.method	node(with:sources:lossLabels:)	MLCGraph.node(with:sources:lossLabels:)	func node(with layer: MLCLayer, sources: [MLCTensor], lossLabels: [MLCTensor]) -> MLCTensor?
+c:objc(cs)MLCGraph(im)resultTensorsForLayer:	swift.method	resultTensors(for:)	MLCGraph.resultTensors(for:)	func resultTensors(for layer: MLCLayer) -> [MLCTensor]
+c:objc(cs)MLCGraph(im)scatterWithDimension:source:indices:copyFrom:reductionType:	swift.method	scatter(withDimension:source:indices:copyFrom:reductionType:)	MLCGraph.scatter(withDimension:source:indices:copyFrom:reductionType:)	func scatter(withDimension dimension: Int, source: MLCTensor, indices: MLCTensor, copyFrom: MLCTensor, reductionType: MLCReductionType) -> MLCTensor?
+c:objc(cs)MLCGraph(im)sourceTensorsForLayer:	swift.method	sourceTensors(for:)	MLCGraph.sourceTensors(for:)	func sourceTensors(for layer: MLCLayer) -> [MLCTensor]
+c:objc(cs)MLCGraph(im)splitWithSource:splitCount:dimension:	swift.method	split(source:splitCount:dimension:)	MLCGraph.split(source:splitCount:dimension:)	func split(source: MLCTensor, splitCount: Int, dimension: Int) -> [MLCTensor]?
+c:objc(cs)MLCGraph(py)device	swift.property	device	MLCGraph.device	var device: MLCDevice? { get }
+c:objc(cs)MLCGraph(py)layers	swift.property	layers	MLCGraph.layers	var layers: [MLCLayer] { get }
+c:objc(cs)MLCGraph(py)summarizedDOTDescription	swift.property	summarizedDOTDescription	MLCGraph.summarizedDOTDescription	var summarizedDOTDescription: String { get }
+c:objc(cs)MLCGroupNormalizationLayer	swift.class	MLCGroupNormalizationLayer	MLCGroupNormalizationLayer	class MLCGroupNormalizationLayer
+c:objc(cs)MLCGroupNormalizationLayer(cm)layerWithFeatureChannelCount:groupCount:beta:gamma:varianceEpsilon:	swift.init	init(featureChannelCount:groupCount:beta:gamma:varianceEpsilon:)	MLCGroupNormalizationLayer.init(featureChannelCount:groupCount:beta:gamma:varianceEpsilon:)	convenience init?(featureChannelCount: Int, groupCount: Int, beta: MLCTensor?, gamma: MLCTensor?, varianceEpsilon: Float)
+c:objc(cs)MLCGroupNormalizationLayer(py)beta	swift.property	beta	MLCGroupNormalizationLayer.beta	var beta: MLCTensor? { get }
+c:objc(cs)MLCGroupNormalizationLayer(py)betaParameter	swift.property	betaParameter	MLCGroupNormalizationLayer.betaParameter	var betaParameter: MLCTensorParameter? { get }
+c:objc(cs)MLCGroupNormalizationLayer(py)featureChannelCount	swift.property	featureChannelCount	MLCGroupNormalizationLayer.featureChannelCount	var featureChannelCount: Int { get }
+c:objc(cs)MLCGroupNormalizationLayer(py)gamma	swift.property	gamma	MLCGroupNormalizationLayer.gamma	var gamma: MLCTensor? { get }
+c:objc(cs)MLCGroupNormalizationLayer(py)gammaParameter	swift.property	gammaParameter	MLCGroupNormalizationLayer.gammaParameter	var gammaParameter: MLCTensorParameter? { get }
+c:objc(cs)MLCGroupNormalizationLayer(py)groupCount	swift.property	groupCount	MLCGroupNormalizationLayer.groupCount	var groupCount: Int { get }
+c:objc(cs)MLCGroupNormalizationLayer(py)varianceEpsilon	swift.property	varianceEpsilon	MLCGroupNormalizationLayer.varianceEpsilon	var varianceEpsilon: Float { get }
+c:objc(cs)MLCInferenceGraph	swift.class	MLCInferenceGraph	MLCInferenceGraph	class MLCInferenceGraph
+c:objc(cs)MLCInferenceGraph(cm)graphWithGraphObjects:	swift.init	init(graphObjects:)	MLCInferenceGraph.init(graphObjects:)	convenience init(graphObjects: [MLCGraph])
+c:objc(cs)MLCInferenceGraph(im)addInputs:	swift.method	addInputs(_:)	MLCInferenceGraph.addInputs(_:)	func addInputs(_ inputs: [String : MLCTensor]) -> Bool
+c:objc(cs)MLCInferenceGraph(im)addInputs:lossLabels:lossLabelWeights:	swift.method	addInputs(_:lossLabels:lossLabelWeights:)	MLCInferenceGraph.addInputs(_:lossLabels:lossLabelWeights:)	func addInputs(_ inputs: [String : MLCTensor], lossLabels: [String : MLCTensor]?, lossLabelWeights: [String : MLCTensor]?) -> Bool
+c:objc(cs)MLCInferenceGraph(im)addOutputs:	swift.method	addOutputs(_:)	MLCInferenceGraph.addOutputs(_:)	func addOutputs(_ outputs: [String : MLCTensor]) -> Bool
+c:objc(cs)MLCInferenceGraph(im)compileWithOptions:device:	swift.method	compile(options:device:)	MLCInferenceGraph.compile(options:device:)	func compile(options: MLCGraphCompilationOptions = [], device: MLCDevice) -> Bool
+c:objc(cs)MLCInferenceGraph(im)compileWithOptions:device:inputTensors:inputTensorsData:	swift.method	compile(options:device:inputTensors:inputTensorsData:)	MLCInferenceGraph.compile(options:device:inputTensors:inputTensorsData:)	func compile(options: MLCGraphCompilationOptions = [], device: MLCDevice, inputTensors: [String : MLCTensor]?, inputTensorsData: [String : MLCTensorData]?) -> Bool
+c:objc(cs)MLCInferenceGraph(im)executeWithInputsData:batchSize:options:completionHandler:	swift.method	execute(inputsData:batchSize:options:completionHandler:)	MLCInferenceGraph.execute(inputsData:batchSize:options:completionHandler:)	func execute(inputsData: [String : MLCTensorData], batchSize: Int, options: MLCExecutionOptions = [], completionHandler: MLCGraphCompletionHandler? = nil) -> Bool
+c:objc(cs)MLCInferenceGraph(im)executeWithInputsData:lossLabelsData:lossLabelWeightsData:batchSize:options:completionHandler:	swift.method	execute(inputsData:lossLabelsData:lossLabelWeightsData:batchSize:options:completionHandler:)	MLCInferenceGraph.execute(inputsData:lossLabelsData:lossLabelWeightsData:batchSize:options:completionHandler:)	func execute(inputsData: [String : MLCTensorData], lossLabelsData: [String : MLCTensorData]?, lossLabelWeightsData: [String : MLCTensorData]?, batchSize: Int, options: MLCExecutionOptions = [], completionHandler: MLCGraphCompletionHandler? = nil) -> Bool
+c:objc(cs)MLCInferenceGraph(im)executeWithInputsData:lossLabelsData:lossLabelWeightsData:outputsData:batchSize:options:completionHandler:	swift.method	execute(inputsData:lossLabelsData:lossLabelWeightsData:outputsData:batchSize:options:completionHandler:)	MLCInferenceGraph.execute(inputsData:lossLabelsData:lossLabelWeightsData:outputsData:batchSize:options:completionHandler:)	func execute(inputsData: [String : MLCTensorData], lossLabelsData: [String : MLCTensorData]?, lossLabelWeightsData: [String : MLCTensorData]?, outputsData: [String : MLCTensorData]?, batchSize: Int, options: MLCExecutionOptions = [], completionHandler: MLCGraphCompletionHandler? = nil) -> Bool
+c:objc(cs)MLCInferenceGraph(im)executeWithInputsData:outputsData:batchSize:options:completionHandler:	swift.method	execute(inputsData:outputsData:batchSize:options:completionHandler:)	MLCInferenceGraph.execute(inputsData:outputsData:batchSize:options:completionHandler:)	func execute(inputsData: [String : MLCTensorData], outputsData: [String : MLCTensorData]?, batchSize: Int, options: MLCExecutionOptions = [], completionHandler: MLCGraphCompletionHandler? = nil) -> Bool
+c:objc(cs)MLCInferenceGraph(im)linkWithGraphs:	swift.method	link(with:)	MLCInferenceGraph.link(with:)	func link(with graphs: [MLCInferenceGraph]) -> Bool
+c:objc(cs)MLCInferenceGraph(py)deviceMemorySize	swift.property	deviceMemorySize	MLCInferenceGraph.deviceMemorySize	var deviceMemorySize: Int { get }
+c:objc(cs)MLCInstanceNormalizationLayer	swift.class	MLCInstanceNormalizationLayer	MLCInstanceNormalizationLayer	class MLCInstanceNormalizationLayer
+c:objc(cs)MLCInstanceNormalizationLayer(cm)layerWithFeatureChannelCount:beta:gamma:varianceEpsilon:	swift.init	init(featureChannelCount:beta:gamma:varianceEpsilon:)	MLCInstanceNormalizationLayer.init(featureChannelCount:beta:gamma:varianceEpsilon:)	convenience init?(featureChannelCount: Int, beta: MLCTensor?, gamma: MLCTensor?, varianceEpsilon: Float)
+c:objc(cs)MLCInstanceNormalizationLayer(cm)layerWithFeatureChannelCount:beta:gamma:varianceEpsilon:momentum:	swift.init	init(featureChannelCount:beta:gamma:varianceEpsilon:momentum:)	MLCInstanceNormalizationLayer.init(featureChannelCount:beta:gamma:varianceEpsilon:momentum:)	convenience init?(featureChannelCount: Int, beta: MLCTensor?, gamma: MLCTensor?, varianceEpsilon: Float, momentum: Float)
+c:objc(cs)MLCInstanceNormalizationLayer(cm)layerWithFeatureChannelCount:mean:variance:beta:gamma:varianceEpsilon:momentum:	swift.init	init(featureChannelCount:mean:variance:beta:gamma:varianceEpsilon:momentum:)	MLCInstanceNormalizationLayer.init(featureChannelCount:mean:variance:beta:gamma:varianceEpsilon:momentum:)	convenience init?(featureChannelCount: Int, mean: MLCTensor, variance: MLCTensor, beta: MLCTensor?, gamma: MLCTensor?, varianceEpsilon: Float, momentum: Float)
+c:objc(cs)MLCInstanceNormalizationLayer(py)beta	swift.property	beta	MLCInstanceNormalizationLayer.beta	var beta: MLCTensor? { get }
+c:objc(cs)MLCInstanceNormalizationLayer(py)betaParameter	swift.property	betaParameter	MLCInstanceNormalizationLayer.betaParameter	var betaParameter: MLCTensorParameter? { get }
+c:objc(cs)MLCInstanceNormalizationLayer(py)featureChannelCount	swift.property	featureChannelCount	MLCInstanceNormalizationLayer.featureChannelCount	var featureChannelCount: Int { get }
+c:objc(cs)MLCInstanceNormalizationLayer(py)gamma	swift.property	gamma	MLCInstanceNormalizationLayer.gamma	var gamma: MLCTensor? { get }
+c:objc(cs)MLCInstanceNormalizationLayer(py)gammaParameter	swift.property	gammaParameter	MLCInstanceNormalizationLayer.gammaParameter	var gammaParameter: MLCTensorParameter? { get }
+c:objc(cs)MLCInstanceNormalizationLayer(py)mean	swift.property	mean	MLCInstanceNormalizationLayer.mean	var mean: MLCTensor? { get }
+c:objc(cs)MLCInstanceNormalizationLayer(py)momentum	swift.property	momentum	MLCInstanceNormalizationLayer.momentum	var momentum: Float { get }
+c:objc(cs)MLCInstanceNormalizationLayer(py)variance	swift.property	variance	MLCInstanceNormalizationLayer.variance	var variance: MLCTensor? { get }
+c:objc(cs)MLCInstanceNormalizationLayer(py)varianceEpsilon	swift.property	varianceEpsilon	MLCInstanceNormalizationLayer.varianceEpsilon	var varianceEpsilon: Float { get }
+c:objc(cs)MLCLSTMDescriptor	swift.class	MLCLSTMDescriptor	MLCLSTMDescriptor	class MLCLSTMDescriptor
+c:objc(cs)MLCLSTMDescriptor(cm)descriptorWithInputSize:hiddenSize:layerCount:	swift.init	init(inputSize:hiddenSize:layerCount:)	MLCLSTMDescriptor.init(inputSize:hiddenSize:layerCount:)	convenience init(inputSize: Int, hiddenSize: Int, layerCount: Int)
+c:objc(cs)MLCLSTMDescriptor(cm)descriptorWithInputSize:hiddenSize:layerCount:usesBiases:batchFirst:isBidirectional:dropout:	swift.init	init(inputSize:hiddenSize:layerCount:usesBiases:batchFirst:isBidirectional:dropout:)	MLCLSTMDescriptor.init(inputSize:hiddenSize:layerCount:usesBiases:batchFirst:isBidirectional:dropout:)	convenience init(inputSize: Int, hiddenSize: Int, layerCount: Int, usesBiases: Bool, batchFirst: Bool, isBidirectional: Bool, dropout: Float)
+c:objc(cs)MLCLSTMDescriptor(cm)descriptorWithInputSize:hiddenSize:layerCount:usesBiases:batchFirst:isBidirectional:returnsSequences:dropout:	swift.init	init(inputSize:hiddenSize:layerCount:usesBiases:batchFirst:isBidirectional:returnsSequences:dropout:)	MLCLSTMDescriptor.init(inputSize:hiddenSize:layerCount:usesBiases:batchFirst:isBidirectional:returnsSequences:dropout:)	convenience init(inputSize: Int, hiddenSize: Int, layerCount: Int, usesBiases: Bool, batchFirst: Bool, isBidirectional: Bool, returnsSequences: Bool, dropout: Float)
+c:objc(cs)MLCLSTMDescriptor(cm)descriptorWithInputSize:hiddenSize:layerCount:usesBiases:batchFirst:isBidirectional:returnsSequences:dropout:resultMode:	swift.init	init(inputSize:hiddenSize:layerCount:usesBiases:batchFirst:isBidirectional:returnsSequences:dropout:resultMode:)	MLCLSTMDescriptor.init(inputSize:hiddenSize:layerCount:usesBiases:batchFirst:isBidirectional:returnsSequences:dropout:resultMode:)	convenience init(inputSize: Int, hiddenSize: Int, layerCount: Int, usesBiases: Bool, batchFirst: Bool, isBidirectional: Bool, returnsSequences: Bool, dropout: Float, resultMode: MLCLSTMResultMode)
+c:objc(cs)MLCLSTMDescriptor(cm)descriptorWithInputSize:hiddenSize:layerCount:usesBiases:isBidirectional:dropout:	swift.init	init(inputSize:hiddenSize:layerCount:usesBiases:isBidirectional:dropout:)	MLCLSTMDescriptor.init(inputSize:hiddenSize:layerCount:usesBiases:isBidirectional:dropout:)	convenience init(inputSize: Int, hiddenSize: Int, layerCount: Int, usesBiases: Bool, isBidirectional: Bool, dropout: Float)
+c:objc(cs)MLCLSTMDescriptor(py)batchFirst	swift.property	batchFirst	MLCLSTMDescriptor.batchFirst	var batchFirst: Bool { get }
+c:objc(cs)MLCLSTMDescriptor(py)dropout	swift.property	dropout	MLCLSTMDescriptor.dropout	var dropout: Float { get }
+c:objc(cs)MLCLSTMDescriptor(py)hiddenSize	swift.property	hiddenSize	MLCLSTMDescriptor.hiddenSize	var hiddenSize: Int { get }
+c:objc(cs)MLCLSTMDescriptor(py)inputSize	swift.property	inputSize	MLCLSTMDescriptor.inputSize	var inputSize: Int { get }
+c:objc(cs)MLCLSTMDescriptor(py)isBidirectional	swift.property	isBidirectional	MLCLSTMDescriptor.isBidirectional	var isBidirectional: Bool { get }
+c:objc(cs)MLCLSTMDescriptor(py)layerCount	swift.property	layerCount	MLCLSTMDescriptor.layerCount	var layerCount: Int { get }
+c:objc(cs)MLCLSTMDescriptor(py)resultMode	swift.property	resultMode	MLCLSTMDescriptor.resultMode	var resultMode: MLCLSTMResultMode { get }
+c:objc(cs)MLCLSTMDescriptor(py)returnsSequences	swift.property	returnsSequences	MLCLSTMDescriptor.returnsSequences	var returnsSequences: Bool { get }
+c:objc(cs)MLCLSTMDescriptor(py)usesBiases	swift.property	usesBiases	MLCLSTMDescriptor.usesBiases	var usesBiases: Bool { get }
+c:objc(cs)MLCLSTMLayer	swift.class	MLCLSTMLayer	MLCLSTMLayer	class MLCLSTMLayer
+c:objc(cs)MLCLSTMLayer(cm)layerWithDescriptor:inputWeights:hiddenWeights:biases:	swift.init	init(descriptor:inputWeights:hiddenWeights:biases:)	MLCLSTMLayer.init(descriptor:inputWeights:hiddenWeights:biases:)	convenience init?(descriptor: MLCLSTMDescriptor, inputWeights: [MLCTensor], hiddenWeights: [MLCTensor], biases: [MLCTensor]?)
+c:objc(cs)MLCLSTMLayer(cm)layerWithDescriptor:inputWeights:hiddenWeights:peepholeWeights:biases:	swift.init	init(descriptor:inputWeights:hiddenWeights:peepholeWeights:biases:)	MLCLSTMLayer.init(descriptor:inputWeights:hiddenWeights:peepholeWeights:biases:)	convenience init?(descriptor: MLCLSTMDescriptor, inputWeights: [MLCTensor], hiddenWeights: [MLCTensor], peepholeWeights: [MLCTensor]?, biases: [MLCTensor]?)
+c:objc(cs)MLCLSTMLayer(cm)layerWithDescriptor:inputWeights:hiddenWeights:peepholeWeights:biases:gateActivations:outputResultActivation:	swift.init	init(descriptor:inputWeights:hiddenWeights:peepholeWeights:biases:gateActivations:outputResultActivation:)	MLCLSTMLayer.init(descriptor:inputWeights:hiddenWeights:peepholeWeights:biases:gateActivations:outputResultActivation:)	convenience init?(descriptor: MLCLSTMDescriptor, inputWeights: [MLCTensor], hiddenWeights: [MLCTensor], peepholeWeights: [MLCTensor]?, biases: [MLCTensor]?, gateActivations: [MLCActivationDescriptor], outputResultActivation: MLCActivationDescriptor)
+c:objc(cs)MLCLSTMLayer(py)biases	swift.property	biases	MLCLSTMLayer.biases	var biases: [MLCTensor]? { get }
+c:objc(cs)MLCLSTMLayer(py)biasesParameters	swift.property	biasesParameters	MLCLSTMLayer.biasesParameters	var biasesParameters: [MLCTensorParameter]? { get }
+c:objc(cs)MLCLSTMLayer(py)descriptor	swift.property	descriptor	MLCLSTMLayer.descriptor	@NSCopying var descriptor: MLCLSTMDescriptor { get }
+c:objc(cs)MLCLSTMLayer(py)gateActivations	swift.property	gateActivations	MLCLSTMLayer.gateActivations	var gateActivations: [MLCActivationDescriptor] { get }
+c:objc(cs)MLCLSTMLayer(py)hiddenWeights	swift.property	hiddenWeights	MLCLSTMLayer.hiddenWeights	var hiddenWeights: [MLCTensor] { get }
+c:objc(cs)MLCLSTMLayer(py)hiddenWeightsParameters	swift.property	hiddenWeightsParameters	MLCLSTMLayer.hiddenWeightsParameters	var hiddenWeightsParameters: [MLCTensorParameter] { get }
+c:objc(cs)MLCLSTMLayer(py)inputWeights	swift.property	inputWeights	MLCLSTMLayer.inputWeights	var inputWeights: [MLCTensor] { get }
+c:objc(cs)MLCLSTMLayer(py)inputWeightsParameters	swift.property	inputWeightsParameters	MLCLSTMLayer.inputWeightsParameters	var inputWeightsParameters: [MLCTensorParameter] { get }
+c:objc(cs)MLCLSTMLayer(py)outputResultActivation	swift.property	outputResultActivation	MLCLSTMLayer.outputResultActivation	@NSCopying var outputResultActivation: MLCActivationDescriptor { get }
+c:objc(cs)MLCLSTMLayer(py)peepholeWeights	swift.property	peepholeWeights	MLCLSTMLayer.peepholeWeights	var peepholeWeights: [MLCTensor]? { get }
+c:objc(cs)MLCLSTMLayer(py)peepholeWeightsParameters	swift.property	peepholeWeightsParameters	MLCLSTMLayer.peepholeWeightsParameters	var peepholeWeightsParameters: [MLCTensorParameter]? { get }
+c:objc(cs)MLCLayer	swift.class	MLCLayer	MLCLayer	class MLCLayer
+c:objc(cs)MLCLayer(cm)supportsDataType:onDevice:	swift.type.method	supportsDataType(_:on:)	MLCLayer.supportsDataType(_:on:)	class func supportsDataType(_ dataType: MLCDataType, on device: MLCDevice) -> Bool
+c:objc(cs)MLCLayer(py)deviceType	swift.property	deviceType	MLCLayer.deviceType	var deviceType: MLCDeviceType { get }
+c:objc(cs)MLCLayer(py)isDebuggingEnabled	swift.property	isDebuggingEnabled	MLCLayer.isDebuggingEnabled	var isDebuggingEnabled: Bool { get set }
+c:objc(cs)MLCLayer(py)label	swift.property	label	MLCLayer.label	var label: String { get set }
+c:objc(cs)MLCLayer(py)layerID	swift.property	layerID	MLCLayer.layerID	var layerID: Int { get }
+c:objc(cs)MLCLayerNormalizationLayer	swift.class	MLCLayerNormalizationLayer	MLCLayerNormalizationLayer	class MLCLayerNormalizationLayer
+c:objc(cs)MLCLayerNormalizationLayer(py)beta	swift.property	beta	MLCLayerNormalizationLayer.beta	var beta: MLCTensor? { get }
+c:objc(cs)MLCLayerNormalizationLayer(py)betaParameter	swift.property	betaParameter	MLCLayerNormalizationLayer.betaParameter	var betaParameter: MLCTensorParameter? { get }
+c:objc(cs)MLCLayerNormalizationLayer(py)gamma	swift.property	gamma	MLCLayerNormalizationLayer.gamma	var gamma: MLCTensor? { get }
+c:objc(cs)MLCLayerNormalizationLayer(py)gammaParameter	swift.property	gammaParameter	MLCLayerNormalizationLayer.gammaParameter	var gammaParameter: MLCTensorParameter? { get }
+c:objc(cs)MLCLayerNormalizationLayer(py)varianceEpsilon	swift.property	varianceEpsilon	MLCLayerNormalizationLayer.varianceEpsilon	var varianceEpsilon: Float { get }
+c:objc(cs)MLCLossDescriptor	swift.class	MLCLossDescriptor	MLCLossDescriptor	class MLCLossDescriptor
+c:objc(cs)MLCLossDescriptor(cm)descriptorWithType:reductionType:	swift.init	init(type:reductionType:)	MLCLossDescriptor.init(type:reductionType:)	convenience init(type lossType: MLCLossType, reductionType: MLCReductionType)
+c:objc(cs)MLCLossDescriptor(cm)descriptorWithType:reductionType:weight:	swift.init	init(type:reductionType:weight:)	MLCLossDescriptor.init(type:reductionType:weight:)	convenience init(type lossType: MLCLossType, reductionType: MLCReductionType, weight: Float)
+c:objc(cs)MLCLossDescriptor(cm)descriptorWithType:reductionType:weight:labelSmoothing:classCount:	swift.init	init(type:reductionType:weight:labelSmoothing:classCount:)	MLCLossDescriptor.init(type:reductionType:weight:labelSmoothing:classCount:)	convenience init(type lossType: MLCLossType, reductionType: MLCReductionType, weight: Float, labelSmoothing: Float, classCount: Int)
+c:objc(cs)MLCLossDescriptor(cm)descriptorWithType:reductionType:weight:labelSmoothing:classCount:epsilon:delta:	swift.init	init(type:reductionType:weight:labelSmoothing:classCount:epsilon:delta:)	MLCLossDescriptor.init(type:reductionType:weight:labelSmoothing:classCount:epsilon:delta:)	convenience init(type lossType: MLCLossType, reductionType: MLCReductionType, weight: Float, labelSmoothing: Float, classCount: Int, epsilon: Float, delta: Float)
+c:objc(cs)MLCLossDescriptor(py)classCount	swift.property	classCount	MLCLossDescriptor.classCount	var classCount: Int { get }
+c:objc(cs)MLCLossDescriptor(py)delta	swift.property	delta	MLCLossDescriptor.delta	var delta: Float { get }
+c:objc(cs)MLCLossDescriptor(py)epsilon	swift.property	epsilon	MLCLossDescriptor.epsilon	var epsilon: Float { get }
+c:objc(cs)MLCLossDescriptor(py)labelSmoothing	swift.property	labelSmoothing	MLCLossDescriptor.labelSmoothing	var labelSmoothing: Float { get }
+c:objc(cs)MLCLossDescriptor(py)lossType	swift.property	lossType	MLCLossDescriptor.lossType	var lossType: MLCLossType { get }
+c:objc(cs)MLCLossDescriptor(py)reductionType	swift.property	reductionType	MLCLossDescriptor.reductionType	var reductionType: MLCReductionType { get }
+c:objc(cs)MLCLossDescriptor(py)weight	swift.property	weight	MLCLossDescriptor.weight	var weight: Float { get }
+c:objc(cs)MLCLossLayer	swift.class	MLCLossLayer	MLCLossLayer	class MLCLossLayer
+c:objc(cs)MLCLossLayer(cm)categoricalCrossEntropyLossWithReductionType:labelSmoothing:classCount:weight:	swift.type.method	categoricalCrossEntropy(reductionType:labelSmoothing:classCount:weight:)	MLCLossLayer.categoricalCrossEntropy(reductionType:labelSmoothing:classCount:weight:)	class func categoricalCrossEntropy(reductionType: MLCReductionType, labelSmoothing: Float, classCount: Int, weight: Float) -> Self
+c:objc(cs)MLCLossLayer(cm)categoricalCrossEntropyLossWithReductionType:labelSmoothing:classCount:weights:	swift.type.method	categoricalCrossEntropy(reductionType:labelSmoothing:classCount:weights:)	MLCLossLayer.categoricalCrossEntropy(reductionType:labelSmoothing:classCount:weights:)	class func categoricalCrossEntropy(reductionType: MLCReductionType, labelSmoothing: Float, classCount: Int, weights: MLCTensor?) -> Self
+c:objc(cs)MLCLossLayer(cm)cosineDistanceLossWithReductionType:weight:	swift.type.method	cosineDistance(reductionType:weight:)	MLCLossLayer.cosineDistance(reductionType:weight:)	class func cosineDistance(reductionType: MLCReductionType, weight: Float) -> Self
+c:objc(cs)MLCLossLayer(cm)cosineDistanceLossWithReductionType:weights:	swift.type.method	cosineDistance(reductionType:weights:)	MLCLossLayer.cosineDistance(reductionType:weights:)	class func cosineDistance(reductionType: MLCReductionType, weights: MLCTensor?) -> Self
+c:objc(cs)MLCLossLayer(cm)hingeLossWithReductionType:weight:	swift.type.method	hingeLoss(reductionType:weight:)	MLCLossLayer.hingeLoss(reductionType:weight:)	class func hingeLoss(reductionType: MLCReductionType, weight: Float) -> Self
+c:objc(cs)MLCLossLayer(cm)hingeLossWithReductionType:weights:	swift.type.method	hingeLoss(reductionType:weights:)	MLCLossLayer.hingeLoss(reductionType:weights:)	class func hingeLoss(reductionType: MLCReductionType, weights: MLCTensor?) -> Self
+c:objc(cs)MLCLossLayer(cm)huberLossWithReductionType:delta:weight:	swift.type.method	huberLoss(reductionType:delta:weight:)	MLCLossLayer.huberLoss(reductionType:delta:weight:)	class func huberLoss(reductionType: MLCReductionType, delta: Float, weight: Float) -> Self
+c:objc(cs)MLCLossLayer(cm)huberLossWithReductionType:delta:weights:	swift.type.method	huberLoss(reductionType:delta:weights:)	MLCLossLayer.huberLoss(reductionType:delta:weights:)	class func huberLoss(reductionType: MLCReductionType, delta: Float, weights: MLCTensor?) -> Self
+c:objc(cs)MLCLossLayer(cm)layerWithDescriptor:	swift.init	init(descriptor:)	MLCLossLayer.init(descriptor:)	convenience init(descriptor lossDescriptor: MLCLossDescriptor)
+c:objc(cs)MLCLossLayer(cm)layerWithDescriptor:weights:	swift.init	init(descriptor:weights:)	MLCLossLayer.init(descriptor:weights:)	convenience init(descriptor lossDescriptor: MLCLossDescriptor, weights: MLCTensor)
+c:objc(cs)MLCLossLayer(cm)logLossWithReductionType:epsilon:weight:	swift.type.method	log(reductionType:epsilon:weight:)	MLCLossLayer.log(reductionType:epsilon:weight:)	class func log(reductionType: MLCReductionType, epsilon: Float, weight: Float) -> Self
+c:objc(cs)MLCLossLayer(cm)logLossWithReductionType:epsilon:weights:	swift.type.method	log(reductionType:epsilon:weights:)	MLCLossLayer.log(reductionType:epsilon:weights:)	class func log(reductionType: MLCReductionType, epsilon: Float, weights: MLCTensor?) -> Self
+c:objc(cs)MLCLossLayer(cm)meanAbsoluteErrorLossWithReductionType:weight:	swift.type.method	meanAbsoluteError(reductionType:weight:)	MLCLossLayer.meanAbsoluteError(reductionType:weight:)	class func meanAbsoluteError(reductionType: MLCReductionType, weight: Float) -> Self
+c:objc(cs)MLCLossLayer(cm)meanAbsoluteErrorLossWithReductionType:weights:	swift.type.method	meanAbsoluteError(reductionType:weights:)	MLCLossLayer.meanAbsoluteError(reductionType:weights:)	class func meanAbsoluteError(reductionType: MLCReductionType, weights: MLCTensor?) -> Self
+c:objc(cs)MLCLossLayer(cm)meanSquaredErrorLossWithReductionType:weight:	swift.type.method	meanSquaredError(reductionType:weight:)	MLCLossLayer.meanSquaredError(reductionType:weight:)	class func meanSquaredError(reductionType: MLCReductionType, weight: Float) -> Self
+c:objc(cs)MLCLossLayer(cm)meanSquaredErrorLossWithReductionType:weights:	swift.type.method	meanSquaredError(reductionType:weights:)	MLCLossLayer.meanSquaredError(reductionType:weights:)	class func meanSquaredError(reductionType: MLCReductionType, weights: MLCTensor?) -> Self
+c:objc(cs)MLCLossLayer(cm)sigmoidCrossEntropyLossWithReductionType:labelSmoothing:weight:	swift.type.method	sigmoidCrossEntropy(reductionType:labelSmoothing:weight:)	MLCLossLayer.sigmoidCrossEntropy(reductionType:labelSmoothing:weight:)	class func sigmoidCrossEntropy(reductionType: MLCReductionType, labelSmoothing: Float, weight: Float) -> Self
+c:objc(cs)MLCLossLayer(cm)sigmoidCrossEntropyLossWithReductionType:labelSmoothing:weights:	swift.type.method	sigmoidCrossEntropy(reductionType:labelSmoothing:weights:)	MLCLossLayer.sigmoidCrossEntropy(reductionType:labelSmoothing:weights:)	class func sigmoidCrossEntropy(reductionType: MLCReductionType, labelSmoothing: Float, weights: MLCTensor?) -> Self
+c:objc(cs)MLCLossLayer(cm)softmaxCrossEntropyLossWithReductionType:labelSmoothing:classCount:weight:	swift.type.method	softmaxCrossEntropy(reductionType:labelSmoothing:classCount:weight:)	MLCLossLayer.softmaxCrossEntropy(reductionType:labelSmoothing:classCount:weight:)	class func softmaxCrossEntropy(reductionType: MLCReductionType, labelSmoothing: Float, classCount: Int, weight: Float) -> Self
+c:objc(cs)MLCLossLayer(cm)softmaxCrossEntropyLossWithReductionType:labelSmoothing:classCount:weights:	swift.type.method	softmaxCrossEntropy(reductionType:labelSmoothing:classCount:weights:)	MLCLossLayer.softmaxCrossEntropy(reductionType:labelSmoothing:classCount:weights:)	class func softmaxCrossEntropy(reductionType: MLCReductionType, labelSmoothing: Float, classCount: Int, weights: MLCTensor?) -> Self
+c:objc(cs)MLCLossLayer(py)descriptor	swift.property	descriptor	MLCLossLayer.descriptor	@NSCopying var descriptor: MLCLossDescriptor { get }
+c:objc(cs)MLCLossLayer(py)weights	swift.property	weights	MLCLossLayer.weights	var weights: MLCTensor? { get }
+c:objc(cs)MLCMatMulDescriptor	swift.class	MLCMatMulDescriptor	MLCMatMulDescriptor	class MLCMatMulDescriptor
+c:objc(cs)MLCMatMulDescriptor(cm)descriptor	swift.init	init()	MLCMatMulDescriptor.init()	convenience init()
+c:objc(cs)MLCMatMulDescriptor(cm)descriptorWithAlpha:transposesX:transposesY:	swift.init	init(alpha:transposesX:transposesY:)	MLCMatMulDescriptor.init(alpha:transposesX:transposesY:)	convenience init?(alpha: Float, transposesX: Bool, transposesY: Bool)
+c:objc(cs)MLCMatMulDescriptor(py)alpha	swift.property	alpha	MLCMatMulDescriptor.alpha	var alpha: Float { get }
+c:objc(cs)MLCMatMulDescriptor(py)transposesX	swift.property	transposesX	MLCMatMulDescriptor.transposesX	var transposesX: Bool { get }
+c:objc(cs)MLCMatMulDescriptor(py)transposesY	swift.property	transposesY	MLCMatMulDescriptor.transposesY	var transposesY: Bool { get }
+c:objc(cs)MLCMatMulLayer	swift.class	MLCMatMulLayer	MLCMatMulLayer	class MLCMatMulLayer
+c:objc(cs)MLCMatMulLayer(cm)layerWithDescriptor:	swift.init	init(descriptor:)	MLCMatMulLayer.init(descriptor:)	convenience init?(descriptor: MLCMatMulDescriptor)
+c:objc(cs)MLCMatMulLayer(py)descriptor	swift.property	descriptor	MLCMatMulLayer.descriptor	@NSCopying var descriptor: MLCMatMulDescriptor { get }
+c:objc(cs)MLCMultiheadAttentionDescriptor	swift.class	MLCMultiheadAttentionDescriptor	MLCMultiheadAttentionDescriptor	class MLCMultiheadAttentionDescriptor
+c:objc(cs)MLCMultiheadAttentionDescriptor(cm)descriptorWithModelDimension:headCount:	swift.init	init(modelDimension:headCount:)	MLCMultiheadAttentionDescriptor.init(modelDimension:headCount:)	convenience init(modelDimension: Int, headCount: Int)
+c:objc(cs)MLCMultiheadAttentionDescriptor(cm)descriptorWithModelDimension:keyDimension:valueDimension:headCount:dropout:hasBiases:hasAttentionBiases:addsZeroAttention:	swift.init	init(modelDimension:keyDimension:valueDimension:headCount:dropout:hasBiases:hasAttentionBiases:addsZeroAttention:)	MLCMultiheadAttentionDescriptor.init(modelDimension:keyDimension:valueDimension:headCount:dropout:hasBiases:hasAttentionBiases:addsZeroAttention:)	convenience init?(modelDimension: Int, keyDimension: Int, valueDimension: Int, headCount: Int, dropout: Float, hasBiases: Bool, hasAttentionBiases: Bool, addsZeroAttention: Bool)
+c:objc(cs)MLCMultiheadAttentionDescriptor(py)addsZeroAttention	swift.property	addsZeroAttention	MLCMultiheadAttentionDescriptor.addsZeroAttention	var addsZeroAttention: Bool { get }
+c:objc(cs)MLCMultiheadAttentionDescriptor(py)dropout	swift.property	dropout	MLCMultiheadAttentionDescriptor.dropout	var dropout: Float { get }
+c:objc(cs)MLCMultiheadAttentionDescriptor(py)hasAttentionBiases	swift.property	hasAttentionBiases	MLCMultiheadAttentionDescriptor.hasAttentionBiases	var hasAttentionBiases: Bool { get }
+c:objc(cs)MLCMultiheadAttentionDescriptor(py)hasBiases	swift.property	hasBiases	MLCMultiheadAttentionDescriptor.hasBiases	var hasBiases: Bool { get }
+c:objc(cs)MLCMultiheadAttentionDescriptor(py)headCount	swift.property	headCount	MLCMultiheadAttentionDescriptor.headCount	var headCount: Int { get }
+c:objc(cs)MLCMultiheadAttentionDescriptor(py)keyDimension	swift.property	keyDimension	MLCMultiheadAttentionDescriptor.keyDimension	var keyDimension: Int { get }
+c:objc(cs)MLCMultiheadAttentionDescriptor(py)modelDimension	swift.property	modelDimension	MLCMultiheadAttentionDescriptor.modelDimension	var modelDimension: Int { get }
+c:objc(cs)MLCMultiheadAttentionDescriptor(py)valueDimension	swift.property	valueDimension	MLCMultiheadAttentionDescriptor.valueDimension	var valueDimension: Int { get }
+c:objc(cs)MLCMultiheadAttentionLayer	swift.class	MLCMultiheadAttentionLayer	MLCMultiheadAttentionLayer	class MLCMultiheadAttentionLayer
+c:objc(cs)MLCMultiheadAttentionLayer(cm)layerWithDescriptor:weights:biases:attentionBiases:	swift.init	init(descriptor:weights:biases:attentionBiases:)	MLCMultiheadAttentionLayer.init(descriptor:weights:biases:attentionBiases:)	convenience init?(descriptor: MLCMultiheadAttentionDescriptor, weights: [MLCTensor], biases: [MLCTensor]?, attentionBiases: [MLCTensor]?)
+c:objc(cs)MLCMultiheadAttentionLayer(py)attentionBiases	swift.property	attentionBiases	MLCMultiheadAttentionLayer.attentionBiases	var attentionBiases: [MLCTensor]? { get }
+c:objc(cs)MLCMultiheadAttentionLayer(py)biases	swift.property	biases	MLCMultiheadAttentionLayer.biases	var biases: [MLCTensor]? { get }
+c:objc(cs)MLCMultiheadAttentionLayer(py)biasesParameters	swift.property	biasesParameters	MLCMultiheadAttentionLayer.biasesParameters	var biasesParameters: [MLCTensorParameter]? { get }
+c:objc(cs)MLCMultiheadAttentionLayer(py)descriptor	swift.property	descriptor	MLCMultiheadAttentionLayer.descriptor	@NSCopying var descriptor: MLCMultiheadAttentionDescriptor { get }
+c:objc(cs)MLCMultiheadAttentionLayer(py)weights	swift.property	weights	MLCMultiheadAttentionLayer.weights	var weights: [MLCTensor] { get }
+c:objc(cs)MLCMultiheadAttentionLayer(py)weightsParameters	swift.property	weightsParameters	MLCMultiheadAttentionLayer.weightsParameters	var weightsParameters: [MLCTensorParameter] { get }
+c:objc(cs)MLCOptimizer	swift.class	MLCOptimizer	MLCOptimizer	class MLCOptimizer
+c:objc(cs)MLCOptimizer(py)appliesGradientClipping	swift.property	appliesGradientClipping	MLCOptimizer.appliesGradientClipping	var appliesGradientClipping: Bool { get set }
+c:objc(cs)MLCOptimizer(py)customGlobalNorm	swift.property	customGlobalNorm	MLCOptimizer.customGlobalNorm	var customGlobalNorm: Float { get }
+c:objc(cs)MLCOptimizer(py)gradientClipMax	swift.property	gradientClipMax	MLCOptimizer.gradientClipMax	var gradientClipMax: Float { get }
+c:objc(cs)MLCOptimizer(py)gradientClipMin	swift.property	gradientClipMin	MLCOptimizer.gradientClipMin	var gradientClipMin: Float { get }
+c:objc(cs)MLCOptimizer(py)gradientClippingType	swift.property	gradientClippingType	MLCOptimizer.gradientClippingType	var gradientClippingType: MLCGradientClippingType { get }
+c:objc(cs)MLCOptimizer(py)gradientRescale	swift.property	gradientRescale	MLCOptimizer.gradientRescale	var gradientRescale: Float { get }
+c:objc(cs)MLCOptimizer(py)learningRate	swift.property	learningRate	MLCOptimizer.learningRate	var learningRate: Float { get set }
+c:objc(cs)MLCOptimizer(py)maximumClippingNorm	swift.property	maximumClippingNorm	MLCOptimizer.maximumClippingNorm	var maximumClippingNorm: Float { get }
+c:objc(cs)MLCOptimizer(py)regularizationScale	swift.property	regularizationScale	MLCOptimizer.regularizationScale	var regularizationScale: Float { get }
+c:objc(cs)MLCOptimizer(py)regularizationType	swift.property	regularizationType	MLCOptimizer.regularizationType	var regularizationType: MLCRegularizationType { get }
+c:objc(cs)MLCOptimizerDescriptor	swift.class	MLCOptimizerDescriptor	MLCOptimizerDescriptor	class MLCOptimizerDescriptor
+c:objc(cs)MLCOptimizerDescriptor(cm)descriptorWithLearningRate:gradientRescale:appliesGradientClipping:gradientClipMax:gradientClipMin:regularizationType:regularizationScale:	swift.init	init(learningRate:gradientRescale:appliesGradientClipping:gradientClipMax:gradientClipMin:regularizationType:regularizationScale:)	MLCOptimizerDescriptor.init(learningRate:gradientRescale:appliesGradientClipping:gradientClipMax:gradientClipMin:regularizationType:regularizationScale:)	convenience init(learningRate: Float, gradientRescale: Float, appliesGradientClipping: Bool, gradientClipMax: Float, gradientClipMin: Float, regularizationType: MLCRegularizationType, regularizationScale: Float)
+c:objc(cs)MLCOptimizerDescriptor(cm)descriptorWithLearningRate:gradientRescale:appliesGradientClipping:gradientClippingType:gradientClipMax:gradientClipMin:maximumClippingNorm:customGlobalNorm:regularizationType:regularizationScale:	swift.init	init(learningRate:gradientRescale:appliesGradientClipping:gradientClippingType:gradientClipMax:gradientClipMin:maximumClippingNorm:customGlobalNorm:regularizationType:regularizationScale:)	MLCOptimizerDescriptor.init(learningRate:gradientRescale:appliesGradientClipping:gradientClippingType:gradientClipMax:gradientClipMin:maximumClippingNorm:customGlobalNorm:regularizationType:regularizationScale:)	convenience init(learningRate: Float, gradientRescale: Float, appliesGradientClipping: Bool, gradientClippingType: MLCGradientClippingType, gradientClipMax: Float, gradientClipMin: Float, maximumClippingNorm: Float, customGlobalNorm: Float, regularizationType: MLCRegularizationType, regularizationScale: Float)
+c:objc(cs)MLCOptimizerDescriptor(cm)descriptorWithLearningRate:gradientRescale:regularizationType:regularizationScale:	swift.init	init(learningRate:gradientRescale:regularizationType:regularizationScale:)	MLCOptimizerDescriptor.init(learningRate:gradientRescale:regularizationType:regularizationScale:)	convenience init(learningRate: Float, gradientRescale: Float, regularizationType: MLCRegularizationType, regularizationScale: Float)
+c:objc(cs)MLCOptimizerDescriptor(py)appliesGradientClipping	swift.property	appliesGradientClipping	MLCOptimizerDescriptor.appliesGradientClipping	var appliesGradientClipping: Bool { get }
+c:objc(cs)MLCOptimizerDescriptor(py)customGlobalNorm	swift.property	customGlobalNorm	MLCOptimizerDescriptor.customGlobalNorm	var customGlobalNorm: Float { get }
+c:objc(cs)MLCOptimizerDescriptor(py)gradientClipMax	swift.property	gradientClipMax	MLCOptimizerDescriptor.gradientClipMax	var gradientClipMax: Float { get }
+c:objc(cs)MLCOptimizerDescriptor(py)gradientClipMin	swift.property	gradientClipMin	MLCOptimizerDescriptor.gradientClipMin	var gradientClipMin: Float { get }
+c:objc(cs)MLCOptimizerDescriptor(py)gradientClippingType	swift.property	gradientClippingType	MLCOptimizerDescriptor.gradientClippingType	var gradientClippingType: MLCGradientClippingType { get }
+c:objc(cs)MLCOptimizerDescriptor(py)gradientRescale	swift.property	gradientRescale	MLCOptimizerDescriptor.gradientRescale	var gradientRescale: Float { get }
+c:objc(cs)MLCOptimizerDescriptor(py)learningRate	swift.property	learningRate	MLCOptimizerDescriptor.learningRate	var learningRate: Float { get }
+c:objc(cs)MLCOptimizerDescriptor(py)maximumClippingNorm	swift.property	maximumClippingNorm	MLCOptimizerDescriptor.maximumClippingNorm	var maximumClippingNorm: Float { get }
+c:objc(cs)MLCOptimizerDescriptor(py)regularizationScale	swift.property	regularizationScale	MLCOptimizerDescriptor.regularizationScale	var regularizationScale: Float { get }
+c:objc(cs)MLCOptimizerDescriptor(py)regularizationType	swift.property	regularizationType	MLCOptimizerDescriptor.regularizationType	var regularizationType: MLCRegularizationType { get }
+c:objc(cs)MLCPaddingLayer	swift.class	MLCPaddingLayer	MLCPaddingLayer	class MLCPaddingLayer
+c:objc(cs)MLCPaddingLayer(py)constantValue	swift.property	constantValue	MLCPaddingLayer.constantValue	var constantValue: Float { get }
+c:objc(cs)MLCPaddingLayer(py)paddingBottom	swift.property	paddingBottom	MLCPaddingLayer.paddingBottom	var paddingBottom: Int { get }
+c:objc(cs)MLCPaddingLayer(py)paddingLeft	swift.property	paddingLeft	MLCPaddingLayer.paddingLeft	var paddingLeft: Int { get }
+c:objc(cs)MLCPaddingLayer(py)paddingRight	swift.property	paddingRight	MLCPaddingLayer.paddingRight	var paddingRight: Int { get }
+c:objc(cs)MLCPaddingLayer(py)paddingTop	swift.property	paddingTop	MLCPaddingLayer.paddingTop	var paddingTop: Int { get }
+c:objc(cs)MLCPaddingLayer(py)paddingType	swift.property	paddingType	MLCPaddingLayer.paddingType	var paddingType: MLCPaddingType { get }
+c:objc(cs)MLCPlatform	swift.class	MLCPlatform	MLCPlatform	class MLCPlatform
+c:objc(cs)MLCPlatform(cm)getRNGseed	swift.type.method	getRNGseed()	MLCPlatform.getRNGseed()	class func getRNGseed() -> NSNumber?
+c:objc(cs)MLCPlatform(cm)setRNGSeedTo:	swift.type.method	setRNGSeedTo(_:)	MLCPlatform.setRNGSeedTo(_:)	class func setRNGSeedTo(_ seed: NSNumber)
+c:objc(cs)MLCPoolingDescriptor	swift.class	MLCPoolingDescriptor	MLCPoolingDescriptor	class MLCPoolingDescriptor
+c:objc(cs)MLCPoolingLayer	swift.class	MLCPoolingLayer	MLCPoolingLayer	class MLCPoolingLayer
+c:objc(cs)MLCPoolingLayer(cm)layerWithDescriptor:	swift.init	init(descriptor:)	MLCPoolingLayer.init(descriptor:)	convenience init(descriptor: MLCPoolingDescriptor)
+c:objc(cs)MLCPoolingLayer(py)descriptor	swift.property	descriptor	MLCPoolingLayer.descriptor	@NSCopying var descriptor: MLCPoolingDescriptor { get }
+c:objc(cs)MLCRMSPropOptimizer	swift.class	MLCRMSPropOptimizer	MLCRMSPropOptimizer	class MLCRMSPropOptimizer
+c:objc(cs)MLCRMSPropOptimizer(cm)optimizerWithDescriptor:	swift.init	init(descriptor:)	MLCRMSPropOptimizer.init(descriptor:)	convenience init(descriptor optimizerDescriptor: MLCOptimizerDescriptor)
+c:objc(cs)MLCRMSPropOptimizer(cm)optimizerWithDescriptor:momentumScale:alpha:epsilon:isCentered:	swift.init	init(descriptor:momentumScale:alpha:epsilon:isCentered:)	MLCRMSPropOptimizer.init(descriptor:momentumScale:alpha:epsilon:isCentered:)	convenience init(descriptor optimizerDescriptor: MLCOptimizerDescriptor, momentumScale: Float, alpha: Float, epsilon: Float, isCentered: Bool)
+c:objc(cs)MLCRMSPropOptimizer(py)alpha	swift.property	alpha	MLCRMSPropOptimizer.alpha	var alpha: Float { get }
+c:objc(cs)MLCRMSPropOptimizer(py)epsilon	swift.property	epsilon	MLCRMSPropOptimizer.epsilon	var epsilon: Float { get }
+c:objc(cs)MLCRMSPropOptimizer(py)isCentered	swift.property	isCentered	MLCRMSPropOptimizer.isCentered	var isCentered: Bool { get }
+c:objc(cs)MLCRMSPropOptimizer(py)momentumScale	swift.property	momentumScale	MLCRMSPropOptimizer.momentumScale	var momentumScale: Float { get }
+c:objc(cs)MLCReductionLayer	swift.class	MLCReductionLayer	MLCReductionLayer	class MLCReductionLayer
+c:objc(cs)MLCReductionLayer(cm)layerWithReductionType:dimension:	swift.init	init(reductionType:dimension:)	MLCReductionLayer.init(reductionType:dimension:)	convenience init?(reductionType: MLCReductionType, dimension: Int)
+c:objc(cs)MLCReductionLayer(py)dimension	swift.property	dimension	MLCReductionLayer.dimension	var dimension: Int { get }
+c:objc(cs)MLCReductionLayer(py)reductionType	swift.property	reductionType	MLCReductionLayer.reductionType	var reductionType: MLCReductionType { get }
+c:objc(cs)MLCReshapeLayer	swift.class	MLCReshapeLayer	MLCReshapeLayer	class MLCReshapeLayer
+c:objc(cs)MLCSGDOptimizer	swift.class	MLCSGDOptimizer	MLCSGDOptimizer	class MLCSGDOptimizer
+c:objc(cs)MLCSGDOptimizer(cm)optimizerWithDescriptor:	swift.init	init(descriptor:)	MLCSGDOptimizer.init(descriptor:)	convenience init(descriptor optimizerDescriptor: MLCOptimizerDescriptor)
+c:objc(cs)MLCSGDOptimizer(cm)optimizerWithDescriptor:momentumScale:usesNesterovMomentum:	swift.init	init(descriptor:momentumScale:usesNesterovMomentum:)	MLCSGDOptimizer.init(descriptor:momentumScale:usesNesterovMomentum:)	convenience init(descriptor optimizerDescriptor: MLCOptimizerDescriptor, momentumScale: Float, usesNesterovMomentum: Bool)
+c:objc(cs)MLCSGDOptimizer(py)momentumScale	swift.property	momentumScale	MLCSGDOptimizer.momentumScale	var momentumScale: Float { get }
+c:objc(cs)MLCSGDOptimizer(py)usesNesterovMomentum	swift.property	usesNesterovMomentum	MLCSGDOptimizer.usesNesterovMomentum	var usesNesterovMomentum: Bool { get }
+c:objc(cs)MLCScatterLayer	swift.class	MLCScatterLayer	MLCScatterLayer	class MLCScatterLayer
+c:objc(cs)MLCScatterLayer(cm)layerWithDimension:reductionType:	swift.init	init(dimension:reductionType:)	MLCScatterLayer.init(dimension:reductionType:)	convenience init?(dimension: Int, reductionType: MLCReductionType)
+c:objc(cs)MLCScatterLayer(py)dimension	swift.property	dimension	MLCScatterLayer.dimension	var dimension: Int { get }
+c:objc(cs)MLCScatterLayer(py)reductionType	swift.property	reductionType	MLCScatterLayer.reductionType	var reductionType: MLCReductionType { get }
+c:objc(cs)MLCSelectionLayer	swift.class	MLCSelectionLayer	MLCSelectionLayer	class MLCSelectionLayer
+c:objc(cs)MLCSelectionLayer(cm)layer	swift.init	init()	MLCSelectionLayer.init()	convenience init()
+c:objc(cs)MLCSliceLayer	swift.class	MLCSliceLayer	MLCSliceLayer	class MLCSliceLayer
+c:objc(cs)MLCSoftmaxLayer	swift.class	MLCSoftmaxLayer	MLCSoftmaxLayer	class MLCSoftmaxLayer
+c:objc(cs)MLCSoftmaxLayer(cm)layerWithOperation:	swift.init	init(operation:)	MLCSoftmaxLayer.init(operation:)	convenience init(operation: MLCSoftmaxOperation)
+c:objc(cs)MLCSoftmaxLayer(cm)layerWithOperation:dimension:	swift.init	init(operation:dimension:)	MLCSoftmaxLayer.init(operation:dimension:)	convenience init(operation: MLCSoftmaxOperation, dimension: Int)
+c:objc(cs)MLCSoftmaxLayer(py)dimension	swift.property	dimension	MLCSoftmaxLayer.dimension	var dimension: Int { get }
+c:objc(cs)MLCSoftmaxLayer(py)operation	swift.property	operation	MLCSoftmaxLayer.operation	var operation: MLCSoftmaxOperation { get }
+c:objc(cs)MLCSplitLayer	swift.class	MLCSplitLayer	MLCSplitLayer	class MLCSplitLayer
+c:objc(cs)MLCSplitLayer(cm)layerWithSplitCount:dimension:	swift.init	init(splitCount:dimension:)	MLCSplitLayer.init(splitCount:dimension:)	convenience init(splitCount: Int, dimension: Int)
+c:objc(cs)MLCSplitLayer(py)dimension	swift.property	dimension	MLCSplitLayer.dimension	var dimension: Int { get }
+c:objc(cs)MLCSplitLayer(py)splitCount	swift.property	splitCount	MLCSplitLayer.splitCount	var splitCount: Int { get }
+c:objc(cs)MLCTensor	swift.class	MLCTensor	MLCTensor	class MLCTensor
+c:objc(cs)MLCTensor(cm)tensorWithDescriptor:	swift.init	init(descriptor:)	MLCTensor.init(descriptor:)	convenience init(descriptor tensorDescriptor: MLCTensorDescriptor)
+c:objc(cs)MLCTensor(cm)tensorWithDescriptor:data:	swift.init	init(descriptor:data:)	MLCTensor.init(descriptor:data:)	convenience init(descriptor tensorDescriptor: MLCTensorDescriptor, data: MLCTensorData)
+c:objc(cs)MLCTensor(cm)tensorWithDescriptor:fillWithData:	swift.init	init(descriptor:fillWithData:)	MLCTensor.init(descriptor:fillWithData:)	convenience init(descriptor tensorDescriptor: MLCTensorDescriptor, fillWithData fillData: NSNumber)
+c:objc(cs)MLCTensor(cm)tensorWithDescriptor:randomInitializerType:	swift.init	init(descriptor:randomInitializerType:)	MLCTensor.init(descriptor:randomInitializerType:)	convenience init(descriptor tensorDescriptor: MLCTensorDescriptor, randomInitializerType: MLCRandomInitializerType)
+c:objc(cs)MLCTensor(cm)tensorWithSequenceLength:featureChannelCount:batchSize:	swift.init	init(sequenceLength:featureChannelCount:batchSize:)	MLCTensor.init(sequenceLength:featureChannelCount:batchSize:)	convenience init(sequenceLength: Int, featureChannelCount: Int, batchSize: Int)
+c:objc(cs)MLCTensor(cm)tensorWithSequenceLength:featureChannelCount:batchSize:data:	swift.init	init(sequenceLength:featureChannelCount:batchSize:data:)	MLCTensor.init(sequenceLength:featureChannelCount:batchSize:data:)	convenience init(sequenceLength: Int, featureChannelCount: Int, batchSize: Int, data: MLCTensorData?)
+c:objc(cs)MLCTensor(cm)tensorWithSequenceLength:featureChannelCount:batchSize:randomInitializerType:	swift.init	init(sequenceLength:featureChannelCount:batchSize:randomInitializerType:)	MLCTensor.init(sequenceLength:featureChannelCount:batchSize:randomInitializerType:)	convenience init(sequenceLength: Int, featureChannelCount: Int, batchSize: Int, randomInitializerType: MLCRandomInitializerType)
+c:objc(cs)MLCTensor(cm)tensorWithWidth:height:featureChannelCount:batchSize:	swift.init	init(width:height:featureChannelCount:batchSize:)	MLCTensor.init(width:height:featureChannelCount:batchSize:)	convenience init(width: Int, height: Int, featureChannelCount: Int, batchSize: Int)
+c:objc(cs)MLCTensor(cm)tensorWithWidth:height:featureChannelCount:batchSize:data:	swift.init	init(width:height:featureChannelCount:batchSize:data:)	MLCTensor.init(width:height:featureChannelCount:batchSize:data:)	convenience init(width: Int, height: Int, featureChannelCount: Int, batchSize: Int, data: MLCTensorData)
+c:objc(cs)MLCTensor(cm)tensorWithWidth:height:featureChannelCount:batchSize:data:dataType:	swift.init	init(width:height:featureChannelCount:batchSize:data:dataType:)	MLCTensor.init(width:height:featureChannelCount:batchSize:data:dataType:)	convenience init(width: Int, height: Int, featureChannelCount: Int, batchSize: Int, data: MLCTensorData, dataType: MLCDataType)
+c:objc(cs)MLCTensor(cm)tensorWithWidth:height:featureChannelCount:batchSize:fillWithData:dataType:	swift.init	init(width:height:featureChannelCount:batchSize:fillWithData:dataType:)	MLCTensor.init(width:height:featureChannelCount:batchSize:fillWithData:dataType:)	convenience init(width: Int, height: Int, featureChannelCount: Int, batchSize: Int, fillWithData fillData: Float, dataType: MLCDataType)
+c:objc(cs)MLCTensor(cm)tensorWithWidth:height:featureChannelCount:batchSize:randomInitializerType:	swift.init	init(width:height:featureChannelCount:batchSize:randomInitializerType:)	MLCTensor.init(width:height:featureChannelCount:batchSize:randomInitializerType:)	convenience init(width: Int, height: Int, featureChannelCount: Int, batchSize: Int, randomInitializerType: MLCRandomInitializerType)
+c:objc(cs)MLCTensor(im)bindAndWriteData:toDevice:	swift.method	bindAndWriteData(_:to:)	MLCTensor.bindAndWriteData(_:to:)	func bindAndWriteData(_ data: MLCTensorData, to device: MLCDevice) -> Bool
+c:objc(cs)MLCTensor(im)bindOptimizerData:deviceData:	swift.method	bindOptimizerData(_:deviceData:)	MLCTensor.bindOptimizerData(_:deviceData:)	func bindOptimizerData(_ data: [MLCTensorData], deviceData: [MLCTensorOptimizerDeviceData]?) -> Bool
+c:objc(cs)MLCTensor(im)copyDataFromDeviceMemoryToBytes:length:synchronizeWithDevice:	swift.method	copyDataFromDeviceMemory(toBytes:length:synchronizeWithDevice:)	MLCTensor.copyDataFromDeviceMemory(toBytes:length:synchronizeWithDevice:)	func copyDataFromDeviceMemory(toBytes bytes: UnsafeMutableRawPointer, length: Int, synchronizeWithDevice: Bool) -> Bool
+c:objc(cs)MLCTensor(im)synchronizeData	swift.method	synchronizeData()	MLCTensor.synchronizeData()	func synchronizeData() -> Bool
+c:objc(cs)MLCTensor(im)synchronizeOptimizerData	swift.method	synchronizeOptimizerData()	MLCTensor.synchronizeOptimizerData()	func synchronizeOptimizerData() -> Bool
+c:objc(cs)MLCTensor(im)tensorByDequantizingToType:scale:bias:	swift.method	dequantized(to:scale:zeroPoint:)	MLCTensor.dequantized(to:scale:zeroPoint:)	func dequantized(to type: MLCDataType, scale: MLCTensor, zeroPoint bias: MLCTensor) -> MLCTensor?
+c:objc(cs)MLCTensor(im)tensorByDequantizingToType:scale:bias:axis:	swift.method	dequantized(to:scale:bias:axis:)	MLCTensor.dequantized(to:scale:bias:axis:)	func dequantized(to type: MLCDataType, scale: MLCTensor, bias: MLCTensor, axis: Int) -> MLCTensor?
+c:objc(cs)MLCTensor(im)tensorByQuantizingToType:scale:bias:	swift.method	quantized(to:scale:bias:)	MLCTensor.quantized(to:scale:bias:)	func quantized(to type: MLCDataType, scale: Float, bias: Int) -> MLCTensor?
+c:objc(cs)MLCTensor(im)tensorByQuantizingToType:scale:bias:axis:	swift.method	quantized(to:scale:bias:axis:)	MLCTensor.quantized(to:scale:bias:axis:)	func quantized(to type: MLCDataType, scale: MLCTensor, bias: MLCTensor, axis: Int) -> MLCTensor?
+c:objc(cs)MLCTensor(py)data	swift.property	data	MLCTensor.data	var data: Data? { get }
+c:objc(cs)MLCTensor(py)descriptor	swift.property	descriptor	MLCTensor.descriptor	@NSCopying var descriptor: MLCTensorDescriptor { get }
+c:objc(cs)MLCTensor(py)device	swift.property	device	MLCTensor.device	var device: MLCDevice? { get }
+c:objc(cs)MLCTensor(py)hasValidNumerics	swift.property	hasValidNumerics	MLCTensor.hasValidNumerics	var hasValidNumerics: Bool { get }
+c:objc(cs)MLCTensor(py)label	swift.property	label	MLCTensor.label	var label: String { get set }
+c:objc(cs)MLCTensor(py)optimizerData	swift.property	optimizerData	MLCTensor.optimizerData	var optimizerData: [MLCTensorData] { get }
+c:objc(cs)MLCTensor(py)optimizerDeviceData	swift.property	optimizerDeviceData	MLCTensor.optimizerDeviceData	var optimizerDeviceData: [MLCTensorOptimizerDeviceData] { get }
+c:objc(cs)MLCTensor(py)tensorID	swift.property	tensorID	MLCTensor.tensorID	var tensorID: Int { get }
+c:objc(cs)MLCTensorData	swift.class	MLCTensorData	MLCTensorData	class MLCTensorData
+c:objc(cs)MLCTensorData(cm)dataWithBytesNoCopy:length:	swift.init	init(bytesNoCopy:length:)	MLCTensorData.init(bytesNoCopy:length:)	convenience init(bytesNoCopy bytes: UnsafeMutableRawPointer, length: Int)
+c:objc(cs)MLCTensorData(cm)dataWithBytesNoCopy:length:deallocator:	swift.init	init(bytesNoCopy:length:deallocator:)	MLCTensorData.init(bytesNoCopy:length:deallocator:)	convenience init(bytesNoCopy bytes: UnsafeMutableRawPointer, length: Int, deallocator: @escaping (UnsafeMutableRawPointer, Int) -> Void)
+c:objc(cs)MLCTensorData(cm)dataWithImmutableBytesNoCopy:length:	swift.init	init(immutableBytesNoCopy:length:)	MLCTensorData.init(immutableBytesNoCopy:length:)	convenience init(immutableBytesNoCopy bytes: UnsafeRawPointer, length: Int)
+c:objc(cs)MLCTensorData(py)bytes	swift.property	bytes	MLCTensorData.bytes	var bytes: UnsafeMutableRawPointer { get }
+c:objc(cs)MLCTensorData(py)length	swift.property	length	MLCTensorData.length	var length: Int { get }
+c:objc(cs)MLCTensorDescriptor	swift.class	MLCTensorDescriptor	MLCTensorDescriptor	class MLCTensorDescriptor
+c:objc(cs)MLCTensorDescriptor(cm)convolutionBiasesDescriptorWithFeatureChannelCount:dataType:	swift.init	init(convolutionBiasesWithFeatureChannelCount:dataType:)	MLCTensorDescriptor.init(convolutionBiasesWithFeatureChannelCount:dataType:)	convenience init?(convolutionBiasesWithFeatureChannelCount featureChannelCount: Int, dataType: MLCDataType)
+c:objc(cs)MLCTensorDescriptor(cm)convolutionWeightsDescriptorWithInputFeatureChannelCount:outputFeatureChannelCount:dataType:	swift.init	init(convolutionWeightsWithInputFeatureChannelCount:outputFeatureChannelCount:dataType:)	MLCTensorDescriptor.init(convolutionWeightsWithInputFeatureChannelCount:outputFeatureChannelCount:dataType:)	convenience init?(convolutionWeightsWithInputFeatureChannelCount inputFeatureChannelCount: Int, outputFeatureChannelCount: Int, dataType: MLCDataType)
+c:objc(cs)MLCTensorDescriptor(cm)convolutionWeightsDescriptorWithWidth:height:inputFeatureChannelCount:outputFeatureChannelCount:dataType:	swift.init	init(convolutionWeightsWithWidth:height:inputFeatureChannelCount:outputFeatureChannelCount:dataType:)	MLCTensorDescriptor.init(convolutionWeightsWithWidth:height:inputFeatureChannelCount:outputFeatureChannelCount:dataType:)	convenience init?(convolutionWeightsWithWidth width: Int, height: Int, inputFeatureChannelCount: Int, outputFeatureChannelCount: Int, dataType: MLCDataType)
+c:objc(cs)MLCTensorDescriptor(cm)descriptorWithWidth:height:featureChannelCount:batchSize:	swift.init	init(width:height:featureChannelCount:batchSize:)	MLCTensorDescriptor.init(width:height:featureChannelCount:batchSize:)	convenience init?(width: Int, height: Int, featureChannelCount featureChannels: Int, batchSize: Int)
+c:objc(cs)MLCTensorDescriptor(cm)descriptorWithWidth:height:featureChannelCount:batchSize:dataType:	swift.init	init(width:height:featureChannelCount:batchSize:dataType:)	MLCTensorDescriptor.init(width:height:featureChannelCount:batchSize:dataType:)	convenience init?(width: Int, height: Int, featureChannelCount: Int, batchSize: Int, dataType: MLCDataType)
+c:objc(cs)MLCTensorDescriptor(cpy)maxTensorDimensions	swift.type.property	maxTensorDimensions	MLCTensorDescriptor.maxTensorDimensions	class var maxTensorDimensions: Int { get }
+c:objc(cs)MLCTensorDescriptor(py)dataType	swift.property	dataType	MLCTensorDescriptor.dataType	var dataType: MLCDataType { get }
+c:objc(cs)MLCTensorDescriptor(py)dimensionCount	swift.property	dimensionCount	MLCTensorDescriptor.dimensionCount	var dimensionCount: Int { get }
+c:objc(cs)MLCTensorDescriptor(py)sortedSequences	swift.property	sortedSequences	MLCTensorDescriptor.sortedSequences	var sortedSequences: Bool { get }
+c:objc(cs)MLCTensorDescriptor(py)tensorAllocationSizeInBytes	swift.property	tensorAllocationSizeInBytes	MLCTensorDescriptor.tensorAllocationSizeInBytes	var tensorAllocationSizeInBytes: Int { get }
+c:objc(cs)MLCTensorOptimizerDeviceData	swift.class	MLCTensorOptimizerDeviceData	MLCTensorOptimizerDeviceData	class MLCTensorOptimizerDeviceData
+c:objc(cs)MLCTensorParameter	swift.class	MLCTensorParameter	MLCTensorParameter	class MLCTensorParameter
+c:objc(cs)MLCTensorParameter(cm)parameterWithTensor:	swift.init	init(tensor:)	MLCTensorParameter.init(tensor:)	convenience init(tensor: MLCTensor)
+c:objc(cs)MLCTensorParameter(cm)parameterWithTensor:optimizerData:	swift.init	init(tensor:optimizerData:)	MLCTensorParameter.init(tensor:optimizerData:)	convenience init(tensor: MLCTensor, optimizerData: [MLCTensorData]?)
+c:objc(cs)MLCTensorParameter(py)isUpdatable	swift.property	isUpdatable	MLCTensorParameter.isUpdatable	var isUpdatable: Bool { get set }
+c:objc(cs)MLCTensorParameter(py)tensor	swift.property	tensor	MLCTensorParameter.tensor	var tensor: MLCTensor { get }
+c:objc(cs)MLCTrainingGraph	swift.class	MLCTrainingGraph	MLCTrainingGraph	class MLCTrainingGraph
+c:objc(cs)MLCTrainingGraph(cm)graphWithGraphObjects:lossLayer:optimizer:	swift.init	init(graphObjects:lossLayer:optimizer:)	MLCTrainingGraph.init(graphObjects:lossLayer:optimizer:)	convenience init(graphObjects: [MLCGraph], lossLayer: MLCLayer?, optimizer: MLCOptimizer?)
+c:objc(cs)MLCTrainingGraph(im)addInputs:lossLabels:	swift.method	addInputs(_:lossLabels:)	MLCTrainingGraph.addInputs(_:lossLabels:)	func addInputs(_ inputs: [String : MLCTensor], lossLabels: [String : MLCTensor]?) -> Bool
+c:objc(cs)MLCTrainingGraph(im)addInputs:lossLabels:lossLabelWeights:	swift.method	addInputs(_:lossLabels:lossLabelWeights:)	MLCTrainingGraph.addInputs(_:lossLabels:lossLabelWeights:)	func addInputs(_ inputs: [String : MLCTensor], lossLabels: [String : MLCTensor]?, lossLabelWeights: [String : MLCTensor]?) -> Bool
+c:objc(cs)MLCTrainingGraph(im)addOutputs:	swift.method	addOutputs(_:)	MLCTrainingGraph.addOutputs(_:)	func addOutputs(_ outputs: [String : MLCTensor]) -> Bool
+c:objc(cs)MLCTrainingGraph(im)allocateUserGradientForTensor:	swift.method	allocateUserGradient(for:)	MLCTrainingGraph.allocateUserGradient(for:)	func allocateUserGradient(for tensor: MLCTensor) -> MLCTensor?
+c:objc(cs)MLCTrainingGraph(im)bindOptimizerData:deviceData:withTensor:	swift.method	bindOptimizerData(_:deviceData:with:)	MLCTrainingGraph.bindOptimizerData(_:deviceData:with:)	func bindOptimizerData(_ data: [MLCTensorData], deviceData: [MLCTensorOptimizerDeviceData]?, with tensor: MLCTensor) -> Bool
+c:objc(cs)MLCTrainingGraph(im)compileOptimizer:	swift.method	compileOptimizer(_:)	MLCTrainingGraph.compileOptimizer(_:)	func compileOptimizer(_ optimizer: MLCOptimizer) -> Bool
+c:objc(cs)MLCTrainingGraph(im)compileWithOptions:device:	swift.method	compile(options:device:)	MLCTrainingGraph.compile(options:device:)	func compile(options: MLCGraphCompilationOptions = [], device: MLCDevice) -> Bool
+c:objc(cs)MLCTrainingGraph(im)compileWithOptions:device:inputTensors:inputTensorsData:	swift.method	compile(options:device:inputTensors:inputTensorsData:)	MLCTrainingGraph.compile(options:device:inputTensors:inputTensorsData:)	func compile(options: MLCGraphCompilationOptions = [], device: MLCDevice, inputTensors: [String : MLCTensor]?, inputTensorsData: [String : MLCTensorData]?) -> Bool
+c:objc(cs)MLCTrainingGraph(im)executeForwardWithBatchSize:options:completionHandler:	swift.method	executeForward(batchSize:options:completionHandler:)	MLCTrainingGraph.executeForward(batchSize:options:completionHandler:)	func executeForward(batchSize: Int, options: MLCExecutionOptions = [], completionHandler: MLCGraphCompletionHandler? = nil) -> Bool
+c:objc(cs)MLCTrainingGraph(im)executeForwardWithBatchSize:options:outputsData:completionHandler:	swift.method	executeForward(batchSize:options:outputsData:completionHandler:)	MLCTrainingGraph.executeForward(batchSize:options:outputsData:completionHandler:)	func executeForward(batchSize: Int, options: MLCExecutionOptions = [], outputsData: [String : MLCTensorData]?, completionHandler: MLCGraphCompletionHandler? = nil) -> Bool
+c:objc(cs)MLCTrainingGraph(im)executeGradientWithBatchSize:options:completionHandler:	swift.method	executeGradient(batchSize:options:completionHandler:)	MLCTrainingGraph.executeGradient(batchSize:options:completionHandler:)	func executeGradient(batchSize: Int, options: MLCExecutionOptions = [], completionHandler: MLCGraphCompletionHandler? = nil) -> Bool
+c:objc(cs)MLCTrainingGraph(im)executeGradientWithBatchSize:options:outputsData:completionHandler:	swift.method	executeGradient(batchSize:options:outputsData:completionHandler:)	MLCTrainingGraph.executeGradient(batchSize:options:outputsData:completionHandler:)	func executeGradient(batchSize: Int, options: MLCExecutionOptions = [], outputsData: [String : MLCTensorData]?, completionHandler: MLCGraphCompletionHandler? = nil) -> Bool
+c:objc(cs)MLCTrainingGraph(im)executeOptimizerUpdateWithOptions:completionHandler:	swift.method	executeOptimizerUpdate(options:completionHandler:)	MLCTrainingGraph.executeOptimizerUpdate(options:completionHandler:)	func executeOptimizerUpdate(options: MLCExecutionOptions = [], completionHandler: MLCGraphCompletionHandler? = nil) -> Bool
+c:objc(cs)MLCTrainingGraph(im)executeWithInputsData:lossLabelsData:lossLabelWeightsData:batchSize:options:completionHandler:	swift.method	execute(inputsData:lossLabelsData:lossLabelWeightsData:batchSize:options:completionHandler:)	MLCTrainingGraph.execute(inputsData:lossLabelsData:lossLabelWeightsData:batchSize:options:completionHandler:)	func execute(inputsData: [String : MLCTensorData], lossLabelsData: [String : MLCTensorData]?, lossLabelWeightsData: [String : MLCTensorData]?, batchSize: Int, options: MLCExecutionOptions = [], completionHandler: MLCGraphCompletionHandler? = nil) -> Bool
+c:objc(cs)MLCTrainingGraph(im)executeWithInputsData:lossLabelsData:lossLabelWeightsData:outputsData:batchSize:options:completionHandler:	swift.method	execute(inputsData:lossLabelsData:lossLabelWeightsData:outputsData:batchSize:options:completionHandler:)	MLCTrainingGraph.execute(inputsData:lossLabelsData:lossLabelWeightsData:outputsData:batchSize:options:completionHandler:)	func execute(inputsData: [String : MLCTensorData], lossLabelsData: [String : MLCTensorData]?, lossLabelWeightsData: [String : MLCTensorData]?, outputsData: [String : MLCTensorData]?, batchSize: Int, options: MLCExecutionOptions = [], completionHandler: MLCGraphCompletionHandler? = nil) -> Bool
+c:objc(cs)MLCTrainingGraph(im)gradientDataForParameter:layer:	swift.method	gradientData(forParameter:layer:)	MLCTrainingGraph.gradientData(forParameter:layer:)	func gradientData(forParameter parameter: MLCTensor, layer: MLCLayer) -> Data?
+c:objc(cs)MLCTrainingGraph(im)gradientTensorForInput:	swift.method	gradientTensor(forInput:)	MLCTrainingGraph.gradientTensor(forInput:)	func gradientTensor(forInput input: MLCTensor) -> MLCTensor?
+c:objc(cs)MLCTrainingGraph(im)linkWithGraphs:	swift.method	link(with:)	MLCTrainingGraph.link(with:)	func link(with graphs: [MLCTrainingGraph]) -> Bool
+c:objc(cs)MLCTrainingGraph(im)resultGradientTensorsForLayer:	swift.method	resultGradientTensors(for:)	MLCTrainingGraph.resultGradientTensors(for:)	func resultGradientTensors(for layer: MLCLayer) -> [MLCTensor]
+c:objc(cs)MLCTrainingGraph(im)setTrainingTensorParameters:	swift.method	setTrainingTensorParameters(_:)	MLCTrainingGraph.setTrainingTensorParameters(_:)	func setTrainingTensorParameters(_ parameters: [MLCTensorParameter]) -> Bool
+c:objc(cs)MLCTrainingGraph(im)sourceGradientTensorsForLayer:	swift.method	sourceGradientTensors(for:)	MLCTrainingGraph.sourceGradientTensors(for:)	func sourceGradientTensors(for layer: MLCLayer) -> [MLCTensor]
+c:objc(cs)MLCTrainingGraph(im)stopGradientForTensors:	swift.method	stopGradient(for:)	MLCTrainingGraph.stopGradient(for:)	func stopGradient(for tensors: [MLCTensor]) -> Bool
+c:objc(cs)MLCTrainingGraph(im)synchronizeUpdates	swift.method	synchronizeUpdates()	MLCTrainingGraph.synchronizeUpdates()	func synchronizeUpdates()
+c:objc(cs)MLCTrainingGraph(py)deviceMemorySize	swift.property	deviceMemorySize	MLCTrainingGraph.deviceMemorySize	var deviceMemorySize: Int { get }
+c:objc(cs)MLCTrainingGraph(py)optimizer	swift.property	optimizer	MLCTrainingGraph.optimizer	var optimizer: MLCOptimizer? { get }
+c:objc(cs)MLCTransposeLayer	swift.class	MLCTransposeLayer	MLCTransposeLayer	class MLCTransposeLayer
+c:objc(cs)MLCUpsampleLayer	swift.class	MLCUpsampleLayer	MLCUpsampleLayer	class MLCUpsampleLayer
+c:objc(cs)MLCUpsampleLayer(py)alignsCorners	swift.property	alignsCorners	MLCUpsampleLayer.alignsCorners	var alignsCorners: Bool { get }
+c:objc(cs)MLCUpsampleLayer(py)sampleMode	swift.property	sampleMode	MLCUpsampleLayer.sampleMode	var sampleMode: MLCSampleMode { get }
+c:objc(cs)MLCYOLOLossDescriptor	swift.class	MLCYOLOLossDescriptor	MLCYOLOLossDescriptor	class MLCYOLOLossDescriptor
+c:objc(cs)MLCYOLOLossDescriptor(cm)descriptorWithAnchorBoxes:anchorBoxCount:	swift.init	init(anchorBoxes:anchorBoxCount:)	MLCYOLOLossDescriptor.init(anchorBoxes:anchorBoxCount:)	convenience init(anchorBoxes: Data, anchorBoxCount: Int)
+c:objc(cs)MLCYOLOLossDescriptor(py)anchorBoxCount	swift.property	anchorBoxCount	MLCYOLOLossDescriptor.anchorBoxCount	var anchorBoxCount: Int { get }
+c:objc(cs)MLCYOLOLossDescriptor(py)anchorBoxes	swift.property	anchorBoxes	MLCYOLOLossDescriptor.anchorBoxes	var anchorBoxes: Data { get }
+c:objc(cs)MLCYOLOLossDescriptor(py)maximumIOUForObjectAbsence	swift.property	maximumIOUForObjectAbsence	MLCYOLOLossDescriptor.maximumIOUForObjectAbsence	var maximumIOUForObjectAbsence: Float { get set }
+c:objc(cs)MLCYOLOLossDescriptor(py)minimumIOUForObjectPresence	swift.property	minimumIOUForObjectPresence	MLCYOLOLossDescriptor.minimumIOUForObjectPresence	var minimumIOUForObjectPresence: Float { get set }
+c:objc(cs)MLCYOLOLossDescriptor(py)scaleClassLoss	swift.property	scaleClassLoss	MLCYOLOLossDescriptor.scaleClassLoss	var scaleClassLoss: Float { get set }
+c:objc(cs)MLCYOLOLossDescriptor(py)scaleNoObjectConfidenceLoss	swift.property	scaleNoObjectConfidenceLoss	MLCYOLOLossDescriptor.scaleNoObjectConfidenceLoss	var scaleNoObjectConfidenceLoss: Float { get set }
+c:objc(cs)MLCYOLOLossDescriptor(py)scaleObjectConfidenceLoss	swift.property	scaleObjectConfidenceLoss	MLCYOLOLossDescriptor.scaleObjectConfidenceLoss	var scaleObjectConfidenceLoss: Float { get set }
+c:objc(cs)MLCYOLOLossDescriptor(py)scaleSpatialPositionLoss	swift.property	scaleSpatialPositionLoss	MLCYOLOLossDescriptor.scaleSpatialPositionLoss	var scaleSpatialPositionLoss: Float { get set }
+c:objc(cs)MLCYOLOLossDescriptor(py)scaleSpatialSizeLoss	swift.property	scaleSpatialSizeLoss	MLCYOLOLossDescriptor.scaleSpatialSizeLoss	var scaleSpatialSizeLoss: Float { get set }
+c:objc(cs)MLCYOLOLossDescriptor(py)shouldRescore	swift.property	shouldRescore	MLCYOLOLossDescriptor.shouldRescore	var shouldRescore: Bool { get set }
+c:objc(cs)MLCYOLOLossLayer	swift.class	MLCYOLOLossLayer	MLCYOLOLossLayer	class MLCYOLOLossLayer
+c:objc(cs)MLCYOLOLossLayer(cm)layerWithDescriptor:	swift.init	init(descriptor:)	MLCYOLOLossLayer.init(descriptor:)	convenience init(descriptor lossDescriptor: MLCYOLOLossDescriptor)
+c:objc(cs)MLCYOLOLossLayer(py)yoloLossDescriptor	swift.property	yoloLossDescriptor	MLCYOLOLossLayer.yoloLossDescriptor	@NSCopying var yoloLossDescriptor: MLCYOLOLossDescriptor { get }
+s:9MLCompute14MLCPoolingTypeO	swift.enum	MLCPoolingType	MLCPoolingType	enum MLCPoolingType
+s:9MLCompute14MLCPoolingTypeO16debugDescriptionSSvp	swift.property	debugDescription	MLCPoolingType.debugDescription	var debugDescription: String { get }
+s:9MLCompute14MLCPoolingTypeO3maxyA2CmF	swift.enum.case	MLCPoolingType.max	MLCPoolingType.max	case max
+s:9MLCompute14MLCPoolingTypeO6l2NormyA2CmF	swift.enum.case	MLCPoolingType.l2Norm	MLCPoolingType.l2Norm	case l2Norm
+s:9MLCompute14MLCPoolingTypeO7averageyACSb_tcACmF	swift.enum.case	MLCPoolingType.average(countIncludesPadding:)	MLCPoolingType.average(countIncludesPadding:)	case average(countIncludesPadding: Bool = false)
+s:9MLCompute16MLCPaddingPolicyO	swift.enum	MLCPaddingPolicy	MLCPaddingPolicy	enum MLCPaddingPolicy
+s:9MLCompute16MLCPaddingPolicyO16debugDescriptionSSvp	swift.property	debugDescription	MLCPaddingPolicy.debugDescription	var debugDescription: String { get }
+s:9MLCompute16MLCPaddingPolicyO4sameyA2CmF	swift.enum.case	MLCPaddingPolicy.same	MLCPaddingPolicy.same	case same
+s:9MLCompute16MLCPaddingPolicyO5sizedyACSi_SitcACmF	swift.enum.case	MLCPaddingPolicy.sized(y:x:)	MLCPaddingPolicy.sized(y:x:)	case sized(y: Int, x: Int)
+s:9MLCompute16MLCPaddingPolicyO5validyA2CmF	swift.enum.case	MLCPaddingPolicy.valid	MLCPaddingPolicy.valid	case valid
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCActivationType	swift.func.op	!=(_:_:)	MLCActivationType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCArithmeticOperation	swift.func.op	!=(_:_:)	MLCArithmeticOperation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCComparisonOperation	swift.func.op	!=(_:_:)	MLCComparisonOperation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCConvolutionType	swift.func.op	!=(_:_:)	MLCConvolutionType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCDataType	swift.func.op	!=(_:_:)	MLCDataType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCDeviceType	swift.func.op	!=(_:_:)	MLCDeviceType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.func.op	!=(_:_:)	MLCExecutionOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCGradientClippingType	swift.func.op	!=(_:_:)	MLCGradientClippingType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.func.op	!=(_:_:)	MLCGraphCompilationOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCLSTMResultMode	swift.func.op	!=(_:_:)	MLCLSTMResultMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCLossType	swift.func.op	!=(_:_:)	MLCLossType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCPaddingType	swift.func.op	!=(_:_:)	MLCPaddingType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCRandomInitializerType	swift.func.op	!=(_:_:)	MLCRandomInitializerType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCReductionType	swift.func.op	!=(_:_:)	MLCReductionType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCRegularizationType	swift.func.op	!=(_:_:)	MLCRegularizationType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCSampleMode	swift.func.op	!=(_:_:)	MLCSampleMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MLCSoftmaxOperation	swift.func.op	!=(_:_:)	MLCSoftmaxOperation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCActivationType	swift.property	hashValue	MLCActivationType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCArithmeticOperation	swift.property	hashValue	MLCArithmeticOperation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCComparisonOperation	swift.property	hashValue	MLCComparisonOperation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCConvolutionType	swift.property	hashValue	MLCConvolutionType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCDataType	swift.property	hashValue	MLCDataType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCDeviceType	swift.property	hashValue	MLCDeviceType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCGradientClippingType	swift.property	hashValue	MLCGradientClippingType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCLSTMResultMode	swift.property	hashValue	MLCLSTMResultMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCLossType	swift.property	hashValue	MLCLossType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCPaddingType	swift.property	hashValue	MLCPaddingType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCRandomInitializerType	swift.property	hashValue	MLCRandomInitializerType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCReductionType	swift.property	hashValue	MLCReductionType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCRegularizationType	swift.property	hashValue	MLCRegularizationType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCSampleMode	swift.property	hashValue	MLCSampleMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MLCSoftmaxOperation	swift.property	hashValue	MLCSoftmaxOperation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCActivationType	swift.method	hash(into:)	MLCActivationType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCArithmeticOperation	swift.method	hash(into:)	MLCArithmeticOperation.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCComparisonOperation	swift.method	hash(into:)	MLCComparisonOperation.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCConvolutionType	swift.method	hash(into:)	MLCConvolutionType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCDataType	swift.method	hash(into:)	MLCDataType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCDeviceType	swift.method	hash(into:)	MLCDeviceType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCGradientClippingType	swift.method	hash(into:)	MLCGradientClippingType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCLSTMResultMode	swift.method	hash(into:)	MLCLSTMResultMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCLossType	swift.method	hash(into:)	MLCLossType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCPaddingType	swift.method	hash(into:)	MLCPaddingType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCRandomInitializerType	swift.method	hash(into:)	MLCRandomInitializerType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCReductionType	swift.method	hash(into:)	MLCReductionType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCRegularizationType	swift.method	hash(into:)	MLCRegularizationType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCSampleMode	swift.method	hash(into:)	MLCSampleMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MLCSoftmaxOperation	swift.method	hash(into:)	MLCSoftmaxOperation.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11MLCDataTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCDataType.init(rawValue:)	init?(rawValue: Int32)
+s:So11MLCLossTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCLossType.init(rawValue:)	init?(rawValue: Int32)
+s:So13MLCDeviceTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCDeviceType.init(rawValue:)	init?(rawValue: Int32)
+s:So13MLCSampleModeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCSampleMode.init(rawValue:)	init?(rawValue: Int32)
+s:So13MLCSliceLayerC9MLComputeE3endSaySiGvp	swift.property	end	MLCSliceLayer.end	var end: [Int] { get }
+s:So13MLCSliceLayerC9MLComputeE5start3end6strideABSgSaySiG_A2HSgtcfc	swift.init	init(start:end:stride:)	MLCSliceLayer.init(start:end:stride:)	convenience init?(start: [Int], end: [Int], stride: [Int]?)
+s:So13MLCSliceLayerC9MLComputeE5startSaySiGvp	swift.property	start	MLCSliceLayer.start	var start: [Int] { get }
+s:So13MLCSliceLayerC9MLComputeE6strideSaySiGSgvp	swift.property	stride	MLCSliceLayer.stride	var stride: [Int]? { get }
+s:So13MLCSplitLayerC9MLComputeE19splitSectionLengths9dimensionABSaySiG_Sitcfc	swift.init	init(splitSectionLengths:dimension:)	MLCSplitLayer.init(splitSectionLengths:dimension:)	convenience init(splitSectionLengths: [Int], dimension: Int)
+s:So13MLCSplitLayerC9MLComputeE19splitSectionLengthsSaySiGSgvp	swift.property	splitSectionLengths	MLCSplitLayer.splitSectionLengths	var splitSectionLengths: [Int]? { get }
+s:So14MLCPaddingTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCPaddingType.init(rawValue:)	init?(rawValue: Int32)
+s:So15MLCPaddingLayerC9MLComputeE11zeroPaddingABSaySiG_tcfc	swift.init	init(zeroPadding:)	MLCPaddingLayer.init(zeroPadding:)	convenience init(zeroPadding: [Int])
+s:So15MLCPaddingLayerC9MLComputeE15constantPadding0D5ValueABSaySiG_Sftcfc	swift.init	init(constantPadding:constantValue:)	MLCPaddingLayer.init(constantPadding:constantValue:)	convenience init(constantPadding: [Int], constantValue: Float)
+s:So15MLCPaddingLayerC9MLComputeE16symmetricPaddingABSaySiG_tcfc	swift.init	init(symmetricPadding:)	MLCPaddingLayer.init(symmetricPadding:)	convenience init(symmetricPadding: [Int])
+s:So15MLCPaddingLayerC9MLComputeE17reflectionPaddingABSaySiG_tcfc	swift.init	init(reflectionPadding:)	MLCPaddingLayer.init(reflectionPadding:)	convenience init(reflectionPadding: [Int])
+s:So15MLCReshapeLayerC9MLComputeE5shapeABSgSaySiG_tcfc	swift.init	init(shape:)	MLCReshapeLayer.init(shape:)	convenience init?(shape: [Int])
+s:So15MLCReshapeLayerC9MLComputeE5shapeSaySiGvp	swift.property	shape	MLCReshapeLayer.shape	var shape: [Int] { get }
+s:So16MLCReductionTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCReductionType.init(rawValue:)	init?(rawValue: Int32)
+s:So16MLCTrainingGraphC9MLComputeE14executeForward9batchSize7options11outputsDataSo9MLCTensorCSg6result_Sd13executionTimetSi_So19MLCExecutionOptionsVSDySSSo0kJ0CGSgtYaKF	swift.method	executeForward(batchSize:options:outputsData:)	MLCTrainingGraph.executeForward(batchSize:options:outputsData:)	@discardableResult func executeForward(batchSize: Int, options: MLCExecutionOptions = [], outputsData: [String : MLCTensorData]? = nil) async throws -> (result: MLCTensor?, executionTime: TimeInterval)
+s:So16MLCTrainingGraphC9MLComputeE15executeGradient9batchSize7options11outputsDataSdSi_So19MLCExecutionOptionsVSDySSSo09MLCTensorJ0CGSgtYaKF	swift.method	executeGradient(batchSize:options:outputsData:)	MLCTrainingGraph.executeGradient(batchSize:options:outputsData:)	@discardableResult func executeGradient(batchSize: Int, options: MLCExecutionOptions = [], outputsData: [String : MLCTensorData]? = nil) async throws -> TimeInterval
+s:So16MLCTrainingGraphC9MLComputeE22executeOptimizerUpdate7optionsSdSo19MLCExecutionOptionsV_tYaKF	swift.method	executeOptimizerUpdate(options:)	MLCTrainingGraph.executeOptimizerUpdate(options:)	@discardableResult func executeOptimizerUpdate(options: MLCExecutionOptions = []) async throws -> TimeInterval
+s:So16MLCUpsampleLayerC9MLComputeE5shape10sampleMode13alignsCornersABSgSaySiG_So09MLCSampleF0VSbtcfc	swift.init	init(shape:sampleMode:alignsCorners:)	MLCUpsampleLayer.init(shape:sampleMode:alignsCorners:)	convenience init?(shape: [Int], sampleMode: MLCSampleMode, alignsCorners: Bool)
+s:So16MLCUpsampleLayerC9MLComputeE5shapeABSgSaySiG_tcfc	swift.init	init(shape:)	MLCUpsampleLayer.init(shape:)	convenience init?(shape: [Int])
+s:So16MLCUpsampleLayerC9MLComputeE5shapeSaySiGvp	swift.property	shape	MLCUpsampleLayer.shape	var shape: [Int] { get }
+s:So17MLCActivationTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCActivationType.init(rawValue:)	init?(rawValue: Int32)
+s:So17MLCInferenceGraphC9MLComputeE7execute10inputsData010lossLabelsF00g12LabelWeightsF007outputsF09batchSize7optionsSo9MLCTensorCSg6result_Sd13executionTimetSDySSSo0oF0CG_ARSgA2SSiSo19MLCExecutionOptionsVtYaKF	swift.method	execute(inputsData:lossLabelsData:lossLabelWeightsData:outputsData:batchSize:options:)	MLCInferenceGraph.execute(inputsData:lossLabelsData:lossLabelWeightsData:outputsData:batchSize:options:)	@discardableResult func execute(inputsData: [String : MLCTensorData], lossLabelsData: [String : MLCTensorData]? = nil, lossLabelWeightsData: [String : MLCTensorData]? = nil, outputsData: [String : MLCTensorData]? = nil, batchSize: Int, options: MLCExecutionOptions = []) async throws -> (result: MLCTensor?, executionTime: TimeInterval)
+s:So17MLCLSTMResultModeV8rawValueABSgs6UInt64V_tcfc	swift.init	init(rawValue:)	MLCLSTMResultMode.init(rawValue:)	init?(rawValue: UInt64)
+s:So17MLCReductionLayerC9MLComputeE10dimensionsSaySiGvp	swift.property	dimensions	MLCReductionLayer.dimensions	var dimensions: [Int] { get }
+s:So17MLCReductionLayerC9MLComputeE13reductionType10dimensionsABSgSo0aE0V_SaySiGtcfc	swift.init	init(reductionType:dimensions:)	MLCReductionLayer.init(reductionType:dimensions:)	convenience init?(reductionType: MLCReductionType, dimensions: [Int])
+s:So17MLCTransposeLayerC9MLComputeE10dimensionsABSgSaySiG_tcfc	swift.init	init(dimensions:)	MLCTransposeLayer.init(dimensions:)	convenience init?(dimensions: [Int])
+s:So17MLCTransposeLayerC9MLComputeE10dimensionsSaySiGvp	swift.property	dimensions	MLCTransposeLayer.dimensions	var dimensions: [Int] { get }
+s:So18MLCConvolutionTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCConvolutionType.init(rawValue:)	init?(rawValue: Int32)
+s:So19MLCExecutionOptionsV8rawValueABs6UInt64V_tcfc	swift.init	init(rawValue:)	MLCExecutionOptions.init(rawValue:)	init(rawValue: UInt64)
+s:So19MLCSoftmaxOperationV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCSoftmaxOperation.init(rawValue:)	init?(rawValue: Int32)
+s:So19MLCTensorDescriptorC9MLComputeE15sequenceLengthsSaySiGSgvp	swift.property	sequenceLengths	MLCTensorDescriptor.sequenceLengths	var sequenceLengths: [Int]? { get }
+s:So19MLCTensorDescriptorC9MLComputeE24batchSizePerSequenceStepSaySiGSgvp	swift.property	batchSizePerSequenceStep	MLCTensorDescriptor.batchSizePerSequenceStep	var batchSizePerSequenceStep: [Int]? { get }
+s:So19MLCTensorDescriptorC9MLComputeE5shape15sequenceLengths15sortedSequences8dataTypeABSgSaySiG_AISbSo07MLCDataJ0Vtcfc	swift.init	init(shape:sequenceLengths:sortedSequences:dataType:)	MLCTensorDescriptor.init(shape:sequenceLengths:sortedSequences:dataType:)	convenience init?(shape: [Int], sequenceLengths: [Int], sortedSequences: Bool, dataType: MLCDataType)
+s:So19MLCTensorDescriptorC9MLComputeE5shape8dataTypeABSgSaySiG_So07MLCDataF0Vtcfc	swift.init	init(shape:dataType:)	MLCTensorDescriptor.init(shape:dataType:)	convenience init?(shape: [Int], dataType: MLCDataType)
+s:So19MLCTensorDescriptorC9MLComputeE5shapeSaySiGvp	swift.property	shape	MLCTensorDescriptor.shape	var shape: [Int] { get }
+s:So19MLCTensorDescriptorC9MLComputeE6strideSaySiGvp	swift.property	stride	MLCTensorDescriptor.stride	var stride: [Int] { get }
+s:So20MLCPoolingDescriptorC9MLComputeE11kernelSizesSi6height_Si5widthtvp	swift.property	kernelSizes	MLCPoolingDescriptor.kernelSizes	var kernelSizes: (height: Int, width: Int) { get }
+s:So20MLCPoolingDescriptorC9MLComputeE11poolingTypeAC0aE0Ovp	swift.property	poolingType	MLCPoolingDescriptor.poolingType	var poolingType: MLCPoolingType { get }
+s:So20MLCPoolingDescriptorC9MLComputeE13dilationRatesSi1y_Si1xtvp	swift.property	dilationRates	MLCPoolingDescriptor.dilationRates	var dilationRates: (y: Int, x: Int) { get }
+s:So20MLCPoolingDescriptorC9MLComputeE13paddingPolicyAC010MLCPaddingE0Ovp	swift.property	paddingPolicy	MLCPoolingDescriptor.paddingPolicy	var paddingPolicy: MLCPaddingPolicy { get }
+s:So20MLCPoolingDescriptorC9MLComputeE4type11kernelSizes7strides13dilationRates13paddingPolicyAbC0A4TypeO_Si6height_Si5widthtSi1y_Si1xtSiAM_SiANtAC010MLCPaddingK0Otcfc	swift.init	init(type:kernelSizes:strides:dilationRates:paddingPolicy:)	MLCPoolingDescriptor.init(type:kernelSizes:strides:dilationRates:paddingPolicy:)	convenience init(type: MLCPoolingType, kernelSizes: (height: Int, width: Int), strides: (y: Int, x: Int) = (y: 1, x: 1), dilationRates: (y: Int, x: Int) = (y: 1, x: 1), paddingPolicy: MLCPaddingPolicy = .same)
+s:So20MLCPoolingDescriptorC9MLComputeE7stridesSi1y_Si1xtvp	swift.property	strides	MLCPoolingDescriptor.strides	var strides: (y: Int, x: Int) { get }
+s:So21MLCRegularizationTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCRegularizationType.init(rawValue:)	init?(rawValue: Int32)
+s:So22MLCArithmeticOperationV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCArithmeticOperation.init(rawValue:)	init?(rawValue: Int32)
+s:So22MLCComparisonOperationV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCComparisonOperation.init(rawValue:)	init?(rawValue: Int32)
+s:So22MLCEmbeddingDescriptorC9MLComputeE11maximumNormSfSgvp	swift.property	maximumNorm	MLCEmbeddingDescriptor.maximumNorm	var maximumNorm: Float? { get }
+s:So22MLCEmbeddingDescriptorC9MLComputeE12paddingIndexSiSgvp	swift.property	paddingIndex	MLCEmbeddingDescriptor.paddingIndex	var paddingIndex: Int? { get }
+s:So22MLCEmbeddingDescriptorC9MLComputeE14embeddingCount0D9Dimension12paddingIndex11maximumNorm01pJ025scalesGradientByFrequencyABSgSi_S2iSgSfSgALSbtcfc	swift.init	init(embeddingCount:embeddingDimension:paddingIndex:maximumNorm:pNorm:scalesGradientByFrequency:)	MLCEmbeddingDescriptor.init(embeddingCount:embeddingDimension:paddingIndex:maximumNorm:pNorm:scalesGradientByFrequency:)	convenience init?(embeddingCount: Int, embeddingDimension: Int, paddingIndex: Int?, maximumNorm: Float?, pNorm: Float?, scalesGradientByFrequency: Bool)
+s:So22MLCEmbeddingDescriptorC9MLComputeE14embeddingCount0D9DimensionABSgSi_Sitcfc	swift.init	init(embeddingCount:embeddingDimension:)	MLCEmbeddingDescriptor.init(embeddingCount:embeddingDimension:)	convenience init?(embeddingCount: Int, embeddingDimension: Int)
+s:So22MLCEmbeddingDescriptorC9MLComputeE14embeddingCountSivp	swift.property	embeddingCount	MLCEmbeddingDescriptor.embeddingCount	var embeddingCount: Int { get }
+s:So22MLCEmbeddingDescriptorC9MLComputeE18embeddingDimensionSivp	swift.property	embeddingDimension	MLCEmbeddingDescriptor.embeddingDimension	var embeddingDimension: Int { get }
+s:So22MLCEmbeddingDescriptorC9MLComputeE5pNormSfSgvp	swift.property	pNorm	MLCEmbeddingDescriptor.pNorm	var pNorm: Float? { get }
+s:So23MLCGradientClippingTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCGradientClippingType.init(rawValue:)	init?(rawValue: Int32)
+s:So24MLCConvolutionDescriptorC9MLComputeE11kernelSizesSi6height_Si5widthtvp	swift.property	kernelSizes	MLCConvolutionDescriptor.kernelSizes	var kernelSizes: (height: Int, width: Int) { get }
+s:So24MLCConvolutionDescriptorC9MLComputeE13dilationRatesSi1y_Si1xtvp	swift.property	dilationRates	MLCConvolutionDescriptor.dilationRates	var dilationRates: (y: Int, x: Int) { get }
+s:So24MLCConvolutionDescriptorC9MLComputeE13paddingPolicyAC010MLCPaddingE0Ovp	swift.property	paddingPolicy	MLCConvolutionDescriptor.paddingPolicy	var paddingPolicy: MLCPaddingPolicy { get }
+s:So24MLCConvolutionDescriptorC9MLComputeE4type11kernelSizes24inputFeatureChannelCount06outputhiJ005groupJ07strides13dilationRates13paddingPolicyABSo0A4TypeV_Si6height_Si5widthtS4i1y_Si1xtSiAP_SiAQtAC010MLCPaddingQ0Otcfc	swift.init	init(type:kernelSizes:inputFeatureChannelCount:outputFeatureChannelCount:groupCount:strides:dilationRates:paddingPolicy:)	MLCConvolutionDescriptor.init(type:kernelSizes:inputFeatureChannelCount:outputFeatureChannelCount:groupCount:strides:dilationRates:paddingPolicy:)	convenience init(type: MLCConvolutionType = .standard, kernelSizes: (height: Int, width: Int), inputFeatureChannelCount: Int, outputFeatureChannelCount: Int, groupCount: Int = 1, strides: (y: Int, x: Int) = (1, 1), dilationRates: (y: Int, x: Int) = (1, 1), paddingPolicy: MLCPaddingPolicy = .same)
+s:So24MLCConvolutionDescriptorC9MLComputeE7stridesSi1y_Si1xtvp	swift.property	strides	MLCConvolutionDescriptor.strides	var strides: (y: Int, x: Int) { get }
+s:So24MLCRandomInitializerTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	MLCRandomInitializerType.init(rawValue:)	init?(rawValue: Int32)
+s:So26MLCGraphCompilationOptionsV8rawValueABs6UInt64V_tcfc	swift.init	init(rawValue:)	MLCGraphCompilationOptions.init(rawValue:)	init(rawValue: UInt64)
+s:So26MLCLayerNormalizationLayerC9MLComputeE15normalizedShape4beta5gamma15varianceEpsilonABSgSaySiG_So9MLCTensorCAKSftcfc	swift.init	init(normalizedShape:beta:gamma:varianceEpsilon:)	MLCLayerNormalizationLayer.init(normalizedShape:beta:gamma:varianceEpsilon:)	convenience init?(normalizedShape: [Int], beta: MLCTensor, gamma: MLCTensor, varianceEpsilon: Float)
+s:So26MLCLayerNormalizationLayerC9MLComputeE15normalizedShape4beta5gamma15varianceEpsilonABSgSaySiG_So9MLCTensorCSgALSftcfc	swift.init	init(normalizedShape:beta:gamma:varianceEpsilon:)	MLCLayerNormalizationLayer.init(normalizedShape:beta:gamma:varianceEpsilon:)	convenience init?(normalizedShape: [Int], beta: MLCTensor?, gamma: MLCTensor?, varianceEpsilon: Float)
+s:So26MLCLayerNormalizationLayerC9MLComputeE15normalizedShapeSaySiGvp	swift.property	normalizedShape	MLCLayerNormalizationLayer.normalizedShape	var normalizedShape: [Int] { get }
+s:So8MLCGraphC9MLComputeE5split6source0C14SectionLengths9dimensionSaySo9MLCTensorCGSgAI_SaySiGSitF	swift.method	split(source:splitSectionLengths:dimension:)	MLCGraph.split(source:splitSectionLengths:dimension:)	func split(source: MLCTensor, splitSectionLengths: [Int], dimension: Int) -> [MLCTensor]?
+s:So8MLCGraphC9MLComputeE7reshape5shape6sourceSo9MLCTensorCSgSaySiG_AHtF	swift.method	reshape(shape:source:)	MLCGraph.reshape(shape:source:)	func reshape(shape: [Int], source: MLCTensor) -> MLCTensor?
+s:So8MLCGraphC9MLComputeE9transpose10dimensions6sourceSo9MLCTensorCSgSaySiG_AHtF	swift.method	transpose(dimensions:source:)	MLCGraph.transpose(dimensions:source:)	func transpose(dimensions: [Int], source: MLCTensor) -> MLCTensor?
+s:So9MLCTensorC9MLComputeE15sequenceLengths15sortedSequences19featureChannelCount9batchSize21randomInitializerTypeABSgSaySiG_SbS2iSo09MLCRandommN0Vtcfc	swift.init	init(sequenceLengths:sortedSequences:featureChannelCount:batchSize:randomInitializerType:)	MLCTensor.init(sequenceLengths:sortedSequences:featureChannelCount:batchSize:randomInitializerType:)	convenience init?(sequenceLengths: [Int], sortedSequences: Bool, featureChannelCount: Int, batchSize: Int, randomInitializerType: MLCRandomInitializerType)
+s:So9MLCTensorC9MLComputeE15sequenceLengths15sortedSequences19featureChannelCount9batchSize4dataABSgSaySiG_SbS2iSo0A4DataCSgtcfc	swift.init	init(sequenceLengths:sortedSequences:featureChannelCount:batchSize:data:)	MLCTensor.init(sequenceLengths:sortedSequences:featureChannelCount:batchSize:data:)	convenience init?(sequenceLengths: [Int], sortedSequences: Bool, featureChannelCount: Int, batchSize: Int, data: MLCTensorData? = nil)
+s:So9MLCTensorC9MLComputeE5shape12fillWithData8dataTypeABSaySiG_So8NSNumberCSo07MLCDataH0Vtcfc	swift.init	init(shape:fillWithData:dataType:)	MLCTensor.init(shape:fillWithData:dataType:)	convenience init(shape: [Int], fillWithData fillData: NSNumber, dataType: MLCDataType)
+s:So9MLCTensorC9MLComputeE5shape21randomInitializerTypeABSaySiG_So09MLCRandomeF0Vtcfc	swift.init	init(shape:randomInitializerType:)	MLCTensor.init(shape:randomInitializerType:)	convenience init(shape: [Int], randomInitializerType: MLCRandomInitializerType)
+s:So9MLCTensorC9MLComputeE5shape4data0D4TypeABSaySiG_So0A4DataCSo07MLCDataE0Vtcfc	swift.init	init(shape:data:dataType:)	MLCTensor.init(shape:data:dataType:)	convenience init(shape: [Int], data: MLCTensorData, dataType: MLCDataType)
+s:So9MLCTensorC9MLComputeE5shape8dataTypeABSaySiG_So07MLCDataE0Vtcfc	swift.init	init(shape:dataType:)	MLCTensor.init(shape:dataType:)	convenience init(shape: [Int], dataType: MLCDataType)
+s:So9MLCTensorC9MLComputeE5shapeABSaySiG_tcfc	swift.init	init(shape:)	MLCTensor.init(shape:)	convenience init(shape: [Int])
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.init	init(arrayLiteral:)	MLCExecutionOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.init	init(arrayLiteral:)	MLCGraphCompilationOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	isDisjoint(with:)	MLCExecutionOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	isDisjoint(with:)	MLCGraphCompilationOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	isSuperset(of:)	MLCExecutionOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	isSuperset(of:)	MLCGraphCompilationOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	subtracting(_:)	MLCExecutionOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	subtracting(_:)	MLCGraphCompilationOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	isStrictSubset(of:)	MLCExecutionOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	isStrictSubset(of:)	MLCGraphCompilationOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	isStrictSuperset(of:)	MLCExecutionOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	isStrictSuperset(of:)	MLCGraphCompilationOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.property	isEmpty	MLCExecutionOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.property	isEmpty	MLCGraphCompilationOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	isSubset(of:)	MLCExecutionOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	isSubset(of:)	MLCGraphCompilationOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	subtract(_:)	MLCExecutionOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	subtract(_:)	MLCGraphCompilationOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.init	init(_:)	MLCExecutionOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.init	init(_:)	MLCGraphCompilationOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	insert(_:)	MLCExecutionOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	insert(_:)	MLCGraphCompilationOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	remove(_:)	MLCExecutionOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	remove(_:)	MLCGraphCompilationOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	update(with:)	MLCExecutionOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	update(with:)	MLCGraphCompilationOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	contains(_:)	MLCExecutionOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	contains(_:)	MLCGraphCompilationOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	intersection(_:)	MLCExecutionOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	intersection(_:)	MLCGraphCompilationOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	symmetricDifference(_:)	MLCExecutionOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	symmetricDifference(_:)	MLCGraphCompilationOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	union(_:)	MLCExecutionOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	union(_:)	MLCGraphCompilationOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	formIntersection(_:)	MLCExecutionOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	formIntersection(_:)	MLCGraphCompilationOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	formSymmetricDifference(_:)	MLCExecutionOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	formSymmetricDifference(_:)	MLCGraphCompilationOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.method	formUnion(_:)	MLCExecutionOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.method	formUnion(_:)	MLCGraphCompilationOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MLCExecutionOptions	swift.init	init()	MLCExecutionOptions.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MLCGraphCompilationOptions	swift.init	init()	MLCGraphCompilationOptions.init()	init()

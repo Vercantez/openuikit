@@ -1,0 +1,18 @@
+precise	kind	title	path	declaration
+c:@T@MSPresentationAnchor	swift.typealias	MSPresentationAnchor	MSPresentationAnchor	typealias MSPresentationAnchor = UIWindow
+c:objc(cs)MSServiceAccount	swift.class	MSServiceAccount	MSServiceAccount	class MSServiceAccount
+c:objc(cs)MSServiceAccount(im)initWithServiceName:accountName:	swift.init	init(serviceName:accountName:)	MSServiceAccount.init(serviceName:accountName:)	init(serviceName: String, accountName: String)
+c:objc(cs)MSServiceAccount(py)accountName	swift.property	accountName	MSServiceAccount.accountName	var accountName: String { get }
+c:objc(cs)MSServiceAccount(py)authorizationScope	swift.property	authorizationScope	MSServiceAccount.authorizationScope	var authorizationScope: String? { get set }
+c:objc(cs)MSServiceAccount(py)authorizationTokenURL	swift.property	authorizationTokenURL	MSServiceAccount.authorizationTokenURL	var authorizationTokenURL: URL? { get set }
+c:objc(cs)MSServiceAccount(py)clientID	swift.property	clientID	MSServiceAccount.clientID	var clientID: String? { get set }
+c:objc(cs)MSServiceAccount(py)clientSecret	swift.property	clientSecret	MSServiceAccount.clientSecret	var clientSecret: String? { get set }
+c:objc(cs)MSServiceAccount(py)configurationURL	swift.property	configurationURL	MSServiceAccount.configurationURL	var configurationURL: URL? { get set }
+c:objc(cs)MSServiceAccount(py)serviceName	swift.property	serviceName	MSServiceAccount.serviceName	var serviceName: String { get }
+c:objc(cs)MSSetupSession	swift.class	MSSetupSession	MSSetupSession	class MSSetupSession
+c:objc(cs)MSSetupSession(im)initWithServiceAccount:	swift.init	init(serviceAccount:)	MSSetupSession.init(serviceAccount:)	init(serviceAccount: MSServiceAccount)
+c:objc(cs)MSSetupSession(im)startWithError:	swift.method	start()	MSSetupSession.start()	func start() throws
+c:objc(cs)MSSetupSession(py)account	swift.property	account	MSSetupSession.account	var account: MSServiceAccount { get }
+c:objc(cs)MSSetupSession(py)presentationContext	swift.property	presentationContext	MSSetupSession.presentationContext	weak var presentationContext: (any MSAuthenticationPresentationContext)? { get set }
+c:objc(pl)MSAuthenticationPresentationContext	swift.protocol	MSAuthenticationPresentationContext	MSAuthenticationPresentationContext	protocol MSAuthenticationPresentationContext : NSObjectProtocol
+c:objc(pl)MSAuthenticationPresentationContext(im)presentationAnchor	swift.method	presentationAnchor()	MSAuthenticationPresentationContext.presentationAnchor()	func presentationAnchor() -> MSPresentationAnchor?

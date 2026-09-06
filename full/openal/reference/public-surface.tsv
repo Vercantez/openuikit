@@ -1,0 +1,343 @@
+precise	kind	title	path	declaration
+c:@F@alBuffer3f	swift.func	alBuffer3f(_:_:_:_:_:)	alBuffer3f(_:_:_:_:_:)	func alBuffer3f(_ bid: ALuint, _ param: ALenum, _ value1: ALfloat, _ value2: ALfloat, _ value3: ALfloat)
+c:@F@alBuffer3i	swift.func	alBuffer3i(_:_:_:_:_:)	alBuffer3i(_:_:_:_:_:)	func alBuffer3i(_ bid: ALuint, _ param: ALenum, _ value1: ALint, _ value2: ALint, _ value3: ALint)
+c:@F@alBufferData	swift.func	alBufferData(_:_:_:_:_:)	alBufferData(_:_:_:_:_:)	func alBufferData(_ bid: ALuint, _ format: ALenum, _ data: UnsafeRawPointer!, _ size: ALsizei, _ freq: ALsizei)
+c:@F@alBufferf	swift.func	alBufferf(_:_:_:)	alBufferf(_:_:_:)	func alBufferf(_ bid: ALuint, _ param: ALenum, _ value: ALfloat)
+c:@F@alBufferfv	swift.func	alBufferfv(_:_:_:)	alBufferfv(_:_:_:)	func alBufferfv(_ bid: ALuint, _ param: ALenum, _ values: UnsafePointer<ALfloat>!)
+c:@F@alBufferi	swift.func	alBufferi(_:_:_:)	alBufferi(_:_:_:)	func alBufferi(_ bid: ALuint, _ param: ALenum, _ value: ALint)
+c:@F@alBufferiv	swift.func	alBufferiv(_:_:_:)	alBufferiv(_:_:_:)	func alBufferiv(_ bid: ALuint, _ param: ALenum, _ values: UnsafePointer<ALint>!)
+c:@F@alDeleteBuffers	swift.func	alDeleteBuffers(_:_:)	alDeleteBuffers(_:_:)	func alDeleteBuffers(_ n: ALsizei, _ buffers: UnsafePointer<ALuint>!)
+c:@F@alDeleteSources	swift.func	alDeleteSources(_:_:)	alDeleteSources(_:_:)	func alDeleteSources(_ n: ALsizei, _ sources: UnsafePointer<ALuint>!)
+c:@F@alDisable	swift.func	alDisable(_:)	alDisable(_:)	func alDisable(_ capability: ALenum)
+c:@F@alDistanceModel	swift.func	alDistanceModel(_:)	alDistanceModel(_:)	func alDistanceModel(_ distanceModel: ALenum)
+c:@F@alDopplerFactor	swift.func	alDopplerFactor(_:)	alDopplerFactor(_:)	func alDopplerFactor(_ value: ALfloat)
+c:@F@alDopplerVelocity	swift.func	alDopplerVelocity(_:)	alDopplerVelocity(_:)	func alDopplerVelocity(_ value: ALfloat)
+c:@F@alEnable	swift.func	alEnable(_:)	alEnable(_:)	func alEnable(_ capability: ALenum)
+c:@F@alGenBuffers	swift.func	alGenBuffers(_:_:)	alGenBuffers(_:_:)	func alGenBuffers(_ n: ALsizei, _ buffers: UnsafeMutablePointer<ALuint>!)
+c:@F@alGenSources	swift.func	alGenSources(_:_:)	alGenSources(_:_:)	func alGenSources(_ n: ALsizei, _ sources: UnsafeMutablePointer<ALuint>!)
+c:@F@alGetBoolean	swift.func	alGetBoolean(_:)	alGetBoolean(_:)	func alGetBoolean(_ param: ALenum) -> ALboolean
+c:@F@alGetBooleanv	swift.func	alGetBooleanv(_:_:)	alGetBooleanv(_:_:)	func alGetBooleanv(_ param: ALenum, _ data: UnsafeMutablePointer<ALboolean>!)
+c:@F@alGetBuffer3f	swift.func	alGetBuffer3f(_:_:_:_:_:)	alGetBuffer3f(_:_:_:_:_:)	func alGetBuffer3f(_ bid: ALuint, _ param: ALenum, _ value1: UnsafeMutablePointer<ALfloat>!, _ value2: UnsafeMutablePointer<ALfloat>!, _ value3: UnsafeMutablePointer<ALfloat>!)
+c:@F@alGetBuffer3i	swift.func	alGetBuffer3i(_:_:_:_:_:)	alGetBuffer3i(_:_:_:_:_:)	func alGetBuffer3i(_ bid: ALuint, _ param: ALenum, _ value1: UnsafeMutablePointer<ALint>!, _ value2: UnsafeMutablePointer<ALint>!, _ value3: UnsafeMutablePointer<ALint>!)
+c:@F@alGetBufferf	swift.func	alGetBufferf(_:_:_:)	alGetBufferf(_:_:_:)	func alGetBufferf(_ bid: ALuint, _ param: ALenum, _ value: UnsafeMutablePointer<ALfloat>!)
+c:@F@alGetBufferfv	swift.func	alGetBufferfv(_:_:_:)	alGetBufferfv(_:_:_:)	func alGetBufferfv(_ bid: ALuint, _ param: ALenum, _ values: UnsafeMutablePointer<ALfloat>!)
+c:@F@alGetBufferi	swift.func	alGetBufferi(_:_:_:)	alGetBufferi(_:_:_:)	func alGetBufferi(_ bid: ALuint, _ param: ALenum, _ value: UnsafeMutablePointer<ALint>!)
+c:@F@alGetBufferiv	swift.func	alGetBufferiv(_:_:_:)	alGetBufferiv(_:_:_:)	func alGetBufferiv(_ bid: ALuint, _ param: ALenum, _ values: UnsafeMutablePointer<ALint>!)
+c:@F@alGetDouble	swift.func	alGetDouble(_:)	alGetDouble(_:)	func alGetDouble(_ param: ALenum) -> ALdouble
+c:@F@alGetDoublev	swift.func	alGetDoublev(_:_:)	alGetDoublev(_:_:)	func alGetDoublev(_ param: ALenum, _ data: UnsafeMutablePointer<ALdouble>!)
+c:@F@alGetEnumValue	swift.func	alGetEnumValue(_:)	alGetEnumValue(_:)	func alGetEnumValue(_ ename: UnsafePointer<ALchar>!) -> ALenum
+c:@F@alGetError	swift.func	alGetError()	alGetError()	func alGetError() -> ALenum
+c:@F@alGetFloat	swift.func	alGetFloat(_:)	alGetFloat(_:)	func alGetFloat(_ param: ALenum) -> ALfloat
+c:@F@alGetFloatv	swift.func	alGetFloatv(_:_:)	alGetFloatv(_:_:)	func alGetFloatv(_ param: ALenum, _ data: UnsafeMutablePointer<ALfloat>!)
+c:@F@alGetInteger	swift.func	alGetInteger(_:)	alGetInteger(_:)	func alGetInteger(_ param: ALenum) -> ALint
+c:@F@alGetIntegerv	swift.func	alGetIntegerv(_:_:)	alGetIntegerv(_:_:)	func alGetIntegerv(_ param: ALenum, _ data: UnsafeMutablePointer<ALint>!)
+c:@F@alGetListener3f	swift.func	alGetListener3f(_:_:_:_:)	alGetListener3f(_:_:_:_:)	func alGetListener3f(_ param: ALenum, _ value1: UnsafeMutablePointer<ALfloat>!, _ value2: UnsafeMutablePointer<ALfloat>!, _ value3: UnsafeMutablePointer<ALfloat>!)
+c:@F@alGetListener3i	swift.func	alGetListener3i(_:_:_:_:)	alGetListener3i(_:_:_:_:)	func alGetListener3i(_ param: ALenum, _ value1: UnsafeMutablePointer<ALint>!, _ value2: UnsafeMutablePointer<ALint>!, _ value3: UnsafeMutablePointer<ALint>!)
+c:@F@alGetListenerf	swift.func	alGetListenerf(_:_:)	alGetListenerf(_:_:)	func alGetListenerf(_ param: ALenum, _ value: UnsafeMutablePointer<ALfloat>!)
+c:@F@alGetListenerfv	swift.func	alGetListenerfv(_:_:)	alGetListenerfv(_:_:)	func alGetListenerfv(_ param: ALenum, _ values: UnsafeMutablePointer<ALfloat>!)
+c:@F@alGetListeneri	swift.func	alGetListeneri(_:_:)	alGetListeneri(_:_:)	func alGetListeneri(_ param: ALenum, _ value: UnsafeMutablePointer<ALint>!)
+c:@F@alGetListeneriv	swift.func	alGetListeneriv(_:_:)	alGetListeneriv(_:_:)	func alGetListeneriv(_ param: ALenum, _ values: UnsafeMutablePointer<ALint>!)
+c:@F@alGetProcAddress	swift.func	alGetProcAddress(_:)	alGetProcAddress(_:)	func alGetProcAddress(_ fname: UnsafePointer<ALchar>!) -> UnsafeMutableRawPointer!
+c:@F@alGetSource3f	swift.func	alGetSource3f(_:_:_:_:_:)	alGetSource3f(_:_:_:_:_:)	func alGetSource3f(_ sid: ALuint, _ param: ALenum, _ value1: UnsafeMutablePointer<ALfloat>!, _ value2: UnsafeMutablePointer<ALfloat>!, _ value3: UnsafeMutablePointer<ALfloat>!)
+c:@F@alGetSource3i	swift.func	alGetSource3i(_:_:_:_:_:)	alGetSource3i(_:_:_:_:_:)	func alGetSource3i(_ sid: ALuint, _ param: ALenum, _ value1: UnsafeMutablePointer<ALint>!, _ value2: UnsafeMutablePointer<ALint>!, _ value3: UnsafeMutablePointer<ALint>!)
+c:@F@alGetSourcef	swift.func	alGetSourcef(_:_:_:)	alGetSourcef(_:_:_:)	func alGetSourcef(_ sid: ALuint, _ param: ALenum, _ value: UnsafeMutablePointer<ALfloat>!)
+c:@F@alGetSourcefv	swift.func	alGetSourcefv(_:_:_:)	alGetSourcefv(_:_:_:)	func alGetSourcefv(_ sid: ALuint, _ param: ALenum, _ values: UnsafeMutablePointer<ALfloat>!)
+c:@F@alGetSourcei	swift.func	alGetSourcei(_:_:_:)	alGetSourcei(_:_:_:)	func alGetSourcei(_ sid: ALuint, _ param: ALenum, _ value: UnsafeMutablePointer<ALint>!)
+c:@F@alGetSourceiv	swift.func	alGetSourceiv(_:_:_:)	alGetSourceiv(_:_:_:)	func alGetSourceiv(_ sid: ALuint, _ param: ALenum, _ values: UnsafeMutablePointer<ALint>!)
+c:@F@alGetString	swift.func	alGetString(_:)	alGetString(_:)	func alGetString(_ param: ALenum) -> UnsafePointer<ALchar>!
+c:@F@alIsBuffer	swift.func	alIsBuffer(_:)	alIsBuffer(_:)	func alIsBuffer(_ bid: ALuint) -> ALboolean
+c:@F@alIsEnabled	swift.func	alIsEnabled(_:)	alIsEnabled(_:)	func alIsEnabled(_ capability: ALenum) -> ALboolean
+c:@F@alIsExtensionPresent	swift.func	alIsExtensionPresent(_:)	alIsExtensionPresent(_:)	func alIsExtensionPresent(_ extname: UnsafePointer<ALchar>!) -> ALboolean
+c:@F@alIsSource	swift.func	alIsSource(_:)	alIsSource(_:)	func alIsSource(_ sid: ALuint) -> ALboolean
+c:@F@alListener3f	swift.func	alListener3f(_:_:_:_:)	alListener3f(_:_:_:_:)	func alListener3f(_ param: ALenum, _ value1: ALfloat, _ value2: ALfloat, _ value3: ALfloat)
+c:@F@alListener3i	swift.func	alListener3i(_:_:_:_:)	alListener3i(_:_:_:_:)	func alListener3i(_ param: ALenum, _ value1: ALint, _ value2: ALint, _ value3: ALint)
+c:@F@alListenerf	swift.func	alListenerf(_:_:)	alListenerf(_:_:)	func alListenerf(_ param: ALenum, _ value: ALfloat)
+c:@F@alListenerfv	swift.func	alListenerfv(_:_:)	alListenerfv(_:_:)	func alListenerfv(_ param: ALenum, _ values: UnsafePointer<ALfloat>!)
+c:@F@alListeneri	swift.func	alListeneri(_:_:)	alListeneri(_:_:)	func alListeneri(_ param: ALenum, _ value: ALint)
+c:@F@alListeneriv	swift.func	alListeneriv(_:_:)	alListeneriv(_:_:)	func alListeneriv(_ param: ALenum, _ values: UnsafePointer<ALint>!)
+c:@F@alSource3f	swift.func	alSource3f(_:_:_:_:_:)	alSource3f(_:_:_:_:_:)	func alSource3f(_ sid: ALuint, _ param: ALenum, _ value1: ALfloat, _ value2: ALfloat, _ value3: ALfloat)
+c:@F@alSource3i	swift.func	alSource3i(_:_:_:_:_:)	alSource3i(_:_:_:_:_:)	func alSource3i(_ sid: ALuint, _ param: ALenum, _ value1: ALint, _ value2: ALint, _ value3: ALint)
+c:@F@alSourcePause	swift.func	alSourcePause(_:)	alSourcePause(_:)	func alSourcePause(_ sid: ALuint)
+c:@F@alSourcePausev	swift.func	alSourcePausev(_:_:)	alSourcePausev(_:_:)	func alSourcePausev(_ ns: ALsizei, _ sids: UnsafePointer<ALuint>!)
+c:@F@alSourcePlay	swift.func	alSourcePlay(_:)	alSourcePlay(_:)	func alSourcePlay(_ sid: ALuint)
+c:@F@alSourcePlayv	swift.func	alSourcePlayv(_:_:)	alSourcePlayv(_:_:)	func alSourcePlayv(_ ns: ALsizei, _ sids: UnsafePointer<ALuint>!)
+c:@F@alSourceQueueBuffers	swift.func	alSourceQueueBuffers(_:_:_:)	alSourceQueueBuffers(_:_:_:)	func alSourceQueueBuffers(_ sid: ALuint, _ numEntries: ALsizei, _ bids: UnsafePointer<ALuint>!)
+c:@F@alSourceRewind	swift.func	alSourceRewind(_:)	alSourceRewind(_:)	func alSourceRewind(_ sid: ALuint)
+c:@F@alSourceRewindv	swift.func	alSourceRewindv(_:_:)	alSourceRewindv(_:_:)	func alSourceRewindv(_ ns: ALsizei, _ sids: UnsafePointer<ALuint>!)
+c:@F@alSourceStop	swift.func	alSourceStop(_:)	alSourceStop(_:)	func alSourceStop(_ sid: ALuint)
+c:@F@alSourceStopv	swift.func	alSourceStopv(_:_:)	alSourceStopv(_:_:)	func alSourceStopv(_ ns: ALsizei, _ sids: UnsafePointer<ALuint>!)
+c:@F@alSourceUnqueueBuffers	swift.func	alSourceUnqueueBuffers(_:_:_:)	alSourceUnqueueBuffers(_:_:_:)	func alSourceUnqueueBuffers(_ sid: ALuint, _ numEntries: ALsizei, _ bids: UnsafeMutablePointer<ALuint>!)
+c:@F@alSourcef	swift.func	alSourcef(_:_:_:)	alSourcef(_:_:_:)	func alSourcef(_ sid: ALuint, _ param: ALenum, _ value: ALfloat)
+c:@F@alSourcefv	swift.func	alSourcefv(_:_:_:)	alSourcefv(_:_:_:)	func alSourcefv(_ sid: ALuint, _ param: ALenum, _ values: UnsafePointer<ALfloat>!)
+c:@F@alSourcei	swift.func	alSourcei(_:_:_:)	alSourcei(_:_:_:)	func alSourcei(_ sid: ALuint, _ param: ALenum, _ value: ALint)
+c:@F@alSourceiv	swift.func	alSourceiv(_:_:_:)	alSourceiv(_:_:_:)	func alSourceiv(_ sid: ALuint, _ param: ALenum, _ values: UnsafePointer<ALint>!)
+c:@F@alSpeedOfSound	swift.func	alSpeedOfSound(_:)	alSpeedOfSound(_:)	func alSpeedOfSound(_ value: ALfloat)
+c:@F@alcCaptureCloseDevice	swift.func	alcCaptureCloseDevice(_:)	alcCaptureCloseDevice(_:)	func alcCaptureCloseDevice(_ device: OpaquePointer!) -> ALCboolean
+c:@F@alcCaptureOpenDevice	swift.func	alcCaptureOpenDevice(_:_:_:_:)	alcCaptureOpenDevice(_:_:_:_:)	func alcCaptureOpenDevice(_ devicename: UnsafePointer<ALCchar>!, _ frequency: ALCuint, _ format: ALCenum, _ buffersize: ALCsizei) -> OpaquePointer!
+c:@F@alcCaptureSamples	swift.func	alcCaptureSamples(_:_:_:)	alcCaptureSamples(_:_:_:)	func alcCaptureSamples(_ device: OpaquePointer!, _ buffer: UnsafeMutableRawPointer!, _ samples: ALCsizei)
+c:@F@alcCaptureStart	swift.func	alcCaptureStart(_:)	alcCaptureStart(_:)	func alcCaptureStart(_ device: OpaquePointer!)
+c:@F@alcCaptureStop	swift.func	alcCaptureStop(_:)	alcCaptureStop(_:)	func alcCaptureStop(_ device: OpaquePointer!)
+c:@F@alcCloseDevice	swift.func	alcCloseDevice(_:)	alcCloseDevice(_:)	func alcCloseDevice(_ device: OpaquePointer!) -> ALCboolean
+c:@F@alcCreateContext	swift.func	alcCreateContext(_:_:)	alcCreateContext(_:_:)	func alcCreateContext(_ device: OpaquePointer!, _ attrlist: UnsafePointer<ALCint>!) -> OpaquePointer!
+c:@F@alcDestroyContext	swift.func	alcDestroyContext(_:)	alcDestroyContext(_:)	func alcDestroyContext(_ context: OpaquePointer!)
+c:@F@alcGetContextsDevice	swift.func	alcGetContextsDevice(_:)	alcGetContextsDevice(_:)	func alcGetContextsDevice(_ context: OpaquePointer!) -> OpaquePointer!
+c:@F@alcGetCurrentContext	swift.func	alcGetCurrentContext()	alcGetCurrentContext()	func alcGetCurrentContext() -> OpaquePointer!
+c:@F@alcGetEnumValue	swift.func	alcGetEnumValue(_:_:)	alcGetEnumValue(_:_:)	func alcGetEnumValue(_ device: OpaquePointer!, _ enumname: UnsafePointer<ALCchar>!) -> ALCenum
+c:@F@alcGetError	swift.func	alcGetError(_:)	alcGetError(_:)	func alcGetError(_ device: OpaquePointer!) -> ALCenum
+c:@F@alcGetIntegerv	swift.func	alcGetIntegerv(_:_:_:_:)	alcGetIntegerv(_:_:_:_:)	func alcGetIntegerv(_ device: OpaquePointer!, _ param: ALCenum, _ size: ALCsizei, _ data: UnsafeMutablePointer<ALCint>!)
+c:@F@alcGetProcAddress	swift.func	alcGetProcAddress(_:_:)	alcGetProcAddress(_:_:)	func alcGetProcAddress(_ device: OpaquePointer!, _ funcname: UnsafePointer<ALCchar>!) -> UnsafeMutableRawPointer!
+c:@F@alcGetString	swift.func	alcGetString(_:_:)	alcGetString(_:_:)	func alcGetString(_ device: OpaquePointer!, _ param: ALCenum) -> UnsafePointer<ALCchar>!
+c:@F@alcIsExtensionPresent	swift.func	alcIsExtensionPresent(_:_:)	alcIsExtensionPresent(_:_:)	func alcIsExtensionPresent(_ device: OpaquePointer!, _ extname: UnsafePointer<ALCchar>!) -> ALCboolean
+c:@F@alcMakeContextCurrent	swift.func	alcMakeContextCurrent(_:)	alcMakeContextCurrent(_:)	func alcMakeContextCurrent(_ context: OpaquePointer!) -> ALCboolean
+c:@F@alcOpenDevice	swift.func	alcOpenDevice(_:)	alcOpenDevice(_:)	func alcOpenDevice(_ devicename: UnsafePointer<ALCchar>!) -> OpaquePointer!
+c:@F@alcProcessContext	swift.func	alcProcessContext(_:)	alcProcessContext(_:)	func alcProcessContext(_ context: OpaquePointer!)
+c:@F@alcSuspendContext	swift.func	alcSuspendContext(_:)	alcSuspendContext(_:)	func alcSuspendContext(_ context: OpaquePointer!)
+c:@T@ALCboolean	swift.typealias	ALCboolean	ALCboolean	typealias ALCboolean = CChar
+c:@T@ALCbyte	swift.typealias	ALCbyte	ALCbyte	typealias ALCbyte = CChar
+c:@T@ALCchar	swift.typealias	ALCchar	ALCchar	typealias ALCchar = CChar
+c:@T@ALCdouble	swift.typealias	ALCdouble	ALCdouble	typealias ALCdouble = Double
+c:@T@ALCenum	swift.typealias	ALCenum	ALCenum	typealias ALCenum = Int32
+c:@T@ALCfloat	swift.typealias	ALCfloat	ALCfloat	typealias ALCfloat = Float
+c:@T@ALCint	swift.typealias	ALCint	ALCint	typealias ALCint = Int32
+c:@T@ALCshort	swift.typealias	ALCshort	ALCshort	typealias ALCshort = Int16
+c:@T@ALCsizei	swift.typealias	ALCsizei	ALCsizei	typealias ALCsizei = Int32
+c:@T@ALCubyte	swift.typealias	ALCubyte	ALCubyte	typealias ALCubyte = UInt8
+c:@T@ALCuint	swift.typealias	ALCuint	ALCuint	typealias ALCuint = UInt32
+c:@T@ALCushort	swift.typealias	ALCushort	ALCushort	typealias ALCushort = UInt16
+c:@T@ALboolean	swift.typealias	ALboolean	ALboolean	typealias ALboolean = CChar
+c:@T@ALbyte	swift.typealias	ALbyte	ALbyte	typealias ALbyte = CChar
+c:@T@ALchar	swift.typealias	ALchar	ALchar	typealias ALchar = CChar
+c:@T@ALdouble	swift.typealias	ALdouble	ALdouble	typealias ALdouble = Double
+c:@T@ALenum	swift.typealias	ALenum	ALenum	typealias ALenum = Int32
+c:@T@ALfloat	swift.typealias	ALfloat	ALfloat	typealias ALfloat = Float
+c:@T@ALint	swift.typealias	ALint	ALint	typealias ALint = Int32
+c:@T@ALshort	swift.typealias	ALshort	ALshort	typealias ALshort = Int16
+c:@T@ALsizei	swift.typealias	ALsizei	ALsizei	typealias ALsizei = Int32
+c:@T@ALubyte	swift.typealias	ALubyte	ALubyte	typealias ALubyte = UInt8
+c:@T@ALuint	swift.typealias	ALuint	ALuint	typealias ALuint = UInt32
+c:@T@ALushort	swift.typealias	ALushort	ALushort	typealias ALushort = UInt16
+c:@T@LPALBUFFER3F	swift.typealias	LPALBUFFER3F	LPALBUFFER3F	typealias LPALBUFFER3F = (ALuint, ALenum, ALfloat, ALfloat, ALfloat) -> Void
+c:@T@LPALBUFFER3I	swift.typealias	LPALBUFFER3I	LPALBUFFER3I	typealias LPALBUFFER3I = (ALuint, ALenum, ALint, ALint, ALint) -> Void
+c:@T@LPALBUFFERDATA	swift.typealias	LPALBUFFERDATA	LPALBUFFERDATA	typealias LPALBUFFERDATA = (ALuint, ALenum, UnsafeRawPointer?, ALsizei, ALsizei) -> Void
+c:@T@LPALBUFFERF	swift.typealias	LPALBUFFERF	LPALBUFFERF	typealias LPALBUFFERF = (ALuint, ALenum, ALfloat) -> Void
+c:@T@LPALBUFFERFV	swift.typealias	LPALBUFFERFV	LPALBUFFERFV	typealias LPALBUFFERFV = (ALuint, ALenum, UnsafePointer<ALfloat>?) -> Void
+c:@T@LPALBUFFERI	swift.typealias	LPALBUFFERI	LPALBUFFERI	typealias LPALBUFFERI = (ALuint, ALenum, ALint) -> Void
+c:@T@LPALBUFFERIV	swift.typealias	LPALBUFFERIV	LPALBUFFERIV	typealias LPALBUFFERIV = (ALuint, ALenum, UnsafePointer<ALint>?) -> Void
+c:@T@LPALCCAPTURECLOSEDEVICE	swift.typealias	LPALCCAPTURECLOSEDEVICE	LPALCCAPTURECLOSEDEVICE	typealias LPALCCAPTURECLOSEDEVICE = (OpaquePointer?) -> ALCboolean
+c:@T@LPALCCAPTUREOPENDEVICE	swift.typealias	LPALCCAPTUREOPENDEVICE	LPALCCAPTUREOPENDEVICE	typealias LPALCCAPTUREOPENDEVICE = (UnsafePointer<ALCchar>?, ALCuint, ALCenum, ALCsizei) -> OpaquePointer?
+c:@T@LPALCCAPTURESAMPLES	swift.typealias	LPALCCAPTURESAMPLES	LPALCCAPTURESAMPLES	typealias LPALCCAPTURESAMPLES = (OpaquePointer?, UnsafeMutableRawPointer?, ALCsizei) -> Void
+c:@T@LPALCCAPTURESTART	swift.typealias	LPALCCAPTURESTART	LPALCCAPTURESTART	typealias LPALCCAPTURESTART = (OpaquePointer?) -> Void
+c:@T@LPALCCAPTURESTOP	swift.typealias	LPALCCAPTURESTOP	LPALCCAPTURESTOP	typealias LPALCCAPTURESTOP = (OpaquePointer?) -> Void
+c:@T@LPALCCLOSEDEVICE	swift.typealias	LPALCCLOSEDEVICE	LPALCCLOSEDEVICE	typealias LPALCCLOSEDEVICE = (OpaquePointer?) -> ALCboolean
+c:@T@LPALCCREATECONTEXT	swift.typealias	LPALCCREATECONTEXT	LPALCCREATECONTEXT	typealias LPALCCREATECONTEXT = (OpaquePointer?, UnsafePointer<ALCint>?) -> OpaquePointer?
+c:@T@LPALCDESTROYCONTEXT	swift.typealias	LPALCDESTROYCONTEXT	LPALCDESTROYCONTEXT	typealias LPALCDESTROYCONTEXT = (OpaquePointer?) -> Void
+c:@T@LPALCGETCONTEXTSDEVICE	swift.typealias	LPALCGETCONTEXTSDEVICE	LPALCGETCONTEXTSDEVICE	typealias LPALCGETCONTEXTSDEVICE = (OpaquePointer?) -> OpaquePointer?
+c:@T@LPALCGETCURRENTCONTEXT	swift.typealias	LPALCGETCURRENTCONTEXT	LPALCGETCURRENTCONTEXT	typealias LPALCGETCURRENTCONTEXT = () -> OpaquePointer?
+c:@T@LPALCGETENUMVALUE	swift.typealias	LPALCGETENUMVALUE	LPALCGETENUMVALUE	typealias LPALCGETENUMVALUE = (OpaquePointer?, UnsafePointer<ALCchar>?) -> ALCenum
+c:@T@LPALCGETERROR	swift.typealias	LPALCGETERROR	LPALCGETERROR	typealias LPALCGETERROR = (OpaquePointer?) -> ALCenum
+c:@T@LPALCGETINTEGERV	swift.typealias	LPALCGETINTEGERV	LPALCGETINTEGERV	typealias LPALCGETINTEGERV = (OpaquePointer?, ALCenum, ALCsizei, UnsafeMutablePointer<ALCint>?) -> Void
+c:@T@LPALCGETPROCADDRESS	swift.typealias	LPALCGETPROCADDRESS	LPALCGETPROCADDRESS	typealias LPALCGETPROCADDRESS = (OpaquePointer?, UnsafePointer<ALCchar>?) -> UnsafeMutableRawPointer?
+c:@T@LPALCGETSTRING	swift.typealias	LPALCGETSTRING	LPALCGETSTRING	typealias LPALCGETSTRING = (OpaquePointer?, ALCenum) -> UnsafePointer<ALCchar>?
+c:@T@LPALCISEXTENSIONPRESENT	swift.typealias	LPALCISEXTENSIONPRESENT	LPALCISEXTENSIONPRESENT	typealias LPALCISEXTENSIONPRESENT = (OpaquePointer?, UnsafePointer<ALCchar>?) -> ALCboolean
+c:@T@LPALCMAKECONTEXTCURRENT	swift.typealias	LPALCMAKECONTEXTCURRENT	LPALCMAKECONTEXTCURRENT	typealias LPALCMAKECONTEXTCURRENT = (OpaquePointer?) -> ALCboolean
+c:@T@LPALCOPENDEVICE	swift.typealias	LPALCOPENDEVICE	LPALCOPENDEVICE	typealias LPALCOPENDEVICE = (UnsafePointer<ALCchar>?) -> OpaquePointer?
+c:@T@LPALCPROCESSCONTEXT	swift.typealias	LPALCPROCESSCONTEXT	LPALCPROCESSCONTEXT	typealias LPALCPROCESSCONTEXT = (OpaquePointer?) -> Void
+c:@T@LPALCSUSPENDCONTEXT	swift.typealias	LPALCSUSPENDCONTEXT	LPALCSUSPENDCONTEXT	typealias LPALCSUSPENDCONTEXT = (OpaquePointer?) -> Void
+c:@T@LPALDELETEBUFFERS	swift.typealias	LPALDELETEBUFFERS	LPALDELETEBUFFERS	typealias LPALDELETEBUFFERS = (ALsizei, UnsafePointer<ALuint>?) -> Void
+c:@T@LPALDELETESOURCES	swift.typealias	LPALDELETESOURCES	LPALDELETESOURCES	typealias LPALDELETESOURCES = (ALsizei, UnsafePointer<ALuint>?) -> Void
+c:@T@LPALDISABLE	swift.typealias	LPALDISABLE	LPALDISABLE	typealias LPALDISABLE = (ALenum) -> Void
+c:@T@LPALDISTANCEMODEL	swift.typealias	LPALDISTANCEMODEL	LPALDISTANCEMODEL	typealias LPALDISTANCEMODEL = (ALenum) -> Void
+c:@T@LPALDOPPLERFACTOR	swift.typealias	LPALDOPPLERFACTOR	LPALDOPPLERFACTOR	typealias LPALDOPPLERFACTOR = (ALfloat) -> Void
+c:@T@LPALDOPPLERVELOCITY	swift.typealias	LPALDOPPLERVELOCITY	LPALDOPPLERVELOCITY	typealias LPALDOPPLERVELOCITY = (ALfloat) -> Void
+c:@T@LPALENABLE	swift.typealias	LPALENABLE	LPALENABLE	typealias LPALENABLE = (ALenum) -> Void
+c:@T@LPALGENBUFFERS	swift.typealias	LPALGENBUFFERS	LPALGENBUFFERS	typealias LPALGENBUFFERS = (ALsizei, UnsafeMutablePointer<ALuint>?) -> Void
+c:@T@LPALGENSOURCES	swift.typealias	LPALGENSOURCES	LPALGENSOURCES	typealias LPALGENSOURCES = (ALsizei, UnsafeMutablePointer<ALuint>?) -> Void
+c:@T@LPALGETBOOLEAN	swift.typealias	LPALGETBOOLEAN	LPALGETBOOLEAN	typealias LPALGETBOOLEAN = (ALenum) -> ALboolean
+c:@T@LPALGETBOOLEANV	swift.typealias	LPALGETBOOLEANV	LPALGETBOOLEANV	typealias LPALGETBOOLEANV = (ALenum, UnsafeMutablePointer<ALboolean>?) -> Void
+c:@T@LPALGETBUFFER3F	swift.typealias	LPALGETBUFFER3F	LPALGETBUFFER3F	typealias LPALGETBUFFER3F = (ALuint, ALenum, UnsafeMutablePointer<ALfloat>?, UnsafeMutablePointer<ALfloat>?, UnsafeMutablePointer<ALfloat>?) -> Void
+c:@T@LPALGETBUFFER3I	swift.typealias	LPALGETBUFFER3I	LPALGETBUFFER3I	typealias LPALGETBUFFER3I = (ALuint, ALenum, UnsafeMutablePointer<ALint>?, UnsafeMutablePointer<ALint>?, UnsafeMutablePointer<ALint>?) -> Void
+c:@T@LPALGETBUFFERF	swift.typealias	LPALGETBUFFERF	LPALGETBUFFERF	typealias LPALGETBUFFERF = (ALuint, ALenum, UnsafeMutablePointer<ALfloat>?) -> Void
+c:@T@LPALGETBUFFERFV	swift.typealias	LPALGETBUFFERFV	LPALGETBUFFERFV	typealias LPALGETBUFFERFV = (ALuint, ALenum, UnsafeMutablePointer<ALfloat>?) -> Void
+c:@T@LPALGETBUFFERI	swift.typealias	LPALGETBUFFERI	LPALGETBUFFERI	typealias LPALGETBUFFERI = (ALuint, ALenum, UnsafeMutablePointer<ALint>?) -> Void
+c:@T@LPALGETBUFFERIV	swift.typealias	LPALGETBUFFERIV	LPALGETBUFFERIV	typealias LPALGETBUFFERIV = (ALuint, ALenum, UnsafeMutablePointer<ALint>?) -> Void
+c:@T@LPALGETDOUBLE	swift.typealias	LPALGETDOUBLE	LPALGETDOUBLE	typealias LPALGETDOUBLE = (ALenum) -> ALdouble
+c:@T@LPALGETDOUBLEV	swift.typealias	LPALGETDOUBLEV	LPALGETDOUBLEV	typealias LPALGETDOUBLEV = (ALenum, UnsafeMutablePointer<ALdouble>?) -> Void
+c:@T@LPALGETENUMVALUE	swift.typealias	LPALGETENUMVALUE	LPALGETENUMVALUE	typealias LPALGETENUMVALUE = (UnsafePointer<ALchar>?) -> ALenum
+c:@T@LPALGETERROR	swift.typealias	LPALGETERROR	LPALGETERROR	typealias LPALGETERROR = () -> ALenum
+c:@T@LPALGETFLOAT	swift.typealias	LPALGETFLOAT	LPALGETFLOAT	typealias LPALGETFLOAT = (ALenum) -> ALfloat
+c:@T@LPALGETFLOATV	swift.typealias	LPALGETFLOATV	LPALGETFLOATV	typealias LPALGETFLOATV = (ALenum, UnsafeMutablePointer<ALfloat>?) -> Void
+c:@T@LPALGETINTEGER	swift.typealias	LPALGETINTEGER	LPALGETINTEGER	typealias LPALGETINTEGER = (ALenum) -> ALint
+c:@T@LPALGETINTEGERV	swift.typealias	LPALGETINTEGERV	LPALGETINTEGERV	typealias LPALGETINTEGERV = (ALenum, UnsafeMutablePointer<ALint>?) -> Void
+c:@T@LPALGETLISTENER3F	swift.typealias	LPALGETLISTENER3F	LPALGETLISTENER3F	typealias LPALGETLISTENER3F = (ALenum, UnsafeMutablePointer<ALfloat>?, UnsafeMutablePointer<ALfloat>?, UnsafeMutablePointer<ALfloat>?) -> Void
+c:@T@LPALGETLISTENER3I	swift.typealias	LPALGETLISTENER3I	LPALGETLISTENER3I	typealias LPALGETLISTENER3I = (ALenum, UnsafeMutablePointer<ALint>?, UnsafeMutablePointer<ALint>?, UnsafeMutablePointer<ALint>?) -> Void
+c:@T@LPALGETLISTENERF	swift.typealias	LPALGETLISTENERF	LPALGETLISTENERF	typealias LPALGETLISTENERF = (ALenum, UnsafeMutablePointer<ALfloat>?) -> Void
+c:@T@LPALGETLISTENERFV	swift.typealias	LPALGETLISTENERFV	LPALGETLISTENERFV	typealias LPALGETLISTENERFV = (ALenum, UnsafeMutablePointer<ALfloat>?) -> Void
+c:@T@LPALGETLISTENERI	swift.typealias	LPALGETLISTENERI	LPALGETLISTENERI	typealias LPALGETLISTENERI = (ALenum, UnsafeMutablePointer<ALint>?) -> Void
+c:@T@LPALGETLISTENERIV	swift.typealias	LPALGETLISTENERIV	LPALGETLISTENERIV	typealias LPALGETLISTENERIV = (ALenum, UnsafeMutablePointer<ALint>?) -> Void
+c:@T@LPALGETPROCADDRESS	swift.typealias	LPALGETPROCADDRESS	LPALGETPROCADDRESS	typealias LPALGETPROCADDRESS = (UnsafePointer<ALchar>?) -> UnsafeMutableRawPointer?
+c:@T@LPALGETSOURCE3F	swift.typealias	LPALGETSOURCE3F	LPALGETSOURCE3F	typealias LPALGETSOURCE3F = (ALuint, ALenum, UnsafeMutablePointer<ALfloat>?, UnsafeMutablePointer<ALfloat>?, UnsafeMutablePointer<ALfloat>?) -> Void
+c:@T@LPALGETSOURCE3I	swift.typealias	LPALGETSOURCE3I	LPALGETSOURCE3I	typealias LPALGETSOURCE3I = (ALuint, ALenum, UnsafeMutablePointer<ALint>?, UnsafeMutablePointer<ALint>?, UnsafeMutablePointer<ALint>?) -> Void
+c:@T@LPALGETSOURCEF	swift.typealias	LPALGETSOURCEF	LPALGETSOURCEF	typealias LPALGETSOURCEF = (ALuint, ALenum, UnsafeMutablePointer<ALfloat>?) -> Void
+c:@T@LPALGETSOURCEFV	swift.typealias	LPALGETSOURCEFV	LPALGETSOURCEFV	typealias LPALGETSOURCEFV = (ALuint, ALenum, UnsafeMutablePointer<ALfloat>?) -> Void
+c:@T@LPALGETSOURCEI	swift.typealias	LPALGETSOURCEI	LPALGETSOURCEI	typealias LPALGETSOURCEI = (ALuint, ALenum, UnsafeMutablePointer<ALint>?) -> Void
+c:@T@LPALGETSOURCEIV	swift.typealias	LPALGETSOURCEIV	LPALGETSOURCEIV	typealias LPALGETSOURCEIV = (ALuint, ALenum, UnsafeMutablePointer<ALint>?) -> Void
+c:@T@LPALGETSTRING	swift.typealias	LPALGETSTRING	LPALGETSTRING	typealias LPALGETSTRING = (ALenum) -> UnsafePointer<ALchar>?
+c:@T@LPALISBUFFER	swift.typealias	LPALISBUFFER	LPALISBUFFER	typealias LPALISBUFFER = (ALuint) -> ALboolean
+c:@T@LPALISENABLED	swift.typealias	LPALISENABLED	LPALISENABLED	typealias LPALISENABLED = (ALenum) -> ALboolean
+c:@T@LPALISEXTENSIONPRESENT	swift.typealias	LPALISEXTENSIONPRESENT	LPALISEXTENSIONPRESENT	typealias LPALISEXTENSIONPRESENT = (UnsafePointer<ALchar>?) -> ALboolean
+c:@T@LPALISSOURCE	swift.typealias	LPALISSOURCE	LPALISSOURCE	typealias LPALISSOURCE = (ALuint) -> ALboolean
+c:@T@LPALLISTENER3F	swift.typealias	LPALLISTENER3F	LPALLISTENER3F	typealias LPALLISTENER3F = (ALenum, ALfloat, ALfloat, ALfloat) -> Void
+c:@T@LPALLISTENER3I	swift.typealias	LPALLISTENER3I	LPALLISTENER3I	typealias LPALLISTENER3I = (ALenum, ALint, ALint, ALint) -> Void
+c:@T@LPALLISTENERF	swift.typealias	LPALLISTENERF	LPALLISTENERF	typealias LPALLISTENERF = (ALenum, ALfloat) -> Void
+c:@T@LPALLISTENERFV	swift.typealias	LPALLISTENERFV	LPALLISTENERFV	typealias LPALLISTENERFV = (ALenum, UnsafePointer<ALfloat>?) -> Void
+c:@T@LPALLISTENERI	swift.typealias	LPALLISTENERI	LPALLISTENERI	typealias LPALLISTENERI = (ALenum, ALint) -> Void
+c:@T@LPALLISTENERIV	swift.typealias	LPALLISTENERIV	LPALLISTENERIV	typealias LPALLISTENERIV = (ALenum, UnsafePointer<ALint>?) -> Void
+c:@T@LPALSOURCE3F	swift.typealias	LPALSOURCE3F	LPALSOURCE3F	typealias LPALSOURCE3F = (ALuint, ALenum, ALfloat, ALfloat, ALfloat) -> Void
+c:@T@LPALSOURCE3I	swift.typealias	LPALSOURCE3I	LPALSOURCE3I	typealias LPALSOURCE3I = (ALuint, ALenum, ALint, ALint, ALint) -> Void
+c:@T@LPALSOURCEF	swift.typealias	LPALSOURCEF	LPALSOURCEF	typealias LPALSOURCEF = (ALuint, ALenum, ALfloat) -> Void
+c:@T@LPALSOURCEFV	swift.typealias	LPALSOURCEFV	LPALSOURCEFV	typealias LPALSOURCEFV = (ALuint, ALenum, UnsafePointer<ALfloat>?) -> Void
+c:@T@LPALSOURCEI	swift.typealias	LPALSOURCEI	LPALSOURCEI	typealias LPALSOURCEI = (ALuint, ALenum, ALint) -> Void
+c:@T@LPALSOURCEIV	swift.typealias	LPALSOURCEIV	LPALSOURCEIV	typealias LPALSOURCEIV = (ALuint, ALenum, UnsafePointer<ALint>?) -> Void
+c:@T@LPALSOURCEPAUSE	swift.typealias	LPALSOURCEPAUSE	LPALSOURCEPAUSE	typealias LPALSOURCEPAUSE = (ALuint) -> Void
+c:@T@LPALSOURCEPAUSEV	swift.typealias	LPALSOURCEPAUSEV	LPALSOURCEPAUSEV	typealias LPALSOURCEPAUSEV = (ALsizei, UnsafePointer<ALuint>?) -> Void
+c:@T@LPALSOURCEPLAY	swift.typealias	LPALSOURCEPLAY	LPALSOURCEPLAY	typealias LPALSOURCEPLAY = (ALuint) -> Void
+c:@T@LPALSOURCEPLAYV	swift.typealias	LPALSOURCEPLAYV	LPALSOURCEPLAYV	typealias LPALSOURCEPLAYV = (ALsizei, UnsafePointer<ALuint>?) -> Void
+c:@T@LPALSOURCEQUEUEBUFFERS	swift.typealias	LPALSOURCEQUEUEBUFFERS	LPALSOURCEQUEUEBUFFERS	typealias LPALSOURCEQUEUEBUFFERS = (ALuint, ALsizei, UnsafePointer<ALuint>?) -> Void
+c:@T@LPALSOURCEREWIND	swift.typealias	LPALSOURCEREWIND	LPALSOURCEREWIND	typealias LPALSOURCEREWIND = (ALuint) -> Void
+c:@T@LPALSOURCEREWINDV	swift.typealias	LPALSOURCEREWINDV	LPALSOURCEREWINDV	typealias LPALSOURCEREWINDV = (ALsizei, UnsafePointer<ALuint>?) -> Void
+c:@T@LPALSOURCESTOP	swift.typealias	LPALSOURCESTOP	LPALSOURCESTOP	typealias LPALSOURCESTOP = (ALuint) -> Void
+c:@T@LPALSOURCESTOPV	swift.typealias	LPALSOURCESTOPV	LPALSOURCESTOPV	typealias LPALSOURCESTOPV = (ALsizei, UnsafePointer<ALuint>?) -> Void
+c:@T@LPALSOURCEUNQUEUEBUFFERS	swift.typealias	LPALSOURCEUNQUEUEBUFFERS	LPALSOURCEUNQUEUEBUFFERS	typealias LPALSOURCEUNQUEUEBUFFERS = (ALuint, ALsizei, UnsafeMutablePointer<ALuint>?) -> Void
+c:@T@LPALSPEEDOFSOUND	swift.typealias	LPALSPEEDOFSOUND	LPALSPEEDOFSOUND	typealias LPALSPEEDOFSOUND = (ALfloat) -> Void
+c:@T@alBufferDataStaticProcPtr	swift.typealias	alBufferDataStaticProcPtr	alBufferDataStaticProcPtr	typealias alBufferDataStaticProcPtr = (ALint, ALenum, UnsafeRawPointer, ALsizei, ALsizei) -> Void
+c:@T@alMacOSXGetRenderChannelCountProcPtr	swift.typealias	alMacOSXGetRenderChannelCountProcPtr	alMacOSXGetRenderChannelCountProcPtr	typealias alMacOSXGetRenderChannelCountProcPtr = () -> ALint
+c:@T@alMacOSXRenderChannelCountProcPtr	swift.typealias	alMacOSXRenderChannelCountProcPtr	alMacOSXRenderChannelCountProcPtr	typealias alMacOSXRenderChannelCountProcPtr = (ALint) -> Void
+c:@T@alSourceAddNotificationProcPtr	swift.typealias	alSourceAddNotificationProcPtr	alSourceAddNotificationProcPtr	typealias alSourceAddNotificationProcPtr = (ALuint, ALuint, alSourceNotificationProc, UnsafeMutableRawPointer?) -> ALenum
+c:@T@alSourceGetRenderingQualityProcPtr	swift.typealias	alSourceGetRenderingQualityProcPtr	alSourceGetRenderingQualityProcPtr	typealias alSourceGetRenderingQualityProcPtr = (ALuint) -> ALint
+c:@T@alSourceNotificationProc	swift.typealias	alSourceNotificationProc	alSourceNotificationProc	typealias alSourceNotificationProc = (ALuint, ALuint, UnsafeMutableRawPointer?) -> Void
+c:@T@alSourceRemoveNotificationProcPtr	swift.typealias	alSourceRemoveNotificationProcPtr	alSourceRemoveNotificationProcPtr	typealias alSourceRemoveNotificationProcPtr = (ALuint, ALuint, alSourceNotificationProc, UnsafeMutableRawPointer?) -> Void
+c:@T@alSourceRenderingQualityProcPtr	swift.typealias	alSourceRenderingQualityProcPtr	alSourceRenderingQualityProcPtr	typealias alSourceRenderingQualityProcPtr = (ALuint, ALint) -> Void
+c:@T@alcASAGetListenerProcPtr	swift.typealias	alcASAGetListenerProcPtr	alcASAGetListenerProcPtr	typealias alcASAGetListenerProcPtr = (ALuint, UnsafeMutableRawPointer, UnsafeMutablePointer<ALuint>) -> ALenum
+c:@T@alcASAGetSourceProcPtr	swift.typealias	alcASAGetSourceProcPtr	alcASAGetSourceProcPtr	typealias alcASAGetSourceProcPtr = (ALuint, ALuint, UnsafeMutableRawPointer, UnsafeMutablePointer<ALuint>) -> ALenum
+c:@T@alcASASetListenerProcPtr	swift.typealias	alcASASetListenerProcPtr	alcASASetListenerProcPtr	typealias alcASASetListenerProcPtr = (ALuint, UnsafeMutableRawPointer, ALuint) -> ALenum
+c:@T@alcASASetSourceProcPtr	swift.typealias	alcASASetSourceProcPtr	alcASASetSourceProcPtr	typealias alcASASetSourceProcPtr = (ALuint, ALuint, UnsafeMutableRawPointer, ALuint) -> ALenum
+c:@T@alcMacOSXGetMixerMaxiumumBussesProcPtr	swift.typealias	alcMacOSXGetMixerMaxiumumBussesProcPtr	alcMacOSXGetMixerMaxiumumBussesProcPtr	typealias alcMacOSXGetMixerMaxiumumBussesProcPtr = () -> ALint
+c:@T@alcMacOSXGetMixerOutputRateProcPtr	swift.typealias	alcMacOSXGetMixerOutputRateProcPtr	alcMacOSXGetMixerOutputRateProcPtr	typealias alcMacOSXGetMixerOutputRateProcPtr = () -> ALdouble
+c:@T@alcMacOSXGetRenderingQualityProcPtr	swift.typealias	alcMacOSXGetRenderingQualityProcPtr	alcMacOSXGetRenderingQualityProcPtr	typealias alcMacOSXGetRenderingQualityProcPtr = () -> ALint
+c:@T@alcMacOSXMixerMaxiumumBussesProcPtr	swift.typealias	alcMacOSXMixerMaxiumumBussesProcPtr	alcMacOSXMixerMaxiumumBussesProcPtr	typealias alcMacOSXMixerMaxiumumBussesProcPtr = (ALint) -> Void
+c:@T@alcMacOSXMixerOutputRateProcPtr	swift.typealias	alcMacOSXMixerOutputRateProcPtr	alcMacOSXMixerOutputRateProcPtr	typealias alcMacOSXMixerOutputRateProcPtr = (ALdouble) -> Void
+c:@T@alcMacOSXRenderingQualityProcPtr	swift.typealias	alcMacOSXRenderingQualityProcPtr	alcMacOSXRenderingQualityProcPtr	typealias alcMacOSXRenderingQualityProcPtr = (ALint) -> Void
+c:@T@alcOutputCapturerAvailableSamplesProcPtr	swift.typealias	alcOutputCapturerAvailableSamplesProcPtr	alcOutputCapturerAvailableSamplesProcPtr	typealias alcOutputCapturerAvailableSamplesProcPtr = () -> ALint
+c:@T@alcOutputCapturerPrepareProcPtr	swift.typealias	alcOutputCapturerPrepareProcPtr	alcOutputCapturerPrepareProcPtr	typealias alcOutputCapturerPrepareProcPtr = (ALCuint, ALCenum, ALCsizei) -> Void
+c:@T@alcOutputCapturerSamplesProcPtr	swift.typealias	alcOutputCapturerSamplesProcPtr	alcOutputCapturerSamplesProcPtr	typealias alcOutputCapturerSamplesProcPtr = (UnsafeMutableRawPointer, ALCsizei) -> Void
+c:@T@alcOutputCapturerStartProcPtr	swift.typealias	alcOutputCapturerStartProcPtr	alcOutputCapturerStartProcPtr	typealias alcOutputCapturerStartProcPtr = () -> Void
+c:@T@alcOutputCapturerStopProcPtr	swift.typealias	alcOutputCapturerStopProcPtr	alcOutputCapturerStopProcPtr	typealias alcOutputCapturerStopProcPtr = () -> Void
+c:@macro@ALC_ALL_ATTRIBUTES	swift.var	ALC_ALL_ATTRIBUTES	ALC_ALL_ATTRIBUTES	var ALC_ALL_ATTRIBUTES: Int32 { get }
+c:@macro@ALC_ALL_DEVICES_SPECIFIER	swift.var	ALC_ALL_DEVICES_SPECIFIER	ALC_ALL_DEVICES_SPECIFIER	var ALC_ALL_DEVICES_SPECIFIER: Int32 { get }
+c:@macro@ALC_ASA_REVERB_ROOM_TYPE_Cathedral	swift.var	ALC_ASA_REVERB_ROOM_TYPE_Cathedral	ALC_ASA_REVERB_ROOM_TYPE_Cathedral	var ALC_ASA_REVERB_ROOM_TYPE_Cathedral: Int32 { get }
+c:@macro@ALC_ASA_REVERB_ROOM_TYPE_LargeChamber	swift.var	ALC_ASA_REVERB_ROOM_TYPE_LargeChamber	ALC_ASA_REVERB_ROOM_TYPE_LargeChamber	var ALC_ASA_REVERB_ROOM_TYPE_LargeChamber: Int32 { get }
+c:@macro@ALC_ASA_REVERB_ROOM_TYPE_LargeHall	swift.var	ALC_ASA_REVERB_ROOM_TYPE_LargeHall	ALC_ASA_REVERB_ROOM_TYPE_LargeHall	var ALC_ASA_REVERB_ROOM_TYPE_LargeHall: Int32 { get }
+c:@macro@ALC_ASA_REVERB_ROOM_TYPE_LargeHall2	swift.var	ALC_ASA_REVERB_ROOM_TYPE_LargeHall2	ALC_ASA_REVERB_ROOM_TYPE_LargeHall2	var ALC_ASA_REVERB_ROOM_TYPE_LargeHall2: Int32 { get }
+c:@macro@ALC_ASA_REVERB_ROOM_TYPE_LargeRoom	swift.var	ALC_ASA_REVERB_ROOM_TYPE_LargeRoom	ALC_ASA_REVERB_ROOM_TYPE_LargeRoom	var ALC_ASA_REVERB_ROOM_TYPE_LargeRoom: Int32 { get }
+c:@macro@ALC_ASA_REVERB_ROOM_TYPE_LargeRoom2	swift.var	ALC_ASA_REVERB_ROOM_TYPE_LargeRoom2	ALC_ASA_REVERB_ROOM_TYPE_LargeRoom2	var ALC_ASA_REVERB_ROOM_TYPE_LargeRoom2: Int32 { get }
+c:@macro@ALC_ASA_REVERB_ROOM_TYPE_MediumChamber	swift.var	ALC_ASA_REVERB_ROOM_TYPE_MediumChamber	ALC_ASA_REVERB_ROOM_TYPE_MediumChamber	var ALC_ASA_REVERB_ROOM_TYPE_MediumChamber: Int32 { get }
+c:@macro@ALC_ASA_REVERB_ROOM_TYPE_MediumHall	swift.var	ALC_ASA_REVERB_ROOM_TYPE_MediumHall	ALC_ASA_REVERB_ROOM_TYPE_MediumHall	var ALC_ASA_REVERB_ROOM_TYPE_MediumHall: Int32 { get }
+c:@macro@ALC_ASA_REVERB_ROOM_TYPE_MediumHall2	swift.var	ALC_ASA_REVERB_ROOM_TYPE_MediumHall2	ALC_ASA_REVERB_ROOM_TYPE_MediumHall2	var ALC_ASA_REVERB_ROOM_TYPE_MediumHall2: Int32 { get }
+c:@macro@ALC_ASA_REVERB_ROOM_TYPE_MediumHall3	swift.var	ALC_ASA_REVERB_ROOM_TYPE_MediumHall3	ALC_ASA_REVERB_ROOM_TYPE_MediumHall3	var ALC_ASA_REVERB_ROOM_TYPE_MediumHall3: Int32 { get }
+c:@macro@ALC_ASA_REVERB_ROOM_TYPE_MediumRoom	swift.var	ALC_ASA_REVERB_ROOM_TYPE_MediumRoom	ALC_ASA_REVERB_ROOM_TYPE_MediumRoom	var ALC_ASA_REVERB_ROOM_TYPE_MediumRoom: Int32 { get }
+c:@macro@ALC_ASA_REVERB_ROOM_TYPE_Plate	swift.var	ALC_ASA_REVERB_ROOM_TYPE_Plate	ALC_ASA_REVERB_ROOM_TYPE_Plate	var ALC_ASA_REVERB_ROOM_TYPE_Plate: Int32 { get }
+c:@macro@ALC_ASA_REVERB_ROOM_TYPE_SmallRoom	swift.var	ALC_ASA_REVERB_ROOM_TYPE_SmallRoom	ALC_ASA_REVERB_ROOM_TYPE_SmallRoom	var ALC_ASA_REVERB_ROOM_TYPE_SmallRoom: Int32 { get }
+c:@macro@ALC_ATTRIBUTES_SIZE	swift.var	ALC_ATTRIBUTES_SIZE	ALC_ATTRIBUTES_SIZE	var ALC_ATTRIBUTES_SIZE: Int32 { get }
+c:@macro@ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER	swift.var	ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER	ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER	var ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER: Int32 { get }
+c:@macro@ALC_CAPTURE_DEVICE_SPECIFIER	swift.var	ALC_CAPTURE_DEVICE_SPECIFIER	ALC_CAPTURE_DEVICE_SPECIFIER	var ALC_CAPTURE_DEVICE_SPECIFIER: Int32 { get }
+c:@macro@ALC_CAPTURE_SAMPLES	swift.var	ALC_CAPTURE_SAMPLES	ALC_CAPTURE_SAMPLES	var ALC_CAPTURE_SAMPLES: Int32 { get }
+c:@macro@ALC_DEFAULT_ALL_DEVICES_SPECIFIER	swift.var	ALC_DEFAULT_ALL_DEVICES_SPECIFIER	ALC_DEFAULT_ALL_DEVICES_SPECIFIER	var ALC_DEFAULT_ALL_DEVICES_SPECIFIER: Int32 { get }
+c:@macro@ALC_DEFAULT_DEVICE_SPECIFIER	swift.var	ALC_DEFAULT_DEVICE_SPECIFIER	ALC_DEFAULT_DEVICE_SPECIFIER	var ALC_DEFAULT_DEVICE_SPECIFIER: Int32 { get }
+c:@macro@ALC_DEVICE_SPECIFIER	swift.var	ALC_DEVICE_SPECIFIER	ALC_DEVICE_SPECIFIER	var ALC_DEVICE_SPECIFIER: Int32 { get }
+c:@macro@ALC_EXTENSIONS	swift.var	ALC_EXTENSIONS	ALC_EXTENSIONS	var ALC_EXTENSIONS: Int32 { get }
+c:@macro@ALC_FALSE	swift.var	ALC_FALSE	ALC_FALSE	var ALC_FALSE: Int32 { get }
+c:@macro@ALC_FREQUENCY	swift.var	ALC_FREQUENCY	ALC_FREQUENCY	var ALC_FREQUENCY: Int32 { get }
+c:@macro@ALC_INVALID	swift.var	ALC_INVALID	ALC_INVALID	var ALC_INVALID: Int32 { get }
+c:@macro@ALC_INVALID_CONTEXT	swift.var	ALC_INVALID_CONTEXT	ALC_INVALID_CONTEXT	var ALC_INVALID_CONTEXT: Int32 { get }
+c:@macro@ALC_INVALID_DEVICE	swift.var	ALC_INVALID_DEVICE	ALC_INVALID_DEVICE	var ALC_INVALID_DEVICE: Int32 { get }
+c:@macro@ALC_INVALID_ENUM	swift.var	ALC_INVALID_ENUM	ALC_INVALID_ENUM	var ALC_INVALID_ENUM: Int32 { get }
+c:@macro@ALC_INVALID_VALUE	swift.var	ALC_INVALID_VALUE	ALC_INVALID_VALUE	var ALC_INVALID_VALUE: Int32 { get }
+c:@macro@ALC_MAJOR_VERSION	swift.var	ALC_MAJOR_VERSION	ALC_MAJOR_VERSION	var ALC_MAJOR_VERSION: Int32 { get }
+c:@macro@ALC_MINOR_VERSION	swift.var	ALC_MINOR_VERSION	ALC_MINOR_VERSION	var ALC_MINOR_VERSION: Int32 { get }
+c:@macro@ALC_MONO_SOURCES	swift.var	ALC_MONO_SOURCES	ALC_MONO_SOURCES	var ALC_MONO_SOURCES: Int32 { get }
+c:@macro@ALC_NO_ERROR	swift.var	ALC_NO_ERROR	ALC_NO_ERROR	var ALC_NO_ERROR: Int32 { get }
+c:@macro@ALC_OUT_OF_MEMORY	swift.var	ALC_OUT_OF_MEMORY	ALC_OUT_OF_MEMORY	var ALC_OUT_OF_MEMORY: Int32 { get }
+c:@macro@ALC_REFRESH	swift.var	ALC_REFRESH	ALC_REFRESH	var ALC_REFRESH: Int32 { get }
+c:@macro@ALC_STEREO_SOURCES	swift.var	ALC_STEREO_SOURCES	ALC_STEREO_SOURCES	var ALC_STEREO_SOURCES: Int32 { get }
+c:@macro@ALC_SYNC	swift.var	ALC_SYNC	ALC_SYNC	var ALC_SYNC: Int32 { get }
+c:@macro@ALC_TRUE	swift.var	ALC_TRUE	ALC_TRUE	var ALC_TRUE: Int32 { get }
+c:@macro@ALC_VERSION_0_1	swift.var	ALC_VERSION_0_1	ALC_VERSION_0_1	var ALC_VERSION_0_1: Int32 { get }
+c:@macro@AL_BITS	swift.var	AL_BITS	AL_BITS	var AL_BITS: Int32 { get }
+c:@macro@AL_BUFFER	swift.var	AL_BUFFER	AL_BUFFER	var AL_BUFFER: Int32 { get }
+c:@macro@AL_BUFFERS_PROCESSED	swift.var	AL_BUFFERS_PROCESSED	AL_BUFFERS_PROCESSED	var AL_BUFFERS_PROCESSED: Int32 { get }
+c:@macro@AL_BUFFERS_QUEUED	swift.var	AL_BUFFERS_QUEUED	AL_BUFFERS_QUEUED	var AL_BUFFERS_QUEUED: Int32 { get }
+c:@macro@AL_BYTE_OFFSET	swift.var	AL_BYTE_OFFSET	AL_BYTE_OFFSET	var AL_BYTE_OFFSET: Int32 { get }
+c:@macro@AL_CHANNELS	swift.var	AL_CHANNELS	AL_CHANNELS	var AL_CHANNELS: Int32 { get }
+c:@macro@AL_CONE_INNER_ANGLE	swift.var	AL_CONE_INNER_ANGLE	AL_CONE_INNER_ANGLE	var AL_CONE_INNER_ANGLE: Int32 { get }
+c:@macro@AL_CONE_OUTER_ANGLE	swift.var	AL_CONE_OUTER_ANGLE	AL_CONE_OUTER_ANGLE	var AL_CONE_OUTER_ANGLE: Int32 { get }
+c:@macro@AL_CONE_OUTER_GAIN	swift.var	AL_CONE_OUTER_GAIN	AL_CONE_OUTER_GAIN	var AL_CONE_OUTER_GAIN: Int32 { get }
+c:@macro@AL_DIRECTION	swift.var	AL_DIRECTION	AL_DIRECTION	var AL_DIRECTION: Int32 { get }
+c:@macro@AL_DISTANCE_MODEL	swift.var	AL_DISTANCE_MODEL	AL_DISTANCE_MODEL	var AL_DISTANCE_MODEL: Int32 { get }
+c:@macro@AL_DOPPLER_FACTOR	swift.var	AL_DOPPLER_FACTOR	AL_DOPPLER_FACTOR	var AL_DOPPLER_FACTOR: Int32 { get }
+c:@macro@AL_DOPPLER_VELOCITY	swift.var	AL_DOPPLER_VELOCITY	AL_DOPPLER_VELOCITY	var AL_DOPPLER_VELOCITY: Int32 { get }
+c:@macro@AL_EXPONENT_DISTANCE	swift.var	AL_EXPONENT_DISTANCE	AL_EXPONENT_DISTANCE	var AL_EXPONENT_DISTANCE: Int32 { get }
+c:@macro@AL_EXPONENT_DISTANCE_CLAMPED	swift.var	AL_EXPONENT_DISTANCE_CLAMPED	AL_EXPONENT_DISTANCE_CLAMPED	var AL_EXPONENT_DISTANCE_CLAMPED: Int32 { get }
+c:@macro@AL_EXTENSIONS	swift.var	AL_EXTENSIONS	AL_EXTENSIONS	var AL_EXTENSIONS: Int32 { get }
+c:@macro@AL_FALSE	swift.var	AL_FALSE	AL_FALSE	var AL_FALSE: Int32 { get }
+c:@macro@AL_FORMAT_MONO16	swift.var	AL_FORMAT_MONO16	AL_FORMAT_MONO16	var AL_FORMAT_MONO16: Int32 { get }
+c:@macro@AL_FORMAT_MONO8	swift.var	AL_FORMAT_MONO8	AL_FORMAT_MONO8	var AL_FORMAT_MONO8: Int32 { get }
+c:@macro@AL_FORMAT_STEREO16	swift.var	AL_FORMAT_STEREO16	AL_FORMAT_STEREO16	var AL_FORMAT_STEREO16: Int32 { get }
+c:@macro@AL_FORMAT_STEREO8	swift.var	AL_FORMAT_STEREO8	AL_FORMAT_STEREO8	var AL_FORMAT_STEREO8: Int32 { get }
+c:@macro@AL_FREQUENCY	swift.var	AL_FREQUENCY	AL_FREQUENCY	var AL_FREQUENCY: Int32 { get }
+c:@macro@AL_GAIN	swift.var	AL_GAIN	AL_GAIN	var AL_GAIN: Int32 { get }
+c:@macro@AL_ILLEGAL_COMMAND	swift.var	AL_ILLEGAL_COMMAND	AL_ILLEGAL_COMMAND	var AL_ILLEGAL_COMMAND: Int32 { get }
+c:@macro@AL_ILLEGAL_ENUM	swift.var	AL_ILLEGAL_ENUM	AL_ILLEGAL_ENUM	var AL_ILLEGAL_ENUM: Int32 { get }
+c:@macro@AL_INITIAL	swift.var	AL_INITIAL	AL_INITIAL	var AL_INITIAL: Int32 { get }
+c:@macro@AL_INVALID	swift.var	AL_INVALID	AL_INVALID	var AL_INVALID: Int32 { get }
+c:@macro@AL_INVALID_ENUM	swift.var	AL_INVALID_ENUM	AL_INVALID_ENUM	var AL_INVALID_ENUM: Int32 { get }
+c:@macro@AL_INVALID_NAME	swift.var	AL_INVALID_NAME	AL_INVALID_NAME	var AL_INVALID_NAME: Int32 { get }
+c:@macro@AL_INVALID_OPERATION	swift.var	AL_INVALID_OPERATION	AL_INVALID_OPERATION	var AL_INVALID_OPERATION: Int32 { get }
+c:@macro@AL_INVALID_VALUE	swift.var	AL_INVALID_VALUE	AL_INVALID_VALUE	var AL_INVALID_VALUE: Int32 { get }
+c:@macro@AL_INVERSE_DISTANCE	swift.var	AL_INVERSE_DISTANCE	AL_INVERSE_DISTANCE	var AL_INVERSE_DISTANCE: Int32 { get }
+c:@macro@AL_INVERSE_DISTANCE_CLAMPED	swift.var	AL_INVERSE_DISTANCE_CLAMPED	AL_INVERSE_DISTANCE_CLAMPED	var AL_INVERSE_DISTANCE_CLAMPED: Int32 { get }
+c:@macro@AL_LINEAR_DISTANCE	swift.var	AL_LINEAR_DISTANCE	AL_LINEAR_DISTANCE	var AL_LINEAR_DISTANCE: Int32 { get }
+c:@macro@AL_LINEAR_DISTANCE_CLAMPED	swift.var	AL_LINEAR_DISTANCE_CLAMPED	AL_LINEAR_DISTANCE_CLAMPED	var AL_LINEAR_DISTANCE_CLAMPED: Int32 { get }
+c:@macro@AL_LOOPING	swift.var	AL_LOOPING	AL_LOOPING	var AL_LOOPING: Int32 { get }
+c:@macro@AL_MAX_DISTANCE	swift.var	AL_MAX_DISTANCE	AL_MAX_DISTANCE	var AL_MAX_DISTANCE: Int32 { get }
+c:@macro@AL_MAX_GAIN	swift.var	AL_MAX_GAIN	AL_MAX_GAIN	var AL_MAX_GAIN: Int32 { get }
+c:@macro@AL_MIN_GAIN	swift.var	AL_MIN_GAIN	AL_MIN_GAIN	var AL_MIN_GAIN: Int32 { get }
+c:@macro@AL_NONE	swift.var	AL_NONE	AL_NONE	var AL_NONE: Int32 { get }
+c:@macro@AL_NO_ERROR	swift.var	AL_NO_ERROR	AL_NO_ERROR	var AL_NO_ERROR: Int32 { get }
+c:@macro@AL_ORIENTATION	swift.var	AL_ORIENTATION	AL_ORIENTATION	var AL_ORIENTATION: Int32 { get }
+c:@macro@AL_OUT_OF_MEMORY	swift.var	AL_OUT_OF_MEMORY	AL_OUT_OF_MEMORY	var AL_OUT_OF_MEMORY: Int32 { get }
+c:@macro@AL_PAUSED	swift.var	AL_PAUSED	AL_PAUSED	var AL_PAUSED: Int32 { get }
+c:@macro@AL_PENDING	swift.var	AL_PENDING	AL_PENDING	var AL_PENDING: Int32 { get }
+c:@macro@AL_PITCH	swift.var	AL_PITCH	AL_PITCH	var AL_PITCH: Int32 { get }
+c:@macro@AL_PLAYING	swift.var	AL_PLAYING	AL_PLAYING	var AL_PLAYING: Int32 { get }
+c:@macro@AL_POSITION	swift.var	AL_POSITION	AL_POSITION	var AL_POSITION: Int32 { get }
+c:@macro@AL_PROCESSED	swift.var	AL_PROCESSED	AL_PROCESSED	var AL_PROCESSED: Int32 { get }
+c:@macro@AL_QUEUE_HAS_LOOPED	swift.var	AL_QUEUE_HAS_LOOPED	AL_QUEUE_HAS_LOOPED	var AL_QUEUE_HAS_LOOPED: Int32 { get }
+c:@macro@AL_REFERENCE_DISTANCE	swift.var	AL_REFERENCE_DISTANCE	AL_REFERENCE_DISTANCE	var AL_REFERENCE_DISTANCE: Int32 { get }
+c:@macro@AL_RENDERER	swift.var	AL_RENDERER	AL_RENDERER	var AL_RENDERER: Int32 { get }
+c:@macro@AL_ROLLOFF_FACTOR	swift.var	AL_ROLLOFF_FACTOR	AL_ROLLOFF_FACTOR	var AL_ROLLOFF_FACTOR: Int32 { get }
+c:@macro@AL_SAMPLE_OFFSET	swift.var	AL_SAMPLE_OFFSET	AL_SAMPLE_OFFSET	var AL_SAMPLE_OFFSET: Int32 { get }
+c:@macro@AL_SEC_OFFSET	swift.var	AL_SEC_OFFSET	AL_SEC_OFFSET	var AL_SEC_OFFSET: Int32 { get }
+c:@macro@AL_SIZE	swift.var	AL_SIZE	AL_SIZE	var AL_SIZE: Int32 { get }
+c:@macro@AL_SOURCE_RELATIVE	swift.var	AL_SOURCE_RELATIVE	AL_SOURCE_RELATIVE	var AL_SOURCE_RELATIVE: Int32 { get }
+c:@macro@AL_SOURCE_STATE	swift.var	AL_SOURCE_STATE	AL_SOURCE_STATE	var AL_SOURCE_STATE: Int32 { get }
+c:@macro@AL_SOURCE_TYPE	swift.var	AL_SOURCE_TYPE	AL_SOURCE_TYPE	var AL_SOURCE_TYPE: Int32 { get }
+c:@macro@AL_SPEED_OF_SOUND	swift.var	AL_SPEED_OF_SOUND	AL_SPEED_OF_SOUND	var AL_SPEED_OF_SOUND: Int32 { get }
+c:@macro@AL_STATIC	swift.var	AL_STATIC	AL_STATIC	var AL_STATIC: Int32 { get }
+c:@macro@AL_STOPPED	swift.var	AL_STOPPED	AL_STOPPED	var AL_STOPPED: Int32 { get }
+c:@macro@AL_STREAMING	swift.var	AL_STREAMING	AL_STREAMING	var AL_STREAMING: Int32 { get }
+c:@macro@AL_TRUE	swift.var	AL_TRUE	AL_TRUE	var AL_TRUE: Int32 { get }
+c:@macro@AL_UNDETERMINED	swift.var	AL_UNDETERMINED	AL_UNDETERMINED	var AL_UNDETERMINED: Int32 { get }
+c:@macro@AL_UNUSED	swift.var	AL_UNUSED	AL_UNUSED	var AL_UNUSED: Int32 { get }
+c:@macro@AL_VELOCITY	swift.var	AL_VELOCITY	AL_VELOCITY	var AL_VELOCITY: Int32 { get }
+c:@macro@AL_VENDOR	swift.var	AL_VENDOR	AL_VENDOR	var AL_VENDOR: Int32 { get }
+c:@macro@AL_VERSION	swift.var	AL_VERSION	AL_VERSION	var AL_VERSION: Int32 { get }

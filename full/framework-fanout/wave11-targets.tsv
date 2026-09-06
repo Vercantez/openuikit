@@ -1,0 +1,16 @@
+module	slug	lane	priority	risks	dependencies
+SensitiveContentAnalysis	sensitivecontentanalysis	leaf-full	100	ml,privacy,fail-closed	Foundation
+ThreadNetwork	threadnetwork	leaf-full	100	network,hardware,fail-closed	Foundation
+VideoSubscriberAccount	videosubscriberaccount	medium-full	100	privacy,os-service,fail-closed	Foundation
+Matter	matter	large-partitioned	100	hardware,network,c-abi,fail-closed	Foundation
+MetalFX	metalfx	medium-full	100	graphics,gpu,fail-closed	Foundation,Metal
+MetalPerformanceShadersGraph	metalperformanceshadersgraph	large-partitioned	100	graphics,gpu,ml,fail-closed	Foundation,Metal
+PHASE	phase	large-partitioned	100	audio,spatial,realtime,fail-closed	Foundation
+OpenAL	openal	legacy-adapter	100	legacy,c-abi,audio,fail-closed	CoreFoundation
+IOSurface	iosurface	medium-full	100	c-abi,graphics,buffer-ownership,fail-closed	CoreFoundation
+MediaSetup	mediasetup	leaf-full	100	ui,os-service,fail-closed	Foundation,UIKit
+LiveCommunicationKit	livecommunicationkit	medium-full	100	telephony,os-service,fail-closed	Foundation
+SharedWithYouCore	sharedwithyoucore	leaf-full	100	os-service,fail-closed	Foundation
+ManagedSettingsUI	managedsettingsui	leaf-full	100	ui,privacy,fail-closed	Foundation,ManagedSettings
+Cinematic	cinematic	medium-full	100	video,ml,fail-closed	Foundation
+MLCompute	mlcompute	large-partitioned	100	ml,gpu,fail-closed	Foundation

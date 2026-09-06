@@ -420,6 +420,14 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// grows to `[0, 10, 375, 60]` (6 pt) and the search field occupies it.
     static let searchActiveExtraHeight: CGFloat = 6
     var searchHiddenByScroll = false
+    /// True after the hosted search controller has been `isActive` at least
+    /// once. MEASURED Notes t200 vs t6000 / Tabs t200 vs t6000, iPhone SE
+    /// 2x / iOS 26.1: first rest is bar 54 / search height 0; after cancel
+    /// inside a tab-bar nav the inactive slot stays **60** below the 54 pt
+    /// content (bar `[0, 10, 375, 114]`, inset 124, field `[16, 1, 343, 44]`)
+    /// until `hidesSearchBarWhenScrolling` hides it (Tabs t7000 offset 260,
+    /// bar 54 again). Ledger (window-root nav, no tab bar) restores 54.
+    var searchSlotRevealed = false
     var hostedSearchBar: UISearchBar?
 
     var largeTitleLabel: UILabel?
@@ -926,6 +934,14 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
               let item = topItem, item.hidesSearchBarWhenScrolling,
               let sc = item.searchController, !sc.isActive,
               requestedY > 8 else { return 0 }
+        // MEASURED Notes t6000 → Tabs t7000, iPhone SE 2x / iOS 26.1:
+        // after cancel the inactive slot is showing (inset 124). A
+        // programmatic 200 then hides the slot; `safeAreaInsetsDidChange`
+        // rebases offset by the 60 pt shrink (200 → 260). Adding the
+        // bump on top of that would land 320. When the slot is already
+        // collapsed (never revealed, or already hidden) there is no
+        // rebase and the bump alone lands 260 (Tabs t7000 golden).
+        if showsInactiveSearchSlot { return 0 }
         let field = UIFontMetrics(forTextStyle: .body).scaledValue(
             for: 44, compatibleWith: traitCollection)
         return max(UINavigationBar.iOSBarContentHeight
@@ -933,23 +949,57 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
                    8 + field + 8)
     }
 
+    /// Full inactive-slot height (`8 + scaledField(44) + 8`). MEASURED
+    /// Notes t6000 / t6000.xxxl / t6000.ax1, iPhone SE 2x / iOS 26.1:
+    /// **60 / 74 / 96** below the 54 pt content (bar 114 / 128 / 150,
+    /// inset 124 / 138 / 160). Landscape compact-height bar origin 24
+    /// keeps the same 60 pt slot (Notes t6000.landscape bar 114, inset 138).
+    func searchInactiveSlotHeight() -> CGFloat {
+        let field = UIFontMetrics(forTextStyle: .body).scaledValue(
+            for: 44, compatibleWith: traitCollection)
+        return 8 + field + 8
+    }
+
+    /// Inactive slot under the 54 pt content bar. Phone + tab-bar nav only.
+    /// MEASURED Notes t6000 / Tabs t6000 (tab-bar nav) vs Ledger t6000
+    /// (window-root nav, bar 54) vs Notes-ipad t6000 (bar 54, trailing field).
+    var showsInactiveSearchSlot: Bool {
+        guard OpenUIKitRuntime.systemFontCut == .iOS,
+              !UINavigationBar.isPad,
+              searchSlotRevealed,
+              !searchHiddenByScroll,
+              topItem?.searchController != nil,
+              topItem?.searchController?.isActive != true,
+              _controller?.tabBarController != nil else { return false }
+        return true
+    }
+
     /// Extra height the navigation controller should add to the bar frame
-    /// for an active inline search. Inactive search is 0 pt (Tabs t200).
+    /// for hosted search. Active inline: +6 (Tabs t4000 bar 60). Inactive
+    /// slot after a tab-bar presentation: +60 (Notes t6000 bar 114).
+    /// First rest and Ledger cancel stay 0 (Tabs t200 / Ledger t6000).
     /// Pad: MEASURED Tabs-ipad t4000, the bar stays **54** (search is a
     /// trailing 240/280 × 44 field in the 44 pt top chrome, not +6).
     var searchOverlayHeight: CGFloat {
         guard OpenUIKitRuntime.systemFontCut == .iOS else { return 0 }
         if UINavigationBar.isPad { return 0 }
+        // Ledger docks search at the bottom (usesBottomSearch); overlay 0.
         if usesBottomSearch { return 0 }
-        guard let sc = topItem?.searchController, sc.isActive else { return 0 }
-        // MEASURED Tabs t4000: extra 6 → bar 60 = 8+44+8. Tabs t4000.ax1 /
-        // Notes t4000.ax1, SE 2x / iOS 26.1: field 80
-        // (`UIFontMetrics.body.scaledValue(44)` table hit), extra 42 → bar 96
-        // = 8+80+8. Floor stays 6 so `.large` is unchanged.
-        let field = UIFontMetrics(forTextStyle: .body).scaledValue(
-            for: 44, compatibleWith: traitCollection)
-        return max(UINavigationBar.searchActiveExtraHeight,
-                   8 + field + 8 - UINavigationBar.iOSBarContentHeight)
+        guard topItem?.searchController != nil else { return 0 }
+        if topItem?.searchController?.isActive == true {
+            // MEASURED Tabs t4000: extra 6 → bar 60 = 8+44+8. Tabs t4000.ax1 /
+            // Notes t4000.ax1, SE 2x / iOS 26.1: field 80
+            // (`UIFontMetrics.body.scaledValue(44)` table hit), extra 42 → bar 96
+            // = 8+80+8. Floor stays 6 so `.large` is unchanged.
+            let field = UIFontMetrics(forTextStyle: .body).scaledValue(
+                for: 44, compatibleWith: traitCollection)
+            return max(UINavigationBar.searchActiveExtraHeight,
+                       8 + field + 8 - UINavigationBar.iOSBarContentHeight)
+        }
+        if showsInactiveSearchSlot {
+            return searchInactiveSlotHeight()
+        }
+        return 0
     }
 
     func makeItemView(_ item: UIBarButtonItem) -> _UIBarButtonItemView {
@@ -1030,7 +1080,12 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
             largeTitleLabel?.isHidden = true
             promptLabel?.isHidden = true
         } else {
-            titleLabel.isHidden = titleViewHost != nil
+            // Pad trailing search already hid the title in layoutSearchBar
+            // (Tabs-ipad t200 / t4000). Don't undo that — Ledger's
+            // collapsed-bar restore is phone bottom-dock only.
+            if !(UINavigationBar.isPad && hostedSearchBar != nil) {
+                titleLabel.isHidden = titleViewHost != nil
+            }
             for v in leftItemViews + rightItemViews {
                 v.isHidden = false
                 v.alpha = 1
@@ -1058,6 +1113,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         let active = topItem?.searchController?.isActive == true
             && OpenUIKitRuntime.systemFontCut == .iOS
         bar._navInlineActive = active
+        bar._navInactiveSlot = false
         if UINavigationBar.isPad {
             // MEASURED Tabs-ipad t200 / t4000, iPad (A16) 820×1180 @2x /
             // iOS 26.1: rest UISearchBar `[564.969, 31.817, 240, 44]`
@@ -1079,11 +1135,28 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
             bar.layoutIfNeeded()
             return
         }
+        if showsInactiveSearchSlot {
+            // MEASURED Notes t6000 / Tabs t6000, iPhone SE 2x / iOS 26.1:
+            // UISearchBar `[0, 54, 375, 60]` under the 54 pt content
+            // (bar 114); field `[16, 1, 343, 44]`, no dismiss. Title stays.
+            bar._padTrailingChrome = false
+            bar._navInactiveSlot = true
+            bar.isHidden = false
+            titleLabel.alpha = titleViewHost == nil ? 1 : 0
+            let slotH = searchInactiveSlotHeight()
+            bar.frame = CGRect(x: 0, y: UINavigationBar.iOSBarContentHeight,
+                               width: bounds.width, height: slotH)
+            bar.setShowsCancelButton(false, animated: false)
+            bar.setNeedsLayout()
+            bar.layoutIfNeeded()
+            return
+        }
         if !active {
             // Tabs t200: UISearchBar `[0, 64, 375, 0]` — height 0 at the
             // bar's bottom edge, not isHidden (the placeholder still dumps).
             bar._padTrailingChrome = false
             bar.isHidden = false
+            titleLabel.alpha = titleViewHost == nil ? 1 : 0
             bar.frame = CGRect(x: 0, y: bounds.height, width: bounds.width, height: 0)
             return
         }
