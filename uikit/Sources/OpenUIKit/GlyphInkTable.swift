@@ -105,6 +105,21 @@ public enum GlyphInkTable {
     /// 16/16, skipped []; overlap with the prior 3 euro keys **3/3
     /// identical**. Table **8786 → 8799**. 3x euro F0.0 light+dark
     /// on iPhone 16 (2/2) → glyph_ink_ios_3x **848 → 850**.
+    /// Docker `linux_realapp_verify` 78 then
+    /// `OPENUIKIT_IOS_INK_MISS: I|system-medium|17|light|F0.0|82`
+    /// on the 13th screen (Ledger). Scalar 82 is `'R'`. MEASURED
+    /// `realapp_ledger_light` layout: bottom-docked `UISearchBar`
+    /// placeholder `UITextFieldLabel` intrinsic **48.5×20.5**
+    /// (`LedgerListViewController` `placeholder = "Regex"`;
+    /// `UISearchBar` field font system medium 17). Mac and Linux
+    /// scale-2 `OPENUIKIT_INK_LOG` of all 14 screens: that one key
+    /// (Q at regular 17 F0.0 is the miss probe, not a real-app
+    /// glyph). Harvest ASCII 33–126 at 17 pt medium, light+dark ×
+    /// F0.0/F0.5 (the 17 pt iOS pen grid) on SE 2x / iOS 26.1
+    /// (`OpenUIKit-2x-ledger-ink`), 376/376, skipped []; overlap
+    /// **84/84 identical**. Named miss `{w:19, h:24, ox:3, oy:-25}`.
+    /// Table **8799 → 9091**. Q stays nil. `glyph_ink.json` /
+    /// `glyph_ink_ios_3x.json` untouched.
     private static var iosEntries: [String: JSONValue]? = {
         guard let json = ResourceIO.loadJSONResource("glyph_ink_ios.json"),
               let e = json["entries"]?.objectValue else { return nil }
