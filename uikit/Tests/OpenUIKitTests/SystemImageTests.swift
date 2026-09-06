@@ -166,6 +166,11 @@ final class SystemImageTests: XCTestCase {
         XCTAssertNotNil(UIImage(systemName: "magnifyingglass"))
         XCTAssertNotNil(UIImage(systemName: "gearshape"))
         XCTAssertNotNil(UIImage(systemName: "chevron.right"))
+        // MEASURED symbolinkprobe, iPhone SE 2x / iOS 26.1: Notes tab
+        // `note.text` at 18/medium/large is 29×25 (58×50 alignment,
+        // 46×42 ink at 6,4). Was nil (linux-trial); harvested this round.
+        XCTAssertNotNil(UIImage(systemName: "note.text",
+                                 withConfiguration: configuration))
         OpenUIKitRuntime.systemFontCut = .macOS
         XCTAssertNil(UIImage(systemName: "house",
                              withConfiguration: configuration))

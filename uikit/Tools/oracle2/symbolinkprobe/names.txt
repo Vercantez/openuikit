@@ -71,3 +71,4 @@ exclamationmark.circle
 number
 person.crop.circle
 multiply
+note.text

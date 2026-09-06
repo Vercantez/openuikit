@@ -287,9 +287,17 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 1)).minY, 243, accuracy: 1e-9)
         XCTAssertNil(table.footerViews[0], "untitled footer is spacing, no view")
 
+        // navLarge: first header compact 38. MEASURED headerprobe; the
+        // discriminator is `displaysLargeTitles` (Notes t6000 SA.top 124
+        // without large titles stays 55.5). Bare SA.top=116 is not enough.
+        let host = UIViewController()
+        host.view.addSubview(table)
+        let nav = UINavigationController(rootViewController: host)
+        nav.navigationBar.prefersLargeTitles = true
+        host.navigationItem.largeTitleDisplayMode = .always
         table._setSafeAreaInsets(UIEdgeInsets(top: 116, left: 0, bottom: 0, right: 0))
         table.layoutIfNeeded()
-        // navLarge: first header compact 38, later still 38 after untitled footer.
+        XCTAssertTrue(nav.navigationBar.displaysLargeTitles)
         XCTAssertEqual(table.metrics[0].headerHeight, 38, accuracy: 1e-9)
         XCTAssertTrue(table.metrics[0].compactHeader)
         XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 0)).minY, 38, accuracy: 1e-9)
@@ -318,13 +326,17 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(table.metrics[0].headerHeight, 55.5, accuracy: 1e-9)
         XCTAssertFalse(table.metrics[0].compactHeader)
 
+        // Notes replaced the SA.top overlay heuristic with overflow compact
+        // under tab-hosted search. xxxl SA.top 84 without a search
+        // controller (this table) stays 55.5; Notes t200.xxxl compact 38
+        // is the overflow path (`searchOverflowCompact`).
         UITraitCollection.current = UITraitCollection(
             userInterfaceStyle: .light, displayScale: 2,
             preferredContentSizeCategory: .extraExtraExtraLarge)
         table._setSafeAreaInsets(UIEdgeInsets(top: 84, left: 0, bottom: 0, right: 0))
         table.layoutIfNeeded()
-        XCTAssertEqual(table.metrics[0].headerHeight, 38, accuracy: 1e-9)
-        XCTAssertTrue(table.metrics[0].compactHeader)
+        XCTAssertEqual(table.metrics[0].headerHeight, 55.5, accuracy: 1e-9)
+        XCTAssertFalse(table.metrics[0].compactHeader)
     }
 
     // MARK: Compact pageSheet top inset (probe_sheet_inset / NavFlow t1200)
@@ -702,7 +714,7 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(nav.navigationBar.searchOverlayHeight, 0)
     }
 
-    // MARK: Compact-height phone tab bar (Tabs t200.landscape)
+    // MARK: Compact-height phone tab bar (Tabs t200.landscape + Notes t200.landscape)
 
     /// MEASURED Tabs t200.landscape / t2000.landscape, iPhone SE 2x /
     /// iOS 26.1: `UITabBar [0, 311, 667, 64]`, platter `[205, 0, 257.5, 44]`,
@@ -750,6 +762,43 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(tab.tabBar.itemViews[1].badgeView.frame.size,
                        CGSize(width: 16, height: 16))
         XCTAssertEqual(tab.tabBar.itemViews[1].badgeView.frame.origin.y, 0)
+    }
+
+    /// MEASURED Notes t200.landscape, iPhone SE 2x / iOS 26.1: 2-item
+    /// compact-height bar is the same 64 / platter 44 / items 36 at y 4
+    /// with 4 pt side pad and 4 pt gaps (Notes + Settings).
+    func testCompactHeightTabBarIs64AndPacksIconTitle() {
+        UIDevice.current.userInterfaceIdiom = .phone
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            horizontalSizeClass: .compact, verticalSizeClass: .compact)
+        device(667, 375, scale: 2)
+
+        let tab = UITabBarController()
+        let notes = UIViewController()
+        notes.tabBarItem = UITabBarItem(title: "Notes", image: nil, tag: 0)
+        let settings = UIViewController()
+        settings.tabBarItem = UITabBarItem(title: "Settings", image: nil, tag: 1)
+        tab.viewControllers = [notes, settings]
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 667, height: 375))
+        window.rootViewController = tab
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(UITabBar.barHeight, 64)
+        XCTAssertEqual(tab.tabBar.frame,
+                       CGRect(x: 0, y: 311, width: 667, height: 64))
+        XCTAssertEqual(tab.tabBar.platter.frame.height, 44)
+        XCTAssertEqual(tab.tabBar.itemViews.count, 2)
+        XCTAssertEqual(tab.tabBar.itemViews[0].frame.minY, 4)
+        XCTAssertEqual(tab.tabBar.itemViews[0].frame.height, 36)
+        XCTAssertEqual(tab.tabBar.itemViews[0].frame.minX, 4, accuracy: 0.5)
+        XCTAssertEqual(
+            tab.tabBar.itemViews[1].frame.minX
+                - tab.tabBar.itemViews[0].frame.maxX,
+            4, accuracy: 0.5)
+        XCTAssertEqual(tab.tabBar.itemViews[0].titleLabel.font.pointSize, 12,
+                       accuracy: 1e-9)
+        XCTAssertEqual(tab.transitionView.safeAreaInsets.bottom, 64)
     }
 }
 
