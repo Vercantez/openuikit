@@ -7,15 +7,23 @@ Linux success and is not a Messages for Business service.
 
 ## Depth pass 2026-09
 
-SDK depth for `BusinessChat` in `full/businesschat/` (21 exact IDs). This
-is a fresh seed: every public identifier is implemented with a focused
-synchronous test. Enum cases share one table-driven raw-value test; every
-other implemented identifier has its own test.
+SDK depth for `BusinessChat` in `full/businesschat/` (21 exact IDs).
 
-Coverage this round: **21 implemented / 0 declared / 21 total**
-(21 nondeferred, floor 17). No non-enum test is cited by more than 1
-implemented row (5.3% of the 19 non-enum-member implemented rows). Enum
-cases share a table-driven raw-value test.
+**Before** (refused merge at `149078779dfb`): **21 implemented / 0 declared /
+21 total**, but `FW_MERGE GATE RED` because
+`BCChatActionTests.testChatActionClass` used `BCChatAction.self is AnyClass`
+(always-true under `-warnings-as-errors`). Coverage already cited focused
+`test*` functions; the ledger was not a bulk relabel. The always-true `is`
+made the cited class test uncompilable on the merge host.
+
+**After** this repair: **21 implemented / 0 declared / 21 total** (21
+nondeferred, floor 17). `testChatActionClass` now checks
+`String(reflecting:)` and `superclass` instead of `is`. Tests remain
+split by family (`BCChatActionParameterTests`, `BCChatButtonStyleTests`,
+`BCChatActionTests`, `BCChatButtonTests`). Enum cases share one
+table-driven raw-value test; every other implemented identifier has its
+own test. No non-enum test is cited by more than 1 of the remaining 19
+implemented rows (5.3%; cap 40%).
 
 Top-5 implemented evidence:
 
