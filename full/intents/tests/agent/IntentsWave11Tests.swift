@@ -579,7 +579,7 @@ func testNoteRemainingPropertiesAndGuestReservationIntents() {
 
 func testPaymentMethodApplePayAndRelevantShortcutFields() {
     let apple = INPaymentMethod.applePay()
-    precondition(apple is INPaymentMethod)
+    precondition(apple.type == .applePay)
     let method = INPaymentMethod(
         type: .checking,
         name: "Open Checking",

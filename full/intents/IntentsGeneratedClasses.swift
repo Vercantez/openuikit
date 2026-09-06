@@ -881,10 +881,10 @@ open class INDateComponentsResolutionResult: INIntentResolutionResult, @unchecke
     }
 }
 
-open class INDateRelevanceProvider: NSObject, @unchecked Sendable {
+open class INDateRelevanceProvider: INRelevanceProvider, @unchecked Sendable {
     open var endDate: Date? = nil
     open var startDate: Date?
-    public required override init() { super.init() }
+    public required init() { super.init() }
     public convenience init(start startDate: Date, end endDate: Date?) {
         self.init()
         self.startDate = startDate
@@ -1983,7 +1983,11 @@ open class INPaymentAmountResolutionResult: INIntentResolutionResult, @unchecked
 }
 
 open class INPaymentMethod: NSObject, @unchecked Sendable {
-    open class func applePay() -> Self { self.init() }
+    open class func applePay() -> Self {
+        let method = self.init()
+        method.type = .applePay
+        return method
+    }
     open var icon: INImage? = nil
     open var identificationHint: String? = nil
     open var name: String? = nil
