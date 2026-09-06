@@ -1,0 +1,17 @@
+module	slug	lane	priority	risks	dependencies
+CoreMedia	coremedia	large-partitioned	100	media,time,c-abi,buffer-ownership,callbacks,concurrency	CoreAudioTypes,CoreFoundation,CoreVideo,Foundation
+AVFoundation	avfoundation	medium-full	100	ui,fail-closed	Foundation
+Vision	vision	large-partitioned	100	machine-learning,image-processing,hardware	CoreGraphics,CoreImage,Foundation
+AudioToolbox	audiotoolbox	large-partitioned	100	audio,realtime,c-abi,callbacks,buffer-ownership,fail-closed	CoreAudioTypes,CoreFoundation,Foundation
+AppIntents	appintents	medium-full	100	ui,fail-closed	Foundation
+Charts	charts	medium-full	100	ui,fail-closed	Foundation
+Intents	intents	medium-full	100	ui,fail-closed	Foundation
+Accelerate	accelerate	medium-full	100	ui,fail-closed	Foundation
+Metal	metal	large-partitioned	100	gpu,abi,hardware,host-driven	CoreGraphics,Foundation,IOSurface
+MetalPerformanceShaders	metalperformanceshaders	large-partitioned	100	gpu,numerics,hardware,metal	Foundation,Metal
+Network	network	medium-full	100	ui,fail-closed	Foundation
+CoreData	coredata	large-partitioned	100	persistence,concurrency,migration	Foundation
+SpriteKit	spritekit	large-partitioned	100	graphics,realtime,fail-closed	CoreGraphics,Foundation,QuartzCore,UIKit
+SceneKit	scenekit	large-partitioned	100	rendering,gpu,physics	CoreGraphics,Foundation,Metal,QuartzCore
+CoreText	coretext	medium-full	100	ui,fail-closed	Foundation
+StoreKit	storekit	medium-full	100	ui,fail-closed	Foundation
