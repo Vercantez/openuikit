@@ -47,9 +47,25 @@ private func avMakeFtypMoov(
     height: UInt16 = 240,
     handler: String = "vide",
     codec: String = "avc1",
-    sampleDelta: UInt32 = 20
+    sampleDelta: UInt32 = 20,
+    trackID: UInt32 = 1
 ) -> Data {
     let ftyp = avBox("ftyp", avU32(0x69736f6d) + avU32(0) + avU32(0x69736f6d))
+    let trak = avMakeTrak(
+        timescale: timescale,
+        duration: duration,
+        width: width,
+        height: height,
+        handler: handler,
+        codec: codec,
+        sampleDelta: sampleDelta,
+        trackID: trackID
+    )
+    let moov = avBox("moov", avMakeMvhd(timescale: timescale, duration: duration, nextTrackID: trackID + 1) + trak)
+    return ftyp + moov
+}
+
+private func avMakeMvhd(timescale: UInt32, duration: UInt32, nextTrackID: UInt32) -> Data {
     var mvhd = Data()
     mvhd.append(avU32(0))
     mvhd.append(avU32(0))
@@ -62,13 +78,25 @@ private func avMakeFtypMoov(
     mvhd.append(Data(count: 8))
     mvhd.append(avIdentityMatrix())
     mvhd.append(Data(count: 24))
-    mvhd.append(avU32(2))
+    mvhd.append(avU32(nextTrackID))
+    return avBox("mvhd", mvhd)
+}
 
+private func avMakeTrak(
+    timescale: UInt32,
+    duration: UInt32,
+    width: UInt16,
+    height: UInt16,
+    handler: String,
+    codec: String,
+    sampleDelta: UInt32,
+    trackID: UInt32
+) -> Data {
     var tkhd = Data()
     tkhd.append(avU32(0x000003))
     tkhd.append(avU32(0))
     tkhd.append(avU32(0))
-    tkhd.append(avU32(1))
+    tkhd.append(avU32(trackID))
     tkhd.append(avU32(0))
     tkhd.append(avU32(duration))
     tkhd.append(Data(count: 8))
@@ -128,9 +156,7 @@ private func avMakeFtypMoov(
     let stbl = avBox("stbl", stsd + stts + stsz)
     let minf = avBox("minf", stbl)
     let mdia = avBox("mdia", avBox("mdhd", mdhd) + avBox("hdlr", hdlr) + minf)
-    let trak = avBox("trak", avBox("tkhd", tkhd) + mdia)
-    let moov = avBox("moov", avBox("mvhd", mvhd) + trak)
-    return ftyp + moov
+    return avBox("trak", avBox("tkhd", tkhd) + mdia)
 }
 
 private func avLE32(_ value: UInt32) -> Data {
@@ -339,64 +365,32 @@ func testISOBMFFAudioAndVideoTracks() {
     precondition(asset.track(withTrackID: 2)?.mediaType == .audio)
 }
 
-private func avReadBoxes(_ data: Data) -> [(String, Data)] {
-    var result: [(String, Data)] = []
-    var offset = 0
-    while offset + 8 <= data.count {
-        let size = data[offset..<(offset + 4)].reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
-        let type = String(bytes: data[(offset + 4)..<(offset + 8)], encoding: .ascii) ?? ""
-        let total = Int(size)
-        if total < 8 || offset + total > data.count { break }
-        result.append((type, data[(offset + 8)..<(offset + total)]))
-        offset += total
-    }
-    return result
-}
-
 private func avMakeDualTrackMovie() -> Data {
-    let video = avMakeFtypMoov()
-    let audio = avMakeFtypMoov(
+    let ftyp = avBox("ftyp", avU32(0x69736f6d) + avU32(0) + avU32(0x69736f6d))
+    let video = avMakeTrak(
+        timescale: 600,
+        duration: 1800,
+        width: 320,
+        height: 240,
+        handler: "vide",
+        codec: "avc1",
+        sampleDelta: 20,
+        trackID: 1
+    )
+    let audio = avMakeTrak(
         timescale: 44100,
         duration: 132300,
         width: 0,
         height: 0,
         handler: "soun",
         codec: "mp4a",
-        sampleDelta: 1024
+        sampleDelta: 1024,
+        trackID: 2
     )
-    func trak(from data: Data) -> Data {
-        guard let moov = avReadBoxes(data).first(where: { $0.0 == "moov" }) else { return Data() }
-        guard let trak = avReadBoxes(moov.1).first(where: { $0.0 == "trak" }) else { return Data() }
-        return avBox("trak", trak.1)
-    }
-    let ftyp = avBox("ftyp", avU32(0x69736f6d) + avU32(0) + avU32(0x69736f6d))
-    var mvhd = Data()
-    mvhd.append(avU32(0))
-    mvhd.append(avU32(0))
-    mvhd.append(avU32(0))
-    mvhd.append(avU32(600))
-    mvhd.append(avU32(1800))
-    mvhd.append(avU32(0x00010000))
-    mvhd.append(avU16(0x0100))
-    mvhd.append(avU16(0))
-    mvhd.append(Data(count: 8))
-    mvhd.append(avIdentityMatrix())
-    mvhd.append(Data(count: 24))
-    mvhd.append(avU32(3))
-    var audioTrak = trak(from: audio)
-    // version-0 tkhd track_id is 12 bytes into the tkhd payload; the trak box
-    // contains tkhd as the first child (size 4 + type 4 + payload).
-    let audioBoxes = avReadBoxes(audioTrak)
-    if let tkhd = audioBoxes.first(where: { $0.0 == "tkhd" }), tkhd.1.count >= 16 {
-        var payload = tkhd.1
-        payload.replaceSubrange(12..<16, with: avU32(2))
-        var rebuilt = Data()
-        for (type, body) in audioBoxes {
-            rebuilt.append(avBox(type, type == "tkhd" ? payload : body))
-        }
-        audioTrak = avBox("trak", rebuilt)
-    }
-    let moov = avBox("moov", avBox("mvhd", mvhd) + trak(from: video) + audioTrak)
+    let moov = avBox(
+        "moov",
+        avMakeMvhd(timescale: 600, duration: 1800, nextTrackID: 3) + video + audio
+    )
     return ftyp + moov
 }
 
