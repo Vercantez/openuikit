@@ -6,6 +6,8 @@
 
 #if canImport(Foundation)
 import Foundation
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
 #endif
 
 // MARK: - Core Animation 3D (SplashViewController.swift:116)

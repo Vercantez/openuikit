@@ -8,6 +8,8 @@
 
 #if canImport(Foundation)
 import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
 #endif
 
 /// The orientation of an interface presented by a window scene. Raw values
