@@ -63,6 +63,8 @@ internal final class ATAudioFileObject: ATObject {
     var permissions: AudioFilePermissions
     var packetCursor: Int64 = 0
     var closed = false
+    var deferSizeUpdates = false
+    var userData: [UInt32: [Data]] = [:]
 
     init(
         urlPath: String,
@@ -1012,4 +1014,278 @@ public func ExtAudioFileGetPropertyInfo(
         return kExtAudioFileError_InvalidProperty
     }
 }
+
+public func AudioFileSetProperty(
+    _ inAudioFile: AudioFileID?,
+    _ inPropertyID: AudioFilePropertyID,
+    _ inDataSize: UInt32,
+    _ inPropertyData: UnsafeRawPointer?
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self) else {
+        return kAudioFileNotOpenError
+    }
+    switch inPropertyID {
+    case kAudioFilePropertyDeferSizeUpdates:
+        guard let inPropertyData, inDataSize >= 4 else { return kAudioFileBadPropertySizeError }
+        file.deferSizeUpdates = inPropertyData.loadUnaligned(as: UInt32.self) != 0
+        return 0
+    default:
+        return kAudioFileUnsupportedPropertyError
+    }
+}
+
+@_cdecl("AudioFileOptimize")
+public func AudioFileOptimize(_ inAudioFile: AudioFileID?) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self) else {
+        return kAudioFileNotOpenError
+    }
+    if file.permissions == .readPermission {
+        return kAudioFilePermissionsError
+    }
+    return 0
+}
+
+public func AudioFileReadPacketData(
+    _ inAudioFile: AudioFileID?,
+    _ inUseCache: Bool,
+    _ outNumBytes: UnsafeMutablePointer<UInt32>?,
+    _ outPacketDescriptions: UnsafeMutableRawPointer?,
+    _ inStartingPacket: Int64,
+    _ ioNumPackets: UnsafeMutablePointer<UInt32>?,
+    _ outBuffer: UnsafeMutableRawPointer?
+) -> Int32 {
+    return AudioFileReadPackets(
+        inAudioFile,
+        inUseCache,
+        outNumBytes,
+        outPacketDescriptions,
+        inStartingPacket,
+        ioNumPackets,
+        outBuffer
+    )
+}
+
+private let atHostedAudioFileTypes: [AudioFileTypeID] = [
+    kAudioFileWAVEType,
+    kAudioFileAIFFType,
+    kAudioFileCAFType,
+]
+
+public func AudioFileGetGlobalInfoSize(
+    _ inPropertyID: AudioFilePropertyID,
+    _ inSpecifierSize: UInt32,
+    _ inSpecifier: UnsafeMutableRawPointer?,
+    _ outDataSize: UnsafeMutablePointer<UInt32>?
+) -> Int32 {
+    _ = inSpecifierSize
+    _ = inSpecifier
+    switch inPropertyID {
+    case kAudioFileGlobalInfo_ReadableTypes, kAudioFileGlobalInfo_WritableTypes:
+        outDataSize?.pointee = UInt32(atHostedAudioFileTypes.count * 4)
+        return 0
+    case kAudioFileGlobalInfo_AvailableFormatIDs:
+        outDataSize?.pointee = 4
+        return 0
+    case kAudioFileGlobalInfo_FileTypeName:
+        outDataSize?.pointee = UInt32(MemoryLayout<Unmanaged<CFString>?>.size)
+        return 0
+    default:
+        return kAudioFileUnsupportedPropertyError
+    }
+}
+
+public func AudioFileGetGlobalInfo(
+    _ inPropertyID: AudioFilePropertyID,
+    _ inSpecifierSize: UInt32,
+    _ inSpecifier: UnsafeMutableRawPointer?,
+    _ ioDataSize: UnsafeMutablePointer<UInt32>?,
+    _ outPropertyData: UnsafeMutableRawPointer?
+) -> Int32 {
+    _ = inSpecifierSize
+    switch inPropertyID {
+    case kAudioFileGlobalInfo_ReadableTypes, kAudioFileGlobalInfo_WritableTypes:
+        let size = UInt32(atHostedAudioFileTypes.count * 4)
+        if let ioDataSize, ioDataSize.pointee < size {
+            return kAudioFileBadPropertySizeError
+        }
+        ioDataSize?.pointee = size
+        if let outPropertyData {
+            for (index, type) in atHostedAudioFileTypes.enumerated() {
+                outPropertyData.storeBytes(of: type, toByteOffset: index * 4, as: UInt32.self)
+            }
+        }
+        return 0
+    case kAudioFileGlobalInfo_AvailableFormatIDs:
+        if let ioDataSize, ioDataSize.pointee < 4 {
+            return kAudioFileBadPropertySizeError
+        }
+        ioDataSize?.pointee = 4
+        outPropertyData?.storeBytes(of: atFormatLinearPCM, as: UInt32.self)
+        return 0
+    case kAudioFileGlobalInfo_FileTypeName:
+        let fileType = inSpecifier?.loadUnaligned(as: AudioFileTypeID.self) ?? 0
+        let name: String
+        switch fileType {
+        case kAudioFileWAVEType: name = "WAVE"
+        case kAudioFileAIFFType: name = "AIFF"
+        case kAudioFileCAFType: name = "CAF"
+        default: name = "Unknown"
+        }
+        ioDataSize?.pointee = UInt32(MemoryLayout<Unmanaged<CFString>?>.size)
+        if let outPropertyData {
+            let cf = name.withCString { pointer in
+                CFStringCreateWithCString(
+                    kCFAllocatorDefault,
+                    pointer,
+                    CFStringBuiltInEncodings.UTF8.rawValue
+                )
+            }!
+            outPropertyData.storeBytes(of: Unmanaged.passRetained(cf), as: Unmanaged<CFString>.self)
+        }
+        return 0
+    default:
+        return kAudioFileUnsupportedPropertyError
+    }
+}
 #endif
+
+public func AudioFileCountUserData(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ outNumberItems: UnsafeMutablePointer<UInt32>?
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self), !file.closed else {
+        return kAudioFileNotOpenError
+    }
+    let count = UInt32(file.userData[inUserDataID]?.count ?? 0)
+    outNumberItems?.pointee = count
+    return 0
+}
+
+public func AudioFileSetUserData(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ inIndex: UInt32,
+    _ inUserDataSize: UInt32,
+    _ inUserData: UnsafeRawPointer?
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self), !file.closed else {
+        return kAudioFileNotOpenError
+    }
+    guard file.permissions != .readPermission else { return kAudioFilePermissionsError }
+    guard let inUserData else { return kAudioFileUnspecifiedError }
+    var items = file.userData[inUserDataID] ?? []
+    let blob = Data(bytes: inUserData, count: Int(inUserDataSize))
+    if Int(inIndex) < items.count {
+        items[Int(inIndex)] = blob
+    } else if Int(inIndex) == items.count {
+        items.append(blob)
+    } else {
+        return kAudioFileInvalidChunkError
+    }
+    file.userData[inUserDataID] = items
+    return 0
+}
+
+public func AudioFileGetUserDataSize(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ inIndex: UInt32,
+    _ outUserDataSize: UnsafeMutablePointer<UInt32>?
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self), !file.closed else {
+        return kAudioFileNotOpenError
+    }
+    guard let items = file.userData[inUserDataID], Int(inIndex) < items.count else {
+        return kAudioFileInvalidChunkError
+    }
+    outUserDataSize?.pointee = UInt32(items[Int(inIndex)].count)
+    return 0
+}
+
+public func AudioFileGetUserDataSize64(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ inIndex: UInt32,
+    _ outUserDataSize: UnsafeMutablePointer<UInt64>?
+) -> Int32 {
+    var size32: UInt32 = 0
+    let status = AudioFileGetUserDataSize(inAudioFile, inUserDataID, inIndex, &size32)
+    if status == 0 {
+        outUserDataSize?.pointee = UInt64(size32)
+    }
+    return status
+}
+
+public func AudioFileGetUserData(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ inIndex: UInt32,
+    _ ioUserDataSize: UnsafeMutablePointer<UInt32>?,
+    _ outUserData: UnsafeMutableRawPointer?
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self), !file.closed else {
+        return kAudioFileNotOpenError
+    }
+    guard let items = file.userData[inUserDataID], Int(inIndex) < items.count else {
+        return kAudioFileInvalidChunkError
+    }
+    let blob = items[Int(inIndex)]
+    if let ioUserDataSize, ioUserDataSize.pointee < UInt32(blob.count) {
+        return kAudioFileBadPropertySizeError
+    }
+    ioUserDataSize?.pointee = UInt32(blob.count)
+    if let outUserData, !blob.isEmpty {
+        blob.copyBytes(to: outUserData.assumingMemoryBound(to: UInt8.self), count: blob.count)
+    }
+    return 0
+}
+
+public func AudioFileGetUserDataAtOffset(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ inIndex: UInt32,
+    _ inOffset: Int64,
+    _ ioUserDataSize: UnsafeMutablePointer<UInt32>?,
+    _ outUserData: UnsafeMutableRawPointer?
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self), !file.closed else {
+        return kAudioFileNotOpenError
+    }
+    guard let items = file.userData[inUserDataID], Int(inIndex) < items.count else {
+        return kAudioFileInvalidChunkError
+    }
+    let blob = items[Int(inIndex)]
+    if inOffset < 0 || inOffset > Int64(blob.count) {
+        return kAudioFileInvalidChunkError
+    }
+    let start = Int(inOffset)
+    let available = blob.count - start
+    let requested = Int(ioUserDataSize?.pointee ?? UInt32(available))
+    let count = min(available, requested)
+    ioUserDataSize?.pointee = UInt32(count)
+    if let outUserData, count > 0 {
+        blob.copyBytes(
+            to: outUserData.assumingMemoryBound(to: UInt8.self),
+            from: start..<(start + count)
+        )
+    }
+    return 0
+}
+
+public func AudioFileRemoveUserData(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ inIndex: UInt32
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self), !file.closed else {
+        return kAudioFileNotOpenError
+    }
+    guard file.permissions != .readPermission else { return kAudioFilePermissionsError }
+    guard var items = file.userData[inUserDataID], Int(inIndex) < items.count else {
+        return kAudioFileInvalidChunkError
+    }
+    items.remove(at: Int(inIndex))
+    file.userData[inUserDataID] = items
+    return 0
+}

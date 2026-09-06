@@ -16,6 +16,17 @@ func testCameraProjection() {
     let ortho = cam.projectionTransform(withViewportSize: CGSize(width: 200, height: 100))
     precondition(abs(ortho.m11 - 0.25) < 1e-4)
     precondition(abs(ortho.m22 - 0.5) < 1e-4)
+    cam.usesOrthographicProjection = false
+    cam.fieldOfView = 90
+    cam.zNear = 1
+    cam.zFar = 100
+    let persp2 = cam.projectionTransform(withViewportSize: CGSize(width: 100, height: 100))
+    let n: Float = 1
+    let far: Float = 100
+    let expectedM33 = -(far + n) / (far - n)
+    let expectedM43 = -2 * far * n / (far - n)
+    precondition(abs(persp2.m33 - expectedM33) < 1e-4)
+    precondition(abs(persp2.m43 - expectedM43) < 1e-4)
 }
 
 func testCameraStores() {

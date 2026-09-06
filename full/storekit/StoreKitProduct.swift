@@ -210,6 +210,8 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
         private enum Storage: Hashable, Sendable {
             case quantity(Int)
             case appAccountToken(UUID)
+            case promotionalOffer(String)
+            case winBackOffer(String)
             case other(String)
         }
 
@@ -229,7 +231,7 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
         }
 
         public static func winBackOffer(_ offer: Product.SubscriptionOffer) -> PurchaseOption {
-            PurchaseOption(storage: .other("winBack:\(offer.id ?? "")"))
+            PurchaseOption(storage: .winBackOffer(offer.id ?? ""))
         }
 
         public static func promotionalOffer(
@@ -243,7 +245,7 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
             _ = nonce
             _ = signature
             _ = timestamp
-            return PurchaseOption(storage: .other("promo:\(offerID)"))
+            return PurchaseOption(storage: .promotionalOffer(offerID))
         }
 
         public static func promotionalOffer(
@@ -251,7 +253,7 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
             signature: Product.SubscriptionOffer.Signature
         ) -> PurchaseOption {
             _ = signature
-            return PurchaseOption(storage: .other("promo:\(offerID)"))
+            return PurchaseOption(storage: .promotionalOffer(offerID))
         }
 
         public static func promotionalOffer(
@@ -259,7 +261,7 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
             compactJWS: String
         ) -> [PurchaseOption] {
             _ = compactJWS
-            return [PurchaseOption(storage: .other("promo:\(offerID)"))]
+            return [PurchaseOption(storage: .promotionalOffer(offerID))]
         }
 
         public static func onStorefrontChange(
@@ -296,6 +298,16 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
 
         var appAccountTokenValue: UUID? {
             if case .appAccountToken(let value) = storage { return value }
+            return nil
+        }
+
+        var promotionalOfferID: String? {
+            if case .promotionalOffer(let value) = storage { return value }
+            return nil
+        }
+
+        var winBackOfferID: String? {
+            if case .winBackOffer(let value) = storage { return value }
             return nil
         }
     }
@@ -495,13 +507,28 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
 
             public struct Statuses: AsyncSequence {
                 public typealias Element = Product.SubscriptionInfo.Status
-                public struct AsyncIterator: AsyncIteratorProtocol {
-                    public mutating func next() async -> Element? { nil }
+                let snapshot: [Element]
+                public init(snapshot: [Element] = []) {
+                    self.snapshot = snapshot
                 }
-                public func makeAsyncIterator() -> AsyncIterator { AsyncIterator() }
+                public struct AsyncIterator: AsyncIteratorProtocol {
+                    var snapshot: [Element]
+                    var index = 0
+                    public mutating func next() async -> Element? {
+                        guard index < snapshot.count else { return nil }
+                        let value = snapshot[index]
+                        index += 1
+                        return value
+                    }
+                }
+                public func makeAsyncIterator() -> AsyncIterator {
+                    AsyncIterator(snapshot: snapshot)
+                }
             }
 
-            public static var updates: Statuses { Statuses() }
+            public static var updates: Statuses {
+                Statuses(snapshot: LocalTestingStore.shared.allSubscriptionStatuses())
+            }
             public static var all: AsyncStream<(groupID: String, statuses: [Product.SubscriptionInfo.Status])> {
                 AsyncStream { $0.finish() }
             }
@@ -660,17 +687,12 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
         }
 
         public func update() async throws {
-            guard LocalTestingStore.shared.isLoaded else {
-                throw StoreKitError.notAvailableInStorefront
-            }
+            try StoreKitTesting.updateProductVisibility(visibility, for: productID)
         }
 
         public static var currentOrder: [Product.PromotionInfo] {
             get async throws {
-                guard LocalTestingStore.shared.isLoaded else {
-                    throw StoreKitError.notAvailableInStorefront
-                }
-                return []
+                try StoreKitTesting.promotionOrder()
             }
         }
 
@@ -678,24 +700,18 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
             _ visibility: Visibility,
             for productID: Product.ID
         ) async throws {
-            _ = visibility
-            _ = productID
-            guard LocalTestingStore.shared.isLoaded else {
-                throw StoreKitError.notAvailableInStorefront
-            }
+            try StoreKitTesting.updateProductVisibility(visibility, for: productID)
         }
 
         public static func updateProductOrder(byID order: some Collection<String>) async throws {
-            _ = Array(order)
-            guard LocalTestingStore.shared.isLoaded else {
-                throw StoreKitError.notAvailableInStorefront
-            }
+            try StoreKitTesting.updateProductOrder(byID: Array(order))
         }
 
         public static func updateAll(_ promotions: some Collection<Product.PromotionInfo>) async throws {
-            _ = Array(promotions)
-            guard LocalTestingStore.shared.isLoaded else {
-                throw StoreKitError.notAvailableInStorefront
+            let values = Array(promotions)
+            try StoreKitTesting.updateProductOrder(byID: values.map(\.productID))
+            for info in values {
+                try StoreKitTesting.updateProductVisibility(info.visibility, for: info.productID)
             }
         }
     }

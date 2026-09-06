@@ -9,6 +9,9 @@ extension AVAsset {
     return candidate
   }
   public func findUnusedTrackID() async throws -> CMPersistentTrackID { unusedTrackID() }
+  public func findUnusedTrackID(completionHandler: @escaping (CMPersistentTrackID, (any Error)?) -> Void) {
+    completionHandler(unusedTrackID(), nil)
+  }
   public var duration: CMTime {
     // Injected host SPI wins so first-pass clock tests stay deterministic.
     // Otherwise a local ISO-BMFF / WAV / AIFF probe supplies the movie header.
@@ -28,8 +31,13 @@ extension AVAsset {
     }
     return .invalid
   }
-  public var preferredRate: Float { portableProbe() == nil ? 0 : 1 }
-  public var preferredVolume: Float { portableProbe() == nil ? 0 : 1 }
+  public var preferredRate: Float { portableProbe()?.preferredRate ?? 0 }
+  public var preferredVolume: Float {
+    if let audio = tracks.first(where: { $0.mediaType == .audio }) {
+      return audio.preferredVolume
+    }
+    return portableProbe()?.preferredVolume ?? 0
+  }
   public var preferredTransform: CGAffineTransform {
     portableProbe()?.preferredTransform ?? .identity
   }
@@ -44,17 +52,32 @@ extension AVAsset {
   public func loadTrack(withTrackID trackID: CMPersistentTrackID) async throws -> AVAssetTrack? {
     return track(withTrackID: trackID)
   }
+  public func loadTrack(withTrackID trackID: CMPersistentTrackID, completionHandler: @escaping (AVAssetTrack?, (any Error)?) -> Void) {
+    completionHandler(track(withTrackID: trackID), nil)
+  }
   public func tracks(withMediaType mediaType: AVMediaType) -> [AVAssetTrack] {
     tracks.filter { $0.mediaType == mediaType }
   }
   public func loadTracks(withMediaType mediaType: AVMediaType) async throws -> [AVAssetTrack] {
     return tracks(withMediaType: mediaType)
   }
+  public func loadTracks(
+    withMediaType mediaType: AVMediaType,
+    completionHandler: @escaping ([AVAssetTrack]?, (any Error)?) -> Void
+  ) {
+    completionHandler(tracks(withMediaType: mediaType), nil)
+  }
   public func tracks(withMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic) -> [AVAssetTrack] {
     tracks.filter { $0.hasMediaCharacteristic(mediaCharacteristic) }
   }
   public func loadTracks(withMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic) async throws -> [AVAssetTrack] {
     return tracks(withMediaCharacteristic: mediaCharacteristic)
+  }
+  public func loadTracks(
+    withMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic,
+    completionHandler: @escaping ([AVAssetTrack]?, (any Error)?) -> Void
+  ) {
+    completionHandler(tracks(withMediaCharacteristic: mediaCharacteristic), nil)
   }
   public var trackGroups: [AVAssetTrackGroup] { [] }
   public var creationDate: AVMetadataItem? { nil }
@@ -151,19 +174,25 @@ extension AVAssetExportSession {
     case exporting(progress: Progress)
   }
   public class func allExportPresets() -> [String] { [] }
-  public class func exportPresets(compatibleWith asset: AVAsset) -> [String] { [] }
-  public class func compatibility(ofExportPreset presetName: String, with asset: AVAsset, outputFileType: AVFileType?) async -> Bool { false }
+  public class func exportPresets(compatibleWith asset: AVAsset) -> [String] {
+    _ = asset
+    return []
+  }
+  public class func compatibility(ofExportPreset presetName: String, with asset: AVAsset, outputFileType: AVFileType?) async -> Bool {
+    _ = (presetName, asset, outputFileType)
+    return false
+  }
   public var supportedFileTypes: [AVFileType] { [] }
   public var compatibleFileTypes: [AVFileType] { get async { [] } }
   public var timeRange: CMTimeRange {
-      get { .zero }
-      set { _ = newValue }
+      get { portableTimeRange }
+      set { portableTimeRange = newValue }
     }
   public var maxDuration: CMTime { .zero }
   public var estimatedOutputFileLength: Int64 { 0 }
   public var fileLengthLimit: Int64 {
-      get { 0 }
-      set { _ = newValue }
+      get { portableFileLengthLimit }
+      set { portableFileLengthLimit = newValue }
     }
   public var estimatedMaximumDuration: CMTime { get async throws { .zero } }
   public var estimatedOutputFileLengthInBytes: Int64 { get async throws { 0 } }
@@ -323,8 +352,13 @@ open class AVAssetReader: NSObject, @unchecked Sendable {
       set { _ = newValue }
     }
   public var outputs: [AVAssetReaderOutput] { stateLock.withLock { storedOutputs } }
-  public func canAdd(_ output: AVAssetReaderOutput) -> Bool { false }
-  public func add(_ output: AVAssetReaderOutput) { _ = output }
+  public func canAdd(_ output: AVAssetReaderOutput) -> Bool {
+    stateLock.withLock { storedStatus == .unknown }
+  }
+  public func add(_ output: AVAssetReaderOutput) {
+    guard canAdd(output) else { return }
+    stateLock.withLock { storedOutputs.append(output) }
+  }
   public func startReading() -> Bool {
     stateLock.lock()
     storedStatus = .failed
@@ -595,7 +629,11 @@ open class AVAssetTrack: NSObject, @unchecked Sendable {
     return CMTimeRange(start: .zero, duration: duration)
   }
   public var naturalTimeScale: CMTimeScale { portableRecord.mediaTimescale }
-  public var estimatedDataRate: Float { 0 }
+  public var estimatedDataRate: Float {
+    let seconds = portableRecord.duration.seconds
+    guard seconds > 0, portableRecord.totalSampleDataLength > 0 else { return 0 }
+    return Float(Double(portableRecord.totalSampleDataLength) * 8.0 / seconds)
+  }
   public var languageCode: String? { portableRecord.languageCode }
   public var extendedLanguageTag: String? { portableRecord.languageCode }
   public var naturalSize: CGSize { portableRecord.naturalSize }
@@ -610,7 +648,10 @@ open class AVAssetTrack: NSObject, @unchecked Sendable {
   public var segments: [AVAssetTrackSegment] { [] }
   public func segment(forTrackTime trackTime: CMTime) -> AVAssetTrackSegment? { nil }
   public func loadSegment(forTrackTime trackTime: CMTime) async throws -> AVAssetTrackSegment? { return nil }
-  public func samplePresentationTime(forTrackTime trackTime: CMTime) -> CMTime { .zero }
+  public func samplePresentationTime(forTrackTime trackTime: CMTime) -> CMTime {
+    // Unedited local tracks have identity mapping; no elst is parsed yet.
+    trackTime.isValid ? trackTime : .invalid
+  }
   public func loadSamplePresentationTime(forTrackTime trackTime: CMTime) async throws -> CMTime { return .zero }
   public var commonMetadata: [AVMetadataItem] { [] }
   public var metadata: [AVMetadataItem] { [] }
@@ -620,6 +661,7 @@ open class AVAssetTrack: NSObject, @unchecked Sendable {
   public var availableTrackAssociationTypes: [AVAssetTrack.AssociationType] { [] }
   public func associatedTracks(ofType trackAssociationType: AVAssetTrack.AssociationType) -> [AVAssetTrack] { [] }
   public func loadAssociatedTracks(ofType trackAssociationType: AVAssetTrack.AssociationType) async throws -> [AVAssetTrack] { return [] }
+  public var canProvideSampleCursors: Bool { false }
   public func makeSampleCursor(presentationTimeStamp: CMTime) -> AVSampleCursor? { nil }
   public func makeSampleCursorAtFirstSampleInDecodeOrder() -> AVSampleCursor? { nil }
   public func makeSampleCursorAtLastSampleInDecodeOrder() -> AVSampleCursor? { nil }
@@ -731,8 +773,15 @@ open class AVAssetWriter: NSObject, @unchecked Sendable {
     }
   public var inputs: [AVAssetWriterInput] { stateLock.withLock { storedInputs } }
   public func canApply(outputSettings: [String : Any]?, forMediaType mediaType: AVMediaType) -> Bool { false }
-  public func canAdd(_ input: AVAssetWriterInput) -> Bool { false }
-  public func add(_ input: AVAssetWriterInput) { _ = input }
+  public func canAdd(_ input: AVAssetWriterInput) -> Bool {
+    stateLock.withLock {
+      storedStatus == .unknown && (input.mediaType == .video || input.mediaType == .audio)
+    }
+  }
+  public func add(_ input: AVAssetWriterInput) {
+    guard canAdd(input) else { return }
+    stateLock.withLock { storedInputs.append(input) }
+  }
   public func startWriting() -> Bool {
     stateLock.lock()
     storedStatus = .failed
@@ -746,6 +795,13 @@ open class AVAssetWriter: NSObject, @unchecked Sendable {
     stateLock.withLock { storedStatus = .cancelled }
   }
   public func finishWriting() async {}
+  public func finishWriting(completionHandler handler: @escaping () -> Void) {
+    stateLock.lock()
+    storedStatus = .failed
+    storedError = AVError(.encoderNotFound)
+    stateLock.unlock()
+    handler()
+  }
   public var movieFragmentInterval: CMTime {
       get { .zero }
       set { _ = newValue }
@@ -844,10 +900,19 @@ open class AVAssetWriterInput: NSObject, @unchecked Sendable {
     public func appendImmediately(_ taggedPixelBufferGroup: [CMTaggedDynamicBuffer], with presentationTime: CMTime) throws -> Bool { return false }
     public func finish() {}
   }
-  convenience init(mediaType: AVMediaType, outputSettings: [String : Any]?) { self.init() }
-  convenience init(mediaType: AVMediaType, outputSettings: [String : Any]?, sourceFormatHint: CMFormatDescription?) { self.init() }
-  public var mediaType: AVMediaType { AVMediaType(rawValue: "") }
-  public var outputSettings: [String : Any]? { nil }
+  private var storedMediaType = AVMediaType(rawValue: "")
+  private var storedOutputSettings: [String : Any]?
+  public convenience init(mediaType: AVMediaType, outputSettings: [String : Any]?) {
+    self.init()
+    storedMediaType = mediaType
+    storedOutputSettings = outputSettings
+  }
+  public convenience init(mediaType: AVMediaType, outputSettings: [String : Any]?, sourceFormatHint: CMFormatDescription?) {
+    self.init(mediaType: mediaType, outputSettings: outputSettings)
+    _ = sourceFormatHint
+  }
+  public var mediaType: AVMediaType { storedMediaType }
+  public var outputSettings: [String : Any]? { storedOutputSettings }
   public var sourceFormatHint: CMFormatDescription? { nil }
   public var metadata: [AVMetadataItem] {
       get { [] }
@@ -943,12 +1008,21 @@ open class AVAssetWriterInputPassDescription: NSObject, @unchecked Sendable {
 }
 
 open class AVAssetWriterInputPixelBufferAdaptor: NSObject, @unchecked Sendable {
+  private var storedInput = AVAssetWriterInput()
+  private var storedAttributes: [String : any Sendable]?
   public override init() { super.init() }
-  convenience init(assetWriterInput input: AVAssetWriterInput, sourcePixelBufferAttributes: [String : Any]? = nil) { self.init() }
-  public var assetWriterInput: AVAssetWriterInput { AVAssetWriterInput() }
-  public var sourcePixelBufferAttributes: [String : any Sendable]? { nil }
+  public convenience init(assetWriterInput input: AVAssetWriterInput, sourcePixelBufferAttributes: [String : Any]? = nil) {
+    self.init()
+    storedInput = input
+    storedAttributes = sourcePixelBufferAttributes
+  }
+  public var assetWriterInput: AVAssetWriterInput { storedInput }
+  public var sourcePixelBufferAttributes: [String : any Sendable]? { storedAttributes }
   public var pixelBufferPool: CVPixelBufferPool? { nil }
-  public func append(_ pixelBuffer: CVPixelBuffer, withPresentationTime presentationTime: CMTime) -> Bool { false }
+  public func append(_ pixelBuffer: CVPixelBuffer, withPresentationTime presentationTime: CMTime) -> Bool {
+    _ = (pixelBuffer, presentationTime)
+    return false
+  }
 }
 
 open class AVAssetWriterInputTaggedPixelBufferGroupAdaptor: NSObject, @unchecked Sendable {
@@ -960,8 +1034,12 @@ open class AVAssetWriterInputTaggedPixelBufferGroupAdaptor: NSObject, @unchecked
 }
 
 open class AVComposition: AVAsset, @unchecked Sendable {
+  var portableURLAssetInitializationOptions: [String: Any] = [:]
   public override init() { super.init() }
-  public var urlAssetInitializationOptions: [String : Any] { [:] }
+  public var urlAssetInitializationOptions: [String : Any] { portableURLAssetInitializationOptions }
+  public var naturalSize: CGSize {
+    tracks.first(where: { $0.mediaType == .video })?.naturalSize ?? .zero
+  }
 }
 
 open class AVCompositionTrack: AVAssetTrack, @unchecked Sendable {
@@ -1088,7 +1166,10 @@ open class AVMutableCaptionRegion: AVCaptionRegion, @unchecked Sendable {
 
 open class AVMutableComposition: AVComposition, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(urlAssetInitializationOptions URLAssetInitializationOptions: [String : Any]? = nil) { self.init() }
+  public convenience init(urlAssetInitializationOptions URLAssetInitializationOptions: [String : Any]? = nil) {
+    self.init()
+    portableURLAssetInitializationOptions = URLAssetInitializationOptions ?? [:]
+  }
   public func insertTimeRange(_ timeRange: CMTimeRange, of asset: AVAsset, at startTime: CMTime) throws {
     _ = startTime
     for source in asset.tracks {
@@ -1099,10 +1180,46 @@ open class AVMutableComposition: AVComposition, @unchecked Sendable {
       try dest.insertTimeRange(timeRange, of: source, at: startTime)
     }
   }
-  public func insertEmptyTimeRange(_ timeRange: CMTimeRange) { _ = timeRange }
-  public func removeTimeRange(_ timeRange: CMTimeRange) { _ = timeRange }
+  public func insertEmptyTimeRange(_ timeRange: CMTimeRange) {
+    let extra = timeRange.duration.seconds
+    guard extra > 0 else { return }
+    loadState.lock.lock()
+    for track in loadState.storedTracks {
+      let current = track.portableRecord.duration
+      let base = current.isValid ? current.seconds : 0
+      let scale = track.portableRecord.mediaTimescale == 0 ? 600 : track.portableRecord.mediaTimescale
+      track.portableRecord.duration = AVTimeMath.time(seconds: base + extra, timescale: scale)
+    }
+    loadState.lock.unlock()
+  }
+  public func removeTimeRange(_ timeRange: CMTimeRange) {
+    let cut = timeRange.duration.seconds
+    guard cut > 0 else { return }
+    loadState.lock.lock()
+    for track in loadState.storedTracks {
+      guard track.portableRecord.duration.isValid else { continue }
+      let scale = track.portableRecord.mediaTimescale == 0 ? 600 : track.portableRecord.mediaTimescale
+      track.portableRecord.duration = AVTimeMath.time(
+        seconds: max(0, track.portableRecord.duration.seconds - cut),
+        timescale: scale
+      )
+    }
+    loadState.lock.unlock()
+  }
   public func scaleTimeRange(_ timeRange: CMTimeRange, toDuration duration: CMTime) {
-    _ = (timeRange, duration)
+    let source = timeRange.duration.seconds
+    guard source > 0, duration.isValid else { return }
+    let factor = duration.seconds / source
+    loadState.lock.lock()
+    for track in loadState.storedTracks {
+      guard track.portableRecord.duration.isValid else { continue }
+      let scale = track.portableRecord.mediaTimescale == 0 ? 600 : track.portableRecord.mediaTimescale
+      track.portableRecord.duration = AVTimeMath.time(
+        seconds: track.portableRecord.duration.seconds * factor,
+        timescale: scale
+      )
+    }
+    loadState.lock.unlock()
   }
   public func addMutableTrack(withMediaType mediaType: AVMediaType, preferredTrackID: CMPersistentTrackID) -> AVMutableCompositionTrack? {
     let track = AVMutableCompositionTrack()
@@ -1149,9 +1266,32 @@ open class AVMutableCompositionTrack: AVCompositionTrack, @unchecked Sendable {
     portableRecord.languageCode = track.languageCode
   }
   public func insertTimeRanges(_ timeRanges: [NSValue], of tracks: [AVAssetTrack], at startTime: CMTime) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
-  public func insertEmptyTimeRange(_ timeRange: CMTimeRange) {}
-  public func removeTimeRange(_ timeRange: CMTimeRange) {}
-  public func scaleTimeRange(_ timeRange: CMTimeRange, toDuration duration: CMTime) {}
+  public func insertEmptyTimeRange(_ timeRange: CMTimeRange) {
+    let extra = timeRange.duration.seconds
+    guard extra > 0 else { return }
+    let current = portableRecord.duration
+    let base = current.isValid ? current.seconds : 0
+    let scale = portableRecord.mediaTimescale == 0 ? 600 : portableRecord.mediaTimescale
+    portableRecord.duration = AVTimeMath.time(seconds: base + extra, timescale: scale)
+  }
+  public func removeTimeRange(_ timeRange: CMTimeRange) {
+    let cut = timeRange.duration.seconds
+    guard cut > 0, portableRecord.duration.isValid else { return }
+    let scale = portableRecord.mediaTimescale == 0 ? 600 : portableRecord.mediaTimescale
+    portableRecord.duration = AVTimeMath.time(
+      seconds: max(0, portableRecord.duration.seconds - cut),
+      timescale: scale
+    )
+  }
+  public func scaleTimeRange(_ timeRange: CMTimeRange, toDuration duration: CMTime) {
+    let source = timeRange.duration.seconds
+    guard source > 0, duration.isValid, portableRecord.duration.isValid else { return }
+    let scale = portableRecord.mediaTimescale == 0 ? 600 : portableRecord.mediaTimescale
+    portableRecord.duration = AVTimeMath.time(
+      seconds: portableRecord.duration.seconds * (duration.seconds / source),
+      timescale: scale
+    )
+  }
   public func validateSegments(_ trackSegments: [AVCompositionTrackSegment]) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
   public func addTrackAssociation(to compositionTrack: AVCompositionTrack, type trackAssociationType: AVAssetTrack.AssociationType) {}
   public func removeTrackAssociation(to compositionTrack: AVCompositionTrack, type trackAssociationType: AVAssetTrack.AssociationType) {}
@@ -1173,84 +1313,337 @@ open class AVMutableMetadataItem: AVMetadataItem, @unchecked Sendable {
 
 open class AVMutableMovie: AVMovie, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(url URL: URL, options: [String : Any]? = nil, error: ()) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
-  convenience init(data: Data, options: [String : Any]? = nil, error: ()) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
-  convenience init(settingsFrom movie: AVMovie?, options: [String : Any]? = nil) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+
+  public convenience init(url URL: URL, options: [String : Any]? = nil, error: ()) throws {
+    guard URL.isFileURL, FileManager.default.fileExists(atPath: URL.path) else {
+      throw AVError(.failedToLoadMediaData)
+    }
+    self.init()
+    portableURL = URL
+    _ = options
+    attachMovieProbeIfNeeded(mutable: true)
+    if portableProbe() == nil {
+      throw AVError(.fileFormatNotRecognized)
+    }
+  }
+
+  public convenience init(data: Data, options: [String : Any]? = nil, error: ()) throws {
+    self.init()
+    portableData = data
+    _ = options
+    attachMovieProbeIfNeeded(mutable: true)
+    if portableProbe() == nil {
+      throw AVError(.fileFormatNotRecognized)
+    }
+  }
+
+  public convenience init(settingsFrom movie: AVMovie?, options: [String : Any]? = nil) throws {
+    self.init()
+    portableTimescale = movie?.portableTimescale ?? 600
+    portableURL = movie?.url
+    portableDefaultStorage = movie?.defaultMediaDataStorage
+    _ = options
+  }
+
   public var timescale: CMTimeScale {
-      get { 0 }
-      set { _ = newValue }
-    }
+    get { portableTimescale }
+    set { portableTimescale = newValue }
+  }
   public var isModified: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableModified }
+    set { portableModified = newValue }
+  }
   public var interleavingPeriod: CMTime {
-      get { .zero }
-      set { _ = newValue }
+    get { portableInterleavingPeriod }
+    set { portableInterleavingPeriod = newValue }
+  }
+
+  public func insertTimeRange(
+    _ timeRange: CMTimeRange,
+    of asset: AVAsset,
+    at startTime: CMTime,
+    copySampleData: Bool
+  ) throws {
+    if copySampleData {
+      throw AVError(.decoderNotFound)
     }
-  public func insertTimeRange(_ timeRange: CMTimeRange, of asset: AVAsset, at startTime: CMTime, copySampleData: Bool) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
-  public func insertEmptyTimeRange(_ timeRange: CMTimeRange) {}
-  public func removeTimeRange(_ timeRange: CMTimeRange) {}
-  public func scale(_ timeRange: CMTimeRange, toDuration duration: CMTime) {}
-  public func mutableTrack(compatibleWith track: AVAssetTrack) -> AVMutableMovieTrack? { nil }
-  public func addMutableTrack(withMediaType mediaType: AVMediaType, copySettingsFrom track: AVAssetTrack?, options: [String : Any]? = nil) -> AVMutableMovieTrack? { nil }
-  public func addMutableTracksCopyingSettings(from existingTracks: [AVAssetTrack], options: [String : Any]? = nil) -> [AVMutableMovieTrack] { [] }
-  public func removeTrack(_ track: AVMovieTrack) {}
+    _ = startTime
+    for source in asset.tracks {
+      guard let dest = addMutableTrack(
+        withMediaType: source.mediaType,
+        copySettingsFrom: source,
+        options: nil
+      ) else { continue }
+      try dest.insertTimeRange(timeRange, of: source, at: startTime, copySampleData: false)
+    }
+    portableModified = true
+  }
+
+  public func insertEmptyTimeRange(_ timeRange: CMTimeRange) {
+    let extra = timeRange.duration.seconds
+    guard extra > 0 else { return }
+    loadState.lock.lock()
+    for track in loadState.storedTracks {
+      let current = track.portableRecord.duration
+      let base = current.isValid ? current.seconds : 0
+      let scale = track.portableRecord.mediaTimescale == 0 ? 600 : track.portableRecord.mediaTimescale
+      track.portableRecord.duration = AVTimeMath.time(seconds: base + extra, timescale: scale)
+    }
+    loadState.lock.unlock()
+    portableModified = true
+  }
+
+  public func removeTimeRange(_ timeRange: CMTimeRange) {
+    let cut = timeRange.duration.seconds
+    guard cut > 0 else { return }
+    loadState.lock.lock()
+    for track in loadState.storedTracks {
+      guard track.portableRecord.duration.isValid else { continue }
+      let scale = track.portableRecord.mediaTimescale == 0 ? 600 : track.portableRecord.mediaTimescale
+      track.portableRecord.duration = AVTimeMath.time(
+        seconds: max(0, track.portableRecord.duration.seconds - cut),
+        timescale: scale
+      )
+    }
+    loadState.lock.unlock()
+    portableModified = true
+  }
+
+  public func scale(_ timeRange: CMTimeRange, toDuration duration: CMTime) {
+    let source = timeRange.duration.seconds
+    guard source > 0, duration.isValid else { return }
+    let factor = duration.seconds / source
+    loadState.lock.lock()
+    for track in loadState.storedTracks {
+      guard track.portableRecord.duration.isValid else { continue }
+      let scale = track.portableRecord.mediaTimescale == 0 ? 600 : track.portableRecord.mediaTimescale
+      track.portableRecord.duration = AVTimeMath.time(
+        seconds: track.portableRecord.duration.seconds * factor,
+        timescale: scale
+      )
+    }
+    loadState.lock.unlock()
+    portableModified = true
+  }
+
+  public func mutableTrack(compatibleWith track: AVAssetTrack) -> AVMutableMovieTrack? {
+    tracks.compactMap { $0 as? AVMutableMovieTrack }.first { $0.mediaType == track.mediaType }
+  }
+
+  public func addMutableTrack(
+    withMediaType mediaType: AVMediaType,
+    copySettingsFrom track: AVAssetTrack?,
+    options: [String : Any]? = nil
+  ) -> AVMutableMovieTrack? {
+    _ = options
+    let added = AVMutableMovieTrack()
+    var record = AVLocalMediaTrack()
+    record.mediaType = mediaType
+    record.trackID = unusedTrackID()
+    record.isEnabled = true
+    record.isSelfContained = false
+    if let track {
+      record.naturalSize = track.naturalSize
+      record.preferredTransform = track.preferredTransform
+      record.preferredVolume = track.preferredVolume
+      record.nominalFrameRate = track.nominalFrameRate
+      record.mediaTimescale = track.naturalTimeScale
+      record.languageCode = track.languageCode
+    }
+    added.portableAsset = self
+    added.portableRecord = record
+    loadState.lock.lock()
+    loadState.storedTracks.append(added)
+    loadState.lock.unlock()
+    portableModified = true
+    return added
+  }
+
+  public func addMutableTracksCopyingSettings(
+    from existingTracks: [AVAssetTrack],
+    options: [String : Any]? = nil
+  ) -> [AVMutableMovieTrack] {
+    existingTracks.compactMap {
+      addMutableTrack(withMediaType: $0.mediaType, copySettingsFrom: $0, options: options)
+    }
+  }
+
+  public func removeTrack(_ track: AVMovieTrack) {
+    loadState.lock.lock()
+    loadState.storedTracks.removeAll { $0 === track }
+    loadState.lock.unlock()
+    portableModified = true
+  }
 }
 
 open class AVMutableMovieTrack: AVMovieTrack, @unchecked Sendable {
+  var portableSampleReferenceBaseURL: URL?
+  var portableTrackModified = false
+  var portableLayer = 0
+  var portableCleanApertureDimensions = CGSize.zero
+  var portableProductionApertureDimensions = CGSize.zero
+  var portableEncodedPixelsDimensions = CGSize.zero
+  var portablePreferredMediaChunkSize = 0
+  var portablePreferredMediaChunkDuration = CMTime.zero
+  var portablePreferredMediaChunkAlignment = 0
+  var portableAssociatedTracks: [AVAssetTrack.AssociationType: [AVAssetTrack]] = [:]
+
   public override init() { super.init() }
-  public func append(_ sampleBuffer: CMReadySampleBuffer<CMSampleBuffer.DynamicContent>) throws -> (decodeTime: CMTime, presentationTime: CMTime) { return (decodeTime: .zero, presentationTime: .zero) }
+
+  public func append(
+    _ sampleBuffer: CMReadySampleBuffer<CMSampleBuffer.DynamicContent>
+  ) throws -> (decodeTime: CMTime, presentationTime: CMTime) {
+    _ = sampleBuffer
+    throw AVError(.decoderNotFound)
+  }
+
   public var sampleReferenceBaseURL: URL? {
-      get { nil }
-      set { _ = newValue }
-    }
+    get { portableSampleReferenceBaseURL }
+    set { portableSampleReferenceBaseURL = newValue }
+  }
   public var isModified: Bool {
-      get { false }
-      set { _ = newValue }
-    }
+    get { portableTrackModified }
+    set { portableTrackModified = newValue }
+  }
   public var hasProtectedContent: Bool { false }
   public var timescale: CMTimeScale {
-      get { 0 }
-      set { _ = newValue }
-    }
+    get { portableRecord.mediaTimescale }
+    set { portableRecord.mediaTimescale = newValue }
+  }
   public var layer: Int {
-      get { 0 }
-      set { _ = newValue }
-    }
+    get { portableLayer }
+    set { portableLayer = newValue }
+  }
   public var cleanApertureDimensions: CGSize {
-      get { .zero }
-      set { _ = newValue }
-    }
+    get { portableCleanApertureDimensions }
+    set { portableCleanApertureDimensions = newValue }
+  }
   public var productionApertureDimensions: CGSize {
-      get { .zero }
-      set { _ = newValue }
-    }
+    get { portableProductionApertureDimensions }
+    set { portableProductionApertureDimensions = newValue }
+  }
   public var encodedPixelsDimensions: CGSize {
-      get { .zero }
-      set { _ = newValue }
-    }
+    get { portableEncodedPixelsDimensions }
+    set { portableEncodedPixelsDimensions = newValue }
+  }
   public var preferredMediaChunkSize: Int {
-      get { 0 }
-      set { _ = newValue }
-    }
+    get { portablePreferredMediaChunkSize }
+    set { portablePreferredMediaChunkSize = newValue }
+  }
   public var preferredMediaChunkDuration: CMTime {
-      get { .zero }
-      set { _ = newValue }
-    }
+    get { portablePreferredMediaChunkDuration }
+    set { portablePreferredMediaChunkDuration = newValue }
+  }
   public var preferredMediaChunkAlignment: Int {
-      get { 0 }
-      set { _ = newValue }
+    get { portablePreferredMediaChunkAlignment }
+    set { portablePreferredMediaChunkAlignment = newValue }
+  }
+  public override var isEnabled: Bool {
+    get { portableRecord.isEnabled }
+    set { portableRecord.isEnabled = newValue }
+  }
+  public override var naturalSize: CGSize {
+    get { portableRecord.naturalSize }
+    set { portableRecord.naturalSize = newValue }
+  }
+  public override var preferredTransform: CGAffineTransform {
+    get { portableRecord.preferredTransform }
+    set { portableRecord.preferredTransform = newValue }
+  }
+  public override var preferredVolume: Float {
+    get { portableRecord.preferredVolume }
+    set { portableRecord.preferredVolume = newValue }
+  }
+
+  public func insertTimeRange(
+    _ timeRange: CMTimeRange,
+    of track: AVAssetTrack,
+    at startTime: CMTime,
+    copySampleData: Bool
+  ) throws {
+    if copySampleData {
+      throw AVError(.decoderNotFound)
     }
-  public func insertTimeRange(_ timeRange: CMTimeRange, of track: AVAssetTrack, at startTime: CMTime, copySampleData: Bool) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
-  public func insertEmptyTimeRange(_ timeRange: CMTimeRange) {}
-  public func removeTimeRange(_ timeRange: CMTimeRange) {}
-  public func scaleTimeRange(_ timeRange: CMTimeRange, toDuration duration: CMTime) {}
-  public func addTrackAssociation(to movieTrack: AVMovieTrack, type trackAssociationType: AVAssetTrack.AssociationType) {}
-  public func removeTrackAssociation(to movieTrack: AVMovieTrack, type trackAssociationType: AVAssetTrack.AssociationType) {}
-  public func replaceFormatDescription(_ formatDescription: CMFormatDescription, with newFormatDescription: CMFormatDescription) {}
-  public func append(_ sampleBuffer: CMSampleBuffer, decodeTime outDecodeTime: UnsafeMutablePointer<CMTime>?, presentationTime outPresentationTime: UnsafeMutablePointer<CMTime>?) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
-  public func insertMediaTimeRange(_ mediaTimeRange: CMTimeRange, into trackTimeRange: CMTimeRange) -> Bool { false }
+    _ = startTime
+    portableRecord.duration = timeRange.duration
+    portableRecord.mediaType = track.mediaType
+    portableRecord.naturalSize = track.naturalSize
+    portableRecord.preferredTransform = track.preferredTransform
+    portableRecord.nominalFrameRate = track.nominalFrameRate
+    portableRecord.mediaTimescale = track.naturalTimeScale
+    portableRecord.languageCode = track.languageCode
+    portableRecord.isSelfContained = false
+    portableTrackModified = true
+  }
+
+  public func insertEmptyTimeRange(_ timeRange: CMTimeRange) {
+    let extra = timeRange.duration.seconds
+    guard extra > 0 else { return }
+    let current = portableRecord.duration
+    let base = current.isValid ? current.seconds : 0
+    let scale = portableRecord.mediaTimescale == 0 ? 600 : portableRecord.mediaTimescale
+    portableRecord.duration = AVTimeMath.time(seconds: base + extra, timescale: scale)
+    portableTrackModified = true
+  }
+
+  public func removeTimeRange(_ timeRange: CMTimeRange) {
+    let cut = timeRange.duration.seconds
+    guard cut > 0, portableRecord.duration.isValid else { return }
+    let scale = portableRecord.mediaTimescale == 0 ? 600 : portableRecord.mediaTimescale
+    portableRecord.duration = AVTimeMath.time(
+      seconds: max(0, portableRecord.duration.seconds - cut),
+      timescale: scale
+    )
+    portableTrackModified = true
+  }
+
+  public func scaleTimeRange(_ timeRange: CMTimeRange, toDuration duration: CMTime) {
+    let source = timeRange.duration.seconds
+    guard source > 0, duration.isValid, portableRecord.duration.isValid else { return }
+    let scale = portableRecord.mediaTimescale == 0 ? 600 : portableRecord.mediaTimescale
+    portableRecord.duration = AVTimeMath.time(
+      seconds: portableRecord.duration.seconds * (duration.seconds / source),
+      timescale: scale
+    )
+    portableTrackModified = true
+  }
+
+  public func addTrackAssociation(to movieTrack: AVMovieTrack, type trackAssociationType: AVAssetTrack.AssociationType) {
+    var current = portableAssociatedTracks[trackAssociationType] ?? []
+    current.append(movieTrack)
+    portableAssociatedTracks[trackAssociationType] = current
+  }
+
+  public func removeTrackAssociation(to movieTrack: AVMovieTrack, type trackAssociationType: AVAssetTrack.AssociationType) {
+    portableAssociatedTracks[trackAssociationType]?.removeAll { $0 === movieTrack }
+  }
+
+  public override func associatedTracks(ofType trackAssociationType: AVAssetTrack.AssociationType) -> [AVAssetTrack] {
+    portableAssociatedTracks[trackAssociationType] ?? []
+  }
+
+  public func replaceFormatDescription(
+    _ formatDescription: CMFormatDescription,
+    with newFormatDescription: CMFormatDescription
+  ) {
+    _ = (formatDescription, newFormatDescription)
+  }
+
+  public func append(
+    _ sampleBuffer: CMSampleBuffer,
+    decodeTime outDecodeTime: UnsafeMutablePointer<CMTime>?,
+    presentationTime outPresentationTime: UnsafeMutablePointer<CMTime>?
+  ) throws {
+    _ = sampleBuffer
+    outDecodeTime?.pointee = .invalid
+    outPresentationTime?.pointee = .invalid
+    throw AVError(.decoderNotFound)
+  }
+
+  public func insertMediaTimeRange(_ mediaTimeRange: CMTimeRange, into trackTimeRange: CMTimeRange) -> Bool {
+    _ = (mediaTimeRange, trackTimeRange)
+    return false
+  }
 }
 
 open class AVMutableTimedMetadataGroup: AVTimedMetadataGroup, @unchecked Sendable {
@@ -1306,14 +1699,19 @@ open class AVMutableVideoCompositionLayerInstruction: AVVideoCompositionLayerIns
 }
 
 extension AVURLAsset {
-  public class func audiovisualTypes() -> [AVFileType] { [] }
-  public class func audiovisualMIMETypes() -> [String] { [] }
+  public class func audiovisualTypes() -> [AVFileType] { [.mp4, .m4a, .mov] }
+  public class func audiovisualMIMETypes() -> [String] {
+    ["video/mp4", "audio/mp4", "audio/wav", "audio/aiff"]
+  }
   public class func isPlayableExtendedMIMEType(_ extendedMIMEType: String) -> Bool { false }
-  public var httpSessionIdentifier: UUID { UUID() }
   public var resourceLoader: AVAssetResourceLoader { AVAssetResourceLoader() }
   public var assetCache: AVAssetCache? { nil }
-  public func compatibleTrack(for compositionTrack: AVCompositionTrack) -> AVAssetTrack? { nil }
-  public func findCompatibleTrack(for compositionTrack: AVCompositionTrack) async throws -> AVAssetTrack? { return nil }
+  public func compatibleTrack(for compositionTrack: AVCompositionTrack) -> AVAssetTrack? {
+    tracks.first(where: { $0.mediaType == compositionTrack.mediaType })
+  }
+  public func findCompatibleTrack(for compositionTrack: AVCompositionTrack) async throws -> AVAssetTrack? {
+    return compatibleTrack(for: compositionTrack)
+  }
   public var variants: [AVAssetVariant] { [] }
   public var mayRequireContentKeysForMediaDataProcessing: Bool { false }
 }

@@ -175,6 +175,9 @@ public final class EntityProperty<Value>: NSObject, @unchecked Sendable
     }
 
     public var identifier: String? { storedIdentifier }
+    public var indexingKeyName: String?
+    public var customIndexingKey: CSCustomAttributeKey?
+    public var indexingKeyPath: PartialKeyPath<CSSearchableItemAttributeSet>?
 
     public var wrappedValue: Value {
         get {
@@ -209,6 +212,240 @@ public final class EntityProperty<Value>: NSObject, @unchecked Sendable
         self.init(title: title, identifier: identifier)
         storedGetter = getter
     }
+
+    public convenience init(identifier: String, title: LocalizedStringResource) {
+        self.init(title: title, identifier: identifier)
+    }
+
+    public convenience init(identifier: String) {
+        self.init()
+        storedIdentifier = identifier
+    }
+
+    public convenience init(
+        title: LocalizedStringResource,
+        indexingKey: PartialKeyPath<CSSearchableItemAttributeSet>
+    ) {
+        self.init(title: title)
+        indexingKeyPath = indexingKey
+        indexingKeyName = "indexingKey"
+    }
+
+    public convenience init(
+        title: LocalizedStringResource,
+        customIndexingKey: CSCustomAttributeKey
+    ) {
+        self.init(title: title, identifier: customIndexingKey.keyName)
+        self.customIndexingKey = customIndexingKey
+    }
+
+    public convenience init(
+        identifier: String,
+        title: LocalizedStringResource,
+        indexingKey: PartialKeyPath<CSSearchableItemAttributeSet>
+    ) {
+        self.init(title: title, identifier: identifier)
+        indexingKeyPath = indexingKey
+        indexingKeyName = "indexingKey"
+    }
+
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        title: LocalizedStringResource,
+        indexingKey: PartialKeyPath<CSSearchableItemAttributeSet>,
+        getter: KeyPath<Entity, Value>
+    ) {
+        self.init(title: title, identifier: identifier)
+        indexingKeyPath = indexingKey
+        indexingKeyName = "indexingKey"
+        storedGetter = {
+            guard let entity = EntityResolutionEngine.defaultResult(Entity.self) else {
+                fatalError("EntityProperty getter has no registered entity")
+            }
+            return entity[keyPath: getter]
+        }
+    }
+
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        indexingKey: PartialKeyPath<CSSearchableItemAttributeSet>,
+        getSetter: WritableKeyPath<Entity, Value>
+    ) {
+        self.init()
+        storedIdentifier = identifier
+        indexingKeyPath = indexingKey
+        indexingKeyName = "indexingKey"
+        storedGetter = {
+            guard let entity = EntityResolutionEngine.defaultResult(Entity.self) else {
+                fatalError("EntityProperty getter has no registered entity")
+            }
+            return entity[keyPath: getSetter]
+        }
+    }
+
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        indexingKey: PartialKeyPath<CSSearchableItemAttributeSet>,
+        getter: KeyPath<Entity, Value>
+    ) {
+        self.init()
+        storedIdentifier = identifier
+        indexingKeyPath = indexingKey
+        indexingKeyName = "indexingKey"
+        storedGetter = {
+            guard let entity = EntityResolutionEngine.defaultResult(Entity.self) else {
+                fatalError("EntityProperty getter has no registered entity")
+            }
+            return entity[keyPath: getter]
+        }
+    }
+
+    public convenience init(
+        identifier: String,
+        indexingKey: PartialKeyPath<CSSearchableItemAttributeSet>
+    ) {
+        self.init()
+        storedIdentifier = identifier
+        indexingKeyPath = indexingKey
+        indexingKeyName = "indexingKey"
+    }
+
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        customIndexingKey: CSCustomAttributeKey,
+        getter: KeyPath<Entity, Value>
+    ) {
+        self.init()
+        storedIdentifier = identifier
+        self.customIndexingKey = customIndexingKey
+        storedGetter = {
+            guard let entity = EntityResolutionEngine.defaultResult(Entity.self) else {
+                fatalError("EntityProperty getter has no registered entity")
+            }
+            return entity[keyPath: getter]
+        }
+    }
+
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        customIndexingKey: CSCustomAttributeKey,
+        getSetter: WritableKeyPath<Entity, Value>
+    ) {
+        self.init(identifier: identifier, customIndexingKey: customIndexingKey, getter: getSetter)
+    }
+
+    public convenience init(
+        identifier: String,
+        customIndexingKey: CSCustomAttributeKey
+    ) {
+        self.init()
+        storedIdentifier = identifier
+        self.customIndexingKey = customIndexingKey
+    }
+
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        title: LocalizedStringResource,
+        indexingKey: PartialKeyPath<CSSearchableItemAttributeSet>,
+        getSetter: WritableKeyPath<Entity, Value>
+    ) {
+        self.init(identifier: identifier, title: title, indexingKey: indexingKey, getter: getSetter)
+    }
+
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        title: LocalizedStringResource,
+        customIndexingKey: CSCustomAttributeKey,
+        getter: KeyPath<Entity, Value>
+    ) {
+        self.init(title: title, identifier: identifier)
+        self.customIndexingKey = customIndexingKey
+        storedGetter = {
+            guard let entity = EntityResolutionEngine.defaultResult(Entity.self) else {
+                fatalError("EntityProperty getter has no registered entity")
+            }
+            return entity[keyPath: getter]
+        }
+    }
+
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        title: LocalizedStringResource,
+        customIndexingKey: CSCustomAttributeKey,
+        getSetter: WritableKeyPath<Entity, Value>
+    ) {
+        self.init(
+            identifier: identifier,
+            title: title,
+            customIndexingKey: customIndexingKey,
+            getter: getSetter
+        )
+    }
+
+    public convenience init(
+        identifier: String,
+        title: LocalizedStringResource,
+        customIndexingKey: CSCustomAttributeKey
+    ) {
+        self.init(title: title, identifier: identifier)
+        self.customIndexingKey = customIndexingKey
+    }
+
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        title: LocalizedStringResource,
+        getter: KeyPath<Entity, Value>
+    ) {
+        self.init(title: title, identifier: identifier)
+        storedGetter = {
+            guard let entity = EntityResolutionEngine.defaultResult(Entity.self) else {
+                fatalError("EntityProperty getter has no registered entity")
+            }
+            return entity[keyPath: getter]
+        }
+    }
+
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        title: LocalizedStringResource,
+        getSetter: WritableKeyPath<Entity, Value>
+    ) {
+        self.init(identifier: identifier, title: title, getter: getSetter)
+    }
+
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        getter: KeyPath<Entity, Value>
+    ) {
+        self.init()
+        storedIdentifier = identifier
+        storedGetter = {
+            guard let entity = EntityResolutionEngine.defaultResult(Entity.self) else {
+                fatalError("EntityProperty getter has no registered entity")
+            }
+            return entity[keyPath: getter]
+        }
+    }
+
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        getSetter: WritableKeyPath<Entity, Value>
+    ) {
+        self.init(identifier: identifier, getter: getSetter)
+    }
+
+    public convenience init(indexingKey: PartialKeyPath<CSSearchableItemAttributeSet>) {
+        self.init()
+        indexingKeyPath = indexingKey
+        indexingKeyName = "indexingKey"
+    }
+
+    public convenience init(customIndexingKey: CSCustomAttributeKey) {
+        self.init()
+        self.customIndexingKey = customIndexingKey
+        storedIdentifier = customIndexingKey.keyName
+    }
+
     public convenience init<T0, T1>(identifier p0: T0? = nil, asyncGetter p1: T1? = nil) { self.init() }
     public convenience init<T0, T1, T2>(identifier p0: T0? = nil, indexingKey p1: T1? = nil, getter p2: T2? = nil) { self.init() }
     public convenience init<T0, T1, T2>(identifier p0: T0? = nil, indexingKey p1: T1? = nil, getSetter p2: T2? = nil) { self.init() }

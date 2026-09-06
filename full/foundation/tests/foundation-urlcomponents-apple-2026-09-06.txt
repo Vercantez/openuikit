@@ -1,0 +1,83 @@
+parse.http-host	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=;query=nil;fragment=nil;peHost=example.com;pePath=;peQuery=nil;peFragment=nil;string=http://example.com
+parse.http-host.items	nil
+parse.full	scheme=https;user=user;password=pass;host=example.com;port=8080;path=/path/to;query=q=1&b=2;fragment=frag;peHost=example.com;pePath=/path/to;peQuery=q=1&b=2;peFragment=frag;string=https://user:pass@example.com:8080/path/to?q=1&b=2#frag
+parse.full.items	q=1&b=2
+parse.slash-path	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=/;query=nil;fragment=nil;peHost=example.com;pePath=/;peQuery=nil;peFragment=nil;string=http://example.com/
+parse.slash-path.items	nil
+parse.relative	scheme=nil;user=nil;password=nil;host=nil;port=nil;path=/relative/path;query=x=1;fragment=nil;peHost=nil;pePath=/relative/path;peQuery=x=1;peFragment=nil;string=/relative/path?x=1
+parse.relative.items	x=1
+parse.ipv6	scheme=http;user=nil;password=nil;host=[::1];port=8080;path=/foo;query=nil;fragment=nil;peHost=[::1];pePath=/foo;peQuery=nil;peFragment=nil;string=http://[::1]:8080/foo
+parse.ipv6.items	nil
+parse.pct-space-path	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=/a b;query=nil;fragment=nil;peHost=example.com;pePath=/a%20b;peQuery=nil;peFragment=nil;string=http://example.com/a%20b
+parse.pct-space-path.items	nil
+parse.cafe-path	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=/café;query=nil;fragment=nil;peHost=example.com;pePath=/caf%C3%A9;peQuery=nil;peFragment=nil;string=http://example.com/caf%C3%A9
+parse.cafe-path.items	nil
+parse.query-space	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=;query=q=hello world;fragment=nil;peHost=example.com;pePath=;peQuery=q=hello%20world;peFragment=nil;string=http://example.com?q=hello%20world
+parse.query-space.items	q=hello world
+parse.query-plus	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=;query=q=hello+world;fragment=nil;peHost=example.com;pePath=;peQuery=q=hello+world;peFragment=nil;string=http://example.com?q=hello+world
+parse.query-plus.items	q=hello+world
+parse.empty-query	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=;query=;fragment=nil;peHost=example.com;pePath=;peQuery=;peFragment=nil;string=http://example.com?
+parse.empty-query.items	
+parse.empty-frag	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=;query=nil;fragment=;peHost=example.com;pePath=;peQuery=nil;peFragment=;string=http://example.com#
+parse.empty-frag.items	nil
+parse.user-only	scheme=http;user=user;password=nil;host=example.com;port=nil;path=;query=nil;fragment=nil;peHost=example.com;pePath=;peQuery=nil;peFragment=nil;string=http://user@example.com
+parse.user-only.items	nil
+parse.user-empty-pass	scheme=http;user=user;password=;host=example.com;port=nil;path=;query=nil;fragment=nil;peHost=example.com;pePath=;peQuery=nil;peFragment=nil;string=http://user:@example.com
+parse.user-empty-pass.items	nil
+parse.empty-user-pass	scheme=http;user=;password=pass;host=example.com;port=nil;path=;query=nil;fragment=nil;peHost=example.com;pePath=;peQuery=nil;peFragment=nil;string=http://:pass@example.com
+parse.empty-user-pass.items	nil
+parse.port-0	scheme=http;user=nil;password=nil;host=example.com;port=0;path=/;query=nil;fragment=nil;peHost=example.com;pePath=/;peQuery=nil;peFragment=nil;string=http://example.com:0/
+parse.port-0.items	nil
+parse.file	scheme=file;user=nil;password=nil;host=;port=nil;path=/tmp/foo;query=nil;fragment=nil;peHost=;pePath=/tmp/foo;peQuery=nil;peFragment=nil;string=file:///tmp/foo
+parse.file.items	nil
+parse.pct-slash-path	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=/path/name;query=nil;fragment=nil;peHost=example.com;pePath=/path%2Fname;peQuery=nil;peFragment=nil;string=http://example.com/path%2Fname
+parse.pct-slash-path.items	nil
+parse.space-host	nil
+parse.bare-words	scheme=nil;user=nil;password=nil;host=nil;port=nil;path=not a url;query=nil;fragment=nil;peHost=nil;pePath=not%20a%20url;peQuery=nil;peFragment=nil;string=not%20a%20url
+parse.bare-words.items	nil
+parse.empty	scheme=nil;user=nil;password=nil;host=nil;port=nil;path=;query=nil;fragment=nil;peHost=nil;pePath=;peQuery=nil;peFragment=nil;string=
+parse.empty.items	nil
+parse.scheme-only	scheme=http;user=nil;password=nil;host=;port=nil;path=;query=nil;fragment=nil;peHost=;pePath=;peQuery=nil;peFragment=nil;string=http://
+parse.scheme-only.items	nil
+parse.dup-query	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=/a;query=b=1&b=2;fragment=nil;peHost=example.com;pePath=/a;peQuery=b=1&b=2;peFragment=nil;string=http://example.com/a?b=1&b=2
+parse.dup-query.items	b=1&b=2
+parse.query-eq	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=/;query==;fragment=nil;peHost=example.com;pePath=/;peQuery==;peFragment=nil;string=http://example.com/?=
+parse.query-eq.items	=
+parse.query-name	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=/;query=a;fragment=nil;peHost=example.com;pePath=/;peQuery=a;peFragment=nil;string=http://example.com/?a
+parse.query-name.items	a=nil
+parse.query-empty-val	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=/;query=a=;fragment=nil;peHost=example.com;pePath=/;peQuery=a=;peFragment=nil;string=http://example.com/?a=
+parse.query-empty-val.items	a=
+parse.query-empty-name	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=/;query==b;fragment=nil;peHost=example.com;pePath=/;peQuery==b;peFragment=nil;string=http://example.com/?=b
+parse.query-empty-name.items	=b
+parse.mailto	scheme=mailto;user=nil;password=nil;host=nil;port=nil;path=foo@example.com;query=nil;fragment=nil;peHost=nil;pePath=foo@example.com;peQuery=nil;peFragment=nil;string=mailto:foo@example.com
+parse.mailto.items	nil
+parse.net-path	scheme=nil;user=nil;password=nil;host=example.com;port=nil;path=/path;query=nil;fragment=nil;peHost=example.com;pePath=/path;peQuery=nil;peFragment=nil;string=//example.com/path
+parse.net-path.items	nil
+parse.scheme-case	scheme=HTTP;user=nil;password=nil;host=EXAMPLE.COM;port=nil;path=/FOO;query=nil;fragment=nil;peHost=EXAMPLE.COM;pePath=/FOO;peQuery=nil;peFragment=nil;string=HTTP://EXAMPLE.COM/FOO
+parse.scheme-case.items	nil
+parse.query-amp	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=;query=q=&;fragment=nil;peHost=example.com;pePath=;peQuery=q=%26;peFragment=nil;string=http://example.com?q=%26
+parse.query-amp.items	q=&
+parse.idn-puny	scheme=http;user=nil;password=nil;host=例.com;port=nil;path=;query=nil;fragment=nil;peHost=%E4%BE%8B.com;pePath=;peQuery=nil;peFragment=nil;string=http://xn--fsq.com
+parse.idn-puny.items	nil
+parse.idn-unicode	scheme=http;user=nil;password=nil;host=例子.测试;port=nil;path=;query=nil;fragment=nil;peHost=%E4%BE%8B%E5%AD%90.%E6%B5%8B%E8%AF%95;pePath=;peQuery=nil;peFragment=nil;string=http://xn--fsqu00a.xn--0zwm56d
+parse.idn-unicode.items	nil
+parse.zone-id	scheme=http;user=nil;password=nil;host=[fe80::1%en0];port=nil;path=/;query=nil;fragment=nil;peHost=[fe80::1%25en0];pePath=/;peQuery=nil;peFragment=nil;string=http://[fe80::1%25en0]/
+parse.zone-id.items	nil
+encInv.cafe.true	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=/café;query=nil;fragment=nil;peHost=example.com;pePath=/caf%C3%A9;peQuery=nil;peFragment=nil;string=http://example.com/caf%C3%A9
+encInv.cafe.false	nil
+url.rel.false	scheme=nil;user=nil;password=nil;host=nil;port=nil;path=/rel/path;query=x=1;fragment=nil;peHost=nil;pePath=/rel/path;peQuery=x=1;peFragment=nil;string=/rel/path?x=1
+url.rel.true	scheme=http;user=nil;password=nil;host=example.com;port=nil;path=/rel/path;query=x=1;fragment=nil;peHost=example.com;pePath=/rel/path;peQuery=x=1;peFragment=nil;string=http://example.com/rel/path?x=1
+empty	scheme=nil;user=nil;password=nil;host=nil;port=nil;path=;query=nil;fragment=nil;peHost=nil;pePath=;peQuery=nil;peFragment=nil;string=
+built	scheme=https;user=nil;password=nil;host=example.com;port=nil;path=/foo;query=a=1;fragment=z;peHost=example.com;pePath=/foo;peQuery=a=1;peFragment=z;string=https://example.com/foo?a=1#z
+built.barePath	scheme=https;user=nil;password=nil;host=example.com;port=nil;path=foo;query=a=1;fragment=z;peHost=example.com;pePath=foo;peQuery=a=1;peFragment=z;string=nil
+qi.space	query=k=hello world;peQuery=k=hello%20world;string=http://example.com/?k=hello%20world
+qi.amp-eq	query=k=a&b=c;peQuery=k=a%26b%3Dc
+qi.plus	peQuery=k=+
+qi.nilValue	query=a;items=a=nil;string=http://example.com/?a
+qi.empty	query=;string=http://example.com/?
+qi.nil	query=nil;string=http://example.com/
+peqi	query=a b=c&d;peQuery=a%20b=c%26d;items=a b=c&d
+host.cafe	host=café.com;peHost=caf%C3%A9.com;string=http://xn--caf-dma.com/?a%20b=c%26d
+userinfo	peUser=u%20ser;pePassword=p%40ss;string=http://u%20ser:p%40ss@example.com/?a%20b=c%26d
+host.ipv6	scheme=http;user=nil;password=nil;host=[::1];port=nil;path=/;query=nil;fragment=nil;peHost=[::1];pePath=/;peQuery=nil;peFragment=nil;string=http://[::1]/
+qi.encodeMap	20->%20;22->%22;23->%23;25->%25;26->%26;3C->%3C;3D->%3D;3E->%3E;5B->%5B;5C->%5C;5D->%5D;5E->%5E;60->%60;7B->%7B;7C->%7C;7D->%7D

@@ -12,17 +12,20 @@ func testCContentContextGetSet() {
     expect(nw_content_context_get_is_final(context) == false, "get_is_final")
     expect(nw_content_context_get_relative_priority(context) == 0, "get_relative_priority")
     let identifier = nw_content_context_get_identifier(context)
-    expect(identifier.pointee == 0, "get_identifier empty")
+    expect(String(cString: identifier) == "payload", "get_identifier")
     nw_content_context_set_antecedent(context, nil)
     nw_content_context_set_expiration_milliseconds(context, 10)
+    expect(nw_content_context_get_expiration_milliseconds(context) == 10, "set_expiration")
     nw_content_context_set_is_final(context, true)
+    expect(nw_content_context_get_is_final(context), "set_is_final")
     nw_content_context_set_relative_priority(context, 0.5)
+    expect(nw_content_context_get_relative_priority(context) == 0.5, "set_relative_priority")
     let metadata = nw_udp_create_metadata()
     nw_content_context_set_metadata_for_protocol(context, metadata)
-    expect(nw_content_context_copy_protocol_metadata(context, nw_protocol_copy_udp_definition()) == nil, "copy_protocol_metadata")
+    expect(nw_content_context_copy_protocol_metadata(context, nw_protocol_copy_udp_definition()) != nil, "copy_protocol_metadata")
     var visited = 0
     nw_content_context_foreach_protocol_metadata(context) { _, _ in visited += 1 }
-    expect(visited == 0, "foreach empty")
+    expect(visited == 1, "foreach stored metadata")
 }
 
 func testCBrowserCreateAndCopy() {

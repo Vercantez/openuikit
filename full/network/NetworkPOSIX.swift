@@ -182,7 +182,9 @@ enum NWPOSIX {
 
     static func makePath(
         required: NWInterface.InterfaceType?,
-        prohibited: [NWInterface.InterfaceType]
+        prohibited: [NWInterface.InterfaceType],
+        localEndpoint: NWEndpoint? = nil,
+        remoteEndpoint: NWEndpoint? = nil
     ) -> NWPath {
         let records = snapshotInterfaces()
         let filtered = records.filter { record in
@@ -209,8 +211,8 @@ enum NWPOSIX {
             supportsIPv6: supportsIPv6,
             supportsDNS: satisfied,
             unsatisfiedReason: satisfied ? .notAvailable : .notAvailable,
-            localEndpoint: nil,
-            remoteEndpoint: nil,
+            localEndpoint: localEndpoint,
+            remoteEndpoint: remoteEndpoint,
             gateways: procNetRouteGateways()
         )
     }
@@ -247,6 +249,68 @@ enum NWPOSIX {
         if options.noDelay {
             var yes: Int32 = 1
             _ = setsockopt(fd, Int32(IPPROTO_TCP), Int32(TCP_NODELAY), &yes, socklen_t(MemoryLayout<Int32>.size))
+        }
+        if options.enableKeepalive {
+            var yes: Int32 = 1
+            _ = setsockopt(fd, Int32(SOL_SOCKET), Int32(SO_KEEPALIVE), &yes, socklen_t(MemoryLayout<Int32>.size))
+        }
+    }
+
+    static func endpointFromSocket(fd: Int32, peer: Bool) -> NWEndpoint? {
+        var storage = sockaddr_storage()
+        var length = socklen_t(MemoryLayout<sockaddr_storage>.size)
+        let rc = withUnsafeMutablePointer(to: &storage) { pointer in
+            pointer.withMemoryRebound(to: sockaddr.self, capacity: 1) { sa in
+                peer ? getpeername(fd, sa, &length) : getsockname(fd, sa, &length)
+            }
+        }
+        guard rc == 0 else { return nil }
+        return endpointFromSockaddr(&storage)
+    }
+
+    static func endpointFromSockaddr(_ storage: inout sockaddr_storage) -> NWEndpoint? {
+        let family = Int32(storage.ss_family)
+        if family == Int32(AF_INET) {
+            return withUnsafePointer(to: &storage) { pointer in
+                pointer.withMemoryRebound(to: sockaddr_in.self, capacity: 1) { sin in
+                    var bytes = Data(count: 4)
+                    bytes.withUnsafeMutableBytes { dest in
+                        var saddr = sin.pointee.sin_addr.s_addr
+                        withUnsafeBytes(of: &saddr) { src in
+                            dest.copyBytes(from: src)
+                        }
+                    }
+                    let host: NWEndpoint.Host = IPv4Address(bytes).map { .ipv4($0) } ?? .ipv4(.loopback)
+                    let port = NWEndpoint.Port(integerLiteral: UInt16(bigEndian: sin.pointee.sin_port))
+                    return .hostPort(host: host, port: port)
+                }
+            }
+        }
+        if family == Int32(AF_INET6) {
+            return withUnsafePointer(to: &storage) { pointer in
+                pointer.withMemoryRebound(to: sockaddr_in6.self, capacity: 1) { sin6 in
+                    var bytes = Data(count: 16)
+                    bytes.withUnsafeMutableBytes { dest in
+                        withUnsafeBytes(of: sin6.pointee.sin6_addr) { src in
+                            dest.copyBytes(from: src)
+                        }
+                    }
+                    let host: NWEndpoint.Host = IPv6Address(bytes).map { .ipv6($0) } ?? .ipv6(.loopback)
+                    let port = NWEndpoint.Port(integerLiteral: UInt16(bigEndian: sin6.pointee.sin6_port))
+                    return .hostPort(host: host, port: port)
+                }
+            }
+        }
+        return nil
+    }
+
+    static func cInterfaceType(_ type: NWInterface.InterfaceType) -> nw_interface_type_t {
+        switch type {
+        case .wifi: return nw_interface_type_wifi
+        case .cellular: return nw_interface_type_cellular
+        case .wiredEthernet: return nw_interface_type_wired
+        case .loopback: return nw_interface_type_loopback
+        case .other: return nw_interface_type_other
         }
     }
 

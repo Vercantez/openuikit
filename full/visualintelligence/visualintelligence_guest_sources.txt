@@ -1,0 +1,2 @@
+full/visualintelligence/VisualIntelligence.swift
+full/visualintelligence/VisualIntelligenceLookalikes.swift

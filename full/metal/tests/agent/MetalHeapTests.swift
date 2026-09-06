@@ -1,3 +1,4 @@
+import Dispatch
 import Foundation
 import Metal
 
@@ -48,4 +49,45 @@ func testHeapFenceAndEvent() {
     commandBuffer.encodeWaitForEvent(event, value: 1)
     commandBuffer.commit()
     commandBuffer.waitUntilCompleted()
+}
+
+func testSharedEventHostClock() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let event = device.makeSharedEvent()!
+    event.label = "host-clock"
+    precondition(event.label == "host-clock")
+    precondition(event.device.name == device.name)
+    precondition(event.signaledValue == 0)
+    event.signaledValue = 3
+    precondition(event.signaledValue == 3)
+    event.signaledValue = 1
+    precondition(event.signaledValue == 3)
+    precondition(event.wait(untilSignaledValue: 3, timeoutMS: 0))
+    precondition(!event.wait(untilSignaledValue: 4, timeoutMS: 0))
+    var notified = false
+    let listener = MTLSharedEventListener()
+    _ = listener.dispatchQueue
+    event.notify(listener, atValue: 5) { shared, value in
+        notified = true
+        precondition(value >= 5)
+        precondition(shared.signaledValue >= 5)
+    }
+    event.signaledValue = 5
+    precondition(notified)
+    let sharedListener = MTLSharedEventListener.shared()
+    precondition(sharedListener === MTLSharedEventListener.shared())
+    let queued = MTLSharedEventListener(dispatchQueue: DispatchQueue.global())
+    _ = queued.dispatchQueue
+    let handle = event.makeSharedEventHandle()
+    handle.label = "cloned"
+    let restored = device.makeSharedEvent(handle: handle)!
+    precondition(restored.signaledValue == 5)
+    let queue = device.makeCommandQueue()!
+    let commandBuffer = queue.makeCommandBuffer()!
+    commandBuffer.encodeSignalEvent(event, value: 7)
+    commandBuffer.encodeWaitForEvent(event, value: 7)
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+    precondition(event.signaledValue >= 7)
+    _ = MTLSharedEventHandle.supportsSecureCoding
 }

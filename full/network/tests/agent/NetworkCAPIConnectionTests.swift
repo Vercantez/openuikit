@@ -19,7 +19,7 @@ func testCConnectionCopyAndBatch() {
     _ = copiedParameters
     expect(nw_connection_copy_current_path(connection) != nil, "copy_current_path")
     let description = nw_connection_copy_description(connection)
-    expect(description.pointee == 0, "copy_description empty")
+    expect(String(cString: description) == "127.0.0.1", "copy_description hostname")
     expect(nw_connection_get_maximum_datagram_size(connection) == 0, "maximum_datagram_size")
     var batched = false
     nw_connection_batch(connection) { batched = true }
@@ -29,7 +29,8 @@ func testCConnectionCopyAndBatch() {
     nw_connection_restart(connection)
     var sawReport = false
     nw_connection_access_establishment_report(connection, DispatchQueue(label: "c.est")) { report in
-        expect(report == nil, "no fabricated establishment report")
+        expect(report != nil, "establishment report object")
+        expect(nw_establishment_report_get_duration_milliseconds(report!) == 0, "duration zero")
         sawReport = true
     }
     expect(sawReport, "access_establishment_report")

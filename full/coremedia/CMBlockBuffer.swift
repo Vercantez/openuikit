@@ -52,6 +52,22 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
     public var owner: CMBlockBuffer { self }
     public var endIndex: Int { dataLength }
 
+    public struct Slice {
+        public var owner: CMBlockBuffer
+        public var startIndex: Int
+        public var endIndex: Int
+
+        public init(owner: CMBlockBuffer, startIndex: Int, endIndex: Int) {
+            self.owner = owner
+            self.startIndex = startIndex
+            self.endIndex = endIndex
+        }
+    }
+
+    public func slice(from start: Int, to end: Int) -> Slice {
+        Slice(owner: self, startIndex: start, endIndex: end)
+    }
+
     public init() {
         self.storage = []
     }
@@ -237,7 +253,7 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
     }
 
     public func append(
-        buffer: Slice<UnsafeMutableRawBufferPointer>,
+        buffer: Swift.Slice<UnsafeMutableRawBufferPointer>,
         deallocator: @escaping CustomBlockDeallocator,
         flags: Flags = []
     ) throws {
@@ -255,7 +271,7 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
     }
 
     public func append(
-        buffer: Slice<UnsafeMutableRawBufferPointer>,
+        buffer: Swift.Slice<UnsafeMutableRawBufferPointer>,
         allocator: CFAllocator? = kCFAllocatorDefault,
         flags: Flags = []
     ) throws {
@@ -346,11 +362,30 @@ public func CMBlockBufferCreateWithMemoryBlock(
     flags: CMBlockBufferFlags,
     blockBufferOut: UnsafeMutablePointer<CMBlockBuffer?>
 ) -> OSStatus {
-    _ = (structureAllocator, blockAllocator, customBlockSource, flags)
+    _ = (structureAllocator, blockAllocator, flags)
     if offsetToData < 0 { return kCMBlockBufferBadOffsetParameterErr }
     if dataLength < 0 { return kCMBlockBufferBadLengthParameterErr }
     if offsetToData > blockLength || dataLength > blockLength - offsetToData {
         return kCMBlockBufferBadOffsetParameterErr
+    }
+    if let custom = customBlockSource?.pointee {
+        if custom.version != kCMBlockBufferCustomBlockSourceVersion {
+            blockBufferOut.pointee = nil
+            return kCMBlockBufferBadCustomBlockSourceErr
+        }
+        if memoryBlock == nil, let allocate = custom.AllocateBlock {
+            guard let allocated = allocate(custom.refCon, blockLength) else {
+                blockBufferOut.pointee = nil
+                return kCMBlockBufferBlockAllocationFailedErr
+            }
+            let buffer = UnsafeRawBufferPointer(
+                start: allocated.advanced(by: offsetToData),
+                count: dataLength
+            )
+            blockBufferOut.pointee = CMBlockBuffer(copying: buffer)
+            custom.FreeBlock?(custom.refCon, allocated, blockLength)
+            return kCMBlockBufferNoErr
+        }
     }
     if let memoryBlock {
         let buffer = UnsafeRawBufferPointer(start: memoryBlock.advanced(by: offsetToData), count: dataLength)

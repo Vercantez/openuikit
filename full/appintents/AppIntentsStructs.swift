@@ -77,11 +77,43 @@ public struct AppShortcutParameterPresentationSummaryString<Intent, Value, Param
 
 public struct IntentItem<Value: _IntentValue>: @unchecked Sendable {
     public var value: Value
-    public init(_ value: Value) { self.value = value }
+    public var description: DisplayRepresentation
+
+    public init(_ value: Value) {
+        self.value = value
+        self.description = DisplayRepresentation(title: String(describing: value))
+    }
+
+    public init(
+        _ value: Value,
+        title: LocalizedStringResource,
+        subtitle: LocalizedStringResource? = nil,
+        image: DisplayRepresentation.Image? = nil
+    ) {
+        self.value = value
+        self.description = DisplayRepresentation(
+            title: title,
+            subtitle: subtitle,
+            image: image
+        )
+    }
+
     public enum Builder: Hashable, Sendable {
         case _appIntentsPlaceholder
         public static func buildBlock(_ items: IntentItem<Value>...) -> [IntentItem<Value>] {
             items
+        }
+        public static func buildBlock() -> [Value] { [] }
+        public static func buildArray(_ components: [[IntentItem<Value>]]) -> [IntentItem<Value>] {
+            components.flatMap { $0 }
+        }
+        public static func buildExpression(_ expression: Value) -> IntentItem<Value> {
+            IntentItem(expression)
+        }
+        public static func buildExpression<ExpressionValue: _IntentValue>(
+            _ expression: IntentItem<ExpressionValue>
+        ) -> IntentItem<ExpressionValue> {
+            expression
         }
     }
 }
@@ -196,18 +228,205 @@ public struct IntentPerson: @unchecked Sendable, Hashable, _IntentValue {
             case applicationDefined(String)
         }
     }
+
+    public typealias ValueType = IntentPerson
+    public typealias UnwrappedType = IntentPerson
+}
+
+extension IntentPerson.Identifier: Codable {
+    private enum CodingKeys: String, CodingKey { case applicationDefined, contact, unknown }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let value = try container.decodeIfPresent(String.self, forKey: .applicationDefined) {
+            self = .applicationDefined(value)
+        } else if let value = try container.decodeIfPresent(String.self, forKey: .contact) {
+            self = .contact(value)
+        } else {
+            self = .unknown
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .applicationDefined(let value):
+            try container.encode(value, forKey: .applicationDefined)
+        case .contact(let value):
+            try container.encode(value, forKey: .contact)
+        case .unknown:
+            try container.encode(true, forKey: .unknown)
+        }
+    }
+}
+
+extension IntentPerson.Name: Codable {
+    private enum CodingKeys: String, CodingKey { case displayName, components, unknown }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let value = try container.decodeIfPresent(String.self, forKey: .displayName) {
+            self = .displayName(value)
+        } else if let value = try container.decodeIfPresent(PersonNameComponents.self, forKey: .components) {
+            self = .components(value)
+        } else {
+            self = .unknown
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .displayName(let value):
+            try container.encode(value, forKey: .displayName)
+        case .components(let value):
+            try container.encode(value, forKey: .components)
+        case .unknown:
+            try container.encode(true, forKey: .unknown)
+        }
+    }
+}
+
+extension IntentPerson.Handle.Label: Codable {
+    private enum CodingKeys: String, CodingKey { case named, custom }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let custom = try container.decodeIfPresent(String.self, forKey: .custom) {
+            self = .custom(custom)
+            return
+        }
+        switch try container.decode(String.self, forKey: .named) {
+        case "home": self = .home
+        case "main": self = .main
+        case "work": self = .work
+        case "pager": self = .pager
+        case "iPhone": self = .iPhone
+        case "mobile": self = .mobile
+        case "school": self = .school
+        case "homeFax": self = .homeFax
+        case "workFax": self = .workFax
+        default: self = .other
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .custom(let value):
+            try container.encode(value, forKey: .custom)
+        case .home: try container.encode("home", forKey: .named)
+        case .main: try container.encode("main", forKey: .named)
+        case .work: try container.encode("work", forKey: .named)
+        case .other: try container.encode("other", forKey: .named)
+        case .pager: try container.encode("pager", forKey: .named)
+        case .iPhone: try container.encode("iPhone", forKey: .named)
+        case .mobile: try container.encode("mobile", forKey: .named)
+        case .school: try container.encode("school", forKey: .named)
+        case .homeFax: try container.encode("homeFax", forKey: .named)
+        case .workFax: try container.encode("workFax", forKey: .named)
+        }
+    }
+}
+
+extension IntentPerson.Handle.Value: Codable {
+    private enum CodingKeys: String, CodingKey { case phoneNumber, emailAddress, applicationDefined }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let value = try container.decodeIfPresent(String.self, forKey: .phoneNumber) {
+            self = .phoneNumber(value)
+        } else if let value = try container.decodeIfPresent(String.self, forKey: .emailAddress) {
+            self = .emailAddress(value)
+        } else {
+            self = .applicationDefined(try container.decode(String.self, forKey: .applicationDefined))
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .phoneNumber(let value):
+            try container.encode(value, forKey: .phoneNumber)
+        case .emailAddress(let value):
+            try container.encode(value, forKey: .emailAddress)
+        case .applicationDefined(let value):
+            try container.encode(value, forKey: .applicationDefined)
+        }
+    }
+}
+
+extension IntentPerson.Handle: Codable {}
+
+extension IntentPerson: Codable {
+    private enum CodingKeys: String, CodingKey { case identifier, name, handle, aliases, isMe }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let identifier = try container.decode(Identifier.self, forKey: .identifier)
+        let name = try container.decode(Name.self, forKey: .name)
+        let handle = try container.decodeIfPresent(Handle.self, forKey: .handle)
+        let aliases = try container.decodeIfPresent([Handle].self, forKey: .aliases) ?? []
+        let isMe = try container.decodeIfPresent(Bool.self, forKey: .isMe) ?? false
+        self.init(identifier: identifier, name: name, handle: handle, aliases: aliases, isMe: isMe, image: nil)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(identifier, forKey: .identifier)
+        try container.encode(name, forKey: .name)
+        try container.encodeIfPresent(handle, forKey: .handle)
+        try container.encode(aliases, forKey: .aliases)
+        try container.encode(isMe, forKey: .isMe)
+    }
 }
 
 public struct DoubleResolver: @unchecked Sendable {
     public init() {}
 }
 
+#if !canImport(RelevanceKit)
+public struct RelevantContext: Sendable, Hashable {
+    public var score: Double
+    public init(score: Double = 0) { self.score = score }
+}
+#endif
+
 public struct RelevantIntent: @unchecked Sendable {
-    public init() {}
+    public let widgetKind: String
+    public let relevanceScore: Double
+    public var debugDescription: String { "\(widgetKind):\(relevanceScore)" }
+
+    public init() {
+        self.widgetKind = ""
+        self.relevanceScore = 0
+    }
+
+    public init<IntentType: WidgetConfigurationIntent>(
+        _ intent: IntentType,
+        widgetKind: String,
+        relevance: RelevantContext
+    ) {
+        _ = intent
+        self.widgetKind = widgetKind
+        self.relevanceScore = relevance.score
+    }
 }
 
 public struct EntityQuerySort<Entity>: @unchecked Sendable {
-    public init() {}
+    public let by: PartialKeyPath<Entity>?
+    public let order: Ordering
+
+    public init() {
+        self.by = nil
+        self.order = .ascending
+    }
+
+    public init(by: PartialKeyPath<Entity>, order: Ordering = .ascending) {
+        self.by = by
+        self.order = order
+    }
+
     public enum Ordering: Hashable, Sendable {
         case descending
         case ascending
@@ -289,8 +508,37 @@ public struct IntentItemSection<Result: _IntentValue>: @unchecked Sendable {
     }
 }
 
-public struct IntentPaymentMethod: @unchecked Sendable {
-    public init() {}
+public struct IntentPaymentMethod: @unchecked Sendable, Hashable, _IntentValue {
+    public var paymentType: PaymentType
+    public var name: String?
+    public var identificationHint: String?
+    public var icon: DisplayRepresentation.Image?
+
+    public static var typeDisplayRepresentation: TypeDisplayRepresentation { "Payment Method" }
+
+    public var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(title: name ?? paymentType.rawToken, image: icon)
+    }
+
+    public init() {
+        self.paymentType = .unknown
+        self.name = nil
+        self.identificationHint = nil
+        self.icon = nil
+    }
+
+    public init(
+        type: PaymentType,
+        name: LocalizedStringResource? = nil,
+        identificationHint: String? = nil,
+        icon: DisplayRepresentation.Image? = nil
+    ) {
+        self.paymentType = type
+        self.name = name.map { appIntentsString($0) }
+        self.identificationHint = identificationHint
+        self.icon = icon
+    }
+
     public enum PaymentType: Hashable, Sendable {
         case debit
         case store
@@ -301,15 +549,71 @@ public struct IntentPaymentMethod: @unchecked Sendable {
         case applePay
         case checking
         case brokerage
+
+        public var rawToken: String {
+            switch self {
+            case .debit: return "debit"
+            case .store: return "store"
+            case .credit: return "credit"
+            case .prepaid: return "prepaid"
+            case .savings: return "savings"
+            case .unknown: return "unknown"
+            case .applePay: return "applePay"
+            case .checking: return "checking"
+            case .brokerage: return "brokerage"
+            }
+        }
     }
 }
 
-public struct IntentCollectionSize: @unchecked Sendable {
-    public init() {}
+public struct IntentCollectionSize: @unchecked Sendable, Hashable, ExpressibleByIntegerLiteral {
+    public let min: Int
+    public let max: Int
+
+    public init() {
+        self.min = 0
+        self.max = 0
+    }
+
+    public init(integerLiteral value: Int) {
+        self.min = value
+        self.max = value
+    }
+
+    public init(min: Int, max: Int) {
+        self.min = min
+        self.max = max
+    }
+
+    public init(exactly value: Int) {
+        self.min = value
+        self.max = value
+    }
 }
 
-public struct IntentCurrencyAmount: @unchecked Sendable {
-    public init() {}
+public struct IntentCurrencyAmount: @unchecked Sendable, Hashable, _IntentValue {
+    public let amount: Decimal
+    public let currencyCode: String
+
+    public static var typeDisplayRepresentation: TypeDisplayRepresentation { "Currency Amount" }
+
+    public var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(title: "\(amount) \(currencyCode)")
+    }
+
+    public var localizedStringResource: LocalizedStringResource {
+        LocalizedStringResource("\(amount) \(currencyCode)")
+    }
+
+    public init() {
+        self.amount = 0
+        self.currencyCode = "USD"
+    }
+
+    public init(amount: Decimal, currencyCode: String) {
+        self.amount = amount
+        self.currencyCode = currencyCode
+    }
 }
 
 public struct IntentItemCollection<Result: _IntentValue>: @unchecked Sendable {
@@ -416,6 +720,10 @@ public struct BoolFromStringResolver: @unchecked Sendable {
 public struct IntentParameterContext<Value: _IntentValue>: @unchecked Sendable {
     public var title: LocalizedStringResource
     public var isOptional: Bool
+    public var storedDefaultUnit: Any?
+    public var storedUnit: Any?
+    public var storedUnitAdjustForLocale: Bool?
+    public var storedSupportsNegativeNumbers: Bool?
 
     public init(title: LocalizedStringResource = LocalizedStringResource(""), isOptional: Bool = true) {
         self.title = title
@@ -539,8 +847,12 @@ public struct EntityQuerySortingOptions<Entity>: @unchecked Sendable {
     public init() {}
 }
 
-public struct EmptyResolverSpecification<Value>: @unchecked Sendable {
+public struct EmptyResolverSpecification<Value>: ResolverSpecification {
     public init() {}
+    public static func == (lhs: EmptyResolverSpecification<Value>, rhs: EmptyResolverSpecification<Value>) -> Bool {
+        true
+    }
+    public func hash(into hasher: inout Hasher) {}
 }
 
 public struct FocusFilterSuggestionContext: @unchecked Sendable {

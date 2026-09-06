@@ -42,6 +42,7 @@ final class LinuxMTLCommandBuffer: NSObject, MTLCommandBuffer, @unchecked Sendab
     private var scheduledHandlers: [MTLCommandBufferHandler] = []
     private var recorded: [() -> Void] = []
     private var encoding = false
+    private var pendingError: MTLCommandBufferError?
 
     var device: any MTLDevice { queue.device }
     var commandQueue: any MTLCommandQueue { queue }
@@ -75,8 +76,13 @@ final class LinuxMTLCommandBuffer: NSObject, MTLCommandBuffer, @unchecked Sendab
         let end = ProcessInfo.processInfo.systemUptime
         kernelEndTime = end
         gpuEndTime = end
-        status = .completed
-        error = nil
+        if let pendingError {
+            status = .error
+            error = pendingError
+        } else {
+            status = .completed
+            error = nil
+        }
         for handler in completedHandlers {
             handler(self)
         }
@@ -97,8 +103,20 @@ final class LinuxMTLCommandBuffer: NSObject, MTLCommandBuffer, @unchecked Sendab
     }
 
     func waitUntilCompleted() {
-        if status == .committed || status == .scheduled {
-            status = .completed
+        if status == .committed {
+            status = .scheduled
+        }
+        if status == .scheduled {
+            status = error == nil ? .completed : .error
+        }
+    }
+
+    func failClosed(_ code: MTLCommandBufferError.Code, reason: String) {
+        if pendingError == nil {
+            pendingError = MTLCommandBufferError(
+                code,
+                userInfo: [NSLocalizedDescriptionKey: reason]
+            )
         }
     }
 
@@ -122,13 +140,19 @@ final class LinuxMTLCommandBuffer: NSObject, MTLCommandBuffer, @unchecked Sendab
 
     func encodeSignalEvent(_ event: any MTLEvent, value: UInt64) {
         record {
-            (event as? LinuxMTLEvent)?.signal(value)
+            if let shared = event as? LinuxMTLSharedEvent {
+                shared.signaledValue = value
+            } else {
+                (event as? LinuxMTLEvent)?.signal(value)
+            }
         }
     }
 
     func encodeWaitForEvent(_ event: any MTLEvent, value: UInt64) {
         record {
-            _ = (event, value)
+            if let shared = event as? LinuxMTLSharedEvent {
+                _ = shared.wait(untilSignaledValue: value, timeoutMS: 0)
+            }
         }
     }
 
@@ -161,12 +185,18 @@ final class LinuxMTLCommandBuffer: NSObject, MTLCommandBuffer, @unchecked Sendab
     }
 
     func makeParallelRenderCommandEncoder(descriptor renderPassDescriptor: MTLRenderPassDescriptor) -> (any MTLParallelRenderCommandEncoder)? {
-        _ = renderPassDescriptor
-        return nil
+        guard beginEncoder() else { return nil }
+        return LinuxMTLParallelRenderCommandEncoder(commandBuffer: self, descriptor: renderPassDescriptor)
     }
 
     func makeResourceStateCommandEncoder() -> (any MTLResourceStateCommandEncoder)? {
-        nil
+        guard beginEncoder() else { return nil }
+        return LinuxMTLResourceStateCommandEncoder(commandBuffer: self)
+    }
+
+    func resourceStateCommandEncoder(with resourceStatePassDescriptor: MTLResourceStatePassDescriptor) -> (any MTLResourceStateCommandEncoder)? {
+        _ = resourceStatePassDescriptor
+        return makeResourceStateCommandEncoder()
     }
 
     func finishEncoder() {
@@ -471,6 +501,30 @@ final class LinuxMTLBlitCommandEncoder: NSObject, MTLBlitCommandEncoder, @unchec
             (fence as? LinuxMTLFence)?.wait()
         }
     }
+
+    func resetCommandsInBuffer(_ buffer: any MTLIndirectCommandBuffer, range: Range<Int>) {
+        commandBuffer.record {
+            (buffer as? LinuxMTLIndirectCommandBuffer)?.resetCommands(range)
+        }
+    }
+
+    func copyIndirectCommandBuffer(
+        _ buffer: any MTLIndirectCommandBuffer,
+        sourceRange: Range<Int>,
+        destination: any MTLIndirectCommandBuffer,
+        destinationIndex: Int
+    ) {
+        commandBuffer.record {
+            guard let source = buffer as? LinuxMTLIndirectCommandBuffer,
+                  let dest = destination as? LinuxMTLIndirectCommandBuffer
+            else { return }
+            dest.copyCommands(from: source, sourceRange: sourceRange, destinationIndex: destinationIndex)
+        }
+    }
+
+    func optimizeIndirectCommandBuffer(_ buffer: any MTLIndirectCommandBuffer, range: Range<Int>) {
+        _ = (buffer, range)
+    }
 }
 
 final class LinuxMTLComputeCommandEncoder: NSObject, MTLComputeCommandEncoder, @unchecked Sendable {
@@ -599,8 +653,12 @@ final class LinuxMTLComputeCommandEncoder: NSObject, MTLComputeCommandEncoder, @
         let snapshotBytes = bytes
         let snapshotPipeline = pipeline
         let count = max(threadsPerGrid.width, 0) * max(threadsPerGrid.height, 0) * max(threadsPerGrid.depth, 0)
-        commandBuffer.record {
-            guard let pipeline = snapshotPipeline, pipeline.function.isCPUBuiltin else { return }
+        let recorded = commandBuffer
+        recorded.record {
+            guard let pipeline = snapshotPipeline, pipeline.function.isCPUBuiltin else {
+                recorded.failClosed(.notPermitted, reason: "no shader execution")
+                return
+            }
             LinuxMTLCPUKernel.run(
                 name: pipeline.function.name,
                 threadCount: count,
@@ -628,6 +686,64 @@ final class LinuxMTLComputeCommandEncoder: NSObject, MTLComputeCommandEncoder, @
 
     func waitForFence(_ fence: any MTLFence) {
         (fence as? LinuxMTLFence)?.wait()
+    }
+
+    func executeCommandsInBuffer(_ buffer: any MTLIndirectCommandBuffer, range: Range<Int>) {
+        guard let icb = buffer as? LinuxMTLIndirectCommandBuffer else { return }
+        let snapshot = icb.snapshotCompute(range: range)
+        let recorded = commandBuffer
+        recorded.record {
+            for command in snapshot {
+                guard let pipeline = command.pipeline, pipeline.function.isCPUBuiltin else {
+                    recorded.failClosed(.notPermitted, reason: "no shader execution")
+                    continue
+                }
+                let count: Int
+                switch command.dispatch {
+                case .none:
+                    continue
+                case .threadgroups(let groups, let threads):
+                    count = max(groups.width, 0) * max(threads.width, 0)
+                        * max(groups.height, 0) * max(threads.height, 0)
+                        * max(groups.depth, 0) * max(threads.depth, 0)
+                case .threads(let threads, _):
+                    count = max(threads.width, 0) * max(threads.height, 0) * max(threads.depth, 0)
+                }
+                LinuxMTLCPUKernel.run(
+                    name: pipeline.function.name,
+                    threadCount: count,
+                    buffers: command.buffers,
+                    bytes: [:]
+                )
+            }
+        }
+    }
+
+    func executeCommandsInBuffer(
+        _ buffer: any MTLIndirectCommandBuffer,
+        indirectBuffer indirectRangeBuffer: any MTLBuffer,
+        offset: Int
+    ) {
+        let location = Int(indirectRangeBuffer.contents().advanced(by: offset).load(as: UInt32.self))
+        let length = Int(indirectRangeBuffer.contents().advanced(by: offset + 4).load(as: UInt32.self))
+        executeCommandsInBuffer(buffer, range: location..<(location + length))
+    }
+
+    func executeCommands(in indirectCommandBuffer: any MTLIndirectCommandBuffer, with executionRange: NSRange) {
+        let lower = executionRange.location
+        executeCommandsInBuffer(indirectCommandBuffer, range: lower..<(lower + executionRange.length))
+    }
+
+    func executeCommands(
+        in indirectCommandbuffer: any MTLIndirectCommandBuffer,
+        indirectBuffer indirectRangeBuffer: any MTLBuffer,
+        indirectBufferOffset: Int
+    ) {
+        executeCommandsInBuffer(
+            indirectCommandbuffer,
+            indirectBuffer: indirectRangeBuffer,
+            offset: indirectBufferOffset
+        )
     }
 }
 
@@ -691,9 +807,16 @@ final class LinuxMTLRenderCommandEncoder: NSObject, MTLRenderCommandEncoder, @un
 
     var device: any MTLDevice { commandBuffer.device }
 
-    init(commandBuffer: LinuxMTLCommandBuffer, descriptor: MTLRenderPassDescriptor) {
+    let ownsCommandBufferSlot: Bool
+
+    init(
+        commandBuffer: LinuxMTLCommandBuffer,
+        descriptor: MTLRenderPassDescriptor,
+        ownsCommandBufferSlot: Bool = true
+    ) {
         self.commandBuffer = commandBuffer
         self.descriptor = descriptor
+        self.ownsCommandBufferSlot = ownsCommandBufferSlot
         super.init()
     }
 
@@ -704,7 +827,9 @@ final class LinuxMTLRenderCommandEncoder: NSObject, MTLRenderCommandEncoder, @un
         commandBuffer.record {
             LinuxMTLRenderCommandEncoder.applyLoadStore(descriptor)
         }
-        commandBuffer.finishEncoder()
+        if ownsCommandBufferSlot {
+            commandBuffer.finishEncoder()
+        }
     }
 
     static func applyLoadStore(_ descriptor: MTLRenderPassDescriptor) {
@@ -1002,6 +1127,213 @@ final class LinuxMTLRenderCommandEncoder: NSObject, MTLRenderCommandEncoder, @un
     func memoryBarrier(scope: MTLBarrierScope, after: MTLRenderStages, before: MTLRenderStages) {
         _ = (scope, after, before)
     }
+
+    func executeCommandsInBuffer(_ buffer: any MTLIndirectCommandBuffer, range: Range<Int>) {
+        _ = (buffer, range)
+        commandBuffer.failClosed(.notPermitted, reason: "no shader execution")
+    }
+
+    func executeCommandsInBuffer(
+        _ buffer: any MTLIndirectCommandBuffer,
+        indirectBuffer indirectRangeBuffer: any MTLBuffer,
+        offset: Int
+    ) {
+        _ = (buffer, indirectRangeBuffer, offset)
+        commandBuffer.failClosed(.notPermitted, reason: "no shader execution")
+    }
+
+    func setMeshBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int) {
+        recordedState.append("meshB:\(index):\(offset):\(buffer?.length ?? -1)")
+    }
+
+    func setMeshBufferOffset(_ offset: Int, index: Int) {
+        recordedState.append("meshBO:\(index):\(offset)")
+    }
+
+    func setMeshBytes(_ bytes: UnsafeRawPointer, length: Int, index: Int) {
+        _ = bytes
+        recordedState.append("meshBytes:\(index):\(length)")
+    }
+
+    func setMeshTexture(_ texture: (any MTLTexture)?, index: Int) {
+        recordedState.append("meshT:\(index):\(texture?.width ?? -1)")
+    }
+
+    func setMeshSamplerState(_ sampler: (any MTLSamplerState)?, index: Int) {
+        recordedState.append("meshS:\(index):\(sampler != nil)")
+    }
+
+    func setMeshSamplerState(_ sampler: (any MTLSamplerState)?, lodMinClamp: Float, lodMaxClamp: Float, index: Int) {
+        _ = (lodMinClamp, lodMaxClamp)
+        setMeshSamplerState(sampler, index: index)
+    }
+
+    func setObjectBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int) {
+        recordedState.append("objB:\(index):\(offset):\(buffer?.length ?? -1)")
+    }
+
+    func setObjectBufferOffset(_ offset: Int, index: Int) {
+        recordedState.append("objBO:\(index):\(offset)")
+    }
+
+    func setObjectBytes(_ bytes: UnsafeRawPointer, length: Int, index: Int) {
+        _ = bytes
+        recordedState.append("objBytes:\(index):\(length)")
+    }
+
+    func setObjectTexture(_ texture: (any MTLTexture)?, index: Int) {
+        recordedState.append("objT:\(index):\(texture?.width ?? -1)")
+    }
+
+    func setObjectSamplerState(_ sampler: (any MTLSamplerState)?, index: Int) {
+        recordedState.append("objS:\(index):\(sampler != nil)")
+    }
+
+    func setObjectSamplerState(_ sampler: (any MTLSamplerState)?, lodMinClamp: Float, lodMaxClamp: Float, index: Int) {
+        _ = (lodMinClamp, lodMaxClamp)
+        setObjectSamplerState(sampler, index: index)
+    }
+
+    func setObjectThreadgroupMemoryLength(_ length: Int, index: Int) {
+        recordedState.append("objTG:\(index):\(length)")
+    }
+
+    func setTileBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int) {
+        recordedState.append("tileB:\(index):\(offset):\(buffer?.length ?? -1)")
+    }
+
+    func setTileBufferOffset(_ offset: Int, index: Int) {
+        recordedState.append("tileBO:\(index):\(offset)")
+    }
+
+    func setTileBytes(_ bytes: UnsafeRawPointer, length: Int, index: Int) {
+        _ = bytes
+        recordedState.append("tileBytes:\(index):\(length)")
+    }
+
+    func setTileTexture(_ texture: (any MTLTexture)?, index: Int) {
+        recordedState.append("tileT:\(index):\(texture?.width ?? -1)")
+    }
+
+    func setTileSamplerState(_ sampler: (any MTLSamplerState)?, index: Int) {
+        recordedState.append("tileS:\(index):\(sampler != nil)")
+    }
+
+    func setTileSamplerState(_ sampler: (any MTLSamplerState)?, lodMinClamp: Float, lodMaxClamp: Float, index: Int) {
+        _ = (lodMinClamp, lodMaxClamp)
+        setTileSamplerState(sampler, index: index)
+    }
+
+    func setThreadgroupMemoryLength(_ length: Int, offset: Int, index: Int) {
+        recordedState.append("tg:\(index):\(offset):\(length)")
+    }
+
+    func setTessellationFactorBuffer(_ buffer: (any MTLBuffer)?, offset: Int, instanceStride: Int) {
+        recordedState.append("tess:\(offset):\(instanceStride):\(buffer?.length ?? -1)")
+    }
+
+    func setTessellationFactorScale(_ scale: Float) {
+        recordedState.append("tessScale:\(scale)")
+    }
+
+    func setDepthTestBounds(_ bounds: ClosedRange<Float>) {
+        recordedState.append("depthBounds:\(bounds.lowerBound):\(bounds.upperBound)")
+    }
+
+    func dispatchThreadsPerTile(_ threadsPerTile: MTLSize) {
+        recordedState.append("tileDispatch:\(threadsPerTile.width)x\(threadsPerTile.height)")
+    }
+
+    func drawMeshThreadgroups(
+        _ threadgroupsPerGrid: MTLSize,
+        threadsPerObjectThreadgroup: MTLSize,
+        threadsPerMeshThreadgroup: MTLSize
+    ) {
+        recordedState.append(
+            "meshTG:\(threadgroupsPerGrid.width):\(threadsPerObjectThreadgroup.width):\(threadsPerMeshThreadgroup.width)"
+        )
+    }
+
+    func drawMeshThreadgroups(
+        indirectBuffer: any MTLBuffer,
+        indirectBufferOffset: Int,
+        threadsPerObjectThreadgroup: MTLSize,
+        threadsPerMeshThreadgroup: MTLSize
+    ) {
+        recordedState.append(
+            "meshTGIndirect:\(indirectBuffer.length):\(indirectBufferOffset):\(threadsPerObjectThreadgroup.width):\(threadsPerMeshThreadgroup.width)"
+        )
+    }
+
+    func drawMeshThreads(
+        _ threadsPerGrid: MTLSize,
+        threadsPerObjectThreadgroup: MTLSize,
+        threadsPerMeshThreadgroup: MTLSize
+    ) {
+        recordedState.append(
+            "meshThreads:\(threadsPerGrid.width):\(threadsPerObjectThreadgroup.width):\(threadsPerMeshThreadgroup.width)"
+        )
+    }
+
+    func drawPatches(
+        numberOfPatchControlPoints: Int,
+        patchStart: Int,
+        patchCount: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        instanceCount: Int,
+        baseInstance: Int
+    ) {
+        recordedState.append(
+            "patches:\(numberOfPatchControlPoints):\(patchStart):\(patchCount):\(patchIndexBufferOffset):\(instanceCount):\(baseInstance)"
+        )
+    }
+
+    func drawPatches(
+        numberOfPatchControlPoints: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        indirectBuffer: any MTLBuffer,
+        indirectBufferOffset: Int
+    ) {
+        recordedState.append(
+            "patchesIndirect:\(numberOfPatchControlPoints):\(patchIndexBufferOffset):\(indirectBuffer.length):\(indirectBufferOffset)"
+        )
+    }
+
+    func drawIndexedPatches(
+        numberOfPatchControlPoints: Int,
+        patchStart: Int,
+        patchCount: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        controlPointIndexBuffer: any MTLBuffer,
+        controlPointIndexBufferOffset: Int,
+        instanceCount: Int,
+        baseInstance: Int
+    ) {
+        recordedState.append(
+            "idxPatches:\(numberOfPatchControlPoints):\(patchStart):\(patchCount):\(controlPointIndexBuffer.length):\(instanceCount):\(baseInstance)"
+        )
+    }
+
+    func drawIndexedPatches(
+        numberOfPatchControlPoints: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        controlPointIndexBuffer: any MTLBuffer,
+        controlPointIndexBufferOffset: Int,
+        indirectBuffer: any MTLBuffer,
+        indirectBufferOffset: Int
+    ) {
+        recordedState.append(
+            "idxPatchesIndirect:\(numberOfPatchControlPoints):\(controlPointIndexBuffer.length):\(indirectBuffer.length):\(indirectBufferOffset)"
+        )
+    }
+
+    func memoryBarrier(resources: [any MTLResource], after: MTLRenderStages, before: MTLRenderStages) {
+        recordedState.append("barrierResources:\(resources.count):\(after.rawValue):\(before.rawValue)")
+    }
 }
 
 final class LinuxMTLLibrary: NSObject, MTLLibrary, @unchecked Sendable {
@@ -1147,65 +1479,277 @@ final class LinuxMTLArgumentEncoder: NSObject, MTLArgumentEncoder, @unchecked Se
     var label: String?
     let encodedLength: Int
     let alignment: Int = 16
-    private var dummy = UnsafeMutableRawPointer.allocate(byteCount: 16, alignment: 16)
+    private let slotStride = 16
+    private var backing: UnsafeMutableRawPointer
+    private var ownsBacking = true
+    private var argumentBuffer: (any MTLBuffer)?
+    private var argumentOffset = 0
+    private let arguments: [MTLArgumentDescriptor]
 
     var device: any MTLDevice { owningDevice }
 
     init(device: LinuxMTLDevice, arguments: [MTLArgumentDescriptor]) {
         self.owningDevice = device
-        self.encodedLength = 0
-        _ = arguments
+        self.arguments = arguments
+        let maxIndex = arguments.map(\.index).max() ?? -1
+        let length = maxIndex < 0 ? 0 : (maxIndex + 1) * 16
+        self.encodedLength = length
+        self.backing = UnsafeMutableRawPointer.allocate(byteCount: max(length, 16), alignment: 16)
+        self.backing.initializeMemory(as: UInt8.self, repeating: 0, count: max(length, 16))
         super.init()
-        dummy.initializeMemory(as: UInt8.self, repeating: 0, count: 16)
     }
 
     deinit {
-        dummy.deallocate()
+        if ownsBacking {
+            backing.deallocate()
+        }
+    }
+
+    private func slot(_ index: Int) -> UnsafeMutableRawPointer? {
+        let offset = argumentOffset + index * slotStride
+        if let argumentBuffer {
+            guard offset + slotStride <= argumentBuffer.length else { return nil }
+            return argumentBuffer.contents().advanced(by: offset)
+        }
+        guard offset + slotStride <= max(encodedLength, 16) else { return nil }
+        return backing.advanced(by: index * slotStride)
     }
 
     func setArgumentBuffer(_ argumentBuffer: (any MTLBuffer)?, offset: Int) {
-        _ = (argumentBuffer, offset)
+        self.argumentBuffer = argumentBuffer
+        self.argumentOffset = max(offset, 0)
     }
 
     func setArgumentBuffer(_ argumentBuffer: (any MTLBuffer)?, startOffset: Int, arrayElement: Int) {
-        _ = (argumentBuffer, startOffset, arrayElement)
+        setArgumentBuffer(argumentBuffer, offset: startOffset + arrayElement * encodedLength)
     }
 
     func setBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int) {
-        _ = (buffer, offset, index)
+        guard let slot = slot(index) else { return }
+        let packed = (buffer?.gpuAddress ?? 0) &+ UInt64(offset)
+        slot.storeBytes(of: packed, as: UInt64.self)
     }
 
     func setTexture(_ texture: (any MTLTexture)?, index: Int) {
-        _ = (texture, index)
+        guard let slot = slot(index) else { return }
+        slot.storeBytes(of: texture?.gpuResourceID._impl ?? 0, as: UInt64.self)
     }
 
     func setSamplerState(_ sampler: (any MTLSamplerState)?, index: Int) {
-        _ = (sampler, index)
+        guard let slot = slot(index) else { return }
+        slot.storeBytes(of: sampler?.gpuResourceID._impl ?? 0, as: UInt64.self)
     }
 
     func setRenderPipelineState(_ pipeline: (any MTLRenderPipelineState)?, index: Int) {
-        _ = (pipeline, index)
+        guard let slot = slot(index) else { return }
+        slot.storeBytes(of: pipeline?.gpuResourceID._impl ?? 0, as: UInt64.self)
     }
 
     func setComputePipelineState(_ pipeline: (any MTLComputePipelineState)?, index: Int) {
-        _ = (pipeline, index)
+        guard let slot = slot(index) else { return }
+        slot.storeBytes(of: pipeline?.gpuResourceID._impl ?? 0, as: UInt64.self)
     }
 
     func setIndirectCommandBuffer(_ indirectCommandBuffer: (any MTLIndirectCommandBuffer)?, index: Int) {
-        _ = (indirectCommandBuffer, index)
+        guard let slot = slot(index) else { return }
+        slot.storeBytes(of: indirectCommandBuffer?.gpuResourceID._impl ?? 0, as: UInt64.self)
     }
 
     func setDepthStencilState(_ depthStencilState: (any MTLDepthStencilState)?, index: Int) {
-        _ = (depthStencilState, index)
+        guard let slot = slot(index) else { return }
+        slot.storeBytes(of: depthStencilState?.gpuResourceID._impl ?? 0, as: UInt64.self)
     }
 
     func constantData(at index: Int) -> UnsafeMutableRawPointer {
-        _ = index
-        return dummy
+        slot(index) ?? backing
     }
 
     func makeArgumentEncoderForBuffer(atIndex index: Int) -> (any MTLArgumentEncoder)? {
         _ = index
         return nil
+    }
+}
+
+final class LinuxMTLParallelRenderCommandEncoder: NSObject, MTLParallelRenderCommandEncoder, @unchecked Sendable {
+    unowned let commandBuffer: LinuxMTLCommandBuffer
+    let descriptor: MTLRenderPassDescriptor
+    var label: String?
+    private var ended = false
+    private var childCount = 0
+
+    var device: any MTLDevice { commandBuffer.device }
+
+    init(commandBuffer: LinuxMTLCommandBuffer, descriptor: MTLRenderPassDescriptor) {
+        self.commandBuffer = commandBuffer
+        self.descriptor = descriptor
+        super.init()
+    }
+
+    func makeRenderCommandEncoder() -> (any MTLRenderCommandEncoder)? {
+        guard !ended else { return nil }
+        childCount += 1
+        return LinuxMTLRenderCommandEncoder(
+            commandBuffer: commandBuffer,
+            descriptor: descriptor,
+            ownsCommandBufferSlot: false
+        )
+    }
+
+    func endEncoding() {
+        guard !ended else { return }
+        ended = true
+        if childCount == 0 {
+            let descriptor = self.descriptor
+            commandBuffer.record {
+                LinuxMTLRenderCommandEncoder.applyLoadStore(descriptor)
+            }
+        }
+        commandBuffer.finishEncoder()
+    }
+
+    func insertDebugSignpost(_ string: String) {
+        _ = string
+    }
+
+    func pushDebugGroup(_ string: String) {
+        _ = string
+    }
+
+    func popDebugGroup() {}
+
+    func barrier(afterQueueStages: MTLStages, beforeStages: MTLStages) {
+        _ = (afterQueueStages, beforeStages)
+    }
+
+    func setColorStoreAction(_ storeAction: MTLStoreAction, index colorAttachmentIndex: Int) {
+        descriptor.colorAttachments[colorAttachmentIndex].storeAction = storeAction
+    }
+
+    func setColorStoreActionOptions(_ storeActionOptions: MTLStoreActionOptions, index colorAttachmentIndex: Int) {
+        descriptor.colorAttachments[colorAttachmentIndex].storeActionOptions = storeActionOptions
+    }
+
+    func setDepthStoreAction(_ storeAction: MTLStoreAction) {
+        descriptor.depthAttachment.storeAction = storeAction
+    }
+
+    func setDepthStoreActionOptions(_ storeActionOptions: MTLStoreActionOptions) {
+        descriptor.depthAttachment.storeActionOptions = storeActionOptions
+    }
+
+    func setStencilStoreAction(_ storeAction: MTLStoreAction) {
+        descriptor.stencilAttachment.storeAction = storeAction
+    }
+
+    func setStencilStoreActionOptions(_ storeActionOptions: MTLStoreActionOptions) {
+        descriptor.stencilAttachment.storeActionOptions = storeActionOptions
+    }
+}
+
+final class LinuxMTLResourceStateCommandEncoder: NSObject, MTLResourceStateCommandEncoder, @unchecked Sendable {
+    unowned let commandBuffer: LinuxMTLCommandBuffer
+    var label: String?
+    private var ended = false
+
+    var device: any MTLDevice { commandBuffer.device }
+
+    init(commandBuffer: LinuxMTLCommandBuffer) {
+        self.commandBuffer = commandBuffer
+        super.init()
+    }
+
+    func endEncoding() {
+        guard !ended else { return }
+        ended = true
+        commandBuffer.finishEncoder()
+    }
+
+    func insertDebugSignpost(_ string: String) {
+        _ = string
+    }
+
+    func pushDebugGroup(_ string: String) {
+        _ = string
+    }
+
+    func popDebugGroup() {}
+
+    func barrier(afterQueueStages: MTLStages, beforeStages: MTLStages) {
+        _ = (afterQueueStages, beforeStages)
+    }
+
+    func update(_ fence: any MTLFence) {
+        commandBuffer.record {
+            (fence as? LinuxMTLFence)?.signal()
+        }
+    }
+
+    func wait(for fence: any MTLFence) {
+        commandBuffer.record {
+            (fence as? LinuxMTLFence)?.wait()
+        }
+    }
+
+    func updateTextureMapping(
+        _ texture: any MTLTexture,
+        mode: MTLSparseTextureMappingMode,
+        region: MTLRegion,
+        mipLevel: Int,
+        slice: Int
+    ) {
+        _ = (texture, mode, region, mipLevel, slice)
+        commandBuffer.failClosed(
+            .notPermitted,
+            reason: "sparse texture mapping is not available on the CPU reference"
+        )
+    }
+
+    func updateTextureMapping(
+        _ texture: any MTLTexture,
+        mode: MTLSparseTextureMappingMode,
+        indirectBuffer: any MTLBuffer,
+        indirectBufferOffset: Int
+    ) {
+        _ = (texture, mode, indirectBuffer, indirectBufferOffset)
+        commandBuffer.failClosed(
+            .notPermitted,
+            reason: "sparse texture mapping is not available on the CPU reference"
+        )
+    }
+
+    func updateTextureMappings(
+        _ texture: any MTLTexture,
+        mode: MTLSparseTextureMappingMode,
+        regions: UnsafePointer<MTLRegion>,
+        mipLevels: UnsafePointer<Int>,
+        slices: UnsafePointer<Int>,
+        numRegions: Int
+    ) {
+        _ = (texture, mode, regions, mipLevels, slices, numRegions)
+        commandBuffer.failClosed(
+            .notPermitted,
+            reason: "sparse texture mapping is not available on the CPU reference"
+        )
+    }
+
+    func moveTextureMappings(
+        sourceTexture: any MTLTexture,
+        sourceSlice: Int,
+        sourceLevel: Int,
+        sourceOrigin: MTLOrigin,
+        sourceSize: MTLSize,
+        destinationTexture: any MTLTexture,
+        destinationSlice: Int,
+        destinationLevel: Int,
+        destinationOrigin: MTLOrigin
+    ) {
+        _ = (
+            sourceTexture, sourceSlice, sourceLevel, sourceOrigin, sourceSize,
+            destinationTexture, destinationSlice, destinationLevel, destinationOrigin
+        )
+        commandBuffer.failClosed(
+            .notPermitted,
+            reason: "sparse texture mapping is not available on the CPU reference"
+        )
     }
 }

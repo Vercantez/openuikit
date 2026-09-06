@@ -1,9 +1,9 @@
 # CoreData (Linux starting point)
 
 This directory is a clean-room Linux `CoreData` module for the OpenUIKit
-framework fan-out. It is a working **in-memory** object graph. There is no
-`sqlite3` under `full/` or `uikit/` (grep), so `NSSQLiteStoreType` is
-fail-closed and listed rather than a durable Apple WAL/`Z*` store.
+framework fan-out. It is a working **in-memory** object graph plus a Linux
+SQLite store loaded via `dlopen("libsqlite3.so.0")`. The on-disk layout is
+host `_cd_meta` / `_cd_row` tables, not Apple's WAL/`Z*` schema.
 
 Isolated-gate success is not integrated Linux success. A future EC2 run must
 build real guest Foundation and Dispatch, compile this module against those
@@ -15,7 +15,11 @@ build real guest Foundation and Dispatch, compile this module against those
 - Programmatic `NSManagedObjectModel` construction: entities, attributes
   (types, optionality, defaults), relationships with inverses, fetched
   properties, fetch indexes, uniqueness constraints, configurations, and
-  fetch-request templates. Compiled `.mom`/`.momd` loading returns nil.
+  fetch-request templates. `.xcdatamodel` / `.xcdatamodeld` **contents XML**
+  loads (entities, attributes with types/defaults/optional/transient,
+  relationships with inverse/delete rules/ordered, fetched properties,
+  uniqueness constraints, version identifiers). Compiled `.mom`/`.momd`
+  bytes still return nil.
 - `NSManagedObject` / `NSManagedObjectID` with `value(forKey:)` /
   `setValue`, primitive accessors, `willAccessValue` / `willChangeValue`
   (including to-many set-mutation), validation, faults, and **complete
@@ -31,8 +35,12 @@ build real guest Foundation and Dispatch, compile this module against those
   `automaticallyMergesChangesFromParent`, and merge-policy objects
   (error / rollback / overwrite / store-trump / object-trump).
 - `NSPersistentStoreCoordinator` + `NSPersistentContainer` against
-  `NSInMemoryStoreType`. `registerStoreClass` / `registeredStoreTypes` are
-  wired into `addPersistentStore`. `loadPersistentStores` callbacks run.
+  `NSInMemoryStoreType` and `NSSQLiteStoreType` (libsqlite3). Schema is
+  generated from the model; fetch supports NSPredicate / sort / limit /
+  offset / faulting. Model-hash mismatch throws
+  `NSPersistentStoreIncompatibleVersionHashError` instead of migrating.
+  `registerStoreClass` / `registeredStoreTypes` are wired into
+  `addPersistentStore`. `loadPersistentStores` callbacks run.
 - `NSFetchRequest` with **block** `NSPredicate` evaluation (comparison,
   compound, IN, CONTAINS, BEGINSWITH, ENDSWITH, relationship key paths).
   String `NSPredicate(format:)` and `NSSortDescriptor(key:)` are unavailable
@@ -53,15 +61,15 @@ The isolated runtime probe `tests/agent/CoreDataRuntime.swift` prints
 `tests/agent/CoreDataDependencyIdentity.swift` prints
 `COREDATA_DEPENDENCY_IDENTITY_OK` and is not executed by the isolated gate.
 
-Coverage (wave-1 → depth pass → ledger repair): **88 → 1206 → 682 implemented** / 612 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
+Coverage (wave-1 → depth pass → ledger repair → wave 8): **88 → 1206 → 682 → 774 implemented** / 520 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
 
 ## Fail-closed boundaries
 
-- `NSSQLiteStoreType` is a **platform blocker**. No `sqlite3` exists in this
-  tree. Unregistered SQLite `addPersistentStore` throws and does not create
-  a file. `NSBinaryStoreType` also does not open.
-- `NSManagedObjectModel(contentsOf:)` returns nil: compiled `.mom`/`.momd`
-  bytes are proprietary and are not parsed.
+- Apple `Z*` / WAL SQLite layout is **not** claimed. Linux SQLite uses
+  `_cd_meta` / `_cd_row` and throws `NSPersistentStoreIncompatibleSchemaError`
+  for unrelated files. `NSBinaryStoreType` does not open.
+- Compiled `.mom` / `.momd` bytes stay nil. Source `.xcdatamodel` contents
+  XML is parsed.
 - `NSPersistentCloudKitContainer.initializeCloudKitSchema` throws. Sharing
   and CloudKit record mutation APIs return false / fail.
 - Ubiquity / iCloud store options are unavailable.
@@ -167,8 +175,76 @@ COREDATA_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=CoreData dylib=libCoreData.dylib
 ```
 
-Unresolved behavioral questions stay in `oracle-questions.tsv` (SQLite schema
-errors, compiled `.momd` layout, lightweight migration, `perform(schedule:)`
-reentrancy, CloudKit entitlement errors, `NSCoreDataVersionNumber` on iOS 26.1,
-committed-snapshot nil boxing, child-save instance identity, FRC first-fetch
-callback order).
+Unresolved behavioral questions stay in `oracle-questions.tsv` (Apple Z*
+SQLite schema errors, compiled `.momd` layout, lightweight migration,
+`perform(schedule:)` reentrancy, CloudKit entitlement errors,
+`NSCoreDataVersionNumber` on iOS 26.1, committed-snapshot nil boxing,
+child-save instance identity, FRC first-fetch callback order).
+
+## Depth pass 2026-09 (wave 8)
+
+Third behavioral pass on `cursor/port-coredata-to-linux-c39b`. Kept the
+in-memory graph and existing synchronous tests; added `.xcdatamodel` XML
+loading, a libsqlite3 store, uniqueness-constraint conflicts, dictionary
+`propertiesToGroupBy`, and exact did-save / objects-did-change userInfo
+keys. Coordinator `perform` and store-add completion stay synchronous so
+the sealed gate cannot hang. Compiled `.mom`, binary stores, CloudKit,
+ubiquity, history, and lightweight migration remain fail-closed. Nine
+`NSExpression`/`UndoManager` rows stay `deferred`.
+
+`.cursor/verify-cloud-environment.sh` on this snapshot fails earlier
+(`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift
+6.2.4 / linux and the sealed gate compiles with a clean product tree.
+
+**Coverage before / after this wave 8 pass** (1319 public IDs):
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Before (tree at expected start `bff8535c`) | 682 | 612 | 15 | 10 | 0 |
+| After (XML + SQLite + focused tests) | 774 | 520 | 15 | 10 | 0 |
+
+Every `implemented` row cites
+`test:full/coredata/tests/agent/<File>Tests.swift#testName` naming a real
+top-level synchronous `func testName()`. Enum / option-set members and C
+`k…`/`err…`/`NS*Error` constants still share two table-driven value tests.
+No other test is cited by more than 40% of implemented rows (largest
+non-catalog/error: `testFailClosedSurfaces` at 49 / 774 ≈ 6.3%). Tests do
+not wait on `DispatchQueue.main`, `DispatchSemaphore`, `RunLoop`, or
+`Task`.
+
+Top-5 implemented evidence distribution (774 rows):
+
+| Rows | Share | Evidence |
+| ---: | ---: | --- |
+| 257 | 33.2% | `CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues` |
+| 218 | 28.2% | `CoreDataErrorCodeTests.swift#testErrorCodes` |
+| 49 | 6.3% | `CoreDataFailClosedTests.swift#testFailClosedSurfaces` |
+| 23 | 3.0% | `CoreDataBatchTests.swift#testBatchRequests` |
+| 22 | 2.8% | `CoreDataSQLiteTests.swift#testSQLiteDestroyAndMetadata` |
+
+New focused tests this pass:
+
+| Family | Test |
+| --- | --- |
+| contents XML load | `testXMLModelLoadFromContents` |
+| `.xcdatamodeld` bundle | `testXMLModelLoadXcdatamodeld` |
+| XML relationships / fetched properties / uniqueness | `testXMLModelRelationshipsFetchedPropertiesAndConstraints` |
+| SQLite CRUD + faulting | `testSQLiteCRUDAndFaulting` |
+| SQLite predicate / sort / limit / offset | `testSQLiteFetchLimitOffsetAndPredicate` |
+| incompatible schema / hash mismatch fail-closed | `testSQLiteIncompatibleSchemaAndMigrationFailClosed` |
+| SQLite destroy + metadata | `testSQLiteDestroyAndMetadata` |
+| did-save / objects-did-change userInfo keys | `testDidSaveAndObjectsDidChangeUserInfoKeys` |
+| `propertiesToGroupBy` | `testPropertiesToGroupBy` |
+| KVC accessors / validation / refresh | `testManagedObjectKVCAccessors` |
+| uniqueness `NSConstraintConflict` | `testConstraintConflictOnSave` |
+
+Isolated-gate markers from this host:
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FRAMEWORK_FANOUT_REFERENCE_OK
+COREDATA_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CoreData dylib=libCoreData.dylib
+```

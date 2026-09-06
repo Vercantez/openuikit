@@ -104,10 +104,20 @@ public protocol NWGroupDescriptor: AnyObject, Sendable {}
 
 public class NWMulticastGroup: NWGroupDescriptor, @unchecked Sendable {
     public init?(with endpoint: NWEndpoint) { return nil }
+
+    /// Linux has no multicast group membership daemon. Construction fails
+    /// closed instead of pretending IGMP/MLD joined.
+    public init(for endpoints: [NWEndpoint], from source: NWEndpoint? = nil, disableUnicast: Bool = false) throws {
+        _ = endpoints
+        _ = source
+        _ = disableUnicast
+        throw NWError.posix(.EOPNOTSUPP)
+    }
 }
 
 public class NWMultiplexGroup: NWGroupDescriptor, @unchecked Sendable {
     public init(with endpoint: NWEndpoint) { _ = endpoint }
+    public convenience init(to endpoint: NWEndpoint) { self.init(with: endpoint) }
 }
 
 public final class NWConnectionGroup: @unchecked Sendable {

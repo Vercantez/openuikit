@@ -1,0 +1,4 @@
+full/systemextensions/OSSystemExtensionError.swift
+full/systemextensions/OSSystemExtensionProperties.swift
+full/systemextensions/OSSystemExtensionsWorkspace.swift
+full/systemextensions/SystemExtensions.swift

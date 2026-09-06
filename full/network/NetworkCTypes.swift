@@ -1,4 +1,9 @@
 import Foundation
+#if canImport(Glibc)
+import Glibc
+#elseif canImport(Darwin)
+import Darwin
+#endif
 
 // MARK: - Host lookalikes for Darwin/Security/CoreFoundation imported names
 //
@@ -34,6 +39,28 @@ public final class sec_protocol_metadata: NSObject, @unchecked Sendable {
     }
 }
 public typealias sec_protocol_metadata_t = sec_protocol_metadata
+
+/// Opaque Security identity/trust stand-ins. Linux never loads a keychain
+/// identity or evaluates a trust object.
+public final class sec_identity: NSObject, @unchecked Sendable {}
+public typealias sec_identity_t = sec_identity
+public final class sec_trust: NSObject, @unchecked Sendable {}
+public typealias sec_trust_t = sec_trust
+
+public struct tls_ciphersuite_t: RawRepresentable, Hashable, Sendable {
+    public var rawValue: UInt16
+    public init(rawValue: UInt16) { self.rawValue = rawValue }
+}
+
+public struct tls_ciphersuite_group_t: RawRepresentable, Hashable, Sendable {
+    public var rawValue: UInt16
+    public init(rawValue: UInt16) { self.rawValue = rawValue }
+}
+
+public struct tls_protocol_version_t: RawRepresentable, Hashable, Sendable {
+    public var rawValue: UInt16
+    public init(rawValue: UInt16) { self.rawValue = rawValue }
+}
 
 public let kNWErrorDomainPOSIX: CFString = "kNWErrorDomainPOSIX" as NSString
 public let kNWErrorDomainDNS: CFString = "kNWErrorDomainDNS" as NSString
@@ -437,22 +464,177 @@ public protocol OS_nw_txt_record: NSObjectProtocol {}
 public protocol OS_nw_ws_request: NSObjectProtocol {}
 public protocol OS_nw_ws_response: NSObjectProtocol {}
 
+final class NWLinuxCString {
+    private let ptr: UnsafeMutablePointer<CChar>
+
+    init(_ string: String = "") {
+        if let copied = strdup(string) {
+            ptr = copied
+        } else {
+            ptr = UnsafeMutablePointer<CChar>.allocate(capacity: 1)
+            ptr.initialize(to: 0)
+        }
+    }
+
+    deinit {
+        free(ptr)
+    }
+
+    var pointer: UnsafePointer<CChar> { UnsafePointer(ptr) }
+    var mutablePointer: UnsafeMutablePointer<CChar> { ptr }
+}
+
 // Concrete OS_OBJECT stand-ins for C functions that return existentials.
-final class _NWLinux_nw_advertise_descriptor: NSObject, OS_nw_advertise_descriptor {}
-final class _NWLinux_nw_browse_descriptor: NSObject, OS_nw_browse_descriptor {}
-final class _NWLinux_nw_browse_result: NSObject, OS_nw_browse_result {}
-final class _NWLinux_nw_browser: NSObject, OS_nw_browser {}
-final class _NWLinux_nw_connection: NSObject, OS_nw_connection {}
-final class _NWLinux_nw_connection_group: NSObject, OS_nw_connection_group {}
-final class _NWLinux_nw_content_context: NSObject, OS_nw_content_context {}
-final class _NWLinux_nw_data_transfer_report: NSObject, OS_nw_data_transfer_report {}
-final class _NWLinux_nw_endpoint: NSObject, OS_nw_endpoint, Sendable {}
-final class _NWLinux_nw_error: NSObject, OS_nw_error {}
-final class _NWLinux_nw_establishment_report: NSObject, OS_nw_establishment_report {}
+final class _NWLinux_nw_advertise_descriptor: NSObject, OS_nw_advertise_descriptor {
+    var applicationServiceName = NWLinuxCString()
+    var noAutoRename = false
+    var txtRecord: nw_txt_record_t?
+}
+
+final class _NWLinux_nw_browse_descriptor: NSObject, OS_nw_browse_descriptor {
+    var applicationServiceName: NWLinuxCString?
+    var bonjourType = NWLinuxCString()
+    var bonjourDomain = NWLinuxCString()
+    var includeTXTRecord = false
+}
+
+final class _NWLinux_nw_browse_result: NSObject, OS_nw_browse_result {
+    var endpoint: nw_endpoint_t?
+    var txtRecord: nw_txt_record_t?
+    var interfaces: [nw_interface_t] = []
+}
+
+final class _NWLinux_nw_browser: NSObject, OS_nw_browser {
+    var descriptor: nw_browse_descriptor_t?
+    var parameters: nw_parameters_t?
+    var queue: dispatch_queue_t?
+    var stateHandler: nw_browser_state_changed_handler_t?
+    var resultsHandler: nw_browser_browse_results_changed_handler_t?
+}
+
+final class _NWLinux_nw_connection: NSObject, OS_nw_connection {
+    var endpoint: nw_endpoint_t?
+    var parameters: nw_parameters_t?
+    var queue: dispatch_queue_t?
+    var descriptionText = NWLinuxCString()
+    var maximumDatagramSize: UInt32 = 0
+}
+
+final class _NWLinux_nw_connection_group: NSObject, OS_nw_connection_group {
+    var descriptor: nw_group_descriptor_t?
+    var parameters: nw_parameters_t?
+    var queue: dispatch_queue_t?
+    var stateHandler: nw_connection_group_state_changed_handler_t?
+    var receiveHandler: nw_connection_group_receive_handler_t?
+    var newConnectionHandler: nw_connection_group_new_connection_handler_t?
+    var started = false
+    var cancelled = false
+}
+
+final class _NWLinux_nw_content_context: NSObject, OS_nw_content_context {
+    var identifier = NWLinuxCString()
+    var expirationMilliseconds: UInt64 = 0
+    var isFinal = false
+    var relativePriority: Double = 0
+    var antecedent: nw_content_context_t?
+    var protocolMetadata: [nw_protocol_metadata_t] = []
+}
+
+final class _NWLinux_nw_data_transfer_report: NSObject, OS_nw_data_transfer_report {
+    var state = nw_data_transfer_report_state_collecting
+}
+
+final class _NWLinux_nw_endpoint: NSObject, OS_nw_endpoint, @unchecked Sendable {
+    var type = nw_endpoint_type_invalid
+    var hostname = NWLinuxCString()
+    var portString = NWLinuxCString()
+    var port: UInt16 = 0
+    var url = NWLinuxCString()
+    var addressString = NWLinuxCString()
+    var bonjourName = NWLinuxCString()
+    var bonjourType = NWLinuxCString()
+    var bonjourDomain = NWLinuxCString()
+    var txtRecord: nw_txt_record_t?
+    private let sockaddrHeap = UnsafeMutablePointer<sockaddr_storage>.allocate(capacity: 1)
+
+    override init() {
+        sockaddrHeap.initialize(to: sockaddr_storage())
+        super.init()
+    }
+
+    deinit {
+        sockaddrHeap.deinitialize(count: 1)
+        sockaddrHeap.deallocate()
+    }
+
+    var sockaddrPointer: UnsafePointer<sockaddr> {
+        UnsafeRawPointer(sockaddrHeap).assumingMemoryBound(to: sockaddr.self)
+    }
+
+    func storeSockaddr(_ address: UnsafePointer<sockaddr>) {
+        let family = Int32(address.pointee.sa_family)
+        let length: Int
+        if family == Int32(AF_INET6) {
+            length = MemoryLayout<sockaddr_in6>.size
+        } else {
+            length = MemoryLayout<sockaddr_in>.size
+        }
+        memset(sockaddrHeap, 0, MemoryLayout<sockaddr_storage>.size)
+        memcpy(sockaddrHeap, address, min(length, MemoryLayout<sockaddr_storage>.size))
+    }
+}
+
+final class _NWLinux_nw_error: NSObject, OS_nw_error {
+    var domain = nw_error_domain_posix
+    var code = Int32(POSIXErrorCode.EOPNOTSUPP.rawValue)
+}
+
+final class _NWLinux_nw_establishment_report: NSObject, OS_nw_establishment_report {
+    var durationMilliseconds: UInt64 = 0
+    var attemptStartedAfterMilliseconds: UInt64 = 0
+    var previousAttemptCount: UInt32 = 0
+    var proxyConfigured = false
+    var usedProxy = false
+    var proxyEndpoint: nw_endpoint_t?
+    var protocols: [(nw_protocol_definition_t, UInt64, UInt64)] = []
+    var resolutions: [(nw_report_resolution_source_t, UInt64, UInt32, nw_endpoint_t, nw_endpoint_t)] = []
+    var resolutionReports: [nw_resolution_report_t] = []
+}
 final class _NWLinux_nw_ethernet_channel: NSObject, OS_nw_ethernet_channel {}
-final class _NWLinux_nw_framer: NSObject, OS_nw_framer {}
-final class _NWLinux_nw_group_descriptor: NSObject, OS_nw_group_descriptor {}
-final class _NWLinux_nw_interface: NSObject, OS_nw_interface {}
+
+final class _NWLinux_nw_framer: NSObject, OS_nw_framer {
+    var options: nw_protocol_options_t?
+    var parameters: nw_parameters_t?
+    var localEndpoint: nw_endpoint_t?
+    var remoteEndpoint: nw_endpoint_t?
+    var input = Data()
+    var output = Data()
+    var inputOffset = 0
+    var ready = false
+    var failedCode: Int32?
+    var passThroughInput = false
+    var passThroughOutput = false
+    var wakeupMilliseconds: UInt64 = 0
+    var inputHandler: nw_framer_input_handler_t?
+    var outputHandler: nw_framer_output_handler_t?
+    var wakeupHandler: nw_framer_wakeup_handler_t?
+    var stopHandler: nw_framer_stop_handler_t?
+    var cleanupHandler: nw_framer_cleanup_handler_t?
+}
+
+final class _NWLinux_nw_group_descriptor: NSObject, OS_nw_group_descriptor {
+    var endpoints: [nw_endpoint_t] = []
+    var isMulticast = false
+    var disableUnicast = false
+    var specificSource: nw_endpoint_t?
+}
+
+final class _NWLinux_nw_interface: NSObject, OS_nw_interface {
+    var name = NWLinuxCString()
+    var index: UInt32 = 0
+    var type = nw_interface_type_other
+}
+
 final class _NWLinux_nw_listener: NSObject, OS_nw_listener {}
 final class _NWLinux_nw_object: NSObject, OS_nw_object {}
 final class _NWLinux_nw_parameters: NSObject, OS_nw_parameters {
@@ -473,12 +655,48 @@ final class _NWLinux_nw_parameters: NSObject, OS_nw_parameters {
     var localEndpoint: nw_endpoint_t?
     var requiredInterface: nw_interface_t?
     var privacyContext: nw_privacy_context_t?
+    var prohibitedInterfaces: [nw_interface_t] = []
 }
 final class _NWLinux_nw_path: NSObject, OS_nw_path {}
 final class _NWLinux_nw_path_monitor: NSObject, OS_nw_path_monitor {}
-final class _NWLinux_nw_privacy_context: NSObject, OS_nw_privacy_context {}
-final class _NWLinux_nw_protocol_definition: NSObject, OS_nw_protocol_definition {}
-final class _NWLinux_nw_protocol_metadata: NSObject, OS_nw_protocol_metadata {}
+final class _NWLinux_nw_privacy_context: NSObject, OS_nw_privacy_context {
+    var descriptionText = NWLinuxCString()
+    var proxies: [nw_proxy_config_t] = []
+    var loggingDisabled = false
+    var requireEncryptedNameResolution = false
+    var fallbackResolver: nw_resolver_config_t?
+    var cacheFlushed = false
+}
+final class _NWLinux_nw_protocol_definition: NSObject, OS_nw_protocol_definition {
+    var identifier = NWLinuxCString()
+}
+final class _NWLinux_nw_protocol_metadata: NSObject, OS_nw_protocol_metadata {
+    var kind = ""
+    var definition: nw_protocol_definition_t?
+    var objectValues: [String: Any] = [:]
+    var rawValues: [String: UnsafeMutableRawPointer] = [:]
+    var wsOpcode = nw_ws_opcode_t(rawValue: 0)
+    var wsCloseCode = nw_ws_close_code_t(rawValue: 0)
+    var wsServerResponse: nw_ws_response_t?
+    var pongHandler: nw_ws_pong_handler_t?
+    var applicationError: UInt64 = 0
+    var applicationErrorReason: NWLinuxCString?
+    var keepaliveInterval: UInt16 = 0
+    var localMaxStreamsBidirectional: UInt64 = 0
+    var localMaxStreamsUnidirectional: UInt64 = 0
+    var remoteIdleTimeout: UInt64 = 0
+    var remoteMaxStreamsBidirectional: UInt64 = 0
+    var remoteMaxStreamsUnidirectional: UInt64 = 0
+    var streamApplicationError: UInt64 = 0
+    var streamID: UInt64 = 0
+    var streamType: UInt8 = 0
+    var usableDatagramFrameSize: UInt16 = 0
+    var ipECN = nw_ip_ecn_flag_non_ect
+    var ipReceiveTime: UInt64 = 0
+    var ipServiceClass = nw_service_class_best_effort
+    var tcpAvailableReceive: UInt32 = 0
+    var tcpAvailableSend: UInt32 = 0
+}
 final class _NWLinux_nw_protocol_options: NSObject, OS_nw_protocol_options {
     var connectionTimeout: UInt32 = 0
     var disableAckStretching = false
@@ -497,17 +715,66 @@ final class _NWLinux_nw_protocol_options: NSObject, OS_nw_protocol_options {
     var retransmitConnectionDropTime: UInt32 = 0
     var retransmitFinDrop = false
     var preferNoChecksum = false
+    var isQUIC = false
+    var quicIdleTimeout: UInt32 = 0
+    var quicInitialMaxData: UInt64 = 0
+    var quicInitialMaxStreamDataBidirectionalLocal: UInt64 = 0
+    var quicInitialMaxStreamDataBidirectionalRemote: UInt64 = 0
+    var quicInitialMaxStreamDataUnidirectional: UInt64 = 0
+    var quicInitialMaxStreamsBidirectional: UInt64 = 0
+    var quicInitialMaxStreamsUnidirectional: UInt64 = 0
+    var quicMaxDatagramFrameSize: UInt16 = 0
+    var quicMaxUDPPayloadSize: UInt16 = 0
+    var quicStreamIsDatagram = false
+    var quicStreamIsUnidirectional = false
+    var quicALPN: [String] = []
+    var wsVersion = nw_ws_version_invalid
+    var wsAutoReplyPing = false
+    var wsSkipHandshake = false
+    var wsMaximumMessageSize: Int = 0
+    var wsHeaders: [(String, String)] = []
+    var wsSubprotocols: [String] = []
+    var framerObjectValues: [String: Any] = [:]
+    var framerDefinition: nw_protocol_definition_t?
+    var secProtocolOptions = sec_protocol_options()
 }
 final class _NWLinux_nw_protocol_stack: NSObject, OS_nw_protocol_stack {}
-final class _NWLinux_nw_proxy_config: NSObject, OS_nw_proxy_config {}
-final class _NWLinux_nw_relay_hop: NSObject, OS_nw_relay_hop {}
-final class _NWLinux_nw_resolution_report: NSObject, OS_nw_resolution_report {}
-final class _NWLinux_nw_resolver_config: NSObject, OS_nw_resolver_config {}
+final class _NWLinux_nw_proxy_config: NSObject, OS_nw_proxy_config {
+    var matchDomains: [String] = []
+    var excludedDomains: [String] = []
+    var failoverAllowed = false
+    var username = NWLinuxCString()
+    var password = NWLinuxCString()
+    var endpoint: nw_endpoint_t?
+}
+final class _NWLinux_nw_relay_hop: NSObject, OS_nw_relay_hop {
+    var headers: [(String, String)] = []
+    var http3Endpoint: nw_endpoint_t?
+    var http2Endpoint: nw_endpoint_t?
+}
+final class _NWLinux_nw_resolution_report: NSObject, OS_nw_resolution_report {
+    var preferredEndpoint: nw_endpoint_t?
+    var successfulEndpoint: nw_endpoint_t?
+    var endpointCount: UInt32 = 0
+    var milliseconds: UInt64 = 0
+    var protocolValue = nw_report_resolution_protocol_unknown
+    var source = nw_report_resolution_source_query
+}
+final class _NWLinux_nw_resolver_config: NSObject, OS_nw_resolver_config {
+    var servers: [nw_endpoint_t] = []
+}
 final class _NWLinux_nw_txt_record: NSObject, OS_nw_txt_record {
     var entries: [(key: String, value: Data)] = []
 }
-final class _NWLinux_nw_ws_request: NSObject, OS_nw_ws_request {}
-final class _NWLinux_nw_ws_response: NSObject, OS_nw_ws_response {}
+final class _NWLinux_nw_ws_request: NSObject, OS_nw_ws_request {
+    var headers: [(String, String)] = []
+    var subprotocols: [String] = []
+}
+final class _NWLinux_nw_ws_response: NSObject, OS_nw_ws_response {
+    var status = nw_ws_response_status_invalid
+    var selectedSubprotocol: NWLinuxCString?
+    var headers: [(String, String)] = []
+}
 
 // MARK: - C imported typealiases
 public typealias nw_advertise_descriptor_t = any OS_nw_advertise_descriptor

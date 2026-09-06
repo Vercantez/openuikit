@@ -1,0 +1,3 @@
+import TranslationUIProvider
+
+let frameworkLoadSmokeMarker = "TRANSLATIONUIPROVIDER_AGENT_RUNTIME_OK"

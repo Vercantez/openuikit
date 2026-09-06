@@ -611,7 +611,14 @@ public struct vImage_AffineTransform {
         self.tx = 0
         self.ty = 0
     }
-    public init(a: CGFloat, b: CGFloat, c: CGFloat, d: CGFloat, tx: CGFloat, ty: CGFloat) { self.init(); _ = a; _ = b; _ = c; _ = d; _ = tx; _ = ty }
+    public init(a: CGFloat, b: CGFloat, c: CGFloat, d: CGFloat, tx: CGFloat, ty: CGFloat) {
+        self.a = Float(a)
+        self.b = Float(b)
+        self.c = Float(c)
+        self.d = Float(d)
+        self.tx = Float(tx)
+        self.ty = Float(ty)
+    }
     public init(a: Float, b: Float, c: Float, d: Float, tx: Float, ty: Float) { self.init(); self.a = a; self.b = b; self.c = c; self.d = d; self.tx = tx; self.ty = ty }
 }
 
@@ -630,7 +637,14 @@ public struct vImage_AffineTransform_Double {
         self.tx = 0
         self.ty = 0
     }
-    public init(a: CGFloat, b: CGFloat, c: CGFloat, d: CGFloat, tx: CGFloat, ty: CGFloat) { self.init(); _ = a; _ = b; _ = c; _ = d; _ = tx; _ = ty }
+    public init(a: CGFloat, b: CGFloat, c: CGFloat, d: CGFloat, tx: CGFloat, ty: CGFloat) {
+        self.a = Double(a)
+        self.b = Double(b)
+        self.c = Double(c)
+        self.d = Double(d)
+        self.tx = Double(tx)
+        self.ty = Double(ty)
+    }
     public init(a: Double, b: Double, c: Double, d: Double, tx: Double, ty: Double) { self.init(); self.a = a; self.b = b; self.c = c; self.d = d; self.tx = tx; self.ty = ty }
 }
 
@@ -1768,6 +1782,19 @@ public struct DenseMatrix_Double {
         self.data = UnsafeMutablePointer<Double>.allocate(capacity: 1)
         self.rowCount = 0
     }
+    public init(
+        rowCount: Int32,
+        columnCount: Int32,
+        columnStride: Int32,
+        attributes: SparseAttributes_t,
+        data: UnsafeMutablePointer<Double>
+    ) {
+        self.rowCount = rowCount
+        self.columnCount = columnCount
+        self.columnStride = columnStride
+        self.attributes = attributes
+        self.data = data
+    }
 }
 
 public struct DenseMatrix_Float {
@@ -1782,6 +1809,19 @@ public struct DenseMatrix_Float {
         self.columnStride = 0
         self.data = UnsafeMutablePointer<Float>.allocate(capacity: 1)
         self.rowCount = 0
+    }
+    public init(
+        rowCount: Int32,
+        columnCount: Int32,
+        columnStride: Int32,
+        attributes: SparseAttributes_t,
+        data: UnsafeMutablePointer<Float>
+    ) {
+        self.rowCount = rowCount
+        self.columnCount = columnCount
+        self.columnStride = columnStride
+        self.attributes = attributes
+        self.data = data
     }
 }
 
@@ -1812,6 +1852,10 @@ public struct DenseVector_Double {
         self.count = 0
         self.data = UnsafeMutablePointer<Double>.allocate(capacity: 1)
     }
+    public init(count: Int32, data: UnsafeMutablePointer<Double>) {
+        self.count = count
+        self.data = data
+    }
 }
 
 public struct DenseVector_Float {
@@ -1820,6 +1864,10 @@ public struct DenseVector_Float {
     public init() {
         self.count = 0
         self.data = UnsafeMutablePointer<Float>.allocate(capacity: 1)
+    }
+    public init(count: Int32, data: UnsafeMutablePointer<Float>) {
+        self.count = count
+        self.data = data
     }
 }
 

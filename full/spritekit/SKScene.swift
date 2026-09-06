@@ -90,13 +90,24 @@ open class SKScene: SKNode {
     open func didFinishUpdate() { delegate?.didFinishUpdate(for: self) }
 
     open func convertPoint(fromView point: CGPoint) -> CGPoint {
+        let viewSize = view?.bounds.size ?? size
+        let mapping = SKViewport.mapping(sceneSize: size, viewSize: viewSize, mode: scaleMode)
+        let sceneX = (point.x - mapping.offsetX) / mapping.scaleX
+        let sceneYFromTop = (point.y - mapping.offsetY) / mapping.scaleY
         let origin = CGPoint(x: -size.width * anchorPoint.x, y: -size.height * anchorPoint.y)
-        return CGPoint(x: origin.x + point.x, y: origin.y + (size.height - point.y))
+        return CGPoint(x: origin.x + sceneX, y: origin.y + (size.height - sceneYFromTop))
     }
 
     open func convertPoint(toView point: CGPoint) -> CGPoint {
+        let viewSize = view?.bounds.size ?? size
+        let mapping = SKViewport.mapping(sceneSize: size, viewSize: viewSize, mode: scaleMode)
         let origin = CGPoint(x: -size.width * anchorPoint.x, y: -size.height * anchorPoint.y)
-        return CGPoint(x: point.x - origin.x, y: size.height - (point.y - origin.y))
+        let sceneX = point.x - origin.x
+        let sceneYFromBottom = point.y - origin.y
+        return CGPoint(
+            x: sceneX * mapping.scaleX + mapping.offsetX,
+            y: (size.height - sceneYFromBottom) * mapping.scaleY + mapping.offsetY
+        )
     }
 
     public override var frame: CGRect {
@@ -122,7 +133,8 @@ open class SKView: NSObject {
     public var preferredFramesPerSecond: Int = 60
     public var preferredFrameRate: Float = 60
     public var frameInterval: Int = 1
-    var _frame: CGRect = CGRect(x: 0, y: 0, width: 320, height: 480)
+    /// Linux host viewport. Apple `SKView` inherits `UIView.bounds`.
+    public var bounds: CGRect = CGRect(x: 0, y: 0, width: 320, height: 480)
 
     public override init() { super.init() }
 
@@ -133,6 +145,9 @@ open class SKView: NSObject {
         }
         self.scene = scene
         scene?.view = self
+        if let scene, scene.scaleMode == .resizeFill, scene.size != bounds.size {
+            scene.size = bounds.size
+        }
         scene?.didMove(to: self)
     }
 
@@ -154,10 +169,82 @@ open class SKView: NSObject {
     }
 
     public func texture(from node: SKNode, crop: CGRect) -> SKTexture? {
-        let size = crop.size
-        guard size.width > 0, size.height > 0 else { return nil }
-        let pixels = [UInt8](repeating: 0, count: Int(size.width) * Int(size.height) * 4)
-        return SKTexture(data: Data(pixels), size: size)
+        SKSoftwareRaster.capture(node: node, crop: crop)
+    }
+}
+
+/// CPU scene driver. Metal `init(device:)` / encode paths stay unavailable.
+open class SKRenderer: NSObject {
+    public var scene: SKScene?
+    public var ignoresSiblingOrder: Bool = false
+    public var shouldCullNonVisibleNodes: Bool = true
+    public var showsDrawCount: Bool = false
+    public var showsFields: Bool = false
+    public var showsNodeCount: Bool = false
+    public var showsPhysics: Bool = false
+    public var showsQuadCount: Bool = false
+
+    public override init() { super.init() }
+
+    public func update(atTime currentTime: TimeInterval) {
+        scene?.update(currentTime)
+    }
+}
+
+enum SKSoftwareRaster {
+    static func capture(node: SKNode, crop: CGRect) -> SKTexture? {
+        let width = max(1, Int(crop.width.rounded(.down)))
+        let height = max(1, Int(crop.height.rounded(.down)))
+        guard crop.width > 0, crop.height > 0 else { return nil }
+        var pixels = [UInt8](repeating: 0, count: width * height * 4)
+        let space = node.parent ?? node
+        func fill(_ rect: CGRect, color: SKColor) {
+            let (red, green, blue, alpha) = sk_colorBytes(color)
+            if alpha == 0 { return }
+            let x0 = max(0, Int((rect.minX - crop.minX).rounded(.down)))
+            let y0 = max(0, Int((rect.minY - crop.minY).rounded(.down)))
+            let x1 = min(width, Int((rect.maxX - crop.minX).rounded(.up)))
+            let y1 = min(height, Int((rect.maxY - crop.minY).rounded(.up)))
+            if x0 >= x1 || y0 >= y1 { return }
+            for y in y0..<y1 {
+                for x in x0..<x1 {
+                    let index = ((height - 1 - y) * width + x) * 4
+                    pixels[index] = red
+                    pixels[index + 1] = green
+                    pixels[index + 2] = blue
+                    pixels[index + 3] = alpha
+                }
+            }
+        }
+        func walk(_ current: SKNode) {
+            if current.isHidden { return }
+            let corners = sk_rectCorners(current.frame)
+            let converted = corners.map { corner -> CGPoint in
+                guard let parent = current.parent else { return corner }
+                let world = parent._localToWorld(corner)
+                return space._worldToLocal(world)
+            }
+            let xs = converted.map(\.x)
+            let ys = converted.map(\.y)
+            if let minX = xs.min(), let maxX = xs.max(), let minY = ys.min(), let maxY = ys.max() {
+                let box = CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
+                if let sprite = current as? SKSpriteNode {
+                    fill(box, color: sprite.color)
+                } else if let shape = current as? SKShapeNode {
+                    fill(box, color: shape.fillColor)
+                }
+            }
+            let children = ignoresSiblingOrder(current)
+            for child in children {
+                walk(child)
+            }
+        }
+        walk(node)
+        return SKTexture(data: Data(pixels), size: CGSize(width: CGFloat(width), height: CGFloat(height)))
+    }
+
+    private static func ignoresSiblingOrder(_ node: SKNode) -> [SKNode] {
+        node.children.sorted { $0.zPosition < $1.zPosition }
     }
 }
 
@@ -217,9 +304,35 @@ open class SKCameraNode: SKNode {
 
     public func containedNodeSet() -> Set<SKNode> {
         guard let scene else { return [] }
+        let halfWidth = scene.size.width / (2 * max(abs(xScale), 0.0001))
+        let halfHeight = scene.size.height / (2 * max(abs(yScale), 0.0001))
+        let worldCamera = parent.map { $0._localToWorld(position) } ?? position
+        let visible = CGRect(
+            x: worldCamera.x - halfWidth,
+            y: worldCamera.y - halfHeight,
+            width: halfWidth * 2,
+            height: halfHeight * 2
+        )
         var set: Set<SKNode> = []
+        func worldFrame(_ node: SKNode) -> CGRect {
+            let world = sk_rectCorners(node.frame).map { corner -> CGPoint in
+                if let parent = node.parent { return parent._localToWorld(corner) }
+                return corner
+            }
+            let xs = world.map(\.x)
+            let ys = world.map(\.y)
+            return CGRect(
+                x: xs.min() ?? 0,
+                y: ys.min() ?? 0,
+                width: (xs.max() ?? 0) - (xs.min() ?? 0),
+                height: (ys.max() ?? 0) - (ys.min() ?? 0)
+            )
+        }
         func walk(_ node: SKNode) {
-            set.insert(node)
+            if node !== scene, node.isHidden { return }
+            if visible.intersects(worldFrame(node)) {
+                set.insert(node)
+            }
             for child in node.children { walk(child) }
         }
         walk(scene)

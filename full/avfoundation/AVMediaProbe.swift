@@ -23,6 +23,8 @@ struct AVLocalMediaTrack {
 
 struct AVLocalMediaProbe {
     var duration: CMTime = .invalid
+    var preferredRate: Float = 1
+    var preferredVolume: Float = 1
     var preferredTransform: CGAffineTransform = .identity
     var majorBrand: String = ""
     var tracks: [AVLocalMediaTrack] = []
@@ -40,6 +42,10 @@ struct AVLocalMediaProbe {
         guard let data = try? Data(contentsOf: url, options: [.mappedIfSafe]) else {
             return nil
         }
+        return probe(data: data)
+    }
+
+    static func probe(data: Data) -> AVLocalMediaProbe? {
         if data.count < 12 { return nil }
         if data.starts(with: Data([0x52, 0x49, 0x46, 0x46])) {
             return parseWAV(data)
@@ -150,7 +156,10 @@ private func parseISOBMFF(_ data: Data) -> AVLocalMediaProbe? {
     }
     let moovBoxes = AVISOBoxParser.boxes(in: moov.payload)
     if let mvhd = moovBoxes.first(where: { $0.type == "mvhd" }) {
-        probe.duration = parseMVHD(mvhd.payload)
+        let header = parseMVHD(mvhd.payload)
+        probe.duration = header.duration
+        probe.preferredRate = header.preferredRate
+        probe.preferredVolume = header.preferredVolume
     }
     for trak in moovBoxes where trak.type == "trak" {
         if let track = parseTrak(trak.payload) {
@@ -166,21 +175,35 @@ private func parseISOBMFF(_ data: Data) -> AVLocalMediaProbe? {
     return probe
 }
 
-private func parseMVHD(_ payload: Data) -> CMTime {
-    guard let versionFlags = AVISOBoxParser.u32(payload, 0) else { return .invalid }
+private func parseMVHD(_ payload: Data) -> (duration: CMTime, preferredRate: Float, preferredVolume: Float) {
+    guard let versionFlags = AVISOBoxParser.u32(payload, 0) else {
+        return (.invalid, 1, 1)
+    }
     let version = versionFlags >> 24
     if version == 1 {
         guard let timescale = AVISOBoxParser.u32(payload, 20),
               let duration = AVISOBoxParser.u64(payload, 24),
               timescale > 0
-        else { return .invalid }
-        return CMTime(value: CMTimeValue(duration), timescale: CMTimeScale(timescale))
+        else { return (.invalid, 1, 1) }
+        let rate = AVISOBoxParser.u32(payload, 32).map { Float($0) / 65536 } ?? 1
+        let volume = AVISOBoxParser.u16(payload, 36).map { Float($0) / 256 } ?? 1
+        return (
+            CMTime(value: CMTimeValue(duration), timescale: CMTimeScale(timescale)),
+            rate,
+            volume
+        )
     }
     guard let timescale = AVISOBoxParser.u32(payload, 12),
           let duration = AVISOBoxParser.u32(payload, 16),
           timescale > 0
-    else { return .invalid }
-    return CMTime(value: CMTimeValue(duration), timescale: CMTimeScale(timescale))
+    else { return (.invalid, 1, 1) }
+    let rate = AVISOBoxParser.u32(payload, 20).map { Float($0) / 65536 } ?? 1
+    let volume = AVISOBoxParser.u16(payload, 24).map { Float($0) / 256 } ?? 1
+    return (
+        CMTime(value: CMTimeValue(duration), timescale: CMTimeScale(timescale)),
+        rate,
+        volume
+    )
 }
 
 private func parseTrak(_ payload: Data) -> AVLocalMediaTrack? {
@@ -208,6 +231,9 @@ private func parseTrak(_ payload: Data) -> AVLocalMediaTrack? {
     }
     if let stts = sampleBoxes.first(where: { $0.type == "stts" }) {
         parseSTTS(stts.payload, into: &track)
+    }
+    if let stsz = sampleBoxes.first(where: { $0.type == "stsz" }) {
+        parseSTSZ(stsz.payload, into: &track)
     }
     return track
 }
@@ -336,6 +362,25 @@ private func isoBox(type: String, payload: Data) -> Data {
     data.append(contentsOf: Array(type.utf8.prefix(4)))
     data.append(payload)
     return data
+}
+
+private func parseSTSZ(_ payload: Data, into track: inout AVLocalMediaTrack) {
+    guard let sampleSize = AVISOBoxParser.u32(payload, 4),
+          let sampleCount = AVISOBoxParser.u32(payload, 8)
+    else { return }
+    if sampleSize != 0 {
+        track.totalSampleDataLength = Int64(sampleSize) * Int64(sampleCount)
+        return
+    }
+    var total: Int64 = 0
+    var offset = 12
+    var remaining = Int(sampleCount)
+    while remaining > 0, let size = AVISOBoxParser.u32(payload, offset) {
+        total += Int64(size)
+        offset += 4
+        remaining -= 1
+    }
+    track.totalSampleDataLength = total
 }
 
 private func parseSTTS(_ payload: Data, into track: inout AVLocalMediaTrack) {

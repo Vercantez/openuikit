@@ -130,22 +130,111 @@ open class HTTPURLResponse: URLResponse, @unchecked Sendable {
         return nil
     }
 
+    open override var suggestedFilename: String? {
+        if value(forHTTPHeaderField: "Content-Disposition") != nil {
+            if let fromHeader = Self._contentDispositionFilename(self), !fromHeader.isEmpty {
+                return fromHeader
+            }
+            // MEASURED 2026-09-06: Content-Disposition without a filename
+            // yields "Unknown", not the URL's last path component.
+            return "Unknown"
+        }
+        let base = super.suggestedFilename ?? "Unknown"
+        if base == "Unknown" { return base }
+        // MEASURED 2026-09-06 Apple HTTPURLResponse.suggestedFilename on macOS 26:
+        // text/html on b.txt → b.txt.html; application/json on data → data.json;
+        // image/png on photo.jpg → photo.jpg.png. Append the MIME's preferred
+        // extension when it is not already the last path extension.
+        guard let ext = Self._extension(forMIME: mimeType) else { return base }
+        let current: String?
+        if let dot = base.lastIndex(of: "."), dot != base.startIndex {
+            current = String(base[base.index(after: dot)...])
+        } else {
+            current = nil
+        }
+        if current?.lowercased() == ext { return base }
+        return base + "." + ext
+    }
+
     open class func localizedString(forStatusCode statusCode: Int) -> String {
+        // MEASURED 2026-09-06 Apple HTTPURLResponse.localizedString on macOS 26.
         switch statusCode {
+        case 100: return "continue"
+        case 101: return "switching protocols"
         case 200: return "no error"
         case 201: return "created"
         case 204: return "no content"
+        case 206: return "partial content"
+        case 300: return "multiple choices"
         case 301: return "moved permanently"
         case 302: return "found"
+        case 303: return "see other"
         case 304: return "not modified"
+        case 307: return "temporarily redirected"
+        case 308: return "redirected"
         case 400: return "bad request"
         case 401: return "unauthorized"
         case 403: return "forbidden"
         case 404: return "not found"
+        case 405: return "method not allowed"
+        case 408: return "request timed out"
+        case 409: return "conflict"
+        case 410: return "no longer exists"
         case 500: return "internal server error"
+        case 501: return "unimplemented"
         case 502: return "bad gateway"
         case 503: return "service unavailable"
+        case 504: return "gateway timed out"
+        case 400...499: return "client error"
         default: return "server response"
+        }
+    }
+
+    private static func _contentDispositionFilename(_ response: HTTPURLResponse) -> String? {
+        guard let header = response.value(forHTTPHeaderField: "Content-Disposition") else {
+            return nil
+        }
+        var filename: String?
+        var encoded: String?
+        let pieces = header.split(separator: ";", omittingEmptySubsequences: true)
+        for piece in pieces.dropFirst() {
+            let text = String(piece).trimmingCharacters(in: .whitespacesAndNewlines)
+            guard let equal = text.firstIndex(of: "=") else { continue }
+            let key = text[..<equal].trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            var value = String(text[text.index(after: equal)...])
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            if value.hasPrefix("\""), value.hasSuffix("\""), value.count >= 2 {
+                value = String(value.dropFirst().dropLast())
+            }
+            if key == "filename*" {
+                encoded = _rfc5987(value)
+            } else if key == "filename" {
+                filename = value
+            }
+        }
+        let chosen = encoded ?? filename
+        if let chosen, !chosen.isEmpty { return chosen }
+        if pieces.count >= 1 { return nil }
+        return nil
+    }
+
+    private static func _rfc5987(_ value: String) -> String? {
+        // charset''percent-encoded. MEASURED filename*=UTF-8''na%20me.txt → "na me.txt"
+        guard let first = value.firstIndex(of: "'"),
+              let second = value[value.index(after: first)...].firstIndex(of: "'") else {
+            return nil
+        }
+        let encoded = String(value[value.index(after: second)...])
+        return encoded.removingPercentEncoding ?? encoded
+    }
+
+    private static func _extension(forMIME mime: String?) -> String? {
+        switch mime {
+        case "text/html": return "html"
+        case "application/json": return "json"
+        case "image/png": return "png"
+        case "application/pdf": return "pdf"
+        default: return nil
         }
     }
 
@@ -669,10 +758,206 @@ open class URLProtocol: NSObject, @unchecked Sendable {
     open class func requestIsCacheEquivalent(_ a: URLRequest, to b: URLRequest) -> Bool { a == b }
     open func startLoading() {}
     open func stopLoading() {}
+
+    private static let registryLock = NSLock()
+    private static var registeredTypes: [URLProtocol.Type] = []
+
+    open class func registerClass(_ protocolClass: AnyClass) -> Bool {
+        guard let type = protocolClass as? URLProtocol.Type else { return false }
+        return registryLock.withLock {
+            if registeredTypes.contains(where: { $0 == type }) { return false }
+            registeredTypes.append(type)
+            return true
+        }
+    }
+
+    open class func unregisterClass(_ protocolClass: AnyClass) {
+        guard let type = protocolClass as? URLProtocol.Type else { return }
+        registryLock.withLock {
+            registeredTypes.removeAll { $0 == type }
+        }
+    }
+
+    fileprivate static func _registered() -> [URLProtocol.Type] {
+        registryLock.withLock { registeredTypes }
+    }
 }
 
-public protocol URLSessionDelegate: AnyObject, Sendable {}
-public protocol URLSessionTaskDelegate: URLSessionDelegate {}
+public enum URLSessionResponseDisposition: Int, Sendable {
+    case cancel = 0
+    case allow = 1
+    case becomeDownload = 2
+    case becomeStream = 3
+}
+
+public enum URLSessionAuthChallengeDisposition: Int, Sendable {
+    case useCredential = 0
+    case performDefaultHandling = 1
+    case cancelAuthenticationChallenge = 2
+    case rejectProtectionSpace = 3
+}
+
+public protocol URLSessionDelegate: AnyObject, Sendable {
+    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: (any Error)?)
+}
+
+public extension URLSessionDelegate {
+    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: (any Error)?) {}
+}
+
+public protocol URLSessionTaskDelegate: URLSessionDelegate {
+    func urlSession(
+        _ session: URLSession,
+        task: URLSessionTask,
+        didCompleteWithError error: (any Error)?
+    )
+    func urlSession(
+        _ session: URLSession,
+        task: URLSessionTask,
+        willPerformHTTPRedirection response: HTTPURLResponse,
+        newRequest request: URLRequest,
+        completionHandler: @escaping @Sendable (URLRequest?) -> Void
+    )
+}
+
+public extension URLSessionTaskDelegate {
+    func urlSession(
+        _ session: URLSession,
+        task: URLSessionTask,
+        didCompleteWithError error: (any Error)?
+    ) {}
+    func urlSession(
+        _ session: URLSession,
+        task: URLSessionTask,
+        willPerformHTTPRedirection response: HTTPURLResponse,
+        newRequest request: URLRequest,
+        completionHandler: @escaping @Sendable (URLRequest?) -> Void
+    ) {
+        completionHandler(request)
+    }
+}
+
+public protocol URLSessionDataDelegate: URLSessionTaskDelegate {
+    func urlSession(
+        _ session: URLSession,
+        dataTask: URLSessionDataTask,
+        didReceive data: Data
+    )
+    func urlSession(
+        _ session: URLSession,
+        dataTask: URLSessionDataTask,
+        didReceive response: URLResponse,
+        completionHandler: @escaping @Sendable (URLSessionResponseDisposition) -> Void
+    )
+}
+
+public extension URLSessionDataDelegate {
+    func urlSession(
+        _ session: URLSession,
+        dataTask: URLSessionDataTask,
+        didReceive data: Data
+    ) {}
+    func urlSession(
+        _ session: URLSession,
+        dataTask: URLSessionDataTask,
+        didReceive response: URLResponse,
+        completionHandler: @escaping @Sendable (URLSessionResponseDisposition) -> Void
+    ) {
+        completionHandler(.allow)
+    }
+}
+
+public protocol URLSessionDownloadDelegate: URLSessionTaskDelegate {
+    func urlSession(
+        _ session: URLSession,
+        downloadTask: URLSessionDownloadTask,
+        didFinishDownloadingTo location: URL
+    )
+}
+
+public extension URLSessionDownloadDelegate {
+    func urlSession(
+        _ session: URLSession,
+        downloadTask: URLSessionDownloadTask,
+        didFinishDownloadingTo location: URL
+    ) {}
+}
+
+open class URLProtectionSpace: NSObject, @unchecked Sendable {
+    open var host: String
+    open var port: Int
+    open var `protocol`: String?
+    open var realm: String?
+    open var authenticationMethod: String
+
+    public init(
+        host: String,
+        port: Int,
+        protocol: String?,
+        realm: String?,
+        authenticationMethod: String?
+    ) {
+        self.host = host
+        self.port = port
+        self.protocol = `protocol`
+        self.realm = realm
+        self.authenticationMethod = authenticationMethod ?? NSURLAuthenticationMethodDefault
+        super.init()
+    }
+}
+
+public let NSURLAuthenticationMethodDefault = "NSURLAuthenticationMethodDefault"
+public let NSURLAuthenticationMethodHTTPBasic = "NSURLAuthenticationMethodHTTPBasic"
+public let NSURLAuthenticationMethodHTTPDigest = "NSURLAuthenticationMethodHTTPDigest"
+public let NSURLAuthenticationMethodNTLM = "NSURLAuthenticationMethodNTLM"
+public let NSURLAuthenticationMethodNegotiate = "NSURLAuthenticationMethodNegotiate"
+public let NSURLAuthenticationMethodClientCertificate = "NSURLAuthenticationMethodClientCertificate"
+public let NSURLAuthenticationMethodServerTrust = "NSURLAuthenticationMethodServerTrust"
+
+open class URLCredential: NSObject, @unchecked Sendable {
+    public enum Persistence: UInt, Sendable {
+        case none = 0
+        case forSession = 1
+        case permanent = 2
+        case synchronizable = 3
+    }
+
+    open var user: String?
+    open var password: String?
+    open var persistence: Persistence
+
+    public init(user: String, password: String, persistence: Persistence) {
+        self.user = user
+        self.password = password
+        self.persistence = persistence
+        super.init()
+    }
+}
+
+open class URLAuthenticationChallenge: NSObject, @unchecked Sendable {
+    open var protectionSpace: URLProtectionSpace
+    open var proposedCredential: URLCredential?
+    open var previousFailureCount: Int
+    open var failureResponse: URLResponse?
+    open var error: (any Error)?
+
+    public init(
+        protectionSpace: URLProtectionSpace,
+        proposedCredential: URLCredential?,
+        previousFailureCount: Int,
+        failureResponse: URLResponse?,
+        error: (any Error)?,
+        sender: Any? = nil
+    ) {
+        self.protectionSpace = protectionSpace
+        self.proposedCredential = proposedCredential
+        self.previousFailureCount = previousFailureCount
+        self.failureResponse = failureResponse
+        self.error = error
+        super.init()
+        _ = sender
+    }
+}
 
 open class URLSessionConfiguration: NSObject, @unchecked Sendable {
     open var requestCachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy
@@ -683,7 +968,20 @@ open class URLSessionConfiguration: NSObject, @unchecked Sendable {
     open var protocolClasses: [AnyClass]? = []
     open var httpShouldSetCookies: Bool = true
     open var httpAdditionalHeaders: [AnyHashable: Any]?
-
+    // MEASURED 2026-09-06 Apple URLSessionConfiguration.default on macOS 26:
+    // waitsForConnectivity=false, httpMaximumConnectionsPerHost=6,
+    // httpCookieAcceptPolicy rawValue 2 (onlyFromMainDocumentDomain).
+    open var waitsForConnectivity: Bool = false
+    open var httpMaximumConnectionsPerHost: Int = 6
+    open var httpCookieAcceptPolicy: HTTPCookieStorage.AcceptPolicy = .onlyFromMainDocumentDomain
+    open var httpShouldUsePipelining: Bool = false
+    open var allowsCellularAccess: Bool = true
+    open var allowsExpensiveNetworkAccess: Bool = true
+    open var allowsConstrainedNetworkAccess: Bool = true
+    open var identifier: String?
+    open var isDiscretionary: Bool = false
+    open var sessionSendsLaunchEvents: Bool = false
+    fileprivate var isBackground: Bool = false
     private let ephemeralStorage: Bool
 
     private init(ephemeral: Bool) {
@@ -703,6 +1001,17 @@ open class URLSessionConfiguration: NSObject, @unchecked Sendable {
         URLSessionConfiguration(ephemeral: true)
     }
 
+    open class func background(withIdentifier identifier: String) -> URLSessionConfiguration {
+        // MEASURED 2026-09-06 Apple URLSessionConfiguration.background(withIdentifier:)
+        // succeeds and stores the identifier. nsurlsessiond is not present on
+        // the guest; using the session fail-closes with URLError.cannotLoadFromNetwork.
+        let result = URLSessionConfiguration(ephemeral: true)
+        result.identifier = identifier
+        result.isBackground = true
+        result.sessionSendsLaunchEvents = true
+        return result
+    }
+
     fileprivate func copied() -> URLSessionConfiguration {
         let result = URLSessionConfiguration(ephemeral: ephemeralStorage)
         result.requestCachePolicy = requestCachePolicy
@@ -713,6 +1022,17 @@ open class URLSessionConfiguration: NSObject, @unchecked Sendable {
         result.protocolClasses = protocolClasses
         result.httpShouldSetCookies = httpShouldSetCookies
         result.httpAdditionalHeaders = httpAdditionalHeaders
+        result.waitsForConnectivity = waitsForConnectivity
+        result.httpMaximumConnectionsPerHost = httpMaximumConnectionsPerHost
+        result.httpCookieAcceptPolicy = httpCookieAcceptPolicy
+        result.httpShouldUsePipelining = httpShouldUsePipelining
+        result.allowsCellularAccess = allowsCellularAccess
+        result.allowsExpensiveNetworkAccess = allowsExpensiveNetworkAccess
+        result.allowsConstrainedNetworkAccess = allowsConstrainedNetworkAccess
+        result.identifier = identifier
+        result.isDiscretionary = isDiscretionary
+        result.sessionSendsLaunchEvents = sessionSendsLaunchEvents
+        result.isBackground = isBackground
         return result
     }
 }
@@ -1004,12 +1324,144 @@ private final class _URLTransportOperation: @unchecked Sendable {
     }
 }
 
+open class URLSessionTask: NSObject, @unchecked Sendable {
+    public enum State: Int, Sendable {
+        case running = 0
+        case suspended = 1
+        case canceling = 2
+        case completed = 3
+    }
+
+    public static let defaultPriority: Float = 0.5
+    public static let lowPriority: Float = 0.25
+    public static let highPriority: Float = 0.75
+
+    open private(set) var taskIdentifier: Int
+    open private(set) var originalRequest: URLRequest?
+    open private(set) var currentRequest: URLRequest?
+    open private(set) var response: URLResponse?
+    open private(set) var error: (any Error)?
+    open private(set) var countOfBytesReceived: Int64 = 0
+    open private(set) var countOfBytesSent: Int64 = 0
+    open private(set) var countOfBytesExpectedToReceive: Int64 = 0
+    open private(set) var countOfBytesExpectedToSend: Int64 = 0
+    open var taskDescription: String?
+    open var priority: Float = URLSessionTask.defaultPriority
+    private let lock = NSLock()
+    private var storedState: State = .suspended
+    fileprivate weak var session: URLSession?
+    fileprivate var completion: (@Sendable (Data?, URLResponse?, (any Error)?) -> Void)?
+    fileprivate var downloadCompletion: (@Sendable (URL?, URLResponse?, (any Error)?) -> Void)?
+    private var work: Task<Void, Never>?
+
+    // MEASURED 2026-09-06 Apple URLSessionTask on macOS 26: new tasks are
+    // State.suspended (rawValue 1), priority 0.5, byte counts 0.
+    fileprivate init(session: URLSession, request: URLRequest, identifier: Int) {
+        self.session = session
+        self.originalRequest = request
+        self.currentRequest = request
+        self.taskIdentifier = identifier
+        super.init()
+    }
+
+    open var state: State { lock.withLock { storedState } }
+
+    open func resume() {
+        let shouldStart = lock.withLock { () -> Bool in
+            guard storedState == .suspended else { return false }
+            storedState = .running
+            return true
+        }
+        guard shouldStart else { return }
+        work = Task { [weak self] in
+            guard let self else { return }
+            await self.session?._performTask(self)
+        }
+    }
+
+    open func suspend() {
+        lock.withLock {
+            if storedState == .running { storedState = .suspended }
+        }
+        work?.cancel()
+    }
+
+    open func cancel() {
+        lock.withLock { storedState = .canceling }
+        work?.cancel()
+        let cancelled = URLError(.cancelled, url: originalRequest?.url)
+        finish(data: nil, response: nil, file: nil, error: cancelled)
+    }
+
+    fileprivate func finish(
+        data: Data?, response: URLResponse?, file: URL?, error: (any Error)?
+    ) {
+        // `var`, not `let`: the x86 verify box's toolchain refuses initialising a
+        // `let` from inside the `withLock` closure ("cannot assign to value:
+        // 'handler' is a 'let' constant", verify82) although Swift 6.2.4 on the
+        // Mac and in the Docker leg accepted it.
+        var handler: (@Sendable (Data?, URLResponse?, (any Error)?) -> Void)? = nil
+        var downloadHandler: (@Sendable (URL?, URLResponse?, (any Error)?) -> Void)? = nil
+        lock.withLock {
+            storedState = .completed
+            self.response = response
+            self.error = error
+            if let data { countOfBytesReceived = Int64(data.count) }
+            if let response = response as? HTTPURLResponse {
+                countOfBytesExpectedToReceive = response.expectedContentLength
+            }
+            handler = completion
+            downloadHandler = downloadCompletion
+            completion = nil
+            downloadCompletion = nil
+        }
+        session?._onDelegateQueue {
+            handler?(data, response, error)
+            downloadHandler?(file, response, error)
+            if let session = self.session {
+                if let dataTask = self as? URLSessionDataTask,
+                   let dataDelegate = session.delegate as? URLSessionDataDelegate {
+                    if let response {
+                        dataDelegate.urlSession(
+                            session, dataTask: dataTask, didReceive: response
+                        ) { _ in }
+                    }
+                    if let data, error == nil {
+                        dataDelegate.urlSession(session, dataTask: dataTask, didReceive: data)
+                    }
+                }
+                if let downloadTask = self as? URLSessionDownloadTask,
+                   let downloadDelegate = session.delegate as? URLSessionDownloadDelegate,
+                   let file, error == nil {
+                    downloadDelegate.urlSession(
+                        session, downloadTask: downloadTask, didFinishDownloadingTo: file
+                    )
+                }
+                if let taskDelegate = session.delegate as? URLSessionTaskDelegate {
+                    taskDelegate.urlSession(session, task: self, didCompleteWithError: error)
+                }
+            }
+        }
+    }
+}
+
+open class URLSessionDataTask: URLSessionTask, @unchecked Sendable {}
+open class URLSessionUploadTask: URLSessionDataTask, @unchecked Sendable {}
+open class URLSessionDownloadTask: URLSessionTask, @unchecked Sendable {}
+open class URLSessionStreamTask: URLSessionTask, @unchecked Sendable {}
+
 open class URLSession: NSObject, @unchecked Sendable {
+    public typealias ResponseDisposition = URLSessionResponseDisposition
+    public typealias AuthChallengeDisposition = URLSessionAuthChallengeDisposition
+
     public static let shared = URLSession(configuration: URLSessionConfiguration.default)
 
     open private(set) var configuration: URLSessionConfiguration
     open private(set) var delegate: (any URLSessionDelegate)?
     open private(set) var delegateQueue: OperationQueue
+    private let taskLock = NSLock()
+    private var nextTaskIdentifier = 1
+    private var invalidated = false
 
     public init(
         configuration: URLSessionConfiguration,
@@ -1026,6 +1478,16 @@ open class URLSession: NSObject, @unchecked Sendable {
         for request: URLRequest,
         delegate: (any URLSessionTaskDelegate)? = nil
     ) async throws -> (Data, URLResponse) {
+        if taskLock.withLock({ invalidated }) {
+            throw URLError(.cancelled, url: request.url)
+        }
+        if configuration.isBackground {
+            throw URLError(
+                .cannotLoadFromNetwork,
+                url: request.url,
+                detail: "background URLSession is not available"
+            )
+        }
         var request = try _prepared(request)
         let originalRequest = request
         let policy = request.cachePolicy == .useProtocolCachePolicy
@@ -1050,6 +1512,7 @@ open class URLSession: NSObject, @unchecked Sendable {
             return (output.0, output.1)
         }
 
+        let redirectDelegate = delegate ?? (self.delegate as? URLSessionTaskDelegate)
         var redirectCount = 0
         while true {
             request = _requestByAddingCookies(request)
@@ -1063,10 +1526,11 @@ open class URLSession: NSObject, @unchecked Sendable {
             ) else { throw URLError(.cannotParseResponse, url: request.url) }
 
             _storeResponseCookies(result.headerPairs, for: result.effectiveURL)
-            if let redirected = _redirectRequest(
+            if let redirected = _followRedirect(
                 from: request,
                 response: response,
-                headerPairs: result.headerPairs
+                headerPairs: result.headerPairs,
+                redirectDelegate: redirectDelegate
             ) {
                 redirectCount += 1
                 guard redirectCount <= 20 else {
@@ -1094,6 +1558,196 @@ open class URLSession: NSObject, @unchecked Sendable {
         try await data(for: URLRequest(url: url), delegate: delegate)
     }
 
+    public func upload(
+        for request: URLRequest,
+        from bodyData: Data,
+        delegate: (any URLSessionTaskDelegate)? = nil
+    ) async throws -> (Data, URLResponse) {
+        var request = request
+        request.httpBody = bodyData
+        return try await data(for: request, delegate: delegate)
+    }
+
+    public func upload(
+        for request: URLRequest,
+        fromFile fileURL: URL,
+        delegate: (any URLSessionTaskDelegate)? = nil
+    ) async throws -> (Data, URLResponse) {
+        let body = try Data(contentsOf: fileURL)
+        return try await upload(for: request, from: body, delegate: delegate)
+    }
+
+    public func download(
+        for request: URLRequest,
+        delegate: (any URLSessionTaskDelegate)? = nil
+    ) async throws -> (URL, URLResponse) {
+        let (data, response) = try await self.data(for: request, delegate: delegate)
+        return (try _writeDownload(data), response)
+    }
+
+    public func download(
+        from url: URL,
+        delegate: (any URLSessionTaskDelegate)? = nil
+    ) async throws -> (URL, URLResponse) {
+        try await download(for: URLRequest(url: url), delegate: delegate)
+    }
+
+    open func dataTask(with request: URLRequest) -> URLSessionDataTask {
+        _makeDataTask(request, completion: nil)
+    }
+
+    open func dataTask(with url: URL) -> URLSessionDataTask {
+        dataTask(with: URLRequest(url: url))
+    }
+
+    open func dataTask(
+        with request: URLRequest,
+        completionHandler: @escaping @Sendable (Data?, URLResponse?, (any Error)?) -> Void
+    ) -> URLSessionDataTask {
+        _makeDataTask(request, completion: completionHandler)
+    }
+
+    open func dataTask(
+        with url: URL,
+        completionHandler: @escaping @Sendable (Data?, URLResponse?, (any Error)?) -> Void
+    ) -> URLSessionDataTask {
+        dataTask(with: URLRequest(url: url), completionHandler: completionHandler)
+    }
+
+    open func uploadTask(with request: URLRequest, from bodyData: Data) -> URLSessionUploadTask {
+        var request = request
+        request.httpBody = bodyData
+        return _makeUploadTask(request, completion: nil)
+    }
+
+    open func uploadTask(
+        with request: URLRequest,
+        from bodyData: Data?,
+        completionHandler: @escaping @Sendable (Data?, URLResponse?, (any Error)?) -> Void
+    ) -> URLSessionUploadTask {
+        var request = request
+        request.httpBody = bodyData
+        return _makeUploadTask(request, completion: completionHandler)
+    }
+
+    open func uploadTask(with request: URLRequest, fromFile fileURL: URL) -> URLSessionUploadTask {
+        var request = request
+        request.httpBody = try? Data(contentsOf: fileURL)
+        return _makeUploadTask(request, completion: nil)
+    }
+
+    open func downloadTask(with request: URLRequest) -> URLSessionDownloadTask {
+        _makeDownloadTask(request, completion: nil)
+    }
+
+    open func downloadTask(with url: URL) -> URLSessionDownloadTask {
+        downloadTask(with: URLRequest(url: url))
+    }
+
+    open func downloadTask(
+        with request: URLRequest,
+        completionHandler: @escaping @Sendable (URL?, URLResponse?, (any Error)?) -> Void
+    ) -> URLSessionDownloadTask {
+        _makeDownloadTask(request, completion: completionHandler)
+    }
+
+    open func downloadTask(
+        with url: URL,
+        completionHandler: @escaping @Sendable (URL?, URLResponse?, (any Error)?) -> Void
+    ) -> URLSessionDownloadTask {
+        downloadTask(with: URLRequest(url: url), completionHandler: completionHandler)
+    }
+
+    open func streamTask(withHostName hostname: String, port: Int) -> URLSessionStreamTask {
+        let url = URL(string: "http://\(hostname):\(port)/") ?? URL(string: "http://localhost/")!
+        let task = URLSessionStreamTask(session: self, request: URLRequest(url: url), identifier: _nextID())
+        task.completion = { _, _, error in
+            _ = error
+        }
+        return task
+    }
+
+    open func finishTasksAndInvalidate() {
+        taskLock.withLock { invalidated = true }
+    }
+
+    open func invalidateAndCancel() {
+        taskLock.withLock { invalidated = true }
+        _onDelegateQueue {
+            self.delegate?.urlSession(self, didBecomeInvalidWithError: nil)
+        }
+    }
+
+    fileprivate func _performTask(_ task: URLSessionTask?) async {
+        guard let task, let request = task.originalRequest else { return }
+        if task is URLSessionStreamTask {
+            let error = URLError(
+                .unsupportedURL,
+                url: request.url,
+                detail: "URLSessionStreamTask is not implemented"
+            )
+            task.finish(data: nil, response: nil, file: nil, error: error)
+            return
+        }
+        do {
+            let (data, response) = try await data(for: request)
+            var file: URL?
+            if task is URLSessionDownloadTask {
+                file = try _writeDownload(data)
+            }
+            task.finish(data: data, response: response, file: file, error: nil)
+        } catch {
+            task.finish(data: nil, response: nil, file: nil, error: error)
+        }
+    }
+
+    fileprivate func _onDelegateQueue(_ body: @escaping () -> Void) {
+        // Guest OperationQueue is an inline stub (OpenUIKit). Deliver on this
+        // thread so completion-handler tests stay synchronous.
+        body()
+    }
+
+    private func _nextID() -> Int {
+        taskLock.withLock {
+            let value = nextTaskIdentifier
+            nextTaskIdentifier += 1
+            return value
+        }
+    }
+
+    private func _makeDataTask(
+        _ request: URLRequest,
+        completion: (@Sendable (Data?, URLResponse?, (any Error)?) -> Void)?
+    ) -> URLSessionDataTask {
+        let task = URLSessionDataTask(session: self, request: request, identifier: _nextID())
+        task.completion = completion
+        return task
+    }
+
+    private func _makeUploadTask(
+        _ request: URLRequest,
+        completion: (@Sendable (Data?, URLResponse?, (any Error)?) -> Void)?
+    ) -> URLSessionUploadTask {
+        let task = URLSessionUploadTask(session: self, request: request, identifier: _nextID())
+        task.completion = completion
+        return task
+    }
+
+    private func _makeDownloadTask(
+        _ request: URLRequest,
+        completion: (@Sendable (URL?, URLResponse?, (any Error)?) -> Void)?
+    ) -> URLSessionDownloadTask {
+        let task = URLSessionDownloadTask(session: self, request: request, identifier: _nextID())
+        task.downloadCompletion = completion
+        return task
+    }
+
+    private func _writeDownload(_ data: Data) throws -> URL {
+        let url = URL(fileURLWithPath: "/tmp/\(UUID().uuidString)", isDirectory: false)
+        try data.write(to: url)
+        return url
+    }
+
     private func _prepared(_ source: URLRequest) throws -> URLRequest {
         guard source.url != nil else { throw URLError(.badURL) }
         var request = source
@@ -1107,8 +1761,12 @@ open class URLSession: NSObject, @unchecked Sendable {
     }
 
     private func _protocolType(for request: URLRequest) -> URLProtocol.Type? {
+        var candidates: [URLProtocol.Type] = []
         for candidate in configuration.protocolClasses ?? [] {
-            guard let type = candidate as? URLProtocol.Type else { continue }
+            if let type = candidate as? URLProtocol.Type { candidates.append(type) }
+        }
+        candidates.append(contentsOf: URLProtocol._registered())
+        for type in candidates {
             if type.canInit(with: request) { return type }
         }
         return nil
@@ -1221,6 +1879,28 @@ open class URLSession: NSObject, @unchecked Sendable {
                 ? HTTPCookie._responseCookie(value, for: url) : nil
         }
         storage.setCookies(cookies, for: url, mainDocumentURL: url)
+    }
+
+    private func _followRedirect(
+        from source: URLRequest,
+        response: HTTPURLResponse,
+        headerPairs: [(String, String)],
+        redirectDelegate: (any URLSessionTaskDelegate)?
+    ) -> URLRequest? {
+        guard let next = _redirectRequest(
+            from: source, response: response, headerPairs: headerPairs
+        ) else { return nil }
+        guard let redirectDelegate else { return next }
+        let observed = _makeDataTask(source, completion: nil)
+        var chosen: URLRequest? = next
+        redirectDelegate.urlSession(
+            self,
+            task: observed,
+            willPerformHTTPRedirection: response,
+            newRequest: next,
+            completionHandler: { chosen = $0 }
+        )
+        return chosen
     }
 
     private func _redirectRequest(
