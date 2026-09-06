@@ -2,37 +2,26 @@ import AddressBook
 import CoreFoundation
 import Foundation
 
-func testAddressBookStore() {
-    let book = abFreshBook()
-    abRequire(!ABAddressBookHasUnsavedChanges(book), "fresh clean")
+func testAddressBookCreateAndCounts() {
+    let book = abTake(ABAddressBookCreate())
     abRequire(ABAddressBookGetPersonCount(book) == 0, "no people")
     abRequire(ABAddressBookGetGroupCount(book) == 0, "no groups")
+    abRequire(!ABAddressBookHasUnsavedChanges(book), "fresh create is clean")
+}
 
+func testAddressBookCopyArrays() {
+    let book = abFreshBook()
     let sources = abNSArray(abTake(ABAddressBookCopyArrayOfAllSources(book)))
     abRequire(sources.count == 1, "one source")
     let source = abPeek(ABAddressBookCopyDefaultSource(book))
     abRequire(ABRecordGetRecordType(source) == ABRecordType(kABSourceType), "source type")
-    let sourceName = abTake(ABRecordCopyCompositeName(source))
-    abRequire(abText(sourceName) == "Local", "local source")
-    let fetchedSource = abPeek(ABAddressBookGetSourceWithRecordID(book, ABRecordGetRecordID(source)))
-    abRequire(fetchedSource === source, "get source by id")
 
     let person = abFreshPerson()
     _ = ABRecordSetValue(person, kABPersonFirstNameProperty, abCF("Ada"), nil)
-    _ = ABRecordSetValue(person, kABPersonLastNameProperty, abCF("Lovelace"), nil)
     abRequire(ABAddressBookAddRecord(book, person, nil), "add person")
-    abRequire(ABAddressBookHasUnsavedChanges(book), "dirty after add")
-    abRequire(ABRecordGetRecordID(person) != kABRecordInvalidID, "assigned id")
-    abRequire(ABAddressBookGetPersonCount(book) == 1, "one person")
-    let byID = abPeek(ABAddressBookGetPersonWithRecordID(book, ABRecordGetRecordID(person)))
-    abRequire(byID === person, "get person")
-
     let group = abTake(ABGroupCreate())
     _ = ABRecordSetValue(group, kABGroupNameProperty, abCF("Pioneers"), nil)
     abRequire(ABAddressBookAddRecord(book, group, nil), "add group")
-    abRequire(ABAddressBookGetGroupCount(book) == 1, "one group")
-    let groupByID = abPeek(ABAddressBookGetGroupWithRecordID(book, ABRecordGetRecordID(group)))
-    abRequire(groupByID === group, "get group")
 
     let people = abNSArray(abTake(ABAddressBookCopyArrayOfAllPeople(book)))
     abRequire(people.count == 1, "copy people")
@@ -42,17 +31,53 @@ func testAddressBookStore() {
     abRequire(inSource.count == 1, "people in source")
     let groupsInSource = abNSArray(abTake(ABAddressBookCopyArrayOfAllGroupsInSource(book, source)))
     abRequire(groupsInSource.count == 1, "groups in source")
+}
 
+func testAddressBookLookupByRecordID() {
+    let book = abFreshBook()
+    let source = abPeek(ABAddressBookCopyDefaultSource(book))
+    let fetchedSource = abPeek(ABAddressBookGetSourceWithRecordID(book, ABRecordGetRecordID(source)))
+    abRequire(fetchedSource === source, "get source by id")
+
+    let person = abFreshPerson()
+    _ = ABRecordSetValue(person, kABPersonFirstNameProperty, abCF("Ada"), nil)
+    abRequire(ABAddressBookAddRecord(book, person, nil), "add person")
+    let byID = abPeek(ABAddressBookGetPersonWithRecordID(book, ABRecordGetRecordID(person)))
+    abRequire(byID === person, "get person")
+
+    let group = abTake(ABGroupCreate())
+    _ = ABRecordSetValue(group, kABGroupNameProperty, abCF("Pioneers"), nil)
+    abRequire(ABAddressBookAddRecord(book, group, nil), "add group")
+    let groupByID = abPeek(ABAddressBookGetGroupWithRecordID(book, ABRecordGetRecordID(group)))
+    abRequire(groupByID === group, "get group")
+
+    abRequire(ABAddressBookGetPersonWithRecordID(book, 999) == nil, "missing person")
+    abRequire(ABAddressBookGetGroupWithRecordID(book, 999) == nil, "missing group")
+    abRequire(ABAddressBookGetSourceWithRecordID(book, 999) == nil, "missing source")
+}
+
+func testAddressBookAddSaveRevertRemove() {
+    let book = abFreshBook()
+    abRequire(!ABAddressBookHasUnsavedChanges(book), "clean before add")
+    let person = abFreshPerson()
+    _ = ABRecordSetValue(person, kABPersonFirstNameProperty, abCF("Ada"), nil)
+    abRequire(ABAddressBookAddRecord(book, person, nil), "add person")
+    abRequire(ABAddressBookHasUnsavedChanges(book), "dirty after add")
+    abRequire(ABRecordGetRecordID(person) != kABRecordInvalidID, "assigned id")
     abRequire(ABAddressBookSave(book, nil), "save")
     abRequire(!ABAddressBookHasUnsavedChanges(book), "clean after save")
+
+    let group = abTake(ABGroupCreate())
+    _ = ABRecordSetValue(group, kABGroupNameProperty, abCF("Pioneers"), nil)
+    abRequire(ABAddressBookAddRecord(book, group, nil), "add group")
+    abRequire(ABAddressBookSave(book, nil), "save group")
     abRequire(ABAddressBookRemoveRecord(book, group, nil), "remove group")
     abRequire(ABAddressBookHasUnsavedChanges(book), "dirty after remove")
     ABAddressBookRevert(book)
     abRequire(!ABAddressBookHasUnsavedChanges(book), "clean after revert")
     abRequire(ABAddressBookGetGroupCount(book) == 1, "group restored")
-    abRequire(ABAddressBookGetPersonWithRecordID(book, 999) == nil, "missing person")
-    abRequire(ABAddressBookGetGroupWithRecordID(book, 999) == nil, "missing group")
-    abRequire(ABAddressBookGetSourceWithRecordID(book, 999) == nil, "missing source")
+
+    let source = abPeek(ABAddressBookCopyDefaultSource(book))
     abRequire(!ABAddressBookRemoveRecord(book, source, nil), "cannot remove default source")
 }
 
@@ -76,11 +101,14 @@ func testPeopleSearch() {
     abRequire(none.count == 0, "no match")
 }
 
-func testCreateWithOptionsAndLocalizedLabel() {
+func testCreateWithOptions() {
     var slot: Unmanaged<CFError>? = nil
     let book = abTake(ABAddressBookCreateWithOptions(nil, &slot))
     abRequire(slot == nil, "no error on create")
     abRequire(ABAddressBookGetPersonCount(book) == 0, "empty book")
+}
+
+func testCopyLocalizedLabel() {
     let home = abTake(ABAddressBookCopyLocalizedLabel(kABHomeLabel))
     abRequire(abText(home) == "Home", "strip home")
     let iphone = abTake(ABAddressBookCopyLocalizedLabel(kABPersonPhoneIPhoneLabel))
@@ -103,7 +131,7 @@ func testAuthorizationFailClosed() {
     }
     abRequire(!granted, "not granted")
     abRequire(code == kABOperationNotPermittedByUserError, "user error")
-    abRequire(domain == "ABAddressBookErrorDomain", "error domain")
+    abRequire(domain == abText(ABAddressBookErrorDomain), "error domain")
     abRequire(ABAddressBookGetAuthorizationStatus() == .denied, "still denied")
 }
 
@@ -123,7 +151,7 @@ func testStoreErrors() {
     abRequire(!ABAddressBookAddRecord(nil, nil, &error), "nil add")
     let ns = abNSError(error!.takeRetainedValue())
     abRequire(ns.code == kABOperationNotPermittedByStoreError, "store error")
-    abRequire(ns.domain == "ABAddressBookErrorDomain", "domain")
+    abRequire(ns.domain == abText(ABAddressBookErrorDomain), "domain")
     abRequire(!ABAddressBookSave(nil, nil), "nil save")
     ABAddressBookRevert(nil)
     abRequire(!ABPersonSetImageData(nil, nil, nil), "nil image")

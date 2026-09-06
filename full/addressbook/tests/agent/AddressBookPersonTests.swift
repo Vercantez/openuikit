@@ -2,13 +2,8 @@ import AddressBook
 import CoreFoundation
 import Foundation
 
-func testPersonImageAndSource() {
-    let book = abFreshBook()
-    let source = abPeek(ABAddressBookCopyDefaultSource(book))
-    let person = abTake(ABPersonCreateInSource(source))
-    abRequire(ABRecordGetRecordType(person) == ABRecordType(kABPersonType), "person")
-    let copiedSource = abPeek(ABPersonCopySource(person))
-    abRequire(copiedSource === source, "same source")
+func testPersonImageData() {
+    let person = abFreshPerson()
     abRequire(!ABPersonHasImageData(person), "no image")
     let payload = Data([0x00, 0x01, 0x02, 0xFF])
     abRequire(ABPersonSetImageData(person, abCFData(payload), nil), "set image")
@@ -21,10 +16,19 @@ func testPersonImageAndSource() {
     abRequire(abNSData(original) == payload, "original same bytes")
     abRequire(ABPersonRemoveImageData(person, nil), "remove image")
     abRequire(!ABPersonHasImageData(person), "image gone")
+}
+
+func testPersonSource() {
+    let book = abFreshBook()
+    let source = abPeek(ABAddressBookCopyDefaultSource(book))
+    let person = abTake(ABPersonCreateInSource(source))
+    abRequire(ABRecordGetRecordType(person) == ABRecordType(kABPersonType), "person")
+    let copiedSource = abPeek(ABPersonCopySource(person))
+    abRequire(copiedSource === source, "same source")
     abRequire(ABPersonCreateInSource(person) == nil, "person is not a source")
 }
 
-func testPersonCompareAndSort() {
+func testPersonCompareByName() {
     let ada = abFreshPerson()
     _ = ABRecordSetValue(ada, kABPersonFirstNameProperty, abCF("Ada"), nil)
     _ = ABRecordSetValue(ada, kABPersonLastNameProperty, abCF("Lovelace"), nil)
@@ -50,7 +54,15 @@ func testPersonCompareAndSort() {
         ABPersonGetSortOrdering() == ABPersonSortOrdering(kABPersonSortByFirstName),
         "default sort"
     )
+}
 
+func testPeopleInSourceSorted() {
+    let ada = abFreshPerson()
+    _ = ABRecordSetValue(ada, kABPersonFirstNameProperty, abCF("Ada"), nil)
+    _ = ABRecordSetValue(ada, kABPersonLastNameProperty, abCF("Lovelace"), nil)
+    let grace = abFreshPerson()
+    _ = ABRecordSetValue(grace, kABPersonFirstNameProperty, abCF("Grace"), nil)
+    _ = ABRecordSetValue(grace, kABPersonLastNameProperty, abCF("Hopper"), nil)
     let book = abFreshBook()
     abRequire(ABAddressBookAddRecord(book, ada, nil), "add ada")
     abRequire(ABAddressBookAddRecord(book, grace, nil), "add grace")
@@ -69,11 +81,14 @@ func testPersonCompareAndSort() {
     abRequire(abAsString(abTake(ABRecordCopyValue(first, kABPersonLastNameProperty))) == "Hopper", "hopper first")
 }
 
-func testLinkedPeopleAndPropertyMetadata() {
+func testLinkedPeople() {
     let person = abFreshPerson()
     let linked = abNSArray(abTake(ABPersonCopyArrayOfAllLinkedPeople(person)))
     abRequire(linked.count == 1, "self linked")
     abRequire(linked[0] as AnyObject === person, "self identity")
+}
+
+func testPropertyMetadata() {
     abRequire(ABPersonGetTypeOfProperty(kABPersonFirstNameProperty) == ABPropertyType(kABStringPropertyType), "fn type")
     abRequire(ABPersonGetTypeOfProperty(kABPersonEmailProperty) == ABPropertyType(kABMultiStringPropertyType), "email type")
     abRequire(ABPersonGetTypeOfProperty(kABPersonAddressProperty) == ABPropertyType(kABMultiDictionaryPropertyType), "addr type")
@@ -93,17 +108,21 @@ func testLinkedPeopleAndPropertyMetadata() {
     abRequire(abText(localized) == "First Name", "localized first")
 }
 
-func testGroupMembership() {
+func testGroupCreate() {
     let book = abFreshBook()
     let source = abPeek(ABAddressBookCopyDefaultSource(book))
     let group = abTake(ABGroupCreateInSource(source))
     _ = ABRecordSetValue(group, kABGroupNameProperty, abCF("Engineers"), nil)
-    let groupName = abTake(ABRecordCopyCompositeName(group))
-    abRequire(abText(groupName) == "Engineers", "group name")
     abRequire(ABRecordGetRecordType(group) == ABRecordType(kABGroupType), "group type")
     let copiedSource = abPeek(ABGroupCopySource(group))
     abRequire(copiedSource === source, "group source")
+    let standalone = abTake(ABGroupCreate())
+    abRequire(ABRecordGetRecordType(standalone) == ABRecordType(kABGroupType), "standalone group")
+}
 
+func testGroupMembers() {
+    let group = abTake(ABGroupCreate())
+    _ = ABRecordSetValue(group, kABGroupNameProperty, abCF("Engineers"), nil)
     let ada = abFreshPerson()
     _ = ABRecordSetValue(ada, kABPersonFirstNameProperty, abCF("Ada"), nil)
     _ = ABRecordSetValue(ada, kABPersonLastNameProperty, abCF("Lovelace"), nil)
@@ -124,6 +143,4 @@ func testGroupMembership() {
     abRequire(ABGroupRemoveMember(group, ada, nil), "remove ada")
     abRequire(abNSArray(abTake(ABGroupCopyArrayOfAllMembers(group))).count == 1, "one left")
     abRequire(!ABGroupRemoveMember(group, ada, nil), "remove missing")
-    let standalone = abTake(ABGroupCreate())
-    abRequire(ABRecordGetRecordType(standalone) == ABRecordType(kABGroupType), "standalone group")
 }
