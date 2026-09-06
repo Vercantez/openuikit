@@ -159,6 +159,21 @@ public protocol UIDropSession: UIDragDropSession {
 #endif
 }
 
+#if !canImport(Foundation)
+extension UIDropSession {
+    /// Guest umbrella bridge hook. OpenUIKit is built before Foundation and
+    /// cannot name its Progress. The later Foundation UIDropSession extension
+    /// wraps these retained, typed payloads in the ONE Foundation.Progress.
+    /// Works through any UIDropSession, including application-owned sessions.
+    public func _openUIKitLoadObjects<T>(ofClass type: T.Type) -> [T] {
+        items.compactMap { item in
+            if let object = item.localObject as? T { return object }
+            return item.itemProvider._load(type)
+        }
+    }
+}
+#endif
+
 @preconcurrency @MainActor
 final class _UIDragSessionImpl: UIDragSession, UIDropSession {
     var items: [UIDragItem]

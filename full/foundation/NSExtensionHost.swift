@@ -62,9 +62,13 @@ private struct _ExtensionItemSnapshot: @unchecked Sendable {
 }
 
 private struct _ItemProviderSnapshot: @unchecked Sendable {
+#if FOUNDATION_EXTENSION_HOST
     var registeredTypeIdentifiers: [String]
     var suggestedName: String?
     var item: (any NSSecureCoding)?
+#else
+    var provider: OpenUIKit.NSItemProvider
+#endif
 }
 
 #if !FOUNDATION_EXTENSION_HOST
@@ -130,6 +134,7 @@ private enum _ExtensionArchiveTransport {
 
 // MARK: - Item provider identity used by extension items
 
+#if FOUNDATION_EXTENSION_HOST
 /// The bounded item-provider identity required by `NSExtensionItem`.
 ///
 /// In-process item retention, identifier ordering, copying, and secure metadata
@@ -265,6 +270,60 @@ open class NSItemProvider: NSObject, NSCopying, NSSecureCoding {
         }
     }
 }
+
+#else
+/// Guest Foundation's extension-host provider is a storage-preserving subclass
+/// bridge to the Foundation-hidden OpenUIKit provider. Unlike an alias with a
+/// retroactive conformance, this can implement NSSecureCoding's required coder
+/// initializer on an open class. UIDragItem consumes this SAME object, while
+/// NSExtensionItem keeps its existing Foundation attachment/coding contract.
+///
+/// MEASURED verify88, x86 rungs b/c: two unrelated provider classes rejected
+/// URLBar.swift:1137. Apple Foundation's contentsOf oracle returned non-nil for
+/// https, existing file, missing .txt, directory; the inherited failable
+/// initializer now preserves these URL payloads instead of returning nil.
+open class NSItemProvider: OpenUIKit.NSItemProvider, NSCopying, NSSecureCoding,
+    @unchecked Sendable {
+    // Representations are immutable after initialization. Keep the original
+    // extension-host synchronization for its one mutable metadata property.
+    private let name = Mutex<String?>(nil)
+    open override var suggestedName: String? {
+        get { name.withLock { $0 } }
+        set { name.withLock { $0 = newValue } }
+    }
+    open class var supportsSecureCoding: Bool { true }
+
+    public override init() { super.init() }
+
+    public override init(item: Any?, typeIdentifier: String?) {
+        super.init(item: item, typeIdentifier: typeIdentifier)
+    }
+
+    public override init(_openUIKitCopying provider: OpenUIKit.NSItemProvider) {
+        super.init(_openUIKitCopying: provider)
+        suggestedName = provider.suggestedName
+    }
+
+    public required init?(coder: NSCoder) {
+        guard let snapshot = _ExtensionArchiveTransport.provider(for: coder)
+        else { return nil }
+        super.init(_openUIKitCopying: snapshot.provider)
+        suggestedName = snapshot.provider.suggestedName
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        NSItemProvider(_openUIKitCopying: self)
+    }
+
+    open override func copy() -> Any { copy(with: nil) }
+
+    open func encode(with coder: NSCoder) {
+        _ExtensionArchiveTransport.store(
+            _ItemProviderSnapshot(provider: OpenUIKit.NSItemProvider(
+                _openUIKitCopying: self)), for: coder)
+    }
+}
+#endif
 
 // MARK: - Extension item
 

@@ -182,9 +182,3 @@ public func os_log(_ message: StaticString, log: OSLog, type: OSLogType, _ argum
     // Logging stays on the guest console; no Apple os logging service exists.
     print(argument)
 }
-public extension NSItemProvider {
-    convenience init?(contentsOf url: URL) {
-        // File-backed drag representations are unavailable on the guest.
-        return nil
-    }
-}
