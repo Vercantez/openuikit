@@ -475,7 +475,7 @@ func testSearchForPhotosAndStartPlaybackIntents() {
     playback.includedAttributes = [.livePhoto]
     playback.excludedAttributes = [.hdrPhoto]
     playback.peopleInPhoto = people
-    playback.peopleInPhotoOperator = .none
+    playback.peopleInPhotoOperator = INConditionalOperator.none
     precondition(playback.albumName == "Trip")
     precondition(playback.dateCreated?.startDateComponents?.year == 2025)
     precondition(playback.searchTerms == ["sunset"])
@@ -483,7 +483,7 @@ func testSearchForPhotosAndStartPlaybackIntents() {
     precondition(playback.includedAttributes.contains(.livePhoto))
     precondition(playback.excludedAttributes.contains(.hdrPhoto))
     precondition(playback.peopleInPhoto?.count == 1)
-    precondition(playback.peopleInPhotoOperator == .none)
+    precondition(playback.peopleInPhotoOperator == INConditionalOperator.none)
     let playbackResponse = INStartPhotoPlaybackIntentResponse(code: .continueInApp, userActivity: nil)
     precondition(playbackResponse.code == .continueInApp)
 }

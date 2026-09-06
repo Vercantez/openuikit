@@ -303,9 +303,9 @@ public enum INHostIntentDispatcher {
             var results: [INIntentResolutionResult] = []
             typed.resolvePriority(for: add) { results.append($0) }
             typed.resolveSpatialEventTrigger(for: add) { results.append($0) }
-            typed.resolveTargetTaskList(for: add) { results.append($0) }
+            typed.resolveTargetTaskList(for: add, completion: { results.append($0) })
             typed.resolveTargetTaskList(for: add, with: { results.append($0) })
-            typed.resolveTemporalEventTrigger(for: add) { results.append($0) }
+            typed.resolveTemporalEventTrigger(for: add, completion: { results.append($0) })
             typed.resolveTemporalEventTrigger(for: add, with: { results.append($0) })
             return results
         }
@@ -354,7 +354,7 @@ public enum INHostIntentDispatcher {
             typed.resolveStatus(for: setTask) { results.append($0) }
             typed.resolveTargetTask(for: setTask) { results.append($0) }
             typed.resolveTaskTitle(for: setTask) { results.append($0) }
-            typed.resolveTemporalEventTrigger(for: setTask) { results.append($0) }
+            typed.resolveTemporalEventTrigger(for: setTask, completion: { results.append($0) })
             typed.resolveTemporalEventTrigger(for: setTask, with: { results.append($0) })
             return results
         }
