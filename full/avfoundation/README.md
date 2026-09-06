@@ -84,8 +84,10 @@ service success.
 
 Deferred on this host:
 
-- `AVCaptureVideoPreviewLayer`, `AVSynchronizedLayer`,
-  `AVSampleBufferDisplayLayer` (must subclass `CALayer` and present buffers)
+- `AVCaptureVideoPreviewLayer`, `AVSynchronizedLayer` (must subclass
+  `CALayer` and present buffers). `AVSampleBufferDisplayLayer` is a `CALayer`
+  subclass on this host; enqueue fail-closes with `AVError.decoderNotFound`
+  and never displays frames.
 - `AVAssetDownloadTask`, `AVAggregateAssetDownloadTask`,
   `AVAssetDownloadURLSession` (must subclass `URLSession` types)
 - `UTType`-typed members (no UniformTypeIdentifiers on the isolated host)
@@ -292,4 +294,78 @@ Build is not the seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`).
 The framework tree itself has no stale `.build` / `build` / `scratch`
 products. `tests/test_avfoundation_host.sh` is a Darwin IceCubes/`xcrun`
 consumer and is not runnable on this Linux host.
+
+### Pass 6 (wave 8 next)
+
+Sixth SDK-depth pass on `cursor/port-avfoundation-to-linux-747d`. Passes 1–5
+(277 / 1188 / 1784 / 2727 / 3281) are kept and stay green. This pass stores
+`AVAssetWriter` / input-group configuration and cancel, `AVAssetReader`
+output settings, a FairPlay-free `AVContentKeySession` fail-closed model,
+`AVCaptureMovieFileOutput` / `AVCaptureStillImageOutput` recording and still
+capture that complete synchronously with
+`AVError.applicationIsNotAuthorizedToUseDevice`,
+`AVCaptureResolvedPhotoSettings` zero dimensions, `AVOutputSettingsPreset`
+identifier strings, `AVPlayerItem` output delegates, and
+`AVSampleBufferDisplayLayer` as a `CALayer` that fail-closes on enqueue.
+
+| | before (pass 5) | after (pass 6) |
+|---|---|---|
+| `implemented` | 3281 | 3681 |
+| `declared` | 2085 | 1707 |
+| `deferred` | 266 | 244 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 `implemented` evidence distribution after pass 6 (table-driven enum /
+option-set / metadata-constant tests may share a value test; no other single
+test exceeds 40% of the remaining implemented rows):
+
+| citations | test |
+|---|---|
+| 292 | `testAVMetadataIdentifierRawValues` (identifier constants) |
+| 279 | `testAVMetadataKeyRawValues` (key constants) |
+| 267 | `testOptionSetAlgebraSynthesis` (OptionSet / SetAlgebra) |
+| 253 | `testRawRepresentableEnumHashableSynthesis` (enum Hashable / `!=`) |
+| 132 | `testAVCaptureDeviceFailClosedDiscoveryModel` (capture device fail-closed) |
+
+Pass 6 added 400 `implemented` rows (11 tests in
+`tests/agent/AVDepthPass6Tests.swift`). Largest non-table test remains 132
+citations (capture-device fail-closed), under 40% of the remaining
+implemented rows after table-driven metadata/enum/option-set evidence.
+Deferred dropped 22 rows because still-image capture methods and
+`AVSampleBufferDisplayLayer` now have fail-closed Linux behavior instead of
+being left as unimplemented CALayer/hardware stubs.
+
+Fail-closed on this pass: writer `canApply` stays false; tagged/pixel
+receivers `appendImmediately` return false; content-key requests complete
+with `AVError.contentKeyRequestCancelled` (no FairPlay daemon); movie
+`startRecording` and still `captureStillImageAsynchronously` invoke the
+caller synchronously with `AVError.applicationIsNotAuthorizedToUseDevice`;
+sample-buffer display enqueue records `AVError.decoderNotFound` and
+`requiresFlushToResumeDecoding`. Local ISO BMFF / WAV / AIFF probing from
+earlier passes is unchanged. `AVSpeechSynthesizer` remains extra portable
+AVFAudio surface; it is not in this module's public census. No SwiftUI
+cross-import overlay rows exist in this seed.
+
+Sealed Linux gate (`bash full/avfoundation/tests/acceptance/test_host.sh`)
+ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVFoundation lane=medium-full symbols=5632
+FRAMEWORK_FANOUT_REFERENCE_OK
+AVFOUNDATION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
+```
+
+`swiftc --version` on this host is Swift 6.2.4, target
+`x86_64-unknown-linux-gnu`. The campaign inventory stamp
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a
+host-inventory token, not printed by the sealed framework gate.
+`.cursor/verify-cloud-environment.sh` currently stops on a missing
+`scratch/ladder-corpus/focus-ios` corpus checkout in this snapshot (active
+Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21`, not the
+seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). The framework
+tree itself has no stale `.build` / `build` / `scratch` products.
+`tests/test_avfoundation_host.sh` is a Darwin IceCubes/`xcrun` consumer and
+is not runnable on this Linux host.
 
