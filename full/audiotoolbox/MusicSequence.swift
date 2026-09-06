@@ -132,6 +132,11 @@ internal final class ATMusicTrackObject: ATObject {
     unowned var sequence: ATMusicSequenceObject?
     var events: [ATMusicEvent] = []
     let isTempo: Bool
+    var mute: UInt32 = 0
+    var solo: UInt32 = 0
+    var offsetTime: MusicTimeStamp = 0
+    var length: MusicTimeStamp = 0
+    var timeResolution: UInt16 = 480
 
     init(sequence: ATMusicSequenceObject, isTempo: Bool) {
         self.sequence = sequence
@@ -145,6 +150,7 @@ internal final class ATMusicSequenceObject: ATObject {
     var tracks: [ATMusicTrackObject] = []
     var tempoTrack: ATMusicTrackObject!
     var tempoHandle: MusicTrack?
+    var graph: AUGraph?
 
     override init() {
         super.init()
@@ -883,4 +889,437 @@ public func MusicSequenceFileLoad(
     }
     return MusicSequenceFileLoadData(inSequence, cf, inFileTypeHint, inFlags)
 }
+
+public func MusicSequenceFileCreateData(
+    _ inSequence: MusicSequence?,
+    _ inFileType: MusicSequenceFileTypeID,
+    _ inFlags: MusicSequenceFileFlags,
+    _ inResolution: Int16,
+    _ outData: UnsafeMutablePointer<Unmanaged<CFData>?>?
+) -> Int32 {
+    _ = inFlags
+    outData?.pointee = nil
+    guard let sequence = ATRegistry.shared.lookup(inSequence, as: ATMusicSequenceObject.self) else {
+        return kAudioToolboxErr_NoSequence
+    }
+    if inFileType != .midiType && inFileType != .anyType {
+        return kAudioToolboxErr_InvalidSequenceType
+    }
+    let resolution = inResolution == 0 ? Int16(480) : inResolution
+    let bytes = atEncodeSMF(sequence: sequence, ticksPerBeat: UInt16(max(resolution, 1)))
+    let cf = bytes.withUnsafeBytes { buffer in
+        CFDataCreate(kCFAllocatorDefault, buffer.bindMemory(to: UInt8.self).baseAddress, bytes.count)!
+    }
+    outData?.pointee = Unmanaged.passRetained(cf)
+    return 0
+}
+
+public func MusicSequenceFileCreate(
+    _ inSequence: MusicSequence?,
+    _ inFileRef: CFURL?,
+    _ inFileType: MusicSequenceFileTypeID,
+    _ inFlags: MusicSequenceFileFlags,
+    _ inResolution: Int16
+) -> Int32 {
+    guard let inFileRef else { return atParamError }
+    guard let path = atPathFromCFURL(inFileRef) else { return kAudioFileInvalidFileError }
+    var data: Unmanaged<CFData>?
+    let status = MusicSequenceFileCreateData(inSequence, inFileType, inFlags, inResolution, &data)
+    guard status == 0, let retained = data else { return status }
+    let cf = retained.takeRetainedValue()
+    let length = CFDataGetLength(cf)
+    let bytes = Data(bytes: CFDataGetBytePtr(cf), count: length)
+    do {
+        try bytes.write(to: URL(fileURLWithPath: path), options: inFlags.contains(.eraseFile) ? .atomic : .atomic)
+    } catch {
+        return kAudioFileUnspecifiedError
+    }
+    return 0
+}
 #endif
+
+@_cdecl("MusicSequenceGetBeatsForSeconds")
+public func MusicSequenceGetBeatsForSeconds(
+    _ inSequence: MusicSequence?,
+    _ inSeconds: Float64,
+    _ outBeats: UnsafeMutablePointer<MusicTimeStamp>?
+) -> Int32 {
+    guard let sequence = ATRegistry.shared.lookup(inSequence, as: ATMusicSequenceObject.self) else {
+        return kAudioToolboxErr_NoSequence
+    }
+    let bpm = atSequenceTempo(sequence)
+    outBeats?.pointee = inSeconds * (bpm / 60.0)
+    return 0
+}
+
+@_cdecl("MusicSequenceGetSecondsForBeats")
+public func MusicSequenceGetSecondsForBeats(
+    _ inSequence: MusicSequence?,
+    _ inBeats: MusicTimeStamp,
+    _ outSeconds: UnsafeMutablePointer<Float64>?
+) -> Int32 {
+    guard let sequence = ATRegistry.shared.lookup(inSequence, as: ATMusicSequenceObject.self) else {
+        return kAudioToolboxErr_NoSequence
+    }
+    let bpm = atSequenceTempo(sequence)
+    outSeconds?.pointee = inBeats * 60.0 / max(bpm, 1)
+    return 0
+}
+
+public func MusicSequenceGetTrackIndex(
+    _ inSequence: MusicSequence?,
+    _ inTrack: MusicTrack?,
+    _ outTrackIndex: UnsafeMutablePointer<UInt32>?
+) -> Int32 {
+    guard let sequence = ATRegistry.shared.lookup(inSequence, as: ATMusicSequenceObject.self) else {
+        return kAudioToolboxErr_NoSequence
+    }
+    guard let track = ATRegistry.shared.lookup(inTrack, as: ATMusicTrackObject.self) else {
+        return kAudioToolboxErr_TrackNotFound
+    }
+    return atWithLock(sequence.lock) {
+        if let index = sequence.tracks.firstIndex(where: { $0 === track }) {
+            outTrackIndex?.pointee = UInt32(index)
+            return 0
+        }
+        return kAudioToolboxErr_TrackNotFound
+    }
+}
+
+public func MusicSequenceSetAUGraph(
+    _ inSequence: MusicSequence?,
+    _ inGraph: AUGraph?
+) -> Int32 {
+    guard let sequence = ATRegistry.shared.lookup(inSequence, as: ATMusicSequenceObject.self) else {
+        return kAudioToolboxErr_NoSequence
+    }
+    if let inGraph {
+        guard ATRegistry.shared.lookup(inGraph, as: ATAUGraphObject.self) != nil else {
+            return kAUGraphErr_InvalidAudioUnit
+        }
+    }
+    sequence.graph = inGraph
+    return 0
+}
+
+public func MusicSequenceGetAUGraph(
+    _ inSequence: MusicSequence?,
+    _ outGraph: UnsafeMutablePointer<AUGraph?>?
+) -> Int32 {
+    guard let sequence = ATRegistry.shared.lookup(inSequence, as: ATMusicSequenceObject.self) else {
+        return kAudioToolboxErr_NoSequence
+    }
+    outGraph?.pointee = sequence.graph
+    return 0
+}
+
+public func MusicSequenceBeatsToBarBeatTime(
+    _ inSequence: MusicSequence?,
+    _ inBeats: MusicTimeStamp,
+    _ inSubbeatDivisor: UInt32,
+    _ outBarBeatTime: UnsafeMutablePointer<CABarBeatTime>?
+) -> Int32 {
+    guard ATRegistry.shared.lookup(inSequence, as: ATMusicSequenceObject.self) != nil else {
+        return kAudioToolboxErr_NoSequence
+    }
+    let divisor = max(inSubbeatDivisor, 1)
+    let beatsPerBar: Float64 = 4
+    let bar = Int32(floor(inBeats / beatsPerBar))
+    let beatInBar = inBeats - Float64(bar) * beatsPerBar
+    let beat = UInt16(floor(beatInBar)) + 1
+    let fraction = beatInBar - floor(beatInBar)
+    var time = CABarBeatTime()
+    time.bar = bar
+    time.beat = beat
+    time.subbeat = UInt16(fraction * Float64(divisor))
+    time.subbeatDivisor = UInt16(divisor)
+    outBarBeatTime?.pointee = time
+    return 0
+}
+
+public func MusicSequenceBarBeatTimeToBeats(
+    _ inSequence: MusicSequence?,
+    _ inBarBeatTime: UnsafePointer<CABarBeatTime>?,
+    _ outBeats: UnsafeMutablePointer<MusicTimeStamp>?
+) -> Int32 {
+    guard ATRegistry.shared.lookup(inSequence, as: ATMusicSequenceObject.self) != nil else {
+        return kAudioToolboxErr_NoSequence
+    }
+    guard let inBarBeatTime else { return atParamError }
+    let time = inBarBeatTime.pointee
+    let divisor = max(Float64(time.subbeatDivisor), 1)
+    let beats = Float64(time.bar) * 4.0 + Float64(max(Int(time.beat), 1) - 1) + Float64(time.subbeat) / divisor
+    outBeats?.pointee = beats
+    return 0
+}
+
+public func MusicTrackCopyInsert(
+    _ inSourceTrack: MusicTrack?,
+    _ inSourceStartTime: MusicTimeStamp,
+    _ inSourceEndTime: MusicTimeStamp,
+    _ inDestTrack: MusicTrack?,
+    _ inDestInsertTime: MusicTimeStamp
+) -> Int32 {
+    guard let source = ATRegistry.shared.lookup(inSourceTrack, as: ATMusicTrackObject.self),
+          let dest = ATRegistry.shared.lookup(inDestTrack, as: ATMusicTrackObject.self),
+          let sequence = dest.sequence
+    else {
+        return kAudioToolboxErr_TrackNotFound
+    }
+    return atWithLock(sequence.lock) {
+        let copied = source.events.filter { $0.time >= inSourceStartTime && $0.time < inSourceEndTime }
+        let span = inSourceEndTime - inSourceStartTime
+        for index in dest.events.indices {
+            if dest.events[index].time >= inDestInsertTime {
+                dest.events[index].time += span
+            }
+        }
+        for event in copied {
+            var moved = event
+            moved.time = inDestInsertTime + (event.time - inSourceStartTime)
+            dest.events.append(moved)
+        }
+        return 0
+    }
+}
+
+public func MusicTrackCut(
+    _ inTrack: MusicTrack?,
+    _ inStartTime: MusicTimeStamp,
+    _ inEndTime: MusicTimeStamp
+) -> Int32 {
+    guard let track = ATRegistry.shared.lookup(inTrack, as: ATMusicTrackObject.self),
+          let sequence = track.sequence
+    else {
+        return kAudioToolboxErr_TrackNotFound
+    }
+    return atWithLock(sequence.lock) {
+        let span = inEndTime - inStartTime
+        track.events.removeAll { $0.time >= inStartTime && $0.time < inEndTime }
+        for index in track.events.indices {
+            if track.events[index].time >= inEndTime {
+                track.events[index].time -= span
+            }
+        }
+        return 0
+    }
+}
+
+public func MusicTrackMerge(
+    _ inSourceTrack: MusicTrack?,
+    _ inSourceStartTime: MusicTimeStamp,
+    _ inSourceEndTime: MusicTimeStamp,
+    _ inDestTrack: MusicTrack?,
+    _ inDestInsertTime: MusicTimeStamp
+) -> Int32 {
+    guard let source = ATRegistry.shared.lookup(inSourceTrack, as: ATMusicTrackObject.self),
+          let dest = ATRegistry.shared.lookup(inDestTrack, as: ATMusicTrackObject.self),
+          let sequence = dest.sequence
+    else {
+        return kAudioToolboxErr_TrackNotFound
+    }
+    return atWithLock(sequence.lock) {
+        let copied = source.events.filter { $0.time >= inSourceStartTime && $0.time < inSourceEndTime }
+        for event in copied {
+            var moved = event
+            moved.time = inDestInsertTime + (event.time - inSourceStartTime)
+            dest.events.append(moved)
+        }
+        return 0
+    }
+}
+
+public func MusicTrackMoveEvents(
+    _ inTrack: MusicTrack?,
+    _ inStartTime: MusicTimeStamp,
+    _ inEndTime: MusicTimeStamp,
+    _ inMoveTime: MusicTimeStamp
+) -> Int32 {
+    guard let track = ATRegistry.shared.lookup(inTrack, as: ATMusicTrackObject.self),
+          let sequence = track.sequence
+    else {
+        return kAudioToolboxErr_TrackNotFound
+    }
+    return atWithLock(sequence.lock) {
+        for index in track.events.indices {
+            if track.events[index].time >= inStartTime && track.events[index].time < inEndTime {
+                track.events[index].time += inMoveTime
+            }
+        }
+        return 0
+    }
+}
+
+public func MusicTrackGetProperty(
+    _ inTrack: MusicTrack?,
+    _ inPropertyID: UInt32,
+    _ outData: UnsafeMutableRawPointer?,
+    _ ioDataSize: UnsafeMutablePointer<UInt32>?
+) -> Int32 {
+    guard let track = ATRegistry.shared.lookup(inTrack, as: ATMusicTrackObject.self) else {
+        return kAudioToolboxErr_TrackNotFound
+    }
+    switch inPropertyID {
+    case kSequenceTrackProperty_MuteStatus:
+        ioDataSize?.pointee = 4
+        outData?.storeBytes(of: track.mute, as: UInt32.self)
+    case kSequenceTrackProperty_SoloStatus:
+        ioDataSize?.pointee = 4
+        outData?.storeBytes(of: track.solo, as: UInt32.self)
+    case kSequenceTrackProperty_OffsetTime:
+        ioDataSize?.pointee = 8
+        outData?.storeBytes(of: track.offsetTime, as: MusicTimeStamp.self)
+    case kSequenceTrackProperty_TrackLength:
+        ioDataSize?.pointee = 8
+        let length = track.length > 0 ? track.length : (track.events.map(\.time).max() ?? 0)
+        outData?.storeBytes(of: length, as: MusicTimeStamp.self)
+    case kSequenceTrackProperty_TimeResolution:
+        ioDataSize?.pointee = 2
+        outData?.storeBytes(of: track.timeResolution, as: UInt16.self)
+    default:
+        return kAudioToolboxErr_InvalidEventType
+    }
+    return 0
+}
+
+public func MusicTrackSetProperty(
+    _ inTrack: MusicTrack?,
+    _ inPropertyID: UInt32,
+    _ inData: UnsafeRawPointer?,
+    _ inDataSize: UInt32
+) -> Int32 {
+    guard let track = ATRegistry.shared.lookup(inTrack, as: ATMusicTrackObject.self) else {
+        return kAudioToolboxErr_TrackNotFound
+    }
+    guard let inData else { return atParamError }
+    switch inPropertyID {
+    case kSequenceTrackProperty_MuteStatus:
+        guard inDataSize >= 4 else { return atParamError }
+        track.mute = inData.loadUnaligned(as: UInt32.self)
+    case kSequenceTrackProperty_SoloStatus:
+        guard inDataSize >= 4 else { return atParamError }
+        track.solo = inData.loadUnaligned(as: UInt32.self)
+    case kSequenceTrackProperty_OffsetTime:
+        guard inDataSize >= 8 else { return atParamError }
+        track.offsetTime = inData.loadUnaligned(as: MusicTimeStamp.self)
+    case kSequenceTrackProperty_TrackLength:
+        guard inDataSize >= 8 else { return atParamError }
+        track.length = inData.loadUnaligned(as: MusicTimeStamp.self)
+    case kSequenceTrackProperty_TimeResolution:
+        guard inDataSize >= 2 else { return atParamError }
+        track.timeResolution = inData.loadUnaligned(as: UInt16.self)
+    default:
+        return kAudioToolboxErr_InvalidEventType
+    }
+    return 0
+}
+
+@_cdecl("MusicEventIteratorSetEventTime")
+public func MusicEventIteratorSetEventTime(
+    _ inIterator: MusicEventIterator?,
+    _ inTimeStamp: MusicTimeStamp
+) -> Int32 {
+    guard let iterator = ATRegistry.shared.lookup(inIterator, as: ATMusicEventIteratorObject.self) else {
+        return atParamError
+    }
+    guard iterator.index < iterator.snapshot.count else { return kAudioToolboxErr_EndOfTrack }
+    guard let sequence = iterator.track.sequence else { return kAudioToolboxErr_NoSequence }
+    let event = iterator.snapshot[iterator.index]
+    return atWithLock(sequence.lock) {
+        if let idx = iterator.track.events.firstIndex(where: {
+            $0.time == event.time && $0.type == event.type && $0.payload == event.payload
+        }) {
+            iterator.track.events[idx].time = inTimeStamp
+        }
+        iterator.snapshot[iterator.index].time = inTimeStamp
+        return 0
+    }
+}
+
+@_cdecl("MusicPlayerPreroll")
+public func MusicPlayerPreroll(_ inPlayer: MusicPlayer?) -> Int32 {
+    guard ATRegistry.shared.lookup(inPlayer, as: ATMusicPlayerObject.self) != nil else {
+        return kAudioToolboxErr_InvalidPlayerState
+    }
+    return 0
+}
+
+internal func atEncodeSMF(sequence: ATMusicSequenceObject, ticksPerBeat: UInt16) -> [UInt8] {
+    func vlq(_ value: UInt32) -> [UInt8] {
+        var buffer: [UInt8] = []
+        var remaining = value
+        buffer.append(UInt8(remaining & 0x7F))
+        remaining >>= 7
+        while remaining > 0 {
+            buffer.append(UInt8((remaining & 0x7F) | 0x80))
+            remaining >>= 7
+        }
+        return buffer.reversed()
+    }
+    func be16(_ value: UInt16) -> [UInt8] {
+        [UInt8((value >> 8) & 0xFF), UInt8(value & 0xFF)]
+    }
+    func be32(_ value: UInt32) -> [UInt8] {
+        [
+            UInt8((value >> 24) & 0xFF),
+            UInt8((value >> 16) & 0xFF),
+            UInt8((value >> 8) & 0xFF),
+            UInt8(value & 0xFF),
+        ]
+    }
+    func encodeTrack(_ events: [ATMusicEvent], extraTempo: Bool) -> [UInt8] {
+        var payload: [UInt8] = []
+        var lastTick: UInt32 = 0
+        let ordered = events.sorted { $0.time < $1.time }
+        for event in ordered {
+            let tick = UInt32(max(event.time, 0) * Float64(ticksPerBeat))
+            payload.append(contentsOf: vlq(tick >= lastTick ? tick - lastTick : 0))
+            lastTick = tick
+            if event.type == kMusicEventType_ExtendedTempo, event.payload.count >= 8 {
+                let bpm = event.payload.withUnsafeBytes { $0.loadUnaligned(as: Float64.self) }
+                let us = UInt32((60_000_000.0 / max(bpm, 1)).rounded())
+                payload.append(contentsOf: [0xFF, 0x51, 0x03, UInt8((us >> 16) & 0xFF), UInt8((us >> 8) & 0xFF), UInt8(us & 0xFF)])
+            } else if event.type == kMusicEventType_MIDINoteMessage, event.payload.count >= MemoryLayout<MIDINoteMessage>.size {
+                let message = event.payload.withUnsafeBytes { $0.loadUnaligned(as: MIDINoteMessage.self) }
+                payload.append(0x90 | (message.channel & 0x0F))
+                payload.append(message.note)
+                payload.append(message.velocity)
+            } else if event.type == kMusicEventType_MIDIChannelMessage, event.payload.count >= MemoryLayout<MIDIChannelMessage>.size {
+                let message = event.payload.withUnsafeBytes { $0.loadUnaligned(as: MIDIChannelMessage.self) }
+                payload.append(message.status)
+                payload.append(message.data1)
+                payload.append(message.data2)
+            } else {
+                payload.append(contentsOf: [0xFF, 0x01, 0x00])
+            }
+            _ = extraTempo
+        }
+        payload.append(contentsOf: vlq(0))
+        payload.append(contentsOf: [0xFF, 0x2F, 0x00])
+        var chunk: [UInt8] = [0x4D, 0x54, 0x72, 0x6B]
+        chunk.append(contentsOf: be32(UInt32(payload.count)))
+        chunk.append(contentsOf: payload)
+        return chunk
+    }
+    let format: UInt16 = sequence.tracks.count > 1 ? 1 : 0
+    var ntrks = UInt16(sequence.tracks.count)
+    if !sequence.tempoTrack.events.isEmpty {
+        ntrks += 1
+    }
+    var bytes: [UInt8] = [0x4D, 0x54, 0x68, 0x64]
+    bytes.append(contentsOf: be32(6))
+    bytes.append(contentsOf: be16(format))
+    bytes.append(contentsOf: be16(max(ntrks, 1)))
+    bytes.append(contentsOf: be16(ticksPerBeat))
+    if !sequence.tempoTrack.events.isEmpty {
+        bytes.append(contentsOf: encodeTrack(sequence.tempoTrack.events, extraTempo: true))
+    }
+    if sequence.tracks.isEmpty && sequence.tempoTrack.events.isEmpty {
+        bytes.append(contentsOf: encodeTrack([], extraTempo: false))
+    }
+    for track in sequence.tracks {
+        bytes.append(contentsOf: encodeTrack(track.events, extraTempo: false))
+    }
+    return bytes
+}
+

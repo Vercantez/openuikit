@@ -1,0 +1,8 @@
+full/assignables/AssignableDocument.swift
+full/assignables/Assignables.swift
+full/assignables/AssignablesLookalikes.swift
+full/assignables/AssignablesViewSurface.swift
+full/assignables/AssignedWorkDocument.swift
+full/assignables/DocumentViews.swift
+full/assignables/MergeableParts.swift
+full/assignables/UserIdentity.swift

@@ -1,10 +1,21 @@
 import Foundation
+#if canImport(Glibc)
+import Glibc
+#elseif canImport(Darwin)
+import Darwin
+#endif
 
 // Fail-closed C API imported by the Network overlay. Completions that would
 // otherwise hang are invoked with a POSIX EOPNOTSUPP-shaped error object.
 
-private func nwLinuxCError() -> nw_error_t {
-    NWLinuxCFactory.make_nw_error()
+private func nwLinuxCError(
+    _ domain: nw_error_domain_t = nw_error_domain_posix,
+    _ code: Int32 = Int32(POSIXErrorCode.EOPNOTSUPP.rawValue)
+) -> nw_error_t {
+    let error = _NWLinux_nw_error()
+    error.domain = domain
+    error.code = code
+    return error
 }
 
 private func linuxParameters(_ parameters: nw_parameters_t) -> _NWLinux_nw_parameters? {
@@ -17,6 +28,106 @@ private func linuxOptions(_ options: nw_protocol_options_t) -> _NWLinux_nw_proto
 
 private func linuxTXT(_ txt_record: nw_txt_record_t) -> _NWLinux_nw_txt_record? {
     txt_record as? _NWLinux_nw_txt_record
+}
+
+private func linuxEndpoint(_ endpoint: nw_endpoint_t) -> _NWLinux_nw_endpoint? {
+    endpoint as? _NWLinux_nw_endpoint
+}
+
+private func linuxError(_ error: nw_error_t) -> _NWLinux_nw_error? {
+    error as? _NWLinux_nw_error
+}
+
+private func linuxMetadata(_ metadata: nw_protocol_metadata_t) -> _NWLinux_nw_protocol_metadata? {
+    metadata as? _NWLinux_nw_protocol_metadata
+}
+
+private func linuxFramer(_ framer: nw_framer_t) -> _NWLinux_nw_framer? {
+    framer as? _NWLinux_nw_framer
+}
+
+private func linuxInterface(_ interface: nw_interface_t) -> _NWLinux_nw_interface? {
+    interface as? _NWLinux_nw_interface
+}
+
+private func linuxConnection(_ connection: nw_connection_t) -> _NWLinux_nw_connection? {
+    connection as? _NWLinux_nw_connection
+}
+
+private func linuxGroup(_ group: nw_connection_group_t) -> _NWLinux_nw_connection_group? {
+    group as? _NWLinux_nw_connection_group
+}
+
+private func linuxDescriptor(_ descriptor: nw_browse_descriptor_t) -> _NWLinux_nw_browse_descriptor? {
+    descriptor as? _NWLinux_nw_browse_descriptor
+}
+
+private func linuxBrowseResult(_ result: nw_browse_result_t) -> _NWLinux_nw_browse_result? {
+    result as? _NWLinux_nw_browse_result
+}
+
+private func linuxContext(_ context: nw_content_context_t) -> _NWLinux_nw_content_context? {
+    context as? _NWLinux_nw_content_context
+}
+
+private func linuxReport(_ report: nw_data_transfer_report_t) -> _NWLinux_nw_data_transfer_report? {
+    report as? _NWLinux_nw_data_transfer_report
+}
+
+private func linuxProxy(_ config: nw_proxy_config_t) -> _NWLinux_nw_proxy_config? {
+    config as? _NWLinux_nw_proxy_config
+}
+
+private func linuxPrivacy(_ context: nw_privacy_context_t) -> _NWLinux_nw_privacy_context? {
+    context as? _NWLinux_nw_privacy_context
+}
+
+private func linuxDefinition(_ definition: nw_protocol_definition_t) -> _NWLinux_nw_protocol_definition? {
+    definition as? _NWLinux_nw_protocol_definition
+}
+
+private func linuxGroupDescriptor(_ descriptor: nw_group_descriptor_t) -> _NWLinux_nw_group_descriptor? {
+    descriptor as? _NWLinux_nw_group_descriptor
+}
+
+private func linuxRelay(_ hop: nw_relay_hop_t) -> _NWLinux_nw_relay_hop? {
+    hop as? _NWLinux_nw_relay_hop
+}
+
+private func linuxResolver(_ config: nw_resolver_config_t) -> _NWLinux_nw_resolver_config? {
+    config as? _NWLinux_nw_resolver_config
+}
+
+private func linuxResolution(_ report: nw_resolution_report_t) -> _NWLinux_nw_resolution_report? {
+    report as? _NWLinux_nw_resolution_report
+}
+
+private func linuxWSRequest(_ request: nw_ws_request_t) -> _NWLinux_nw_ws_request? {
+    request as? _NWLinux_nw_ws_request
+}
+
+private func linuxWSResponse(_ response: nw_ws_response_t) -> _NWLinux_nw_ws_response? {
+    response as? _NWLinux_nw_ws_response
+}
+
+private func linuxNamedDefinition(_ identifier: String) -> nw_protocol_definition_t {
+    let object = _NWLinux_nw_protocol_definition()
+    object.identifier = NWLinuxCString(identifier)
+    return object
+}
+
+private func linuxLoopbackInterface() -> nw_interface_t {
+    let object = _NWLinux_nw_interface()
+    if let record = NWPOSIX.snapshotInterfaces().first(where: { $0.interface.type == .loopback }) {
+        object.name = NWLinuxCString(record.interface.name)
+        object.index = UInt32(record.interface.index)
+        object.type = NWPOSIX.cInterfaceType(record.interface.type)
+    } else {
+        object.name = NWLinuxCString("lo")
+        object.index = 1
+        object.type = nw_interface_type_loopback
+    }
+    return object
 }
 
 public func nw_advertise_descriptor_copy_txt_record_object(_ advertise_descriptor: nw_advertise_descriptor_t) -> nw_txt_record_t? {
@@ -63,65 +174,62 @@ public func nw_advertise_descriptor_set_txt_record_object(_ advertise_descriptor
 }
 
 public func nw_browse_descriptor_create_application_service(_ application_service_name: UnsafePointer<CChar>) -> nw_browse_descriptor_t {
-    _ = application_service_name
-    return NWLinuxCFactory.make_nw_browse_descriptor()
+    let object = _NWLinux_nw_browse_descriptor()
+    object.applicationServiceName = NWLinuxCString(String(cString: application_service_name))
+    return object
 }
 
 public func nw_browse_descriptor_create_bonjour_service(_ type: UnsafePointer<CChar>, _ domain: UnsafePointer<CChar>?) -> nw_browse_descriptor_t {
-    _ = type
-    _ = domain
-    return NWLinuxCFactory.make_nw_browse_descriptor()
+    let object = _NWLinux_nw_browse_descriptor()
+    object.bonjourType = NWLinuxCString(String(cString: type))
+    object.bonjourDomain = NWLinuxCString(domain.map { String(cString: $0) } ?? "")
+    return object
 }
 
 public func nw_browse_descriptor_get_application_service_name(_ descriptor: nw_browse_descriptor_t) -> UnsafePointer<CChar>? {
-    _ = descriptor
-    return nil
+    linuxDescriptor(descriptor)?.applicationServiceName?.pointer
 }
 
 public func nw_browse_descriptor_get_bonjour_service_domain(_ descriptor: nw_browse_descriptor_t) -> UnsafePointer<CChar>? {
-    _ = descriptor
-    return nil
+    linuxDescriptor(descriptor)?.bonjourDomain.pointer
 }
 
 public func nw_browse_descriptor_get_bonjour_service_type(_ descriptor: nw_browse_descriptor_t) -> UnsafePointer<CChar> {
-    _ = descriptor
-    return withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
+    linuxDescriptor(descriptor)?.bonjourType.pointer ?? withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
 }
 
 public func nw_browse_descriptor_get_include_txt_record(_ descriptor: nw_browse_descriptor_t) -> Bool {
-    _ = descriptor
-    return false
+    linuxDescriptor(descriptor)?.includeTXTRecord ?? false
 }
 
 public func nw_browse_descriptor_set_include_txt_record(_ descriptor: nw_browse_descriptor_t, _ include_txt_record: Bool) {
-    _ = descriptor
-    _ = include_txt_record
+    linuxDescriptor(descriptor)?.includeTXTRecord = include_txt_record
 }
 
 public func nw_browse_result_copy_endpoint(_ result: nw_browse_result_t) -> nw_endpoint_t {
-    _ = result
-    return NWLinuxCFactory.make_nw_endpoint()
+    linuxBrowseResult(result)?.endpoint ?? NWLinuxCFactory.make_nw_endpoint()
 }
 
 public func nw_browse_result_copy_txt_record_object(_ result: nw_browse_result_t) -> nw_txt_record_t? {
-    _ = result
-    return nil
+    linuxBrowseResult(result)?.txtRecord
 }
 
 public func nw_browse_result_enumerate_interfaces(_ result: nw_browse_result_t, _ enumerator: (nw_interface_t) -> Bool) {
-    _ = result
-    _ = enumerator
+    guard let stored = linuxBrowseResult(result) else { return }
+    for interface in stored.interfaces {
+        if !enumerator(interface) { return }
+    }
 }
 
 public func nw_browse_result_get_changes(_ old_result: nw_browse_result_t?, _ new_result: nw_browse_result_t?) -> nw_browse_result_change_t {
-    _ = old_result
-    _ = new_result
-    fatalError("unhandled C return nw_browse_result_change_t")
+    if old_result == nil && new_result == nil {
+        return nw_browse_result_change_t(UInt64(nw_browse_result_change_identical))
+    }
+    return nw_browse_result_change_t(UInt64(nw_browse_result_change_invalid))
 }
 
 public func nw_browse_result_get_interfaces_count(_ result: nw_browse_result_t) -> Int {
-    _ = result
-    return 0
+    linuxBrowseResult(result)?.interfaces.count ?? 0
 }
 
 public func nw_browser_cancel(_ browser: nw_browser_t) {
@@ -129,38 +237,37 @@ public func nw_browser_cancel(_ browser: nw_browser_t) {
 }
 
 public func nw_browser_copy_browse_descriptor(_ browser: nw_browser_t) -> nw_browse_descriptor_t {
-    _ = browser
-    return NWLinuxCFactory.make_nw_browse_descriptor()
+    (browser as? _NWLinux_nw_browser)?.descriptor ?? NWLinuxCFactory.make_nw_browse_descriptor()
 }
 
 public func nw_browser_copy_parameters(_ browser: nw_browser_t) -> nw_parameters_t {
-    _ = browser
-    return NWLinuxCFactory.make_nw_parameters()
+    (browser as? _NWLinux_nw_browser)?.parameters ?? NWLinuxCFactory.make_nw_parameters()
 }
 
 public func nw_browser_create(_ descriptor: nw_browse_descriptor_t, _ parameters: nw_parameters_t?) -> nw_browser_t {
-    _ = descriptor
-    _ = parameters
-    return NWLinuxCFactory.make_nw_browser()
+    let object = _NWLinux_nw_browser()
+    object.descriptor = descriptor
+    object.parameters = parameters
+    return object
 }
 
 public func nw_browser_set_browse_results_changed_handler(_ browser: nw_browser_t, _ handler: nw_browser_browse_results_changed_handler_t?) {
-    _ = browser
-    _ = handler
+    (browser as? _NWLinux_nw_browser)?.resultsHandler = handler
 }
 
 public func nw_browser_set_queue(_ browser: nw_browser_t, _ queue: dispatch_queue_t) {
-    _ = browser
-    _ = queue
+    (browser as? _NWLinux_nw_browser)?.queue = queue
 }
 
 public func nw_browser_set_state_changed_handler(_ browser: nw_browser_t, _ state_changed_handler: nw_browser_state_changed_handler_t?) {
-    _ = browser
-    _ = state_changed_handler
+    (browser as? _NWLinux_nw_browser)?.stateHandler = state_changed_handler
 }
 
 public func nw_browser_start(_ browser: nw_browser_t) {
-    _ = browser
+    guard let stored = browser as? _NWLinux_nw_browser else { return }
+    let empty = _NWLinux_nw_browse_result()
+    stored.resultsHandler?(empty, empty, true)
+    stored.stateHandler?(nw_browser_state_failed, nwLinuxCError())
 }
 
 public func nw_connection_access_establishment_report(_ connection: nw_connection_t, _ queue: dispatch_queue_t, _ access_block: @escaping nw_establishment_report_access_block_t) {
@@ -188,18 +295,16 @@ public func nw_connection_copy_current_path(_ connection: nw_connection_t) -> nw
 }
 
 public func nw_connection_copy_description(_ connection: nw_connection_t) -> UnsafeMutablePointer<CChar> {
-    _ = connection
-    return withUnsafeMutablePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
+    linuxConnection(connection)?.descriptionText.mutablePointer
+        ?? withUnsafeMutablePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
 }
 
 public func nw_connection_copy_endpoint(_ connection: nw_connection_t) -> nw_endpoint_t {
-    _ = connection
-    return NWLinuxCFactory.make_nw_endpoint()
+    linuxConnection(connection)?.endpoint ?? NWLinuxCFactory.make_nw_endpoint()
 }
 
 public func nw_connection_copy_parameters(_ connection: nw_connection_t) -> nw_parameters_t {
-    _ = connection
-    return NWLinuxCFactory.make_nw_parameters()
+    linuxConnection(connection)?.parameters ?? NWLinuxCFactory.make_nw_parameters()
 }
 
 public func nw_connection_copy_protocol_metadata(_ connection: nw_connection_t, _ definition: nw_protocol_definition_t) -> nw_protocol_metadata_t? {
@@ -209,14 +314,18 @@ public func nw_connection_copy_protocol_metadata(_ connection: nw_connection_t, 
 }
 
 public func nw_connection_create(_ endpoint: nw_endpoint_t, _ parameters: nw_parameters_t) -> nw_connection_t {
-    _ = endpoint
-    _ = parameters
-    return NWLinuxCFactory.make_nw_connection()
+    let object = _NWLinux_nw_connection()
+    object.endpoint = endpoint
+    object.parameters = parameters
+    if let host = linuxEndpoint(endpoint) {
+        object.descriptionText = NWLinuxCString(String(cString: host.hostname.pointer))
+    }
+    return object
 }
 
 public func nw_connection_create_new_data_transfer_report(_ connection: nw_connection_t) -> nw_data_transfer_report_t {
     _ = connection
-    return NWLinuxCFactory.make_nw_data_transfer_report()
+    return _NWLinux_nw_data_transfer_report()
 }
 
 public func nw_connection_force_cancel(_ connection: nw_connection_t) {
@@ -224,17 +333,15 @@ public func nw_connection_force_cancel(_ connection: nw_connection_t) {
 }
 
 public func nw_connection_get_maximum_datagram_size(_ connection: nw_connection_t) -> UInt32 {
-    _ = connection
-    return 0
+    linuxConnection(connection)?.maximumDatagramSize ?? 0
 }
 
 public func nw_connection_group_cancel(_ group: nw_connection_group_t) {
-    _ = group
+    linuxGroup(group)?.cancelled = true
 }
 
 public func nw_connection_group_copy_descriptor(_ group: nw_connection_group_t) -> nw_group_descriptor_t {
-    _ = group
-    return NWLinuxCFactory.make_nw_group_descriptor()
+    linuxGroup(group)?.descriptor ?? NWLinuxCFactory.make_nw_group_descriptor()
 }
 
 public func nw_connection_group_copy_local_endpoint_for_message(_ group: nw_connection_group_t, _ context: nw_content_context_t) -> nw_endpoint_t? {
@@ -244,8 +351,7 @@ public func nw_connection_group_copy_local_endpoint_for_message(_ group: nw_conn
 }
 
 public func nw_connection_group_copy_parameters(_ group: nw_connection_group_t) -> nw_parameters_t {
-    _ = group
-    return NWLinuxCFactory.make_nw_parameters()
+    linuxGroup(group)?.parameters ?? NWLinuxCFactory.make_nw_parameters()
 }
 
 public func nw_connection_group_copy_path_for_message(_ group: nw_connection_group_t, _ context: nw_content_context_t) -> nw_path_t? {
@@ -274,9 +380,10 @@ public func nw_connection_group_copy_remote_endpoint_for_message(_ group: nw_con
 }
 
 public func nw_connection_group_create(_ group_descriptor: nw_group_descriptor_t, _ parameters: nw_parameters_t) -> nw_connection_group_t {
-    _ = group_descriptor
-    _ = parameters
-    return NWLinuxCFactory.make_nw_connection_group()
+    let object = _NWLinux_nw_connection_group()
+    object.descriptor = group_descriptor
+    object.parameters = parameters
+    return object
 }
 
 public func nw_connection_group_extract_connection(_ group: nw_connection_group_t, _ endpoint: nw_endpoint_t?, _ protocol_options: nw_protocol_options_t?) -> nw_connection_t? {
@@ -310,34 +417,31 @@ public func nw_connection_group_send_message(_ group: nw_connection_group_t, _ c
     _ = content
     _ = endpoint
     _ = context
-    _ = completion
     completion(nwLinuxCError())
 }
 
 public func nw_connection_group_set_new_connection_handler(_ group: nw_connection_group_t, _ new_connection_handler: nw_connection_group_new_connection_handler_t?) {
-    _ = group
-    _ = new_connection_handler
+    linuxGroup(group)?.newConnectionHandler = new_connection_handler
 }
 
 public func nw_connection_group_set_queue(_ group: nw_connection_group_t, _ queue: dispatch_queue_t) {
-    _ = group
-    _ = queue
+    linuxGroup(group)?.queue = queue
 }
 
 public func nw_connection_group_set_receive_handler(_ group: nw_connection_group_t, _ maximum_message_size: UInt32, _ reject_oversized_messages: Bool, _ receive_handler: nw_connection_group_receive_handler_t?) {
-    _ = group
     _ = maximum_message_size
     _ = reject_oversized_messages
-    _ = receive_handler
+    linuxGroup(group)?.receiveHandler = receive_handler
 }
 
 public func nw_connection_group_set_state_changed_handler(_ group: nw_connection_group_t, _ state_changed_handler: nw_connection_group_state_changed_handler_t?) {
-    _ = group
-    _ = state_changed_handler
+    linuxGroup(group)?.stateHandler = state_changed_handler
 }
 
 public func nw_connection_group_start(_ group: nw_connection_group_t) {
-    _ = group
+    guard let stored = linuxGroup(group) else { return }
+    stored.started = true
+    stored.stateHandler?(nw_connection_group_state_failed, nwLinuxCError())
 }
 
 public func nw_connection_receive(_ connection: nw_connection_t, _ minimum_incomplete_length: UInt32, _ maximum_length: UInt32, _ completion: @escaping nw_connection_receive_completion_t) {
@@ -397,81 +501,73 @@ public func nw_connection_start(_ connection: nw_connection_t) {
 }
 
 public func nw_content_context_copy_antecedent(_ context: nw_content_context_t) -> nw_content_context_t? {
-    _ = context
-    return nil
+    linuxContext(context)?.antecedent
 }
 
 public func nw_content_context_copy_protocol_metadata(_ context: nw_content_context_t, _ protocol: nw_protocol_definition_t) -> nw_protocol_metadata_t? {
-    _ = context
     _ = `protocol`
-    return nil
+    return linuxContext(context)?.protocolMetadata.first
 }
 
 public func nw_content_context_create(_ context_identifier: UnsafePointer<CChar>) -> nw_content_context_t {
-    _ = context_identifier
-    return NWLinuxCFactory.make_nw_content_context()
+    let object = _NWLinux_nw_content_context()
+    object.identifier = NWLinuxCString(String(cString: context_identifier))
+    return object
 }
 
 public func nw_content_context_foreach_protocol_metadata(_ context: nw_content_context_t, _ foreach_block: @escaping (nw_protocol_definition_t, nw_protocol_metadata_t) -> Void) {
-    _ = context
-    _ = foreach_block
+    guard let stored = linuxContext(context) else { return }
+    for metadata in stored.protocolMetadata {
+        foreach_block(linuxMetadata(metadata)?.definition ?? NWLinuxCFactory.make_nw_protocol_definition(), metadata)
+    }
 }
 
 public func nw_content_context_get_expiration_milliseconds(_ context: nw_content_context_t) -> UInt64 {
-    _ = context
-    return 0
+    linuxContext(context)?.expirationMilliseconds ?? 0
 }
 
 public func nw_content_context_get_identifier(_ context: nw_content_context_t) -> UnsafePointer<CChar> {
-    _ = context
-    return withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
+    linuxContext(context)?.identifier.pointer ?? withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
 }
 
 public func nw_content_context_get_is_final(_ context: nw_content_context_t) -> Bool {
-    _ = context
-    return false
+    linuxContext(context)?.isFinal ?? false
 }
 
 public func nw_content_context_get_relative_priority(_ context: nw_content_context_t) -> Double {
-    _ = context
-    return 0
+    linuxContext(context)?.relativePriority ?? 0
 }
 
 public func nw_content_context_set_antecedent(_ context: nw_content_context_t, _ antecedent_context: nw_content_context_t?) {
-    _ = context
-    _ = antecedent_context
+    linuxContext(context)?.antecedent = antecedent_context
 }
 
 public func nw_content_context_set_expiration_milliseconds(_ context: nw_content_context_t, _ expiration_milliseconds: UInt64) {
-    _ = context
-    _ = expiration_milliseconds
+    linuxContext(context)?.expirationMilliseconds = expiration_milliseconds
 }
 
 public func nw_content_context_set_is_final(_ context: nw_content_context_t, _ is_final: Bool) {
-    _ = context
-    _ = is_final
+    linuxContext(context)?.isFinal = is_final
 }
 
 public func nw_content_context_set_metadata_for_protocol(_ context: nw_content_context_t, _ protocol_metadata: nw_protocol_metadata_t) {
-    _ = context
-    _ = protocol_metadata
+    linuxContext(context)?.protocolMetadata.append(protocol_metadata)
 }
 
 public func nw_content_context_set_relative_priority(_ context: nw_content_context_t, _ relative_priority: Double) {
-    _ = context
-    _ = relative_priority
+    linuxContext(context)?.relativePriority = relative_priority
 }
 
 public func nw_data_transfer_report_collect(_ report: nw_data_transfer_report_t, _ queue: dispatch_queue_t, _ collect_block: @escaping nw_data_transfer_report_collect_block_t) {
-    _ = report
     _ = queue
-    _ = collect_block
+    linuxReport(report)?.state = nw_data_transfer_report_state_collected
+    collect_block(report)
 }
 
 public func nw_data_transfer_report_copy_path_interface(_ report: nw_data_transfer_report_t, _ path_index: UInt32) -> nw_interface_t {
     _ = report
     _ = path_index
-    return NWLinuxCFactory.make_nw_interface()
+    return linuxLoopbackInterface()
 }
 
 public func nw_data_transfer_report_get_duration_milliseconds(_ report: nw_data_transfer_report_t) -> UInt64 {
@@ -481,7 +577,7 @@ public func nw_data_transfer_report_get_duration_milliseconds(_ report: nw_data_
 
 public func nw_data_transfer_report_get_path_count(_ report: nw_data_transfer_report_t) -> UInt32 {
     _ = report
-    return 0
+    return 1
 }
 
 public func nw_data_transfer_report_get_path_radio_type(_ report: nw_data_transfer_report_t, _ path_index: UInt32) -> nw_interface_radio_type_t {
@@ -545,8 +641,7 @@ public func nw_data_transfer_report_get_sent_transport_retransmitted_byte_count(
 }
 
 public func nw_data_transfer_report_get_state(_ report: nw_data_transfer_report_t) -> nw_data_transfer_report_state_t {
-    _ = report
-    return nw_data_transfer_report_state_t(rawValue: 0)
+    linuxReport(report)?.state ?? nw_data_transfer_report_state_collecting
 }
 
 public func nw_data_transfer_report_get_transport_minimum_rtt_milliseconds(_ report: nw_data_transfer_report_t, _ path_index: UInt32) -> UInt64 {
@@ -568,102 +663,135 @@ public func nw_data_transfer_report_get_transport_smoothed_rtt_milliseconds(_ re
 }
 
 public func nw_endpoint_copy_address_string(_ endpoint: nw_endpoint_t) -> UnsafeMutablePointer<CChar> {
-    _ = endpoint
-    return withUnsafeMutablePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
+    linuxEndpoint(endpoint)?.addressString.mutablePointer
+        ?? withUnsafeMutablePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
 }
 
 public func nw_endpoint_copy_port_string(_ endpoint: nw_endpoint_t) -> UnsafeMutablePointer<CChar> {
-    _ = endpoint
-    return withUnsafeMutablePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
+    linuxEndpoint(endpoint)?.portString.mutablePointer
+        ?? withUnsafeMutablePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
 }
 
 public func nw_endpoint_copy_txt_record(_ endpoint: nw_endpoint_t) -> nw_txt_record_t? {
-    _ = endpoint
-    return nil
+    linuxEndpoint(endpoint)?.txtRecord
 }
 
 public func nw_endpoint_create_address(_ address: UnsafePointer<sockaddr>) -> nw_endpoint_t {
-    _ = address
-    return NWLinuxCFactory.make_nw_endpoint()
+    let object = _NWLinux_nw_endpoint()
+    object.type = nw_endpoint_type_address
+    object.storeSockaddr(address)
+    let family = Int32(address.pointee.sa_family)
+    if family == Int32(AF_INET) {
+        address.withMemoryRebound(to: sockaddr_in.self, capacity: 1) { sin in
+            object.port = UInt16(bigEndian: sin.pointee.sin_port)
+            var buffer = [CChar](repeating: 0, count: 16)
+            var addr = sin.pointee.sin_addr
+            _ = inet_ntop(AF_INET, &addr, &buffer, 16)
+            object.addressString = NWLinuxCString(String(cString: buffer))
+            object.portString = NWLinuxCString(String(object.port))
+        }
+    } else if family == Int32(AF_INET6) {
+        address.withMemoryRebound(to: sockaddr_in6.self, capacity: 1) { sin6 in
+            object.port = UInt16(bigEndian: sin6.pointee.sin6_port)
+            var buffer = [CChar](repeating: 0, count: 46)
+            var addr = sin6.pointee.sin6_addr
+            _ = inet_ntop(AF_INET6, &addr, &buffer, 46)
+            object.addressString = NWLinuxCString(String(cString: buffer))
+            object.portString = NWLinuxCString(String(object.port))
+        }
+    }
+    return object
 }
 
 public func nw_endpoint_create_bonjour_service(_ name: UnsafePointer<CChar>, _ type: UnsafePointer<CChar>, _ domain: UnsafePointer<CChar>) -> nw_endpoint_t {
-    _ = name
-    _ = type
-    _ = domain
-    return NWLinuxCFactory.make_nw_endpoint()
+    let object = _NWLinux_nw_endpoint()
+    object.type = nw_endpoint_type_bonjour_service
+    object.bonjourName = NWLinuxCString(String(cString: name))
+    object.bonjourType = NWLinuxCString(String(cString: type))
+    object.bonjourDomain = NWLinuxCString(String(cString: domain))
+    return object
 }
 
 public func nw_endpoint_create_host(_ hostname: UnsafePointer<CChar>, _ port: UnsafePointer<CChar>) -> nw_endpoint_t {
-    _ = hostname
-    _ = port
-    return NWLinuxCFactory.make_nw_endpoint()
+    let object = _NWLinux_nw_endpoint()
+    object.type = nw_endpoint_type_host
+    object.hostname = NWLinuxCString(String(cString: hostname))
+    object.portString = NWLinuxCString(String(cString: port))
+    object.port = UInt16(String(cString: port)) ?? 0
+    object.addressString = NWLinuxCString(String(cString: hostname))
+    return object
 }
 
 public func nw_endpoint_create_url(_ url: UnsafePointer<CChar>) -> nw_endpoint_t {
-    _ = url
-    return NWLinuxCFactory.make_nw_endpoint()
+    let object = _NWLinux_nw_endpoint()
+    object.type = nw_endpoint_type_url
+    object.url = NWLinuxCString(String(cString: url))
+    return object
 }
 
 public func nw_endpoint_get_address(_ endpoint: nw_endpoint_t) -> UnsafePointer<sockaddr> {
-    _ = endpoint
-    return withUnsafePointer(to: &NWLinuxCStatics.sockaddrStorage) { $0 }
+    linuxEndpoint(endpoint)?.sockaddrPointer
+        ?? withUnsafePointer(to: &NWLinuxCStatics.sockaddrStorage) { $0 }
 }
 
 public func nw_endpoint_get_bonjour_service_domain(_ endpoint: nw_endpoint_t) -> UnsafePointer<CChar> {
-    _ = endpoint
-    return withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
+    linuxEndpoint(endpoint)?.bonjourDomain.pointer
+        ?? withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
 }
 
 public func nw_endpoint_get_bonjour_service_name(_ endpoint: nw_endpoint_t) -> UnsafePointer<CChar> {
-    _ = endpoint
-    return withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
+    linuxEndpoint(endpoint)?.bonjourName.pointer
+        ?? withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
 }
 
 public func nw_endpoint_get_bonjour_service_type(_ endpoint: nw_endpoint_t) -> UnsafePointer<CChar> {
-    _ = endpoint
-    return withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
+    linuxEndpoint(endpoint)?.bonjourType.pointer
+        ?? withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
 }
 
 public func nw_endpoint_get_hostname(_ endpoint: nw_endpoint_t) -> UnsafePointer<CChar> {
-    _ = endpoint
-    return withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
+    linuxEndpoint(endpoint)?.hostname.pointer
+        ?? withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
 }
 
 public func nw_endpoint_get_port(_ endpoint: nw_endpoint_t) -> UInt16 {
-    _ = endpoint
-    return 0
+    linuxEndpoint(endpoint)?.port ?? 0
 }
 
 public func nw_endpoint_get_signature(_ endpoint: nw_endpoint_t, _ out_signature_length: UnsafeMutablePointer<Int>) -> UnsafePointer<UInt8>? {
     _ = endpoint
-    _ = out_signature_length
+    out_signature_length.pointee = 0
     return nil
 }
 
 public func nw_endpoint_get_type(_ endpoint: nw_endpoint_t) -> nw_endpoint_type_t {
-    _ = endpoint
-    return nw_endpoint_type_t(rawValue: 0)
+    linuxEndpoint(endpoint)?.type ?? nw_endpoint_type_invalid
 }
 
 public func nw_endpoint_get_url(_ endpoint: nw_endpoint_t) -> UnsafePointer<CChar> {
-    _ = endpoint
-    return withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
+    linuxEndpoint(endpoint)?.url.pointer
+        ?? withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
 }
 
 public func nw_error_copy_cf_error(_ error: nw_error_t) -> Unmanaged<CFError> {
-    _ = error
-    return Unmanaged.passRetained(NSError(domain: String(kNWErrorDomainPOSIX), code: Int(POSIXErrorCode.EOPNOTSUPP.rawValue)) as CFError)
+    let stored = linuxError(error)
+    let domain: String
+    switch stored?.domain.rawValue {
+    case nw_error_domain_dns.rawValue: domain = String(kNWErrorDomainDNS)
+    case nw_error_domain_tls.rawValue: domain = String(kNWErrorDomainTLS)
+    case nw_error_domain_wifi_aware.rawValue: domain = String(kNWErrorDomainWiFiAware)
+    default: domain = String(kNWErrorDomainPOSIX)
+    }
+    let code = Int(stored?.code ?? Int32(POSIXErrorCode.EOPNOTSUPP.rawValue))
+    return Unmanaged.passRetained(NSError(domain: domain, code: code) as CFError)
 }
 
 public func nw_error_get_error_code(_ error: nw_error_t) -> Int32 {
-    _ = error
-    return 0
+    linuxError(error)?.code ?? 0
 }
 
 public func nw_error_get_error_domain(_ error: nw_error_t) -> nw_error_domain_t {
-    _ = error
-    return nw_error_domain_t(rawValue: 0)
+    linuxError(error)?.domain ?? nw_error_domain_invalid
 }
 
 public func nw_establishment_report_copy_proxy_endpoint(_ report: nw_establishment_report_t) -> nw_endpoint_t? {
@@ -713,133 +841,129 @@ public func nw_establishment_report_get_used_proxy(_ report: nw_establishment_re
 
 public func nw_framer_async(_ framer: nw_framer_t, _ async_block: @escaping nw_framer_block_t) {
     _ = framer
-    _ = async_block
+    async_block()
 }
 
 public func nw_framer_copy_local_endpoint(_ framer: nw_framer_t) -> nw_endpoint_t {
-    _ = framer
-    return NWLinuxCFactory.make_nw_endpoint()
+    linuxFramer(framer)?.localEndpoint ?? NWLinuxCFactory.make_nw_endpoint()
 }
 
 public func nw_framer_copy_options(_ framer: nw_framer_t) -> nw_protocol_options_t {
-    _ = framer
-    return NWLinuxCFactory.make_nw_protocol_options()
+    linuxFramer(framer)?.options ?? NWLinuxCFactory.make_nw_protocol_options()
 }
 
 public func nw_framer_copy_parameters(_ framer: nw_framer_t) -> nw_parameters_t {
-    _ = framer
-    return NWLinuxCFactory.make_nw_parameters()
+    linuxFramer(framer)?.parameters ?? NWLinuxCFactory.make_nw_parameters()
 }
 
 public func nw_framer_copy_remote_endpoint(_ framer: nw_framer_t) -> nw_endpoint_t {
-    _ = framer
-    return NWLinuxCFactory.make_nw_endpoint()
+    linuxFramer(framer)?.remoteEndpoint ?? NWLinuxCFactory.make_nw_endpoint()
 }
 
 public func nw_framer_create_definition(_ identifier: UnsafePointer<CChar>, _ flags: UInt32, _ start_handler: @escaping nw_framer_start_handler_t) -> nw_protocol_definition_t {
-    _ = identifier
     _ = flags
-    _ = start_handler
-    return NWLinuxCFactory.make_nw_protocol_definition()
+    let definition = linuxNamedDefinition(String(cString: identifier))
+    let framer = _NWLinux_nw_framer()
+    _ = start_handler(framer)
+    return definition
 }
 
 public func nw_framer_create_options(_ framer_definition: nw_protocol_definition_t) -> nw_protocol_options_t {
-    _ = framer_definition
-    return NWLinuxCFactory.make_nw_protocol_options()
+    let options = _NWLinux_nw_protocol_options()
+    options.framerDefinition = framer_definition
+    return options
 }
 
 public func nw_framer_deliver_input(_ framer: nw_framer_t, _ input_buffer: UnsafePointer<UInt8>, _ input_length: Int, _ message: nw_framer_message_t, _ is_complete: Bool) {
-    _ = framer
-    _ = input_buffer
-    _ = input_length
     _ = message
     _ = is_complete
+    guard let stored = linuxFramer(framer), input_length > 0 else { return }
+    stored.input.append(Data(bytes: input_buffer, count: input_length))
 }
 
 public func nw_framer_deliver_input_no_copy(_ framer: nw_framer_t, _ input_length: Int, _ message: nw_framer_message_t, _ is_complete: Bool) -> Bool {
-    _ = framer
-    _ = input_length
     _ = message
     _ = is_complete
-    return false
+    guard let stored = linuxFramer(framer) else { return false }
+    return stored.input.count - stored.inputOffset >= input_length
 }
 
 public func nw_framer_mark_failed_with_error(_ framer: nw_framer_t, _ error_code: Int32) {
-    _ = framer
-    _ = error_code
+    linuxFramer(framer)?.failedCode = error_code
+    linuxFramer(framer)?.ready = false
 }
 
 public func nw_framer_mark_ready(_ framer: nw_framer_t) {
-    _ = framer
+    linuxFramer(framer)?.ready = true
 }
 
 public func nw_framer_message_access_value(_ message: nw_framer_message_t, _ key: UnsafePointer<CChar>, _ access_value: (UnsafeRawPointer?) -> Bool) -> Bool {
-    _ = message
-    _ = key
-    _ = access_value
-    return false
+    let name = String(cString: key)
+    let pointer = linuxMetadata(message)?.rawValues[name]
+    return access_value(pointer.map { UnsafeRawPointer($0) })
 }
 
 public func nw_framer_message_copy_object_value(_ message: nw_framer_message_t, _ key: UnsafePointer<CChar>) -> Any? {
-    _ = message
-    _ = key
-    return nil
+    linuxMetadata(message)?.objectValues[String(cString: key)]
 }
 
 public func nw_framer_message_create(_ framer: nw_framer_t) -> nw_framer_message_t {
     _ = framer
-    fatalError("unhandled C return nw_framer_message_t")
+    let message = _NWLinux_nw_protocol_metadata()
+    message.kind = "framer"
+    return message
 }
 
 public func nw_framer_message_set_object_value(_ message: nw_framer_message_t, _ key: UnsafePointer<CChar>, _ value: Any?) {
-    _ = message
-    _ = key
-    _ = value
+    linuxMetadata(message)?.objectValues[String(cString: key)] = value as Any
 }
 
 public func nw_framer_message_set_value(_ message: nw_framer_message_t, _ key: UnsafePointer<CChar>, _ value: UnsafeMutableRawPointer?, _ dispose_value: nw_framer_message_dispose_value_t?) {
-    _ = message
-    _ = key
-    _ = value
     _ = dispose_value
+    guard let stored = linuxMetadata(message) else { return }
+    stored.rawValues[String(cString: key)] = value
 }
 
 public func nw_framer_options_copy_object_value(_ options: nw_protocol_options_t, _ key: UnsafePointer<CChar>) -> Any? {
-    _ = options
-    _ = key
-    return nil
+    linuxOptions(options)?.framerObjectValues[String(cString: key)]
 }
 
 public func nw_framer_options_set_object_value(_ options: nw_protocol_options_t, _ key: UnsafePointer<CChar>, _ value: Any?) {
-    _ = options
-    _ = key
-    _ = value
+    linuxOptions(options)?.framerObjectValues[String(cString: key)] = value as Any
 }
 
 public func nw_framer_parse_input(_ framer: nw_framer_t, _ minimum_incomplete_length: Int, _ maximum_length: Int, _ temp_buffer: UnsafeMutablePointer<UInt8>?, _ parse: (UnsafeMutablePointer<UInt8>?, Int, Bool) -> Int) -> Bool {
-    _ = framer
-    _ = minimum_incomplete_length
-    _ = maximum_length
-    _ = temp_buffer
-    _ = parse
-    return false
+    guard let stored = linuxFramer(framer) else { return false }
+    let available = stored.input.count - stored.inputOffset
+    if available < minimum_incomplete_length { return false }
+    let amount = min(max(available, 0), max(maximum_length, 0))
+    if let temp_buffer, amount > 0 {
+        stored.input.copyBytes(to: temp_buffer, from: stored.inputOffset..<(stored.inputOffset + amount))
+    }
+    let consumed = parse(temp_buffer, amount, true)
+    if consumed > 0 {
+        stored.inputOffset += min(consumed, amount)
+    }
+    return consumed > 0
 }
 
 public func nw_framer_parse_output(_ framer: nw_framer_t, _ minimum_incomplete_length: Int, _ maximum_length: Int, _ temp_buffer: UnsafeMutablePointer<UInt8>?, _ parse: (UnsafeMutablePointer<UInt8>?, Int, Bool) -> Int) -> Bool {
-    _ = framer
-    _ = minimum_incomplete_length
-    _ = maximum_length
-    _ = temp_buffer
-    _ = parse
-    return false
+    guard let stored = linuxFramer(framer) else { return false }
+    if stored.output.count < minimum_incomplete_length { return false }
+    let amount = min(stored.output.count, max(maximum_length, 0))
+    if let temp_buffer, amount > 0 {
+        stored.output.copyBytes(to: temp_buffer, from: 0..<amount)
+    }
+    let consumed = parse(temp_buffer, amount, true)
+    return consumed > 0
 }
 
 public func nw_framer_pass_through_input(_ framer: nw_framer_t) {
-    _ = framer
+    linuxFramer(framer)?.passThroughInput = true
 }
 
 public func nw_framer_pass_through_output(_ framer: nw_framer_t) {
-    _ = framer
+    linuxFramer(framer)?.passThroughOutput = true
 }
 
 public func nw_framer_prepend_application_protocol(_ framer: nw_framer_t, _ protocol_options: nw_protocol_options_t) -> Bool {
@@ -849,120 +973,117 @@ public func nw_framer_prepend_application_protocol(_ framer: nw_framer_t, _ prot
 }
 
 public func nw_framer_protocol_create_message(_ definition: nw_protocol_definition_t) -> nw_framer_message_t {
-    _ = definition
-    fatalError("unhandled C return nw_framer_message_t")
+    let message = _NWLinux_nw_protocol_metadata()
+    message.kind = "framer"
+    message.definition = definition
+    return message
 }
 
 public func nw_framer_schedule_wakeup(_ framer: nw_framer_t, _ milliseconds: UInt64) {
-    _ = framer
-    _ = milliseconds
+    guard let stored = linuxFramer(framer) else { return }
+    stored.wakeupMilliseconds = milliseconds
+    stored.wakeupHandler?(framer)
 }
 
 public func nw_framer_set_cleanup_handler(_ framer: nw_framer_t, _ cleanup_handler: @escaping nw_framer_cleanup_handler_t) {
-    _ = framer
-    _ = cleanup_handler
+    linuxFramer(framer)?.cleanupHandler = cleanup_handler
 }
 
 public func nw_framer_set_input_handler(_ framer: nw_framer_t, _ input_handler: @escaping nw_framer_input_handler_t) {
-    _ = framer
-    _ = input_handler
+    linuxFramer(framer)?.inputHandler = input_handler
 }
 
 public func nw_framer_set_output_handler(_ framer: nw_framer_t, _ output_handler: @escaping nw_framer_output_handler_t) {
-    _ = framer
-    _ = output_handler
+    linuxFramer(framer)?.outputHandler = output_handler
 }
 
 public func nw_framer_set_stop_handler(_ framer: nw_framer_t, _ stop_handler: @escaping nw_framer_stop_handler_t) {
-    _ = framer
-    _ = stop_handler
+    linuxFramer(framer)?.stopHandler = stop_handler
 }
 
 public func nw_framer_set_wakeup_handler(_ framer: nw_framer_t, _ wakeup_handler: @escaping nw_framer_wakeup_handler_t) {
-    _ = framer
-    _ = wakeup_handler
+    linuxFramer(framer)?.wakeupHandler = wakeup_handler
 }
 
 public func nw_framer_write_output(_ framer: nw_framer_t, _ output_buffer: UnsafePointer<UInt8>, _ output_length: Int) {
-    _ = framer
-    _ = output_buffer
-    _ = output_length
+    guard let stored = linuxFramer(framer), output_length > 0 else { return }
+    stored.output.append(Data(bytes: output_buffer, count: output_length))
 }
 
 public func nw_framer_write_output_data(_ framer: nw_framer_t, _ output_data: dispatch_data_t) {
-    _ = framer
-    _ = output_data
+    guard let stored = linuxFramer(framer) else { return }
+    stored.output.append(Data(output_data))
 }
 
 public func nw_framer_write_output_no_copy(_ framer: nw_framer_t, _ output_length: Int) -> Bool {
-    _ = framer
+    guard let stored = linuxFramer(framer) else { return false }
     _ = output_length
-    return false
+    return stored.ready || stored.output.count >= 0
 }
 
 public func nw_group_descriptor_add_endpoint(_ descriptor: nw_group_descriptor_t, _ endpoint: nw_endpoint_t) -> Bool {
-    _ = descriptor
-    _ = endpoint
-    return false
+    guard let stored = linuxGroupDescriptor(descriptor) else { return false }
+    stored.endpoints.append(endpoint)
+    return true
 }
 
 public func nw_group_descriptor_create_multicast(_ multicast_group: nw_endpoint_t) -> nw_group_descriptor_t {
-    _ = multicast_group
-    return NWLinuxCFactory.make_nw_group_descriptor()
+    let object = _NWLinux_nw_group_descriptor()
+    object.isMulticast = true
+    object.endpoints = [multicast_group]
+    return object
 }
 
 public func nw_group_descriptor_create_multiplex(_ remote_endpoint: nw_endpoint_t) -> nw_group_descriptor_t {
-    _ = remote_endpoint
-    return NWLinuxCFactory.make_nw_group_descriptor()
+    let object = _NWLinux_nw_group_descriptor()
+    object.endpoints = [remote_endpoint]
+    return object
 }
 
 public func nw_group_descriptor_enumerate_endpoints(_ descriptor: nw_group_descriptor_t, _ enumerate_block: (nw_endpoint_t) -> Bool) {
-    _ = descriptor
-    _ = enumerate_block
+    guard let stored = linuxGroupDescriptor(descriptor) else { return }
+    for endpoint in stored.endpoints {
+        if !enumerate_block(endpoint) { return }
+    }
 }
 
 public func nw_interface_get_index(_ interface: nw_interface_t) -> UInt32 {
-    _ = interface
-    return 0
+    linuxInterface(interface)?.index ?? 0
 }
 
 public func nw_interface_get_name(_ interface: nw_interface_t) -> UnsafePointer<CChar> {
-    _ = interface
-    return withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
+    linuxInterface(interface)?.name.pointer
+        ?? withUnsafePointer(to: &NWLinuxCStatics.emptyCString) { $0 }
 }
 
 public func nw_interface_get_type(_ interface: nw_interface_t) -> nw_interface_type_t {
-    _ = interface
-    return nw_interface_type_t(rawValue: 0)
+    linuxInterface(interface)?.type ?? nw_interface_type_other
 }
 
 public func nw_ip_create_metadata() -> nw_protocol_metadata_t {
-    return NWLinuxCFactory.make_nw_protocol_metadata()
+    let metadata = _NWLinux_nw_protocol_metadata()
+    metadata.kind = "ip"
+    return metadata
 }
 
 public func nw_ip_metadata_get_ecn_flag(_ metadata: nw_protocol_metadata_t) -> nw_ip_ecn_flag_t {
-    _ = metadata
-    return nw_ip_ecn_flag_t(rawValue: 0)
+    linuxMetadata(metadata)?.ipECN ?? nw_ip_ecn_flag_non_ect
 }
 
 public func nw_ip_metadata_get_receive_time(_ metadata: nw_protocol_metadata_t) -> UInt64 {
-    _ = metadata
-    return 0
+    linuxMetadata(metadata)?.ipReceiveTime ?? 0
 }
 
 public func nw_ip_metadata_get_service_class(_ metadata: nw_protocol_metadata_t) -> nw_service_class_t {
-    _ = metadata
-    return nw_service_class_t(rawValue: 0)
+    linuxMetadata(metadata)?.ipServiceClass ?? nw_service_class_best_effort
 }
 
 public func nw_ip_metadata_set_ecn_flag(_ metadata: nw_protocol_metadata_t, _ ecn_flag: nw_ip_ecn_flag_t) {
-    _ = metadata
-    _ = ecn_flag
+    linuxMetadata(metadata)?.ipECN = ecn_flag
 }
 
 public func nw_ip_metadata_set_service_class(_ metadata: nw_protocol_metadata_t, _ service_class: nw_service_class_t) {
-    _ = metadata
-    _ = service_class
+    linuxMetadata(metadata)?.ipServiceClass = service_class
 }
 
 public func nw_ip_options_set_calculate_receive_time(_ options: nw_protocol_options_t, _ calculate_receive_time: Bool) {
@@ -1071,18 +1192,15 @@ public func nw_listener_start(_ listener: nw_listener_t) {
 }
 
 public func nw_multicast_group_descriptor_get_disable_unicast_traffic(_ multicast_descriptor: nw_group_descriptor_t) -> Bool {
-    _ = multicast_descriptor
-    return false
+    linuxGroupDescriptor(multicast_descriptor)?.disableUnicast ?? false
 }
 
 public func nw_multicast_group_descriptor_set_disable_unicast_traffic(_ multicast_descriptor: nw_group_descriptor_t, _ disable_unicast_traffic: Bool) {
-    _ = multicast_descriptor
-    _ = disable_unicast_traffic
+    linuxGroupDescriptor(multicast_descriptor)?.disableUnicast = disable_unicast_traffic
 }
 
 public func nw_multicast_group_descriptor_set_specific_source(_ multicast_descriptor: nw_group_descriptor_t, _ source: nw_endpoint_t) {
-    _ = multicast_descriptor
-    _ = source
+    linuxGroupDescriptor(multicast_descriptor)?.specificSource = source
 }
 
 public func nw_parameters_clear_prohibited_interface_types(_ parameters: nw_parameters_t) {
@@ -1199,8 +1317,7 @@ public func nw_parameters_iterate_prohibited_interfaces(_ parameters: nw_paramet
 }
 
 public func nw_parameters_prohibit_interface(_ parameters: nw_parameters_t, _ interface: nw_interface_t) {
-    _ = parameters
-    _ = interface
+    linuxParameters(parameters)?.prohibitedInterfaces.append(interface)
 }
 
 public func nw_parameters_prohibit_interface_type(_ parameters: nw_parameters_t, _ interface_type: nw_interface_type_t) {
@@ -1395,61 +1512,63 @@ public func nw_path_uses_interface_type(_ path: nw_path_t, _ interface_type: nw_
 }
 
 public func nw_privacy_context_add_proxy(_ privacy_context: nw_privacy_context_t, _ proxy_config: nw_proxy_config_t) {
-    _ = privacy_context
-    _ = proxy_config
+    linuxPrivacy(privacy_context)?.proxies.append(proxy_config)
 }
 
 public func nw_privacy_context_clear_proxies(_ privacy_context: nw_privacy_context_t) {
-    _ = privacy_context
+    linuxPrivacy(privacy_context)?.proxies.removeAll()
 }
 
 public func nw_privacy_context_create(_ description: UnsafePointer<CChar>) -> nw_privacy_context_t {
-    _ = description
-    return NWLinuxCFactory.make_nw_privacy_context()
+    let object = _NWLinux_nw_privacy_context()
+    object.descriptionText = NWLinuxCString(String(cString: description))
+    return object
 }
 
 public func nw_privacy_context_disable_logging(_ privacy_context: nw_privacy_context_t) {
-    _ = privacy_context
+    linuxPrivacy(privacy_context)?.loggingDisabled = true
 }
 
 public func nw_privacy_context_flush_cache(_ privacy_context: nw_privacy_context_t) {
-    _ = privacy_context
+    linuxPrivacy(privacy_context)?.cacheFlushed = true
 }
 
 public func nw_privacy_context_require_encrypted_name_resolution(_ privacy_context: nw_privacy_context_t, _ require_encrypted_name_resolution: Bool, _ fallback_resolver_config: nw_resolver_config_t?) {
-    _ = privacy_context
-    _ = require_encrypted_name_resolution
-    _ = fallback_resolver_config
+    guard let stored = linuxPrivacy(privacy_context) else { return }
+    stored.requireEncryptedNameResolution = require_encrypted_name_resolution
+    stored.fallbackResolver = fallback_resolver_config
 }
 
 public func nw_protocol_copy_ip_definition() -> nw_protocol_definition_t {
-    return NWLinuxCFactory.make_nw_protocol_definition()
+    linuxNamedDefinition("ip")
 }
 
 public func nw_protocol_copy_quic_definition() -> nw_protocol_definition_t {
-    return NWLinuxCFactory.make_nw_protocol_definition()
+    linuxNamedDefinition("quic")
 }
 
 public func nw_protocol_copy_tcp_definition() -> nw_protocol_definition_t {
-    return NWLinuxCFactory.make_nw_protocol_definition()
+    linuxNamedDefinition("tcp")
 }
 
 public func nw_protocol_copy_tls_definition() -> nw_protocol_definition_t {
-    return NWLinuxCFactory.make_nw_protocol_definition()
+    linuxNamedDefinition("tls")
 }
 
 public func nw_protocol_copy_udp_definition() -> nw_protocol_definition_t {
-    return NWLinuxCFactory.make_nw_protocol_definition()
+    linuxNamedDefinition("udp")
 }
 
 public func nw_protocol_copy_ws_definition() -> nw_protocol_definition_t {
-    return NWLinuxCFactory.make_nw_protocol_definition()
+    linuxNamedDefinition("ws")
 }
 
 public func nw_protocol_definition_is_equal(_ definition1: nw_protocol_definition_t, _ definition2: nw_protocol_definition_t) -> Bool {
-    _ = definition1
-    _ = definition2
-    return false
+    guard let left = linuxDefinition(definition1), let right = linuxDefinition(definition2) else {
+        return false
+    }
+    return String(cString: left.identifier.pointer) == String(cString: right.identifier.pointer)
+        && !String(cString: left.identifier.pointer).isEmpty
 }
 
 public func nw_protocol_metadata_copy_definition(_ metadata: nw_protocol_metadata_t) -> nw_protocol_definition_t {
@@ -1498,8 +1617,7 @@ public func nw_protocol_options_copy_definition(_ options: nw_protocol_options_t
 }
 
 public func nw_protocol_options_is_quic(_ options: nw_protocol_options_t) -> Bool {
-    _ = options
-    return false
+    linuxOptions(options)?.isQUIC ?? false
 }
 
 public func nw_protocol_stack_clear_application_protocols(_ stack: nw_protocol_stack_t) {
@@ -1532,27 +1650,26 @@ public func nw_protocol_stack_set_transport_protocol(_ stack: nw_protocol_stack_
 }
 
 public func nw_proxy_config_add_excluded_domain(_ config: nw_proxy_config_t, _ excluded_domain: UnsafePointer<CChar>) {
-    _ = config
-    _ = excluded_domain
+    linuxProxy(config)?.excludedDomains.append(String(cString: excluded_domain))
 }
 
 public func nw_proxy_config_add_match_domain(_ config: nw_proxy_config_t, _ match_domain: UnsafePointer<CChar>) {
-    _ = config
-    _ = match_domain
+    linuxProxy(config)?.matchDomains.append(String(cString: match_domain))
 }
 
 public func nw_proxy_config_clear_excluded_domains(_ config: nw_proxy_config_t) {
-    _ = config
+    linuxProxy(config)?.excludedDomains.removeAll()
 }
 
 public func nw_proxy_config_clear_match_domains(_ config: nw_proxy_config_t) {
-    _ = config
+    linuxProxy(config)?.matchDomains.removeAll()
 }
 
 public func nw_proxy_config_create_http_connect(_ proxy_endpoint: nw_endpoint_t, _ proxy_tls_options: nw_protocol_options_t?) -> nw_proxy_config_t {
-    _ = proxy_endpoint
     _ = proxy_tls_options
-    return NWLinuxCFactory.make_nw_proxy_config()
+    let object = _NWLinux_nw_proxy_config()
+    object.endpoint = proxy_endpoint
+    return object
 }
 
 public func nw_proxy_config_create_oblivious_http(_ relay: nw_relay_hop_t, _ relay_resource_path: UnsafePointer<CChar>, _ gateway_key_config: UnsafePointer<UInt8>, _ gateway_key_config_length: Int) -> nw_proxy_config_t {
@@ -1560,49 +1677,51 @@ public func nw_proxy_config_create_oblivious_http(_ relay: nw_relay_hop_t, _ rel
     _ = relay_resource_path
     _ = gateway_key_config
     _ = gateway_key_config_length
-    return NWLinuxCFactory.make_nw_proxy_config()
+    return _NWLinux_nw_proxy_config()
 }
 
 public func nw_proxy_config_create_relay(_ first_hop: nw_relay_hop_t, _ second_hop: nw_relay_hop_t?) -> nw_proxy_config_t {
     _ = first_hop
     _ = second_hop
-    return NWLinuxCFactory.make_nw_proxy_config()
+    return _NWLinux_nw_proxy_config()
 }
 
 public func nw_proxy_config_create_socksv5(_ proxy_endpoint: nw_endpoint_t) -> nw_proxy_config_t {
-    _ = proxy_endpoint
-    return NWLinuxCFactory.make_nw_proxy_config()
+    let object = _NWLinux_nw_proxy_config()
+    object.endpoint = proxy_endpoint
+    return object
 }
 
 public func nw_proxy_config_enumerate_excluded_domains(_ config: nw_proxy_config_t, _ enumerator: (UnsafePointer<CChar>) -> Void) {
-    _ = config
-    _ = enumerator
+    guard let stored = linuxProxy(config) else { return }
+    for domain in stored.excludedDomains {
+        domain.withCString { enumerator($0) }
+    }
 }
 
 public func nw_proxy_config_enumerate_match_domains(_ config: nw_proxy_config_t, _ enumerator: (UnsafePointer<CChar>) -> Void) {
-    _ = config
-    _ = enumerator
+    guard let stored = linuxProxy(config) else { return }
+    for domain in stored.matchDomains {
+        domain.withCString { enumerator($0) }
+    }
 }
 
 public func nw_proxy_config_get_failover_allowed(_ proxy_config: nw_proxy_config_t) -> Bool {
-    _ = proxy_config
-    return false
+    linuxProxy(proxy_config)?.failoverAllowed ?? false
 }
 
 public func nw_proxy_config_set_failover_allowed(_ proxy_config: nw_proxy_config_t, _ failover_allowed: Bool) {
-    _ = proxy_config
-    _ = failover_allowed
+    linuxProxy(proxy_config)?.failoverAllowed = failover_allowed
 }
 
 public func nw_proxy_config_set_username_and_password(_ proxy_config: nw_proxy_config_t, _ username: UnsafePointer<CChar>, _ password: UnsafePointer<CChar>?) {
-    _ = proxy_config
-    _ = username
-    _ = password
+    guard let stored = linuxProxy(proxy_config) else { return }
+    stored.username = NWLinuxCString(String(cString: username))
+    stored.password = NWLinuxCString(password.map { String(cString: $0) } ?? "")
 }
 
 public func nw_quic_add_tls_application_protocol(_ options: nw_protocol_options_t, _ application_protocol: UnsafePointer<CChar>) {
-    _ = options
-    _ = application_protocol
+    linuxOptions(options)?.quicALPN.append(String(cString: application_protocol))
 }
 
 public func nw_quic_copy_sec_protocol_metadata(_ metadata: nw_protocol_metadata_t) -> sec_protocol_metadata_t {
@@ -1616,261 +1735,217 @@ public func nw_quic_copy_sec_protocol_options(_ options: nw_protocol_options_t) 
 }
 
 public func nw_quic_create_options() -> nw_protocol_options_t {
-    return NWLinuxCFactory.make_nw_protocol_options()
+    let options = _NWLinux_nw_protocol_options()
+    options.isQUIC = true
+    return options
 }
 
 public func nw_quic_get_application_error(_ metadata: nw_protocol_metadata_t) -> UInt64 {
-    _ = metadata
-    return 0
+    linuxMetadata(metadata)?.applicationError ?? 0
 }
 
 public func nw_quic_get_application_error_reason(_ metadata: nw_protocol_metadata_t) -> UnsafePointer<CChar>? {
-    _ = metadata
-    return nil
+    linuxMetadata(metadata)?.applicationErrorReason?.pointer
 }
 
 public func nw_quic_get_idle_timeout(_ options: nw_protocol_options_t) -> UInt32 {
-    _ = options
-    return 0
+    linuxOptions(options)?.quicIdleTimeout ?? 0
 }
 
 public func nw_quic_get_initial_max_data(_ options: nw_protocol_options_t) -> UInt64 {
-    _ = options
-    return 0
+    linuxOptions(options)?.quicInitialMaxData ?? 0
 }
 
 public func nw_quic_get_initial_max_stream_data_bidirectional_local(_ options: nw_protocol_options_t) -> UInt64 {
-    _ = options
-    return 0
+    linuxOptions(options)?.quicInitialMaxStreamDataBidirectionalLocal ?? 0
 }
 
 public func nw_quic_get_initial_max_stream_data_bidirectional_remote(_ options: nw_protocol_options_t) -> UInt64 {
-    _ = options
-    return 0
+    linuxOptions(options)?.quicInitialMaxStreamDataBidirectionalRemote ?? 0
 }
 
 public func nw_quic_get_initial_max_stream_data_unidirectional(_ options: nw_protocol_options_t) -> UInt64 {
-    _ = options
-    return 0
+    linuxOptions(options)?.quicInitialMaxStreamDataUnidirectional ?? 0
 }
 
 public func nw_quic_get_initial_max_streams_bidirectional(_ options: nw_protocol_options_t) -> UInt64 {
-    _ = options
-    return 0
+    linuxOptions(options)?.quicInitialMaxStreamsBidirectional ?? 0
 }
 
 public func nw_quic_get_initial_max_streams_unidirectional(_ options: nw_protocol_options_t) -> UInt64 {
-    _ = options
-    return 0
+    linuxOptions(options)?.quicInitialMaxStreamsUnidirectional ?? 0
 }
 
 public func nw_quic_get_keepalive_interval(_ metadata: nw_protocol_metadata_t) -> UInt16 {
-    _ = metadata
-    return 0
+    linuxMetadata(metadata)?.keepaliveInterval ?? 0
 }
 
 public func nw_quic_get_local_max_streams_bidirectional(_ metadata: nw_protocol_metadata_t) -> UInt64 {
-    _ = metadata
-    return 0
+    linuxMetadata(metadata)?.localMaxStreamsBidirectional ?? 0
 }
 
 public func nw_quic_get_local_max_streams_unidirectional(_ metadata: nw_protocol_metadata_t) -> UInt64 {
-    _ = metadata
-    return 0
+    linuxMetadata(metadata)?.localMaxStreamsUnidirectional ?? 0
 }
 
 public func nw_quic_get_max_datagram_frame_size(_ options: nw_protocol_options_t) -> UInt16 {
-    _ = options
-    return 0
+    linuxOptions(options)?.quicMaxDatagramFrameSize ?? 0
 }
 
 public func nw_quic_get_max_udp_payload_size(_ options: nw_protocol_options_t) -> UInt16 {
-    _ = options
-    return 0
+    linuxOptions(options)?.quicMaxUDPPayloadSize ?? 0
 }
 
 public func nw_quic_get_remote_idle_timeout(_ metadata: nw_protocol_metadata_t) -> UInt64 {
-    _ = metadata
-    return 0
+    linuxMetadata(metadata)?.remoteIdleTimeout ?? 0
 }
 
 public func nw_quic_get_remote_max_streams_bidirectional(_ metadata: nw_protocol_metadata_t) -> UInt64 {
-    _ = metadata
-    return 0
+    linuxMetadata(metadata)?.remoteMaxStreamsBidirectional ?? 0
 }
 
 public func nw_quic_get_remote_max_streams_unidirectional(_ metadata: nw_protocol_metadata_t) -> UInt64 {
-    _ = metadata
-    return 0
+    linuxMetadata(metadata)?.remoteMaxStreamsUnidirectional ?? 0
 }
 
 public func nw_quic_get_stream_application_error(_ metadata: nw_protocol_metadata_t) -> UInt64 {
-    _ = metadata
-    return 0
+    linuxMetadata(metadata)?.streamApplicationError ?? 0
 }
 
 public func nw_quic_get_stream_id(_ metadata: nw_protocol_metadata_t) -> UInt64 {
-    _ = metadata
-    return 0
+    linuxMetadata(metadata)?.streamID ?? 0
 }
 
 public func nw_quic_get_stream_is_datagram(_ options: nw_protocol_options_t) -> Bool {
-    _ = options
-    return false
+    linuxOptions(options)?.quicStreamIsDatagram ?? false
 }
 
 public func nw_quic_get_stream_is_unidirectional(_ options: nw_protocol_options_t) -> Bool {
-    _ = options
-    return false
+    linuxOptions(options)?.quicStreamIsUnidirectional ?? false
 }
 
 public func nw_quic_get_stream_type(_ stream_metadata: nw_protocol_metadata_t) -> UInt8 {
-    _ = stream_metadata
-    return 0
+    linuxMetadata(stream_metadata)?.streamType ?? 0
 }
 
 public func nw_quic_get_stream_usable_datagram_frame_size(_ metadata: nw_protocol_metadata_t) -> UInt16 {
-    _ = metadata
-    return 0
+    linuxMetadata(metadata)?.usableDatagramFrameSize ?? 0
 }
 
 public func nw_quic_set_application_error(_ metadata: nw_protocol_metadata_t, _ application_error: UInt64, _ reason: UnsafePointer<CChar>?) {
-    _ = metadata
-    _ = application_error
-    _ = reason
+    guard let stored = linuxMetadata(metadata) else { return }
+    stored.applicationError = application_error
+    stored.applicationErrorReason = reason.map { NWLinuxCString(String(cString: $0)) }
 }
 
 public func nw_quic_set_idle_timeout(_ options: nw_protocol_options_t, _ idle_timeout: UInt32) {
-    _ = options
-    _ = idle_timeout
+    linuxOptions(options)?.quicIdleTimeout = idle_timeout
 }
 
 public func nw_quic_set_initial_max_data(_ options: nw_protocol_options_t, _ initial_max_data: UInt64) {
-    _ = options
-    _ = initial_max_data
+    linuxOptions(options)?.quicInitialMaxData = initial_max_data
 }
 
 public func nw_quic_set_initial_max_stream_data_bidirectional_local(_ options: nw_protocol_options_t, _ initial_max_stream_data_bidirectional_local: UInt64) {
-    _ = options
-    _ = initial_max_stream_data_bidirectional_local
+    linuxOptions(options)?.quicInitialMaxStreamDataBidirectionalLocal = initial_max_stream_data_bidirectional_local
 }
 
 public func nw_quic_set_initial_max_stream_data_bidirectional_remote(_ options: nw_protocol_options_t, _ initial_max_stream_data_bidirectional_remote: UInt64) {
-    _ = options
-    _ = initial_max_stream_data_bidirectional_remote
+    linuxOptions(options)?.quicInitialMaxStreamDataBidirectionalRemote = initial_max_stream_data_bidirectional_remote
 }
 
 public func nw_quic_set_initial_max_stream_data_unidirectional(_ options: nw_protocol_options_t, _ initial_max_stream_data_unidirectional: UInt64) {
-    _ = options
-    _ = initial_max_stream_data_unidirectional
+    linuxOptions(options)?.quicInitialMaxStreamDataUnidirectional = initial_max_stream_data_unidirectional
 }
 
 public func nw_quic_set_initial_max_streams_bidirectional(_ options: nw_protocol_options_t, _ initial_max_streams_bidirectional: UInt64) {
-    _ = options
-    _ = initial_max_streams_bidirectional
+    linuxOptions(options)?.quicInitialMaxStreamsBidirectional = initial_max_streams_bidirectional
 }
 
 public func nw_quic_set_initial_max_streams_unidirectional(_ options: nw_protocol_options_t, _ initial_max_streams_unidirectional: UInt64) {
-    _ = options
-    _ = initial_max_streams_unidirectional
+    linuxOptions(options)?.quicInitialMaxStreamsUnidirectional = initial_max_streams_unidirectional
 }
 
 public func nw_quic_set_keepalive_interval(_ metadata: nw_protocol_metadata_t, _ keepalive_interval: UInt16) {
-    _ = metadata
-    _ = keepalive_interval
+    linuxMetadata(metadata)?.keepaliveInterval = keepalive_interval
 }
 
 public func nw_quic_set_local_max_streams_bidirectional(_ metadata: nw_protocol_metadata_t, _ max_streams_bidirectional: UInt64) {
-    _ = metadata
-    _ = max_streams_bidirectional
+    linuxMetadata(metadata)?.localMaxStreamsBidirectional = max_streams_bidirectional
 }
 
 public func nw_quic_set_local_max_streams_unidirectional(_ metadata: nw_protocol_metadata_t, _ max_streams_unidirectional: UInt64) {
-    _ = metadata
-    _ = max_streams_unidirectional
+    linuxMetadata(metadata)?.localMaxStreamsUnidirectional = max_streams_unidirectional
 }
 
 public func nw_quic_set_max_datagram_frame_size(_ options: nw_protocol_options_t, _ max_datagram_frame_size: UInt16) {
-    _ = options
-    _ = max_datagram_frame_size
+    linuxOptions(options)?.quicMaxDatagramFrameSize = max_datagram_frame_size
 }
 
 public func nw_quic_set_max_udp_payload_size(_ options: nw_protocol_options_t, _ max_udp_payload_size: UInt16) {
-    _ = options
-    _ = max_udp_payload_size
+    linuxOptions(options)?.quicMaxUDPPayloadSize = max_udp_payload_size
 }
 
 public func nw_quic_set_stream_application_error(_ metadata: nw_protocol_metadata_t, _ application_error: UInt64) {
-    _ = metadata
-    _ = application_error
+    linuxMetadata(metadata)?.streamApplicationError = application_error
 }
 
 public func nw_quic_set_stream_is_datagram(_ options: nw_protocol_options_t, _ is_datagram: Bool) {
-    _ = options
-    _ = is_datagram
+    linuxOptions(options)?.quicStreamIsDatagram = is_datagram
 }
 
 public func nw_quic_set_stream_is_unidirectional(_ options: nw_protocol_options_t, _ is_unidirectional: Bool) {
-    _ = options
-    _ = is_unidirectional
+    linuxOptions(options)?.quicStreamIsUnidirectional = is_unidirectional
 }
 
 public func nw_relay_hop_add_additional_http_header_field(_ relay_hop: nw_relay_hop_t, _ field_name: UnsafePointer<CChar>, _ field_value: UnsafePointer<CChar>) {
-    _ = relay_hop
-    _ = field_name
-    _ = field_value
+    linuxRelay(relay_hop)?.headers.append((String(cString: field_name), String(cString: field_value)))
 }
 
 public func nw_relay_hop_create(_ http3_relay_endpoint: nw_endpoint_t?, _ http2_relay_endpoint: nw_endpoint_t?, _ relay_tls_options: nw_protocol_options_t?) -> nw_relay_hop_t {
-    _ = http3_relay_endpoint
-    _ = http2_relay_endpoint
     _ = relay_tls_options
-    return NWLinuxCFactory.make_nw_relay_hop()
+    let object = _NWLinux_nw_relay_hop()
+    object.http3Endpoint = http3_relay_endpoint
+    object.http2Endpoint = http2_relay_endpoint
+    return object
 }
 
 public func nw_resolution_report_copy_preferred_endpoint(_ resolution_report: nw_resolution_report_t) -> nw_endpoint_t {
-    _ = resolution_report
-    return NWLinuxCFactory.make_nw_endpoint()
+    linuxResolution(resolution_report)?.preferredEndpoint ?? NWLinuxCFactory.make_nw_endpoint()
 }
 
 public func nw_resolution_report_copy_successful_endpoint(_ resolution_report: nw_resolution_report_t) -> nw_endpoint_t {
-    _ = resolution_report
-    return NWLinuxCFactory.make_nw_endpoint()
+    linuxResolution(resolution_report)?.successfulEndpoint ?? NWLinuxCFactory.make_nw_endpoint()
 }
 
 public func nw_resolution_report_get_endpoint_count(_ resolution_report: nw_resolution_report_t) -> UInt32 {
-    _ = resolution_report
-    return 0
+    linuxResolution(resolution_report)?.endpointCount ?? 0
 }
 
 public func nw_resolution_report_get_milliseconds(_ resolution_report: nw_resolution_report_t) -> UInt64 {
-    _ = resolution_report
-    return 0
+    linuxResolution(resolution_report)?.milliseconds ?? 0
 }
 
 public func nw_resolution_report_get_protocol(_ resolution_report: nw_resolution_report_t) -> nw_report_resolution_protocol_t {
-    _ = resolution_report
-    return nw_report_resolution_protocol_t(rawValue: 0)
+    linuxResolution(resolution_report)?.protocolValue ?? nw_report_resolution_protocol_unknown
 }
 
 public func nw_resolution_report_get_source(_ resolution_report: nw_resolution_report_t) -> nw_report_resolution_source_t {
-    _ = resolution_report
-    return nw_report_resolution_source_t(rawValue: 0)
+    linuxResolution(resolution_report)?.source ?? nw_report_resolution_source_query
 }
 
 public func nw_resolver_config_add_server_address(_ config: nw_resolver_config_t, _ server_address: nw_endpoint_t) {
-    _ = config
-    _ = server_address
+    linuxResolver(config)?.servers.append(server_address)
 }
 
-public func nw_resolver_config_create_https(_ url_endpoint: nw_endpoint_t) -> nw_resolver_config_t {
-    _ = url_endpoint
-    return NWLinuxCFactory.make_nw_resolver_config()
+public func nw_resolver_config_create_https(_ url: UnsafePointer<CChar>) -> nw_resolver_config_t {
+    _ = url
+    return _NWLinux_nw_resolver_config()
 }
 
-public func nw_resolver_config_create_tls(_ server_endpoint: nw_endpoint_t) -> nw_resolver_config_t {
-    _ = server_endpoint
-    return NWLinuxCFactory.make_nw_resolver_config()
+public func nw_resolver_config_create_tls(_ hostname: UnsafePointer<CChar>) -> nw_resolver_config_t {
+    _ = hostname
+    return _NWLinux_nw_resolver_config()
 }
 
 public func nw_tcp_create_options() -> nw_protocol_options_t {
@@ -1878,13 +1953,11 @@ public func nw_tcp_create_options() -> nw_protocol_options_t {
 }
 
 public func nw_tcp_get_available_receive_buffer(_ metadata: nw_protocol_metadata_t) -> UInt32 {
-    _ = metadata
-    return 0
+    linuxMetadata(metadata)?.tcpAvailableReceive ?? 0
 }
 
 public func nw_tcp_get_available_send_buffer(_ metadata: nw_protocol_metadata_t) -> UInt32 {
-    _ = metadata
-    return 0
+    linuxMetadata(metadata)?.tcpAvailableSend ?? 0
 }
 
 public func nw_tcp_options_set_connection_timeout(_ options: nw_protocol_options_t, _ connection_timeout: UInt32) {
@@ -2093,7 +2166,9 @@ public func nw_txt_record_set_key(_ txt_record: nw_txt_record_t, _ key: UnsafePo
 }
 
 public func nw_udp_create_metadata() -> nw_protocol_metadata_t {
-    return NWLinuxCFactory.make_nw_protocol_metadata()
+    let metadata = _NWLinux_nw_protocol_metadata()
+    metadata.kind = "udp"
+    return metadata
 }
 
 public func nw_udp_create_options() -> nw_protocol_options_t {
@@ -2105,55 +2180,49 @@ public func nw_udp_options_set_prefer_no_checksum(_ options: nw_protocol_options
 }
 
 public func nw_ws_create_metadata(_ opcode: nw_ws_opcode_t) -> nw_protocol_metadata_t {
-    _ = opcode
-    return NWLinuxCFactory.make_nw_protocol_metadata()
+    let metadata = _NWLinux_nw_protocol_metadata()
+    metadata.kind = "ws"
+    metadata.wsOpcode = opcode
+    return metadata
 }
 
 public func nw_ws_create_options(_ version: nw_ws_version_t) -> nw_protocol_options_t {
-    _ = version
-    return NWLinuxCFactory.make_nw_protocol_options()
+    let options = _NWLinux_nw_protocol_options()
+    options.wsVersion = version
+    return options
 }
 
 public func nw_ws_metadata_copy_server_response(_ metadata: nw_protocol_metadata_t) -> nw_ws_response_t {
-    _ = metadata
-    return NWLinuxCFactory.make_nw_ws_response()
+    linuxMetadata(metadata)?.wsServerResponse ?? NWLinuxCFactory.make_nw_ws_response()
 }
 
 public func nw_ws_metadata_get_close_code(_ metadata: nw_protocol_metadata_t) -> nw_ws_close_code_t {
-    _ = metadata
-    return nw_ws_close_code_t(rawValue: 0)
+    linuxMetadata(metadata)?.wsCloseCode ?? nw_ws_close_code_t(rawValue: 0)
 }
 
 public func nw_ws_metadata_get_opcode(_ metadata: nw_protocol_metadata_t) -> nw_ws_opcode_t {
-    _ = metadata
-    return nw_ws_opcode_t(rawValue: 0)
+    linuxMetadata(metadata)?.wsOpcode ?? nw_ws_opcode_t(rawValue: 0)
 }
 
 public func nw_ws_metadata_set_close_code(_ metadata: nw_protocol_metadata_t, _ close_code: nw_ws_close_code_t) {
-    _ = metadata
-    _ = close_code
+    linuxMetadata(metadata)?.wsCloseCode = close_code
 }
 
 public func nw_ws_metadata_set_pong_handler(_ metadata: nw_protocol_metadata_t, _ client_queue: dispatch_queue_t, _ pong_handler: @escaping nw_ws_pong_handler_t) {
-    _ = metadata
     _ = client_queue
-    _ = pong_handler
+    linuxMetadata(metadata)?.pongHandler = pong_handler
 }
 
 public func nw_ws_options_add_additional_header(_ options: nw_protocol_options_t, _ name: UnsafePointer<CChar>, _ value: UnsafePointer<CChar>) {
-    _ = options
-    _ = name
-    _ = value
+    linuxOptions(options)?.wsHeaders.append((String(cString: name), String(cString: value)))
 }
 
 public func nw_ws_options_add_subprotocol(_ options: nw_protocol_options_t, _ subprotocol: UnsafePointer<CChar>) {
-    _ = options
-    _ = subprotocol
+    linuxOptions(options)?.wsSubprotocols.append(String(cString: subprotocol))
 }
 
 public func nw_ws_options_set_auto_reply_ping(_ options: nw_protocol_options_t, _ auto_reply_ping: Bool) {
-    _ = options
-    _ = auto_reply_ping
+    linuxOptions(options)?.wsAutoReplyPing = auto_reply_ping
 }
 
 public func nw_ws_options_set_client_request_handler(_ options: nw_protocol_options_t, _ client_queue: dispatch_queue_t, _ handler: @escaping nw_ws_client_request_handler_t) {
@@ -2163,52 +2232,64 @@ public func nw_ws_options_set_client_request_handler(_ options: nw_protocol_opti
 }
 
 public func nw_ws_options_set_maximum_message_size(_ options: nw_protocol_options_t, _ maximum_message_size: Int) {
-    _ = options
-    _ = maximum_message_size
+    linuxOptions(options)?.wsMaximumMessageSize = maximum_message_size
 }
 
 public func nw_ws_options_set_skip_handshake(_ options: nw_protocol_options_t, _ skip_handshake: Bool) {
-    _ = options
-    _ = skip_handshake
+    linuxOptions(options)?.wsSkipHandshake = skip_handshake
 }
 
 public func nw_ws_request_enumerate_additional_headers(_ request: nw_ws_request_t, _ enumerator: (UnsafePointer<CChar>, UnsafePointer<CChar>) -> Bool) -> Bool {
-    _ = request
-    _ = enumerator
-    return false
+    guard let stored = linuxWSRequest(request) else { return false }
+    for (name, value) in stored.headers {
+        let keep = name.withCString { namePtr in
+            value.withCString { valuePtr in
+                enumerator(namePtr, valuePtr)
+            }
+        }
+        if !keep { return false }
+    }
+    return true
 }
 
 public func nw_ws_request_enumerate_subprotocols(_ request: nw_ws_request_t, _ enumerator: (UnsafePointer<CChar>) -> Bool) -> Bool {
-    _ = request
-    _ = enumerator
-    return false
+    guard let stored = linuxWSRequest(request) else { return false }
+    for proto in stored.subprotocols {
+        let keep = proto.withCString { enumerator($0) }
+        if !keep { return false }
+    }
+    return true
 }
 
 public func nw_ws_response_add_additional_header(_ response: nw_ws_response_t, _ name: UnsafePointer<CChar>, _ value: UnsafePointer<CChar>) {
-    _ = response
-    _ = name
-    _ = value
+    linuxWSResponse(response)?.headers.append((String(cString: name), String(cString: value)))
 }
 
 public func nw_ws_response_create(_ status: nw_ws_response_status_t, _ selected_subprotocol: UnsafePointer<CChar>?) -> nw_ws_response_t {
-    _ = status
-    _ = selected_subprotocol
-    return NWLinuxCFactory.make_nw_ws_response()
+    let object = _NWLinux_nw_ws_response()
+    object.status = status
+    object.selectedSubprotocol = selected_subprotocol.map { NWLinuxCString(String(cString: $0)) }
+    return object
 }
 
 public func nw_ws_response_enumerate_additional_headers(_ response: nw_ws_response_t, _ enumerator: (UnsafePointer<CChar>, UnsafePointer<CChar>) -> Bool) -> Bool {
-    _ = response
-    _ = enumerator
-    return false
+    guard let stored = linuxWSResponse(response) else { return false }
+    for (name, value) in stored.headers {
+        let keep = name.withCString { namePtr in
+            value.withCString { valuePtr in
+                enumerator(namePtr, valuePtr)
+            }
+        }
+        if !keep { return false }
+    }
+    return true
 }
 
 public func nw_ws_response_get_selected_subprotocol(_ response: nw_ws_response_t) -> UnsafePointer<CChar>? {
-    _ = response
-    return nil
+    linuxWSResponse(response)?.selectedSubprotocol?.pointer
 }
 
 public func nw_ws_response_get_status(_ response: nw_ws_response_t?) -> nw_ws_response_status_t {
-    _ = response
-    return nw_ws_response_status_t(rawValue: 0)
+    response.flatMap(linuxWSResponse)?.status ?? nw_ws_response_status_invalid
 }
 

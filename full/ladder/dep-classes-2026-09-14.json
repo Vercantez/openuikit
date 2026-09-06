@@ -1,0 +1,907 @@
+{
+ "deps": [
+  {
+   "dep": "Sentry",
+   "class": "ObjC",
+   "apps": [
+    "ProtonMail-ios",
+    "WordPress-iOS",
+    "element-ios",
+    "firefox-ios",
+    "focus-ios",
+    "pocket-casts-ios"
+   ],
+   "n_apps": 6,
+   "swift_files": 545,
+   "swift_lines": 51003,
+   "objc_pct": 33.5,
+   "import_uikit": 85,
+   "import_swiftui": 6,
+   "import_combine": 1,
+   "view_files": 4,
+   "model_uses": 2040,
+   "net_uses": 170,
+   "selector_sites": 67,
+   "objc_sites": 1832,
+   "uikit_gap_uses": 369,
+   "_files_here": 2
+  },
+  {
+   "dep": "Lottie",
+   "class": "SwiftUI/Combine-bound",
+   "apps": [
+    "Telegram-iOS",
+    "duckduckgo-ios",
+    "ios-oss",
+    "pocket-casts-ios",
+    "wikipedia-ios"
+   ],
+   "n_apps": 5,
+   "swift_files": 294,
+   "swift_lines": 38874,
+   "objc_pct": 0.0,
+   "import_uikit": 25,
+   "import_swiftui": 16,
+   "import_combine": 1,
+   "view_files": 7,
+   "model_uses": 1300,
+   "net_uses": 15,
+   "selector_sites": 2,
+   "objc_sites": 66,
+   "uikit_gap_uses": 11,
+   "_files_here": 1
+  },
+  {
+   "dep": "SwiftSoup",
+   "class": "Foundation-heavy",
+   "apps": [
+    "Hackers",
+    "WordPress-iOS",
+    "duckduckgo-ios",
+    "ios-oss",
+    "pocket-casts-ios"
+   ],
+   "n_apps": 5,
+   "swift_files": 63,
+   "swift_lines": 35709,
+   "objc_pct": 0.0,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 373,
+   "net_uses": 1,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 4,
+   "_files_here": 1
+  },
+  {
+   "dep": "Alamofire",
+   "class": "networking-bound",
+   "apps": [
+    "WordPress-iOS",
+    "eidolon",
+    "home-assistant-ios",
+    "mastodon-ios",
+    "nextcloud-ios"
+   ],
+   "n_apps": 5,
+   "swift_files": 47,
+   "swift_lines": 17321,
+   "objc_pct": 0.0,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 1,
+   "view_files": 0,
+   "model_uses": 2208,
+   "net_uses": 910,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 1,
+   "_files_here": 25
+  },
+  {
+   "dep": "Kingfisher",
+   "class": "SwiftUI/Combine-bound",
+   "apps": [
+    "duckduckgo-ios",
+    "firefox-ios",
+    "ios-oss",
+    "pocket-casts-ios"
+   ],
+   "n_apps": 4,
+   "swift_files": 100,
+   "swift_lines": 21859,
+   "objc_pct": 0.0,
+   "import_uikit": 38,
+   "import_swiftui": 14,
+   "import_combine": 7,
+   "view_files": 15,
+   "model_uses": 933,
+   "net_uses": 149,
+   "selector_sites": 7,
+   "objc_sites": 8,
+   "uikit_gap_uses": 14,
+   "_files_here": 31
+  },
+  {
+   "dep": "KeychainAccess",
+   "class": "UIKit-bound",
+   "apps": [
+    "element-ios",
+    "home-assistant-ios",
+    "mastodon-ios",
+    "nextcloud-ios"
+   ],
+   "n_apps": 4,
+   "swift_files": 15,
+   "swift_lines": 15078,
+   "objc_pct": 0.0,
+   "import_uikit": 4,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 133,
+   "net_uses": 0,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 1,
+   "_files_here": 1
+  },
+  {
+   "dep": "SDWebImage",
+   "class": "ObjC",
+   "apps": [
+    "Signal-iOS",
+    "eidolon",
+    "mastodon-ios",
+    "wikipedia-ios"
+   ],
+   "n_apps": 4,
+   "swift_files": 1,
+   "swift_lines": 50,
+   "objc_pct": 99.7,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 0,
+   "net_uses": 0,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 0,
+   "_files_here": 1
+  },
+  {
+   "dep": "GRDB",
+   "class": "Foundation-heavy",
+   "apps": [
+    "Signal-iOS",
+    "duckduckgo-ios",
+    "home-assistant-ios"
+   ],
+   "n_apps": 3,
+   "swift_files": 168,
+   "swift_lines": 71529,
+   "objc_pct": 0.0,
+   "import_uikit": 2,
+   "import_swiftui": 0,
+   "import_combine": 7,
+   "view_files": 0,
+   "model_uses": 919,
+   "net_uses": 0,
+   "selector_sites": 4,
+   "objc_sites": 4,
+   "uikit_gap_uses": 6,
+   "_files_here": 160
+  },
+  {
+   "dep": "CocoaLumberjack",
+   "class": "ObjC",
+   "apps": [
+    "Signal-iOS",
+    "WordPress-iOS",
+    "wikipedia-ios"
+   ],
+   "n_apps": 3,
+   "swift_files": 22,
+   "swift_lines": 2498,
+   "objc_pct": 75.1,
+   "import_uikit": 2,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 19,
+   "net_uses": 0,
+   "selector_sites": 0,
+   "objc_sites": 2,
+   "uikit_gap_uses": 4,
+   "_files_here": 85
+  },
+  {
+   "dep": "SwiftyJSON",
+   "class": "Foundation-heavy",
+   "apps": [
+    "eidolon",
+    "eigen",
+    "nextcloud-ios"
+   ],
+   "n_apps": 3,
+   "swift_files": 2,
+   "swift_lines": 1423,
+   "objc_pct": 0.0,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 127,
+   "net_uses": 0,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 1,
+   "_files_here": 3
+  },
+  {
+   "dep": "SwiftProtobuf",
+   "class": "Foundation-heavy",
+   "apps": [
+    "Signal-iOS",
+    "pocket-casts-ios"
+   ],
+   "n_apps": 2,
+   "swift_files": 305,
+   "swift_lines": 198740,
+   "objc_pct": 0.0,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 1973,
+   "net_uses": 0,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 0,
+   "_files_here": 49
+  },
+  {
+   "dep": "RealmSwift",
+   "class": "ObjC",
+   "apps": [
+    "home-assistant-ios",
+    "nextcloud-ios"
+   ],
+   "n_apps": 2,
+   "swift_files": 47,
+   "swift_lines": 21402,
+   "objc_pct": 46.5,
+   "import_uikit": 0,
+   "import_swiftui": 1,
+   "import_combine": 3,
+   "view_files": 1,
+   "model_uses": 487,
+   "net_uses": 0,
+   "selector_sites": 0,
+   "objc_sites": 86,
+   "uikit_gap_uses": 21,
+   "_files_here": 63
+  },
+  {
+   "dep": "Nimble",
+   "class": "Foundation-heavy",
+   "apps": [
+    "eidolon",
+    "eigen"
+   ],
+   "n_apps": 2,
+   "swift_files": 72,
+   "swift_lines": 10003,
+   "objc_pct": 2.4,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 255,
+   "net_uses": 0,
+   "selector_sites": 0,
+   "objc_sites": 68,
+   "uikit_gap_uses": 64,
+   "_files_here": 41
+  },
+  {
+   "dep": "Quick",
+   "class": "Foundation-heavy",
+   "apps": [
+    "eidolon",
+    "eigen"
+   ],
+   "n_apps": 2,
+   "swift_files": 50,
+   "swift_lines": 4559,
+   "objc_pct": 10.0,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 70,
+   "net_uses": 0,
+   "selector_sites": 0,
+   "objc_sites": 33,
+   "uikit_gap_uses": 14,
+   "_files_here": 27
+  },
+  {
+   "dep": "SnapKit",
+   "class": "UIKit-bound",
+   "apps": [
+    "firefox-ios",
+    "focus-ios"
+   ],
+   "n_apps": 2,
+   "swift_files": 42,
+   "swift_lines": 3769,
+   "objc_pct": 0.0,
+   "import_uikit": 41,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 5,
+   "net_uses": 0,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 1,
+   "_files_here": 7
+  },
+  {
+   "dep": "AlamofireImage",
+   "class": "UIKit-bound",
+   "apps": [
+    "ios-oss",
+    "mastodon-ios"
+   ],
+   "n_apps": 2,
+   "swift_files": 13,
+   "swift_lines": 3431,
+   "objc_pct": 0.0,
+   "import_uikit": 8,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 145,
+   "net_uses": 33,
+   "selector_sites": 1,
+   "objc_sites": 1,
+   "uikit_gap_uses": 0,
+   "_files_here": 15
+  },
+  {
+   "dep": "Starscream",
+   "class": "Foundation-heavy",
+   "apps": [
+    "WordPress-iOS",
+    "eigen"
+   ],
+   "n_apps": 2,
+   "swift_files": 21,
+   "swift_lines": 2827,
+   "objc_pct": 0.0,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 184,
+   "net_uses": 22,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 7,
+   "_files_here": 3
+  },
+  {
+   "dep": "SVProgressHUD",
+   "class": "ObjC",
+   "apps": [
+    "WordPress-iOS",
+    "eidolon"
+   ],
+   "n_apps": 2,
+   "swift_files": 1,
+   "swift_lines": 32,
+   "objc_pct": 98.3,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 0,
+   "net_uses": 0,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 0,
+   "_files_here": 1
+  },
+  {
+   "dep": "RxSwift",
+   "class": "UIKit-bound",
+   "apps": [
+    "eidolon"
+   ],
+   "n_apps": 1,
+   "swift_files": 792,
+   "swift_lines": 117297,
+   "objc_pct": 2.1,
+   "import_uikit": 128,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 1340,
+   "net_uses": 42,
+   "selector_sites": 157,
+   "objc_sites": 22,
+   "uikit_gap_uses": 209,
+   "_files_here": 118
+  },
+  {
+   "dep": "NextcloudKit",
+   "class": "SwiftUI/Combine-bound",
+   "apps": [
+    "nextcloud-ios"
+   ],
+   "n_apps": 1,
+   "swift_files": 100,
+   "swift_lines": 19188,
+   "objc_pct": 0.0,
+   "import_uikit": 6,
+   "import_swiftui": 15,
+   "import_combine": 0,
+   "view_files": 8,
+   "model_uses": 1440,
+   "net_uses": 532,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 61,
+   "_files_here": 262
+  },
+  {
+   "dep": "Apollo",
+   "class": "Foundation-heavy",
+   "apps": [
+    "ios-oss"
+   ],
+   "n_apps": 1,
+   "swift_files": 134,
+   "swift_lines": 16013,
+   "objc_pct": 0.0,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 706,
+   "net_uses": 82,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 1,
+   "_files_here": 500
+  },
+  {
+   "dep": "ReactiveSwift",
+   "class": "Foundation-heavy",
+   "apps": [
+    "ios-oss"
+   ],
+   "n_apps": 1,
+   "swift_files": 62,
+   "swift_lines": 14682,
+   "objc_pct": 0.0,
+   "import_uikit": 3,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 1619,
+   "net_uses": 6,
+   "selector_sites": 3,
+   "objc_sites": 2,
+   "uikit_gap_uses": 2,
+   "_files_here": 599
+  },
+  {
+   "dep": "Nuke",
+   "class": "SwiftUI/Combine-bound",
+   "apps": [
+    "mastodon-ios"
+   ],
+   "n_apps": 1,
+   "swift_files": 64,
+   "swift_lines": 10594,
+   "objc_pct": 0.0,
+   "import_uikit": 23,
+   "import_swiftui": 4,
+   "import_combine": 0,
+   "view_files": 1,
+   "model_uses": 548,
+   "net_uses": 134,
+   "selector_sites": 2,
+   "objc_sites": 6,
+   "uikit_gap_uses": 3,
+   "_files_here": 3
+  },
+  {
+   "dep": "HAKit",
+   "class": "Foundation-heavy",
+   "apps": [
+    "home-assistant-ios"
+   ],
+   "n_apps": 1,
+   "swift_files": 56,
+   "swift_lines": 5126,
+   "objc_pct": 0.0,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 215,
+   "net_uses": 41,
+   "selector_sites": 3,
+   "objc_sites": 2,
+   "uikit_gap_uses": 2,
+   "_files_here": 164
+  },
+  {
+   "dep": "ObjectMapper",
+   "class": "Foundation-heavy",
+   "apps": [
+    "home-assistant-ios"
+   ],
+   "n_apps": 1,
+   "swift_files": 27,
+   "swift_lines": 3990,
+   "objc_pct": 0.0,
+   "import_uikit": 1,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 87,
+   "net_uses": 0,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 0,
+   "_files_here": 28
+  },
+  {
+   "dep": "Interstellar",
+   "class": "Foundation-heavy",
+   "apps": [
+    "eigen"
+   ],
+   "n_apps": 1,
+   "swift_files": 39,
+   "swift_lines": 3758,
+   "objc_pct": 0.0,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 83,
+   "net_uses": 0,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 0,
+   "_files_here": 44
+  },
+  {
+   "dep": "PromiseKit",
+   "class": "Foundation-heavy",
+   "apps": [
+    "home-assistant-ios"
+   ],
+   "n_apps": 1,
+   "swift_files": 24,
+   "swift_lines": 3070,
+   "objc_pct": 17.5,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 1,
+   "view_files": 0,
+   "model_uses": 145,
+   "net_uses": 12,
+   "selector_sites": 0,
+   "objc_sites": 9,
+   "uikit_gap_uses": 1,
+   "_files_here": 249
+  },
+  {
+   "dep": "SwipeCellKit",
+   "class": "UIKit-bound",
+   "apps": [
+    "pocket-casts-ios"
+   ],
+   "n_apps": 1,
+   "swift_files": 23,
+   "swift_lines": 3066,
+   "objc_pct": 0.0,
+   "import_uikit": 22,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 10,
+   "net_uses": 0,
+   "selector_sites": 7,
+   "objc_sites": 8,
+   "uikit_gap_uses": 5,
+   "_files_here": 10
+  },
+  {
+   "dep": "Moya",
+   "class": "Foundation-heavy",
+   "apps": [
+    "eidolon"
+   ],
+   "n_apps": 1,
+   "swift_files": 34,
+   "swift_lines": 2849,
+   "objc_pct": 0.0,
+   "import_uikit": 0,
+   "import_swiftui": 0,
+   "import_combine": 3,
+   "view_files": 0,
+   "model_uses": 226,
+   "net_uses": 65,
+   "selector_sites": 0,
+   "objc_sites": 0,
+   "uikit_gap_uses": 0,
+   "_files_here": 32
+  },
+  {
+   "dep": "DifferenceKit",
+   "class": "UIKit-bound",
+   "apps": [
+    "pocket-casts-ios"
+   ],
+   "n_apps": 1,
+   "swift_files": 20,
+   "swift_lines": 1981,
+   "objc_pct": 0.0,
+   "import_uikit": 3,
+   "import_swiftui": 0,
+   "import_combine": 0,
+   "view_files": 0,
+   "model_uses": 30,
+   "net_uses": 0,
+   "selector_sites": 1,
+   "objc_sites": 1,
+   "uikit_gap_uses": 0,
+   "_files_here": 17
+  }
+ ],
+ "per_app": {
+  "Hackers": {
+   "measured_deps": 1,
+   "load_bearing": [],
+   "worst_load_bearing_class": null,
+   "worst_load_bearing_deps": [],
+   "worst_any_class": "Foundation-heavy",
+   "own_selector_sites": 3,
+   "dep_selector_sites": 0,
+   "load_bearing_selector_sites": 0,
+   "total_selector_sites": 3
+  },
+  "ProtonMail-ios": {
+   "measured_deps": 1,
+   "load_bearing": [],
+   "worst_load_bearing_class": null,
+   "worst_load_bearing_deps": [],
+   "worst_any_class": "ObjC",
+   "own_selector_sites": 18,
+   "dep_selector_sites": 67,
+   "load_bearing_selector_sites": 0,
+   "total_selector_sites": 85
+  },
+  "Signal-iOS": {
+   "measured_deps": 4,
+   "load_bearing": [
+    "GRDB"
+   ],
+   "worst_load_bearing_class": "Foundation-heavy",
+   "worst_load_bearing_deps": [
+    "GRDB"
+   ],
+   "worst_any_class": "ObjC",
+   "own_selector_sites": 496,
+   "dep_selector_sites": 4,
+   "load_bearing_selector_sites": 4,
+   "total_selector_sites": 500
+  },
+  "Telegram-iOS": {
+   "measured_deps": 1,
+   "load_bearing": [],
+   "worst_load_bearing_class": null,
+   "worst_load_bearing_deps": [],
+   "worst_any_class": "SwiftUI/Combine-bound",
+   "own_selector_sites": 1426,
+   "dep_selector_sites": 2,
+   "load_bearing_selector_sites": 0,
+   "total_selector_sites": 1428
+  },
+  "WordPress-iOS": {
+   "measured_deps": 6,
+   "load_bearing": [],
+   "worst_load_bearing_class": null,
+   "worst_load_bearing_deps": [],
+   "worst_any_class": "ObjC",
+   "own_selector_sites": 458,
+   "dep_selector_sites": 67,
+   "load_bearing_selector_sites": 0,
+   "total_selector_sites": 525
+  },
+  "duckduckgo-ios": {
+   "measured_deps": 4,
+   "load_bearing": [],
+   "worst_load_bearing_class": null,
+   "worst_load_bearing_deps": [],
+   "worst_any_class": "SwiftUI/Combine-bound",
+   "own_selector_sites": 189,
+   "dep_selector_sites": 13,
+   "load_bearing_selector_sites": 0,
+   "total_selector_sites": 202
+  },
+  "eidolon": {
+   "measured_deps": 8,
+   "load_bearing": [
+    "SwiftyJSON",
+    "Nimble",
+    "Quick",
+    "RxSwift",
+    "Moya"
+   ],
+   "worst_load_bearing_class": "UIKit-bound",
+   "worst_load_bearing_deps": [
+    "RxSwift"
+   ],
+   "worst_any_class": "ObjC",
+   "own_selector_sites": 8,
+   "dep_selector_sites": 157,
+   "load_bearing_selector_sites": 157,
+   "total_selector_sites": 165
+  },
+  "eigen": {
+   "measured_deps": 5,
+   "load_bearing": [
+    "Nimble",
+    "Quick",
+    "Interstellar"
+   ],
+   "worst_load_bearing_class": "Foundation-heavy",
+   "worst_load_bearing_deps": [
+    "Nimble",
+    "Quick",
+    "Interstellar"
+   ],
+   "worst_any_class": "Foundation-heavy",
+   "own_selector_sites": 29,
+   "dep_selector_sites": 0,
+   "load_bearing_selector_sites": 0,
+   "total_selector_sites": 29
+  },
+  "element-ios": {
+   "measured_deps": 2,
+   "load_bearing": [],
+   "worst_load_bearing_class": null,
+   "worst_load_bearing_deps": [],
+   "worst_any_class": "ObjC",
+   "own_selector_sites": 232,
+   "dep_selector_sites": 67,
+   "load_bearing_selector_sites": 0,
+   "total_selector_sites": 299
+  },
+  "firefox-ios": {
+   "measured_deps": 3,
+   "load_bearing": [],
+   "worst_load_bearing_class": null,
+   "worst_load_bearing_deps": [],
+   "worst_any_class": "SwiftUI/Combine-bound",
+   "own_selector_sites": 430,
+   "dep_selector_sites": 74,
+   "load_bearing_selector_sites": 0,
+   "total_selector_sites": 504
+  },
+  "focus-ios": {
+   "measured_deps": 2,
+   "load_bearing": [],
+   "worst_load_bearing_class": null,
+   "worst_load_bearing_deps": [],
+   "worst_any_class": "ObjC",
+   "own_selector_sites": 77,
+   "dep_selector_sites": 67,
+   "load_bearing_selector_sites": 0,
+   "total_selector_sites": 144
+  },
+  "home-assistant-ios": {
+   "measured_deps": 7,
+   "load_bearing": [
+    "GRDB",
+    "HAKit",
+    "PromiseKit"
+   ],
+   "worst_load_bearing_class": "Foundation-heavy",
+   "worst_load_bearing_deps": [
+    "GRDB",
+    "HAKit",
+    "PromiseKit"
+   ],
+   "worst_any_class": "ObjC",
+   "own_selector_sites": 94,
+   "dep_selector_sites": 7,
+   "load_bearing_selector_sites": 7,
+   "total_selector_sites": 101
+  },
+  "ios-oss": {
+   "measured_deps": 6,
+   "load_bearing": [
+    "Apollo",
+    "ReactiveSwift"
+   ],
+   "worst_load_bearing_class": "Foundation-heavy",
+   "worst_load_bearing_deps": [
+    "Apollo",
+    "ReactiveSwift"
+   ],
+   "worst_any_class": "SwiftUI/Combine-bound",
+   "own_selector_sites": 163,
+   "dep_selector_sites": 13,
+   "load_bearing_selector_sites": 3,
+   "total_selector_sites": 176
+  },
+  "mastodon-ios": {
+   "measured_deps": 5,
+   "load_bearing": [],
+   "worst_load_bearing_class": null,
+   "worst_load_bearing_deps": [],
+   "worst_any_class": "SwiftUI/Combine-bound",
+   "own_selector_sites": 68,
+   "dep_selector_sites": 3,
+   "load_bearing_selector_sites": 0,
+   "total_selector_sites": 71
+  },
+  "nextcloud-ios": {
+   "measured_deps": 5,
+   "load_bearing": [
+    "Alamofire",
+    "RealmSwift",
+    "NextcloudKit"
+   ],
+   "worst_load_bearing_class": "SwiftUI/Combine-bound",
+   "worst_load_bearing_deps": [
+    "NextcloudKit"
+   ],
+   "worst_any_class": "SwiftUI/Combine-bound",
+   "own_selector_sites": 103,
+   "dep_selector_sites": 0,
+   "load_bearing_selector_sites": 0,
+   "total_selector_sites": 103
+  },
+  "pocket-casts-ios": {
+   "measured_deps": 7,
+   "load_bearing": [],
+   "worst_load_bearing_class": null,
+   "worst_load_bearing_deps": [],
+   "worst_any_class": "SwiftUI/Combine-bound",
+   "own_selector_sites": 772,
+   "dep_selector_sites": 84,
+   "load_bearing_selector_sites": 0,
+   "total_selector_sites": 856
+  },
+  "wikipedia-ios": {
+   "measured_deps": 3,
+   "load_bearing": [
+    "CocoaLumberjack"
+   ],
+   "worst_load_bearing_class": "ObjC",
+   "worst_load_bearing_deps": [
+    "CocoaLumberjack"
+   ],
+   "worst_any_class": "SwiftUI/Combine-bound",
+   "own_selector_sites": 419,
+   "dep_selector_sites": 2,
+   "load_bearing_selector_sites": 0,
+   "total_selector_sites": 421
+  }
+ }
+}

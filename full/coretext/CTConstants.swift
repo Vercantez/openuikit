@@ -393,3 +393,70 @@ public var kWordFinalSwashesOffSelector: Int { 3 }
 public var kWordFinalSwashesOnSelector: Int { 2 }
 public var kWordInitialSwashesOffSelector: Int { 1 }
 public var kWordInitialSwashesOnSelector: Int { 0 }
+
+// MARK: - OpenType name IDs (ISO/IEC 14496-22) imported as Apple kFont* aliases
+
+public var kFontCopyrightName: Int { 0 }
+public var kFontFamilyName: Int { 1 }
+public var kFontStyleName: Int { 2 }
+public var kFontUniqueName: Int { 3 }
+public var kFontFullName: Int { 4 }
+public var kFontVersionName: Int { 5 }
+public var kFontManufacturerName: Int { 8 }
+public var kFontDesignerName: Int { 9 }
+public var kFontDescriptionName: Int { 10 }
+public var kFontVendorURLName: Int { 11 }
+public var kFontDesignerURLName: Int { 12 }
+public var kFontLicenseDescriptionName: Int { 13 }
+public var kFontLicenseInfoURLName: Int { 14 }
+public var kFontPreferredFamilyName: Int { 16 }
+public var kFontPreferredSubfamilyName: Int { 17 }
+public var kFontMacCompatibleFullName: Int { 18 }
+public var kFontSampleTextName: Int { 19 }
+public var kFontPostscriptName: Int { 6 }
+public var kFontPostScriptCIDName: Int { 20 }
+public var kFontTrademarkName: Int { 7 }
+public var kFontLastReservedName: Int { 255 }
+
+// MARK: - OpenType platform / encoding IDs
+
+public var kFontUnicodePlatform: Int { 0 }
+public var kFontMacintoshPlatform: Int { 1 }
+public var kFontReservedPlatform: Int { 2 }
+public var kFontMicrosoftPlatform: Int { 3 }
+public var kFontCustomPlatform: Int { 4 }
+public var kFontUnicodeDefaultSemantics: Int { 0 }
+public var kFontUnicodeV1_1Semantics: Int { 1 }
+public var kFontISO10646_1993Semantics: Int { 2 }
+public var kFontUnicodeV2_0BMPOnlySemantics: Int { 3 }
+public var kFontUnicodeV2_0FullCoverageSemantics: Int { 4 }
+public var kFontUnicodeV4_0VariationSequenceSemantics: Int { 5 }
+public var kFontUnicode_FullRepertoire: Int { 6 }
+public var kFontMicrosoftSymbolScript: Int { 0 }
+public var kFontMicrosoftStandardScript: Int { 1 }
+public var kFontMicrosoftUCS4Script: Int { 10 }
+public var kFontNoPlatformCode: UInt32 { 0xFFFF_FFFF }
+public var kFontNoScriptCode: UInt32 { 0xFFFF_FFFF }
+public var kFontNoLanguageCode: UInt32 { 0xFFFF_FFFF }
+public var kFontNoNameCode: UInt32 { 0xFFFF_FFFF }
+
+// MARK: - SFNT FourCC table tags (same packing as kCTFontTable*)
+
+public var kMORTTag: Int { 1836020340 }
+public var kMORXTag: Int { 1836020344 }
+public var kPROPTag: Int { 1886547824 }
+public var kKERNTag: Int { 1801810542 }
+public var kKERXTag: Int { 1801810552 }
+public var kBSLNTag: Int { 1651731566 }
+public var kJUSTTag: Int { 1786082164 }
+public var kLCARTag: Int { 1818452338 }
+public var kOPBDTag: Int { 1869636196 }
+public var kTRAKTag: Int { 1953653099 }
+public var nameFontTableTag: Int { 1851878757 }
+public var os2FontTableTag: Int { 1330851634 }
+public var variationFontTableTag: Int { 1719034226 }
+public var ATSFONTREF_DEFINED: Int32 { 1 }
+
+// CTParagraphStyle writing-direction flags: (0 << 1) and (1 << 1)
+public var kCTWritingDirectionEmbedding: Int { 0 }
+public var kCTWritingDirectionOverride: Int { 2 }

@@ -1,0 +1,46 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave13-repair-1",
+    "maxActive": 24,
+    "maxRuns": 2
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "identitydocumentservices": {
+      "agentId": "bc-34d6648c-f45c-53dc-8688-3e497906ce6a",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T05:52:15Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/234",
+      "expectedPriorHead": "bb4d04ed52bcb82ffd0d4e37ec649c25134d4b64",
+      "idempotencyKey": "41810217-a1b7-5aba-a523-843ab95fee8e",
+      "launchStatus": "SENT",
+      "module": "IdentityDocumentServices",
+      "promptBytes": 1498,
+      "promptSha256": "f22a644d58173c3af290bad073ad01780f4df41677cec0790bf7dae54a209699",
+      "runId": "run-55edd8fd-8792-4eea-8181-5f76cf351556",
+      "runStatus": "running",
+      "slug": "identitydocumentservices"
+    },
+    "secureelementcredential": {
+      "agentId": "bc-20c0d64b-666c-5a91-8a4b-8049e0459b74",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T05:52:23Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/240",
+      "expectedPriorHead": "ae48812ce87260cf094386fa88e869ef344de920",
+      "idempotencyKey": "e6b877f6-688c-58b6-8008-a12dab6a1690",
+      "launchStatus": "SENT",
+      "module": "SecureElementCredential",
+      "promptBytes": 1493,
+      "promptSha256": "7041f465982e2c4b3889ebf6cfad1490924ccfa08373d9552f09c22398fb3f4f",
+      "runId": "run-a024b8d0-d3bb-4d1b-a964-acdb84c8edcd",
+      "runStatus": "running",
+      "slug": "secureelementcredential"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

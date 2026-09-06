@@ -267,6 +267,11 @@ extension AVPlayer {
     return false
   }
 
+  public func preroll(atRate rate: Float, completionHandler: @escaping (Bool) -> Void) {
+    _ = rate
+    completionHandler(false)
+  }
+
   public func cancelPendingPrerolls() {}
 
   public var sourceClock: CMClock? {
@@ -639,18 +644,50 @@ extension AVPlayerItem {
     }
   public var recommendedTimeOffsetFromLive: CMTime { .zero }
   public var automaticallyPreservesTimeOffsetFromLive: Bool {
-      get { false }
-      set { _ = newValue }
+      get { portableAutomaticallyPreservesTimeOffsetFromLive }
+      set { portableAutomaticallyPreservesTimeOffsetFromLive = newValue }
     }
   public var forwardPlaybackEndTime: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { portableForwardPlaybackEndTime }
+      set { portableForwardPlaybackEndTime = newValue }
     }
   public var reversePlaybackEndTime: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { portableReversePlaybackEndTime }
+      set { portableReversePlaybackEndTime = newValue }
     }
-  public var seekableTimeRanges: [NSValue] { [] }
+  public var seekableTimeRanges: [NSValue] { loadedTimeRanges }
+  public var audioMix: AVAudioMix? {
+      get { portableAudioMix }
+      set { portableAudioMix = newValue }
+    }
+  public var videoComposition: AVVideoComposition? {
+      get { portableVideoComposition }
+      set { portableVideoComposition = newValue }
+    }
+  public var seekingWaitsForVideoCompositionRendering: Bool {
+      get { portableSeekingWaitsForVideoCompositionRendering }
+      set { portableSeekingWaitsForVideoCompositionRendering = newValue }
+    }
+  public var videoApertureMode: AVVideoApertureMode {
+      get { portableVideoApertureMode }
+      set { portableVideoApertureMode = newValue }
+    }
+  public var audioTimePitchAlgorithm: AVAudioTimePitchAlgorithm {
+      get { portableAudioTimePitchAlgorithm }
+      set { portableAudioTimePitchAlgorithm = newValue }
+    }
+  public var preferredForwardBufferDuration: TimeInterval {
+      get { portablePreferredForwardBufferDuration }
+      set { portablePreferredForwardBufferDuration = newValue }
+    }
+  public var loadedTimeRanges: [NSValue] {
+    let duration = self.duration
+    guard duration.isValid, duration.seconds > 0 else { return [] }
+    return [AVCMTimeRangeValue.nsValue(for: CMTimeRange(start: .zero, duration: duration))]
+  }
+  public var isPlaybackLikelyToKeepUp: Bool { duration.isValid && duration.seconds > 0 }
+  public var isPlaybackBufferFull: Bool { false }
+  public var isPlaybackBufferEmpty: Bool { loadedTimeRanges.isEmpty }
   public func seek(to time: CMTime) async -> Bool {
     _portableSetCurrentTime(time)
     return time.isValid
@@ -672,29 +709,13 @@ extension AVPlayerItem {
   }
   public func step(byCount stepCount: Int) { _ = stepCount }
   public var timebase: CMTimebase? { nil }
-  public var videoComposition: AVVideoComposition? {
-      get { nil }
-      set { _ = newValue }
-    }
   public var customVideoCompositor: (any AVVideoCompositing)? { nil }
-  public var seekingWaitsForVideoCompositionRendering: Bool {
-      get { false }
-      set { _ = newValue }
-    }
   public var textStyleRules: [AVTextStyleRule]? {
       get { nil }
       set { _ = newValue }
     }
-  public var videoApertureMode: AVVideoApertureMode {
-      get { AVVideoApertureMode(rawValue: "") }
-      set { _ = newValue }
-    }
   public var appliesPerFrameHDRDisplayMetadata: Bool {
       get { false }
-      set { _ = newValue }
-    }
-  public var audioTimePitchAlgorithm: AVAudioTimePitchAlgorithm {
-      get { AVAudioTimePitchAlgorithm(rawValue: "") }
       set { _ = newValue }
     }
   public var isAudioSpatializationAllowed: Bool {
@@ -705,45 +726,29 @@ extension AVPlayerItem {
       get { AVAudioSpatializationFormats(rawValue: 0) }
       set { _ = newValue }
     }
-  public var audioMix: AVAudioMix? {
-      get { nil }
-      set { _ = newValue }
-    }
-  public var loadedTimeRanges: [NSValue] {
-    let duration = self.duration
-    guard duration.isValid, duration.seconds > 0 else { return [] }
-    return [AVCMTimeRangeValue.nsValue(for: CMTimeRange(start: .zero, duration: duration))]
-  }
-  public var isPlaybackLikelyToKeepUp: Bool { false }
-  public var isPlaybackBufferFull: Bool { false }
-  public var isPlaybackBufferEmpty: Bool { false }
   public var canUseNetworkResourcesForLiveStreamingWhilePaused: Bool {
       get { false }
       set { _ = newValue }
     }
-  public var preferredForwardBufferDuration: TimeInterval {
-      get { 0 }
-      set { _ = newValue }
-    }
   public var preferredPeakBitRate: Double {
-      get { 0 }
-      set { _ = newValue }
+      get { portablePreferredPeakBitRate }
+      set { portablePreferredPeakBitRate = newValue }
     }
   public var preferredPeakBitRateForExpensiveNetworks: Double {
-      get { 0 }
-      set { _ = newValue }
+      get { portablePreferredPeakBitRateForExpensiveNetworks }
+      set { portablePreferredPeakBitRateForExpensiveNetworks = newValue }
     }
   public var preferredMaximumResolution: CGSize {
-      get { .zero }
-      set { _ = newValue }
+      get { portablePreferredMaximumResolution }
+      set { portablePreferredMaximumResolution = newValue }
     }
   public var preferredMaximumResolutionForExpensiveNetworks: CGSize {
-      get { .zero }
-      set { _ = newValue }
+      get { portablePreferredMaximumResolutionForExpensiveNetworks }
+      set { portablePreferredMaximumResolutionForExpensiveNetworks = newValue }
     }
   public var startsOnFirstEligibleVariant: Bool {
-      get { false }
-      set { _ = newValue }
+      get { portableStartsOnFirstEligibleVariant }
+      set { portableStartsOnFirstEligibleVariant = newValue }
     }
   public var variantPreferences: AVVariantPreferences {
       get { AVVariantPreferences(rawValue: 0) }
@@ -761,18 +766,35 @@ extension AVPlayerItem {
   public func select(_ mediaPresentationSetting: AVMediaPresentationSetting, for mediaSelectionGroup: AVMediaSelectionGroup) {}
   public func accessLog() -> AVPlayerItemAccessLog? { nil }
   public func errorLog() -> AVPlayerItemErrorLog? { nil }
-  public func add(_ output: AVPlayerItemOutput) {}
-  public func remove(_ output: AVPlayerItemOutput) {}
-  public var outputs: [AVPlayerItemOutput] { [] }
-  public func add(_ collector: AVPlayerItemMediaDataCollector) {}
-  public func remove(_ collector: AVPlayerItemMediaDataCollector) {}
-  public var mediaDataCollectors: [AVPlayerItemMediaDataCollector] { [] }
+  public func add(_ output: AVPlayerItemOutput) {
+    portableOutputs.append(output)
+  }
+  public func remove(_ output: AVPlayerItemOutput) {
+    portableOutputs.removeAll { $0 === output }
+  }
+  public var outputs: [AVPlayerItemOutput] { portableOutputs }
+  public func add(_ collector: AVPlayerItemMediaDataCollector) {
+    portableCollectors.append(collector)
+  }
+  public func remove(_ collector: AVPlayerItemMediaDataCollector) {
+    portableCollectors.removeAll { $0 === collector }
+  }
+  public var mediaDataCollectors: [AVPlayerItemMediaDataCollector] { portableCollectors }
   public func seek(to time: CMTime) {
     _portableSetCurrentTime(time)
   }
   public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) {
     _ = (toleranceBefore, toleranceAfter)
     seek(to: time)
+  }
+  public func seek(
+    to time: CMTime,
+    toleranceBefore: CMTime,
+    toleranceAfter: CMTime,
+    completionHandler: @escaping (Bool) -> Void
+  ) {
+    seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
+    completionHandler(time.isValid)
   }
   public func seek(to date: Date) -> Bool { false }
   public func selectedMediaOption(in mediaSelectionGroup: AVMediaSelectionGroup) -> AVMediaSelectionOption? { nil }
@@ -1021,10 +1043,13 @@ open class AVPlayerItemTrack: NSObject, @unchecked Sendable {
 
 open class AVPlayerItemVideoOutput: AVPlayerItemOutput, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(pixelBufferAttributes: CVPixelBufferAttributes) { self.init() }
-  public func pixelBufferAndDisplayTime(forItemTime itemTime: CMTime) -> (pixelBuffer: CVReadOnlyPixelBuffer?, itemTimeForDisplay: CMTime) { (pixelBuffer: nil, itemTimeForDisplay: .zero) }
-  convenience init(pixelBufferAttributes: [String : any Sendable]? = nil) { self.init() }
-  convenience init(outputSettings: [String : any Sendable]?) { self.init() }
+  public convenience init(pixelBufferAttributes: CVPixelBufferAttributes) { self.init() }
+  public func pixelBufferAndDisplayTime(forItemTime itemTime: CMTime) -> (pixelBuffer: CVReadOnlyPixelBuffer?, itemTimeForDisplay: CMTime) {
+    _ = itemTime
+    return (pixelBuffer: nil, itemTimeForDisplay: .zero)
+  }
+  public convenience init(pixelBufferAttributes: [String : any Sendable]? = nil) { self.init() }
+  public convenience init(outputSettings: [String : any Sendable]?) { self.init() }
   public func hasNewPixelBuffer(forItemTime itemTime: CMTime) -> Bool { false }
   public func copyPixelBuffer(forItemTime itemTime: CMTime, itemTimeForDisplay outItemTimeForDisplay: UnsafeMutablePointer<CMTime>?) -> CVPixelBuffer? { nil }
   public func setDelegate(_ delegate: (any AVPlayerItemOutputPullDelegate)?, queue delegateQueue: DispatchQueue?) {}

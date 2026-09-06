@@ -33,7 +33,7 @@ public enum AVCMTimeValue {
         return value
     }
 
-    static func time(from value: NSValue) -> CMTime {
+    public static func time(from value: NSValue) -> CMTime {
         lock.lock()
         let boxed = table[ObjectIdentifier(value)]
         lock.unlock()
