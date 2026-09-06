@@ -152,6 +152,15 @@ booted `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21`, not campaign
 Swift 6.2.4 / `x86_64-unknown-linux-gnu`. The isolated host gate does not
 need the ladder corpus.
 
+Sealed host gate on this pass printed:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=CoreText lane=medium-full symbols=2644
+FRAMEWORK_FANOUT_REFERENCE_OK
+CORETEXT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CoreText dylib=libCoreText.dylib
+```
+
 Run the sealed host gate with:
 
 ```sh
