@@ -1,0 +1,3 @@
+import IdentityDocumentServicesUI
+
+let frameworkLoadSmokeMarker = "IDENTITYDOCUMENTSERVICESUI_AGENT_RUNTIME_OK"

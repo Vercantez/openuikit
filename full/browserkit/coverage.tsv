@@ -1,0 +1,9 @@
+precise	status	evidence	notes
+c:@E@BEEligibilityContext	implemented	test:full/browserkit/tests/agent/BEAvailabilityContextTests.swift#testBEAvailabilityContextType	
+c:@E@BEEligibilityContext@BEEligibilityContextWebBrowser	implemented	test:full/browserkit/tests/agent/BEAvailabilityContextTests.swift#testBEAvailabilityContextWebBrowserRawValue	
+c:objc(cs)BEAvailability	implemented	test:full/browserkit/tests/agent/BEAvailabilityTests.swift#testBEAvailabilityIsNSObject	
+c:objc(cs)BEAvailability(cm)isEligibleForContext:completionHandler:	implemented	test:full/browserkit/tests/agent/BEAvailabilityTests.swift#testBEAvailabilityIsEligibleFailClosed	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BEEligibilityContext	implemented	test:full/browserkit/tests/agent/BEAvailabilityContextTests.swift#testBEAvailabilityContextInequality	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BEEligibilityContext	implemented	test:full/browserkit/tests/agent/BEAvailabilityContextTests.swift#testBEAvailabilityContextHashValue	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BEEligibilityContext	implemented	test:full/browserkit/tests/agent/BEAvailabilityContextTests.swift#testBEAvailabilityContextHashInto	
+s:So20BEEligibilityContextV8rawValueABSgSi_tcfc	implemented	test:full/browserkit/tests/agent/BEAvailabilityContextTests.swift#testBEAvailabilityContextInitRawValue	
