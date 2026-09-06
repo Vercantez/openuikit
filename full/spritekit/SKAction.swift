@@ -33,7 +33,7 @@ enum _SKActionKind {
     case physicsImpulse(force: CGVector?, angular: CGFloat?, torque: CGFloat?)
     case changeFloat(key: String, to: Float?, by: Float?)
     case colorize(SKColor?, blend: CGFloat?)
-    case follow
+    case follow(points: [CGPoint], offset: Bool, orient: Bool)
     case reach
     case warp
     case perform
@@ -138,7 +138,9 @@ final class _SKActionRuntime {
             node.isHidden = hidden
         case .removeFromParent:
             node.removeFromParent()
-        case .playSound, .playPause, .follow, .reach, .warp, .perform:
+        case .playSound, .playPause, .reach, .warp, .perform:
+            break
+        case .follow:
             break
         case .setTexture(let texture, let resize, let normal):
             if let sprite = node as? SKSpriteNode {
@@ -160,8 +162,19 @@ final class _SKActionRuntime {
 
     private func apply(_ t: CGFloat, on node: SKNode) {
         switch action.kind {
-        case .wait, .playSound, .playPause, .follow, .reach, .warp, .perform, .setTexture, .hide, .removeFromParent, .run:
+        case .wait, .playSound, .playPause, .reach, .warp, .perform, .setTexture, .hide, .removeFromParent, .run:
             break
+        case .follow(let points, let offset, let orient):
+            let sampled = sk_pointAlong(points, t: t)
+            if offset, let start = startPoint, let origin = points.first {
+                node.position = CGPoint(x: start.x + sampled.x - origin.x, y: start.y + sampled.y - origin.y)
+            } else if !offset {
+                node.position = sampled
+            }
+            if orient, points.count >= 2 {
+                let ahead = sk_pointAlong(points, t: min(1, t + 0.01))
+                node.zRotation = CGFloat(atan2(Double(ahead.y - sampled.y), Double(ahead.x - sampled.x)))
+            }
         case .moveBy(let delta):
             if let start = startPoint {
                 node.position = CGPoint(x: start.x + delta.dx * t, y: start.y + delta.dy * t)
@@ -712,25 +725,29 @@ open class SKAction: NSObject, NSCopying, NSSecureCoding {
     }
 
     public class func follow(_ path: CGPath, duration: TimeInterval) -> SKAction {
-        _ = path
-        return make(.follow, duration: duration)
+        make(.follow(points: sk_polyline(path), offset: true, orient: false), duration: duration)
     }
 
     public class func follow(_ path: CGPath, speed: CGFloat) -> SKAction {
-        _ = speed
-        return follow(path, duration: 0)
+        let points = sk_polyline(path)
+        var length: CGFloat = 0
+        if points.count >= 2 {
+            for index in 1..<points.count {
+                length += sk_hypot(points[index].x - points[index - 1].x, points[index].y - points[index - 1].y)
+            }
+        }
+        let duration = speed > 0 ? TimeInterval(length / speed) : 0
+        return make(.follow(points: points, offset: true, orient: false), duration: duration)
     }
 
     public class func follow(_ path: CGPath, asOffset offset: Bool, orientToPath orient: Bool, duration: TimeInterval) -> SKAction {
-        _ = offset
-        _ = orient
-        return follow(path, duration: duration)
+        make(.follow(points: sk_polyline(path), offset: offset, orient: orient), duration: duration)
     }
 
     public class func follow(_ path: CGPath, asOffset offset: Bool, orientToPath orient: Bool, speed: CGFloat) -> SKAction {
-        _ = offset
-        _ = orient
-        return follow(path, speed: speed)
+        let action = follow(path, speed: speed)
+        action.kind = .follow(points: sk_polyline(path), offset: offset, orient: orient)
+        return action
     }
 
     public class func reach(to position: CGPoint, rootNode root: SKNode, duration: TimeInterval) -> SKAction {

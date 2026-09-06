@@ -24,8 +24,14 @@ open class SKTexture: NSObject, NSSecureCoding, NSCopying {
 
     public convenience init(data pixelData: Data, size: CGSize) {
         self.init()
-        _pixels = pixelData
-        _size = size
+        if let png = sk_pngSize(pixelData) {
+            _size = png
+            _pixels = pixelData
+            _name = "png"
+        } else {
+            _pixels = pixelData
+            _size = size
+        }
     }
 
     public convenience init(data pixelData: Data, size: CGSize, flipped: Bool) {
@@ -154,6 +160,26 @@ open class SKTextureAtlas: NSObject, NSSecureCoding {
     var textures: [String: SKTexture]
 
     public convenience init(named name: String) {
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: name, isDirectory: &isDirectory), isDirectory.boolValue {
+            var map: [String: SKTexture] = [:]
+            if let files = try? FileManager.default.contentsOfDirectory(atPath: name) {
+                for file in files {
+                    let path = (name as NSString).appendingPathComponent(file)
+                    if let data = FileManager.default.contents(atPath: path) {
+                        let texture = SKTexture(data: data, size: CGSize(width: 1, height: 1))
+                        let key = (file as NSString).deletingPathExtension
+                        map[key] = texture
+                    }
+                }
+            }
+            self.init(dictionary: map)
+            return
+        }
+        if name.hasSuffix(".plist"), let plist = NSDictionary(contentsOfFile: name) as? [String: Any] {
+            self.init(dictionary: sk_flattenAtlasPlist(plist))
+            return
+        }
         self.init(dictionary: [name: name])
     }
 
@@ -164,6 +190,13 @@ open class SKTextureAtlas: NSObject, NSSecureCoding {
                 map[key] = texture
             } else if let name = value as? String {
                 map[key] = SKTexture(imageNamed: name)
+            } else if let info = value as? [String: Any] {
+                let width = sk_plistNumber(info["width"]) ?? 1
+                let height = sk_plistNumber(info["height"]) ?? 1
+                map[key] = SKTexture(
+                    data: Data(repeating: 255, count: max(1, Int(width * height * 4))),
+                    size: CGSize(width: width, height: height)
+                )
             }
         }
         self.init()
@@ -212,6 +245,21 @@ func sk_valueNoise(x: Int, y: Int, smoothness: CGFloat) -> CGFloat {
     let stirred = (mixed ^ (mixed >> 13)) &* 1_274_126_177
     let unit = CGFloat(stirred % 1000) / 1000
     return sk_lerp(unit, 0.5, sk_clamp(smoothness, 0, 1))
+}
+
+func sk_plistNumber(_ value: Any?) -> CGFloat? {
+    if let number = value as? NSNumber { return CGFloat(number.doubleValue) }
+    if let number = value as? CGFloat { return number }
+    if let number = value as? Double { return CGFloat(number) }
+    if let number = value as? Int { return CGFloat(number) }
+    return nil
+}
+
+func sk_flattenAtlasPlist(_ dictionary: [String: Any]) -> [String: Any] {
+    if let frames = dictionary["frames"] as? [String: Any] {
+        return frames
+    }
+    return dictionary
 }
 
 open class SKSpriteNode: SKNode {
@@ -323,7 +371,10 @@ open class SKLabelNode: SKNode {
     }
 
     public override var frame: CGRect {
-        let width = CGFloat((text ?? "").count) * fontSize * 0.5
+        // Linux font metric rule: advance = 0.5 * fontSize (half-em square),
+        // line height = fontSize. Origin follows alignment relative to position.
+        let glyphs = CGFloat((text ?? attributedText?.string ?? "").count)
+        let width = glyphs * fontSize * 0.5
         let height = fontSize * CGFloat(max(1, numberOfLines))
         var x = position.x
         var y = position.y
