@@ -10,6 +10,12 @@ public typealias simd_float2 = SIMD2<Float>
 public typealias simd_float3 = SIMD3<Float>
 public typealias simd_float4 = SIMD4<Float>
 
+#if !canImport(CoreVideo)
+public typealias OSType = UInt32
+/// FourCC 'BGRA'. Linux lookalike; not an Apple CoreVideo oracle.
+public let kCVPixelFormatType_32BGRA: OSType = 0x42475241
+#endif
+
 public struct simd_float3x3: Equatable, Hashable, Sendable {
     public var columns: (SIMD3<Float>, SIMD3<Float>, SIMD3<Float>)
 

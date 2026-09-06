@@ -107,7 +107,7 @@ public struct RectangleObservation: VisionObservation, QuadrilateralProviding {
     }
 }
 
-public struct BarcodeObservation: VisionObservation, QuadrilateralProviding {
+public struct BarcodeObservation: VisionObservation, QuadrilateralProviding, Codable {
     public enum CompositeType: String, Codable, Hashable, Sendable {
         case linked, gs1TypeA, gs1TypeB, gs1TypeC
     }
@@ -147,13 +147,41 @@ public struct BarcodeObservation: VisionObservation, QuadrilateralProviding {
         self.payloadData = observation.payloadData
         self.isGS1DataCarrier = observation.isGS1DataCarrier
         self.isColorInverted = observation.isColorInverted
-        self.supplementalCompositeType = nil
+        self.supplementalCompositeType = overlayCompositeType(observation.supplementalCompositeType)
         self.supplementalPayloadString = observation.supplementalPayloadString
         self.supplementalPayloadData = observation.supplementalPayloadData
         self.confidence = observation.confidence
         self.uuid = observation.uuid
         self.timeRange = observation.timeRange
         self.originatingRequestDescriptor = nil
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(uuid)
+        hasher.combine(payloadString)
+        hasher.combine(symbology)
+        hasher.combine(topLeft)
+        hasher.combine(confidence)
+    }
+
+    public static func == (a: BarcodeObservation, b: BarcodeObservation) -> Bool {
+        a.uuid == b.uuid
+            && a.payloadString == b.payloadString
+            && a.symbology == b.symbology
+            && a.topLeft == b.topLeft
+            && a.topRight == b.topRight
+            && a.bottomLeft == b.bottomLeft
+            && a.bottomRight == b.bottomRight
+    }
+}
+
+func overlayCompositeType(_ type: VNBarcodeCompositeType) -> BarcodeObservation.CompositeType? {
+    switch type {
+    case .linked: return .linked
+    case .gs1TypeA: return .gs1TypeA
+    case .gs1TypeB: return .gs1TypeB
+    case .gs1TypeC: return .gs1TypeC
+    case .none: return nil
     }
 }
 
@@ -657,6 +685,18 @@ public struct SmudgeObservation: VisionObservation {
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
     public var description: String { "SmudgeObservation" }
+
+    public init(
+        confidence: Float = 0,
+        uuid: UUID = UUID(),
+        timeRange: CMTimeRange? = nil,
+        originatingRequestDescriptor: RequestDescriptor? = nil
+    ) {
+        self.confidence = confidence
+        self.uuid = uuid
+        self.timeRange = timeRange
+        self.originatingRequestDescriptor = originatingRequestDescriptor
+    }
 }
 
 public struct HumanBodyPoseObservation: VisionObservation, PoseProviding {
@@ -1250,6 +1290,18 @@ public struct PixelBufferObservation: VisionObservation {
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
     public var description: String { "PixelBufferObservation" }
+
+    public init(
+        confidence: Float = 0,
+        uuid: UUID = UUID(),
+        timeRange: CMTimeRange? = nil,
+        originatingRequestDescriptor: RequestDescriptor? = nil
+    ) {
+        self.confidence = confidence
+        self.uuid = uuid
+        self.timeRange = timeRange
+        self.originatingRequestDescriptor = originatingRequestDescriptor
+    }
 }
 
 public struct SaliencyImageObservation: VisionObservation {
@@ -1258,6 +1310,18 @@ public struct SaliencyImageObservation: VisionObservation {
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
     public var description: String { "SaliencyImageObservation" }
+
+    public init(
+        confidence: Float = 0,
+        uuid: UUID = UUID(),
+        timeRange: CMTimeRange? = nil,
+        originatingRequestDescriptor: RequestDescriptor? = nil
+    ) {
+        self.confidence = confidence
+        self.uuid = uuid
+        self.timeRange = timeRange
+        self.originatingRequestDescriptor = originatingRequestDescriptor
+    }
 }
 
 public struct ImageAestheticsScoresObservation: VisionObservation {
@@ -1266,6 +1330,18 @@ public struct ImageAestheticsScoresObservation: VisionObservation {
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
     public var description: String { "ImageAestheticsScoresObservation" }
+
+    public init(
+        confidence: Float = 0,
+        uuid: UUID = UUID(),
+        timeRange: CMTimeRange? = nil,
+        originatingRequestDescriptor: RequestDescriptor? = nil
+    ) {
+        self.confidence = confidence
+        self.uuid = uuid
+        self.timeRange = timeRange
+        self.originatingRequestDescriptor = originatingRequestDescriptor
+    }
 }
 
 public struct OpticalFlowObservation: VisionObservation {
@@ -1273,7 +1349,39 @@ public struct OpticalFlowObservation: VisionObservation {
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
+    public let pixelBuffer: CVPixelBuffer?
     public var description: String { "OpticalFlowObservation" }
+
+    public init(
+        confidence: Float = 0,
+        uuid: UUID = UUID(),
+        timeRange: CMTimeRange? = nil,
+        originatingRequestDescriptor: RequestDescriptor? = nil,
+        pixelBuffer: CVPixelBuffer? = nil
+    ) {
+        self.confidence = confidence
+        self.uuid = uuid
+        self.timeRange = timeRange
+        self.originatingRequestDescriptor = originatingRequestDescriptor
+        self.pixelBuffer = pixelBuffer
+    }
+
+    public init?(_ observation: VNPixelBufferObservation) {
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+        self.pixelBuffer = observation.pixelBuffer
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(uuid)
+        hasher.combine(confidence)
+    }
+
+    public static func == (a: OpticalFlowObservation, b: OpticalFlowObservation) -> Bool {
+        a.uuid == b.uuid && a.confidence == b.confidence
+    }
 }
 
 public struct ImageTranslationAlignmentObservation: VisionObservation {
@@ -1300,6 +1408,20 @@ public struct ImageHomographicAlignmentObservation: VisionObservation {
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
     public var description: String { "ImageHomographicAlignmentObservation" }
+
+    public init(
+        warpTransform: matrix_float3x3 = .identity,
+        confidence: Float = 0,
+        uuid: UUID = UUID(),
+        timeRange: CMTimeRange? = nil,
+        originatingRequestDescriptor: RequestDescriptor? = nil
+    ) {
+        self.warpTransform = warpTransform
+        self.confidence = confidence
+        self.uuid = uuid
+        self.timeRange = timeRange
+        self.originatingRequestDescriptor = originatingRequestDescriptor
+    }
 }
 
 public enum VisionResult: CustomStringConvertible {
@@ -1337,7 +1459,44 @@ public enum VisionResult: CustomStringConvertible {
     case generateObjectnessBasedSaliencyImage(GenerateObjectnessBasedSaliencyImageRequest, SaliencyImageObservation)
     case error(any VisionRequest, any Error)
     case coreML(CoreMLRequest, [any VisionObservation])
-    public var description: String { String(describing: self) }
+    public var description: String {
+        switch self {
+        case .detectBarcodes: return "detectBarcodes"
+        case .detectContours: return "detectContours"
+        case .detectRectangles: return "detectRectangles"
+        case .generateImageFeaturePrint: return "generateImageFeaturePrint"
+        case .classifyImage: return "classifyImage"
+        case .recognizeText: return "recognizeText"
+        case .detectFaceRectangles: return "detectFaceRectangles"
+        case .detectHumanBodyPose: return "detectHumanBodyPose"
+        case .detectHorizon: return "detectHorizon"
+        case .detectLensSmudge: return "detectLensSmudge"
+        case .recognizeAnimals: return "recognizeAnimals"
+        case .detectTrajectories: return "detectTrajectories"
+        case .recognizeDocuments: return "recognizeDocuments"
+        case .detectFaceLandmarks: return "detectFaceLandmarks"
+        case .detectHumanHandPose: return "detectHumanHandPose"
+        case .detectAnimalBodyPose: return "detectAnimalBodyPose"
+        case .detectTextRectangles: return "detectTextRectangles"
+        case .detectHumanRectangles: return "detectHumanRectangles"
+        case .detectFaceCaptureQuality: return "detectFaceCaptureQuality"
+        case .detectDocumentSegmentation: return "detectDocumentSegmentation"
+        case .generatePersonInstanceMask: return "generatePersonInstanceMask"
+        case .generatePersonSegmentation: return "generatePersonSegmentation"
+        case .calculateImageAestheticsScores: return "calculateImageAestheticsScores"
+        case .generateForegroundInstanceMask: return "generateForegroundInstanceMask"
+        case .generateAttentionBasedSaliencyImage: return "generateAttentionBasedSaliencyImage"
+        case .generateObjectnessBasedSaliencyImage: return "generateObjectnessBasedSaliencyImage"
+        case .detectHumanBodyPose3D: return "detectHumanBodyPose3D"
+        case .coreML: return "coreML"
+        case .trackObject: return "trackObject"
+        case .trackRectangle: return "trackRectangle"
+        case .trackOpticalFlow: return "trackOpticalFlow"
+        case .trackHomographicImageRegistration: return "trackHomographicImageRegistration"
+        case .trackTranslationalImageRegistration: return "trackTranslationalImageRegistration"
+        case .error: return "error"
+        }
+    }
 }
 
 public final class ImageRequestHandler: @unchecked Sendable {
@@ -1390,38 +1549,67 @@ public final class ImageRequestHandler: @unchecked Sendable {
     }
 
     public func perform<T: VisionRequest>(_ request: T) async throws -> T.Result {
-        if var imageRequest = request as? any ImageProcessingRequestBox {
-            return try await imageRequest.performBoxed(on: inner) as! T.Result
+        try performNow(request)
+    }
+
+    @_spi(OpenUIKitHost)
+    public func performNow<T: VisionRequest>(_ request: T) throws -> T.Result {
+        if let imageRequest = request as? any ImageProcessingRequestBox {
+            return try imageRequest.performBoxed(on: inner) as! T.Result
         }
         throw VisionError.unsupportedRequest("request type")
     }
 }
 
 protocol ImageProcessingRequestBox {
-    mutating func performBoxed(on handler: VNImageRequestHandler) async throws -> Any
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any
 }
 
 extension DetectBarcodesRequest: ImageProcessingRequestBox {
-    mutating func performBoxed(on handler: VNImageRequestHandler) async throws -> Any {
-        try await performOnHandler(handler)
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
     }
 }
 
 extension DetectRectanglesRequest: ImageProcessingRequestBox {
-    mutating func performBoxed(on handler: VNImageRequestHandler) async throws -> Any {
-        try await performOnHandler(handler)
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
     }
 }
 
 extension DetectContoursRequest: ImageProcessingRequestBox {
-    mutating func performBoxed(on handler: VNImageRequestHandler) async throws -> Any {
-        try await performOnHandler(handler)
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
     }
 }
 
 extension GenerateImageFeaturePrintRequest: ImageProcessingRequestBox {
-    mutating func performBoxed(on handler: VNImageRequestHandler) async throws -> Any {
-        try await performOnHandler(handler)
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension RecognizeDocumentsRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension TrackOpticalFlowRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler) as Any
+    }
+}
+
+extension DetectFaceRectanglesRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension RecognizeTextRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
     }
 }
 
