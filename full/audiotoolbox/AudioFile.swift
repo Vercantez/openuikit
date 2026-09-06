@@ -64,6 +64,7 @@ internal final class ATAudioFileObject: ATObject {
     var packetCursor: Int64 = 0
     var closed = false
     var deferSizeUpdates = false
+    var userData: [UInt32: [Data]] = [:]
 
     init(
         urlPath: String,
@@ -1147,3 +1148,144 @@ public func AudioFileGetGlobalInfo(
     }
 }
 #endif
+
+public func AudioFileCountUserData(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ outNumberItems: UnsafeMutablePointer<UInt32>?
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self), !file.closed else {
+        return kAudioFileNotOpenError
+    }
+    let count = UInt32(file.userData[inUserDataID]?.count ?? 0)
+    outNumberItems?.pointee = count
+    return 0
+}
+
+public func AudioFileSetUserData(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ inIndex: UInt32,
+    _ inUserDataSize: UInt32,
+    _ inUserData: UnsafeRawPointer?
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self), !file.closed else {
+        return kAudioFileNotOpenError
+    }
+    guard file.permissions != .readPermission else { return kAudioFilePermissionsError }
+    guard let inUserData else { return kAudioFileUnspecifiedError }
+    var items = file.userData[inUserDataID] ?? []
+    let blob = Data(bytes: inUserData, count: Int(inUserDataSize))
+    if Int(inIndex) < items.count {
+        items[Int(inIndex)] = blob
+    } else if Int(inIndex) == items.count {
+        items.append(blob)
+    } else {
+        return kAudioFileInvalidChunkError
+    }
+    file.userData[inUserDataID] = items
+    return 0
+}
+
+public func AudioFileGetUserDataSize(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ inIndex: UInt32,
+    _ outUserDataSize: UnsafeMutablePointer<UInt32>?
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self), !file.closed else {
+        return kAudioFileNotOpenError
+    }
+    guard let items = file.userData[inUserDataID], Int(inIndex) < items.count else {
+        return kAudioFileInvalidChunkError
+    }
+    outUserDataSize?.pointee = UInt32(items[Int(inIndex)].count)
+    return 0
+}
+
+public func AudioFileGetUserDataSize64(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ inIndex: UInt32,
+    _ outUserDataSize: UnsafeMutablePointer<UInt64>?
+) -> Int32 {
+    var size32: UInt32 = 0
+    let status = AudioFileGetUserDataSize(inAudioFile, inUserDataID, inIndex, &size32)
+    if status == 0 {
+        outUserDataSize?.pointee = UInt64(size32)
+    }
+    return status
+}
+
+public func AudioFileGetUserData(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ inIndex: UInt32,
+    _ ioUserDataSize: UnsafeMutablePointer<UInt32>?,
+    _ outUserData: UnsafeMutableRawPointer?
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self), !file.closed else {
+        return kAudioFileNotOpenError
+    }
+    guard let items = file.userData[inUserDataID], Int(inIndex) < items.count else {
+        return kAudioFileInvalidChunkError
+    }
+    let blob = items[Int(inIndex)]
+    if let ioUserDataSize, ioUserDataSize.pointee < UInt32(blob.count) {
+        return kAudioFileBadPropertySizeError
+    }
+    ioUserDataSize?.pointee = UInt32(blob.count)
+    if let outUserData, !blob.isEmpty {
+        blob.copyBytes(to: outUserData.assumingMemoryBound(to: UInt8.self), count: blob.count)
+    }
+    return 0
+}
+
+public func AudioFileGetUserDataAtOffset(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ inIndex: UInt32,
+    _ inOffset: Int64,
+    _ ioUserDataSize: UnsafeMutablePointer<UInt32>?,
+    _ outUserData: UnsafeMutableRawPointer?
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self), !file.closed else {
+        return kAudioFileNotOpenError
+    }
+    guard let items = file.userData[inUserDataID], Int(inIndex) < items.count else {
+        return kAudioFileInvalidChunkError
+    }
+    let blob = items[Int(inIndex)]
+    if inOffset < 0 || inOffset > Int64(blob.count) {
+        return kAudioFileInvalidChunkError
+    }
+    let start = Int(inOffset)
+    let available = blob.count - start
+    let requested = Int(ioUserDataSize?.pointee ?? UInt32(available))
+    let count = min(available, requested)
+    ioUserDataSize?.pointee = UInt32(count)
+    if let outUserData, count > 0 {
+        blob.copyBytes(
+            to: outUserData.assumingMemoryBound(to: UInt8.self),
+            from: start..<(start + count)
+        )
+    }
+    return 0
+}
+
+public func AudioFileRemoveUserData(
+    _ inAudioFile: AudioFileID?,
+    _ inUserDataID: UInt32,
+    _ inIndex: UInt32
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self), !file.closed else {
+        return kAudioFileNotOpenError
+    }
+    guard file.permissions != .readPermission else { return kAudioFilePermissionsError }
+    guard var items = file.userData[inUserDataID], Int(inIndex) < items.count else {
+        return kAudioFileInvalidChunkError
+    }
+    items.remove(at: Int(inIndex))
+    file.userData[inUserDataID] = items
+    return 0
+}

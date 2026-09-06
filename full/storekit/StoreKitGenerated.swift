@@ -24,7 +24,13 @@ public let SKStoreProductParameterITunesItemIdentifier = "SKStoreProductParamete
 public let SKStoreProductParameterProductIdentifier = "SKStoreProductParameterProductIdentifier"
 public let SKStoreProductParameterProviderToken = "SKStoreProductParameterProviderToken"
 
-public func SKTerminateForInvalidReceipt() {}
+/// Apple terminates the process when the app receipt is invalid.
+/// Linux records the call and does not abort.
+public private(set) var SKTerminateForInvalidReceiptCallCount = 0
+
+public func SKTerminateForInvalidReceipt() {
+    SKTerminateForInvalidReceiptCallCount += 1
+}
 
 public enum SKCloudServiceAuthorizationStatus: Int, Sendable {
     case notDetermined = 0
@@ -33,7 +39,7 @@ public enum SKCloudServiceAuthorizationStatus: Int, Sendable {
     case authorized = 3
 }
 
-public struct SKCloudServiceCapability: OptionSet, Sendable {
+public struct SKCloudServiceCapability: OptionSet, Hashable, Sendable {
     public let rawValue: UInt
     public init(rawValue: UInt) { self.rawValue = rawValue }
     public static let musicCatalogPlayback = SKCloudServiceCapability(rawValue: 1 << 0)
@@ -56,7 +62,7 @@ public enum SKProductStorePromotionVisibility: Int, Sendable {
     case hide = 2
 }
 
-public struct SKANError: Error, Hashable, Sendable {
+public struct SKANError: Error, Hashable, @unchecked Sendable, CustomNSError, LocalizedError {
     public enum Code: Int, Sendable, Hashable {
         case impressionMissingRequiredValue = 0
         case unsupported = 1
@@ -70,6 +76,10 @@ public struct SKANError: Error, Hashable, Sendable {
         case invalidVersion = 9
         case unknown = 10
         case impressionTooShort = 11
+
+        public static func ~= (match: Code, error: any Error) -> Bool {
+            (error as? SKANError)?.code == match
+        }
     }
 
     public static var errorDomain: String { SKANErrorDomain }
@@ -87,7 +97,27 @@ public struct SKANError: Error, Hashable, Sendable {
     public static var impressionTooShort: Code { .impressionTooShort }
 
     public var code: Code
-    public init(_ code: Code) { self.code = code }
+    public var userInfo: [String: Any]
+    public var errorCode: Int { code.rawValue }
+    public var errorUserInfo: [String: Any] { userInfo }
+    public var errorDescription: String? { "SKANError \(code.rawValue)" }
+    public var failureReason: String? { errorDescription }
+    public var recoverySuggestion: String? { nil }
+    public var helpAnchor: String? { nil }
+    public var localizedDescription: String { errorDescription ?? "" }
+
+    public init(_ code: Code, userInfo: [String: Any] = [:]) {
+        self.code = code
+        self.userInfo = userInfo
+    }
+
+    public static func == (lhs: SKANError, rhs: SKANError) -> Bool {
+        lhs.code == rhs.code
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(code)
+    }
 }
 
 public struct SKCloudServiceSetupAction: Hashable, RawRepresentable, Sendable {
@@ -408,10 +438,21 @@ open class SKOverlay: NSObject {
     public func present(in scene: UIWindowScene) {
         _ = scene
         portablePresentCount += 1
+        let context = TransitionContext()
+        delegate?.storeOverlayWillStartPresentation(self, transitionContext: context)
+        // No App Store overlay host on Linux: fail-closed instead of
+        // fabricating a successful presentation.
+        delegate?.storeOverlayDidFailToLoad(
+            self,
+            error: SKError(.overlayInvalidConfiguration)
+        )
     }
     public func dismiss(from scene: UIWindowScene) {
         _ = scene
         portablePresentCount += 1
+        let context = TransitionContext()
+        delegate?.storeOverlayWillStartDismissal(self, transitionContext: context)
+        delegate?.storeOverlayDidFinishDismissal(self, transitionContext: context)
     }
     /// Apple class method `dismissOverlayInScene:`. Linux records the call
     /// and does not present or dismiss UI.
@@ -421,6 +462,7 @@ open class SKOverlay: NSObject {
 }
 
 public protocol SKOverlayDelegate: NSObjectProtocol {
+    func storeOverlayDidFinishPresentation(_ overlay: SKOverlay, transitionContext: SKOverlay.TransitionContext)
     func storeOverlayDidFinishDismissal(_ overlay: SKOverlay, transitionContext: SKOverlay.TransitionContext)
     func storeOverlayDidFailToLoad(_ overlay: SKOverlay, error: any Error)
     func storeOverlayWillStartPresentation(_ overlay: SKOverlay, transitionContext: SKOverlay.TransitionContext)
@@ -428,6 +470,7 @@ public protocol SKOverlayDelegate: NSObjectProtocol {
 }
 
 public extension SKOverlayDelegate {
+    func storeOverlayDidFinishPresentation(_ overlay: SKOverlay, transitionContext: SKOverlay.TransitionContext) {}
     func storeOverlayDidFinishDismissal(_ overlay: SKOverlay, transitionContext: SKOverlay.TransitionContext) {}
     func storeOverlayDidFailToLoad(_ overlay: SKOverlay, error: any Error) {}
     func storeOverlayWillStartPresentation(_ overlay: SKOverlay, transitionContext: SKOverlay.TransitionContext) {}
@@ -702,13 +745,17 @@ public enum ExternalPurchaseCustomLink {
     }
 }
 
-public struct InvalidRequestError: Error, Hashable, Sendable {
+public struct InvalidRequestError: Error, Hashable, Sendable, LocalizedError {
     public var code: Int64
     public var message: String
     public init(code: Int64 = 0, message: String = "") {
         self.code = code
         self.message = message
     }
+    public var errorDescription: String? { message.isEmpty ? "InvalidRequestError \(code)" : message }
+    public var failureReason: String? { errorDescription }
+    public var recoverySuggestion: String? { nil }
+    public var helpAnchor: String? { nil }
 }
 
 public struct PaymentMethodBinding: Hashable, Sendable, Identifiable {
