@@ -1,0 +1,5 @@
+full/metalfx/MTLFXDescriptors.swift
+full/metalfx/MTLFXProtocols.swift
+full/metalfx/MTLFXSoftware.swift
+full/metalfx/MetalFX.swift
+full/metalfx/MetalFXLinuxSupport.swift
