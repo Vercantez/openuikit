@@ -243,7 +243,7 @@ func ciClampAmount(_ value: Float) -> Float {
 }
 
 extension NSObject {
-    @objc public func provideImageData(
+    public func provideImageData(
         _ data: UnsafeMutableRawPointer,
         bytesPerRow rowbytes: Int,
         origin originx: Int,
