@@ -191,11 +191,21 @@ open class NSLayoutConstraint: NSObject {
     /// Real UIKit's constraint inherits `description` from `NSObject` and
     /// subclasses / extensions override it (SnapKit 5.7.0 Debugging.swift).
     /// The default text is not UIKit's and nothing may depend on its wording.
-    open override var description: String {
+    private var _openDescription: String {
         let name = identifier.map { " '\($0)'" } ?? ""
         return "<NSLayoutConstraint\(name) \(firstAttribute) \(relation) "
             + "\(secondAttribute) * \(multiplier) + \(constant)>"
     }
+
+    /// Guest ObjectiveC.NSObject has no Foundation `description` (same split
+    /// as UIView.swift). MEASURED scripts/guest_route_check.sh on
+    /// origin/agent/merge-focus4: `property does not override any property
+    /// from its superclass` at NSLayoutConstraint.swift:194.
+#if canImport(Foundation)
+    open override var description: String { _openDescription }
+#else
+    open var description: String { _openDescription }
+#endif
 
     static func commonAncestor(_ a: UIView, _ b: UIView) -> UIView? {
         var chain: Set<ObjectIdentifier> = []

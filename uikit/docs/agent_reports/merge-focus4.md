@@ -144,3 +144,84 @@ real-app stays **14** screens as merge-focus3 (browser is Darwin-only).
 
 No new rendering rules. Catalyst paths stay behind the existing iOS cut.
 The focus-launch measurements (URLBar / wordmark) are unchanged.
+
+## Guest route (merge-focus5)
+
+After the operator merged this branch with origin/main (docs union +
+ObjectiveC.NSObject fallback imports), `scripts/guest_route_check.sh`
+went red. Main now runs that check on every merge. The Darwin-target
+Foundation-hidden compile (`arm64-apple-macos15.0`, no
+`Foundation.swiftmodule`) is both `!os(Linux)` and
+`!canImport(Foundation)`, so two keep-both leftovers from the Focus
+landing collided with main's TextKit / NSObject landings.
+
+### What was measured
+
+`bash scripts/guest_route_check.sh` on `origin/agent/merge-focus4` (before):
+
+| file | diagnostic |
+|---|---|
+| `FocusLaunchCompat.swift:202` | `invalid redeclaration of 'NSStringDrawingOptions'` |
+| `FocusLaunchCompat.swift:211` | `invalid redeclaration of 'NSStringDrawingContext'` |
+| same file static lets | `ambiguous use of 'init(rawValue:)'` |
+| `AutoLayout/NSLayoutConstraint.swift:194` | `property does not override any property from its superclass` |
+
+The first two are the same UIKit names declared twice: main's
+`NSStringDrawing.swift` (`#if os(Linux) \|\| !canImport(Foundation)`) and
+FocusLaunchCompat's `#if !os(Linux)` copies. Guest is Darwin, so both
+`#if`s fire. `NSStringDrawingOptions(rawValue:)` is then two types.
+
+`NSLayoutConstraint` inherits `NSObject`. Darwin host
+`canImport(Foundation)` has Foundation's `description`; the guest
+`ObjectiveC.NSObject` does not (same split already on `UIView.swift` /
+`UIVisualEffect.swift`). `open override var description` is therefore
+illegal on the guest.
+
+WMO then also reported two Focus-only members that the first errors had
+hidden:
+
+| file | diagnostic |
+|---|---|
+| `FocusLaunchCompat.swift:92` | `cannot find type 'NSItemProvider' in scope` (`#else` of `#if os(Linux)`; Darwin guest is not Linux and has no Foundation `NSItemProvider`; OpenUIKit's class is `#if os(Linux)` only) |
+| `UIResponder.swift:281` | `@objc open var accessibilityValue: String?` — `property cannot be marked '@objc' because its type cannot be represented in Objective-C` (`canImport(ObjectiveC)` is true on the Darwin guest; `String?` needs NSString) |
+
+### Rules
+
+1. **One `NSStringDrawingOptions` / `NSStringDrawingContext`.** Always
+   declared in `NSStringDrawing.swift`. Focus
+   `NSAttributedString.boundingRect(with:options:context:)`
+   (AutocompleteTextField.swift:250) moved there. String.boundingRect
+   stays Linux/guest-only so Darwin host keeps the SDK String overlay
+   (TooltipView.swift:112 already compiled without OpenUIKit's).
+   FocusLaunchCompat keeps a pointer comment, no copies.
+2. **`NSLayoutConstraint.description`** — `#if canImport(Foundation)`
+   `open override` else `open`, sharing `_openDescription`. SnapKit
+   5.7.0 `Debugging.swift` still overrides on Darwin host.
+3. **`UIDragItem.init(itemProvider:)`** —
+   `#if canImport(Foundation) && !os(Linux)` takes Foundation
+   `NSItemProvider` (URLBar.swift:1134); else `Any` (Linux + guest).
+4. **`UIResponder.accessibilityValue`** —
+   `@objc` only when `canImport(ObjectiveC) && canImport(Foundation)`
+   so AutocompleteTextField.swift:51 can still override from another
+   module on Darwin host.
+
+No CQuartz change. No pin files. No `Package.resolved`.
+
+### Proof (this Mac, `SIM_DEVICE_SUFFIX=-merge-focus5`)
+
+| gate | result |
+|---|---|
+| Guest library compile | **GUEST_ROUTE_COMPILE_OK** openuikit=138 opencoregraphics=12, **57 s** (`GUEST_ROUTE_CHECK_OK`) |
+| `swift build --target Blockzilla` | **0 errors** (30.21 s) |
+| `swift build --build-tests` | **Build complete (27.79 s)** |
+| SnapKit + AutoLayout filters | **49 tests, 0 failures** (SnapKit **31/31**) |
+| `FocusBrowserLaunch.makeRoot()` | `URLBar [0, 59, 393, 56]`, wordmark `UIImageView [44, 364.667, 305, 65.333]`, `WKWebView [0, 0, 393, 737]` (`/tmp/app-merge-focus5/realapp_focus_browser_light.layout.json`) |
+| Catalyst | **124/124** (`/tmp/gate-merge-focus5`) |
+| iOS suite `SKIP_CAPTURE=1` | **112/113** (`corner_radius` 99.411) — main's count |
+| Real-app 3x floors | **99.137 / 98.535 / 98.548 / 99.469 / 98.639 / 98.133 / 97.516 / 99.65 / 82.17 / 99.86 / 99.734 / 85.393**; **15** PNGs (browser last; golden N/A) |
+| Linux `swift:6.2-noble` `--target OpenUIKitTests` | **Build complete (31.63 s)**, 0 `error:` |
+| `scripts/linux_realapp_verify.sh` `/tmp/realapp-verify-merge-focus5` | **14/14** headless, **10/10** live, `REAL-APP SCREEN VERIFIED ON LINUX` |
+
+Guest `render_full` stays **14** screens (browser is Darwin-only).
+
+No new rendering rules. Catalyst paths stay behind the existing iOS cut.

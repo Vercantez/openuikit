@@ -83,13 +83,17 @@ public protocol UIDropSession: AnyObject {
 @preconcurrency @MainActor
 open class UIDragItem: NSObject {
     public var localObject: Any?
-#if os(Linux)
-    public init(itemProvider: Any) {
+#if canImport(Foundation) && !os(Linux)
+    /// Darwin host: Foundation.NSItemProvider (URLBar.swift:1134).
+    /// Linux keeps `Any` (OpenUIKit's NSItemProvider is Linux-only);
+    /// the Foundation-hidden Darwin guest has neither. MEASURED
+    /// scripts/guest_route_check.sh: `cannot find type 'NSItemProvider'`.
+    public init(itemProvider: NSItemProvider) {
         _ = itemProvider
         super.init()
     }
 #else
-    public init(itemProvider: NSItemProvider) {
+    public init(itemProvider: Any) {
         _ = itemProvider
         super.init()
     }
@@ -195,40 +199,11 @@ extension NSValue {
 }
 #endif
 
-#if !os(Linux)
-/// Darwin OpenUIKit does not compile NSStringDrawing.swift (that file is
-/// Linux / Foundation-hidden). Focus AutocompleteTextField.swift:250 names
-/// these UIKit types. MEASURED Blockzilla 2026-09-06.
-public struct NSStringDrawingOptions: OptionSet, Hashable, Sendable {
-    public let rawValue: UInt
-    public init(rawValue: UInt) { self.rawValue = rawValue }
-    public static let usesLineFragmentOrigin = NSStringDrawingOptions(rawValue: 1 << 0)
-    public static let usesFontLeading = NSStringDrawingOptions(rawValue: 1 << 1)
-    public static let usesDeviceMetrics = NSStringDrawingOptions(rawValue: 1 << 3)
-    public static let truncatesLastVisibleLine = NSStringDrawingOptions(rawValue: 1 << 5)
-}
-
-public final class NSStringDrawingContext: @unchecked Sendable {
-    public init() {}
-}
-#endif
-
-extension NSAttributedString {
-    /// AutocompleteTextField.swift:250. Width of the typed prefix.
-    public func boundingRect(
-        with size: CGSize,
-        options: NSStringDrawingOptions,
-        context: NSStringDrawingContext?
-    ) -> CGRect {
-        _ = (options, context)
-        let font: UIFont
-        if length > 0, let value = attributes(at: 0, effectiveRange: nil)[.font] as? UIFont {
-            font = value
-        } else {
-            font = .systemFont(ofSize: 17)
-        }
-        let w = FontEngine.measure(string, font: font)
-        let h = FontEngine.labelLineHeight(for: font)
-        return CGRect(x: 0, y: 0, width: min(size.width, w), height: min(size.height, h))
-    }
-}
+// MARK: - NSString drawing
+// NSStringDrawingOptions / NSStringDrawingContext / String.boundingRect /
+// NSAttributedString.boundingRect live on NSStringDrawing.swift (main
+// textkit). Merge-focus5: never keep-both — FocusLaunchCompat's `#if !os(Linux)`
+// copies collided with that file on the Foundation-hidden Darwin guest
+// (MEASURED scripts/guest_route_check.sh: invalid redeclaration at :202/:211,
+// ambiguous `init(rawValue:)`). AutocompleteTextField.swift:250 keeps the
+// attributed boundingRect on the canonical file.

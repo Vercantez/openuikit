@@ -275,9 +275,13 @@ open class UIResponder: NSObject {
     /// `override` it from another module. MEASURED Blockzilla
     /// AutocompleteTextField.swift:51: "non-@objc property declared in
     /// extension of UIResponder and cannot be overridden".
-    /// `@objc` is Darwin-only: Linux Swift 6.2.4 has no ObjC interop
-    /// (`swift build --product openrender` on swift:6.2-noble).
-#if canImport(ObjectiveC)
+    /// `@objc` is Darwin host only: Linux Swift 6.2.4 has no ObjC interop
+    /// (`swift build --product openrender` on swift:6.2-noble). The
+    /// Foundation-hidden guest has ObjectiveC but `String?` is not
+    /// `@objc`-representable without NSString. MEASURED
+    /// scripts/guest_route_check.sh: `property cannot be marked '@objc'
+    /// because its type cannot be represented in Objective-C`.
+#if canImport(ObjectiveC) && canImport(Foundation)
     @objc open var accessibilityValue: String? {
         get { _accessibility.value }
         set { _accessibility.value = newValue }
