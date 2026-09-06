@@ -56,9 +56,17 @@ is printed by `.cursor/verify-cloud-environment.sh`, not by the sealed
 framework gate. This snapshot's verifier failed
 (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor
 Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs campaign
-`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Swift 6.2.4 / linux
-compiled `libLocalAuthenticationEmbeddedUI.dylib`. The sealed gate was not
-weakened.
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` reports
+Swift 6.2.4 / `x86_64-unknown-linux-gnu`. The sealed gate was not weakened.
+
+`bash full/localauthenticationembeddedui/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=LocalAuthenticationEmbeddedUI lane=leaf-full symbols=2
+FRAMEWORK_FANOUT_REFERENCE_OK
+LOCALAUTHENTICATIONEMBEDDEDUI_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=LocalAuthenticationEmbeddedUI dylib=libLocalAuthenticationEmbeddedUI.dylib
+```
 
 ## Depth pass 2026-09
 
