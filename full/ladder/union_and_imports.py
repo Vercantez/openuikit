@@ -70,8 +70,10 @@ def main():
 
     tot = sum(uses.values())
     have = sum(c for t, c in uses.items() if t in ours)
-    free = sum(c for t, c in uses.items() if t in FREE)
-    oos = sum(c for t, c in uses.items() if t in OOS)
+    # FREE/OOS only apply to types we do not declare. Once NSCoder/UINib land
+    # in OpenUIKit they are implemented, not a second subtraction.
+    free = sum(c for t, c in uses.items() if t in FREE and t not in ours)
+    oos = sum(c for t, c in uses.items() if t in OOS and t not in ours)
     gap = tot - have - free - oos
     n10 = [t for t in uses if len(apps[t]) >= 10]
 
