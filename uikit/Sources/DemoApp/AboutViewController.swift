@@ -11,7 +11,7 @@ public final class AboutViewController: UIViewController, BottomInsetAdjustable 
 
     public var extraBottomInset: CGFloat = 0
 
-    public override init() { super.init() }
+    public init() { super.init() }
 
     public override func viewDidLoad() {
         if title == nil { title = "About" }

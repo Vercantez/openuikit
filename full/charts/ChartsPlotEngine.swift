@@ -228,10 +228,14 @@ public extension ChartContent {
         axis: Axis? = nil,
         span: MarkDimension = .automatic
     ) -> _ChartAttributedPlotContent {
-        _ = span
         return _ChartAttributedPlotContent(
             records: chartStampRecords(chartPlotRecords) { record in
                 record.layout.positionBy = axis.map { String(describing: $0) } ?? value.label
+                if axis == .vertical {
+                    record.markHeight = span
+                } else {
+                    record.markWidth = span
+                }
             }
         )
     }

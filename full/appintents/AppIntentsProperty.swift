@@ -972,3 +972,242 @@ extension IntentParameter where Value == IntentPaymentMethod {
         )
     }
 }
+
+// MARK: - CLPlacemark @Parameter
+
+extension IntentParameter where Value == CLPlacemark {
+    public var displayStyle: PlacemarkDisplayStyle? { storedPlacemarkDisplayStyle }
+
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: CLPlacemark? = nil,
+        displayStyle: PlacemarkDisplayStyle = .name,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+        storedPlacemarkDisplayStyle = displayStyle
+    }
+
+    public convenience init(
+        description: LocalizedStringResource? = nil,
+        default defaultValue: CLPlacemark? = nil,
+        displayStyle: PlacemarkDisplayStyle = .name,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: LocalizedStringResource(""),
+            description: description,
+            default: defaultValue,
+            displayStyle: displayStyle,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+    }
+
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        displayStyle: PlacemarkDisplayStyle = .name,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            default: nil,
+            displayStyle: displayStyle,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+    }
+
+    public convenience init<Provider: DynamicOptionsProvider>(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: CLPlacemark? = nil,
+        displayStyle: PlacemarkDisplayStyle = .name,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        optionsProvider: Provider
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            default: defaultValue,
+            displayStyle: displayStyle,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        optionsProviderAttached = true
+        _ = optionsProvider
+    }
+
+    public convenience init<Provider: DynamicOptionsProvider>(
+        description: LocalizedStringResource? = nil,
+        default defaultValue: CLPlacemark? = nil,
+        displayStyle: PlacemarkDisplayStyle = .name,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        optionsProvider: Provider
+    ) {
+        self.init(
+            title: LocalizedStringResource(""),
+            description: description,
+            default: defaultValue,
+            displayStyle: displayStyle,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            optionsProvider: optionsProvider
+        )
+    }
+
+    public convenience init<Provider: DynamicOptionsProvider>(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        displayStyle: PlacemarkDisplayStyle = .name,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        optionsProvider: Provider
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            default: nil,
+            displayStyle: displayStyle,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            optionsProvider: optionsProvider
+        )
+    }
+
+    public convenience init<Spec: ResolverSpecification>(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: CLPlacemark? = nil,
+        displayStyle: PlacemarkDisplayStyle = .name,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        resolvers: Spec
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            default: defaultValue,
+            displayStyle: displayStyle,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        _ = resolvers
+    }
+
+    public convenience init<Spec: ResolverSpecification>(
+        description: LocalizedStringResource? = nil,
+        default defaultValue: CLPlacemark? = nil,
+        displayStyle: PlacemarkDisplayStyle = .name,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        resolvers: Spec
+    ) {
+        self.init(
+            title: LocalizedStringResource(""),
+            description: description,
+            default: defaultValue,
+            displayStyle: displayStyle,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            resolvers: resolvers
+        )
+    }
+
+    public convenience init<Spec: ResolverSpecification>(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        displayStyle: PlacemarkDisplayStyle = .name,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        resolvers: Spec
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            default: nil,
+            displayStyle: displayStyle,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            resolvers: resolvers
+        )
+    }
+
+    public convenience init<Spec: ResolverSpecification, Provider: DynamicOptionsProvider>(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: CLPlacemark? = nil,
+        displayStyle: PlacemarkDisplayStyle = .name,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        optionsProvider: Provider,
+        resolvers: Spec
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            default: defaultValue,
+            displayStyle: displayStyle,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            optionsProvider: optionsProvider
+        )
+        _ = resolvers
+    }
+
+    public convenience init<Spec: ResolverSpecification, Provider: DynamicOptionsProvider>(
+        description: LocalizedStringResource? = nil,
+        default defaultValue: CLPlacemark? = nil,
+        displayStyle: PlacemarkDisplayStyle = .name,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        optionsProvider: Provider,
+        resolvers: Spec
+    ) {
+        self.init(
+            title: LocalizedStringResource(""),
+            description: description,
+            default: defaultValue,
+            displayStyle: displayStyle,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            optionsProvider: optionsProvider,
+            resolvers: resolvers
+        )
+    }
+
+    public convenience init<Spec: ResolverSpecification, Provider: DynamicOptionsProvider>(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        displayStyle: PlacemarkDisplayStyle = .name,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        optionsProvider: Provider,
+        resolvers: Spec
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            default: nil,
+            displayStyle: displayStyle,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            optionsProvider: optionsProvider,
+            resolvers: resolvers
+        )
+    }
+}

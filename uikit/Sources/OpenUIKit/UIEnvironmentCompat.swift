@@ -6,6 +6,12 @@
 // receives. Neither API consults the host locale or wall-clock environment,
 // keeping scripted builds and renders deterministic.
 
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
+
 /// The orientation of an interface presented by a window scene. Raw values
 /// match UIKit's `UIInterfaceOrientation` exactly.
 public enum UIInterfaceOrientation: Int, Sendable {
@@ -91,11 +97,12 @@ extension UIWindowScene {
 /// from the installed keyboard list. Portable hosts instead configure the
 /// language tag for their input stream through `_hostConfigure`.
 @preconcurrency @MainActor
-public final class UITextInputMode {
+public final class UITextInputMode: NSObject {
     public let primaryLanguage: String?
 
     private init(primaryLanguage: String?) {
         self.primaryLanguage = primaryLanguage
+        super.init()
     }
 
     /// OpenUIKit has one host keyboard stream. Its language is unknown until

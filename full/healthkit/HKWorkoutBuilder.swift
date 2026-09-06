@@ -28,7 +28,20 @@ open class HKWorkoutBuilder: NSObject, @unchecked Sendable {
         super.init()
     }
 
+    public func beginCollection(at startDate: Date, completion: @escaping (Bool, (any Error)?) -> Void) {
+        do {
+            try beginCollectionSync(at: startDate)
+            completion(true, nil)
+        } catch {
+            completion(false, error)
+        }
+    }
+
     public func beginCollection(at startDate: Date) async throws {
+        try beginCollectionSync(at: startDate)
+    }
+
+    func beginCollectionSync(at startDate: Date) throws {
         guard state == .idle else {
             throw hkError(.errorInvalidArgument, reason: "beginCollection requires idle builder")
         }
@@ -36,7 +49,20 @@ open class HKWorkoutBuilder: NSObject, @unchecked Sendable {
         state = .collecting
     }
 
+    public func endCollection(at endDate: Date, completion: @escaping (Bool, (any Error)?) -> Void) {
+        do {
+            try endCollectionSync(at: endDate)
+            completion(true, nil)
+        } catch {
+            completion(false, error)
+        }
+    }
+
     public func endCollection(at endDate: Date) async throws {
+        try endCollectionSync(at: endDate)
+    }
+
+    func endCollectionSync(at endDate: Date) throws {
         guard state == .collecting else {
             throw hkError(.errorInvalidArgument, reason: "endCollection requires collecting builder")
         }
@@ -71,7 +97,20 @@ open class HKWorkoutBuilder: NSObject, @unchecked Sendable {
         completion(true, nil)
     }
 
+    public func addWorkoutActivity(_ workoutActivity: HKWorkoutActivity, completion: @escaping (Bool, (any Error)?) -> Void) {
+        do {
+            try addWorkoutActivitySync(workoutActivity)
+            completion(true, nil)
+        } catch {
+            completion(false, error)
+        }
+    }
+
     public func addWorkoutActivity(_ workoutActivity: HKWorkoutActivity) async throws {
+        try addWorkoutActivitySync(workoutActivity)
+    }
+
+    func addWorkoutActivitySync(_ workoutActivity: HKWorkoutActivity) throws {
         guard state == .collecting || state == .ended else {
             throw hkError(.errorInvalidArgument, reason: "addWorkoutActivity requires an active collection")
         }
@@ -98,21 +137,68 @@ open class HKWorkoutBuilder: NSObject, @unchecked Sendable {
         allStatistics[quantityType]
     }
 
+    public func updateActivity(uuid UUID: UUID, adding metadata: [String: Any], completion: @escaping (Bool, (any Error)?) -> Void) {
+        do {
+            try updateActivitySync(uuid: UUID, adding: metadata)
+            completion(true, nil)
+        } catch {
+            completion(false, error)
+        }
+    }
+
     public func updateActivity(uuid UUID: UUID, adding metadata: [String: Any]) async throws {
-        _ = (UUID, metadata)
+        try updateActivitySync(uuid: UUID, adding: metadata)
+    }
+
+    func updateActivitySync(uuid UUID: UUID, adding metadata: [String: Any]) throws {
+        guard state == .collecting || state == .ended else {
+            throw hkError(.errorInvalidArgument, reason: "updateActivity requires an active collection")
+        }
+        guard let index = workoutActivities.firstIndex(where: { $0.uuid == UUID }) else {
+            throw hkError(.errorInvalidArgument, reason: "unknown workout activity UUID")
+        }
+        let current = workoutActivities[index]
+        var merged = current.metadata ?? [:]
+        for (key, value) in metadata {
+            merged[key] = value
+        }
+        workoutActivities[index] = HKWorkoutActivity(
+            workoutConfiguration: current.workoutConfiguration,
+            start: current.startDate,
+            end: current.endDate,
+            uuid: current.uuid,
+            metadata: merged
+        )
+    }
+
+    public func updateActivity(uuid UUID: UUID, end endDate: Date, completion: @escaping (Bool, (any Error)?) -> Void) {
+        do {
+            try updateActivitySync(uuid: UUID, end: endDate)
+            completion(true, nil)
+        } catch {
+            completion(false, error)
+        }
     }
 
     public func updateActivity(uuid UUID: UUID, end endDate: Date) async throws {
-        if let index = workoutActivities.firstIndex(where: { $0.uuid == UUID }) {
-            let current = workoutActivities[index]
-            workoutActivities[index] = HKWorkoutActivity(
-                workoutConfiguration: current.workoutConfiguration,
-                start: current.startDate,
-                end: endDate,
-                uuid: current.uuid,
-                metadata: current.metadata
-            )
+        try updateActivitySync(uuid: UUID, end: endDate)
+    }
+
+    func updateActivitySync(uuid UUID: UUID, end endDate: Date) throws {
+        guard state == .collecting || state == .ended else {
+            throw hkError(.errorInvalidArgument, reason: "updateActivity requires an active collection")
         }
+        guard let index = workoutActivities.firstIndex(where: { $0.uuid == UUID }) else {
+            throw hkError(.errorInvalidArgument, reason: "unknown workout activity UUID")
+        }
+        let current = workoutActivities[index]
+        workoutActivities[index] = HKWorkoutActivity(
+            workoutConfiguration: current.workoutConfiguration,
+            start: current.startDate,
+            end: endDate,
+            uuid: current.uuid,
+            metadata: current.metadata
+        )
     }
 
     public func discardWorkout() {
@@ -207,7 +293,8 @@ open class HKLiveWorkoutDataSource: NSObject, @unchecked Sendable {
     }
 }
 
-open class HKWorkoutSession: NSObject, @unchecked Sendable {
+open class HKWorkoutSession: NSObject, NSSecureCoding, @unchecked Sendable {
+    public static var supportsSecureCoding: Bool { true }
     public weak var delegate: (any HKWorkoutSessionDelegate)?
     public let workoutConfiguration: HKWorkoutConfiguration
     public private(set) var state: HKWorkoutSessionState = .notStarted
@@ -215,37 +302,148 @@ open class HKWorkoutSession: NSObject, @unchecked Sendable {
     public var locationType: HKWorkoutSessionLocationType { workoutConfiguration.locationType }
     public var startDate: Date?
     public var endDate: Date?
+    public private(set) var currentActivity: HKWorkoutActivity
+    private var associatedBuilder: HKLiveWorkoutBuilder?
+    private let healthStore: HKHealthStore
 
     public init(healthStore: HKHealthStore, configuration: HKWorkoutConfiguration) throws {
-        _ = healthStore
+        self.healthStore = healthStore
         self.workoutConfiguration = configuration
+        self.currentActivity = HKWorkoutActivity(
+            workoutConfiguration: configuration,
+            start: Date(),
+            end: nil,
+            metadata: nil
+        )
         super.init()
     }
 
+    public required init?(coder: NSCoder) {
+        self.healthStore = HKHealthStore()
+        self.workoutConfiguration = HKWorkoutConfiguration()
+        self.currentActivity = HKWorkoutActivity(
+            workoutConfiguration: workoutConfiguration,
+            start: Date(),
+            end: nil
+        )
+        super.init()
+        self.state = HKWorkoutSessionState(rawValue: coder.decodeInteger(forKey: "state")) ?? .notStarted
+    }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(state.rawValue, forKey: "state")
+    }
+
+    private func transition(to newState: HKWorkoutSessionState, at date: Date) {
+        let from = state
+        state = newState
+        delegate?.workoutSession(self, didChangeTo: newState, from: from, date: date)
+    }
+
     public func prepare() {
-        state = .prepared
+        guard state == .notStarted else {
+            delegate?.workoutSession(self, didFailWithError: hkError(.errorInvalidArgument, reason: "prepare requires notStarted"))
+            return
+        }
+        transition(to: .prepared, at: Date())
     }
 
     public func startActivity(with date: Date?) {
-        startDate = date ?? Date()
-        state = .running
+        let when = date ?? Date()
+        startDate = when
+        currentActivity = HKWorkoutActivity(
+            workoutConfiguration: workoutConfiguration,
+            start: when,
+            end: nil,
+            uuid: currentActivity.uuid,
+            metadata: currentActivity.metadata
+        )
+        transition(to: .running, at: when)
+        delegate?.workoutSession(self, didBeginActivityWith: workoutConfiguration, date: when)
     }
 
     public func pause() {
-        state = .paused
+        guard state == .running else {
+            delegate?.workoutSession(self, didFailWithError: hkError(.errorInvalidArgument, reason: "pause requires running"))
+            return
+        }
+        let date = Date()
+        transition(to: .paused, at: date)
+        let event = HKWorkoutEvent(type: .pause, date: date)
+        delegate?.workoutSession(self, didGenerate: event)
     }
 
     public func resume() {
-        state = .running
+        guard state == .paused else {
+            delegate?.workoutSession(self, didFailWithError: hkError(.errorInvalidArgument, reason: "resume requires paused"))
+            return
+        }
+        let date = Date()
+        transition(to: .running, at: date)
+        let event = HKWorkoutEvent(type: .resume, date: date)
+        delegate?.workoutSession(self, didGenerate: event)
     }
 
     public func stopActivity(with date: Date?) {
-        endDate = date ?? Date()
-        state = .stopped
+        let when = date ?? Date()
+        endDate = when
+        transition(to: .stopped, at: when)
     }
 
     public func end() {
-        state = .ended
+        let when = Date()
+        if state == .running || state == .paused {
+            endDate = when
+        }
+        transition(to: .ended, at: when)
+    }
+
+    public func associatedWorkoutBuilder() -> HKLiveWorkoutBuilder {
+        if let associatedBuilder { return associatedBuilder }
+        let builder = HKLiveWorkoutBuilder(healthStore: healthStore, configuration: workoutConfiguration, device: nil)
+        builder.workoutSession = self
+        associatedBuilder = builder
+        return builder
+    }
+
+    public func beginNewActivity(configuration workoutConfiguration: HKWorkoutConfiguration, date: Date, metadata: [String: Any]?) {
+        currentActivity = HKWorkoutActivity(
+            workoutConfiguration: workoutConfiguration,
+            start: date,
+            end: nil,
+            metadata: metadata
+        )
+        delegate?.workoutSession(self, didBeginActivityWith: workoutConfiguration, date: date)
+    }
+
+    public func endCurrentActivity(on date: Date) {
+        let configuration = currentActivity.workoutConfiguration
+        currentActivity = HKWorkoutActivity(
+            workoutConfiguration: configuration,
+            start: currentActivity.startDate,
+            end: date,
+            uuid: currentActivity.uuid,
+            metadata: currentActivity.metadata
+        )
+        delegate?.workoutSession(self, didEndActivityWith: configuration, date: date)
+    }
+
+    public func sendToRemoteWorkoutSession(data: Data, completion: @escaping (Bool, (any Error)?) -> Void) {
+        completion(
+            false,
+            hkError(
+                .errorHealthDataUnavailable,
+                reason: "remote workout sessions require Apple Watch pairing; Linux is fail-closed"
+            )
+        )
+    }
+
+    public func sendToRemoteWorkoutSession(data: Data) async throws {
+        _ = data
+        throw hkError(
+            .errorHealthDataUnavailable,
+            reason: "remote workout sessions require Apple Watch pairing; Linux is fail-closed"
+        )
     }
 }
 
@@ -253,11 +451,31 @@ public protocol HKWorkoutSessionDelegate: AnyObject {
     func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date)
     func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: any Error)
     func workoutSession(_ workoutSession: HKWorkoutSession, didGenerate event: HKWorkoutEvent)
+    func workoutSession(_ workoutSession: HKWorkoutSession, didBeginActivityWith workoutConfiguration: HKWorkoutConfiguration, date: Date)
+    func workoutSession(_ workoutSession: HKWorkoutSession, didEndActivityWith workoutConfiguration: HKWorkoutConfiguration, date: Date)
+    func workoutSession(_ workoutSession: HKWorkoutSession, didDisconnectFromRemoteDeviceWithError error: (any Error)?)
+    func workoutSession(_ workoutSession: HKWorkoutSession, didReceiveDataFromRemoteWorkoutSession data: [Data])
 }
 
 extension HKWorkoutSessionDelegate {
     public func workoutSession(_ workoutSession: HKWorkoutSession, didGenerate event: HKWorkoutEvent) {
         _ = (workoutSession, event)
+    }
+
+    public func workoutSession(_ workoutSession: HKWorkoutSession, didBeginActivityWith workoutConfiguration: HKWorkoutConfiguration, date: Date) {
+        _ = (workoutSession, workoutConfiguration, date)
+    }
+
+    public func workoutSession(_ workoutSession: HKWorkoutSession, didEndActivityWith workoutConfiguration: HKWorkoutConfiguration, date: Date) {
+        _ = (workoutSession, workoutConfiguration, date)
+    }
+
+    public func workoutSession(_ workoutSession: HKWorkoutSession, didDisconnectFromRemoteDeviceWithError error: (any Error)?) {
+        _ = (workoutSession, error)
+    }
+
+    public func workoutSession(_ workoutSession: HKWorkoutSession, didReceiveDataFromRemoteWorkoutSession data: [Data]) {
+        _ = (workoutSession, data)
     }
 }
 

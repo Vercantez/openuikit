@@ -296,6 +296,181 @@ func testIOCommandBufferFailClosed() {
     precondition(cancelled.status == .cancelled)
 }
 
+func testCPUTensorBinaryArchiveAndHandles() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let invalid = MTLTensorDescriptor()
+    invalid.dataType = .none
+    do {
+        _ = try device.makeTensor(descriptor: invalid)
+        fatalError("empty tensor must fail closed")
+    } catch let error as MTLTensorError {
+        precondition(error.code == .invalidDescriptor)
+        precondition(MTLTensorError.invalidDescriptor ~= error)
+        precondition(error.localizedDescription.contains("tensor"))
+    } catch {
+        fatalError("expected MTLTensorError")
+    }
+    let descriptor = MTLTensorDescriptor()
+    descriptor.dataType = .float32
+    descriptor.dimensions = MTLTensorExtents([4])!
+    descriptor.usage = [.compute]
+    descriptor.storageMode = .shared
+    descriptor.cpuCacheMode = .defaultCache
+    descriptor.hazardTrackingMode = .default
+    descriptor.resourceOptions = .storageModeShared
+    descriptor.strides = MTLTensorExtents([1])
+    let copy = descriptor.copy() as! MTLTensorDescriptor
+    precondition(copy.dimensions.extents == [4])
+    let sized = device.tensorSizeAndAlign(descriptor: descriptor)
+    precondition(sized.size >= 16)
+    precondition(sized.align == 16)
+    let tensor = try! device.makeTensor(descriptor: descriptor)
+    precondition(tensor.dataType == .float32)
+    precondition(tensor.dimensions.extents == [4])
+    precondition(tensor.usage.contains(.compute))
+    precondition(tensor.buffer == nil)
+    precondition(tensor.bufferOffset == 0)
+    _ = tensor.gpuResourceID
+    _ = tensor.strides
+    let values: [Float] = [1, 2, 3, 4]
+    values.withUnsafeBytes { raw in
+        tensor.replace(
+            sliceOrigin: MTLTensorExtents([0])!,
+            sliceDimensions: MTLTensorExtents([4])!,
+            withBytes: raw.baseAddress!,
+            strides: MTLTensorExtents([1])!
+        )
+    }
+    var readback = [Float](repeating: 0, count: 4)
+    readback.withUnsafeMutableBytes { raw in
+        tensor.getBytes(
+            raw.baseAddress!,
+            strides: MTLTensorExtents([1])!,
+            sliceOrigin: MTLTensorExtents([0])!,
+            sliceDimensions: MTLTensorExtents([4])!
+        )
+    }
+    precondition(readback == values)
+
+    let archiveDesc = MTLBinaryArchiveDescriptor()
+    archiveDesc.url = URL(fileURLWithPath: "/tmp/missing.metallib")
+    let archive = try! device.makeBinaryArchive(descriptor: archiveDesc)
+    archive.label = "cpu-archive"
+    precondition(archive.device.name == device.name)
+    try! archive.addComputePipelineFunctions(descriptor: MTLComputePipelineDescriptor())
+    try! archive.addRenderPipelineFunctions(descriptor: MTLRenderPipelineDescriptor())
+    do {
+        try archive.serialize(to: URL(fileURLWithPath: "/tmp/out.metallib"))
+        fatalError("serialize must fail closed")
+    } catch let error as MTLBinaryArchiveError {
+        precondition(error.code == .internalError)
+        precondition(MTLBinaryArchiveError.internalError ~= error)
+    } catch {
+        fatalError("expected MTLBinaryArchiveError")
+    }
+
+    let builtin = MTLMakeCPUBuiltinLibrary(device).makeFunction(name: MTLCPUBuiltinKernel.fillUInt32.rawValue)!
+    let handle = device.functionHandle(function: builtin)!
+    precondition(handle.name == builtin.name)
+    precondition(handle.functionType == .kernel)
+    precondition(handle.device.name == device.name)
+    _ = handle.gpuResourceID
+    _ = device.functionHandle(function: LinuxMTL4BinaryFunctionStub())
+
+    do {
+        _ = try device.makeDynamicLibrary(library: MTLMakeCPUBuiltinLibrary(device))
+        fatalError("dynamic library must fail closed")
+    } catch let error as MTLDynamicLibraryError {
+        precondition(error.code == .unsupported)
+        precondition(MTLDynamicLibraryError.unsupported ~= error)
+        precondition(error.localizedDescription.contains("dynamic library"))
+    } catch {
+        fatalError("expected MTLDynamicLibraryError")
+    }
+    do {
+        _ = try device.makeDynamicLibrary(url: URL(fileURLWithPath: "/tmp/missing.dylib"))
+        fatalError("dynamic library URL must fail closed")
+    } catch let error as MTLDynamicLibraryError {
+        precondition(error.code == .unsupported)
+    } catch {
+        fatalError("expected MTLDynamicLibraryError")
+    }
+
+    let logDesc = MTLLogStateDescriptor()
+    logDesc.bufferSize = 256
+    logDesc.level = .info
+    let logState = try! device.makeLogState(descriptor: logDesc)
+    var handlerCount = 0
+    logState.addLogHandler { _, _, _, _ in handlerCount += 1 }
+    precondition(handlerCount == 0)
+    do {
+        let bad = MTLLogStateDescriptor()
+        bad.bufferSize = -1
+        _ = try device.makeLogState(descriptor: bad)
+        fatalError("negative log buffer must fail closed")
+    } catch let error as MTLLogStateError {
+        precondition(error == .invalidSize)
+    } catch {
+        fatalError("expected MTLLogStateError")
+    }
+
+    let sharedDesc = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .rgba8Unorm,
+        width: 1,
+        height: 1,
+        mipmapped: false
+    )
+    precondition(device.makeSharedTexture(descriptor: sharedDesc) == nil)
+    let sharedHandle = MTLSharedTextureHandle()
+    sharedHandle.label = "none"
+    _ = sharedHandle.device
+    _ = MTLSharedTextureHandle.supportsSecureCoding
+    precondition(device.makeSharedTexture(handle: sharedHandle) == nil)
+
+    let poolDesc = MTLResourceViewPoolDescriptor()
+    poolDesc.label = "views"
+    poolDesc.resourceViewCount = 4
+    let pool = try! device.makeTextureViewPool(descriptor: poolDesc)
+    precondition(pool.resourceViewCount == 4)
+    precondition(pool.device.name == device.name)
+    _ = pool.baseResourceID
+    _ = pool.label
+    let texture = device.makeTexture(descriptor: sharedDesc)!
+    let first = pool.setTextureView(texture: texture, index: 0)
+    _ = pool.setTextureView(texture: texture, descriptor: MTLTextureViewDescriptor(), index: 1)
+    let buffer = device.makeBuffer(length: 16, options: .storageModeShared)!
+    _ = pool.setTextureView(
+        buffer: buffer,
+        descriptor: sharedDesc,
+        offset: 0,
+        bytesPerRow: 4,
+        index: 2
+    )
+    _ = pool.copyResourceViews(from: pool, sourceRange: 0..<1, destinationIndex: 3)
+    _ = first
+
+    let counterDesc = MTLCounterSampleBufferDescriptor()
+    counterDesc.sampleCount = 2
+    counterDesc.label = "cpu-counters"
+    let counters = try! device.makeCounterSampleBuffer(descriptor: counterDesc)
+    precondition(counters.sampleCount == 2)
+    precondition(counters.device.name == device.name)
+    precondition(try! counters.resolveCounterRange(0..<2) == nil)
+
+    let encoderInfo = MetalTestCommandBufferEncoderInfo()
+    precondition(encoderInfo.label == "encoder")
+    precondition(encoderInfo.debugSignposts.isEmpty)
+    precondition(encoderInfo.errorState == .completed)
+}
+
+private final class LinuxMTL4BinaryFunctionStub: NSObject, MTL4BinaryFunction {}
+
+private final class MetalTestCommandBufferEncoderInfo: NSObject, MTLCommandBufferEncoderInfo {
+    var label: String { "encoder" }
+    var debugSignposts: [String] { [] }
+    var errorState: MTLCommandEncoderErrorState { .completed }
+}
+
 private final class MetalTestIOFileHandle: NSObject, MTLIOFileHandle, @unchecked Sendable {
     var label: String?
 }

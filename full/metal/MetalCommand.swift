@@ -24,6 +24,14 @@ final class LinuxMTLCommandQueue: NSObject, MTLCommandQueue, @unchecked Sendable
     }
 
     func insertDebugCaptureBoundary() {}
+
+    func addResidencySet(_ residencySet: any MTLResidencySet) {
+        _ = residencySet
+    }
+
+    func removeResidencySet(_ residencySet: any MTLResidencySet) {
+        _ = residencySet
+    }
 }
 
 final class LinuxMTLCommandBuffer: NSObject, MTLCommandBuffer, @unchecked Sendable {
@@ -197,6 +205,20 @@ final class LinuxMTLCommandBuffer: NSObject, MTLCommandBuffer, @unchecked Sendab
     func resourceStateCommandEncoder(with resourceStatePassDescriptor: MTLResourceStatePassDescriptor) -> (any MTLResourceStateCommandEncoder)? {
         _ = resourceStatePassDescriptor
         return makeResourceStateCommandEncoder()
+    }
+
+    func makeAccelerationStructureCommandEncoder() -> (any MTLAccelerationStructureCommandEncoder)? {
+        guard beginEncoder() else { return nil }
+        return LinuxMTLAccelerationStructureCommandEncoder(commandBuffer: self)
+    }
+
+    func makeAccelerationStructureCommandEncoder(descriptor: MTLAccelerationStructurePassDescriptor) -> any MTLAccelerationStructureCommandEncoder {
+        _ = descriptor
+        return makeAccelerationStructureCommandEncoder()!
+    }
+
+    func useResidencySet(_ residencySet: any MTLResidencySet) {
+        _ = residencySet
     }
 
     func finishEncoder() {
@@ -1333,6 +1355,55 @@ final class LinuxMTLRenderCommandEncoder: NSObject, MTLRenderCommandEncoder, @un
 
     func memoryBarrier(resources: [any MTLResource], after: MTLRenderStages, before: MTLRenderStages) {
         recordedState.append("barrierResources:\(resources.count):\(after.rawValue):\(before.rawValue)")
+    }
+
+    func sampleCounters(sampleBuffer: any MTLCounterSampleBuffer, sampleIndex: Int, barrier: Bool) {
+        recordedState.append("counters:\(sampleBuffer.sampleCount):\(sampleIndex):\(barrier)")
+    }
+
+    func setColorAttachmentMap(_ mapping: MTLLogicalToPhysicalColorAttachmentMap?) {
+        recordedState.append("colorMap:\(mapping != nil)")
+    }
+
+    func setVertexAccelerationStructure(_ accelerationStructure: (any MTLAccelerationStructure)?, bufferIndex: Int) {
+        recordedState.append("vas:\(bufferIndex):\(accelerationStructure?.size ?? -1)")
+    }
+
+    func setFragmentAccelerationStructure(_ accelerationStructure: (any MTLAccelerationStructure)?, bufferIndex: Int) {
+        recordedState.append("fas:\(bufferIndex):\(accelerationStructure?.size ?? -1)")
+    }
+
+    func setTileAccelerationStructure(_ accelerationStructure: (any MTLAccelerationStructure)?, bufferIndex: Int) {
+        recordedState.append("tas:\(bufferIndex):\(accelerationStructure?.size ?? -1)")
+    }
+
+    func setVertexIntersectionFunctionTable(_ intersectionFunctionTable: (any MTLIntersectionFunctionTable)?, bufferIndex: Int) {
+        recordedState.append("vift:\(bufferIndex):\(intersectionFunctionTable != nil)")
+    }
+
+    func setFragmentIntersectionFunctionTable(_ intersectionFunctionTable: (any MTLIntersectionFunctionTable)?, bufferIndex: Int) {
+        recordedState.append("fift:\(bufferIndex):\(intersectionFunctionTable != nil)")
+    }
+
+    func setTileIntersectionFunctionTable(_ intersectionFunctionTable: (any MTLIntersectionFunctionTable)?, bufferIndex: Int) {
+        recordedState.append("tift:\(bufferIndex):\(intersectionFunctionTable != nil)")
+    }
+
+    func setVertexVisibleFunctionTable(_ functionTable: (any MTLVisibleFunctionTable)?, bufferIndex: Int) {
+        recordedState.append("vvft:\(bufferIndex):\(functionTable != nil)")
+    }
+
+    func setFragmentVisibleFunctionTable(_ functionTable: (any MTLVisibleFunctionTable)?, bufferIndex: Int) {
+        recordedState.append("fvft:\(bufferIndex):\(functionTable != nil)")
+    }
+
+    func setTileVisibleFunctionTable(_ functionTable: (any MTLVisibleFunctionTable)?, bufferIndex: Int) {
+        recordedState.append("tvft:\(bufferIndex):\(functionTable != nil)")
+    }
+
+    func setVertexAmplificationCount(_ count: Int, viewMappings: UnsafePointer<MTLVertexAmplificationViewMapping>?) {
+        let viewport = viewMappings?.pointee.viewportArrayIndexOffset ?? 0
+        recordedState.append("amplify:\(count):\(viewport)")
     }
 }
 

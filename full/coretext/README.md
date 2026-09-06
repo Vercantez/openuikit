@@ -42,9 +42,18 @@ package; that integration is a later central-review step.
   `CTFontCreateCopyWithSymbolicTraits(.traitBold)` at 17 pt.
 - `CTFontCopyTable` / `CTFontHasTable` / `CTFontCopyAvailableTables` return
   the parsed SFNT tables of a registered TTF. The portable face has none.
+- `CTFont.init(_:transform:)` / `CTFontCreateWithName(..., matrix)` store the
+  matrix. Horizontal advances multiply by `matrix.a`; glyf bounds scale x/width
+  by `a` and y/height by `d`. Identity matrices leave pass-1/2/3 numbers
+  unchanged. Shear/rotation/`tx`/`ty` are not claimed.
+- Macintosh language/script IDs (`kFontEnglishLanguage` = 0, `kFontRomanScript`
+  = 0), AAT `mort`/`prop`/`kern`/`kerx`/`bsln` coverage bits, state-table
+  classes, and packed `sizeof_sfnt*` enumerators match public
+  `SFNTTypes.h` / `SFNTLayoutTypes.h` ABI (same family as the already-shipped
+  OpenType name IDs). `kLastFeatureType` is `-1`. `nonGlyphID` is `65535`.
 - Typesetter / line / run / framesetter / frame use the same per-glyph
   advances (cmap+hmtx on a registered TTF, SFUI harvest, or portable
-  `max(size*0.5,1)`).   `CTLineCreateJustifiedLine` distributes leftover
+  `max(size*0.5,1)`, then `matrix.a`).   `CTLineCreateJustifiedLine` distributes leftover
   width across glyph advances. `CTFramesetterCreateFrame` wraps with
   `CTTypesetterSuggestLineBreak` inside a `CGPath` rectangle.
   Per-character fonts split `CTRun`s; `kCTRunDelegateAttributeName` width /
@@ -86,12 +95,9 @@ module. Isolated Linux uses ImageIO-style lookalikes for `CGGlyph`,
   for iOS `.SFUI` (macOS `.SFNS` numbers are not iOS facts).
 - `AttributedString.AdaptiveImageGlyph` (needs `UTType`, not a seeded
   dependency).
+- `CTAdaptiveImageProviding.image(forProposedSize:...)` (returns `CGImage`).
 - Shaping, kerning quality beyond additive `kCTKernAttributeName`, ligatures,
-  justification quality, and bidi.
-- AAT `kFontEnglishLanguage` / Macintosh script codes / `kMORT*` coverage
-  bits / `kPROP*` direction classes (numeric ABI is not in the pinned graph,
-  api-digester, or macios; OpenType name IDs, platform IDs, and FourCC table
-  tags *are* implemented).
+  justification quality, bidi, and font-matrix shear/rotation.
 
 ## Depth pass 2026-09 (wave 8)
 
@@ -143,14 +149,52 @@ Remaining after the two catalogs: 1455 rows. Largest non-catalog test is
 `testSFNTCmapNamePropAndDirectoryTables` at 153 (10.5%). C FourCC / OpenType
 name-ID constants share `testSFNTNamePlatformAndTableTagConstants` (56).
 
+### Fourth pass (AAT integers + font matrix)
+
+Fourth SDK-depth pass on the same wave-8 heading. Keeps pass-1/2/3 tests
+green. Implements the remaining AAT/SFNT integer families
+(`kFontEnglishLanguage` / `kFontRomanScript` / `kMORT*` coverage /
+`kPROP*` direction classes / `sizeof_sfnt*` packed sizes / state-table
+classes) from public `SFNTTypes.h` and `SFNTLayoutTypes.h` ABI, plus
+`CTFont.init(_:transform:)` matrix scaling of advances and glyf bounds.
+`AttributedString.AdaptiveImageGlyph` stays deferred (`UTType`).
+`CTAdaptiveImageProviding.image(forProposedSize:...)` stays deferred
+(`CGImage`). No SwiftUI overlay IDs exist on this surface.
+
+| | before (pass 3) | after (pass 4) |
+|---|---|---|
+| `implemented` | 2274 | 2631 |
+| `declared` | 0 | 0 |
+| `deferred` | 370 | 13 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 `implemented` evidence distribution (table-driven enum/option-set and
+C `k…` integer catalogs may share a value test; no other single test exceeds
+40% of the remaining implemented rows):
+
+| citations | test |
+|---|---|
+| 439 | `testCatalogEnumAndOptionSetRawValues` (enums / option-set members / `init(rawValue:)`) |
+| 380 | `testCatalogIntegerConstants` (C `kCT*` / feature selector integers) |
+| 355 | `testAATLayoutIntegerConstants` (Macintosh language/script + AAT coverage / packed sizeof) |
+| 153 | `testSFNTCmapNamePropAndDirectoryTables` |
+| 133 | `testSFNTLookupStateAndTrackTables` |
+
+Remaining after the two catalogs: 1812 rows. Largest non-catalog test is
+`testAATLayoutIntegerConstants` at 355 (19.6%).
+
 Environment: `git rev-parse HEAD` matched
-`bff8535c68425cc39fb45cb00d447b0981b57242`.
+`39dc25a2769fb88a50f0853964137a4f96d50322`.
 `.cursor/verify-cloud-environment.sh` failed with
 `missing corpus checkout: scratch/ladder-corpus/focus-ios` (this pod
 booted `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21`, not campaign
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Host `swiftc` is
 Swift 6.2.4 / `x86_64-unknown-linux-gnu`. The isolated host gate does not
-need the ladder corpus.
+need the ladder corpus. Campaign inventory stamp
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
+is a host-inventory token; the sealed gate compiled with a clean product
+tree.
 
 Sealed host gate on this pass printed:
 

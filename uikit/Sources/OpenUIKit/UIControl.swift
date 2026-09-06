@@ -94,6 +94,9 @@ open class UIControl: UIView {
         public static let touchCancel = Event(rawValue: 1 << 8)
         public static let valueChanged = Event(rawValue: 1 << 12)
         public static let primaryActionTriggered = Event(rawValue: 1 << 13)
+        /// UIKit `UIControlEventMenuActionTriggered` (iOS 14). Focus URLBar /
+        /// BrowserToolbar a2832521. Raw value from UIControl.h (1 << 14).
+        public static let menuActionTriggered = Event(rawValue: 1 << 14)
         // Text-field editing events (UIKit raw values; text-input module).
         public static let editingDidBegin = Event(rawValue: 1 << 16)
         public static let editingChanged = Event(rawValue: 1 << 17)

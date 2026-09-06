@@ -493,8 +493,61 @@ open class HKSeriesSample: HKSample, @unchecked Sendable {
     public required init?(coder: NSCoder) { super.init(coder: coder) }
 }
 
-open class HKCumulativeQuantitySample: HKQuantitySample, @unchecked Sendable {}
-open class HKDiscreteQuantitySample: HKQuantitySample, @unchecked Sendable {}
+open class HKCumulativeQuantitySample: HKQuantitySample, @unchecked Sendable {
+    public var sumQuantity: HKQuantity { quantity }
+}
+
+open class HKDiscreteQuantitySample: HKQuantitySample, @unchecked Sendable {
+    public override init(
+        type: HKQuantityType,
+        quantity: HKQuantity,
+        start startDate: Date,
+        end endDate: Date,
+        device: HKDevice? = nil,
+        metadata: [String: Any]? = nil
+    ) {
+        super.init(type: type, quantity: quantity, start: startDate, end: endDate, device: device, metadata: metadata)
+    }
+
+    public required init?(coder: NSCoder) { super.init(coder: coder) }
+
+    private var seriesPoints: [HKHealthStorePortable.HKQuantitySeriesPoint] {
+        HKHealthStorePortable.quantitySeriesPoints(for: uuid)
+    }
+
+    private var seriesQuantities: [HKQuantity] {
+        let points = seriesPoints
+        if points.isEmpty { return [quantity] }
+        return points.map(\.quantity)
+    }
+
+    public var averageQuantity: HKQuantity {
+        let values = seriesQuantities.map { $0.doubleValue(for: quantity.unit) }
+        let mean = values.reduce(0, +) / Double(max(values.count, 1))
+        return HKQuantity(unit: quantity.unit, doubleValue: mean)
+    }
+
+    public var maximumQuantity: HKQuantity {
+        let values = seriesQuantities.map { $0.doubleValue(for: quantity.unit) }
+        return HKQuantity(unit: quantity.unit, doubleValue: values.max() ?? quantity.doubleValue(for: quantity.unit))
+    }
+
+    public var minimumQuantity: HKQuantity {
+        let values = seriesQuantities.map { $0.doubleValue(for: quantity.unit) }
+        return HKQuantity(unit: quantity.unit, doubleValue: values.min() ?? quantity.doubleValue(for: quantity.unit))
+    }
+
+    public var mostRecentQuantity: HKQuantity {
+        seriesPoints.last?.quantity ?? quantity
+    }
+
+    public var mostRecentQuantityDateInterval: DateInterval {
+        if let last = seriesPoints.last {
+            return last.dateInterval
+        }
+        return DateInterval(start: startDate, end: endDate)
+    }
+}
 open class HKCumulativeQuantitySeriesSample: HKCumulativeQuantitySample, @unchecked Sendable {}
 open class HKDocumentSample: HKSample, @unchecked Sendable {
     public override init(

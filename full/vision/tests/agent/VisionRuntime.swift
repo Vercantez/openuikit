@@ -619,21 +619,6 @@ func visionExpectOverlayInvalidModel<T>(_ work: () throws -> T, _ message: Strin
     }
 }
 
-func visionWaitFor<T>(_ work: @escaping () async throws -> T) -> T {
-    let lock = DispatchSemaphore(value: 0)
-    var stored: Result<T, Error>?
-    Task {
-        do {
-            stored = .success(try await work())
-        } catch {
-            stored = .failure(error)
-        }
-        lock.signal()
-    }
-    lock.wait()
-    return try! stored!.get()
-}
-
 func visionRectangleImage() -> CGImage {
     var raster = VisionRaster(width: 80, height: 80, filled: (0, 0, 0, 255))
     for y in 20..<60 {
@@ -799,9 +784,10 @@ func testOverlayBarcodePerform() {
     var request = DetectBarcodesRequest()
     visionExpect(request.revision == .revision4, "overlay revision")
     request.symbologies = [.qr]
-    let overlayHits = visionWaitFor {
-        try await request.perform(on: data)
-    }
+    visionExpect(request.supportedSymbologies.contains(.qr), "QR supported")
+    request.setComputeDevice(.cpu, for: .main)
+    visionExpectEqual(request.computeDevice(for: .main), .cpu, "barcode device")
+    let overlayHits = try! request.performOnHandler(VNImageRequestHandler(data: data))
     visionExpect(overlayHits.contains(where: { $0.payloadString == "HELLO" }), "overlay QR")
     _ = ImageRequestHandler(data)
     _ = RequestDescriptor.detectBarcodesRequest(.revision4)
@@ -814,27 +800,42 @@ func testOverlayRectanglePerform() {
     DetectRectanglesRequest().hash(into: &hasher)
     _ = hasher.finalize()
     var request = DetectRectanglesRequest()
+    visionExpectEqual(request.revision, .revision1, "rectangle revision")
     request.minimumSize = 0.1
-    let rectangles = visionWaitFor {
-        try await request.perform(on: visionRectangleImage())
-    }
+    request.minimumConfidence = 0
+    request.minimumAspectRatio = 0.2
+    request.maximumAspectRatio = 1
+    request.maximumObservations = 4
+    request.quadratureToleranceDegrees = 40
+    request.regionOfInterest = .fullImage
+    request.setComputeDevice(.cpu, for: .main)
+    visionExpectEqual(request.computeDevice(for: .main), .cpu, "rectangle device")
+    let rectangles = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
     visionExpect(!rectangles.isEmpty, "overlay rectangles")
 }
 
 func testOverlayContourPerform() {
     var contourRequest = DetectContoursRequest()
+    visionExpectEqual(contourRequest.revision, .revision1, "contour revision")
     contourRequest.detectsDarkOnLight = false
-    let contours = visionWaitFor {
-        try await contourRequest.perform(on: visionRectangleImage())
-    }
+    contourRequest.contrastPivot = 0.5
+    contourRequest.contrastAdjustment = 2
+    contourRequest.maximumImageDimension = 128
+    contourRequest.regionOfInterest = .fullImage
+    contourRequest.setComputeDevice(.cpu, for: .main)
+    visionExpectEqual(contourRequest.computeDevice(for: .main), .cpu, "contour device")
+    visionExpectRevisionCodable(DetectContoursRequest.Revision.revision1, "contour revision coding")
+    let contours = try! contourRequest.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
     visionExpect(contours.contourCount >= 1, "overlay contours")
 }
 
 func testOverlayFeaturePrintPerform() {
-    let printObs = visionWaitFor {
-        try await GenerateImageFeaturePrintRequest().perform(on: visionRectangleImage())
-    }
-    _ = try! printObs.distance(to: printObs)
+    var request = GenerateImageFeaturePrintRequest()
+    request.setComputeDevice(.cpu, for: .main)
+    visionExpectEqual(request.computeDevice(for: .main), .cpu, "feature print device")
+    visionExpectRevisionCodable(GenerateImageFeaturePrintRequest.Revision.revision2, "feature print revision coding")
+    let printObs = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+    visionExpectEqual(try! printObs.distance(to: printObs), 0, "feature print self distance")
 }
 
 func testOverlayTrackObjectRequest() {
@@ -2449,25 +2450,28 @@ func testVNTrackOpticalFlowRequestConfig() {
 }
 
 func testImageRequestHandlerOverlayPerformNow() {
-    let image = visionRectangleImage()
+    let image = try! VisionHost.makeQRImage(payload: "HELLO")
     let data = VisionHost.encodeNetpbm(image)
-    _ = ImageRequestHandler(data)
-    _ = ImageRequestHandler(image)
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    try! FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try! FileManager.default.removeItem(at: directory) }
+    let url = directory.appendingPathComponent("qr.ppm")
+    try! data.write(to: url)
     let ci = CIImage(cgImage: image)
-    _ = ImageRequestHandler(ci)
-    let buffer = CVPixelBuffer(width: image.width, height: image.height)
-    _ = ImageRequestHandler(buffer)
+    let buffer = CVPixelBuffer(width: image.width, height: image.height, pixels: image.pixels)
     let sample = CMSampleBuffer(pixelBuffer: buffer)
-    _ = ImageRequestHandler(sample)
-    let handler = ImageRequestHandler(image)
+    let handlers = [
+        ImageRequestHandler(url), ImageRequestHandler(data), ImageRequestHandler(image),
+        ImageRequestHandler(ci), ImageRequestHandler(buffer), ImageRequestHandler(sample),
+    ]
     var barcodes = DetectBarcodesRequest()
     barcodes.symbologies = [.qr]
-    let qr = try! VisionHost.makeQRImage(payload: "HELLO")
-    let qrHandler = ImageRequestHandler(qr)
-    let hits: [BarcodeObservation] = try! qrHandler.performNow(barcodes)
-    visionExpect(hits.contains(where: { $0.payloadString == "HELLO" }), "handler performNow QR")
+    for (index, handler) in handlers.enumerated() {
+        let hits: [BarcodeObservation] = try! handler.performNow(barcodes)
+        visionExpect(hits.contains(where: { $0.payloadString == "HELLO" }), "handler source \(index) QR")
+    }
     do {
-        _ = try handler.performNow(RecognizeDocumentsRequest())
+        _ = try handlers[0].performNow(RecognizeDocumentsRequest())
         visionExpect(false, "handler documents fail closed")
     } catch let error as VisionError {
         if case .invalidModel = error {
@@ -3848,6 +3852,31 @@ func testRequestProgressAndRevisionProviding() {
     visionExpectEqual(revisionProviding.requestRevision, 3, "protocol revision")
     let copy = observation.copy() as! VNDetectedObjectObservation
     visionExpectEqual(copy.requestRevision, 3, "copied revision")
+    visionExpect(copy !== observation, "detected copy is independent")
+    visionExpectEqual(copy.uuid, observation.uuid, "copied uuid")
+    visionExpectEqual(copy.confidence, observation.confidence, "copied confidence")
+    visionExpectEqual(copy.boundingBox, observation.boundingBox, "copied bounds")
+    copy.requestRevision = 1
+    visionExpectEqual(observation.requestRevision, 3, "copy mutation leaves source revision")
+
+    let rectangle = VNRectangleObservation(
+        requestRevision: 3,
+        topLeft: CGPoint(x: 0.1, y: 0.8),
+        topRight: CGPoint(x: 0.7, y: 0.8),
+        bottomRight: CGPoint(x: 0.7, y: 0.2),
+        bottomLeft: CGPoint(x: 0.1, y: 0.2)
+    )
+    let rectangleCopy = rectangle.copy() as! VNRectangleObservation
+    visionExpectEqual(rectangleCopy.requestRevision, 3, "rectangle copied revision")
+    visionExpect(rectangleCopy !== rectangle, "rectangle copy is independent")
+    visionExpectEqual(rectangleCopy.uuid, rectangle.uuid, "rectangle copied uuid")
+    visionExpectEqual(rectangleCopy.boundingBox, rectangle.boundingBox, "rectangle copied bounds")
+    visionExpectEqual(rectangleCopy.topLeft, rectangle.topLeft, "rectangle copied top left")
+    visionExpectEqual(rectangleCopy.topRight, rectangle.topRight, "rectangle copied top right")
+    visionExpectEqual(rectangleCopy.bottomLeft, rectangle.bottomLeft, "rectangle copied bottom left")
+    visionExpectEqual(rectangleCopy.bottomRight, rectangle.bottomRight, "rectangle copied bottom right")
+    let base = VNObservation(requestRevision: 3)
+    visionExpectEqual((base.copy() as! VNObservation).requestRevision, 3, "base copied revision")
 }
 
 func visionRunFocusedTests() {

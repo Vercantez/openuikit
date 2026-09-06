@@ -1342,4 +1342,29 @@ func testRequestProgressAndRevisionProviding() {
     visionExpectEqual(revisionProviding.requestRevision, 3, "protocol revision")
     let copy = observation.copy() as! VNDetectedObjectObservation
     visionExpectEqual(copy.requestRevision, 3, "copied revision")
+    visionExpect(copy !== observation, "detected copy is independent")
+    visionExpectEqual(copy.uuid, observation.uuid, "copied uuid")
+    visionExpectEqual(copy.confidence, observation.confidence, "copied confidence")
+    visionExpectEqual(copy.boundingBox, observation.boundingBox, "copied bounds")
+    copy.requestRevision = 1
+    visionExpectEqual(observation.requestRevision, 3, "copy mutation leaves source revision")
+
+    let rectangle = VNRectangleObservation(
+        requestRevision: 3,
+        topLeft: CGPoint(x: 0.1, y: 0.8),
+        topRight: CGPoint(x: 0.7, y: 0.8),
+        bottomRight: CGPoint(x: 0.7, y: 0.2),
+        bottomLeft: CGPoint(x: 0.1, y: 0.2)
+    )
+    let rectangleCopy = rectangle.copy() as! VNRectangleObservation
+    visionExpectEqual(rectangleCopy.requestRevision, 3, "rectangle copied revision")
+    visionExpect(rectangleCopy !== rectangle, "rectangle copy is independent")
+    visionExpectEqual(rectangleCopy.uuid, rectangle.uuid, "rectangle copied uuid")
+    visionExpectEqual(rectangleCopy.boundingBox, rectangle.boundingBox, "rectangle copied bounds")
+    visionExpectEqual(rectangleCopy.topLeft, rectangle.topLeft, "rectangle copied top left")
+    visionExpectEqual(rectangleCopy.topRight, rectangle.topRight, "rectangle copied top right")
+    visionExpectEqual(rectangleCopy.bottomLeft, rectangle.bottomLeft, "rectangle copied bottom left")
+    visionExpectEqual(rectangleCopy.bottomRight, rectangle.bottomRight, "rectangle copied bottom right")
+    let base = VNObservation(requestRevision: 3)
+    visionExpectEqual((base.copy() as! VNObservation).requestRevision, 3, "base copied revision")
 }

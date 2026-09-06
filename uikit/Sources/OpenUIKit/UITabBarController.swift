@@ -28,7 +28,7 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
     public let tabBar = UITabBar()
     let transitionView = UITransitionView()
 
-    public override init() {
+    public init() {
         super.init()
     }
 

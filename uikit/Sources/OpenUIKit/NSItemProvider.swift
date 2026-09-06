@@ -18,6 +18,14 @@
 
 #if canImport(Foundation)
 import Foundation
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
+#if !canImport(Foundation) && canImport(FoundationEssentials)
+// Guest library route: Darwin Foundation is hidden; URL lives on
+// FoundationEssentials (UIPrintInteractionController sibling).
+import struct FoundationEssentials.URL
 #endif
 
 #if os(Linux)
@@ -85,6 +93,13 @@ open class NSItemProvider: NSObject, @unchecked Sendable {
         if let typeIdentifier, let item {
             registerItem(item, typeIdentifier: typeIdentifier)
         }
+    }
+
+    /// Gestures-dnd census spelling (`init(contentsOf:)`). Darwin Foundation
+    /// already vends this; Linux stores the file URL as `public.file-url`.
+    public convenience init(contentsOf fileURL: URL) {
+        self.init(item: fileURL, typeIdentifier: "public.file-url")
+        suggestedName = fileURL.lastPathComponent
     }
 
     open var registeredTypeIdentifiers: [String] {
@@ -273,6 +288,38 @@ open class NSItemProvider: NSObject, @unchecked Sendable {
         NSError(domain: NSItemProviderErrorDomain,
                 code: NSItemProviderErrorCode.unexpectedValueClass.rawValue)
     }
+
+    /// Process-local drag (`UIDragDrop.swift`) needs a typed in-process
+    /// getter. Darwin Foundation does not expose one (tests set
+    /// `UIDragItem.localObject`). MEASURED GestureProbe, iPhone SE 2x /
+    /// iOS 26.1: drag items carry the provider plus optional localObject.
+    func _canLoad(_ type: Any.Type) -> Bool {
+        if type == String.self {
+            return hasItemConformingToTypeIdentifier("public.utf8-plain-text")
+                || hasItemConformingToTypeIdentifier("public.text")
+                || hasItemConformingToTypeIdentifier("public.plain-text")
+        }
+        if type == URL.self {
+            return hasItemConformingToTypeIdentifier("public.url")
+                || hasItemConformingToTypeIdentifier("public.file-url")
+        }
+        if type == Data.self {
+            return hasItemConformingToTypeIdentifier("public.data")
+        }
+        lock.lock()
+        defer { lock.unlock() }
+        return representations.contains { $0.object != nil }
+    }
+
+    func _load<T>(_ type: T.Type) -> T? {
+        _ = type
+        lock.lock()
+        defer { lock.unlock() }
+        for rep in representations {
+            if let obj = rep.object as? T { return obj }
+        }
+        return nil
+    }
 }
 
 extension String: NSItemProviderWriting, NSItemProviderReading {
@@ -341,6 +388,65 @@ extension Data: NSItemProviderWriting, NSItemProviderReading {
                               typeIdentifier: String) throws -> Data {
         _ = typeIdentifier
         return data
+    }
+}
+
+#elseif !canImport(Foundation)
+// Guest library route (`scripts/guest_route_check.sh`, Darwin sysroot, no
+// Foundation.swiftmodule). Target is arm64-apple-macos so `os(Linux)` is
+// false and Darwin Foundation.NSItemProvider is not in scope.
+// MEASURED merge_gestures47-merged.log: UIDragDrop.swift:109/113/905/906/910
+// `cannot find type 'NSItemProvider' in scope`.
+// Sibling: NSStringDrawing.swift (`os(Linux) || !canImport(Foundation)`).
+// Progress / NSError / NSLock / DispatchQueue are not named — those facade
+// types exist only after OpenUIKit is built (guest-route-hygiene.md).
+// Darwin/corelibs still use Foundation.NSItemProvider / the Linux class.
+
+open class NSItemProvider: NSObject, @unchecked Sendable {
+    private var typeIdentifiers: [String] = []
+    private var objects: [Any] = []
+    open var suggestedName: String?
+
+    public override init() { super.init() }
+
+    public convenience init(item: Any?, typeIdentifier: String?) {
+        self.init()
+        if let typeIdentifier { typeIdentifiers.append(typeIdentifier) }
+        if let item { objects.append(item) }
+    }
+
+    /// Gestures-dnd census spelling (`init(contentsOf:)`). Same as the Linux
+    /// class: store the file URL as `public.file-url`.
+    public convenience init(contentsOf fileURL: URL) {
+        self.init(item: fileURL, typeIdentifier: "public.file-url")
+        suggestedName = fileURL.lastPathComponent
+    }
+
+    open var registeredTypeIdentifiers: [String] { typeIdentifiers }
+
+    open func hasItemConformingToTypeIdentifier(_ typeIdentifier: String) -> Bool {
+        typeIdentifiers.contains { $0 == typeIdentifier }
+    }
+
+    func _canLoad(_ type: Any.Type) -> Bool {
+        if type == String.self {
+            return hasItemConformingToTypeIdentifier("public.utf8-plain-text")
+                || hasItemConformingToTypeIdentifier("public.text")
+                || hasItemConformingToTypeIdentifier("public.plain-text")
+        }
+        if type == URL.self {
+            return hasItemConformingToTypeIdentifier("public.url")
+                || hasItemConformingToTypeIdentifier("public.file-url")
+        }
+        return !objects.isEmpty
+    }
+
+    func _load<T>(_ type: T.Type) -> T? {
+        _ = type
+        for obj in objects {
+            if let typed = obj as? T { return typed }
+        }
+        return nil
     }
 }
 

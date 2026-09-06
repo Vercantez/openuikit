@@ -367,7 +367,13 @@ open class SCNPhysicsVehicleWheel: NSObject, NSCopying, NSSecureCoding {
 open class SCNPhysicsVehicle: SCNPhysicsBehavior {
     public private(set) var chassisBody: SCNPhysicsBody
     public private(set) var wheels: [SCNPhysicsVehicleWheel]
-    public var speedInKilometersPerHour: CGFloat { 0 }
+    var _engine: [Int: CGFloat] = [:]
+    var _brake: [Int: CGFloat] = [:]
+    var _steer: [Int: CGFloat] = [:]
+
+    public var speedInKilometersPerHour: CGFloat {
+        CGFloat(_scnLength(chassisBody.velocity) * 3.6)
+    }
 
     public init(chassisBody: SCNPhysicsBody, wheels: [SCNPhysicsVehicleWheel]) {
         self.chassisBody = chassisBody
@@ -376,61 +382,198 @@ open class SCNPhysicsVehicle: SCNPhysicsBehavior {
     }
 
     public func applyEngineForce(_ value: CGFloat, forWheelAt index: Int) {
-        _ = value
-        _ = index
+        _engine[index] = value
     }
 
     public func applyBrakingForce(_ value: CGFloat, forWheelAt index: Int) {
-        _ = value
-        _ = index
+        _brake[index] = value
     }
 
     public func setSteeringAngle(_ value: CGFloat, forWheelAt index: Int) {
-        _ = value
-        _ = index
+        _steer[index] = value
+    }
+
+    func _linuxApply() {
+        guard chassisBody.type == .dynamic else { return }
+        var total: Float = 0
+        for (index, force) in _engine {
+            _ = index
+            total += Float(force)
+        }
+        for (index, brake) in _brake {
+            _ = index
+            total -= Float(brake)
+        }
+        if let node = chassisBody._node {
+            let forward = _scnNormalize(node.worldFront)
+            chassisBody.applyForce(_scnScale(forward, total), asImpulse: false)
+            if let first = _steer.values.first, let wheel = wheels.first {
+                _ = wheel.steeringAxis
+                node.eulerAngles.y += Float(first) * 0.01
+            }
+        }
     }
 
     public required init?(coder: NSCoder) { return nil }
 }
 
 open class SCNPhysicsField: NSObject, NSCopying, NSSecureCoding {
+    enum Kind {
+        case drag, vortex, radial, linear, spring, noise, turbulence, electric, magnetic, custom
+    }
+
     public var strength: CGFloat = 1
     public var falloffExponent: CGFloat = 0
     public var minimumDistance: CGFloat = 0
     public var isActive: Bool = true
     public var isExclusive: Bool = false
-    public var halfExtent: SCNVector3 = SCNVector3(x: 1, y: 1, z: 1)
+    public var halfExtent: SCNVector3 = SCNVector3(x: 1e6, y: 1e6, z: 1e6)
     public var usesEllipsoidalExtent: Bool = false
     public var scope: SCNPhysicsFieldScope = .insideExtent
     public var offset: SCNVector3 = SCNVector3Zero
     public var direction: SCNVector3 = SCNVector3(x: 0, y: -1, z: 0)
     public var categoryBitMask: Int = .max
+    var _kind: Kind = .linear
+    var _evaluator: SCNFieldForceEvaluator?
+    var _smoothness: CGFloat = 1
+    var _animationSpeed: CGFloat = 0
+    var _origin = SCNVector3Zero
 
     public override init() { super.init() }
 
-    open class func drag() -> SCNPhysicsField { SCNPhysicsField() }
-    open class func vortex() -> SCNPhysicsField { SCNPhysicsField() }
-    open class func radialGravity() -> SCNPhysicsField { SCNPhysicsField() }
-    open class func linearGravity() -> SCNPhysicsField { SCNPhysicsField() }
+    open class func drag() -> SCNPhysicsField {
+        let field = SCNPhysicsField()
+        field._kind = .drag
+        return field
+    }
+    open class func vortex() -> SCNPhysicsField {
+        let field = SCNPhysicsField()
+        field._kind = .vortex
+        return field
+    }
+    open class func radialGravity() -> SCNPhysicsField {
+        let field = SCNPhysicsField()
+        field._kind = .radial
+        return field
+    }
+    open class func linearGravity() -> SCNPhysicsField {
+        let field = SCNPhysicsField()
+        field._kind = .linear
+        return field
+    }
     open class func noiseField(smoothness: CGFloat, animationSpeed speed: CGFloat) -> SCNPhysicsField {
-        _ = smoothness
-        _ = speed
-        return SCNPhysicsField()
+        let field = SCNPhysicsField()
+        field._kind = .noise
+        field._smoothness = smoothness
+        field._animationSpeed = speed
+        return field
     }
     open class func turbulenceField(smoothness: CGFloat, animationSpeed speed: CGFloat) -> SCNPhysicsField {
-        _ = smoothness
-        _ = speed
-        return SCNPhysicsField()
+        let field = SCNPhysicsField()
+        field._kind = .turbulence
+        field._smoothness = smoothness
+        field._animationSpeed = speed
+        return field
     }
-    open class func spring() -> SCNPhysicsField { SCNPhysicsField() }
-    open class func electric() -> SCNPhysicsField { SCNPhysicsField() }
-    open class func magnetic() -> SCNPhysicsField { SCNPhysicsField() }
+    open class func spring() -> SCNPhysicsField {
+        let field = SCNPhysicsField()
+        field._kind = .spring
+        return field
+    }
+    open class func electric() -> SCNPhysicsField {
+        let field = SCNPhysicsField()
+        field._kind = .electric
+        return field
+    }
+    open class func magnetic() -> SCNPhysicsField {
+        let field = SCNPhysicsField()
+        field._kind = .magnetic
+        return field
+    }
     open class func customField(evaluationBlock block: @escaping SCNFieldForceEvaluator) -> SCNPhysicsField {
-        _ = block
-        return SCNPhysicsField()
+        let field = SCNPhysicsField()
+        field._kind = .custom
+        field._evaluator = block
+        return field
     }
 
-    public func copy(with zone: NSZone? = nil) -> Any { SCNPhysicsField() }
+    /// Linux CPU evaluator. `origin` is the field node's world position.
+    public func linux_evaluate(
+        position: SCNVector3,
+        velocity: SCNVector3,
+        mass: Float,
+        charge: Float,
+        time: TimeInterval,
+        origin: SCNVector3
+    ) -> SCNVector3 {
+        guard isActive else { return SCNVector3Zero }
+        _origin = origin
+        guard _linuxContains(position) else { return SCNVector3Zero }
+        let center = _scnAdd(origin, offset)
+        switch _kind {
+        case .linear:
+            let dir = _scnLength(direction) > 1e-8 ? _scnNormalize(direction) : SCNVector3(0, -1, 0)
+            return _scnScale(dir, Float(strength))
+        case .radial:
+            let delta = _scnSub(position, center)
+            let dist = max(_scnLength(delta), Float(minimumDistance), 1e-6)
+            let fall = pow(dist, Float(falloffExponent))
+            return _scnScale(_scnNormalize(delta), -Float(strength) / max(fall, 1e-6))
+        case .drag:
+            return _scnScale(velocity, -Float(strength))
+        case .vortex:
+            let delta = _scnSub(position, center)
+            let axis = _scnLength(direction) > 1e-8 ? _scnNormalize(direction) : SCNVector3(0, 1, 0)
+            return _scnScale(_scnCross(axis, delta), Float(strength))
+        case .spring:
+            return _scnScale(_scnSub(center, position), Float(strength))
+        case .electric:
+            let delta = _scnSub(position, center)
+            let dist = max(_scnLength(delta), 1e-6)
+            return _scnScale(_scnNormalize(delta), Float(strength) * charge / (dist * dist))
+        case .magnetic:
+            let axis = _scnLength(direction) > 1e-8 ? _scnNormalize(direction) : SCNVector3(0, 1, 0)
+            return _scnScale(_scnCross(velocity, axis), Float(strength) * charge)
+        case .noise, .turbulence:
+            let t = Float(time * TimeInterval(_animationSpeed))
+            let s = Float(max(_smoothness, 0.01))
+            let nx = sin(position.x * s + t)
+            let ny = cos(position.y * s + t * 1.3)
+            let nz = sin(position.z * s + t * 0.7)
+            var force = SCNVector3(nx, ny, nz)
+            if _kind == .turbulence {
+                force = _scnAdd(force, _scnScale(velocity, -0.25))
+            }
+            return _scnScale(force, Float(strength))
+        case .custom:
+            return _evaluator?(position, velocity, mass, charge, time) ?? SCNVector3Zero
+        }
+    }
+
+    func _linuxContains(_ position: SCNVector3) -> Bool {
+        let local = _scnSub(position, _scnAdd(_origin, offset))
+        let hx = max(abs(halfExtent.x), 1e-6)
+        let hy = max(abs(halfExtent.y), 1e-6)
+        let hz = max(abs(halfExtent.z), 1e-6)
+        let inside: Bool
+        if usesEllipsoidalExtent {
+            let nx = local.x / hx
+            let ny = local.y / hy
+            let nz = local.z / hz
+            inside = nx * nx + ny * ny + nz * nz <= 1
+        } else {
+            inside = abs(local.x) <= hx && abs(local.y) <= hy && abs(local.z) <= hz
+        }
+        return scope == .insideExtent ? inside : !inside
+    }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        let copy = SCNPhysicsField()
+        copy.strength = strength
+        copy.direction = direction
+        copy._kind = _kind
+        return copy
+    }
     public static var supportsSecureCoding: Bool { true }
     public required init?(coder: NSCoder) { return nil }
     public func encode(with coder: NSCoder) {}
@@ -568,6 +711,11 @@ open class SCNPhysicsWorld: NSObject, NSSecureCoding {
         guard dt > 0, _root != nil else { return }
         let bodies = _bodies()
         let h = Float(dt)
+        for behavior in _behaviors {
+            (behavior as? SCNPhysicsVehicle)?._linuxApply()
+            _linuxApplySlider(behavior, dt: h)
+        }
+        let fields = _linuxCollectFields()
         for body in bodies {
             guard let node = body._node else { continue }
             defer {
@@ -581,6 +729,7 @@ open class SCNPhysicsWorld: NSObject, NSSecureCoding {
             if body.isAffectedByGravity {
                 force = _scnAdd(force, _scnScale(gravity, Float(body.mass)))
             }
+            force = _scnAdd(force, _linuxFieldForce(on: body, node: node, fields: fields, dt: dt))
             var v = body.velocity
             v = _scnAdd(v, _scnScale(force, inv * h))
             v = SCNVector3(
@@ -594,6 +743,75 @@ open class SCNPhysicsWorld: NSObject, NSSecureCoding {
             node.worldPosition = _scnAdd(node.worldPosition, _scnScale(v, h))
         }
         _resolveContacts(bodies, dt: h)
+    }
+
+    private func _linuxCollectFields() -> [(SCNPhysicsField, SCNVector3)] {
+        var fields: [(SCNPhysicsField, SCNVector3)] = []
+        _root?.enumerateHierarchy { node, _ in
+            if let field = node.physicsField, field.isActive {
+                fields.append((field, node.worldPosition))
+            }
+        }
+        return fields
+    }
+
+    private func _linuxFieldForce(
+        on body: SCNPhysicsBody,
+        node: SCNNode,
+        fields: [(SCNPhysicsField, SCNVector3)],
+        dt: TimeInterval
+    ) -> SCNVector3 {
+        _ = dt
+        var exclusive: [(SCNPhysicsField, SCNVector3)] = []
+        for (field, origin) in fields {
+            field._origin = origin
+            if field.isExclusive && field._linuxContains(node.worldPosition) {
+                exclusive.append((field, origin))
+            }
+        }
+        let applicable = exclusive.isEmpty ? fields : exclusive
+        var force = SCNVector3Zero
+        for (field, origin) in applicable {
+            if (field.categoryBitMask & node.categoryBitMask) == 0 { continue }
+            let f = field.linux_evaluate(
+                position: node.worldPosition,
+                velocity: body.velocity,
+                mass: Float(body.mass),
+                charge: Float(body.charge),
+                time: 0,
+                origin: origin
+            )
+            force = _scnAdd(force, f)
+        }
+        return force
+    }
+
+    private func _linuxApplySlider(_ behavior: SCNPhysicsBehavior, dt: Float) {
+        guard let slider = behavior as? SCNPhysicsSliderJoint else { return }
+        guard slider.bodyA.type == .dynamic else { return }
+        let axis = _scnLength(slider.axisA) > 1e-8 ? _scnNormalize(slider.axisA) : SCNVector3(0, 1, 0)
+        if slider.motorMaximumForce > 0 && abs(slider.motorTargetLinearVelocity) > 0 {
+            let force = min(Float(slider.motorMaximumForce), abs(Float(slider.motorTargetLinearVelocity)) * 10)
+            let signed = slider.motorTargetLinearVelocity >= 0 ? force : -force
+            slider.bodyA.applyForce(_scnScale(axis, signed), asImpulse: false)
+        }
+        if let node = slider.bodyA._node {
+            let rel = _scnDot(_scnSub(node.worldPosition, slider.anchorA), axis)
+            if slider.maximumLinearLimit > slider.minimumLinearLimit {
+                if rel > Float(slider.maximumLinearLimit) {
+                    node.worldPosition = _scnAdd(slider.anchorA, _scnScale(axis, Float(slider.maximumLinearLimit)))
+                    slider.bodyA.velocity = SCNVector3Zero
+                } else if rel < Float(slider.minimumLinearLimit) {
+                    node.worldPosition = _scnAdd(slider.anchorA, _scnScale(axis, Float(slider.minimumLinearLimit)))
+                    slider.bodyA.velocity = SCNVector3Zero
+                }
+            }
+        }
+        _ = dt
+        _ = slider.motorMaximumTorque
+        _ = slider.motorTargetAngularVelocity
+        _ = slider.minimumAngularLimit
+        _ = slider.maximumAngularLimit
     }
 
     private func _collectContacts() -> [SCNPhysicsContact] {

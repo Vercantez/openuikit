@@ -197,37 +197,37 @@ extension AVAssetExportSession {
   public var estimatedMaximumDuration: CMTime { get async throws { .zero } }
   public var estimatedOutputFileLengthInBytes: Int64 { get async throws { 0 } }
   public var metadata: [AVMetadataItem]? {
-      get { nil }
-      set { _ = newValue }
+      get { portableMetadata }
+      set { portableMetadata = newValue }
     }
   public var metadataItemFilter: AVMetadataItemFilter? {
-      get { nil }
-      set { _ = newValue }
+      get { portableMetadataItemFilter }
+      set { portableMetadataItemFilter = newValue }
     }
   public var audioTimePitchAlgorithm: AVAudioTimePitchAlgorithm {
-      get { AVAudioTimePitchAlgorithm(rawValue: "") }
-      set { _ = newValue }
+      get { portableAudioTimePitchAlgorithm }
+      set { portableAudioTimePitchAlgorithm = newValue }
     }
   public var audioMix: AVAudioMix? {
-      get { nil }
-      set { _ = newValue }
+      get { portableAudioMix }
+      set { portableAudioMix = newValue }
     }
   public var videoComposition: AVVideoComposition? {
-      get { nil }
-      set { _ = newValue }
+      get { portableVideoComposition }
+      set { portableVideoComposition = newValue }
     }
   public var customVideoCompositor: (any AVVideoCompositing)? { nil }
   public var audioTrackGroupHandling: AVAssetTrackGroupOutputHandling {
-      get { AVAssetTrackGroupOutputHandling(rawValue: 0) }
-      set { _ = newValue }
+      get { portableAudioTrackGroupHandling }
+      set { portableAudioTrackGroupHandling = newValue }
     }
   public var canPerformMultiplePassesOverSourceMediaData: Bool {
-      get { false }
-      set { _ = newValue }
+      get { portableCanPerformMultiplePassesOverSourceMediaData }
+      set { portableCanPerformMultiplePassesOverSourceMediaData = newValue }
     }
   public var directoryForTemporaryFiles: URL? {
-      get { nil }
-      set { _ = newValue }
+      get { portableDirectoryForTemporaryFiles }
+      set { portableDirectoryForTemporaryFiles = newValue }
     }
 }
 
@@ -333,6 +333,7 @@ open class AVAssetReader: NSObject, @unchecked Sendable {
   private var storedError: (any Error)?
   private var storedAsset = AVAsset()
   private var storedOutputs: [AVAssetReaderOutput] = []
+  private var storedTimeRange = CMTimeRange.zero
   public func start() throws {
     stateLock.lock()
     storedStatus = .failed
@@ -348,8 +349,8 @@ open class AVAssetReader: NSObject, @unchecked Sendable {
   public var status: AVAssetReader.Status { stateLock.withLock { storedStatus } }
   public var error: (any Error)? { stateLock.withLock { storedError } }
   public var timeRange: CMTimeRange {
-      get { .zero }
-      set { _ = newValue }
+      get { storedTimeRange }
+      set { storedTimeRange = newValue }
     }
   public var outputs: [AVAssetReaderOutput] { stateLock.withLock { storedOutputs } }
   public func canAdd(_ output: AVAssetReaderOutput) -> Bool {
@@ -372,17 +373,26 @@ open class AVAssetReader: NSObject, @unchecked Sendable {
 }
 
 open class AVAssetReaderAudioMixOutput: AVAssetReaderOutput, @unchecked Sendable {
+  private var storedTracks: [AVAssetTrack] = []
+  private var storedSettings: [String : Any]?
+  private var storedMix: AVAudioMix?
+  private var storedPitch = AVAudioTimePitchAlgorithm(rawValue: "")
   public override init() { super.init() }
-  convenience init(audioTracks: [AVAssetTrack], audioSettings: [String : Any]?) { self.init() }
-  public var audioTracks: [AVAssetTrack] { [] }
-  public var audioSettings: [String : Any]? { nil }
+  public convenience init(audioTracks: [AVAssetTrack], audioSettings: [String : Any]?) {
+    self.init()
+    storedTracks = audioTracks
+    storedSettings = audioSettings
+    storedMediaType = .audio
+  }
+  public var audioTracks: [AVAssetTrack] { storedTracks }
+  public var audioSettings: [String : Any]? { storedSettings }
   public var audioMix: AVAudioMix? {
-      get { nil }
-      set { _ = newValue }
+      get { storedMix }
+      set { storedMix = newValue }
     }
   public var audioTimePitchAlgorithm: AVAudioTimePitchAlgorithm {
-      get { AVAudioTimePitchAlgorithm(rawValue: "") }
-      set { _ = newValue }
+      get { storedPitch }
+      set { storedPitch = newValue }
     }
 }
 
@@ -391,6 +401,11 @@ public protocol AVAssetReaderCaptionValidationHandling : AnyObject {
 }
 
 open class AVAssetReaderOutput: NSObject, @unchecked Sendable {
+  var storedMediaType = AVMediaType(rawValue: "")
+  private var storedAlwaysCopiesSampleData = true
+  private var storedSupportsRandomAccess = false
+  private var storedConfigurationFinal = false
+  private var storedReadingRanges: [NSValue] = []
   public override init() { super.init() }
   open class Provider<Payload: AVAssetReaderOutput.SupportedPayload>: NSObject, @unchecked Sendable {
     public override init() { super.init() }
@@ -399,69 +414,104 @@ open class AVAssetReaderOutput: NSObject, @unchecked Sendable {
   }
   open class RandomAccessController: NSObject, @unchecked Sendable {
     public override init() { super.init() }
-    public func resetForReading(timeRanges: [CMTimeRange]) {}
+    public func resetForReading(timeRanges: [CMTimeRange]) { _ = timeRanges }
     public func markConfigurationAsFinal() {}
   }
   public protocol SupportedPayload {
   }
-  public var mediaType: AVMediaType { AVMediaType(rawValue: "") }
+  public var mediaType: AVMediaType { storedMediaType }
   public var alwaysCopiesSampleData: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedAlwaysCopiesSampleData }
+      set { storedAlwaysCopiesSampleData = newValue }
     }
   public func copyNextSampleBuffer() -> CMSampleBuffer? { nil }
   public var supportsRandomAccess: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedSupportsRandomAccess }
+      set { storedSupportsRandomAccess = newValue }
     }
-  public func reset(forReadingTimeRanges timeRanges: [NSValue]) {}
-  public func markConfigurationAsFinal() {}
+  public func reset(forReadingTimeRanges timeRanges: [NSValue]) {
+    storedReadingRanges = timeRanges
+  }
+  public func markConfigurationAsFinal() { storedConfigurationFinal = true }
 }
 
 open class AVAssetReaderOutputCaptionAdaptor: NSObject, @unchecked Sendable {
+  private var storedTrackOutput = AVAssetReaderTrackOutput()
+  weak var storedValidationDelegate: (any AVAssetReaderCaptionValidationHandling)?
   public override init() { super.init() }
-  convenience init(assetReaderTrackOutput trackOutput: AVAssetReaderTrackOutput) { self.init() }
-  public var assetReaderTrackOutput: AVAssetReaderTrackOutput { AVAssetReaderTrackOutput() }
+  public convenience init(assetReaderTrackOutput trackOutput: AVAssetReaderTrackOutput) {
+    self.init()
+    storedTrackOutput = trackOutput
+  }
+  public var assetReaderTrackOutput: AVAssetReaderTrackOutput { storedTrackOutput }
   public func nextCaptionGroup() -> AVCaptionGroup? { nil }
-  public func captionsNotPresentInPreviousGroups(in captionGroup: AVCaptionGroup) -> [AVCaption] { [] }
+  public func captionsNotPresentInPreviousGroups(in captionGroup: AVCaptionGroup) -> [AVCaption] {
+    _ = captionGroup
+    return []
+  }
   public var validationDelegate: (any AVAssetReaderCaptionValidationHandling)? {
-      get { nil }
-      set { _ = newValue }
+      get { storedValidationDelegate }
+      set { storedValidationDelegate = newValue }
     }
 }
 
 open class AVAssetReaderOutputMetadataAdaptor: NSObject, @unchecked Sendable {
+  private var storedTrackOutput = AVAssetReaderTrackOutput()
   public override init() { super.init() }
-  convenience init(assetReaderTrackOutput trackOutput: AVAssetReaderTrackOutput) { self.init() }
-  public var assetReaderTrackOutput: AVAssetReaderTrackOutput { AVAssetReaderTrackOutput() }
+  public convenience init(assetReaderTrackOutput trackOutput: AVAssetReaderTrackOutput) {
+    self.init()
+    storedTrackOutput = trackOutput
+  }
+  public var assetReaderTrackOutput: AVAssetReaderTrackOutput { storedTrackOutput }
   public func nextTimedMetadataGroup() -> AVTimedMetadataGroup? { nil }
 }
 
 open class AVAssetReaderSampleReferenceOutput: AVAssetReaderOutput, @unchecked Sendable {
+  private var storedTrack = AVAssetTrack()
   public override init() { super.init() }
-  convenience init(track: AVAssetTrack) { self.init() }
-  public var track: AVAssetTrack { AVAssetTrack() }
+  public convenience init(track: AVAssetTrack) {
+    self.init()
+    storedTrack = track
+    storedMediaType = track.mediaType
+  }
+  public var track: AVAssetTrack { storedTrack }
 }
 
 open class AVAssetReaderTrackOutput: AVAssetReaderOutput, @unchecked Sendable {
+  private var storedTrack = AVAssetTrack()
+  private var storedSettings: [String : Any]?
+  private var storedPitch = AVAudioTimePitchAlgorithm(rawValue: "")
   public override init() { super.init() }
-  convenience init(track: AVAssetTrack, outputSettings: [String : Any]?) { self.init() }
-  public var track: AVAssetTrack { AVAssetTrack() }
-  public var outputSettings: [String : Any]? { nil }
+  public convenience init(track: AVAssetTrack, outputSettings: [String : Any]?) {
+    self.init()
+    storedTrack = track
+    storedSettings = outputSettings
+    storedMediaType = track.mediaType
+  }
+  public var track: AVAssetTrack { storedTrack }
+  public var outputSettings: [String : Any]? { storedSettings }
   public var audioTimePitchAlgorithm: AVAudioTimePitchAlgorithm {
-      get { AVAudioTimePitchAlgorithm(rawValue: "") }
-      set { _ = newValue }
+      get { storedPitch }
+      set { storedPitch = newValue }
     }
 }
 
 open class AVAssetReaderVideoCompositionOutput: AVAssetReaderOutput, @unchecked Sendable {
+  private var storedTracks: [AVAssetTrack] = []
+  private var storedSettings: [String : Any]?
+  private var storedComposition: AVVideoComposition?
   public override init() { super.init() }
-  convenience init(videoTracks: [AVAssetTrack], videoSettings: [String : Any]?) { self.init() }
-  public var videoTracks: [AVAssetTrack] { [] }
-  public var videoSettings: [String : Any]? { nil }
+  public convenience init(videoTracks: [AVAssetTrack], videoSettings: [String : Any]?) {
+    self.init()
+    storedTracks = videoTracks
+    storedSettings = videoSettings
+    storedMediaType = .video
+  }
+  public var videoTracks: [AVAssetTrack] { storedTracks }
+  public var videoSettings: [String : Any]? { storedSettings }
   public var videoComposition: AVVideoComposition? {
-      get { nil }
-      set { _ = newValue }
+      get { storedComposition }
+      set { storedComposition = newValue }
     }
   public var customVideoCompositor: (any AVVideoCompositing)? { nil }
 }
@@ -719,9 +769,19 @@ open class AVAssetVariant: NSObject, @unchecked Sendable {
 }
 
 open class AVAssetVariantQualifier: NSObject, @unchecked Sendable {
+  private var storedPredicate: NSPredicate?
+  private var storedVariant: AVAssetVariant?
   public override init() { super.init() }
-  convenience init(predicate: NSPredicate) { self.init() }
-  convenience init(variant: AVAssetVariant) { self.init() }
+  public convenience init(predicate: NSPredicate) {
+    self.init()
+    storedPredicate = predicate
+  }
+  public convenience init(variant: AVAssetVariant) {
+    self.init()
+    storedVariant = variant
+  }
+  public var portablePredicate: NSPredicate? { storedPredicate }
+  public var portableVariant: AVAssetVariant? { storedVariant }
 }
 
 open class AVAssetWriter: NSObject, @unchecked Sendable {
@@ -739,6 +799,21 @@ open class AVAssetWriter: NSObject, @unchecked Sendable {
   private var storedURL = URL(fileURLWithPath: "/dev/null")
   private var storedFileType = AVFileType(rawValue: "")
   private var storedInputs: [AVAssetWriterInput] = []
+  private var storedMetadata: [AVMetadataItem] = []
+  private var storedShouldOptimize = false
+  private var storedTempDirectory: URL?
+  private var storedMovieFragmentInterval = CMTime.zero
+  private var storedInitialMovieFragmentInterval = CMTime.zero
+  private var storedInitialMovieFragmentSequenceNumber = 0
+  private var storedProducesCombinableFragments = false
+  private var storedOverallDurationHint = CMTime.zero
+  private var storedMovieTimeScale: CMTimeScale = 0
+  private var storedInputGroups: [AVAssetWriterInputGroup] = []
+  private var storedPreferredOutputSegmentInterval = CMTime.zero
+  private var storedInitialSegmentStartTime = CMTime.zero
+  private var storedOutputFileTypeProfile: AVFileTypeProfile?
+  private weak var storedDelegate: (any AVAssetWriterDelegate)?
+  private var storedDidFlushSegment = false
   public func start() throws {
     stateLock.lock()
     storedStatus = .failed
@@ -754,25 +829,31 @@ open class AVAssetWriter: NSObject, @unchecked Sendable {
   public convenience init(outputURL: URL, fileType outputFileType: AVFileType) throws {
     try self.init(url: outputURL, fileType: outputFileType)
   }
+  public convenience init(URL outputURL: URL, fileType outputFileType: AVFileType) throws {
+    try self.init(url: outputURL, fileType: outputFileType)
+  }
   public var outputURL: URL { storedURL }
   public var outputFileType: AVFileType { storedFileType }
   public var availableMediaTypes: [AVMediaType] { [.video, .audio] }
   public var status: AVAssetWriter.Status { stateLock.withLock { storedStatus } }
   public var error: (any Error)? { stateLock.withLock { storedError } }
   public var metadata: [AVMetadataItem] {
-      get { [] }
-      set { _ = newValue }
+      get { storedMetadata }
+      set { storedMetadata = newValue }
     }
   public var shouldOptimizeForNetworkUse: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedShouldOptimize }
+      set { storedShouldOptimize = newValue }
     }
   public var directoryForTemporaryFiles: URL? {
-      get { nil }
-      set { _ = newValue }
+      get { storedTempDirectory }
+      set { storedTempDirectory = newValue }
     }
   public var inputs: [AVAssetWriterInput] { stateLock.withLock { storedInputs } }
-  public func canApply(outputSettings: [String : Any]?, forMediaType mediaType: AVMediaType) -> Bool { false }
+  public func canApply(outputSettings: [String : Any]?, forMediaType mediaType: AVMediaType) -> Bool {
+    _ = (outputSettings, mediaType)
+    return false
+  }
   public func canAdd(_ input: AVAssetWriterInput) -> Bool {
     stateLock.withLock {
       storedStatus == .unknown && (input.mediaType == .video || input.mediaType == .audio)
@@ -803,54 +884,68 @@ open class AVAssetWriter: NSObject, @unchecked Sendable {
     handler()
   }
   public var movieFragmentInterval: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { storedMovieFragmentInterval }
+      set { storedMovieFragmentInterval = newValue }
     }
   public var initialMovieFragmentInterval: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { storedInitialMovieFragmentInterval }
+      set { storedInitialMovieFragmentInterval = newValue }
     }
   public var initialMovieFragmentSequenceNumber: Int {
-      get { 0 }
-      set { _ = newValue }
+      get { storedInitialMovieFragmentSequenceNumber }
+      set { storedInitialMovieFragmentSequenceNumber = newValue }
     }
   public var producesCombinableFragments: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedProducesCombinableFragments }
+      set { storedProducesCombinableFragments = newValue }
     }
   public var overallDurationHint: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { storedOverallDurationHint }
+      set { storedOverallDurationHint = newValue }
     }
   public var movieTimeScale: CMTimeScale {
-      get { 0 }
-      set { _ = newValue }
+      get { storedMovieTimeScale }
+      set { storedMovieTimeScale = newValue }
     }
-  public func canAdd(_ inputGroup: AVAssetWriterInputGroup) -> Bool { false }
-  public func add(_ inputGroup: AVAssetWriterInputGroup) {}
-  public var inputGroups: [AVAssetWriterInputGroup] { [] }
+  public func canAdd(_ inputGroup: AVAssetWriterInputGroup) -> Bool {
+    stateLock.withLock { storedStatus == .unknown }
+  }
+  public func add(_ inputGroup: AVAssetWriterInputGroup) {
+    guard canAdd(inputGroup) else { return }
+    stateLock.withLock { storedInputGroups.append(inputGroup) }
+  }
+  public var inputGroups: [AVAssetWriterInputGroup] { stateLock.withLock { storedInputGroups } }
   public var preferredOutputSegmentInterval: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { storedPreferredOutputSegmentInterval }
+      set { storedPreferredOutputSegmentInterval = newValue }
     }
   public var initialSegmentStartTime: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { storedInitialSegmentStartTime }
+      set { storedInitialSegmentStartTime = newValue }
     }
   public var outputFileTypeProfile: AVFileTypeProfile? {
-      get { nil }
-      set { _ = newValue }
+      get { storedOutputFileTypeProfile }
+      set { storedOutputFileTypeProfile = newValue }
     }
   public var delegate: (any AVAssetWriterDelegate)? {
-      get { nil }
-      set { _ = newValue }
+      get { storedDelegate }
+      set { storedDelegate = newValue }
     }
-  public func flushSegment() {}
+  public func flushSegment() { storedDidFlushSegment = true }
 }
 
 public protocol AVAssetWriterDelegate : AnyObject, Sendable {
   func assetWriter(_ writer: AVAssetWriter, didOutputSegmentData segmentData: Data, segmentType: AVAssetSegmentType, segmentReport: AVAssetSegmentReport?)
   func assetWriter(_ writer: AVAssetWriter, didOutputSegmentData segmentData: Data, segmentType: AVAssetSegmentType)
+}
+
+extension AVAssetWriterDelegate {
+  public func assetWriter(_ writer: AVAssetWriter, didOutputSegmentData segmentData: Data, segmentType: AVAssetSegmentType, segmentReport: AVAssetSegmentReport?) {
+    _ = (writer, segmentData, segmentType, segmentReport)
+  }
+  public func assetWriter(_ writer: AVAssetWriter, didOutputSegmentData segmentData: Data, segmentType: AVAssetSegmentType) {
+    _ = (writer, segmentData, segmentType)
+  }
 }
 
 open class AVAssetWriterInput: NSObject, @unchecked Sendable {
@@ -1024,10 +1119,16 @@ open class AVAssetWriterInputCaptionAdaptor: NSObject, @unchecked Sendable {
 }
 
 open class AVAssetWriterInputGroup: AVMediaSelectionGroup, @unchecked Sendable {
+  private var storedInputs: [AVAssetWriterInput] = []
+  private var storedDefault: AVAssetWriterInput?
   public override init() { super.init() }
-  convenience init(inputs: [AVAssetWriterInput], defaultInput: AVAssetWriterInput?) { self.init() }
-  public var inputs: [AVAssetWriterInput] { [] }
-  public var defaultInput: AVAssetWriterInput? { nil }
+  public convenience init(inputs: [AVAssetWriterInput], defaultInput: AVAssetWriterInput?) {
+    self.init()
+    storedInputs = inputs
+    storedDefault = defaultInput
+  }
+  public var inputs: [AVAssetWriterInput] { storedInputs }
+  public var defaultInput: AVAssetWriterInput? { storedDefault }
 }
 
 open class AVAssetWriterInputMetadataAdaptor: NSObject, @unchecked Sendable {
@@ -1068,10 +1169,16 @@ open class AVAssetWriterInputPixelBufferAdaptor: NSObject, @unchecked Sendable {
 }
 
 open class AVAssetWriterInputTaggedPixelBufferGroupAdaptor: NSObject, @unchecked Sendable {
+  private var storedInput = AVAssetWriterInput()
+  private var storedAttributes: [String : any Sendable]?
   public override init() { super.init() }
-  convenience init(assetWriterInput input: AVAssetWriterInput, sourcePixelBufferAttributes: [String : Any]? = nil) { self.init() }
-  public var assetWriterInput: AVAssetWriterInput { AVAssetWriterInput() }
-  public var sourcePixelBufferAttributes: [String : any Sendable]? { nil }
+  public convenience init(assetWriterInput input: AVAssetWriterInput, sourcePixelBufferAttributes: [String : Any]? = nil) {
+    self.init()
+    storedInput = input
+    storedAttributes = sourcePixelBufferAttributes
+  }
+  public var assetWriterInput: AVAssetWriterInput { storedInput }
+  public var sourcePixelBufferAttributes: [String : any Sendable]? { storedAttributes }
   public var pixelBufferPool: CVPixelBufferPool? { nil }
 }
 

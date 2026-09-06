@@ -77,6 +77,21 @@ public struct URLResourceValues: Sendable {
     public internal(set) var totalFileSize: Int?
     public internal(set) var totalFileAllocatedSize: Int?
 
+    public var allValues: [URLResourceKey: Any] {
+        var result: [URLResourceKey: Any] = [:]
+        if let name { result[.nameKey] = name }
+        if let isRegularFile { result[.isRegularFileKey] = isRegularFile }
+        if let isDirectory { result[.isDirectoryKey] = isDirectory }
+        if let isSymbolicLink { result[.isSymbolicLinkKey] = isSymbolicLink }
+        if let isPackage { result[.isPackageKey] = isPackage }
+        if let isHidden { result[.isHiddenKey] = isHidden }
+        if let fileSize { result[.fileSizeKey] = fileSize }
+        if let fileAllocatedSize { result[.fileAllocatedSizeKey] = fileAllocatedSize }
+        if let totalFileSize { result[.totalFileSizeKey] = totalFileSize }
+        if let totalFileAllocatedSize { result[.totalFileAllocatedSizeKey] = totalFileAllocatedSize }
+        return result
+    }
+
     public init() {}
 }
 

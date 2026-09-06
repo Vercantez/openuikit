@@ -131,7 +131,7 @@ public protocol URLRepresentableEnum: AppEnum, CustomURLRepresentationParameterC
 
 public protocol RangeCheckingResolver: Resolver {}
 
-public protocol ResolverSpecification: Hashable, Sendable {}
+public protocol ResolverSpecification: Hashable, Sendable, Sequence where Element == any Resolver {}
 
 public protocol URLRepresentableEntity: AppEntity, CustomURLRepresentationParameterConvertible {}
 
@@ -161,7 +161,12 @@ public protocol IntentPredictionConfiguration {}
 
 public protocol CustomURLRepresentationParameterConvertible {}
 
-public protocol Resolver: Hashable, Sendable {}
+public protocol Resolver: Hashable, Sendable {
+    associatedtype Input: _IntentValue
+    associatedtype Output: _IntentValue
+    typealias Context = IntentParameterContext<Output>
+    func resolve(from input: Input, context: IntentParameterContext<Output>) async throws -> Output?
+}
 
 public protocol UISceneAppIntent: TargetContentProvidingIntent {}
 

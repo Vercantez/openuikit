@@ -6,12 +6,55 @@ public struct FocusFilterAppContext: @unchecked Sendable {
     public init() {}
 }
 
-public struct AttributedStringFromStringResolver: @unchecked Sendable {
+public struct AttributedStringFromStringResolver: Resolver {
+    public typealias Input = String
+    public typealias Output = AttributedString
     public init() {}
+    public func hostResolve(
+        from input: String,
+        context: IntentParameterContext<AttributedString>
+    ) throws -> AttributedString? {
+        _ = context
+        return AttributedString(input)
+    }
+    public func resolve(
+        from input: String,
+        context: IntentParameterContext<AttributedString>
+    ) throws -> AttributedString? {
+        try hostResolve(from: input, context: context)
+    }
+    public func resolve(
+        from input: String,
+        context: IntentParameterContext<AttributedString>
+    ) async throws -> AttributedString? {
+        try hostResolve(from: input, context: context)
+    }
 }
 
-public struct StringSearchCriteriaFromStringResolverSpecificification: @unchecked Sendable {
+public struct StringSearchCriteriaFromStringResolverSpecificification: Resolver {
+    public typealias Input = String
+    public typealias Output = StringSearchCriteria
     public init() {}
+    public func hostResolve(
+        from input: String,
+        context: IntentParameterContext<StringSearchCriteria>
+    ) throws -> StringSearchCriteria? {
+        _ = input
+        _ = context
+        return StringSearchCriteria()
+    }
+    public func resolve(
+        from input: String,
+        context: IntentParameterContext<StringSearchCriteria>
+    ) throws -> StringSearchCriteria? {
+        try hostResolve(from: input, context: context)
+    }
+    public func resolve(
+        from input: String,
+        context: IntentParameterContext<StringSearchCriteria>
+    ) async throws -> StringSearchCriteria? {
+        try hostResolve(from: input, context: context)
+    }
 }
 
 public struct UniqueAppEntityProvider<Entity: UniqueAppEntity>: UniqueAppEntityQuery, Sendable {
@@ -163,6 +206,10 @@ public struct IntentPerson: @unchecked Sendable, Hashable, _IntentValue {
             name: .unknown,
             handle: handle
         )
+    }
+
+    public var localizedStringResource: LocalizedStringResource {
+        displayRepresentation.title
     }
 
     public enum Identifier: Hashable, Sendable {
@@ -668,52 +715,257 @@ public struct IntentItemCollection<Result: _IntentValue>: @unchecked Sendable {
     }
 }
 
-public struct StringSearchCriteria: @unchecked Sendable {
+public struct StringSearchCriteria: @unchecked Sendable, _IntentValue {
     public init() {}
 }
 
-public struct DoubleFromIntResolver: @unchecked Sendable {
+public struct DoubleFromIntResolver: Resolver {
+    public typealias Input = Int
+    public typealias Output = Double
     public init() {}
+    public func hostResolve(
+        from input: Int,
+        context: IntentParameterContext<Double>
+    ) throws -> Double? {
+        _ = context
+        return Double(input)
+    }
+    public func resolve(
+        from input: Int,
+        context: IntentParameterContext<Double>
+    ) throws -> Double? {
+        try hostResolve(from: input, context: context)
+    }
+    public func resolve(
+        from input: Int,
+        context: IntentParameterContext<Double>
+    ) async throws -> Double? {
+        try hostResolve(from: input, context: context)
+    }
+}
+
+public struct IntFromDoubleResolver: Resolver {
+    public typealias Input = Double
+    public typealias Output = Int
+    public var roundingRule: FloatingPointRoundingRule
+    public init(roundingRule: FloatingPointRoundingRule = .towardZero) {
+        self.roundingRule = roundingRule
+    }
+    public func hostResolve(
+        from input: Double,
+        context: IntentParameterContext<Int>
+    ) throws -> Int? {
+        _ = context
+        return Int(input.rounded(roundingRule))
+    }
+    public func resolve(
+        from input: Double,
+        context: IntentParameterContext<Int>
+    ) throws -> Int? {
+        try hostResolve(from: input, context: context)
+    }
+    public func resolve(
+        from input: Double,
+        context: IntentParameterContext<Int>
+    ) async throws -> Int? {
+        try hostResolve(from: input, context: context)
+    }
+}
+
+public struct IntFromStringResolver: Resolver {
+    public typealias Input = String
+    public typealias Output = Int
+    public var radix: Int
+    public init(radix: Int = 10) {
+        self.radix = radix
+    }
+    public func hostResolve(
+        from input: String,
+        context: IntentParameterContext<Int>
+    ) throws -> Int? {
+        _ = context
+        return Int(input, radix: radix)
+    }
+    public func resolve(
+        from input: String,
+        context: IntentParameterContext<Int>
+    ) throws -> Int? {
+        try hostResolve(from: input, context: context)
+    }
+    public func resolve(
+        from input: String,
+        context: IntentParameterContext<Int>
+    ) async throws -> Int? {
+        try hostResolve(from: input, context: context)
+    }
+}
+
+public struct StringFromIntResolver<Input: _IntentValue, Output: _IntentValue>: Resolver
+    where Output.ValueType == String
+{
+    public init() {}
+    public func hostResolve(
+        from input: Input,
+        context: IntentParameterContext<Output>
+    ) throws -> Output? {
+        _ = context
+        return String(describing: input) as? Output
+    }
+    public func resolve(
+        from input: Input,
+        context: IntentParameterContext<Output>
+    ) throws -> Output? {
+        try hostResolve(from: input, context: context)
+    }
+    public func resolve(
+        from input: Input,
+        context: IntentParameterContext<Output>
+    ) async throws -> Output? {
+        try hostResolve(from: input, context: context)
+    }
+}
+
+public struct URLFromStringResolver: Resolver {
+    public typealias Input = String
+    public typealias Output = URL
+    public init() {}
+    public func hostResolve(
+        from input: String,
+        context: IntentParameterContext<URL>
+    ) throws -> URL? {
+        _ = context
+        return URL(string: input) ?? URL(fileURLWithPath: input)
+    }
+    public func resolve(
+        from input: String,
+        context: IntentParameterContext<URL>
+    ) throws -> URL? {
+        try hostResolve(from: input, context: context)
+    }
+    public func resolve(
+        from input: String,
+        context: IntentParameterContext<URL>
+    ) async throws -> URL? {
+        try hostResolve(from: input, context: context)
+    }
+}
+
+public struct BoolFromStringResolver: Resolver {
+    public typealias Input = String
+    public typealias Output = Bool
+    public init() {}
+    public func hostResolve(
+        from input: String,
+        context: IntentParameterContext<Bool>
+    ) throws -> Bool? {
+        _ = context
+        switch input.lowercased() {
+        case "true", "yes", "1":
+            return true
+        case "false", "no", "0":
+            return false
+        default:
+            return nil
+        }
+    }
+    public func resolve(
+        from input: String,
+        context: IntentParameterContext<Bool>
+    ) throws -> Bool? {
+        try hostResolve(from: input, context: context)
+    }
+    public func resolve(
+        from input: String,
+        context: IntentParameterContext<Bool>
+    ) async throws -> Bool? {
+        try hostResolve(from: input, context: context)
+    }
 }
 
 public struct EntityQueryProperties<Entity, ComparatorMappingType>: @unchecked Sendable {
     public init() {}
 }
 
-public struct EnumURLRepresentation<Enum>: @unchecked Sendable {
-    public init() {}
-    public struct EnumSingleURLRepresentation: @unchecked Sendable {
-        public init() {}
+public struct EnumURLRepresentation<Enum: AppEnum>: @unchecked Sendable,
+    ExpressibleByStringLiteral, ExpressibleByStringInterpolation
+{
+    public let template: String
+    public let caseTemplates: [Enum: String]
+
+    public init() {
+        self.template = ""
+        self.caseTemplates = [:]
     }
-    public struct StringInterpolation: @unchecked Sendable {
-        public init() {}
+
+    public init(_ value: String) {
+        self.template = value
+        self.caseTemplates = [:]
+    }
+
+    public init(_ urlRepresentations: [Enum: EnumSingleURLRepresentation]) {
+        self.template = ""
+        var mapped: [Enum: String] = [:]
+        for (key, value) in urlRepresentations {
+            mapped[key] = value.template
+        }
+        self.caseTemplates = mapped
+    }
+
+    public init(stringLiteral value: String) { self.init(value) }
+    public init(stringInterpolation: StringInterpolation) {
+        self.template = stringInterpolation.value
+        self.caseTemplates = [:]
+    }
+
+    public typealias StringLiteralType = String
+    public typealias UnicodeScalarLiteralType = String
+    public typealias ExtendedGraphemeClusterLiteralType = String
+
+    public func expanded(for value: Enum, applicationName: String = "App") -> String {
+        var text = caseTemplates[value] ?? template
+        text = text.replacingOccurrences(of: "${applicationName}", with: applicationName)
+        text = text.replacingOccurrences(of: "${rawValue}", with: String(describing: value.rawValue))
+        return text
+    }
+
+    public struct EnumSingleURLRepresentation: @unchecked Sendable,
+        ExpressibleByStringLiteral, ExpressibleByStringInterpolation
+    {
+        public let template: String
+        public init() { template = "" }
+        public init(stringLiteral value: String) { template = value }
+        public init(stringInterpolation: StringInterpolation) {
+            template = stringInterpolation.value
+        }
+        public typealias StringLiteralType = EnumURLRepresentation<Enum>.StringLiteralType
+        public typealias StringInterpolation = EnumURLRepresentation<Enum>.StringInterpolation
+        public typealias UnicodeScalarLiteralType = EnumURLRepresentation<Enum>.StringLiteralType
+        public typealias ExtendedGraphemeClusterLiteralType = EnumURLRepresentation<Enum>.StringLiteralType
+    }
+
+    public struct StringInterpolation: StringInterpolationProtocol {
+        fileprivate var value = ""
+        public typealias StringLiteralType = String
+        public init(literalCapacity: Int, interpolationCount: Int) {
+            value.reserveCapacity(literalCapacity + interpolationCount * 12)
+        }
+        public mutating func appendLiteral(_ literal: String) { value += literal }
+        public mutating func appendInterpolation(_ subject: Token) {
+            switch subject {
+            case .rawValue:
+                value += "${rawValue}"
+            }
+        }
+        public mutating func appendInterpolation(_ subject: Enum) {
+            value += String(describing: subject.rawValue)
+        }
         public enum Token: Hashable, Sendable {
             case rawValue
         }
     }
 }
 
-public struct IntFromDoubleResolver: @unchecked Sendable {
-    public init() {}
-}
-
-public struct IntFromStringResolver: @unchecked Sendable {
-    public init() {}
-}
-
-public struct StringFromIntResolver<Input, Output>: @unchecked Sendable {
-    public init() {}
-}
-
 public struct TupleIntentPrediction<Intent, T>: @unchecked Sendable {
-    public init() {}
-}
-
-public struct URLFromStringResolver: @unchecked Sendable {
-    public init() {}
-}
-
-public struct BoolFromStringResolver: @unchecked Sendable {
     public init() {}
 }
 
@@ -726,6 +978,7 @@ public struct IntentParameterContext<Value: _IntentValue>: @unchecked Sendable {
     public var storedSupportsNegativeNumbers: Bool?
     public var storedCurrencyCodes: [String]?
     public var storedPersonMode: IntentPerson.ParameterMode?
+    public var storedPlacemarkDisplayStyle: IntentParameter<Value>.PlacemarkDisplayStyle?
 
     public init(title: LocalizedStringResource = LocalizedStringResource(""), isOptional: Bool = true) {
         self.title = title
@@ -771,6 +1024,9 @@ public struct IntentParameterContext<Value: _IntentValue>: @unchecked Sendable {
     }
 
     public var dateKind: IntentParameter<Value>.DateKind? { nil }
+    public var displayStyle: IntentParameter<Value>.PlacemarkDisplayStyle? {
+        storedPlacemarkDisplayStyle
+    }
 }
 
 public struct ParameterSummaryString<Intent: AppIntent>: Sendable,
@@ -837,8 +1093,29 @@ public struct AnyEntityQueryComparator<Entity, Subject, Property, PropertyType, 
     public init() {}
 }
 
-public struct DoubleFromStringResolver: @unchecked Sendable {
+public struct DoubleFromStringResolver: Resolver {
+    public typealias Input = String
+    public typealias Output = Double
     public init() {}
+    public func hostResolve(
+        from input: String,
+        context: IntentParameterContext<Double>
+    ) throws -> Double? {
+        _ = context
+        return Double(input)
+    }
+    public func resolve(
+        from input: String,
+        context: IntentParameterContext<Double>
+    ) throws -> Double? {
+        try hostResolve(from: input, context: context)
+    }
+    public func resolve(
+        from input: String,
+        context: IntentParameterContext<Double>
+    ) async throws -> Double? {
+        try hostResolve(from: input, context: context)
+    }
 }
 
 public struct StringFromDoubleResolver: @unchecked Sendable {
@@ -850,11 +1127,20 @@ public struct EntityQuerySortingOptions<Entity>: @unchecked Sendable {
 }
 
 public struct EmptyResolverSpecification<Value>: ResolverSpecification {
+    public typealias Element = any Resolver
     public init() {}
-    public static func == (lhs: EmptyResolverSpecification<Value>, rhs: EmptyResolverSpecification<Value>) -> Bool {
+    public static func == (
+        lhs: EmptyResolverSpecification<Value>,
+        rhs: EmptyResolverSpecification<Value>
+    ) -> Bool {
         true
     }
-    public func hash(into hasher: inout Hasher) {}
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(Value.self))
+    }
+    public func makeIterator() -> IndexingIterator<[any Resolver]> {
+        [].makeIterator()
+    }
 }
 
 public struct FocusFilterSuggestionContext: @unchecked Sendable {

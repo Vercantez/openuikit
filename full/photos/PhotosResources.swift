@@ -113,30 +113,96 @@ public final class PHLivePhotoRequestOptions: NSObject, @unchecked Sendable {
 public final class PHLivePhotoEditingContext: NSObject, @unchecked Sendable {
     public var audioVolume: Float = 1
     public var orientation: CGImagePropertyOrientation = .up
+    private var cancelled = false
+    private let input: PHContentEditingInput
 
+    /// Constructs a wrapper around a live-photo editing input. Rendering still
+    /// fail-closes: Linux has no Live Photo compositor, ImageIO pair, or
+    /// `photolibraryd`. Returns `nil` when `livePhoto` is absent.
     public init?(livePhotoEditingInput livePhotoInput: PHContentEditingInput) {
-        _ = livePhotoInput
-        return nil
+        guard livePhotoInput.livePhoto != nil else {
+            return nil
+        }
+        input = livePhotoInput
+        super.init()
     }
 
-    public func cancel() {}
+    public func cancel() {
+        cancelled = true
+    }
+
+    public func prepareLivePhotoForPlayback(
+        withTargetSize targetSize: CGSize,
+        options: [PHLivePhotoEditingOption: Any]? = nil,
+        completionHandler: @escaping (PHLivePhoto?, (any Error)?) -> Void
+    ) {
+        _ = targetSize
+        _ = options
+        _ = input
+        if cancelled {
+            completionHandler(nil, PHPhotosError(.operationInterrupted))
+            return
+        }
+        completionHandler(nil, PHPhotosError(.requestNotSupportedForAsset))
+    }
+
+    public func saveLivePhoto(
+        to output: PHContentEditingOutput,
+        options: [PHLivePhotoEditingOption: Any]? = nil,
+        completionHandler: @escaping (Bool, (any Error)?) -> Void
+    ) {
+        _ = output
+        _ = options
+        if cancelled {
+            completionHandler(false, PHPhotosError(.operationInterrupted))
+            return
+        }
+        completionHandler(false, PHPhotosError(.requestNotSupportedForAsset))
+    }
 
     public func livePhotoForPlayback(
         targetSize: CGSize,
         options: [String: Any]? = nil
     ) async throws -> PHLivePhoto {
-        _ = targetSize
-        _ = options
-        throw PHPhotosError(.requestNotSupportedForAsset)
+        try await withCheckedThrowingContinuation { continuation in
+            var mapped: [PHLivePhotoEditingOption: Any] = [:]
+            if let options {
+                for (key, value) in options {
+                    mapped[PHLivePhotoEditingOption(rawValue: key)] = value
+                }
+            }
+            prepareLivePhotoForPlayback(
+                withTargetSize: targetSize,
+                options: mapped
+            ) { photo, error in
+                if let photo {
+                    continuation.resume(returning: photo)
+                } else {
+                    continuation.resume(throwing: error ?? PHPhotosError(.requestNotSupportedForAsset))
+                }
+            }
+        }
     }
 
     public func saveLivePhoto(
         to output: PHContentEditingOutput,
         options: [String: Any]? = nil
     ) async throws {
-        _ = output
-        _ = options
-        throw PHPhotosError(.requestNotSupportedForAsset)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            var mapped: [PHLivePhotoEditingOption: Any] = [:]
+            if let options {
+                for (key, value) in options {
+                    mapped[PHLivePhotoEditingOption(rawValue: key)] = value
+                }
+            }
+            saveLivePhoto(to: output, options: mapped) { success, error in
+                if success {
+                    continuation.resume()
+                } else {
+                    continuation.resume(throwing: error ?? PHPhotosError(.requestNotSupportedForAsset))
+                }
+            }
+        }
     }
 }
 
@@ -252,6 +318,7 @@ public final class PHAssetResourceManager: NSObject, @unchecked Sendable {
     private static let sharedManager = PHAssetResourceManager()
     private let lock = NSLock()
     private var nextRequestID: PHAssetResourceDataRequestID = 1
+    private var cancelled = Set<PHAssetResourceDataRequestID>()
 
     private override init() {
         super.init()
@@ -262,7 +329,7 @@ public final class PHAssetResourceManager: NSObject, @unchecked Sendable {
     }
 
     public func cancelDataRequest(_ requestID: PHAssetResourceDataRequestID) {
-        _ = requestID
+        lock.withLock { _ = cancelled.insert(requestID) }
     }
 
     @discardableResult
@@ -272,10 +339,18 @@ public final class PHAssetResourceManager: NSObject, @unchecked Sendable {
         dataReceivedHandler handler: @escaping (Data) -> Void,
         completionHandler: @escaping ((any Error)?) -> Void
     ) -> PHAssetResourceDataRequestID {
-        _ = options
         let requestID = lock.withLock { () -> PHAssetResourceDataRequestID in
             defer { nextRequestID &+= 1 }
             return nextRequestID
+        }
+        if lock.withLock({ cancelled.contains(requestID) }) {
+            completionHandler(PHPhotosError(.operationInterrupted))
+            return requestID
+        }
+        options?.progressHandler?(1.0)
+        if lock.withLock({ cancelled.contains(requestID) }) {
+            completionHandler(PHPhotosError(.operationInterrupted))
+            return requestID
         }
         if let data = PhotosLibraryStore.resourceData(
             forAssetIdentifier: resource.assetLocalIdentifier
@@ -336,6 +411,7 @@ public final class PHPersistentChange: NSObject, @unchecked Sendable {
     public let changeToken: PHPersistentChangeToken
     var assetDetails: PHPersistentObjectChangeDetails?
     var collectionDetails: PHPersistentObjectChangeDetails?
+    var listDetails: PHPersistentObjectChangeDetails?
 
     init(changeToken: PHPersistentChangeToken) {
         self.changeToken = changeToken
@@ -349,7 +425,7 @@ public final class PHPersistentChange: NSObject, @unchecked Sendable {
         case .assetCollection:
             if let collectionDetails { return collectionDetails }
         case .collectionList:
-            break
+            if let listDetails { return listDetails }
         }
         throw PHPhotosError(.persistentChangeDetailsUnavailable)
     }
@@ -427,6 +503,14 @@ public final class PHAssetResourceUploadJob: PHObject, @unchecked Sendable {
         super.init(localIdentifier: resource.assetLocalIdentifier)
     }
 
+    @_spi(OpenUIKitHost)
+    public static func _hostJob(
+        resource: PHAssetResource,
+        state: State
+    ) -> PHAssetResourceUploadJob {
+        PHAssetResourceUploadJob(resource: resource, state: state)
+    }
+
     public class func fetchJobs(
         action: Action,
         options: PHFetchOptions?
@@ -438,14 +522,21 @@ public final class PHAssetResourceUploadJob: PHObject, @unchecked Sendable {
 }
 
 public final class PHAssetResourceUploadJobChangeRequest: PHChangeRequest, @unchecked Sendable {
+    var jobIdentifier: String?
+
     public convenience init?(for job: PHAssetResourceUploadJob) {
-        _ = job
-        return nil
+        self.init()
+        jobIdentifier = job.localIdentifier
+        // No photolibraryd / iCloud Photos upload pipeline on Linux. The
+        // request object exists so callers can invoke `acknowledge()`, but
+        // `fetchJobs` remains empty.
     }
 
     public convenience init?(forUploadJob job: PHAssetResourceUploadJob) {
         self.init(for: job)
     }
 
-    public func acknowledge() {}
+    public func acknowledge() {
+        _ = jobIdentifier
+    }
 }

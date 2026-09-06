@@ -68,9 +68,10 @@ open class VNDetectedObjectObservation: VNObservation {
         coder.encode(Double(boundingBox.size.height), forKey: "bh")
     }
 
+    // Wave-18 Linux gate: revision 3 copied as 0; preserve the supplied revision.
     open override func copy(with zone: NSZone? = nil) -> Any {
         VNDetectedObjectObservation(
-            requestRevision: VNRequestRevisionUnspecified,
+            requestRevision: requestRevision,
             boundingBox: boundingBox,
             confidence: confidence,
             uuid: uuid
@@ -151,9 +152,10 @@ open class VNRectangleObservation: VNDetectedObjectObservation {
         encodePoint(bottomLeft, "bl")
     }
 
+    // Wave-18 Linux gate: revision 3 copied as 0; preserve the supplied revision.
     open override func copy(with zone: NSZone? = nil) -> Any {
         VNRectangleObservation(
-            requestRevision: VNRequestRevisionUnspecified,
+            requestRevision: requestRevision,
             topLeft: topLeft,
             topRight: topRight,
             bottomRight: bottomRight,

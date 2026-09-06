@@ -65,3 +65,30 @@ func testCameraStores() {
     _ = cam.projectionTransform
     precondition(cam.wantsHDR)
 }
+
+func testCameraPostProcessStores() {
+    let cam = SCNCamera()
+    cam.bloomIterationCount = 3
+    cam.bloomIterationSpread = 0.5
+    cam.colorFringeIntensity = 0.2
+    cam.colorFringeStrength = 0.1
+    cam.exposureAdaptationBrighteningSpeedFactor = 0.8
+    cam.exposureAdaptationDarkeningSpeedFactor = 0.4
+    cam.focalBlurRadius = 2
+    cam.focalBlurSampleCount = 5
+    cam.focalDistance = 8
+    cam.focalSize = 1
+    cam.grainIsColored = true
+    cam.grainScale = 2
+    cam.screenSpaceAmbientOcclusionBias = 0.1
+    cam.screenSpaceAmbientOcclusionDepthThreshold = 0.5
+    cam.screenSpaceAmbientOcclusionNormalThreshold = 0.2
+    cam.screenSpaceAmbientOcclusionRadius = 4
+    cam.vignettingPower = 1.5
+    cam.whiteBalanceTint = 0.3
+    precondition(cam.bloomIterationCount == 3)
+    precondition(abs(Float(cam.bloomIterationSpread) - 0.5) < 1e-4)
+    precondition(cam.grainIsColored)
+    precondition(cam.focalBlurSampleCount == 5)
+    precondition(abs(Float(cam.whiteBalanceTint) - 0.3) < 1e-4)
+}

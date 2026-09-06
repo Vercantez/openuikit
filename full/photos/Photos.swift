@@ -263,21 +263,15 @@ public final class PHAsset: PHObject, @unchecked Sendable {
                 options: options
             )
         }
-        if let live = PhotosLibraryStore.album(identifier: assetCollection.localIdentifier) {
-            let identifiers = Set(live.transientAssetIdentifiers)
-            return photosFetchAssets(
-                matching: { identifiers.contains($0.localIdentifier) },
-                options: options
-            )
+        let albumIdentifier = assetCollection.localIdentifier
+        if PhotosLibraryStore.album(identifier: albumIdentifier) != nil {
+            return photosFetchAssetsInAlbum(identifier: albumIdentifier, options: options)
         }
-        let identifiers = Set(assetCollection.transientAssetIdentifiers)
+        let identifiers = assetCollection.transientAssetIdentifiers
         if identifiers.isEmpty {
             return photosFetchAssets(matching: { _ in false }, options: options)
         }
-        return photosFetchAssets(
-            matching: { identifiers.contains($0.localIdentifier) },
-            options: options
-        )
+        return photosFetchAssetsInOrder(identifiers, options: options)
     }
 
     public static func fetchKeyAssets(
@@ -316,6 +310,11 @@ public final class PHFetchResult<ObjectType: AnyObject>: NSObject, @unchecked Se
         self.objects = objects
         self.refetch = refetch
         super.init()
+    }
+
+    @_spi(OpenUIKitHost)
+    public convenience init(hostObjects objects: [ObjectType]) {
+        self.init(objects)
     }
 
     public var count: Int { objects.count }
@@ -485,6 +484,16 @@ public enum PHPhotoLibraryPortable {
     @_spi(OpenUIKitHost)
     public static func _reset() {
         PhotosLibraryStore.reset()
+    }
+
+    /// Documented test hook: set an already-determined authorization status
+    /// without the async `requestAuthorization` path.
+    @_spi(OpenUIKitHost)
+    public static func _setStatus(
+        _ status: PHAuthorizationStatus,
+        for level: PHAccessLevel
+    ) {
+        PhotosLibraryStore.store(status, for: level)
     }
 }
 
@@ -684,6 +693,18 @@ open class PHImageManager: NSObject, @unchecked Sendable {
                 resultHandler(nil, nil, .up, denied)
                 return
             }
+            if self.invokeProgressHandler(options?.progressHandler, requestID: requestID) {
+                resultHandler(
+                    nil,
+                    nil,
+                    .up,
+                    [
+                        PHImageCancelledKey: true,
+                        PHImageResultRequestIDKey: requestID,
+                    ]
+                )
+                return
+            }
             let data = asset.portableData
                 ?? PhotosLibraryStore.resourceData(forAssetIdentifier: asset.localIdentifier)
             var info: [AnyHashable: Any] = [
@@ -723,6 +744,16 @@ open class PHImageManager: NSObject, @unchecked Sendable {
             }
             if let denied = self.networkDeniedInfo(options: options, requestID: requestID) {
                 resultHandler(nil, denied)
+                return
+            }
+            if self.invokeProgressHandler(options?.progressHandler, requestID: requestID) {
+                resultHandler(
+                    nil,
+                    [
+                        PHImageCancelledKey: true,
+                        PHImageResultRequestIDKey: requestID,
+                    ]
+                )
                 return
             }
             var info: [AnyHashable: Any] = [
@@ -788,6 +819,21 @@ open class PHImageManager: NSObject, @unchecked Sendable {
     private func deliver(options: PHImageRequestOptions?, body: @escaping () -> Void) {
         _ = options?.isSynchronous
         body()
+    }
+
+    /// Returns `true` when the progress handler sets the stop flag.
+    private func invokeProgressHandler(
+        _ handler: PHAssetImageProgressHandler?,
+        requestID: PHImageRequestID
+    ) -> Bool {
+        guard let handler else { return false }
+        var stop = ObjCBool(false)
+        return withUnsafeMutablePointer(to: &stop) { pointer in
+            handler(0.0, nil, pointer, [PHImageResultRequestIDKey: requestID])
+            if pointer.pointee.boolValue { return true }
+            handler(1.0, nil, pointer, [PHImageResultRequestIDKey: requestID])
+            return pointer.pointee.boolValue
+        }
     }
 
     func claimRequestID() -> PHImageRequestID {

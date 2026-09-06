@@ -72,3 +72,28 @@ func testCAAnimationBridge() {
     let controller = SCNParticlePropertyController(animation: ca)
     precondition(abs(controller.animation.duration - 2) < 1e-9)
 }
+
+func testAnimationTimingFunctionAndAudio() {
+    let anim = SCNAnimation()
+    let fn = SCNTimingFunction.function(withTimingMode: .easeInEaseOut)
+    anim.timingFunction = fn
+    precondition(anim.timingFunction === fn)
+    let source = SCNAudioSource()
+    source.isPositional = true
+    source.rate = 1.5
+    source.reverbBlend = 0.25
+    source.shouldStream = true
+    precondition(source.isPositional)
+    precondition(abs(source.rate - 1.5) < 1e-4)
+    precondition(abs(source.reverbBlend - 0.25) < 1e-4)
+    precondition(source.shouldStream)
+    let player = SCNAudioPlayer(source: source)
+    var started = false
+    var finished = false
+    player.willStartPlayback = { started = true }
+    player.didFinishPlayback = { finished = true }
+    player.willStartPlayback?()
+    player.didFinishPlayback?()
+    precondition(started && finished)
+    precondition(player.audioSource === source)
+}

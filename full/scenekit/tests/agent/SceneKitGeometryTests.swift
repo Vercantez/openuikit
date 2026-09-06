@@ -144,3 +144,51 @@ func testPrimitiveVertexCounts() {
     precondition(elem.primitiveCount == 2)
     precondition(elem.bytesPerIndex == 4)
 }
+
+func testGeometryMaterialsAndElements() {
+    let geom = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
+    geom.chamferSegmentCount = 7
+    precondition(geom.chamferSegmentCount == 7)
+    let plane = SCNPlane(width: 2, height: 2)
+    plane.cornerSegmentCount = 9
+    precondition(plane.cornerSegmentCount == 9)
+    let red = SCNMaterial()
+    red.name = "red"
+    let blue = SCNMaterial()
+    blue.name = "blue"
+    geom.insertMaterial(red, at: 0)
+    precondition(geom.materials.first === red)
+    geom.replaceMaterial(at: 0, with: blue)
+    precondition(geom.materials.first === blue)
+    geom.removeMaterial(at: 0)
+    let elem = geom.element(at: 0)
+    elem.pointSize = 4
+    elem.minimumPointScreenSpaceRadius = 1
+    elem.maximumPointScreenSpaceRadius = 8
+    elem.primitiveRange = NSRange(location: 0, length: elem.primitiveCount)
+    precondition(elem.indicesChannelCount >= 1)
+    precondition(elem.hasInterleavedIndicesChannels == false)
+    precondition(abs(Float(elem.pointSize) - 4) < 1e-4)
+    let crease = SCNGeometryElement(indices: [UInt16]([0, 1]), primitiveType: .line)
+    let creaseSrc = SCNGeometrySource(vertices: [SCNVector3Zero, SCNVector3(1, 0, 0)])
+    geom.edgeCreasesElement = crease
+    geom.edgeCreasesSource = creaseSrc
+    geom.wantsAdaptiveSubdivision = true
+    let lod = SCNLevelOfDetail(geometry: SCNSphere(radius: 0.5), worldSpaceDistance: 12)
+    geom.levelsOfDetail = [lod]
+    precondition(abs(Float(lod.worldSpaceDistance) - 12) < 1e-4)
+    let tess = SCNGeometryTessellator()
+    tess.isAdaptive = true
+    tess.isScreenSpace = true
+    tess.insideTessellationFactor = 3
+    tess.maximumEdgeLength = 2
+    tess.tessellationFactorScale = 1.5
+    geom.tessellator = tess
+    precondition(tess.isAdaptive && tess.isScreenSpace)
+    let channeled = SCNGeometry(
+        sources: geom.sources,
+        elements: geom.elements,
+        sourceChannels: [0]
+    )
+    precondition(channeled.geometrySourceChannels?.first?.intValue == 0)
+}

@@ -90,18 +90,21 @@ open class SCNProgram: NSObject, NSCopying, NSSecureCoding {
     public var fragmentFunctionName: String?
     public var isOpaque: Bool = true
     public weak var delegate: SCNProgramDelegate?
+    var _semantics: [String: String] = [:]
 
     public override init() { super.init() }
 
     public func setSemantic(_ semantic: String?, forSymbol symbol: String, options: [String: Any]? = nil) {
-        _ = semantic
-        _ = symbol
         _ = options
+        if let semantic {
+            _semantics[symbol] = semantic
+        } else {
+            _semantics.removeValue(forKey: symbol)
+        }
     }
 
     public func semantic(forSymbol symbol: String) -> String? {
-        _ = symbol
-        return nil
+        _semantics[symbol]
     }
 
     public func handleBinding(ofBufferNamed name: String, frequency: SCNBufferFrequency, handler: @escaping SCNBufferBindingBlock) {
@@ -275,13 +278,14 @@ open class SCNCameraController: NSObject {
     public var automaticTarget: Bool = true
     public var worldUp: SCNVector3 = SCNNode.localUp
     public var interactionMode: SCNInteractionMode = .orbitTurntable
-    public var minimumVerticalAngle: CGFloat = 0
-    public var maximumVerticalAngle: CGFloat = 0
-    public var minimumHorizontalAngle: Float = 0
-    public var maximumHorizontalAngle: Float = 0
+    public var minimumVerticalAngle: CGFloat = -89
+    public var maximumVerticalAngle: CGFloat = 89
+    public var minimumHorizontalAngle: Float = -.pi
+    public var maximumHorizontalAngle: Float = .pi
     public var inertiaEnabled: Bool = false
     public var inertiaFriction: CGFloat = 0.05
-    public var isInertiaRunning: Bool { false }
+    var _inertiaRunning = false
+    public var isInertiaRunning: Bool { _inertiaRunning }
 
     public override init() { super.init() }
 
@@ -290,40 +294,138 @@ open class SCNCameraController: NSObject {
         node.localTranslate(by: SCNVector3(x: deltaX, y: deltaY, z: deltaZ))
     }
 
-    public func frameNodes(_ nodes: [SCNNode]) { _ = nodes }
-    public func rotateBy(x deltaX: Float, y deltaY: Float) {
-        _ = deltaX
-        _ = deltaY
+    public func frameNodes(_ nodes: [SCNNode]) {
+        guard let cameraNode = pointOfView, !nodes.isEmpty else { return }
+        var minV = SCNVector3(x: Float.greatestFiniteMagnitude, y: Float.greatestFiniteMagnitude, z: Float.greatestFiniteMagnitude)
+        var maxV = SCNVector3(x: -Float.greatestFiniteMagnitude, y: -Float.greatestFiniteMagnitude, z: -Float.greatestFiniteMagnitude)
+        for node in nodes {
+            let box = node.boundingBox
+            let corners = [
+                SCNVector3(box.min.x, box.min.y, box.min.z), SCNVector3(box.max.x, box.min.y, box.min.z),
+                SCNVector3(box.min.x, box.max.y, box.min.z), SCNVector3(box.max.x, box.max.y, box.min.z),
+                SCNVector3(box.min.x, box.min.y, box.max.z), SCNVector3(box.max.x, box.min.y, box.max.z),
+                SCNVector3(box.min.x, box.max.y, box.max.z), SCNVector3(box.max.x, box.max.y, box.max.z)
+            ]
+            for corner in corners {
+                let w = _scnTransformPoint(node.worldTransform, corner)
+                minV.x = min(minV.x, w.x); minV.y = min(minV.y, w.y); minV.z = min(minV.z, w.z)
+                maxV.x = max(maxV.x, w.x); maxV.y = max(maxV.y, w.y); maxV.z = max(maxV.z, w.z)
+            }
+        }
+        let center = SCNVector3(
+            x: (minV.x + maxV.x) * 0.5,
+            y: (minV.y + maxV.y) * 0.5,
+            z: (minV.z + maxV.z) * 0.5
+        )
+        let radius = max(_scnLength(_scnSub(maxV, minV)) * 0.5, 0.5)
+        let fov = cameraNode.camera?.fieldOfView ?? 60
+        let dist = radius / max(tan(Float(fov) * .pi / 360), 1e-4)
+        var view = _scnSub(cameraNode.worldPosition, center)
+        if _scnLength(view) < 1e-6 {
+            view = SCNVector3(0, 0, 1)
+        }
+        view = _scnNormalize(view)
+        cameraNode.worldPosition = _scnAdd(center, _scnScale(view, dist))
+        target = center
+        cameraNode.look(at: target, up: worldUp, localFront: SCNNode.localFront)
     }
-    public func rollBy(_ delta: Float) { _ = delta }
-    public func dollyBy(_ delta: Float) { _ = delta }
-    public func rollAroundTarget(_ delta: Float) { _ = delta }
-    public func dollyToTarget(_ delta: Float) { _ = delta }
+
+    public func rotateBy(x deltaX: Float, y deltaY: Float) {
+        guard let node = pointOfView else { return }
+        var offset = _scnSub(node.worldPosition, target)
+        if _scnLength(offset) < 1e-6 {
+            offset = SCNVector3(0, 0, 1)
+        }
+        let yaw = SCNMatrix4MakeRotation(deltaY, worldUp.x, worldUp.y, worldUp.z)
+        offset = _scnTransformDirection(yaw, offset)
+        let right = _scnNormalize(_scnCross(worldUp, offset))
+        let axis = _scnLength(right) > 1e-6 ? right : SCNNode.localRight
+        let pitch = max(Float(minimumVerticalAngle) * .pi / 180, min(Float(maximumVerticalAngle) * .pi / 180, deltaX))
+        let pitchM = SCNMatrix4MakeRotation(pitch, axis.x, axis.y, axis.z)
+        offset = _scnTransformDirection(pitchM, offset)
+        node.worldPosition = _scnAdd(target, offset)
+        node.look(at: target, up: worldUp, localFront: SCNNode.localFront)
+        _ = minimumHorizontalAngle
+        _ = maximumHorizontalAngle
+    }
+
+    public func rollBy(_ delta: Float) {
+        guard let node = pointOfView else { return }
+        let axis = _scnNormalize(node.worldFront)
+        node.localRotate(by: SCNQuaternion(x: axis.x, y: axis.y, z: axis.z, w: delta))
+    }
+
+    public func dollyBy(_ delta: Float) {
+        dollyToTarget(delta)
+    }
+
+    public func rollAroundTarget(_ delta: Float) {
+        guard let node = pointOfView else { return }
+        let offset = _scnSub(node.worldPosition, target)
+        if _scnLength(offset) < 1e-6 { return }
+        let axis = _scnNormalize(offset)
+        let rot = SCNMatrix4MakeRotation(delta, axis.x, axis.y, axis.z)
+        let up = _scnTransformDirection(rot, worldUp)
+        node.look(at: target, up: up, localFront: SCNNode.localFront)
+        _ = delta
+    }
+
+    public func dollyToTarget(_ delta: Float) {
+        guard let node = pointOfView else { return }
+        let from = node.worldPosition
+        var dir = _scnSub(target, from)
+        let len = _scnLength(dir)
+        if len < 1e-8 {
+            dir = node.worldFront
+        } else {
+            dir = _scnScale(dir, 1 / len)
+        }
+        node.worldPosition = _scnAdd(from, _scnScale(dir, delta))
+    }
+
     public func dolly(toTarget delta: Float) { dollyToTarget(delta) }
+
     public func dolly(by delta: Float, onScreenPoint point: CGPoint, viewport: CGSize) {
         _ = point
         _ = viewport
         dollyBy(delta)
     }
+
     public func roll(by delta: Float, aroundScreenPoint point: CGPoint, viewport: CGSize) {
         _ = point
         _ = viewport
-        rollBy(delta)
+        rollAroundTarget(delta)
     }
-    public func clearRoll() {}
-    public func stopInertia() {}
+
+    public func clearRoll() {
+        guard let node = pointOfView else { return }
+        node.look(at: target, up: worldUp, localFront: SCNNode.localFront)
+    }
+
+    public func stopInertia() {
+        _inertiaRunning = false
+    }
+
     public func beginInteraction(_ location: CGPoint, withViewport viewport: CGSize) {
         _ = location
         _ = viewport
+        if inertiaEnabled {
+            _inertiaRunning = true
+        }
     }
+
     public func continueInteraction(_ location: CGPoint, withViewport viewport: CGSize, sensitivity: CGFloat) {
         _ = location
         _ = viewport
         _ = sensitivity
     }
+
     public func endInteraction(_ location: CGPoint, withViewport viewport: CGSize, velocity: CGPoint) {
         _ = location
         _ = viewport
         _ = velocity
+        if !inertiaEnabled {
+            _inertiaRunning = false
+        }
     }
 }

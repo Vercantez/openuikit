@@ -15,21 +15,6 @@ func visionExpectEqual<T: Equatable>(_ lhs: T, _ rhs: T, _ message: String) {
     visionExpect(lhs == rhs, "\(message): \(lhs) != \(rhs)")
 }
 
-func visionWaitFor<T>(_ work: @escaping () async throws -> T) -> T {
-    let lock = DispatchSemaphore(value: 0)
-    var stored: Result<T, Error>?
-    Task {
-        do {
-            stored = .success(try await work())
-        } catch {
-            stored = .failure(error)
-        }
-        lock.signal()
-    }
-    lock.wait()
-    return try! stored!.get()
-}
-
 func visionRectangleImage() -> CGImage {
     var raster = VisionRaster(width: 80, height: 80, filled: (0, 0, 0, 255))
     for y in 20..<60 {

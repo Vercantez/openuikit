@@ -309,7 +309,7 @@ Still fail-closed / not invented: Apple ML models (person segmentation, animals,
 trajectories, CoreML, pose, classify, text rectangles), homography, learned
 feature prints, async overlay `perform(on:orientation:)`.
 
-## Depth pass 2026-09 (wave 8)
+## Depth pass 2026-09 (wave 18)
 
 Campaign `ios26.1-fwdepth-r18`, lane `large-partitioned`, framework `Vision`
 (3584 IDs). Starting commit `39dc25a2769fb88a50f0853964137a4f96d50322`.
@@ -325,7 +325,9 @@ host. Active Cursor Build on this VM was
 
 The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
 is a host-inventory token (Swift 6.2.4 / linux; the sealed gate refuses stale
-`.build` / `build` / `scratch` products). Exact sealed-gate output:
+`.build` / `build` / `scratch` products). The cloud report claimed the following
+output, but the operator and local replay both failed the copied-revision
+assertion. The verified local result is recorded below:
 
 ```
 CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
@@ -389,3 +391,75 @@ homographic tracking, video processor / AVFoundation cadence, Core ML feature
 values, async overlay `perform(on:orientation:)`. Video-processor and Core ML
 feature-value rows remain `deferred` (no video daemon / no Core ML runtime),
 not `unavailable`.
+
+### Local repair: `agent/fw-vision-r`
+
+Merged `origin/main` at `c1973365` into the cloud head `10983df3`
+(`platform/cursor/port-vision-to-linux-248f`). The merge was conflict-free;
+all repair edits are confined to `full/vision/`. The immutable reference inputs
+and sealed acceptance gate remain unchanged.
+
+The operator log `/tmp/fw_merge_gate-vision.log` and an unmodified local replay
+in `uikit-linux:/gate-codex-vision` both ended with:
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+VISION_AGENT_RUNTIME_FAIL copied revision: 0 != 3
+```
+
+`VNDetectedObjectObservation.copy(with:)` and
+`VNRectangleObservation.copy(with:)` replaced the supplied `requestRevision`
+with `VNRequestRevisionUnspecified` (0). Both now forward the source revision.
+`testRequestProgressAndRevisionProviding` verifies revision **3 → 3** for the
+base, detected-object, and rectangle copies, retained identity/geometry values,
+and independent copied objects. This is a measured Linux regression repair,
+not a new claim about unobserved Apple model behaviour.
+
+The four classical overlay tests now call the existing synchronous
+`performOnHandler` SPI. Removed the semaphore/Task helper from both the cited
+test sources and the sealed runtime. The 24 async overload rows formerly
+credited to these tests are honestly `declared`; neither async scheduling nor
+all async input overloads are asserted by a synchronous helper. The six
+`ImageRequestHandler` constructor citations now point to a test that creates
+its own QR fixture, decodes it through URL, Data, CGImage, CIImage, pixel-buffer,
+and sample-buffer inputs, and removes its temporary directory.
+
+| Snapshot | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Merged current main (`c1973365`) | 2559 | 937 | 88 | 0 | 0 |
+| Refused wave-18 cloud head | 3001 | 525 | 58 | 0 | 0 |
+| Verified local repair | **2977** | **549** | **58** | **0** | **0** |
+
+Net gain over main: **+418 implemented**, with 3526 nondeferred IDs. All 442
+newly implemented cloud rows are retained; only the 24 older async-only claims
+are corrected. Every implemented row has a real synchronous no-argument test
+anchor. There are **107** distinct cited tests; the largest anchor still covers
+319 rows (**10.72%**), below the 40% limit even without the table-test exception.
+No rows are marked `not-applicable`.
+
+Validation on the operator's `uikit-linux` container, from the copied repository
+root `/gate-codex-vision`:
+
+```sh
+timeout 3600 bash full/vision/tests/acceptance/test_host.sh
+timeout 3600 bash full/vision/tests/agent/test_evidence.sh
+```
+
+The first command preserves the sealed warnings-as-errors library, import,
+link, and consolidated runtime checks. The supplemental evidence script
+compiles the actual `*Tests.swift` files with warnings as errors, validates
+anchors and their distribution, and calls every cited test in a separate
+process with a 30-second timeout. It does not alter or replace the sealed gate.
+Both commands pass:
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+VISION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Vision dylib=libVision.dylib
+VISION_EVIDENCE_LEDGER_OK implemented=2977 tests=107 largest=319
+VISION_EVIDENCE_OK
+```
+
+The individual evidence run completes all **107/107** cited tests. Apple model,
+video, homography, async-wrapper, and platform dependency identity limitations
+remain as documented above and in `oracle-questions.tsv`.

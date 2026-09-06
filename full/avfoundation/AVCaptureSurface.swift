@@ -317,7 +317,15 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
   }
   open class RotationCoordinator: NSObject, @unchecked Sendable {
     public override init() { super.init() }
-    public var device: AVCaptureDevice? { nil }
+    weak var storedDevice: AVCaptureDevice?
+    weak var storedPreviewLayer: CALayer?
+    public convenience init(device: AVCaptureDevice, previewLayer: CALayer?) {
+      self.init()
+      storedDevice = device
+      storedPreviewLayer = previewLayer
+    }
+    public var device: AVCaptureDevice? { storedDevice }
+    public var previewLayer: CALayer? { storedPreviewLayer }
     public var videoRotationAngleForHorizonLevelPreview: CGFloat { 0 }
     public var videoRotationAngleForHorizonLevelCapture: CGFloat { 0 }
   }
@@ -355,13 +363,20 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
   }
   public struct WhiteBalanceChromaticityValues: Sendable {
     public init() {}
-    public init(x: Float, y: Float) {}
+    public init(x: Float, y: Float) {
+      self.x = x
+      self.y = y
+    }
     public var x: Float = 0
     public var y: Float = 0
   }
   public struct WhiteBalanceGains: Sendable {
     public init() {}
-    public init(redGain: Float, greenGain: Float, blueGain: Float) {}
+    public init(redGain: Float, greenGain: Float, blueGain: Float) {
+      self.redGain = redGain
+      self.greenGain = greenGain
+      self.blueGain = blueGain
+    }
     public var redGain: Float = 0
     public var greenGain: Float = 0
     public var blueGain: Float = 0
@@ -373,19 +388,25 @@ open class AVCaptureDevice: NSObject, @unchecked Sendable {
   }
   public struct WhiteBalanceTemperatureAndTintValues: Sendable {
     public init() {}
-    public static let tungsten: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
-    public static let fluorescent: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
-    public static let daylight: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
-    public static let cloudy: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
-    public static let shadow: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues()
-    public init(temperature: Float, tint: Float) {}
+    public static let tungsten: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues(temperature: 3200, tint: 0)
+    public static let fluorescent: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues(temperature: 4000, tint: 0)
+    public static let daylight: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues(temperature: 6500, tint: 0)
+    public static let cloudy: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues(temperature: 7500, tint: 0)
+    public static let shadow: AVCaptureDevice.WhiteBalanceTemperatureAndTintValues = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues(temperature: 9000, tint: 0)
+    public init(temperature: Float, tint: Float) {
+      self.temperature = temperature
+      self.tint = tint
+    }
     public var temperature: Float = 0
     public var tint: Float = 0
   }
   public class func devices() -> [AVCaptureDevice] { [] }
   public class func devices(for mediaType: AVMediaType) -> [AVCaptureDevice] { [] }
   public class func `default`(for mediaType: AVMediaType) -> AVCaptureDevice? { nil }
-  convenience init?(uniqueID deviceUniqueID: String) { return nil }
+  public convenience init?(uniqueID deviceUniqueID: String) {
+    _ = deviceUniqueID
+    return nil
+  }
   public var uniqueID: String { "" }
   public var modelID: String { "" }
   public var localizedName: String { "" }
@@ -750,9 +771,17 @@ open class AVCaptureExternalDisplayConfigurator: NSObject, @unchecked Sendable {
 }
 
 open class AVCaptureFileOutput: AVCaptureOutput, @unchecked Sendable {
+  var storedOutputFileURL: URL?
+  var storedMaxRecordedDuration = CMTime.zero
+  var storedMaxRecordedFileSize: Int64 = 0
+  var storedMinFreeDiskSpaceLimit: Int64 = 0
   public override init() { super.init() }
-  public var outputFileURL: URL? { nil }
-  public func startRecording(to outputFileURL: URL, recordingDelegate delegate: any AVCaptureFileOutputRecordingDelegate) {}
+  public var outputFileURL: URL? { storedOutputFileURL }
+  public func startRecording(to outputFileURL: URL, recordingDelegate delegate: any AVCaptureFileOutputRecordingDelegate) {
+    storedOutputFileURL = outputFileURL
+    let error = AVError(.applicationIsNotAuthorizedToUseDevice)
+    delegate.fileOutput(self, didFinishRecordingTo: outputFileURL, from: [], error: error)
+  }
   public func stopRecording() {}
   public var isRecording: Bool { false }
   public var isRecordingPaused: Bool { false }
@@ -761,16 +790,16 @@ open class AVCaptureFileOutput: AVCaptureOutput, @unchecked Sendable {
   public var recordedDuration: CMTime { .zero }
   public var recordedFileSize: Int64 { 0 }
   public var maxRecordedDuration: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { storedMaxRecordedDuration }
+      set { storedMaxRecordedDuration = newValue }
     }
   public var maxRecordedFileSize: Int64 {
-      get { 0 }
-      set { _ = newValue }
+      get { storedMaxRecordedFileSize }
+      set { storedMaxRecordedFileSize = newValue }
     }
   public var minFreeDiskSpaceLimit: Int64 {
-      get { 0 }
-      set { _ = newValue }
+      get { storedMinFreeDiskSpaceLimit }
+      set { storedMinFreeDiskSpaceLimit = newValue }
     }
 }
 
@@ -780,6 +809,24 @@ public protocol AVCaptureFileOutputRecordingDelegate : AnyObject {
   func fileOutput(_ output: AVCaptureFileOutput, didPauseRecordingTo fileURL: URL, from connections: [AVCaptureConnection])
   func fileOutput(_ output: AVCaptureFileOutput, didResumeRecordingTo fileURL: URL, from connections: [AVCaptureConnection])
   func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: (any Error)?)
+}
+
+extension AVCaptureFileOutputRecordingDelegate {
+  public func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
+    _ = (output, fileURL, connections)
+  }
+  public func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, startPTS: CMTime, from connections: [AVCaptureConnection]) {
+    _ = (output, fileURL, startPTS, connections)
+  }
+  public func fileOutput(_ output: AVCaptureFileOutput, didPauseRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
+    _ = (output, fileURL, connections)
+  }
+  public func fileOutput(_ output: AVCaptureFileOutput, didResumeRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
+    _ = (output, fileURL, connections)
+  }
+  public func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: (any Error)?) {
+    _ = (output, outputFileURL, connections, error)
+  }
 }
 
 open class AVCaptureFraming: NSObject, @unchecked Sendable {
@@ -860,32 +907,54 @@ public protocol AVCaptureMetadataOutputObjectsDelegate : AnyObject {
 }
 
 open class AVCaptureMovieFileOutput: AVCaptureFileOutput, @unchecked Sendable {
+  private var storedFragmentInterval = CMTime.invalid
+  private var storedMetadata: [AVMetadataItem]?
+  private var storedOutputSettings: [ObjectIdentifier: [String : Any]] = [:]
+  private var storedRecordOrientation: [ObjectIdentifier: Bool] = [:]
+  private var storedSwitchingEnabled = false
+  private var storedSwitchingBehavior = AVCaptureDevice.PrimaryConstituentDeviceSwitchingBehavior.unsupported
+  private var storedSwitchingConditions = AVCaptureDevice.PrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions()
+  private var storedSpatialEnabled = false
   public override init() { super.init() }
   public var movieFragmentInterval: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { storedFragmentInterval }
+      set { storedFragmentInterval = newValue }
     }
   public var metadata: [AVMetadataItem]? {
-      get { nil }
-      set { _ = newValue }
+      get { storedMetadata }
+      set { storedMetadata = newValue }
     }
   public var availableVideoCodecTypes: [AVVideoCodecType] { [] }
-  public func supportedOutputSettingsKeys(for connection: AVCaptureConnection) -> [String] { [] }
-  public func outputSettings(for connection: AVCaptureConnection) -> [String : Any] { [:] }
-  public func setOutputSettings(_ outputSettings: [String : Any]?, for connection: AVCaptureConnection) {}
-  public func recordsVideoOrientationAndMirroringChangesAsMetadataTrack(for connection: AVCaptureConnection) -> Bool { false }
-  public func setRecordsVideoOrientationAndMirroringChangesAsMetadataTrack(_ doRecordChanges: Bool, for connection: AVCaptureConnection) {}
+  public func supportedOutputSettingsKeys(for connection: AVCaptureConnection) -> [String] {
+    _ = connection
+    return []
+  }
+  public func outputSettings(for connection: AVCaptureConnection) -> [String : Any] {
+    storedOutputSettings[ObjectIdentifier(connection)] ?? [:]
+  }
+  public func setOutputSettings(_ outputSettings: [String : Any]?, for connection: AVCaptureConnection) {
+    storedOutputSettings[ObjectIdentifier(connection)] = outputSettings ?? [:]
+  }
+  public func recordsVideoOrientationAndMirroringChangesAsMetadataTrack(for connection: AVCaptureConnection) -> Bool {
+    storedRecordOrientation[ObjectIdentifier(connection)] ?? false
+  }
+  public func setRecordsVideoOrientationAndMirroringChangesAsMetadataTrack(_ doRecordChanges: Bool, for connection: AVCaptureConnection) {
+    storedRecordOrientation[ObjectIdentifier(connection)] = doRecordChanges
+  }
   public var isPrimaryConstituentDeviceSwitchingBehaviorForRecordingEnabled: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedSwitchingEnabled }
+      set { storedSwitchingEnabled = newValue }
     }
-  public func setPrimaryConstituentDeviceSwitchingBehaviorForRecording(_ switchingBehavior: AVCaptureDevice.PrimaryConstituentDeviceSwitchingBehavior, restrictedSwitchingBehaviorConditions: AVCaptureDevice.PrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions) {}
-  public var primaryConstituentDeviceSwitchingBehaviorForRecording: AVCaptureDevice.PrimaryConstituentDeviceSwitchingBehavior { AVCaptureDevice.PrimaryConstituentDeviceSwitchingBehavior(rawValue: 0)! }
-  public var primaryConstituentDeviceRestrictedSwitchingBehaviorConditionsForRecording: AVCaptureDevice.PrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions { AVCaptureDevice.PrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions(rawValue: 0) }
+  public func setPrimaryConstituentDeviceSwitchingBehaviorForRecording(_ switchingBehavior: AVCaptureDevice.PrimaryConstituentDeviceSwitchingBehavior, restrictedSwitchingBehaviorConditions: AVCaptureDevice.PrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions) {
+    storedSwitchingBehavior = switchingBehavior
+    storedSwitchingConditions = restrictedSwitchingBehaviorConditions
+  }
+  public var primaryConstituentDeviceSwitchingBehaviorForRecording: AVCaptureDevice.PrimaryConstituentDeviceSwitchingBehavior { storedSwitchingBehavior }
+  public var primaryConstituentDeviceRestrictedSwitchingBehaviorConditionsForRecording: AVCaptureDevice.PrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions { storedSwitchingConditions }
   public var isSpatialVideoCaptureSupported: Bool { false }
   public var isSpatialVideoCaptureEnabled: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedSpatialEnabled }
+      set { storedSpatialEnabled = newValue }
     }
 }
 
@@ -1742,36 +1811,67 @@ open class AVCaptureSpatialAudioMetadataSampleGenerator: NSObject, @unchecked Se
 }
 
 open class AVCaptureStillImageOutput: AVCaptureOutput, @unchecked Sendable {
+  private var storedOutputSettings: [String : Any] = [:]
+  private var storedAutoStabilization = false
+  private var storedHighRes = false
+  private var storedOrientationCompensation = false
+  private var storedLensStabilization = false
   public override init() { super.init() }
   public var outputSettings: [String : Any] {
-      get { [:] }
-      set { _ = newValue }
+      get { storedOutputSettings }
+      set { storedOutputSettings = newValue }
     }
   public var availableImageDataCVPixelFormatTypes: [NSNumber] { [] }
   public var availableImageDataCodecTypes: [AVVideoCodecType] { [] }
   public var isStillImageStabilizationSupported: Bool { false }
   public var automaticallyEnablesStillImageStabilizationWhenAvailable: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedAutoStabilization }
+      set { storedAutoStabilization = newValue }
     }
   public var isStillImageStabilizationActive: Bool { false }
   public var isHighResolutionStillImageOutputEnabled: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedHighRes }
+      set { storedHighRes = newValue }
     }
   public var isCameraSensorOrientationCompensationSupported: Bool { false }
   public var isCameraSensorOrientationCompensationEnabled: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedOrientationCompensation }
+      set { storedOrientationCompensation = newValue }
     }
   public var isCapturingStillImage: Bool { false }
-  public class func jpegStillImageNSDataRepresentation(_ jpegSampleBuffer: CMSampleBuffer) -> Data? { nil }
+  public class func jpegStillImageNSDataRepresentation(_ jpegSampleBuffer: CMSampleBuffer) -> Data? {
+    _ = jpegSampleBuffer
+    return nil
+  }
   public var maxBracketedCaptureStillImageCount: Int { 0 }
   public var isLensStabilizationDuringBracketedCaptureSupported: Bool { false }
   public var isLensStabilizationDuringBracketedCaptureEnabled: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedLensStabilization }
+      set { storedLensStabilization = newValue }
     }
+  public func captureStillImageAsynchronously(
+    from connection: AVCaptureConnection,
+    completionHandler handler: @escaping (CMSampleBuffer?, (any Error)?) -> Void
+  ) {
+    _ = connection
+    handler(nil, AVError(.applicationIsNotAuthorizedToUseDevice))
+  }
+  public func captureStillImageBracketAsynchronously(
+    from connection: AVCaptureConnection,
+    withSettingsArray settings: [AVCaptureBracketedStillImageSettings],
+    completionHandler handler: @escaping (CMSampleBuffer?, AVCaptureBracketedStillImageSettings?, (any Error)?) -> Void
+  ) {
+    _ = (connection, settings)
+    handler(nil, nil, AVError(.applicationIsNotAuthorizedToUseDevice))
+  }
+  public func prepareToCaptureStillImageBracket(
+    from connection: AVCaptureConnection,
+    withSettingsArray settings: [AVCaptureBracketedStillImageSettings],
+    completionHandler handler: @escaping (Bool, (any Error)?) -> Void
+  ) {
+    _ = (connection, settings)
+    handler(false, AVError(.applicationIsNotAuthorizedToUseDevice))
+  }
 }
 
 open class AVCaptureSynchronizedData: NSObject, @unchecked Sendable {
