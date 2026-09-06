@@ -421,6 +421,11 @@ open class INBooleanResolutionResult: INIntentResolutionResult, @unchecked Senda
     open class func confirmationRequired(with valueToConfirm: NSNumber?) -> Self {
         self.init(outcome: .confirmationRequired, value: valueToConfirm)
     }
+
+    @nonobjc
+    open class func confirmationRequired(with valueToConfirm: Bool?) -> Self {
+        self.init(outcome: .confirmationRequired, value: valueToConfirm)
+    }
 }
 
 open class INIntegerResolutionResult: INIntentResolutionResult, @unchecked Sendable {
