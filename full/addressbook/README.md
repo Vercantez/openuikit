@@ -89,8 +89,8 @@ Top-5 implemented evidence distribution (211 rows):
 
 1. `AddressBookConstantTests.swift#testConstantCatalog` — 129 (61.1%) — table-driven enums, option-set members, C `kAB*`/`err*` constants (allowed shared value test)
 2. `AddressBookStoreTests.swift#testAddressBookCopyArrays` — 6 (2.8%)
-3. `AddressBookRecordTests.swift#testMultiValueCreateAndRead` — 6 (2.8%)
-4. `AddressBookRecordTests.swift#testMultiValueMutate` — 6 (2.8%)
+3. `AddressBookRecordTests.swift#testMultiValueMutate` — 6 (2.8%)
+4. `AddressBookRecordTests.swift#testMultiValueCreateAndRead` — 6 (2.8%)
 5. `AddressBookConstantTests.swift#testPersonImageFormatHashableAndEquatable` — 6 (2.8%)
 
 No non-enum test exceeds 40% of the remaining implemented rows (82 after the
