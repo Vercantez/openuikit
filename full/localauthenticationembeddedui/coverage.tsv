@@ -1,3 +1,3 @@
 precise	status	evidence	notes
-c:@T@LAPresentationContext	implemented	test:full/localauthenticationembeddedui/tests/agent/LAPresentationContextTests.swift#testLAPresentationContextIsUIWindow	-
+c:@T@LAPresentationContext	declared	source:full/localauthenticationembeddedui/LocalAuthenticationEmbeddedUI.swift#LAPresentationContext	typealias to UIWindow. Unique non-enum tests on this 2-ID census would each be 50% of implemented rows (over the 40% cap).
 c:objc(cs)LARight(im)authorizeWithLocalizedReason:inPresentationContext:completion:	implemented	test:full/localauthenticationembeddedui/tests/agent/LARightUITests.swift#testAuthorizeInPresentationContextFailClosed	-

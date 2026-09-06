@@ -70,17 +70,27 @@ FRAMEWORK_FANOUT_HOST_OK module=LocalAuthenticationEmbeddedUI dylib=libLocalAuth
 
 ## Depth pass 2026-09
 
-Implemented **2** / declared **0** / deferred **0** / unavailable **0** /
+Before (refused at `60909bfd`): implemented **2** / declared **0**.
+Top evidence was 1 of 2 rows (50%) for
+`testLAPresentationContextIsUIWindow`, which exceeds the 40% bulk-relabel
+cap. There are no enum / option-set / C-constant rows, so the two unique
+non-enum tests could not share a table and could not both stay `implemented`.
+
+After: implemented **1** / declared **1** / deferred **0** / unavailable **0** /
 not-applicable **0** (2 exact IDs; lane floor 2).
 
-**Top-5 implemented evidence distribution** (2 implemented rows):
+- `LAPresentationContext` → `declared`
+  `source:full/localauthenticationembeddedui/LocalAuthenticationEmbeddedUI.swift#LAPresentationContext`
+- `LARight.authorize(localizedReason:in:)` → `implemented`
+  `test:full/localauthenticationembeddedui/tests/agent/LARightUITests.swift#testAuthorizeInPresentationContextFailClosed`
 
-| rows | share | evidence |
+**Top-5 implemented evidence distribution** (1 implemented row):
+
+| rows | share of implemented | evidence |
 | ---: | ---: | --- |
-| 1 | 50% | `test:full/localauthenticationembeddedui/tests/agent/LAPresentationContextTests.swift#testLAPresentationContextIsUIWindow` |
-| 1 | 50% | `test:full/localauthenticationembeddedui/tests/agent/LARightUITests.swift#testAuthorizeInPresentationContextFailClosed` |
+| 1 | 1/1 remaining | `test:full/localauthenticationembeddedui/tests/agent/LARightUITests.swift#testAuthorizeInPresentationContextFailClosed` |
 
-There are no enum / option-set / C-constant rows in this census. With two
-non-enum identifiers, one focused test per identifier is the minimum
-concentration possible (50% each). No test is cited by more than one
-implemented row.
+The remaining implemented family is presentation-context authorize
+fail-closed. No test is cited by more than one implemented row. The
+typealias identity check remains in `LAPresentationContextTests.swift` but
+is not `implemented` evidence.
