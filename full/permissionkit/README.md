@@ -69,10 +69,20 @@ Top-5 implemented evidence distribution:
 No non-enum test exceeds the 40% bulk-relabel bound of the remaining
 implemented rows.
 
-The sealed host gate was run as `bash full/permissionkit/tests/acceptance/test_host.sh`.
+The sealed host gate was run as `bash full/permissionkit/tests/acceptance/test_host.sh`
+and ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=PermissionKit lane=leaf-full symbols=881
+FRAMEWORK_FANOUT_REFERENCE_OK
+PERMISSIONKIT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=PermissionKit dylib=libPermissionKit.dylib
+```
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
 `CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
 missing from this snapshot; HEAD was the expected seed commit
-`cbb368eeea236bbc0479fefa599190972ac8cfca`.
+`cbb368eeea236bbc0479fefa599190972ac8cfca`. The active environment build was
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` rather than the campaign
+pin `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`.
