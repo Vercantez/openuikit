@@ -95,6 +95,7 @@ internal final class ATAudioUnitObject: ATObject {
     var renderCallback = AURenderCallbackStruct()
     var renderNotifies: [AURenderCallbackStruct] = []
     var sampleCounter: Int64 = 0
+    var propertyListeners: [(id: AudioUnitPropertyID, proc: AudioUnitPropertyListenerProc, userData: UnsafeMutableRawPointer?)] = []
 
     func parameterKey(scope: AudioUnitScope, element: AudioUnitElement, id: AudioUnitParameterID) -> UInt64 {
         (UInt64(scope) << 48) | (UInt64(element) << 32) | UInt64(id)
@@ -342,6 +343,37 @@ public func AudioComponentValidate(
     _ = inValidationParameters
     outValidationResult?.pointee = .failed
     return kAudioComponentErr_NotPermitted
+}
+
+public func AudioOutputUnitPublish(
+    _ inDesc: UnsafePointer<AudioComponentDescription>?,
+    _ inName: CFString?,
+    _ inVersion: UInt32,
+    _ inOutputUnit: AudioUnit?
+) -> Int32 {
+    _ = inDesc
+    _ = inName
+    _ = inVersion
+    _ = inOutputUnit
+    return kAudioComponentErr_NotPermitted
+}
+
+public func AudioComponentCopyIcon(
+    _ comp: AudioComponent?,
+    _ outIcon: UnsafeMutableRawPointer?
+) -> Int32 {
+    _ = comp
+    _ = outIcon
+    return kAudioComponentErr_NotPermitted
+}
+
+public func AudioOutputUnitGetHostIcon(
+    _ inUnit: AudioUnit?,
+    _ midHeight: Float32
+) -> OpaquePointer? {
+    _ = inUnit
+    _ = midHeight
+    return nil
 }
 #endif
 

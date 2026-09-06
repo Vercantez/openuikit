@@ -6,6 +6,7 @@ full/appintents/AppIntentsDepth.swift
 full/appintents/AppIntentsEnums.swift
 full/appintents/AppIntentsHost.swift
 full/appintents/AppIntentsLookalikes.swift
+full/appintents/AppIntentsMeasurement.swift
 full/appintents/AppIntentsMembers.swift
 full/appintents/AppIntentsOverlays.swift
 full/appintents/AppIntentsProtocols.swift

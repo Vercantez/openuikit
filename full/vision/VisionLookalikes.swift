@@ -8,6 +8,13 @@ import Foundation
 
 public typealias simd_float2 = SIMD2<Float>
 public typealias simd_float3 = SIMD3<Float>
+public typealias simd_float4 = SIMD4<Float>
+
+#if !canImport(CoreVideo)
+public typealias OSType = UInt32
+/// FourCC 'BGRA'. Linux lookalike; not an Apple CoreVideo oracle.
+public let kCVPixelFormatType_32BGRA: OSType = 0x42475241
+#endif
 
 public struct simd_float3x3: Equatable, Hashable, Sendable {
     public var columns: (SIMD3<Float>, SIMD3<Float>, SIMD3<Float>)
@@ -35,6 +42,44 @@ public struct simd_float3x3: Equatable, Hashable, Sendable {
     ))
 }
 
+public struct simd_float4x4: Equatable, Hashable, Sendable {
+    public var columns: (SIMD4<Float>, SIMD4<Float>, SIMD4<Float>, SIMD4<Float>)
+
+    public init(columns: (SIMD4<Float>, SIMD4<Float>, SIMD4<Float>, SIMD4<Float>)) {
+        self.columns = columns
+    }
+
+    public static func == (lhs: simd_float4x4, rhs: simd_float4x4) -> Bool {
+        lhs.columns.0 == rhs.columns.0
+            && lhs.columns.1 == rhs.columns.1
+            && lhs.columns.2 == rhs.columns.2
+            && lhs.columns.3 == rhs.columns.3
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(columns.0)
+        hasher.combine(columns.1)
+        hasher.combine(columns.2)
+        hasher.combine(columns.3)
+    }
+
+    public static let identity = simd_float4x4(columns: (
+        SIMD4<Float>(1, 0, 0, 0),
+        SIMD4<Float>(0, 1, 0, 0),
+        SIMD4<Float>(0, 0, 1, 0),
+        SIMD4<Float>(0, 0, 0, 1)
+    ))
+
+    public static func translation(x: Float, y: Float, z: Float) -> simd_float4x4 {
+        simd_float4x4(columns: (
+            SIMD4<Float>(1, 0, 0, 0),
+            SIMD4<Float>(0, 1, 0, 0),
+            SIMD4<Float>(0, 0, 1, 0),
+            SIMD4<Float>(x, y, z, 1)
+        ))
+    }
+}
+
 #if !canImport(CoreGraphics)
 public struct CGAffineTransform: Equatable, Hashable, Sendable {
     public var a: CGFloat
@@ -57,6 +102,23 @@ public struct CGAffineTransform: Equatable, Hashable, Sendable {
 
     public init(translationX tx: CGFloat, y ty: CGFloat) {
         self.init(a: 1, b: 0, c: 0, d: 1, tx: tx, ty: ty)
+    }
+
+    public init(rotationAngle angle: CGFloat) {
+        let cosine = Foundation.cos(angle)
+        let sine = Foundation.sin(angle)
+        self.init(a: cosine, b: sine, c: -sine, d: cosine, tx: 0, ty: 0)
+    }
+
+    public func concatenating(_ t2: CGAffineTransform) -> CGAffineTransform {
+        CGAffineTransform(
+            a: a * t2.a + b * t2.c,
+            b: a * t2.b + b * t2.d,
+            c: c * t2.a + d * t2.c,
+            d: c * t2.b + d * t2.d,
+            tx: tx * t2.a + ty * t2.c + t2.tx,
+            ty: tx * t2.b + ty * t2.d + t2.ty
+        )
     }
 }
 #endif
@@ -225,4 +287,32 @@ public struct MLComputeDevice: Hashable, Sendable {
 open class MLModel: NSObject, @unchecked Sendable {}
 
 public protocol MLFeatureProvider: AnyObject {}
+
+open class MLMultiArray: NSObject, @unchecked Sendable {
+    public let shape: [Int]
+    public let data: Data
+
+    public var count: Int {
+        max(1, shape.reduce(1, *))
+    }
+
+    public init(shape: [Int] = [0], data: Data = Data()) {
+        self.shape = shape
+        self.data = data
+        super.init()
+    }
+}
 #endif
+
+/// Local stand-in for DataDetection.Match so document observations compile.
+public enum DataDetector {
+    public struct Match: Hashable, Sendable, Codable {
+        public var matchType: String
+        public var matchedString: String
+
+        public init(matchType: String = "unknown", matchedString: String) {
+            self.matchType = matchType
+            self.matchedString = matchedString
+        }
+    }
+}

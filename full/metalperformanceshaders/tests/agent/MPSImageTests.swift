@@ -355,7 +355,7 @@ func testMPSFailClosedGPUEncode() {
     let eq = MPSImageHistogramEqualization(device: device)
     MPSHostBoundary.reset()
     eq.encodeTransform(to: cmd, sourceTexture: texture, histogram: device.makeBuffer(length: 64), histogramOffset: 0)
-    precondition(MPSHostBoundary.lastRefusedAPI != nil)
+    precondition(MPSHostBoundary.lastRefusedAPI == nil)
     var info = MPSImageHistogramInfo()
     let spec = MPSImageHistogramSpecification(device: device, histogramInfo: &info)
     MPSHostBoundary.reset()

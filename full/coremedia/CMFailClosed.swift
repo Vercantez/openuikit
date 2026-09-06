@@ -122,21 +122,20 @@ public func CMSampleBufferGetSampleTimingInfoArray(
     entriesNeededOut timingArrayEntriesNeededOut: UnsafeMutablePointer<CMItemCount>?
 ) -> OSStatus {
     guard sbuf.isValid else { return kCMSampleBufferError_Invalidated }
-    var needed: CMItemCount = 0
-    if let info = try? sbuf.sampleTimingInfo(at: 0) {
-        needed = 1
-        timingArrayEntriesNeededOut?.pointee = needed
-        if numSampleTimingEntries > 0, let timingArrayOut {
-            timingArrayOut.pointee = info
-        } else if numSampleTimingEntries == 0 {
-            return 0
-        } else if needed > numSampleTimingEntries {
-            return kCMSampleBufferError_ArrayTooSmall
-        }
-        return 0
+    let snapshot = sbuf.copyTimingsAndSizes()
+    if snapshot.timings.isEmpty {
+        timingArrayEntriesNeededOut?.pointee = 0
+        return kCMSampleBufferError_BufferHasNoSampleTimingInfo
     }
-    timingArrayEntriesNeededOut?.pointee = 0
-    return kCMSampleBufferError_BufferHasNoSampleTimingInfo
+    let needed = CMItemCount(snapshot.timings.count)
+    timingArrayEntriesNeededOut?.pointee = needed
+    if numSampleTimingEntries == 0 { return 0 }
+    if numSampleTimingEntries < needed { return kCMSampleBufferError_ArrayTooSmall }
+    guard let timingArrayOut else { return kCMSampleBufferError_RequiredParameterMissing }
+    for index in 0..<Int(needed) {
+        timingArrayOut.advanced(by: index).pointee = snapshot.timings[index]
+    }
+    return 0
 }
 
 public func CMSampleBufferGetOutputSampleTimingInfoArray(
@@ -164,16 +163,18 @@ public func CMSampleBufferCopySampleBufferForRange(
         sampleBufferOut.pointee = nil
         return kCMSampleBufferError_Invalidated
     }
-    if sampleRange.location < 0 || sampleRange.length < 0 {
-        sampleBufferOut.pointee = nil
-        return kCMSampleBufferError_SampleIndexOutOfRange
-    }
     do {
-        sampleBufferOut.pointee = try CMSampleBuffer(referencing: sbuf)
+        sampleBufferOut.pointee = try sbuf.slicedCopy(
+            location: Int(sampleRange.location),
+            length: Int(sampleRange.length)
+        )
         return 0
+    } catch let error as NSError {
+        sampleBufferOut.pointee = nil
+        return OSStatus(error.code)
     } catch {
         sampleBufferOut.pointee = nil
-        return kCMSampleBufferError_AllocationFailed
+        return kCMSampleBufferError_SampleIndexOutOfRange
     }
 }
 
@@ -189,7 +190,10 @@ public func CMSampleBufferCreateCopyWithNewTiming(
         sampleBuffer: originalSBuf,
         sampleBufferOut: sampleBufferOut
     )
-    _ = (numSampleTimingEntries, sampleTimingArray)
+    if status == 0, let sample = sampleBufferOut.pointee, let sampleTimingArray, numSampleTimingEntries > 0 {
+        let timings = Array(UnsafeBufferPointer(start: sampleTimingArray, count: Int(numSampleTimingEntries)))
+        sample.replaceTimings(timings)
+    }
     return status
 }
 

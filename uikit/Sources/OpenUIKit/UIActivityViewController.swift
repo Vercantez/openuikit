@@ -22,6 +22,10 @@
 // is; the sheet around it IS the measured page sheet, and the rows are the
 // measured table-cell metrics. Recorded in docs/KNOWN_GAPS.md.
 
+#if canImport(Foundation)
+import class Foundation.Operation
+#endif
+
 /// UIKit's `UIActivity` — the app-supplied activity. Subclass it and
 /// override `activityTitle` / `perform()`.
 @preconcurrency @MainActor
@@ -84,7 +88,46 @@ public protocol UIActivityItemSource: AnyObject {
 public extension UIActivityItemSource {
     func activityViewController(_ activityViewController: UIActivityViewController,
                                 subjectForActivityType activityType: UIActivity.ActivityType?) -> String { "" }
+    func activityViewController(_ activityViewController: UIActivityViewController,
+                                dataTypeIdentifierForActivityType activityType: UIActivity.ActivityType?) -> String { "" }
+    func activityViewController(_ activityViewController: UIActivityViewController,
+                                thumbnailImageForActivityType activityType: UIActivity.ActivityType?,
+                                suggestedSize size: CGSize) -> UIImage? {
+        _ = size
+        return nil
+    }
 }
+
+#if canImport(Foundation)
+/// A placeholder activity item that produces its payload on a background
+/// operation. OpenUIKit has no share sheet to run the operation; `item`
+/// returns the placeholder unless a subclass overrides it.
+open class UIActivityItemProvider: Operation, UIActivityItemSource, @unchecked Sendable {
+    public let placeholderItem: Any?
+    open var activityType: UIActivity.ActivityType?
+
+    public init(placeholderItem: Any) {
+        self.placeholderItem = placeholderItem
+        super.init()
+    }
+
+    open var item: Any { placeholderItem as Any }
+
+    public func activityViewControllerPlaceholderItem(
+        _ activityViewController: UIActivityViewController
+    ) -> Any {
+        placeholderItem as Any
+    }
+
+    public func activityViewController(
+        _ activityViewController: UIActivityViewController,
+        itemForActivityType activityType: UIActivity.ActivityType?
+    ) -> Any? {
+        self.activityType = activityType
+        return item
+    }
+}
+#endif
 
 @preconcurrency @MainActor
 open class UIActivityViewController: UIViewController,

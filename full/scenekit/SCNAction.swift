@@ -34,6 +34,7 @@ final class _SCNActionRuntime {
     var startScale: SCNVector3?
     var startOpacity: CGFloat?
     var startRotation: SCNVector4?
+    var startEuler: SCNVector3?
     var sequenceIndex = 0
     var sequenceRuntimes: [_SCNActionRuntime] = []
     var groupRuntimes: [_SCNActionRuntime] = []
@@ -457,9 +458,9 @@ func _scnApplyAction(runtime: _SCNActionRuntime, node: SCNNode, t: Float) {
     case .removeFromParent:
         if t >= 1 { node.removeFromParentNode() }
     case .rotateBy(let euler):
-        if runtime.startRotation == nil { runtime.startRotation = node.rotation }
-        if let start = runtime.startRotation {
-            node.rotation = SCNVector4(x: start.x, y: start.y, z: start.z, w: start.w + euler.z * t)
+        if runtime.startEuler == nil { runtime.startEuler = node.eulerAngles }
+        if let start = runtime.startEuler {
+            node.eulerAngles = _scnAdd(start, _scnScale(euler, t))
         }
     case .rotateTo(let euler, _):
         node.eulerAngles = _scnLerp(node.eulerAngles, euler, t)
@@ -513,7 +514,12 @@ open class SCNTransaction: NSObject {
         finished.completionBlock?()
     }
 
-    public class func flush() {}
+    public class func flush() {
+        current.animationDuration = 0
+        let block = current.completionBlock
+        current.completionBlock = nil
+        block?()
+    }
 
     public class func lock() { lockCount += 1 }
     public class func unlock() { lockCount = max(0, lockCount - 1) }

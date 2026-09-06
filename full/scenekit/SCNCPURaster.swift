@@ -141,8 +141,8 @@ func _scnHitTestSegment(root: SCNNode, from pointA: SCNVector3, to pointB: SCNVe
     var hits: [(Float, SCNHitTestResult)] = []
 
     func visit(_ node: SCNNode) {
-        if ignoreHidden && node.isHidden { return }
-        if node.categoryBitMask & mask == 0 { return }
+        if ignoreHidden && node.linux_worldHidden { return }
+        if node.linux_worldCategoryBitMask & mask == 0 { return }
         if let geometry = node.geometry {
             let model = node.worldTransform
             if boundingOnly {
@@ -299,6 +299,32 @@ func _scnApplyConstraint(_ constraint: SCNConstraint, to node: SCNNode) {
         } else {
             node.transform = output
         }
+        return
+    }
+    if let replicator = constraint as? SCNReplicatorConstraint, let target = replicator.target {
+        if replicator.replicatesPosition {
+            let dest = _scnAdd(target.worldPosition, replicator.positionOffset)
+            node.worldPosition = _scnLerp(node.worldPosition, dest, factor == 0 ? 1 : factor)
+        }
+        if replicator.replicatesOrientation {
+            let dest = _scnQuatMul(target.worldOrientation, replicator.orientationOffset)
+            if factor >= 1 {
+                node.worldOrientation = dest
+            } else {
+                let current = node.worldOrientation
+                node.worldOrientation = SCNQuaternion(
+                    x: current.x + (dest.x - current.x) * factor,
+                    y: current.y + (dest.y - current.y) * factor,
+                    z: current.z + (dest.z - current.z) * factor,
+                    w: current.w + (dest.w - current.w) * factor
+                )
+            }
+        }
+        if replicator.replicatesScale {
+            let dest = _scnAdd(target.scale, replicator.scaleOffset)
+            node.scale = _scnLerp(node.scale, dest, factor == 0 ? 1 : factor)
+        }
+        return
     }
 }
 
@@ -455,10 +481,12 @@ func _scnRasterize(scene: SCNScene?, pointOfView: SCNNode?, size: CGSize, autoen
         var wa, wb, wc: SCNVector3
         var material: SCNMaterial
         var doubleSided: Bool
+        var opacity: Float
     }
     var tris: [Tri] = []
     root.enumerateHierarchy { node, _ in
-        if node.isHidden { return }
+        if node.linux_worldHidden { return }
+        if node.linux_worldOpacity <= 0 { return }
         guard let geometry = node.geometry else { return }
         let verts = _scnReadVertices(geometry)
         let norms = _scnReadNormals(geometry)
@@ -489,7 +517,8 @@ func _scnRasterize(scene: SCNScene?, pointOfView: SCNNode?, size: CGSize, autoen
                 bx: cb.x, by: cb.y, bz: cb.z, bw: cb.w,
                 cx: cc.x, cy: cc.y, cz: cc.z, cw: cc.w,
                 na: na, nb: nb, nc: nc, wa: wa, wb: wb, wc: wc,
-                material: material, doubleSided: material.isDoubleSided
+                material: material, doubleSided: material.isDoubleSided,
+                opacity: Float(node.linux_worldOpacity)
             ))
         }
     }
@@ -540,10 +569,11 @@ func _scnRasterize(scene: SCNScene?, pointOfView: SCNNode?, size: CGSize, autoen
                     lights: lights
                 )
                 let o = idx * 4
+                let alpha = max(0, min(1, color.3 * tri.opacity))
                 rgba[o] = UInt8((color.0 * 255).rounded())
                 rgba[o + 1] = UInt8((color.1 * 255).rounded())
                 rgba[o + 2] = UInt8((color.2 * 255).rounded())
-                rgba[o + 3] = UInt8((color.3 * 255).rounded())
+                rgba[o + 3] = UInt8((alpha * 255).rounded())
             }
         }
     }

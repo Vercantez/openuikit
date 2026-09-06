@@ -7,8 +7,10 @@ full/vision/VisionError.swift
 full/vision/VisionGeometry.swift
 full/vision/VisionIdentifiers.swift
 full/vision/VisionImageBuffer.swift
+full/vision/VisionLandmarks.swift
 full/vision/VisionLookalikes.swift
 full/vision/VisionObservation.swift
 full/vision/VisionOverlay.swift
 full/vision/VisionOverlayObservations.swift
+full/vision/VisionPose.swift
 full/vision/VisionRequest.swift

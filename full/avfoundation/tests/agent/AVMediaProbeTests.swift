@@ -449,3 +449,319 @@ func testURLAssetAudiovisualTypes() {
     precondition(asset.compatibleTrack(for: AVCompositionTrack()) == nil)
     _ = composition
 }
+
+func testAVMovieLocalFileProbeAndWriteHeaderFailClosed() {
+    let url = avWrite(avMakeFtypMoov(), suffix: "mp4")
+    defer { try? FileManager.default.removeItem(at: url) }
+    let movie = AVMovie(url: url)
+    precondition(movie.url == url)
+    precondition(abs(movie.duration.seconds - 3) < 0.01)
+    precondition(movie.tracks.count == 1)
+    precondition(movie.tracks[0] is AVMovieTrack)
+    precondition(movie.defaultMediaDataStorage == nil)
+    var loadedTrack: AVAssetTrack?
+    movie.loadTrack(withTrackID: 1) { track, error in
+        loadedTrack = track
+        precondition(error == nil)
+    }
+    precondition(loadedTrack?.trackID == 1)
+    var loadedType: [AVAssetTrack]?
+    movie.loadTracks(withMediaType: .video) { tracks, error in
+        loadedType = tracks
+        precondition(error == nil)
+    }
+    precondition(loadedType?.count == 1)
+    var loadedChar: [AVAssetTrack]?
+    movie.loadTracks(withMediaCharacteristic: .visual) { tracks, error in
+        loadedChar = tracks
+        precondition(error == nil)
+    }
+    precondition(loadedChar?.count == 1)
+    precondition(AVMovie.movieTypes().contains(.mp4))
+    precondition(movie.is(compatibleWithFileType: .mp4))
+    precondition(!movie.canContainMovieFragments)
+    precondition(!movie.containsMovieFragments)
+    do {
+        _ = try movie.makeMovieHeader(fileType: .mp4)
+        preconditionFailure("makeMovieHeader must fail closed")
+    } catch let error as AVError {
+        precondition(error.code == .encoderNotFound)
+    } catch {
+        preconditionFailure("unexpected \(error)")
+    }
+    do {
+        try movie.writeHeader(to: url, fileType: .mp4, options: [])
+        preconditionFailure("writeHeader must fail closed")
+    } catch let error as AVError {
+        precondition(error.code == .encoderNotFound)
+    } catch {
+        preconditionFailure("unexpected \(error)")
+    }
+}
+
+func testAVMutableMovieLocalEdits() {
+    let url = avWrite(avMakeFtypMoov(), suffix: "mp4")
+    defer { try? FileManager.default.removeItem(at: url) }
+    let source = AVURLAsset(url: url)
+    let movie = try! AVMutableMovie(url: url, options: nil, error: ())
+    precondition(movie.url == url)
+    precondition(movie.tracks.count == 1)
+    precondition(movie.tracks[0] is AVMutableMovieTrack)
+    precondition(abs(movie.duration.seconds - 3) < 0.01)
+    precondition(!movie.isPlayable)
+    precondition(!movie.isExportable)
+    precondition(!movie.isReadable)
+    precondition(!movie.isComposable)
+    precondition(!movie.hasProtectedContent)
+    precondition(movie.lyrics == nil)
+    precondition(movie.commonMetadata.isEmpty)
+    precondition(movie.metadata.isEmpty)
+    precondition(movie.availableMetadataFormats.isEmpty)
+    precondition(movie.metadata(forFormat: .quickTimeMetadata).isEmpty)
+    precondition(movie.availableChapterLocales.isEmpty)
+    precondition(movie.chapterMetadataGroups(bestMatchingPreferredLanguages: ["en"]).isEmpty)
+    precondition(
+        movie.chapterMetadataGroups(withTitleLocale: Locale(identifier: "en"), containingItemsWithCommonKeys: nil).isEmpty
+    )
+    precondition(movie.mediaSelectionGroup(forMediaCharacteristic: .audible) == nil)
+    precondition(movie.track(withTrackID: 1) != nil)
+    precondition(movie.tracks(withMediaType: .video).count == 1)
+    precondition(movie.tracks(withMediaCharacteristic: .visual).count == 1)
+    precondition(movie.unusedTrackID() == 2)
+    precondition(movie.trackGroups.isEmpty)
+    precondition(movie.allMediaSelections.isEmpty)
+    precondition(movie.creationDate == nil)
+    precondition(!movie.canContainFragments)
+    precondition(!movie.containsFragments)
+    precondition(!movie.isCompatibleWithAirPlayVideo)
+    precondition(!movie.isCompatibleWithSavedPhotosAlbum)
+    precondition(!movie.providesPreciseDurationAndTiming)
+    precondition(!movie.overallDurationHint.isValid || movie.overallDurationHint.seconds >= 0)
+    _ = movie.preferredMediaSelection
+    precondition(movie.availableMediaCharacteristicsWithMediaSelectionOptions.isEmpty)
+    movie.timescale = 600
+    precondition(movie.timescale == 600)
+    movie.interleavingPeriod = CMTime(seconds: 1, preferredTimescale: 600)
+    precondition(movie.interleavingPeriod.seconds == 1)
+    do {
+        try movie.insertTimeRange(
+            CMTimeRange(start: .zero, duration: source.duration),
+            of: source,
+            at: .zero,
+            copySampleData: true
+        )
+        preconditionFailure("copySampleData must fail closed")
+    } catch let error as AVError {
+        precondition(error.code == .decoderNotFound)
+    } catch {
+        preconditionFailure("unexpected \(error)")
+    }
+    let empty = AVMutableMovie()
+    try! empty.insertTimeRange(
+        CMTimeRange(start: .zero, duration: source.duration),
+        of: source,
+        at: .zero,
+        copySampleData: false
+    )
+    precondition(empty.tracks.count == 1)
+    precondition(abs(empty.duration.seconds - 3) < 0.01)
+    empty.insertEmptyTimeRange(CMTimeRange(start: empty.duration, duration: CMTime(seconds: 1, preferredTimescale: 1)))
+    precondition(abs(empty.duration.seconds - 4) < 0.01)
+    empty.scale(CMTimeRange(start: .zero, duration: empty.duration), toDuration: CMTime(seconds: 2, preferredTimescale: 1))
+    precondition(abs(empty.duration.seconds - 2) < 0.05)
+    empty.removeTimeRange(CMTimeRange(start: .zero, duration: CMTime(seconds: 0.5, preferredTimescale: 600)))
+    precondition(abs(empty.duration.seconds - 1.5) < 0.1)
+    let added = empty.addMutableTrack(withMediaType: .audio, copySettingsFrom: nil, options: nil)
+    precondition(added != nil)
+    precondition(empty.tracks.count == 2)
+    empty.removeTrack(added!)
+    precondition(empty.tracks.count == 1)
+    precondition(empty.mutableTrack(compatibleWith: source.tracks[0]) != nil)
+    let copied = empty.addMutableTracksCopyingSettings(from: source.tracks, options: nil)
+    precondition(!copied.isEmpty)
+    let fromSettings = try! AVMutableMovie(settingsFrom: movie, options: nil)
+    precondition(fromSettings.tracks.isEmpty)
+    let bytes = try! Data(contentsOf: url)
+    let fromData = try! AVMutableMovie(data: bytes, options: nil, error: ())
+    precondition(fromData.tracks.count == 1)
+    var mutableLoaded: AVAssetTrack?
+    movie.loadTrack(withTrackID: 1) { track, error in
+        mutableLoaded = track
+        precondition(error == nil)
+    }
+    precondition(mutableLoaded != nil)
+    movie.loadTracks(withMediaType: .video) { tracks, error in
+        precondition(tracks?.count == 1)
+        precondition(error == nil)
+    }
+    movie.loadTracks(withMediaCharacteristic: .visual) { tracks, error in
+        precondition(tracks?.count == 1)
+        precondition(error == nil)
+    }
+    precondition(movie.defaultMediaDataStorage == nil)
+    do {
+        _ = try AVMutableMovie(url: URL(fileURLWithPath: "/tmp/openav-missing-movie-\(UUID().uuidString).mp4"), options: nil, error: ())
+        preconditionFailure("missing movie must fail")
+    } catch let error as AVError {
+        precondition(error.code == .failedToLoadMediaData)
+    } catch {
+        preconditionFailure("unexpected \(error)")
+    }
+}
+
+func testAVMutableMovieTrackEdits() {
+    let url = avWrite(avMakeFtypMoov(), suffix: "mp4")
+    defer { try? FileManager.default.removeItem(at: url) }
+    let source = AVURLAsset(url: url)
+    let movie = AVMutableMovie()
+    let track = movie.addMutableTrack(withMediaType: .video, copySettingsFrom: source.tracks[0], options: nil)!
+    try! track.insertTimeRange(
+        CMTimeRange(start: .zero, duration: source.duration),
+        of: source.tracks[0],
+        at: .zero,
+        copySampleData: false
+    )
+    precondition(track.mediaType == .video)
+    precondition(track.naturalSize.width == 320)
+    precondition(abs(track.timeRange.duration.seconds - 3) < 0.01)
+    precondition(track.samplePresentationTime(forTrackTime: CMTime(seconds: 1, preferredTimescale: 600)).seconds == 1)
+    precondition(track.segment(forTrackTime: .zero) == nil)
+    precondition(!track.isPlayable)
+    precondition(!track.isDecodable)
+    precondition(track.isEnabled)
+    track.isEnabled = false
+    precondition(!track.isEnabled)
+    track.isEnabled = true
+    track.naturalSize = CGSize(width: 640, height: 480)
+    precondition(track.naturalSize.width == 640)
+    track.preferredVolume = 0.5
+    precondition(abs(Double(track.preferredVolume) - 0.5) < 0.01)
+    track.timescale = 600
+    precondition(track.timescale == 600)
+    track.layer = 2
+    precondition(track.layer == 2)
+    track.cleanApertureDimensions = CGSize(width: 10, height: 10)
+    precondition(track.cleanApertureDimensions.width == 10)
+    track.productionApertureDimensions = CGSize(width: 11, height: 11)
+    precondition(track.productionApertureDimensions.height == 11)
+    track.encodedPixelsDimensions = CGSize(width: 12, height: 12)
+    precondition(track.encodedPixelsDimensions.width == 12)
+    track.preferredMediaChunkSize = 8
+    precondition(track.preferredMediaChunkSize == 8)
+    track.preferredMediaChunkDuration = CMTime(seconds: 1, preferredTimescale: 1)
+    precondition(track.preferredMediaChunkDuration.seconds == 1)
+    track.preferredMediaChunkAlignment = 16
+    precondition(track.preferredMediaChunkAlignment == 16)
+    track.sampleReferenceBaseURL = url
+    precondition(track.sampleReferenceBaseURL == url)
+    track.isModified = true
+    precondition(track.isModified)
+    precondition(!track.hasProtectedContent)
+    precondition(!track.hasAudioSampleDependencies)
+    precondition(!track.requiresFrameReordering)
+    precondition(track.canProvideSampleCursors == false)
+    precondition(track.formatDescriptions.isEmpty)
+    precondition(track.commonMetadata.isEmpty)
+    precondition(track.metadata.isEmpty)
+    precondition(track.availableMetadataFormats.isEmpty)
+    precondition(track.metadata(forFormat: .quickTimeMetadata).isEmpty)
+    precondition(track.availableTrackAssociationTypes.isEmpty)
+    precondition(track.alternateGroupID == 0)
+    precondition(track.mediaDataStorage == nil)
+    precondition(track.segments.isEmpty)
+    precondition(track.hasMediaCharacteristic(.visual))
+    track.insertEmptyTimeRange(CMTimeRange(start: track.timeRange.duration, duration: CMTime(seconds: 1, preferredTimescale: 1)))
+    precondition(abs(track.timeRange.duration.seconds - 4) < 0.05)
+    track.scaleTimeRange(
+        CMTimeRange(start: .zero, duration: track.timeRange.duration),
+        toDuration: CMTime(seconds: 2, preferredTimescale: 1)
+    )
+    precondition(abs(track.timeRange.duration.seconds - 2) < 0.1)
+    track.removeTimeRange(CMTimeRange(start: .zero, duration: CMTime(seconds: 0.5, preferredTimescale: 600)))
+    let other = movie.addMutableTrack(withMediaType: .audio, copySettingsFrom: nil, options: nil)!
+    track.addTrackAssociation(to: other, type: .audioFallback)
+    precondition(track.associatedTracks(ofType: .audioFallback).count == 1)
+    track.removeTrackAssociation(to: other, type: .audioFallback)
+    precondition(track.associatedTracks(ofType: .audioFallback).isEmpty)
+    track.replaceFormatDescription(CMFormatDescription(), with: CMFormatDescription())
+    precondition(!track.insertMediaTimeRange(.zero, into: .zero))
+    do {
+        try track.append(CMSampleBuffer(), decodeTime: nil, presentationTime: nil)
+        preconditionFailure("append sample must fail closed")
+    } catch let error as AVError {
+        precondition(error.code == .decoderNotFound)
+    } catch {
+        preconditionFailure("unexpected \(error)")
+    }
+    do {
+        try track.insertTimeRange(
+            CMTimeRange(start: .zero, duration: source.duration),
+            of: source.tracks[0],
+            at: .zero,
+            copySampleData: true
+        )
+        preconditionFailure("copySampleData must fail closed")
+    } catch let error as AVError {
+        precondition(error.code == .decoderNotFound)
+    } catch {
+        preconditionFailure("unexpected \(error)")
+    }
+}
+
+func testAVCompositionFailClosedSurface() {
+    let composition = AVMutableComposition(urlAssetInitializationOptions: ["k": "v"])
+    precondition(composition.urlAssetInitializationOptions["k"] as? String == "v")
+    precondition(composition.naturalSize == .zero)
+    precondition(composition.tracks.isEmpty)
+    precondition(!composition.duration.isValid)
+    precondition(!composition.isPlayable)
+    precondition(!composition.isExportable)
+    precondition(!composition.isReadable)
+    precondition(!composition.isComposable)
+    precondition(!composition.hasProtectedContent)
+    precondition(composition.lyrics == nil)
+    precondition(composition.commonMetadata.isEmpty)
+    precondition(composition.metadata.isEmpty)
+    precondition(composition.availableMetadataFormats.isEmpty)
+    precondition(composition.metadata(forFormat: .quickTimeMetadata).isEmpty)
+    precondition(composition.availableChapterLocales.isEmpty)
+    precondition(composition.chapterMetadataGroups(bestMatchingPreferredLanguages: []).isEmpty)
+    precondition(
+        composition.chapterMetadataGroups(withTitleLocale: Locale(identifier: "en"), containingItemsWithCommonKeys: nil).isEmpty
+    )
+    precondition(composition.mediaSelectionGroup(forMediaCharacteristic: .visual) == nil)
+    precondition(composition.tracks(withMediaType: .video).isEmpty)
+    precondition(composition.tracks(withMediaCharacteristic: .visual).isEmpty)
+    precondition(composition.trackGroups.isEmpty)
+    precondition(composition.allMediaSelections.isEmpty)
+    precondition(composition.creationDate == nil)
+    precondition(!composition.canContainFragments)
+    precondition(!composition.containsFragments)
+    precondition(!composition.isCompatibleWithAirPlayVideo)
+    precondition(!composition.isCompatibleWithSavedPhotosAlbum)
+    precondition(!composition.providesPreciseDurationAndTiming)
+    _ = composition.preferredMediaSelection
+    precondition(composition.availableMediaCharacteristicsWithMediaSelectionOptions.isEmpty)
+    let url = avWrite(avMakeFtypMoov(), suffix: "mp4")
+    defer { try? FileManager.default.removeItem(at: url) }
+    try! composition.insertTimeRange(
+        CMTimeRange(start: .zero, duration: CMTime(seconds: 3, preferredTimescale: 600)),
+        of: AVURLAsset(url: url),
+        at: .zero
+    )
+    precondition(composition.naturalSize.width == 320)
+    precondition(abs(composition.duration.seconds - 3) < 0.01)
+    precondition(composition.preferredTransform == .identity)
+    composition.loadTrack(withTrackID: 1) { track, error in
+        precondition(track != nil)
+        precondition(error == nil)
+    }
+    composition.loadTracks(withMediaType: .video) { tracks, error in
+        precondition(tracks?.count == 1)
+        precondition(error == nil)
+    }
+    composition.loadTracks(withMediaCharacteristic: .visual) { tracks, error in
+        precondition(tracks?.count == 1)
+        precondition(error == nil)
+    }
+}

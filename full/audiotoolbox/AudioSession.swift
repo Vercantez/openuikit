@@ -86,6 +86,3 @@ public let kAudioSessionRouteChangeReason_Override: UInt32 = 4
 public let kAudioSessionRouteChangeReason_WakeFromSleep: UInt32 = 6
 public let kAudioSessionRouteChangeReason_NoSuitableRouteForCategory: UInt32 = 7
 public let kAudioSessionRouteChangeReason_RouteConfigurationChange: UInt32 = 8
-
-public let kAudioSession_AudioRouteChangeKey_Reason = "OutputAudioRouteChangeKey_Reason"
-public let kAudioSession_AudioRouteChangeKey_OldRoute = "OutputAudioRouteChangeKey_LastRoute"

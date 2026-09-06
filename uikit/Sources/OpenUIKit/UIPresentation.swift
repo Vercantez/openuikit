@@ -582,6 +582,9 @@ final class _UIPageSheetAnimator: UIViewControllerAnimatedTransitioning {
                            initialSpringVelocity: 0, options: [], animations: {
                 moving.frame = up
                 dim?.alpha = dimTarget
+                if let c = ctx as? _UIModalTransitionContext {
+                    c.coordinator?.performAlongsideAnimations()
+                }
             }, completion: { _ in ctx.completeTransition(true) })
         } else {
             UIView.animate(withDuration: duration, delay: 0,
@@ -591,6 +594,9 @@ final class _UIPageSheetAnimator: UIViewControllerAnimatedTransitioning {
                 moving.frame = moving.frame.offsetBy(
                     dx: 0, dy: container.bounds.height - moving.frame.minY)
                 dim?.alpha = 0
+                if let c = ctx as? _UIModalTransitionContext {
+                    c.coordinator?.performAlongsideAnimations()
+                }
             }, completion: { _ in ctx.completeTransition(true) })
         }
     }
@@ -1239,29 +1245,66 @@ extension UIViewController {
 
         pc.presentationTransitionWillBegin()
 
+        let animator: UIViewControllerAnimatedTransitioning? = animated
+            ? (vc.transitioningDelegate?.animationController(
+                forPresented: vc, presenting: self, source: self)
+                ?? vc._makeDefaultPresentAnimator())
+            : nil
+        let interactive = animator.flatMap {
+            vc.transitioningDelegate?.interactionControllerForPresentation(using: $0)
+        }
+        let wantsInteractive = interactive?.wantsInteractiveStart ?? false
+        var coordinator: _UITransitionCoordinator?
+        if animated {
+            // MEASURED animprobe, iPhone SE 2x / iOS 26.1: pageSheet present
+            // reports transitionDuration 0 at viewWillAppear, completionCurve
+            // easeInOut, presentationStyle pageSheet.
+            let coord = _UITransitionCoordinator(
+                animated: true,
+                presentationStyle: vc._resolvedPresentationStyle,
+                duration: 0,
+                completionCurve: .easeInOut,
+                containerView: container,
+                from: self, to: vc,
+                fromView: viewIfLoaded, toView: pc.presentedView,
+                interactive: wantsInteractive,
+                interruptible: wantsInteractive)
+            coord.attach(self, vc)
+            coordinator = coord
+        }
+
         let presenterDisappears = pc.shouldRemovePresentersView
         if presenterDisappears { beginAppearanceTransition(false, animated: animated) }
         vc.beginAppearanceTransition(true, animated: animated)
 
-        let finish = { [weak self, weak vc] in
+        let finish = { [weak self, weak vc, weak coordinator] in
             pc.presentationTransitionDidEnd(true)
             vc?.endAppearanceTransition()
             if presenterDisappears { self?.endAppearanceTransition() }
+            coordinator?.complete(cancelled: false)
             completion?()
         }
-        guard animated else { finish(); return }
+        guard animated, let animator else { finish(); return }
 
-        let animator = vc.transitioningDelegate?.animationController(
-            forPresented: vc, presenting: self, source: self)
-            ?? vc._makeDefaultPresentAnimator()
         let ctx = _UIModalTransitionContext(
             containerView: container, animated: true, presenting: true,
             from: self, to: vc, fromView: viewIfLoaded, toView: pc.presentedView,
             startFrame: pc.frameOfPresentedViewInContainerView,
             endFrame: pc.frameOfPresentedViewInContainerView)
+        ctx.coordinator = coordinator
+        ctx.isInteractive = wantsInteractive
         ctx.onComplete = { _ in finish() }
         vc._activeTransitionContext = ctx
-        animator.animateTransition(using: ctx)
+        if let percent = interactive as? UIPercentDrivenInteractiveTransition {
+            percent._animator = animator
+        }
+        if let interactive, wantsInteractive {
+            interactive.startInteractiveTransition(ctx)
+        } else {
+            animator.animateTransition(using: ctx)
+            coordinator?.flushAlongsideIfNeeded(
+                duration: animator.transitionDuration(using: ctx))
+        }
     }
 
     // MARK: Dismiss
@@ -1287,25 +1330,59 @@ extension UIViewController {
         guard let pc = vc._presentationController else { return }
         let presenterReappears = pc.shouldRemovePresentersView
 
+        let animator: UIViewControllerAnimatedTransitioning? = animated
+            ? (vc.transitioningDelegate?.animationController(forDismissed: vc)
+                ?? vc._makeDefaultDismissAnimator())
+            : nil
+        let interactive = animator.flatMap {
+            vc.transitioningDelegate?.interactionControllerForDismissal(using: $0)
+        }
+        let wantsInteractive = interactive?.wantsInteractiveStart ?? false
+        var coordinator: _UITransitionCoordinator?
+        if animated {
+            let coord = _UITransitionCoordinator(
+                animated: true,
+                presentationStyle: vc._resolvedPresentationStyle,
+                duration: 0,
+                completionCurve: .easeInOut,
+                containerView: pc.containerView ?? vc.view,
+                from: vc, to: presenter,
+                fromView: pc.presentedView, toView: presenter.viewIfLoaded,
+                interactive: wantsInteractive,
+                interruptible: wantsInteractive)
+            coord.attach(presenter, vc)
+            coordinator = coord
+        }
+
         vc.beginAppearanceTransition(false, animated: animated)
         if presenterReappears { presenter.beginAppearanceTransition(true, animated: animated) }
         pc.dismissalTransitionWillBegin()
 
-        let finish = { [weak presenter] in
+        let finish = { [weak presenter, weak coordinator] in
             presenter?._tearDownPresentation(of: vc, completion: completion)
+            coordinator?.complete(cancelled: false)
         }
-        guard animated, let moving = pc.presentedView else { finish(); return }
+        guard animated, let moving = pc.presentedView, let animator else { finish(); return }
 
-        let animator = vc.transitioningDelegate?.animationController(forDismissed: vc)
-            ?? vc._makeDefaultDismissAnimator()
         let ctx = _UIModalTransitionContext(
             containerView: pc.containerView ?? moving,
             animated: true, presenting: false,
             from: vc, to: presenter, fromView: moving, toView: presenter.viewIfLoaded,
             startFrame: moving.frame, endFrame: moving.frame)
+        ctx.coordinator = coordinator
+        ctx.isInteractive = wantsInteractive
         ctx.onComplete = { _ in finish() }
         vc._activeTransitionContext = ctx
-        animator.animateTransition(using: ctx)
+        if let percent = interactive as? UIPercentDrivenInteractiveTransition {
+            percent._animator = animator
+        }
+        if let interactive, wantsInteractive {
+            interactive.startInteractiveTransition(ctx)
+        } else {
+            animator.animateTransition(using: ctx)
+            coordinator?.flushAlongsideIfNeeded(
+                duration: animator.transitionDuration(using: ctx))
+        }
     }
 
     /// Remove a presentation's views and reset both controllers. Shared by

@@ -965,6 +965,79 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(UITableViewCell.disclosureSize(compatibleWith: xxxl),
                        CGSize(width: 14, height: 19.5))
     }
+
+    // MARK: UIViewPropertyAnimator 1 s move 50→150 (animprobe, iPhone SE 2x / iOS 26.1)
+
+    /// MEASURED animprobe, iPhone SE 2x / iOS 26.1: a 1 s linear
+    /// `UIViewPropertyAnimator` moving center.x 50→150 reports
+    /// `fractionComplete` equal to elapsed time and x = 50+100·t.
+    func testPropertyAnimatorLinearTrackMatchesAnimprobe() {
+        OpenUIKitRuntime.animationTime = 0
+        let box = makeAnimatorBox()
+        let animator = UIViewPropertyAnimator(duration: 1, curve: .linear)
+        animator.addAnimations { box.center.x = 150 }
+        animator.startAnimation()
+        for (t, x) in [(0.25, 75.0), (0.5, 100.0), (0.75, 125.0), (1.0, 150.0)] {
+            OpenUIKitRuntime.animationTime = t
+            XCTAssertEqual(Double(animator.fractionComplete), t, accuracy: 1e-9)
+            XCTAssertEqual(Double(presentationX(box)), x, accuracy: 0.02)
+        }
+        OpenUIKitRuntime.animationTime = 0
+    }
+
+    /// MEASURED same probe: easeInOut `fractionComplete` is still linear
+    /// time; pixels follow cubic-bezier(0.42, 0, 0.58, 1). At t=0.25 the
+    /// engine progress is 0.12916 → x=62.916 (probe t≈0.243 → x=62.14).
+    func testPropertyAnimatorEaseInOutPixelsMatchAnimprobe() {
+        OpenUIKitRuntime.animationTime = 0
+        let box = makeAnimatorBox()
+        let animator = UIViewPropertyAnimator(duration: 1, curve: .easeInOut)
+        animator.addAnimations { box.center.x = 150 }
+        animator.startAnimation()
+        OpenUIKitRuntime.animationTime = 0.25
+        XCTAssertEqual(Double(animator.fractionComplete), 0.25, accuracy: 1e-9)
+        XCTAssertEqual(Double(presentationX(box)), 62.916, accuracy: 0.05)
+        OpenUIKitRuntime.animationTime = 0
+    }
+
+    /// MEASURED same probe: dampingRatio 0.5 / D=1 overshoot at t≈0.297 is
+    /// x=166.15, the same family as `UIView.animate(usingSpringWithDamping:)`.
+    func testPropertyAnimatorSpringMatchesUIViewAnimateAndAnimprobe() {
+        OpenUIKitRuntime.animationTime = 0
+        let propertyBox = makeAnimatorBox()
+        let viewBox = makeAnimatorBox()
+        let animator = UIViewPropertyAnimator(duration: 1, dampingRatio: 0.5) {
+            propertyBox.center.x = 150
+        }
+        animator.startAnimation()
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5,
+                       initialSpringVelocity: 0, options: []) {
+            viewBox.center.x = 150
+        }
+        OpenUIKitRuntime.animationTime = 0.3
+        let propertyX = Double(presentationX(propertyBox))
+        let viewX = Double(presentationX(viewBox))
+        XCTAssertEqual(propertyX, viewX, accuracy: 0.02)
+        XCTAssertEqual(propertyX, 166.15, accuracy: 0.6)
+        OpenUIKitRuntime.animationTime = 0
+    }
+
+    private func makeAnimatorBox() -> UIView {
+        let box = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        box.center = CGPoint(x: 50, y: 50)
+        return box
+    }
+
+    private func presentationX(_ view: UIView) -> CGFloat {
+        guard let anim = view.animations.first(where: { $0.property == .position }) else {
+            return view.center.x
+        }
+        if case .point(let p) = view.presentationValue(
+            of: anim, at: OpenUIKitRuntime.animationTime) {
+            return p.x
+        }
+        return view.center.x
+    }
 }
 
 #if !os(Linux)

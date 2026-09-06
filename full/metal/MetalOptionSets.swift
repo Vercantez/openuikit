@@ -178,3 +178,137 @@ public struct MTLIndirectCommandType: OptionSet, Hashable, Sendable {
     public static let drawMeshThreadgroups = MTLIndirectCommandType(rawValue: 1 << 7)
     public static let drawMeshThreads = MTLIndirectCommandType(rawValue: 1 << 8)
 }
+
+public struct MTLAccelerationStructureInstanceOptions: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt32
+
+    public init(rawValue: UInt32) {
+        self.rawValue = rawValue
+    }
+
+    public static let disableTriangleCulling = MTLAccelerationStructureInstanceOptions(rawValue: 1 << 0)
+    public static let triangleFrontFacingWindingCounterClockwise = MTLAccelerationStructureInstanceOptions(rawValue: 1 << 1)
+    public static let opaque = MTLAccelerationStructureInstanceOptions(rawValue: 1 << 2)
+    public static let nonOpaque = MTLAccelerationStructureInstanceOptions(rawValue: 1 << 3)
+}
+
+public struct MTLAccelerationStructureUsage: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let refit = MTLAccelerationStructureUsage(rawValue: 1 << 0)
+    public static let preferFastBuild = MTLAccelerationStructureUsage(rawValue: 1 << 1)
+    public static let extendedLimits = MTLAccelerationStructureUsage(rawValue: 1 << 2)
+    public static let preferFastIntersection = MTLAccelerationStructureUsage(rawValue: 1 << 3)
+    public static let minimizeMemory = MTLAccelerationStructureUsage(rawValue: 1 << 4)
+}
+
+public struct MTLAccelerationStructureRefitOptions: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let vertexData = MTLAccelerationStructureRefitOptions(rawValue: 1 << 0)
+    public static let perPrimitiveData = MTLAccelerationStructureRefitOptions(rawValue: 1 << 1)
+}
+
+public struct MTLIntersectionFunctionSignature: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let instancing = MTLIntersectionFunctionSignature(rawValue: 1 << 0)
+    public static let triangleData = MTLIntersectionFunctionSignature(rawValue: 1 << 1)
+    public static let worldSpaceData = MTLIntersectionFunctionSignature(rawValue: 1 << 2)
+    public static let instanceMotion = MTLIntersectionFunctionSignature(rawValue: 1 << 3)
+    public static let primitiveMotion = MTLIntersectionFunctionSignature(rawValue: 1 << 4)
+    public static let extendedLimits = MTLIntersectionFunctionSignature(rawValue: 1 << 5)
+    public static let maxLevels = MTLIntersectionFunctionSignature(rawValue: 1 << 6)
+    public static let curveData = MTLIntersectionFunctionSignature(rawValue: 1 << 7)
+    public static let intersectionFunctionBuffer = MTLIntersectionFunctionSignature(rawValue: 1 << 8)
+    public static let userData = MTLIntersectionFunctionSignature(rawValue: 1 << 9)
+}
+
+public struct MTL4BinaryFunctionOptions: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let pipelineIndependent = MTL4BinaryFunctionOptions(rawValue: 1 << 0)
+}
+
+public struct MTL4RenderEncoderOptions: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let suspending = MTL4RenderEncoderOptions(rawValue: 1 << 0)
+    public static let resuming = MTL4RenderEncoderOptions(rawValue: 1 << 1)
+}
+
+public struct MTL4ShaderReflection: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let bindingInfo = MTL4ShaderReflection(rawValue: 1 << 0)
+    public static let bufferTypeInfo = MTL4ShaderReflection(rawValue: 1 << 1)
+}
+
+public struct MTL4VisibilityOptions: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let device = MTL4VisibilityOptions(rawValue: 1 << 0)
+    public static let resourceAlias = MTL4VisibilityOptions(rawValue: 1 << 1)
+}
+
+public struct MTL4PipelineDataSetSerializerConfiguration: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let captureDescriptors = MTL4PipelineDataSetSerializerConfiguration(rawValue: 1 << 0)
+    public static let captureBinaries = MTL4PipelineDataSetSerializerConfiguration(rawValue: 1 << 1)
+}
+
+public struct MTLStitchedLibraryOptions: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let failOnBinaryArchiveMiss = MTLStitchedLibraryOptions(rawValue: 1 << 0)
+    public static let storeLibraryInMetalPipelinesScript = MTLStitchedLibraryOptions(rawValue: 1 << 1)
+}
+
+public struct MTLTensorUsage: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let compute = MTLTensorUsage(rawValue: 1 << 0)
+    public static let render = MTLTensorUsage(rawValue: 1 << 1)
+    public static let machineLearning = MTLTensorUsage(rawValue: 1 << 2)
+}

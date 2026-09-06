@@ -279,3 +279,111 @@ public enum ProgressReportingHost {
     }
 }
 
+extension IntentParameter where Value: AppEnum {
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        requestDisambiguationDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        supportedValues: [Value] = []
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+        storedRequestDisambiguationDialog = requestDisambiguationDialog
+        storedSupportedValues = supportedValues
+    }
+
+    public convenience init(
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        requestDisambiguationDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        supportedValues: [Value] = []
+    ) {
+        self.init(
+            title: LocalizedStringResource(""),
+            description: description,
+            default: defaultValue,
+            requestValueDialog: requestValueDialog,
+            requestDisambiguationDialog: requestDisambiguationDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            supportedValues: supportedValues
+        )
+    }
+
+    public convenience init<Provider: DynamicOptionsProvider>(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        requestDisambiguationDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        supportedValues: [Value] = [],
+        optionsProvider: Provider
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            default: defaultValue,
+            requestValueDialog: requestValueDialog,
+            requestDisambiguationDialog: requestDisambiguationDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            supportedValues: supportedValues
+        )
+        optionsProviderAttached = true
+        _ = optionsProvider
+    }
+
+    public convenience init<Spec: ResolverSpecification>(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        requestDisambiguationDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        supportedValues: [Value] = [],
+        resolvers: Spec
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            default: defaultValue,
+            requestValueDialog: requestValueDialog,
+            requestDisambiguationDialog: requestDisambiguationDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            supportedValues: supportedValues
+        )
+        _ = resolvers
+    }
+}
+
+extension IntentParameter where Value: AppEntity {
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        requestDisambiguationDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        query: some EntityQuery = Value.DefaultQuery()
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+        storedRequestDisambiguationDialog = requestDisambiguationDialog
+        _ = query
+    }
+}
+

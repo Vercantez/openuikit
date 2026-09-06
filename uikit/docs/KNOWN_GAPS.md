@@ -54,10 +54,13 @@ The supported boundary is intentionally finite:
   view transforms, callbacks, and animated host-clock state. There is no
   pinch-driven zoom input, zoom centering/content-size model, or UIKit rubber
   band behavior.
-- `UIViewPropertyAnimator` owns queued animation blocks, is retained while an
-  active host-clock transaction is pending, and delivers completion exactly
-  once. Pause/continue, fraction scrubbing, reversal, delay/factor control,
-  interruption positions, and custom timing curves are not implemented.
+- `UIViewPropertyAnimator` is the measured iOS 26.1 state machine (inactive /
+  active / stopped): pause, `fractionComplete` scrub (`speed=0` +
+  `timeOffset`), `stopAnimation` / `finishAnimation(at:)`, continue, reverse,
+  cubic and duration-fit spring timing. Completions capture the animator until
+  delivery; a normal finish lands `.inactive`, not `.stopped`. Physical
+  mass/stiffness/damping springs are stored and converted to a damping ratio;
+  an independent ω-from-mass duration is not modelled (unmeasured).
 - View snapshots are static raster captures. View transitions replace the
   hierarchy and honor duration/completion/interaction policy, but the named
   transition styles do not yet produce distinct visual effects. Controller
@@ -1943,14 +1946,13 @@ animation; `scripts/alert_probe_sim.sh`). What is NOT faithful:
   presentation controller (`vc.sheetPresentationController` is configured
   before a presentation exists), so the back reference has to be weak to
   avoid a cycle.
-- **No `UIViewControllerInteractiveTransitioning`.** The interactive back
-  swipe and the interactive sheet drag are scrubbed against the host clock by
-  the controllers themselves, from measured physics; routing them through a
-  percent-driven interactive protocol would change the feel. A custom
-  animator therefore always runs non-interactively, and the built-in
-  navigation slide stays scrubbable by living in
-  `_UINavigationSlideAnimator` + `UINavigationController.applyTransition`
-  rather than finishing through `context.completeTransition`.
+- **Built-in interactive back-swipe and sheet drag stay on their measured
+  host-clock scrub paths.** A custom animator can return a
+  `UIPercentDrivenInteractiveTransition` from the transitioning /
+  navigation delegate (`update` / `pause` / `finish` / `cancel`, optional
+  interruptible `UIViewPropertyAnimator`). The built-in navigation slide
+  still finishes through `UINavigationController.applyTransition` rather
+  than `context.completeTransition`.
 - **A custom navigation animator gets no bar cross-fade.** `_runTransition`
   sets the bar's state directly instead of running
   `beginTransition`/`setTransitionProgress`, because the bar's cross-fade is
