@@ -1,0 +1,601 @@
+{
+  "campaign": {
+    "activeBuildId": "bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87",
+    "environmentMarker": "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+    "id": "ios26.1-fwseed-r12",
+    "startingSha": "343270ce44481a5ae11b87a6e0713e396ada1ef2"
+  },
+  "defaults": {
+    "autoCreatePR": true,
+    "createRatePerMinute": 12,
+    "effort": "high",
+    "fast": false,
+    "maxActive": 24,
+    "maxRepairRuns": 2,
+    "modelId": "grok-4.6",
+    "skipReviewerRequest": true,
+    "timeoutMinutes": 60
+  },
+  "frameworks": [
+    {
+      "agentName": "Port AccessorySetupKit to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/accessorysetupkit/*.swift",
+        "full/accessorysetupkit/accessorysetupkit_guest_sources.txt",
+        "full/accessorysetupkit/README.md",
+        "full/accessorysetupkit/coverage.tsv",
+        "full/accessorysetupkit/oracle-questions.tsv",
+        "full/accessorysetupkit/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=AccessorySetupKit lane=medium-full symbols=277",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "ACCESSORYSETUPKIT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=AccessorySetupKit dylib=libAccessorySetupKit.dylib"
+      ],
+      "gate": "bash full/accessorysetupkit/tests/acceptance/test_host.sh",
+      "immutableDigest": "723e5fb14be6ce20bdf4dead9939b4c3d7c93ca6a0161b488cec4b810ada3f2f",
+      "lane": "medium-full",
+      "module": "AccessorySetupKit",
+      "ownedPaths": [
+        "full/accessorysetupkit/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "hardware",
+        "bluetooth",
+        "privacy",
+        "fail-closed"
+      ],
+      "slug": "accessorysetupkit",
+      "symbolCount": 277,
+      "taskPath": "full/accessorysetupkit/FANOUT_TASK.md",
+      "prompt": "Implement the AccessorySetupKit framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/accessorysetupkit/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: AccessorySetupKit\n  - lane: medium-full\n  - immutable input digest: 723e5fb14be6ce20bdf4dead9939b4c3d7c93ca6a0161b488cec4b810ada3f2f\n  - known symbol count: 277\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/accessorysetupkit/**\n\nEditable paths:\n  - full/accessorysetupkit/*.swift\n  - full/accessorysetupkit/accessorysetupkit_guest_sources.txt\n  - full/accessorysetupkit/README.md\n  - full/accessorysetupkit/coverage.tsv\n  - full/accessorysetupkit/oracle-questions.tsv\n  - full/accessorysetupkit/tests/agent/**\n\nDependencies:\n  - Foundation\n\nKnown risks:\n  - hardware\n  - bluetooth\n  - privacy\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/accessorysetupkit/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=AccessorySetupKit lane=medium-full symbols=277\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - ACCESSORYSETUPKIT_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=AccessorySetupKit dylib=libAccessorySetupKit.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/accessorysetupkit/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (277 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/accessorysetupkit/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/accessorysetupkit/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/accessorysetupkit/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-accessorysetupkit and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port AVRouting to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/avrouting/*.swift",
+        "full/avrouting/avrouting_guest_sources.txt",
+        "full/avrouting/README.md",
+        "full/avrouting/coverage.tsv",
+        "full/avrouting/oracle-questions.tsv",
+        "full/avrouting/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVRouting lane=leaf-full symbols=38",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "AVROUTING_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=AVRouting dylib=libAVRouting.dylib"
+      ],
+      "gate": "bash full/avrouting/tests/acceptance/test_host.sh",
+      "immutableDigest": "feab4580f2dbbaa7f30006d19785883e8ad5c12245fc062b9383735ec691ccd3",
+      "lane": "leaf-full",
+      "module": "AVRouting",
+      "ownedPaths": [
+        "full/avrouting/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "media",
+        "routing",
+        "fail-closed"
+      ],
+      "slug": "avrouting",
+      "symbolCount": 38,
+      "taskPath": "full/avrouting/FANOUT_TASK.md",
+      "prompt": "Implement the AVRouting framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/avrouting/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: AVRouting\n  - lane: leaf-full\n  - immutable input digest: feab4580f2dbbaa7f30006d19785883e8ad5c12245fc062b9383735ec691ccd3\n  - known symbol count: 38\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/avrouting/**\n\nEditable paths:\n  - full/avrouting/*.swift\n  - full/avrouting/avrouting_guest_sources.txt\n  - full/avrouting/README.md\n  - full/avrouting/coverage.tsv\n  - full/avrouting/oracle-questions.tsv\n  - full/avrouting/tests/agent/**\n\nDependencies:\n  - Foundation\n\nKnown risks:\n  - media\n  - routing\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/avrouting/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVRouting lane=leaf-full symbols=38\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - AVROUTING_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=AVRouting dylib=libAVRouting.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/avrouting/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (38 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/avrouting/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/avrouting/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/avrouting/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-avrouting and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port BusinessChat to Linux",
+      "dependencies": [
+        "Foundation",
+        "UIKit"
+      ],
+      "editablePaths": [
+        "full/businesschat/*.swift",
+        "full/businesschat/businesschat_guest_sources.txt",
+        "full/businesschat/README.md",
+        "full/businesschat/coverage.tsv",
+        "full/businesschat/oracle-questions.tsv",
+        "full/businesschat/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=BusinessChat lane=leaf-full symbols=21",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "BUSINESSCHAT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=BusinessChat dylib=libBusinessChat.dylib"
+      ],
+      "gate": "bash full/businesschat/tests/acceptance/test_host.sh",
+      "immutableDigest": "49eb62e8fd9abe12ae2112ee970784b52da0f5058a2603f2fb214abe3f781d98",
+      "lane": "leaf-full",
+      "module": "BusinessChat",
+      "ownedPaths": [
+        "full/businesschat/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "ui",
+        "messaging",
+        "fail-closed"
+      ],
+      "slug": "businesschat",
+      "symbolCount": 21,
+      "taskPath": "full/businesschat/FANOUT_TASK.md",
+      "prompt": "Implement the BusinessChat framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/businesschat/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: BusinessChat\n  - lane: leaf-full\n  - immutable input digest: 49eb62e8fd9abe12ae2112ee970784b52da0f5058a2603f2fb214abe3f781d98\n  - known symbol count: 21\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/businesschat/**\n\nEditable paths:\n  - full/businesschat/*.swift\n  - full/businesschat/businesschat_guest_sources.txt\n  - full/businesschat/README.md\n  - full/businesschat/coverage.tsv\n  - full/businesschat/oracle-questions.tsv\n  - full/businesschat/tests/agent/**\n\nDependencies:\n  - Foundation\n  - UIKit\n\nKnown risks:\n  - ui\n  - messaging\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/businesschat/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=BusinessChat lane=leaf-full symbols=21\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - BUSINESSCHAT_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=BusinessChat dylib=libBusinessChat.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/businesschat/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (21 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/businesschat/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/businesschat/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/businesschat/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-businesschat and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port CarKey to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/carkey/*.swift",
+        "full/carkey/carkey_guest_sources.txt",
+        "full/carkey/README.md",
+        "full/carkey/coverage.tsv",
+        "full/carkey/oracle-questions.tsv",
+        "full/carkey/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=CarKey lane=leaf-full symbols=114",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "CARKEY_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=CarKey dylib=libCarKey.dylib"
+      ],
+      "gate": "bash full/carkey/tests/acceptance/test_host.sh",
+      "immutableDigest": "4da00fb5750ec1f7d8a60466c88112f1560a3af91d5ed64ec2b9b1ddae6608e7",
+      "lane": "leaf-full",
+      "module": "CarKey",
+      "ownedPaths": [
+        "full/carkey/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "hardware",
+        "security",
+        "fail-closed"
+      ],
+      "slug": "carkey",
+      "symbolCount": 114,
+      "taskPath": "full/carkey/FANOUT_TASK.md",
+      "prompt": "Implement the CarKey framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/carkey/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: CarKey\n  - lane: leaf-full\n  - immutable input digest: 4da00fb5750ec1f7d8a60466c88112f1560a3af91d5ed64ec2b9b1ddae6608e7\n  - known symbol count: 114\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/carkey/**\n\nEditable paths:\n  - full/carkey/*.swift\n  - full/carkey/carkey_guest_sources.txt\n  - full/carkey/README.md\n  - full/carkey/coverage.tsv\n  - full/carkey/oracle-questions.tsv\n  - full/carkey/tests/agent/**\n\nDependencies:\n  - Foundation\n\nKnown risks:\n  - hardware\n  - security\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/carkey/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=CarKey lane=leaf-full symbols=114\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - CARKEY_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=CarKey dylib=libCarKey.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/carkey/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (114 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/carkey/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/carkey/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/carkey/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-carkey and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port ColorSync to Linux",
+      "dependencies": [
+        "CoreFoundation"
+      ],
+      "editablePaths": [
+        "full/colorsync/*.swift",
+        "full/colorsync/colorsync_guest_sources.txt",
+        "full/colorsync/README.md",
+        "full/colorsync/coverage.tsv",
+        "full/colorsync/oracle-questions.tsv",
+        "full/colorsync/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=ColorSync lane=medium-full symbols=207",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "COLORSYNC_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=ColorSync dylib=libColorSync.dylib"
+      ],
+      "gate": "bash full/colorsync/tests/acceptance/test_host.sh",
+      "immutableDigest": "36e648e59600d2bfdbddcf983673a6e7339f1b8bc2c34138607bfa3376a5f872",
+      "lane": "medium-full",
+      "module": "ColorSync",
+      "ownedPaths": [
+        "full/colorsync/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "c-abi",
+        "color",
+        "fail-closed"
+      ],
+      "slug": "colorsync",
+      "symbolCount": 207,
+      "taskPath": "full/colorsync/FANOUT_TASK.md",
+      "prompt": "Implement the ColorSync framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/colorsync/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: ColorSync\n  - lane: medium-full\n  - immutable input digest: 36e648e59600d2bfdbddcf983673a6e7339f1b8bc2c34138607bfa3376a5f872\n  - known symbol count: 207\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/colorsync/**\n\nEditable paths:\n  - full/colorsync/*.swift\n  - full/colorsync/colorsync_guest_sources.txt\n  - full/colorsync/README.md\n  - full/colorsync/coverage.tsv\n  - full/colorsync/oracle-questions.tsv\n  - full/colorsync/tests/agent/**\n\nDependencies:\n  - CoreFoundation\n\nKnown risks:\n  - c-abi\n  - color\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/colorsync/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=ColorSync lane=medium-full symbols=207\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - COLORSYNC_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=ColorSync dylib=libColorSync.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/colorsync/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (207 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/colorsync/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/colorsync/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/colorsync/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-colorsync and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port DeviceDiscoveryUI to Linux",
+      "dependencies": [
+        "Foundation",
+        "UIKit"
+      ],
+      "editablePaths": [
+        "full/devicediscoveryui/*.swift",
+        "full/devicediscoveryui/devicediscoveryui_guest_sources.txt",
+        "full/devicediscoveryui/README.md",
+        "full/devicediscoveryui/coverage.tsv",
+        "full/devicediscoveryui/oracle-questions.tsv",
+        "full/devicediscoveryui/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=DeviceDiscoveryUI lane=leaf-full symbols=1556",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "DEVICEDISCOVERYUI_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=DeviceDiscoveryUI dylib=libDeviceDiscoveryUI.dylib"
+      ],
+      "gate": "bash full/devicediscoveryui/tests/acceptance/test_host.sh",
+      "immutableDigest": "1d7556eee14cf87e3da8971a093ed0c912f79c28b81888f505b9afb63690cbe7",
+      "lane": "leaf-full",
+      "module": "DeviceDiscoveryUI",
+      "ownedPaths": [
+        "full/devicediscoveryui/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "ui",
+        "network",
+        "fail-closed"
+      ],
+      "slug": "devicediscoveryui",
+      "symbolCount": 1556,
+      "taskPath": "full/devicediscoveryui/FANOUT_TASK.md",
+      "prompt": "Implement the DeviceDiscoveryUI framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/devicediscoveryui/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: DeviceDiscoveryUI\n  - lane: leaf-full\n  - immutable input digest: 1d7556eee14cf87e3da8971a093ed0c912f79c28b81888f505b9afb63690cbe7\n  - known symbol count: 1556\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/devicediscoveryui/**\n\nEditable paths:\n  - full/devicediscoveryui/*.swift\n  - full/devicediscoveryui/devicediscoveryui_guest_sources.txt\n  - full/devicediscoveryui/README.md\n  - full/devicediscoveryui/coverage.tsv\n  - full/devicediscoveryui/oracle-questions.tsv\n  - full/devicediscoveryui/tests/agent/**\n\nDependencies:\n  - Foundation\n  - UIKit\n\nKnown risks:\n  - ui\n  - network\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/devicediscoveryui/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=DeviceDiscoveryUI lane=leaf-full symbols=1556\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - DEVICEDISCOVERYUI_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=DeviceDiscoveryUI dylib=libDeviceDiscoveryUI.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/devicediscoveryui/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (1556 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/devicediscoveryui/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/devicediscoveryui/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/devicediscoveryui/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-devicediscoveryui and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port DockKit to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/dockkit/*.swift",
+        "full/dockkit/dockkit_guest_sources.txt",
+        "full/dockkit/README.md",
+        "full/dockkit/coverage.tsv",
+        "full/dockkit/oracle-questions.tsv",
+        "full/dockkit/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=DockKit lane=medium-full symbols=349",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "DOCKKIT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=DockKit dylib=libDockKit.dylib"
+      ],
+      "gate": "bash full/dockkit/tests/acceptance/test_host.sh",
+      "immutableDigest": "66d48e71617a352bf327b10c75c049122c4b6708c3e57e9a7967acf772c4c508",
+      "lane": "medium-full",
+      "module": "DockKit",
+      "ownedPaths": [
+        "full/dockkit/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "hardware",
+        "camera",
+        "fail-closed"
+      ],
+      "slug": "dockkit",
+      "symbolCount": 349,
+      "taskPath": "full/dockkit/FANOUT_TASK.md",
+      "prompt": "Implement the DockKit framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/dockkit/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: DockKit\n  - lane: medium-full\n  - immutable input digest: 66d48e71617a352bf327b10c75c049122c4b6708c3e57e9a7967acf772c4c508\n  - known symbol count: 349\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/dockkit/**\n\nEditable paths:\n  - full/dockkit/*.swift\n  - full/dockkit/dockkit_guest_sources.txt\n  - full/dockkit/README.md\n  - full/dockkit/coverage.tsv\n  - full/dockkit/oracle-questions.tsv\n  - full/dockkit/tests/agent/**\n\nDependencies:\n  - Foundation\n\nKnown risks:\n  - hardware\n  - camera\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/dockkit/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=DockKit lane=medium-full symbols=349\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - DOCKKIT_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=DockKit dylib=libDockKit.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/dockkit/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (349 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/dockkit/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/dockkit/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/dockkit/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-dockkit and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port EnergyKit to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/energykit/*.swift",
+        "full/energykit/energykit_guest_sources.txt",
+        "full/energykit/README.md",
+        "full/energykit/coverage.tsv",
+        "full/energykit/oracle-questions.tsv",
+        "full/energykit/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=EnergyKit lane=leaf-full symbols=256",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "ENERGYKIT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=EnergyKit dylib=libEnergyKit.dylib"
+      ],
+      "gate": "bash full/energykit/tests/acceptance/test_host.sh",
+      "immutableDigest": "a4ff4565b570aec642e63aa54dccb7dfd36295b4f12ead0e6517cbe0c25470d0",
+      "lane": "leaf-full",
+      "module": "EnergyKit",
+      "ownedPaths": [
+        "full/energykit/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "os-service",
+        "fail-closed"
+      ],
+      "slug": "energykit",
+      "symbolCount": 256,
+      "taskPath": "full/energykit/FANOUT_TASK.md",
+      "prompt": "Implement the EnergyKit framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/energykit/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: EnergyKit\n  - lane: leaf-full\n  - immutable input digest: a4ff4565b570aec642e63aa54dccb7dfd36295b4f12ead0e6517cbe0c25470d0\n  - known symbol count: 256\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/energykit/**\n\nEditable paths:\n  - full/energykit/*.swift\n  - full/energykit/energykit_guest_sources.txt\n  - full/energykit/README.md\n  - full/energykit/coverage.tsv\n  - full/energykit/oracle-questions.tsv\n  - full/energykit/tests/agent/**\n\nDependencies:\n  - Foundation\n\nKnown risks:\n  - os-service\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/energykit/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=EnergyKit lane=leaf-full symbols=256\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - ENERGYKIT_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=EnergyKit dylib=libEnergyKit.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/energykit/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (256 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/energykit/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/energykit/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/energykit/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-energykit and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port GameSave to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/gamesave/*.swift",
+        "full/gamesave/gamesave_guest_sources.txt",
+        "full/gamesave/README.md",
+        "full/gamesave/coverage.tsv",
+        "full/gamesave/oracle-questions.tsv",
+        "full/gamesave/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=GameSave lane=leaf-full symbols=62",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "GAMESAVE_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=GameSave dylib=libGameSave.dylib"
+      ],
+      "gate": "bash full/gamesave/tests/acceptance/test_host.sh",
+      "immutableDigest": "cc6914e1d52767c5dfd5ec37880899b3ac47cbb0a11a195d9c3a976e43e2e2f3",
+      "lane": "leaf-full",
+      "module": "GameSave",
+      "ownedPaths": [
+        "full/gamesave/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "persistence",
+        "cloud",
+        "fail-closed"
+      ],
+      "slug": "gamesave",
+      "symbolCount": 62,
+      "taskPath": "full/gamesave/FANOUT_TASK.md",
+      "prompt": "Implement the GameSave framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/gamesave/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: GameSave\n  - lane: leaf-full\n  - immutable input digest: cc6914e1d52767c5dfd5ec37880899b3ac47cbb0a11a195d9c3a976e43e2e2f3\n  - known symbol count: 62\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/gamesave/**\n\nEditable paths:\n  - full/gamesave/*.swift\n  - full/gamesave/gamesave_guest_sources.txt\n  - full/gamesave/README.md\n  - full/gamesave/coverage.tsv\n  - full/gamesave/oracle-questions.tsv\n  - full/gamesave/tests/agent/**\n\nDependencies:\n  - Foundation\n\nKnown risks:\n  - persistence\n  - cloud\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/gamesave/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=GameSave lane=leaf-full symbols=62\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - GAMESAVE_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=GameSave dylib=libGameSave.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/gamesave/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (62 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/gamesave/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/gamesave/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/gamesave/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-gamesave and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port GeoToolbox to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/geotoolbox/*.swift",
+        "full/geotoolbox/geotoolbox_guest_sources.txt",
+        "full/geotoolbox/README.md",
+        "full/geotoolbox/coverage.tsv",
+        "full/geotoolbox/oracle-questions.tsv",
+        "full/geotoolbox/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=GeoToolbox lane=leaf-full symbols=34",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "GEOTOOLBOX_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=GeoToolbox dylib=libGeoToolbox.dylib"
+      ],
+      "gate": "bash full/geotoolbox/tests/acceptance/test_host.sh",
+      "immutableDigest": "7f190b979cf943643d086a128a7ba6494ddc2af0896c168c29b6050805d30d9f",
+      "lane": "leaf-full",
+      "module": "GeoToolbox",
+      "ownedPaths": [
+        "full/geotoolbox/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "location",
+        "fail-closed"
+      ],
+      "slug": "geotoolbox",
+      "symbolCount": 34,
+      "taskPath": "full/geotoolbox/FANOUT_TASK.md",
+      "prompt": "Implement the GeoToolbox framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/geotoolbox/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: GeoToolbox\n  - lane: leaf-full\n  - immutable input digest: 7f190b979cf943643d086a128a7ba6494ddc2af0896c168c29b6050805d30d9f\n  - known symbol count: 34\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/geotoolbox/**\n\nEditable paths:\n  - full/geotoolbox/*.swift\n  - full/geotoolbox/geotoolbox_guest_sources.txt\n  - full/geotoolbox/README.md\n  - full/geotoolbox/coverage.tsv\n  - full/geotoolbox/oracle-questions.tsv\n  - full/geotoolbox/tests/agent/**\n\nDependencies:\n  - Foundation\n\nKnown risks:\n  - location\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/geotoolbox/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=GeoToolbox lane=leaf-full symbols=34\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - GEOTOOLBOX_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=GeoToolbox dylib=libGeoToolbox.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/geotoolbox/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (34 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/geotoolbox/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/geotoolbox/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/geotoolbox/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-geotoolbox and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port IdentityLookupUI to Linux",
+      "dependencies": [
+        "Foundation",
+        "IdentityLookup",
+        "UIKit"
+      ],
+      "editablePaths": [
+        "full/identitylookupui/*.swift",
+        "full/identitylookupui/identitylookupui_guest_sources.txt",
+        "full/identitylookupui/README.md",
+        "full/identitylookupui/coverage.tsv",
+        "full/identitylookupui/oracle-questions.tsv",
+        "full/identitylookupui/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=IdentityLookupUI lane=leaf-full symbols=6",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "IDENTITYLOOKUPUI_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=IdentityLookupUI dylib=libIdentityLookupUI.dylib"
+      ],
+      "gate": "bash full/identitylookupui/tests/acceptance/test_host.sh",
+      "immutableDigest": "befb37cbfc0fc5fa2698dcc9209295258684f8a9020398a9411711b59d8a9708",
+      "lane": "leaf-full",
+      "module": "IdentityLookupUI",
+      "ownedPaths": [
+        "full/identitylookupui/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "ui",
+        "extension",
+        "fail-closed"
+      ],
+      "slug": "identitylookupui",
+      "symbolCount": 6,
+      "taskPath": "full/identitylookupui/FANOUT_TASK.md",
+      "prompt": "Implement the IdentityLookupUI framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/identitylookupui/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: IdentityLookupUI\n  - lane: leaf-full\n  - immutable input digest: befb37cbfc0fc5fa2698dcc9209295258684f8a9020398a9411711b59d8a9708\n  - known symbol count: 6\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/identitylookupui/**\n\nEditable paths:\n  - full/identitylookupui/*.swift\n  - full/identitylookupui/identitylookupui_guest_sources.txt\n  - full/identitylookupui/README.md\n  - full/identitylookupui/coverage.tsv\n  - full/identitylookupui/oracle-questions.tsv\n  - full/identitylookupui/tests/agent/**\n\nDependencies:\n  - Foundation\n  - IdentityLookup\n  - UIKit\n\nKnown risks:\n  - ui\n  - extension\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/identitylookupui/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=IdentityLookupUI lane=leaf-full symbols=6\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - IDENTITYLOOKUPUI_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=IdentityLookupUI dylib=libIdentityLookupUI.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/identitylookupui/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (6 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/identitylookupui/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/identitylookupui/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/identitylookupui/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-identitylookupui and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port JournalingSuggestions to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/journalingsuggestions/*.swift",
+        "full/journalingsuggestions/journalingsuggestions_guest_sources.txt",
+        "full/journalingsuggestions/README.md",
+        "full/journalingsuggestions/coverage.tsv",
+        "full/journalingsuggestions/oracle-questions.tsv",
+        "full/journalingsuggestions/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=JournalingSuggestions lane=leaf-full symbols=931",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "JOURNALINGSUGGESTIONS_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=JournalingSuggestions dylib=libJournalingSuggestions.dylib"
+      ],
+      "gate": "bash full/journalingsuggestions/tests/acceptance/test_host.sh",
+      "immutableDigest": "51c0ba2f66e3bebc90f0ab2a1fd50367fa0c3619417d9eafcdba098b999021c3",
+      "lane": "leaf-full",
+      "module": "JournalingSuggestions",
+      "ownedPaths": [
+        "full/journalingsuggestions/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "privacy",
+        "ui",
+        "fail-closed"
+      ],
+      "slug": "journalingsuggestions",
+      "symbolCount": 931,
+      "taskPath": "full/journalingsuggestions/FANOUT_TASK.md",
+      "prompt": "Implement the JournalingSuggestions framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/journalingsuggestions/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: JournalingSuggestions\n  - lane: leaf-full\n  - immutable input digest: 51c0ba2f66e3bebc90f0ab2a1fd50367fa0c3619417d9eafcdba098b999021c3\n  - known symbol count: 931\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/journalingsuggestions/**\n\nEditable paths:\n  - full/journalingsuggestions/*.swift\n  - full/journalingsuggestions/journalingsuggestions_guest_sources.txt\n  - full/journalingsuggestions/README.md\n  - full/journalingsuggestions/coverage.tsv\n  - full/journalingsuggestions/oracle-questions.tsv\n  - full/journalingsuggestions/tests/agent/**\n\nDependencies:\n  - Foundation\n\nKnown risks:\n  - privacy\n  - ui\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/journalingsuggestions/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=JournalingSuggestions lane=leaf-full symbols=931\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - JOURNALINGSUGGESTIONS_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=JournalingSuggestions dylib=libJournalingSuggestions.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/journalingsuggestions/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (931 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/journalingsuggestions/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/journalingsuggestions/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/journalingsuggestions/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-journalingsuggestions and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port LocalAuthenticationEmbeddedUI to Linux",
+      "dependencies": [
+        "Foundation",
+        "LocalAuthentication",
+        "UIKit"
+      ],
+      "editablePaths": [
+        "full/localauthenticationembeddedui/*.swift",
+        "full/localauthenticationembeddedui/localauthenticationembeddedui_guest_sources.txt",
+        "full/localauthenticationembeddedui/README.md",
+        "full/localauthenticationembeddedui/coverage.tsv",
+        "full/localauthenticationembeddedui/oracle-questions.tsv",
+        "full/localauthenticationembeddedui/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=LocalAuthenticationEmbeddedUI lane=leaf-full symbols=2",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "LOCALAUTHENTICATIONEMBEDDEDUI_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=LocalAuthenticationEmbeddedUI dylib=libLocalAuthenticationEmbeddedUI.dylib"
+      ],
+      "gate": "bash full/localauthenticationembeddedui/tests/acceptance/test_host.sh",
+      "immutableDigest": "9d4e40705f83849555e09dc4fdb55bac4265fc374e0048001454e14841e8964e",
+      "lane": "leaf-full",
+      "module": "LocalAuthenticationEmbeddedUI",
+      "ownedPaths": [
+        "full/localauthenticationembeddedui/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "ui",
+        "security",
+        "fail-closed"
+      ],
+      "slug": "localauthenticationembeddedui",
+      "symbolCount": 2,
+      "taskPath": "full/localauthenticationembeddedui/FANOUT_TASK.md",
+      "prompt": "Implement the LocalAuthenticationEmbeddedUI framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/localauthenticationembeddedui/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: LocalAuthenticationEmbeddedUI\n  - lane: leaf-full\n  - immutable input digest: 9d4e40705f83849555e09dc4fdb55bac4265fc374e0048001454e14841e8964e\n  - known symbol count: 2\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/localauthenticationembeddedui/**\n\nEditable paths:\n  - full/localauthenticationembeddedui/*.swift\n  - full/localauthenticationembeddedui/localauthenticationembeddedui_guest_sources.txt\n  - full/localauthenticationembeddedui/README.md\n  - full/localauthenticationembeddedui/coverage.tsv\n  - full/localauthenticationembeddedui/oracle-questions.tsv\n  - full/localauthenticationembeddedui/tests/agent/**\n\nDependencies:\n  - Foundation\n  - LocalAuthentication\n  - UIKit\n\nKnown risks:\n  - ui\n  - security\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/localauthenticationembeddedui/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=LocalAuthenticationEmbeddedUI lane=leaf-full symbols=2\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - LOCALAUTHENTICATIONEMBEDDEDUI_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=LocalAuthenticationEmbeddedUI dylib=libLocalAuthenticationEmbeddedUI.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/localauthenticationembeddedui/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (2 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/localauthenticationembeddedui/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/localauthenticationembeddedui/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/localauthenticationembeddedui/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-localauthenticationembeddedui and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port LockedCameraCapture to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/lockedcameracapture/*.swift",
+        "full/lockedcameracapture/lockedcameracapture_guest_sources.txt",
+        "full/lockedcameracapture/README.md",
+        "full/lockedcameracapture/coverage.tsv",
+        "full/lockedcameracapture/oracle-questions.tsv",
+        "full/lockedcameracapture/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=LockedCameraCapture lane=leaf-full symbols=43",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "LOCKEDCAMERACAPTURE_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=LockedCameraCapture dylib=libLockedCameraCapture.dylib"
+      ],
+      "gate": "bash full/lockedcameracapture/tests/acceptance/test_host.sh",
+      "immutableDigest": "3a8d9111af323441ce6160205e16e4b34117c5530ca259fd59491abb31123298",
+      "lane": "leaf-full",
+      "module": "LockedCameraCapture",
+      "ownedPaths": [
+        "full/lockedcameracapture/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "extension",
+        "camera",
+        "fail-closed"
+      ],
+      "slug": "lockedcameracapture",
+      "symbolCount": 43,
+      "taskPath": "full/lockedcameracapture/FANOUT_TASK.md",
+      "prompt": "Implement the LockedCameraCapture framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/lockedcameracapture/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: LockedCameraCapture\n  - lane: leaf-full\n  - immutable input digest: 3a8d9111af323441ce6160205e16e4b34117c5530ca259fd59491abb31123298\n  - known symbol count: 43\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/lockedcameracapture/**\n\nEditable paths:\n  - full/lockedcameracapture/*.swift\n  - full/lockedcameracapture/lockedcameracapture_guest_sources.txt\n  - full/lockedcameracapture/README.md\n  - full/lockedcameracapture/coverage.tsv\n  - full/lockedcameracapture/oracle-questions.tsv\n  - full/lockedcameracapture/tests/agent/**\n\nDependencies:\n  - Foundation\n\nKnown risks:\n  - extension\n  - camera\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/lockedcameracapture/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=LockedCameraCapture lane=leaf-full symbols=43\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - LOCKEDCAMERACAPTURE_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=LockedCameraCapture dylib=libLockedCameraCapture.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/lockedcameracapture/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (43 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/lockedcameracapture/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/lockedcameracapture/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/lockedcameracapture/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-lockedcameracapture and open the pull request the campaign expects."
+    },
+    {
+      "agentName": "Port MarketplaceKit to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/marketplacekit/*.swift",
+        "full/marketplacekit/marketplacekit_guest_sources.txt",
+        "full/marketplacekit/README.md",
+        "full/marketplacekit/coverage.tsv",
+        "full/marketplacekit/oracle-questions.tsv",
+        "full/marketplacekit/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_DELIVERABLE_OK module=MarketplaceKit lane=medium-full symbols=207",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "MARKETPLACEKIT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=MarketplaceKit dylib=libMarketplaceKit.dylib"
+      ],
+      "gate": "bash full/marketplacekit/tests/acceptance/test_host.sh",
+      "immutableDigest": "ff1d5736b2b90a42dc2dbff1d5bf55089ba0a05a6a0f10abf91d6d10da4ee7ba",
+      "lane": "medium-full",
+      "module": "MarketplaceKit",
+      "ownedPaths": [
+        "full/marketplacekit/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "os-service",
+        "privacy",
+        "fail-closed"
+      ],
+      "slug": "marketplacekit",
+      "symbolCount": 207,
+      "taskPath": "full/marketplacekit/FANOUT_TASK.md",
+      "prompt": "Implement the MarketplaceKit framework starting point for the OpenUIKit Linux platform.\n\nYour authoritative task specification is `full/marketplacekit/FANOUT_TASK.md`. Read that file completely before editing and follow it exactly. This is an implementation run, not a planning-only run.\n\nCampaign invariants:\n  - campaign: ios26.1-fwseed-r12\n  - expected starting commit: 343270ce44481a5ae11b87a6e0713e396ada1ef2\n  - expected active Cursor Build: bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87\n  - required environment marker: CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - framework: MarketplaceKit\n  - lane: medium-full\n  - immutable input digest: ff1d5736b2b90a42dc2dbff1d5bf55089ba0a05a6a0f10abf91d6d10da4ee7ba\n  - known symbol count: 207\n  - maximum repair passes: 2\n  - time budget: 60 minutes\n\nBefore making changes, verify `git rev-parse HEAD` is exactly the expected starting commit and run `.cursor/verify-cloud-environment.sh`. Stop and report the mismatch without editing if either the commit or required environment marker is wrong.\n\nOwned paths:\n  - full/marketplacekit/**\n\nEditable paths:\n  - full/marketplacekit/*.swift\n  - full/marketplacekit/marketplacekit_guest_sources.txt\n  - full/marketplacekit/README.md\n  - full/marketplacekit/coverage.tsv\n  - full/marketplacekit/oracle-questions.tsv\n  - full/marketplacekit/tests/agent/**\n\nDependencies:\n  - Foundation\n\nKnown risks:\n  - os-service\n  - privacy\n  - fail-closed\n\nStay strictly inside the editable paths. Never edit pinned headers, symbol graphs, .tbd inputs, provenance ledgers, acceptance programs, campaign files, or unrelated app/framework source. Do not weaken, replace, or skip the supplied gate. Do not fabricate successful Apple-only behavior: use an explicit fail-closed boundary where the task requires one.\n\nImplement the strongest useful Linux starting point supported by the pinned corpus, then run this exact gate:\n\n  bash full/marketplacekit/tests/acceptance/test_host.sh\n\nThe final run output must include every expected marker:\n  - CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean\n  - FRAMEWORK_FANOUT_DELIVERABLE_OK module=MarketplaceKit lane=medium-full symbols=207\n  - FRAMEWORK_FANOUT_REFERENCE_OK\n  - MARKETPLACEKIT_AGENT_RUNTIME_OK\n  - FRAMEWORK_FANOUT_HOST_OK module=MarketplaceKit dylib=libMarketplaceKit.dylib\n\nCommit all in-scope implementation and test changes on the Cursor-created branch. Do not merge. Summarize the public surface implemented, fail-closed boundaries, tests run, exact marker output, and any unresolved behavioral questions so central review can audit the pull request.\n\nSEED + DEPTH (authoritative task for this run; the FANOUT_TASK.md seed contract governs file forms, statuses and the sealed gate):\nThis is a FRESH seed: full/marketplacekit/ has AGENTS.md, FANOUT_TASK.md and reference/ but no sources, coverage.tsv or tests yet \u2014 build the starting implementation FANOUT_TASK.md describes (207 exact IDs; acceptance floor per the task) AND go for depth in the same run: implement real Linux behaviour for every family whose semantics are documented (value types, state machines, parsing, arithmetic, notifications, error codes with exact raw values) and fail closed with the documented error where hardware, daemons, entitlements or Apple services are required \u2014 never invent success; unknowns go to oracle-questions.tsv. EVIDENCE FORM (enforced by the sealed gate and by the operator's merge): every `implemented` row's evidence is exactly `test:full/marketplacekit/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier and RETURNS (no DispatchQueue.main / semaphore / RunLoop waits \u2014 the runner has no run loop; a hung test is refused); `declared` rows cite `source:full/marketplacekit/<file>.swift#Symbol`; a file path or a description is not evidence. EVIDENCE RULE: enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Deliver everything FANOUT_TASK.md lists, run `bash full/marketplacekit/tests/acceptance/test_host.sh` directly in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, write README.md with a 'Depth pass 2026-09' section (implemented count and the top-5 evidence distribution; do not add files under uikit/), push as agent/fw-marketplacekit and open the pull request the campaign expects."
+    }
+  ],
+  "repository": {
+    "startingRef": "experiment/cursor-framework-fanout-wave12-seed-20260914",
+    "url": "https://github.com/Vercantez/openuikit-linux-platform"
+  },
+  "schema": 1
+}
