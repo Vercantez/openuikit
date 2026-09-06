@@ -237,3 +237,64 @@ Added Linux behaviour this pass:
 
 Still fail-closed / not invented: Apple ML / document / optical-flow models,
 `performAll` AsyncSequence, homography, learned feature prints.
+
+## Depth pass 2026-09 (wave 8)
+
+Campaign `ios26.1-fwdepth-r17`, lane `large-partitioned`, framework `Vision`
+(3584 IDs). Starting commit `6bf18072f4bc9ca119f4b0ad49dd8478f92dd5f0`.
+Branch `cursor/port-vision-to-linux-e150`. Next pass on top of the ledger
+already in this tree (2148 implemented / 1306 declared / 130 deferred).
+
+`.cursor/verify-cloud-environment.sh` failed on missing
+`scratch/ladder-corpus/focus-ios`. `swiftc` is Swift 6.2.4 /
+`x86_64-unknown-linux-gnu`. The sealed host gate was run directly on this Linux
+host. Active Cursor Build on this VM was
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (campaign expected
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`).
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before (prior wave-8 ledger) | 2148 | 1306 | 130 | 0 | 0 |
+| After this pass | **2559** | **937** | **88** | **0** | **0** |
+
+Nondeferred 3496. Gain **+411 implemented**. Every `implemented` row cites
+`test:full/vision/tests/agent/<File>Tests.swift#testName`. SwiftUI overlay
+re-exports were not present (none marked `not-applicable`). Async overlay
+`perform(on:orientation:)` overloads stay `declared`: tests exercise the same
+fail-closed path through a synchronous `@_spi(OpenUIKitHost)` `performOnHandler`
+so the sealed runtime does not wait on a semaphore.
+
+Top-5 implemented evidence distribution (2559 rows):
+
+1. `VisionOverlayRequestTests.swift#testOverlayRevisionComparableOperators` — 319 (12.5%) — Comparable / range operators on overlay `Revision` enums
+2. `VisionEnumTests.swift#testValueCatalog` — 270 (10.6%) — table-driven enums, revisions, and error codes
+3. `VisionOverlayValueTests.swift#testOverlayPoseValueTypes` — 233 (9.1%) — overlay pose joints/groups
+4. `VisionOverlayValueTests.swift#testOverlayFaceAndDocumentValues` — 172 (6.7%) — face landmarks and document container values
+5. `VisionPoseTests.swift#testHumanBodyPose3DObservationJoints` — 59 (2.3%)
+
+No non-enum test exceeds 40% of implemented rows.
+
+Added Linux behaviour this pass:
+
+- Overlay `VisionError` LocalizedError catalog (table-driven cases).
+- `ContoursObservation` / `Contour` geometry from supplied points (area,
+  perimeter, child contours, Codable).
+- `GeneratePersonSegmentationRequest` quality/pixel-format config; VN perform
+  fail-closed (`invalidModel`).
+- `TrackRectangleRequest` classical template tracker wrapping
+  `VNTrackRectangleRequest`.
+- `RecognizeAnimalsRequest` cat/dog identifiers; `knownAnimalIdentifiers` /
+  `supportedIdentifiers` fail-closed.
+- `DetectTrajectoriesRequest` length/radii/`targetFrameTime`; perform fail-closed.
+- `CoreMLRequest` / `CoreMLModelContainer` (throwing init fail-closed; no Core ML).
+- Pose/text/classify overlay request configuration; VN joint catalogs throw
+  `invalidModel`.
+- `DetectedDocumentObservation` corners + `DocumentObservation` nested Codable
+  from caller-supplied text/list/table/data-detector values.
+- `TrajectoryObservation` points/coefficients; `VNStatefulRequest` spacing.
+- `PixelBufferObservation` size/format/`pixel(at:)`/`withUnsafePointer`/`cgImage`
+  from a supplied buffer (not an Apple segmentation mask).
+
+Still fail-closed / not invented: Apple ML models (person segmentation, animals,
+trajectories, CoreML, pose, classify, text rectangles), homography, learned
+feature prints, async overlay `perform(on:orientation:)`.
