@@ -139,23 +139,34 @@ fail-closed `MLUpdateContext.model` / `MLModelCollection`.
 | | implemented | declared | deferred | unavailable | not-applicable | nondeferred |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Before (wave 8 start / evidence repair) | 633 | 311 | 148 | 16 | 578 | 944 |
-| After wave 8 | 884 | 208 | 0 | 16 | 578 | 1092 |
+| After wave 8 (`f38a68e0`) | 884 | 208 | 0 | 16 | 578 | 1092 |
+| After NA reclass (merge refusal) | 886 | 208 | 576 | 16 | 0 | 1094 |
+
+The operator refused `f38a68e0` because **578 `not-applicable` rows were not
+SwiftUI cross-import overlays** (they were `::SYNTHESIZED::` Swift integer
+stdlib operators on `Int`/`Int8`/`Int16`/`Int32`/`UInt8`/`UInt16`/`UInt32`).
+Those IDs are now `deferred` (stdlib behavior, not a CoreML-owned API) except
+`Int8.multiArrayDataType` and `Int32.multiArrayDataType`, which are CoreML
+overlay witnesses and cite
+`MLShapedArrayTests.swift#testShapedArrayScalarsAndTransforms`. This graph has
+no `s:7SwiftUI…` overlay IDs, so `not-applicable` is 0.
 
 Unavailable rows name Apple Metal GPU / `CVPixelBuffer` hardware (no Linux
 daemon or entitlement fallback). Neural-network / MIL inference remains
 fail-closed (`.generic`, message `neural network layers not implemented`) except
 the tiny Identity / DictVectorizer / Pipeline / GLM linear interpreters.
 
-Top-5 implemented evidence distribution (884 implemented):
+Top-5 implemented evidence distribution (886 implemented):
 
-1. `CoreMLEnumTests.swift#testEnumAndConstantRawValues` — 128 (14.5%)
+1. `CoreMLEnumTests.swift#testEnumAndConstantRawValues` — 128 (14.4%)
 2. `MLTensorTests.swift#testTensorShapeOpsAndEnums` — 71 (8.0%)
 3. `MLShapedArrayTests.swift#testShapedArrayConcatConvertAndSlice` — 69 (7.8%)
 4. `MLTensorTests.swift#testTensorReductionsAndElementwise` — 63 (7.1%)
 5. `MLDescriptionTests.swift#testConstraintsAndFeatureDescription` — 47 (5.3%)
 
-No non-enum test is cited by more than 40% of implemented rows. Remaining
-`declared` rows are stdlib Collection/StringProcessing witnesses, unused
+No non-enum test is cited by more than 40% of implemented rows. Every
+`implemented` citation is `test:full/coreml/tests/agent/<File>Tests.swift#testName`.
+Remaining `declared` rows are Collection/StringProcessing witnesses, unused
 tensor subscript arities, or types without a focused assertion.
 
 Gate markers from `bash full/coreml/tests/acceptance/test_host.sh` (Linux host,
