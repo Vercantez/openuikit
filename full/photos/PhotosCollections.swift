@@ -47,8 +47,7 @@ open class PHCollection: PHObject, @unchecked Sendable {
         guard photosReadAccessGranted() else {
             return PHFetchResult([])
         }
-        let collections: [PHCollection] = PhotosLibraryStore.userAlbums()
-        return PHFetchResult(collections)
+        return PHFetchResult(PhotosLibraryStore.topLevelCollections())
     }
 }
 
