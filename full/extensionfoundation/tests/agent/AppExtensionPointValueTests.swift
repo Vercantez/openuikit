@@ -1,13 +1,17 @@
 @_spi(OpenUIKitHost) import ExtensionFoundation
 
-func testAppExtensionPointInitLooksUpDefinition() throws {
+func testAppExtensionPointInitLooksUpDefinition() {
     let defined = AppExtensionPoint.Definition.buildBlock(
         AppExtensionPoint.Name("ef-lookup-defined"),
         AppExtensionPoint.UserInterface(true)
     )
-    let found = try AppExtensionPoint(identifier: "ef-lookup-defined")
-    precondition(found == defined)
-    precondition(found.host_userInterface == true)
+    do {
+        let found = try AppExtensionPoint(identifier: "ef-lookup-defined")
+        precondition(found == defined)
+        precondition(found.host_userInterface == true)
+    } catch {
+        preconditionFailure("lookup of a defined point must succeed: \(error)")
+    }
 }
 
 func testAppExtensionPointInitEmptyThrowsUnspecified() {
