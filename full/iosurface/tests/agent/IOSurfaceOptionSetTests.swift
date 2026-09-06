@@ -96,7 +96,7 @@ func testPurgeabilityStateAlgebra() {
     precondition(IOSurfacePurgeabilityState.purgeableEmpty.isSuperset(of: .purgeableEmpty))
     precondition(IOSurfacePurgeabilityState.purgeableVolatile.isSubset(of: .purgeableVolatile))
     precondition(!IOSurfacePurgeabilityState.purgeableEmpty.isStrictSubset(of: .purgeableEmpty))
-    precondition(IOSurfacePurgeabilityState.purgeableKeepCurrent.isDisjoint(with: .purgeableVolatile))
+    precondition(IOSurfacePurgeabilityState.purgeableEmpty.isDisjoint(with: .purgeableVolatile))
     precondition(IOSurfacePurgeabilityState.purgeableEmpty.subtracting(.purgeableEmpty).isEmpty)
     precondition(IOSurfacePurgeabilityState(arrayLiteral: .purgeableVolatile) == .purgeableVolatile)
     precondition(IOSurfacePurgeabilityState([.purgeableEmpty]) == .purgeableEmpty)
