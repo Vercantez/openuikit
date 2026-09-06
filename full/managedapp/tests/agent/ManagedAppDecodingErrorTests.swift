@@ -7,7 +7,8 @@ func testManagedAppConfigurationDecodingErrorProtocol() {
         message: "bad landmark"
     )
     let boxed: any ManagedAppConfigurationDecodingError = error
-    managedAppExpect(boxed is any Error)
+    let asError: any Error = boxed
+    managedAppExpectEqual(String(describing: type(of: asError)), "ManagedAppProbeDecodingError")
     managedAppExpectEqual(error.code.rawValue, 7)
     error.code = ManagedAppConfigurationDecodingErrorCode(rawValue: 8)!
     managedAppExpectEqual(error.code.rawValue, 8)

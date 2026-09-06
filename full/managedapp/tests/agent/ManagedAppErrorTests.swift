@@ -3,8 +3,8 @@ import ManagedApp
 
 func testManagedAppErrorEnum() {
     let error: ManagedAppError = .invalidIdentifier
-    managedAppExpect(error is any Error)
-    managedAppExpectEqual(String(describing: type(of: error)), "ManagedAppError")
+    let asError: any Error = error
+    managedAppExpectEqual(String(describing: type(of: asError)), "ManagedAppError")
 }
 
 func testManagedAppErrorCases() {
@@ -16,15 +16,21 @@ func testManagedAppErrorCases() {
 }
 
 func testManagedAppErrorEquality() {
-    managedAppExpect(.invalidIdentifier == .invalidIdentifier)
-    managedAppExpectFalse(.invalidIdentifier == .serverError)
-    managedAppExpectFalse(.serverError == .internalError)
+    let invalid = ManagedAppError.invalidIdentifier
+    let server = ManagedAppError.serverError
+    let internalError = ManagedAppError.internalError
+    managedAppExpect(invalid == .invalidIdentifier)
+    managedAppExpectFalse(invalid == server)
+    managedAppExpectFalse(server == internalError)
 }
 
 func testManagedAppErrorInequality() {
-    managedAppExpect(.invalidIdentifier != .serverError)
-    managedAppExpect(.serverError != .internalError)
-    managedAppExpectFalse(.internalError != .internalError)
+    let invalid = ManagedAppError.invalidIdentifier
+    let server = ManagedAppError.serverError
+    let internalError = ManagedAppError.internalError
+    managedAppExpect(invalid != server)
+    managedAppExpect(server != internalError)
+    managedAppExpectFalse(internalError != .internalError)
 }
 
 func testManagedAppErrorHashInto() {
@@ -42,9 +48,10 @@ func testManagedAppErrorHashValue() {
         ManagedAppError.invalidIdentifier.hashValue,
         ManagedAppError.invalidIdentifier.hashValue
     )
-    managedAppExpect(
-        ManagedAppError.invalidIdentifier.hashValue != ManagedAppError.serverError.hashValue
-            || ManagedAppError.invalidIdentifier != .serverError
+    managedAppExpectFalse(
+        ManagedAppError.invalidIdentifier.hashValue
+            == ManagedAppError.serverError.hashValue
+            && ManagedAppError.invalidIdentifier == .serverError
     )
 }
 

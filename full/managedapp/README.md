@@ -69,6 +69,15 @@ absent on this VM. The sealed gate compiles with a clean product tree
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
 `cbb368eeea236bbc0479fefa599190972ac8cfca` matched.
 
+`bash full/managedapp/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=ManagedApp lane=leaf-full symbols=47
+FRAMEWORK_FANOUT_REFERENCE_OK
+MANAGEDAPP_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=ManagedApp dylib=libManagedApp.dylib
+```
+
 The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. `swiftc` is Swift 6.2.4 / linux and the gate compiled with a clean product tree.
 
 ## Still deferred / unobserved
