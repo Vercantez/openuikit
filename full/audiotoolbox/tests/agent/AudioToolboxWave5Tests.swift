@@ -469,7 +469,7 @@ func testWave5AudioFileUserDataAndFailClosed() {
         } == 0,
         "create"
     )
-    var payload: [UInt8] = [1, 2, 3, 4]
+    let payload: [UInt8] = [1, 2, 3, 4]
     atW5Expect(
         payload.withUnsafeBytes { raw in
             AudioFileSetUserData(file, 0x616E_6E6F, 0, 4, raw.baseAddress)
