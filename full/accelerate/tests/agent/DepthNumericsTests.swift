@@ -56,7 +56,8 @@ func testSparseMultiplyKnownMatrix() {
     SparseMultiply(matrix, x, y)
     precondition(abs(ydata[0] - 3) < 0.0001)
     precondition(abs(ydata[1] - 3) < 0.0001)
-    ydata = [10, 10]
+    ydata[0] = 10
+    ydata[1] = 10
     SparseMultiplyAdd(matrix, x, y)
     precondition(abs(ydata[0] - 13) < 0.0001)
     var scaled: [Float] = [0, 0]
@@ -105,7 +106,8 @@ func testSparseMultiplyDoubleAndMatrix() {
     SparseMultiply(matrix, x, y)
     precondition(abs(ydata[0] - 4) < 1e-12)
     precondition(abs(ydata[1] - 10) < 1e-12)
-    ydata = [1, 1]
+    ydata[0] = 1
+    ydata[1] = 1
     SparseMultiplyAdd(matrix, x, y)
     precondition(abs(ydata[0] - 5) < 1e-12)
     var y2data: [Double] = [0, 0]
