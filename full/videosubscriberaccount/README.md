@@ -80,4 +80,13 @@ Run `bash tests/acceptance/test_host.sh` from this directory, or
 `bash full/videosubscriberaccount/tests/acceptance/test_host.sh` from the
 repository root. Keep generated products out of the tree.
 
-The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this snapshot fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`). `swiftc` is Swift 6.2.4 / linux and the sealed gate compiles with a clean product tree.
+The sealed host gate ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=VideoSubscriberAccount lane=medium-full symbols=210
+FRAMEWORK_FANOUT_REFERENCE_OK
+VIDEOSUBSCRIBERACCOUNT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=VideoSubscriberAccount dylib=libVideoSubscriberAccount.dylib
+```
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this snapshot fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 / linux and the sealed gate compiled with a clean product tree.
