@@ -1,0 +1,4 @@
+full/extensionfoundation/AppExtensionIdentity.swift
+full/extensionfoundation/AppExtensionPoint.swift
+full/extensionfoundation/AppExtensionProcess.swift
+full/extensionfoundation/ExtensionFoundation.swift
