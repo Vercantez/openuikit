@@ -28,6 +28,10 @@ enum MetalCPULayout {
         max(base >> level, 1)
     }
 
+    static func sliceCount(textureType: MTLTextureType, arrayLength: Int) -> Int {
+        metalSliceCount(textureType: textureType, arrayLength: arrayLength)
+    }
+
     static func levels(
         width: Int,
         height: Int,
@@ -35,17 +39,18 @@ enum MetalCPULayout {
         mipmapLevelCount: Int,
         arrayLength: Int,
         sampleCount: Int,
-        bytesPerPixel: Int
+        bytesPerPixel: Int,
+        textureType: MTLTextureType = .type2D
     ) -> (total: Int, levels: [MetalCPUMipLevel]) {
         var levels: [MetalCPUMipLevel] = []
         var offset = 0
         let mips = max(mipmapLevelCount, 1)
-        let slices = max(arrayLength, 1)
+        let slices = sliceCount(textureType: textureType, arrayLength: arrayLength)
         let samples = max(sampleCount, 1)
         for mip in 0..<mips {
             let w = mipSize(base: max(width, 1), level: mip)
             let h = mipSize(base: max(height, 1), level: mip)
-            let d = mipSize(base: max(depth, 1), level: mip)
+            let d = textureType == .type3D ? mipSize(base: max(depth, 1), level: mip) : max(depth, 1)
             let row = w * bytesPerPixel
             let image = row * h
             let sliceBytes = image * d * samples

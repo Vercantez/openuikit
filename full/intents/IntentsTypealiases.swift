@@ -22,3 +22,5 @@ public enum INMediaDestination: Hashable, Sendable {
 }
 
 extension INShortcut { public typealias ReferenceType = INShortcutReference }
+
+public typealias INDailyRoutineSituation = INDailyRoutineRelevanceProvider.Situation

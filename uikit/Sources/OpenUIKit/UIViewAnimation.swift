@@ -101,6 +101,15 @@ struct UIViewAnimation {
     /// Animation-block transaction that owns this property animation. Zero
     /// denotes a manually constructed/test animation with no completion.
     var transactionID: Int = 0
+    /// CA `speed`. 1 is the UIView.animate default; 0 freezes local time at
+    /// `timeOffset` (UIViewPropertyAnimator.pauseAnimation).
+    var speed: Double = 1
+    /// CA `timeOffset`, in seconds of local animation time.
+    var timeOffset: Double = 0
+    /// When true, progress is `local/duration` instead of the timing curve.
+    /// MEASURED animprobe, iPhone SE 2x / iOS 26.1: `scrubsLinearly` defaults
+    /// true on UIViewPropertyAnimator; running playback still uses the curve.
+    var pacesLinearly: Bool = false
 }
 
 // MARK: - Animation block context
@@ -131,6 +140,10 @@ enum UIViewAnimationContext {
     /// global state so launch/test harnesses can make every framework-driven
     /// transition deterministic without rewriting individual call sites.
     static var animationsEnabled = true
+    /// Views that recorded a property change in the current (outermost)
+    /// animation transaction. UIViewPropertyAnimator copies this after
+    /// start so pause/scrub can retarget those records.
+    static var recordedViews: [UIView] = []
 }
 
 // MARK: - Deferred completion handlers
@@ -241,6 +254,15 @@ extension UIView {
         case easeIn = 1
         case easeOut = 2
         case linear = 3
+        /// MEASURED animprobe, iPhone SE 2x / iOS 26.1:
+        /// `UICubicTimingParameters()` reports `animationCurve.rawValue == 5`
+        /// (CSS ease control points 0.25, 0.1, 0.25, 1).
+        case cssEase = 5
+        /// MEASURED same probe: custom control-point cubics report rawValue 6.
+        case customCubic = 6
+        /// MEASURED same probe: navigation push
+        /// `transitionCoordinator.completionCurve.rawValue == 7`.
+        case navigationTransition = 7
     }
 
     /// Animation options. Raw values mirror UIKit's UIViewAnimationOptions
@@ -355,6 +377,7 @@ extension UIView {
         } else {
             transaction.transactionID = UIViewAnimationContext.nextTransactionID
             UIViewAnimationContext.nextTransactionID &+= 1
+            UIViewAnimationContext.recordedViews = []
         }
         UIViewAnimationContext.current = transaction
         UIViewAnimationContext.recordedInBlock = 0
@@ -436,6 +459,9 @@ extension UIView {
         guard UIViewAnimationContext.animationsEnabled,
               let ctx = UIViewAnimationContext.current else { return }
         UIViewAnimationContext.recordedInBlock &+= 1
+        if !UIViewAnimationContext.recordedViews.contains(where: { $0 === self }) {
+            UIViewAnimationContext.recordedViews.append(self)
+        }
         let now = OpenUIKitRuntime.animationTime
         var actualFrom = from
         if let oldIndex = animations.firstIndex(where: { $0.property == property }) {
@@ -502,6 +528,19 @@ extension UIView {
         }
     }
 
+    func _applyAnimationValue(_ value: UIViewAnimation.Value,
+                              for property: UIViewAnimation.Property) {
+        switch (property, value) {
+        case (.alpha, .scalar(let v)): alpha = v
+        case (.position, .point(let p)): center = p
+        case (.bounds, .rect(let r)): bounds = r
+        case (.transform, .transform(let t)): transform = t
+        case (.backgroundColor, .color(let c)): backgroundColor = c
+        case (.cornerRadius, .scalar(let v)): layer.cornerRadius = v
+        default: break
+        }
+    }
+
     /// Drop all recorded animations (the presentation snaps to the model).
     public func removeAllAnimations() { animations.removeAll() }
 
@@ -524,15 +563,32 @@ extension UIView {
     /// that reassigns an animated property after its animation finished calls
     /// this from the completion handler.
     func _removeFinishedAnimations(at time: Double) {
-        animations.removeAll { !$0.repeats && time >= $0.endTime }
+        animations.removeAll { !$0.repeats && !$0.isActive(at: time) }
     }
 }
 
 extension UIViewAnimation {
-    var endTime: Double { begin + delay + duration }
+    /// Wall-clock time at which local time reaches the end (or start, if
+    /// reversed). A paused record (speed 0) never ends on the clock.
+    var endTime: Double {
+        if speed == 0 { return .infinity }
+        if speed > 0 {
+            return begin + delay + (duration - timeOffset) / speed
+        }
+        let reverse = -speed
+        return begin + delay + timeOffset / reverse
+    }
+
+    func localTime(at time: Double) -> Double {
+        (time - begin - delay) * speed + timeOffset
+    }
 
     func isActive(at time: Double) -> Bool {
-        repeats ? time >= begin : time < endTime
+        if repeats { return time >= begin }
+        if speed == 0 { return true }
+        let local = localTime(at: time)
+        if speed > 0 { return local < duration - 1e-9 }
+        return local > 1e-9
     }
 }
 

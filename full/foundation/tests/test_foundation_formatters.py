@@ -83,6 +83,16 @@ FAMILIES = (
         ("HTTPCookiePropertyKey", "requestHeaderFields", "_HTTPDateParser"),
         ("parse.\\(label)", "ouik-sf-host", "Max-Age"),
     ),
+    (
+        "URLComponents",
+        FOUNDATION / "URLLoading.swift",
+        TESTS / "FoundationURLComponentsOracle.swift",
+        TESTS / "foundation-urlcomponents-apple-2026-09-06.txt",
+        83,
+        "bd97aa971993af1fef9636a2e2a1731cb7559ff107f4c144d813482923d81111",
+        ("public struct URLComponents", "public struct URLQueryItem", "_Punycode", "queryItem"),
+        ("qi.encodeMap", "idn-puny", "encInv.cafe.false"),
+    ),
 )
 
 

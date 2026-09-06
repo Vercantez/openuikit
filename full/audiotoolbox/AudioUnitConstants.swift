@@ -226,6 +226,7 @@ public func AudioUnitSetProperty(
         } else {
             unit.outputFormat = format
         }
+        atNotifyPropertyListeners(unit, inID, inScope, inElement)
         return 0
     case kAudioUnitProperty_ElementCount:
         guard let inData, inDataSize >= 4 else { return kAudioUnitErr_InvalidPropertyValue }
@@ -235,20 +236,94 @@ public func AudioUnitSetProperty(
         } else {
             unit.outputCount = max(1, count)
         }
+        atNotifyPropertyListeners(unit, inID, inScope, inElement)
         return 0
     case kAudioUnitProperty_MaximumFramesPerSlice:
         guard let inData, inDataSize >= 4 else { return kAudioUnitErr_InvalidPropertyValue }
         unit.maximumFrames = inData.loadUnaligned(as: UInt32.self)
+        atNotifyPropertyListeners(unit, inID, inScope, inElement)
         return 0
     case kAudioUnitProperty_SetRenderCallback:
         guard let inData, inDataSize >= 16 else {
             return kAudioUnitErr_InvalidPropertyValue
         }
         unit.renderCallback = inData.assumingMemoryBound(to: AURenderCallbackStruct.self).pointee
+        atNotifyPropertyListeners(unit, inID, inScope, inElement)
         return 0
     default:
         return kAudioUnitErr_InvalidProperty
     }
+}
+
+private func atNotifyPropertyListeners(
+    _ unit: ATAudioUnitObject,
+    _ id: AudioUnitPropertyID,
+    _ scope: AudioUnitScope,
+    _ element: AudioUnitElement
+) {
+    let handle = Unmanaged.passUnretained(unit).toOpaque()
+    for listener in unit.propertyListeners where listener.id == id {
+        listener.proc(listener.userData, OpaquePointer(handle), id, scope, element)
+    }
+}
+
+public func AudioUnitAddPropertyListener(
+    _ inUnit: AudioUnit?,
+    _ inID: AudioUnitPropertyID,
+    _ inProc: AudioUnitPropertyListenerProc?,
+    _ inProcUserData: UnsafeMutableRawPointer?
+) -> Int32 {
+    guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
+        return kAudioUnitErr_InvalidElement
+    }
+    guard let inProc else { return kAudioUnitErr_InvalidParameter }
+    unit.propertyListeners.append((id: inID, proc: inProc, userData: inProcUserData))
+    return 0
+}
+
+public func AudioUnitRemovePropertyListenerWithUserData(
+    _ inUnit: AudioUnit?,
+    _ inID: AudioUnitPropertyID,
+    _ inProc: AudioUnitPropertyListenerProc?,
+    _ inProcUserData: UnsafeMutableRawPointer?
+) -> Int32 {
+    guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
+        return kAudioUnitErr_InvalidElement
+    }
+    unit.propertyListeners.removeAll { listener in
+        listener.id == inID
+            && (inProc == nil || listener.userData == inProcUserData)
+    }
+    _ = inProc
+    return 0
+}
+
+public func AudioUnitProcess(
+    _ inUnit: AudioUnit?,
+    _ ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>?,
+    _ inTimeStamp: UnsafeRawPointer?,
+    _ inNumberFrames: UInt32,
+    _ ioData: UnsafeMutableRawPointer?
+) -> Int32 {
+    AudioUnitRender(inUnit, ioActionFlags, inTimeStamp, 0, inNumberFrames, ioData)
+}
+
+public func AudioUnitProcessMultiple(
+    _ inUnit: AudioUnit?,
+    _ ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>?,
+    _ inTimeStamp: UnsafeRawPointer?,
+    _ inNumberFrames: UInt32,
+    _ inNumberInputBufferLists: UInt32,
+    _ inInputBufferLists: UnsafePointer<UnsafeMutableRawPointer?>?,
+    _ inNumberOutputBufferLists: UInt32,
+    _ ioOutputBufferLists: UnsafePointer<UnsafeMutableRawPointer?>?
+) -> Int32 {
+    _ = inNumberInputBufferLists
+    _ = inInputBufferLists
+    guard inNumberOutputBufferLists >= 1, let ioOutputBufferLists else {
+        return kAudioUnitErr_InvalidParameter
+    }
+    return AudioUnitProcess(inUnit, ioActionFlags, inTimeStamp, inNumberFrames, ioOutputBufferLists.pointee)
 }
 
 public func AudioUnitGetParameter(

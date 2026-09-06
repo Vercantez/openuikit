@@ -40,6 +40,39 @@ public typealias AUAudioFrameCount = UInt32
 public typealias AUAudioChannelCount = UInt32
 public typealias AUEventSampleTime = Int64
 public typealias AUValue = Float
+public typealias AUParameterObserverToken = UnsafeMutableRawPointer
+public typealias AUParameterObserver = (AUParameterAddress, AUValue) -> Void
+public typealias AUParameterAutomationObserver = (Int, UnsafePointer<AUParameterAutomationEvent>) -> Void
+public typealias AUParameterRecordingObserver = (Int, UnsafePointer<AURecordedParameterEvent>) -> Void
+public typealias AUImplementorValueObserver = (AUParameter, AUValue) -> Void
+public typealias AUImplementorValueProvider = (AUParameter) -> AUValue
+public typealias AUImplementorStringFromValueCallback = (AUParameter, UnsafePointer<AUValue>?) -> String
+public typealias AUImplementorValueFromStringCallback = (AUParameter, String) -> AUValue
+public typealias AUImplementorDisplayNameWithLengthCallback = (AUParameterNode, Int) -> String
+public typealias AudioUnitPropertyListenerProc = @convention(c) (
+    UnsafeMutableRawPointer?,
+    AudioUnit?,
+    AudioUnitPropertyID,
+    AudioUnitScope,
+    AudioUnitElement
+) -> Void
+public typealias AudioUnitAddPropertyListenerProc = (
+    UnsafeMutableRawPointer?,
+    AudioUnitPropertyID,
+    AudioUnitPropertyListenerProc,
+    UnsafeMutableRawPointer?
+) -> Int32
+public typealias AudioUnitRemovePropertyListenerProc = (
+    UnsafeMutableRawPointer?,
+    AudioUnitPropertyID,
+    AudioUnitPropertyListenerProc
+) -> Int32
+public typealias AudioUnitRemovePropertyListenerWithUserDataProc = (
+    UnsafeMutableRawPointer?,
+    AudioUnitPropertyID,
+    AudioUnitPropertyListenerProc,
+    UnsafeMutableRawPointer?
+) -> Int32
 public typealias ExtAudioFileRef = OpaquePointer
 public typealias ExtAudioFilePropertyID = UInt32
 public typealias ExtAudioFilePacketTableInfoOverride = Int32

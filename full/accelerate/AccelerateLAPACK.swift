@@ -147,20 +147,18 @@ private func _getrf<T: BinaryFloatingPoint>(
     return 0
 }
 
-private func _gesv<T: BinaryFloatingPoint>(
+private func _getrs<T: BinaryFloatingPoint>(
     n: Int,
     nrhs: Int,
-    a: UnsafeMutablePointer<T>,
+    a: UnsafePointer<T>,
     lda: Int,
-    ipiv: UnsafeMutablePointer<Int32>,
+    ipiv: UnsafePointer<Int32>,
     b: UnsafeMutablePointer<T>,
     ldb: Int
 ) -> Int32 {
-    let rc = _getrf(m: n, n: n, a: a, lda: lda, ipiv: ipiv)
-    if rc != 0 { return rc }
     for i in 0..<n {
         let piv = Int(ipiv[i]) - 1
-        if piv != i {
+        if piv != i && piv >= 0 && piv < n {
             for rhs in 0..<nrhs {
                 let t = b[rhs * ldb + i]
                 b[rhs * ldb + i] = b[rhs * ldb + piv]
@@ -186,6 +184,20 @@ private func _gesv<T: BinaryFloatingPoint>(
         }
     }
     return 0
+}
+
+private func _gesv<T: BinaryFloatingPoint>(
+    n: Int,
+    nrhs: Int,
+    a: UnsafeMutablePointer<T>,
+    lda: Int,
+    ipiv: UnsafeMutablePointer<Int32>,
+    b: UnsafeMutablePointer<T>,
+    ldb: Int
+) -> Int32 {
+    let rc = _getrf(m: n, n: n, a: a, lda: lda, ipiv: ipiv)
+    if rc != 0 { return rc }
+    return _getrs(n: n, nrhs: nrhs, a: a, lda: lda, ipiv: ipiv, b: b, ldb: ldb)
 }
 
 private func _posv<T: BinaryFloatingPoint>(
@@ -276,5 +288,114 @@ private func _gels<T: BinaryFloatingPoint>(
             }
         }
     }
+    return rc
+}
+
+private func _potrf<T: BinaryFloatingPoint>(
+    upper: Bool,
+    n: Int,
+    a: UnsafeMutablePointer<T>,
+    lda: Int
+) -> Int32 {
+    _ = upper
+    for i in 0..<n {
+        var diag = a[i * lda + i]
+        for k in 0..<i {
+            diag -= a[i * lda + k] * a[i * lda + k]
+        }
+        if diag <= 0 { return Int32(i + 1) }
+        let s = diag.squareRoot()
+        a[i * lda + i] = s
+        for j in (i + 1)..<n {
+            var v = a[i * lda + j]
+            for k in 0..<i {
+                v -= a[i * lda + k] * a[j * lda + k]
+            }
+            a[i * lda + j] = v / s
+            a[j * lda + i] = a[i * lda + j]
+        }
+    }
+    return 0
+}
+
+private func _getri<T: BinaryFloatingPoint>(
+    n: Int,
+    a: UnsafeMutablePointer<T>,
+    lda: Int,
+    ipiv: UnsafePointer<Int32>
+) -> Int32 {
+    var identity = [T](repeating: 0, count: n * n)
+    for i in 0..<n { identity[i * n + i] = 1 }
+    let rc = identity.withUnsafeMutableBufferPointer { bp in
+        _getrs(n: n, nrhs: n, a: a, lda: lda, ipiv: ipiv, b: bp.baseAddress!, ldb: n)
+    }
+    if rc != 0 { return rc }
+    for j in 0..<n {
+        for i in 0..<n { a[j * lda + i] = identity[j * n + i] }
+    }
+    return 0
+}
+
+@discardableResult
+public func spotrf_(
+    _ uplo: UnsafeMutablePointer<CChar>!,
+    _ n: UnsafeMutablePointer<Int32>!,
+    _ a: UnsafeMutablePointer<Float>!,
+    _ lda: UnsafeMutablePointer<Int32>!,
+    _ info: UnsafeMutablePointer<Int32>!
+) -> Int32 {
+    guard let uplo, let n, let a, let lda, let info else { return -1 }
+    let rc = _potrf(upper: uplo.pointee == 85 || uplo.pointee == 117, n: Int(n.pointee), a: a, lda: Int(lda.pointee))
+    info.pointee = rc
+    return rc
+}
+
+@discardableResult
+public func dpotrf_(
+    _ uplo: UnsafeMutablePointer<CChar>!,
+    _ n: UnsafeMutablePointer<Int32>!,
+    _ a: UnsafeMutablePointer<Double>!,
+    _ lda: UnsafeMutablePointer<Int32>!,
+    _ info: UnsafeMutablePointer<Int32>!
+) -> Int32 {
+    guard let uplo, let n, let a, let lda, let info else { return -1 }
+    let rc = _potrf(upper: uplo.pointee == 85 || uplo.pointee == 117, n: Int(n.pointee), a: a, lda: Int(lda.pointee))
+    info.pointee = rc
+    return rc
+}
+
+@discardableResult
+public func sgetri_(
+    _ n: UnsafeMutablePointer<Int32>!,
+    _ a: UnsafeMutablePointer<Float>!,
+    _ lda: UnsafeMutablePointer<Int32>!,
+    _ ipiv: UnsafeMutablePointer<Int32>!,
+    _ work: UnsafeMutablePointer<Float>!,
+    _ lwork: UnsafeMutablePointer<Int32>!,
+    _ info: UnsafeMutablePointer<Int32>!
+) -> Int32 {
+    guard let n, let a, let lda, let ipiv, let info else { return -1 }
+    _ = work
+    _ = lwork
+    let rc = _getri(n: Int(n.pointee), a: a, lda: Int(lda.pointee), ipiv: ipiv)
+    info.pointee = rc
+    return rc
+}
+
+@discardableResult
+public func dgetri_(
+    _ n: UnsafeMutablePointer<Int32>!,
+    _ a: UnsafeMutablePointer<Double>!,
+    _ lda: UnsafeMutablePointer<Int32>!,
+    _ ipiv: UnsafeMutablePointer<Int32>!,
+    _ work: UnsafeMutablePointer<Double>!,
+    _ lwork: UnsafeMutablePointer<Int32>!,
+    _ info: UnsafeMutablePointer<Int32>!
+) -> Int32 {
+    guard let n, let a, let lda, let ipiv, let info else { return -1 }
+    _ = work
+    _ = lwork
+    let rc = _getri(n: Int(n.pointee), a: a, lda: Int(lda.pointee), ipiv: ipiv)
+    info.pointee = rc
     return rc
 }

@@ -139,3 +139,68 @@ func testRenderPassClearAndLoad() {
     }
     precondition(loaded == keepSeed)
 }
+
+func testParallelRenderEncoderAndSamplerState() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let colorDesc = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .rgba8Unorm,
+        width: 1,
+        height: 1,
+        mipmapped: false
+    )
+    colorDesc.usage = [.renderTarget, .shaderRead]
+    let color = device.makeTexture(descriptor: colorDesc)!
+    let pass = MTLRenderPassDescriptor()
+    pass.colorAttachments[0].texture = color
+    pass.colorAttachments[0].loadAction = .clear
+    pass.colorAttachments[0].storeAction = .store
+    pass.colorAttachments[0].clearColor = MTLClearColorMake(0, 1, 0, 1)
+    let pipeline = MTLRenderPipelineDescriptor()
+    pipeline.colorAttachments[0].pixelFormat = .rgba8Unorm
+    let state = try! device.makeRenderPipelineState(descriptor: pipeline)
+    let samplerDesc = MTLSamplerDescriptor()
+    samplerDesc.minFilter = .linear
+    samplerDesc.label = "cpu-sampler"
+    let sampler = device.makeSamplerState(descriptor: samplerDesc)!
+    precondition(sampler.device.name == device.name)
+    precondition(sampler.label == "cpu-sampler")
+    _ = sampler.gpuResourceID
+    let depthDesc = MTLDepthStencilDescriptor()
+    depthDesc.isDepthWriteEnabled = true
+    depthDesc.depthCompareFunction = .less
+    depthDesc.label = "cpu-depth"
+    let depthState = device.makeDepthStencilState(descriptor: depthDesc)!
+    precondition(depthState.device.name == device.name)
+    precondition(depthState.label == "cpu-depth")
+    _ = depthState.gpuResourceID
+    let queue = device.makeCommandQueue()!
+    let commandBuffer = queue.makeCommandBuffer()!
+    let parallel = commandBuffer.makeParallelRenderCommandEncoder(descriptor: pass)!
+    parallel.label = "parallel"
+    precondition(parallel.label == "parallel")
+    precondition(parallel.device.name == device.name)
+    parallel.insertDebugSignpost("child")
+    parallel.pushDebugGroup("p")
+    parallel.popDebugGroup()
+    let child = parallel.makeRenderCommandEncoder()!
+    child.setRenderPipelineState(state)
+    child.setFragmentSamplerState(sampler, index: 0)
+    child.setVertexSamplerState(sampler, index: 0)
+    child.setDepthStencilState(depthState)
+    child.endEncoding()
+    parallel.setColorStoreAction(.store, index: 0)
+    parallel.setColorStoreActionOptions([], index: 0)
+    parallel.setDepthStoreAction(.dontCare)
+    parallel.setDepthStoreActionOptions([])
+    parallel.setStencilStoreAction(.dontCare)
+    parallel.setStencilStoreActionOptions([])
+    parallel.endEncoding()
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+    precondition(commandBuffer.error == nil)
+    var pixel = [UInt8](repeating: 0, count: 4)
+    pixel.withUnsafeMutableBytes { raw in
+        color.getBytes(raw.baseAddress!, bytesPerRow: 4, from: MTLRegionMake2D(0, 0, 1, 1), mipmapLevel: 0)
+    }
+    precondition(pixel == [0, 255, 0, 255])
+}

@@ -72,6 +72,18 @@ open class MTLTextureDescriptor: NSObject, @unchecked Sendable {
     }
 }
 
+open class MTLTextureViewDescriptor: NSObject, @unchecked Sendable {
+    public var pixelFormat: MTLPixelFormat = .invalid
+    public var textureType: MTLTextureType = .type2D
+    public var swizzle = MTLTextureSwizzleChannels()
+    public var levelRange: Range<Int> = 0..<1
+    public var sliceRange: Range<Int> = 0..<1
+
+    public override init() {
+        super.init()
+    }
+}
+
 open class MTLSamplerDescriptor: NSObject, @unchecked Sendable {
     public var minFilter: MTLSamplerMinMagFilter = .nearest
     public var magFilter: MTLSamplerMinMagFilter = .nearest
@@ -551,6 +563,46 @@ open class MTLBlitPassSampleBufferAttachmentDescriptorArray: NSObject, @unchecke
     }
 }
 
+open class MTLResourceStatePassDescriptor: NSObject, @unchecked Sendable {
+    public let sampleBufferAttachments = MTLResourceStatePassSampleBufferAttachmentDescriptorArray()
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLResourceStatePassSampleBufferAttachmentDescriptor: NSObject, @unchecked Sendable {
+    public var sampleBuffer: (any MTLCounterSampleBuffer)?
+    public var startOfEncoderSampleIndex: Int = 0
+    public var endOfEncoderSampleIndex: Int = 0
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLResourceStatePassSampleBufferAttachmentDescriptorArray: NSObject, @unchecked Sendable {
+    private var storage: [Int: MTLResourceStatePassSampleBufferAttachmentDescriptor] = [:]
+
+    public override init() {
+        super.init()
+    }
+
+    public subscript(attachmentIndex: Int) -> MTLResourceStatePassSampleBufferAttachmentDescriptor! {
+        get {
+            if let existing = storage[attachmentIndex] {
+                return existing
+            }
+            let created = MTLResourceStatePassSampleBufferAttachmentDescriptor()
+            storage[attachmentIndex] = created
+            return created
+        }
+        set {
+            storage[attachmentIndex] = newValue
+        }
+    }
+}
+
 open class MTLComputePassDescriptor: NSObject, @unchecked Sendable {
     public var dispatchType: MTLDispatchType = .serial
     public let sampleBufferAttachments = MTLComputePassSampleBufferAttachmentDescriptorArray()
@@ -593,18 +645,40 @@ open class MTLComputePassSampleBufferAttachmentDescriptorArray: NSObject, @unche
 }
 
 open class MTLFunctionConstantValues: NSObject, @unchecked Sendable {
+    private var indexed: [Int: [UInt8]] = [:]
+    private var named: [String: [UInt8]] = [:]
+
     public override init() {
         super.init()
     }
 
-    public func reset() {}
+    public func reset() {
+        indexed.removeAll()
+        named.removeAll()
+    }
 
     public func setConstantValue(_ value: UnsafeRawPointer, type: MTLDataType, index: Int) {
-        _ = (value, type, index)
+        indexed[index] = bytes(from: value, type: type)
     }
 
     public func setConstantValue(_ value: UnsafeRawPointer, type: MTLDataType, withName name: String) {
-        _ = (value, type, name)
+        named[name] = bytes(from: value, type: type)
+    }
+
+    public func setConstantValues(_ values: UnsafeRawPointer, type: MTLDataType, range: Range<Int>) {
+        let stride = max(metalArgumentEncodedLength(of: type), 1)
+        for (offset, index) in range.enumerated() {
+            setConstantValue(values.advanced(by: offset * stride), type: type, index: index)
+        }
+    }
+
+    func storedValue(at index: Int) -> [UInt8]? {
+        indexed[index]
+    }
+
+    private func bytes(from value: UnsafeRawPointer, type: MTLDataType) -> [UInt8] {
+        let count = max(metalArgumentEncodedLength(of: type), 1)
+        return Array(UnsafeRawBufferPointer(start: value, count: count))
     }
 }
 

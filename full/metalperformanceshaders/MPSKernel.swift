@@ -79,7 +79,25 @@ extension MPSImageAllocator {
     }
 }
 
-public protocol MPSNNPadding: NSObjectProtocol, NSSecureCoding {}
+public protocol MPSNNPadding: NSObjectProtocol, NSSecureCoding {
+    func paddingMethod() -> MPSNNPaddingMethod
+}
+
+extension MPSNNPadding {
+    public func label() -> String { "MPSNNPadding" }
+
+    public func inverse() -> Self? { nil }
+
+    public func destinationImageDescriptor(
+        forSourceImages sourceImages: [MPSImage],
+        sourceStates: [MPSState]?,
+        for kernel: MPSKernel,
+        suggestedDescriptor inDescriptor: MPSImageDescriptor
+    ) -> MPSImageDescriptor {
+        _ = (sourceImages, sourceStates, kernel)
+        return inDescriptor.copy() as MPSImageDescriptor
+    }
+}
 
 public protocol MPSHandle: NSObjectProtocol, NSSecureCoding {
     var label: String { get }
@@ -450,10 +468,6 @@ open class MPSPredicate: NSObject {
 }
 
 open class MPSAccelerationStructure: MPSKernel {}
-
-open class MPSNNFilterNode: NSObject {}
-
-open class MPSNNImageNode: NSObject {}
 
 public func MPSSupportsMTLDevice(_ device: (any MTLDevice)?) -> Bool {
     _ = device

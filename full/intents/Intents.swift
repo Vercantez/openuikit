@@ -311,6 +311,8 @@ open class INObject: NSObject, @unchecked Sendable {
     public let displayString: String
     public let pronunciationHint: String?
     open var alternativeSpeakableMatches: [INSpeakableString]?
+    open var subtitleString: String?
+    open var displayImage: INImage?
 
     public init(identifier: String?, display: String) {
         self.identifier = identifier
@@ -333,12 +335,47 @@ open class INObject: NSObject, @unchecked Sendable {
         super.init()
     }
 
+    public convenience init(identifier: String?, displayString: String) {
+        self.init(identifier: identifier, display: displayString, pronunciationHint: nil)
+    }
+
+    public convenience init(identifier: String?, displayString: String, pronunciationHint: String?) {
+        self.init(identifier: identifier, display: displayString, pronunciationHint: pronunciationHint)
+    }
+
+    public convenience init(
+        identifier: String?,
+        displayString: String,
+        subtitleString: String?,
+        displayImage: INImage?
+    ) {
+        self.init(identifier: identifier, display: displayString, pronunciationHint: nil)
+        self.subtitleString = subtitleString
+        self.displayImage = displayImage
+    }
+
+    public convenience init(
+        identifier: String?,
+        displayString: String,
+        pronunciationHint: String?,
+        subtitleString: String?,
+        displayImage: INImage?
+    ) {
+        self.init(identifier: identifier, display: displayString, pronunciationHint: pronunciationHint)
+        self.subtitleString = subtitleString
+        self.displayImage = displayImage
+    }
+
     public required convenience init?(coder: NSCoder) {
         guard let display = inDecodeString(coder, "displayString") else { return nil }
         self.init(
             identifier: inDecodeString(coder, "identifier"),
-            display: display,
-            pronunciationHint: inDecodeString(coder, "pronunciationHint")
+            displayString: display,
+            pronunciationHint: inDecodeString(coder, "pronunciationHint"),
+            subtitleString: inDecodeString(coder, "subtitleString"),
+            displayImage: coder.containsValue(forKey: "displayImage")
+                ? coder.decodeObject(of: INImage.self, forKey: "displayImage")
+                : nil
         )
     }
 }
@@ -419,6 +456,11 @@ open class INBooleanResolutionResult: INIntentResolutionResult, @unchecked Senda
     }
 
     open class func confirmationRequired(with valueToConfirm: NSNumber?) -> Self {
+        self.init(outcome: .confirmationRequired, value: valueToConfirm)
+    }
+
+    @nonobjc
+    open class func confirmationRequired(with valueToConfirm: Bool?) -> Self {
         self.init(outcome: .confirmationRequired, value: valueToConfirm)
     }
 }

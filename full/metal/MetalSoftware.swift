@@ -286,6 +286,17 @@ final class LinuxMTLDevice: NSObject, MTLDevice, @unchecked Sendable {
         LinuxMTLEvent(device: self)
     }
 
+    func makeSharedEvent() -> (any MTLSharedEvent)? {
+        LinuxMTLSharedEvent(device: self)
+    }
+
+    func makeSharedEvent(handle sharedEventHandle: MTLSharedEventHandle) -> (any MTLSharedEvent)? {
+        let event = LinuxMTLSharedEvent(device: self)
+        event.label = sharedEventHandle.label
+        event.signaledValue = sharedEventHandle.signaledValue
+        return event
+    }
+
     func makeFence() -> (any MTLFence)? {
         LinuxMTLFence(device: self)
     }
@@ -299,8 +310,13 @@ final class LinuxMTLDevice: NSObject, MTLDevice, @unchecked Sendable {
         maxCommandCount maxCount: Int,
         options: MTLResourceOptions = []
     ) -> (any MTLIndirectCommandBuffer)? {
-        _ = (descriptor, maxCount, options)
-        return nil
+        guard maxCount > 0 else { return nil }
+        return LinuxMTLIndirectCommandBuffer(
+            device: self,
+            descriptor: descriptor,
+            maxCommandCount: maxCount,
+            options: options
+        )
     }
 
     func getDefaultSamplePositions(sampleCount: Int) -> [MTLSamplePosition] {
@@ -311,12 +327,26 @@ final class LinuxMTLDevice: NSObject, MTLDevice, @unchecked Sendable {
     }
 
     private func validateRenderPipeline(_ descriptor: MTLRenderPipelineDescriptor) throws {
+        if descriptor.vertexFunction != nil || descriptor.fragmentFunction != nil {
+            throw metalUnsupportedLibraryError(
+                .compileFailure,
+                reason: "no shader compiler"
+            )
+        }
         if descriptor.sampleCount < 1 || descriptor.rasterSampleCount < 1 {
             throw MTLCPUValidationError("render pipeline sampleCount must be >= 1")
         }
         let attachment = descriptor.colorAttachments[0]!
         if attachment.isBlendingEnabled, attachment.pixelFormat == .invalid {
             throw MTLCPUValidationError("blending requires a valid color pixel format")
+        }
+        if let vertex = descriptor.vertexDescriptor {
+            for index in 0..<31 {
+                let layout = vertex.layouts[index]!
+                if layout.stride < 0 {
+                    throw MTLCPUValidationError("vertex descriptor stride must be >= 0")
+                }
+            }
         }
     }
 
@@ -492,9 +522,9 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
     let allowGPUOptimizedContents: Bool
     let compressionType: MTLTextureCompressionType
     let swizzle: MTLTextureSwizzleChannels
-    let parent: (any MTLTexture)? = nil
-    let parentRelativeLevel: Int = 0
-    let parentRelativeSlice: Int = 0
+    var parent: (any MTLTexture)?
+    var parentRelativeLevel: Int
+    var parentRelativeSlice: Int
     let buffer: (any MTLBuffer)?
     let bufferOffset: Int
     let bufferBytesPerRow: Int
@@ -505,9 +535,10 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
     let storage: UnsafeMutableRawPointer
     private let ownsStorage: Bool
     let bytesPerPixel: Int?
-    let mipLevels: [MetalCPUMipLevel]
+    var mipLevels: [MetalCPUMipLevel]
+    var sliceCount: Int
 
-    var rootResource: (any MTLResource)? { buffer }
+    var rootResource: (any MTLResource)? { buffer ?? parent }
 
     init(
         device: LinuxMTLDevice,
@@ -539,6 +570,13 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
         self.storage = storage
         self.ownsStorage = ownsStorage
         self.bytesPerPixel = metalBytesPerPixel(descriptor.pixelFormat)
+        self.parent = nil
+        self.parentRelativeLevel = 0
+        self.parentRelativeSlice = 0
+        self.sliceCount = metalSliceCount(
+            textureType: descriptor.textureType,
+            arrayLength: descriptor.arrayLength
+        )
         let pixelBytes = self.bytesPerPixel ?? 4
         self.mipLevels = MetalCPULayout.levels(
             width: descriptor.width,
@@ -547,7 +585,8 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
             mipmapLevelCount: descriptor.mipmapLevelCount,
             arrayLength: descriptor.arrayLength,
             sampleCount: descriptor.sampleCount,
-            bytesPerPixel: pixelBytes
+            bytesPerPixel: pixelBytes,
+            textureType: descriptor.textureType
         ).levels
         super.init(
             device: device,
@@ -586,7 +625,8 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
             mipmapLevelCount: descriptor.mipmapLevelCount,
             arrayLength: descriptor.arrayLength,
             sampleCount: descriptor.sampleCount,
-            bytesPerPixel: pixelBytes
+            bytesPerPixel: pixelBytes,
+            textureType: descriptor.textureType
         ).total
     }
 
@@ -596,8 +636,8 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
     }
 
     func sliceOffset(level: Int, slice: Int) -> Int? {
-        guard let mip = mipLevel(level), slice >= 0, slice < arrayLength else { return nil }
-        let sliceBytes = mip.bytesPerImage * max(depth, 1) * max(sampleCount, 1)
+        guard let mip = mipLevel(level), slice >= 0, slice < sliceCount else { return nil }
+        let sliceBytes = mip.bytesPerImage * max(mip.depth, 1) * max(sampleCount, 1)
         return mip.offset + slice * sliceBytes
     }
 
@@ -625,8 +665,15 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
         bytesPerRow: Int,
         bytesPerImage: Int
     ) {
-        _ = bytesPerImage
-        copyRegion(region, level: level, slice: slice, bytesPerRow: bytesPerRow, from: pixelBytes, toStorage: true)
+        copyRegion(
+            region,
+            level: level,
+            slice: slice,
+            bytesPerRow: bytesPerRow,
+            bytesPerImage: bytesPerImage,
+            from: pixelBytes,
+            toStorage: true
+        )
     }
 
     func getBytes(
@@ -653,20 +700,144 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
         mipmapLevel level: Int,
         slice: Int
     ) {
-        _ = bytesPerImage
-        copyRegion(region, level: level, slice: slice, bytesPerRow: bytesPerRow, from: pixelBytes, toStorage: false)
+        copyRegion(
+            region,
+            level: level,
+            slice: slice,
+            bytesPerRow: bytesPerRow,
+            bytesPerImage: bytesPerImage,
+            from: pixelBytes,
+            toStorage: false
+        )
     }
 
     func makeTextureView(pixelFormat: MTLPixelFormat) -> (any MTLTexture)? {
-        guard pixelFormat == self.pixelFormat else { return nil }
-        return self
+        makeTextureView(
+            pixelFormat: pixelFormat,
+            textureType: textureType,
+            levels: 0..<mipmapLevelCount,
+            slices: 0..<sliceCount,
+            swizzle: swizzle
+        )
+    }
+
+    func makeTextureView(
+        pixelFormat: MTLPixelFormat,
+        textureType: MTLTextureType,
+        levels levelRange: Range<Int>,
+        slices sliceRange: Range<Int>
+    ) -> (any MTLTexture)? {
+        makeTextureView(
+            pixelFormat: pixelFormat,
+            textureType: textureType,
+            levels: levelRange,
+            slices: sliceRange,
+            swizzle: swizzle
+        )
+    }
+
+    func makeTextureView(
+        pixelFormat: MTLPixelFormat,
+        textureType: MTLTextureType,
+        levels levelRange: Range<Int>,
+        slices sliceRange: Range<Int>,
+        swizzle: MTLTextureSwizzleChannels
+    ) -> (any MTLTexture)? {
+        guard metalPixelFormatsAreViewCompatible(pixelFormat, self.pixelFormat) else { return nil }
+        guard !levelRange.isEmpty, !sliceRange.isEmpty else { return nil }
+        guard levelRange.lowerBound >= 0, levelRange.upperBound <= mipmapLevelCount else { return nil }
+        guard sliceRange.lowerBound >= 0, sliceRange.upperBound <= sliceCount else { return nil }
+        return LinuxMTLTexture(
+            viewOf: self,
+            pixelFormat: pixelFormat,
+            textureType: textureType,
+            levels: levelRange,
+            slices: sliceRange,
+            swizzle: swizzle
+        )
+    }
+
+    func newTextureView(with descriptor: MTLTextureViewDescriptor) -> (any MTLTexture)? {
+        let format = descriptor.pixelFormat == .invalid ? pixelFormat : descriptor.pixelFormat
+        let type = descriptor.textureType
+        return makeTextureView(
+            pixelFormat: format,
+            textureType: type,
+            levels: descriptor.levelRange,
+            slices: descriptor.sliceRange,
+            swizzle: descriptor.swizzle
+        )
+    }
+
+    convenience init(
+        viewOf parentTexture: LinuxMTLTexture,
+        pixelFormat: MTLPixelFormat,
+        textureType: MTLTextureType,
+        levels: Range<Int>,
+        slices: Range<Int>,
+        swizzle: MTLTextureSwizzleChannels
+    ) {
+        let descriptor = MTLTextureDescriptor()
+        descriptor.textureType = textureType
+        descriptor.pixelFormat = pixelFormat
+        let baseLevel = levels.lowerBound
+        let levelCount = max(levels.count, 1)
+        let parentMip = parentTexture.mipLevel(baseLevel)
+        descriptor.width = parentMip?.width ?? max(parentTexture.width >> baseLevel, 1)
+        descriptor.height = parentMip?.height ?? max(parentTexture.height >> baseLevel, 1)
+        descriptor.depth = textureType == .type3D ? (parentMip?.depth ?? parentTexture.depth) : 1
+        descriptor.mipmapLevelCount = levelCount
+        descriptor.arrayLength = textureType == .typeCube ? 1 : max(slices.count, 1)
+        descriptor.sampleCount = parentTexture.sampleCount
+        descriptor.usage = parentTexture.usage.union(.pixelFormatView)
+        descriptor.swizzle = swizzle
+        descriptor.storageMode = parentTexture.storageMode
+        descriptor.cpuCacheMode = parentTexture.cpuCacheMode
+        descriptor.hazardTrackingMode = parentTexture.hazardTrackingMode
+        descriptor.resourceOptions = parentTexture.resourceOptions
+        self.init(
+            device: parentTexture.owningDevice,
+            descriptor: descriptor,
+            storage: parentTexture.storage,
+            ownsStorage: false,
+            parentBuffer: parentTexture.buffer,
+            bufferOffset: parentTexture.bufferOffset,
+            bufferBytesPerRow: parentTexture.bufferBytesPerRow,
+            heap: parentTexture.owningHeap,
+            heapOffset: parentTexture.heapOffsetValue
+        )
+        self.parent = parentTexture
+        self.parentRelativeLevel = levels.lowerBound
+        self.parentRelativeSlice = slices.lowerBound
+        if parentTexture.mipLevel(baseLevel) != nil {
+            var shifted: [MetalCPUMipLevel] = []
+            for index in 0..<levelCount {
+                let parentLevel = baseLevel + index
+                guard let mip = parentTexture.mipLevel(parentLevel) else { continue }
+                let sliceBytes = mip.bytesPerImage * max(mip.depth, 1) * max(parentTexture.sampleCount, 1)
+                shifted.append(
+                    MetalCPUMipLevel(
+                        width: mip.width,
+                        height: mip.height,
+                        depth: mip.depth,
+                        offset: mip.offset + slices.lowerBound * sliceBytes,
+                        bytesPerRow: mip.bytesPerRow,
+                        bytesPerImage: mip.bytesPerImage
+                    )
+                )
+            }
+            if !shifted.isEmpty {
+                self.mipLevels = shifted
+            }
+        }
+        self.sliceCount = slices.count
     }
 
     func generateMipmapsBoxFilter() {
         guard bytesPerPixel != nil, mipmapLevelCount > 1 else { return }
         for level in 1..<mipmapLevelCount {
             guard let src = mipLevel(level - 1), let dst = mipLevel(level) else { continue }
-            for slice in 0..<arrayLength {
+            for slice in 0..<sliceCount {
                 guard let srcOffset = sliceOffset(level: level - 1, slice: slice),
                       let dstOffset = sliceOffset(level: level, slice: slice)
                 else { continue }
@@ -687,13 +858,13 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
 
     func clearLevelZero(color: MTLClearColor) {
         guard let mip = mipLevel(0) else { return }
-        let pixels = mip.width * mip.height * max(depth, 1) * arrayLength * max(sampleCount, 1)
+        let pixels = mip.width * mip.height * max(mip.depth, 1) * sliceCount * max(sampleCount, 1)
         MetalCPUPixels.writeClear(color, format: pixelFormat, to: storage.advanced(by: mip.offset), pixelCount: pixels)
     }
 
     func clearLevelZero(depth: Double) {
         guard pixelFormat == .depth32Float, let mip = mipLevel(0) else { return }
-        let count = mip.width * mip.height * self.depth * arrayLength * max(sampleCount, 1)
+        let count = mip.width * mip.height * mip.depth * sliceCount * max(sampleCount, 1)
         MetalCPUPixels.writeDepth(depth, to: storage.advanced(by: mip.offset), pixelCount: count)
     }
 
@@ -702,6 +873,7 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
         level: Int,
         slice: Int,
         bytesPerRow: Int,
+        bytesPerImage: Int = 0,
         from pointer: UnsafeRawPointer,
         toStorage: Bool
     ) {
@@ -711,22 +883,32 @@ final class LinuxMTLTexture: LinuxMTLResource, MTLTexture, @unchecked Sendable {
         else { return }
         let origin = region.origin
         let size = region.size
-        guard origin.x >= 0, origin.y >= 0,
+        guard origin.x >= 0, origin.y >= 0, origin.z >= 0,
               origin.x + size.width <= mip.width,
-              origin.y + size.height <= mip.height
+              origin.y + size.height <= mip.height,
+              origin.z + size.depth <= mip.depth
         else { return }
-        let storageRow = mip.bytesPerRow
-        for row in 0..<max(size.height, 0) {
-            let storageIndex = base + (origin.y + row) * storageRow + origin.x * bytesPerPixel
-            let external = pointer.advanced(by: row * bytesPerRow)
-            let count = max(size.width, 0) * bytesPerPixel
-            if toStorage {
-                storage.advanced(by: storageIndex).copyMemory(from: external, byteCount: count)
-            } else {
-                UnsafeMutableRawPointer(mutating: external).copyMemory(
-                    from: storage.advanced(by: storageIndex),
-                    byteCount: count
-                )
+        let storageRow = buffer != nil && bufferBytesPerRow > 0 ? bufferBytesPerRow : mip.bytesPerRow
+        let storageImage = buffer != nil && bufferBytesPerRow > 0
+            ? bufferBytesPerRow * max(mip.height, 1)
+            : mip.bytesPerImage
+        let imageStride = bytesPerImage > 0 ? bytesPerImage : bytesPerRow * max(size.height, 1)
+        for z in 0..<max(size.depth, 1) {
+            for row in 0..<max(size.height, 0) {
+                let storageIndex = base
+                    + (origin.z + z) * storageImage
+                    + (origin.y + row) * storageRow
+                    + origin.x * bytesPerPixel
+                let external = pointer.advanced(by: z * imageStride + row * bytesPerRow)
+                let count = max(size.width, 0) * bytesPerPixel
+                if toStorage {
+                    storage.advanced(by: storageIndex).copyMemory(from: external, byteCount: count)
+                } else {
+                    UnsafeMutableRawPointer(mutating: external).copyMemory(
+                        from: storage.advanced(by: storageIndex),
+                        byteCount: count
+                    )
+                }
             }
         }
     }

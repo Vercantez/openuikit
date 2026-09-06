@@ -148,6 +148,38 @@ is a default-allocator wrapper (`CFAllocatorGetDefault()` / `kCFAllocatorSystemD
 no slab cache). Endian sample-description bridges and bitstream parsers stay
 fail-closed.
 
+This run (depth pass 2026-09 wave 8, next pass on starting commit
+`2de7152a`) keeps the earlier surface and adds honest Linux behavior for
+`CMReadOnlyDataBlockBuffer` / `CMMutableDataBlockBuffer` (contiguous copy-in,
+Collection/DataProtocol, custom `BlockSource`, `MemoryPool`), CMSampleBuffer
+overlay (`ContentType`, `DataReadiness` state machine, per-sample attachments,
+`SizePerSample` / `TimingPerSample`, `SamplePropertiesCollection`),
+CMFormatDescription.Extensions collection/`init(base: CFDictionary?)`,
+remaining video-codec FourCCs and MediaSubType table, CMTimebase overlay
+rate/anchor/timer fail-closed paths, and CMTimeRange/CMTimeMapping algebra.
+
+| status | before (this seed) | after |
+| --- | ---: | ---: |
+| implemented | 932 | 1573 |
+| declared | 1508 | 1511 |
+| deferred | 1064 | 420 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Top-5 `implemented` evidence distribution after this pass:
+
+1. `CMFormatDescriptionSurfaceTests.swift#testCMFormatDescriptionMediaSubTypeTable` — 115 (7.3%)
+2. `CMTimebaseAndAlgebraTests.swift#testCMOptionSetAlgebra` — 89 (5.7%)
+3. `CMDataBlockBufferTests.swift#testCMMutableDataBlockBufferReplaceAppendAndPointer` — 52 (3.3%)
+4. `CMSampleBufferOverlayTests.swift#testCMSampleBufferSamplePropertiesAndAttachments` — 52 (3.3%)
+5. `CMKeyStringTests.swift#testCMFormatDescriptionExtensionKeyStrings` — 46 (2.9%)
+
+No non-constant test owns more than 40% of implemented rows. DispatchSourceTimer
+overloads stay `declared` because constructing a live `DispatchSource` in this
+Linux gate aborts libdispatch on release. `AudioBufferList` DataBlockBuffer
+inits and `CVImageBuffer` sample-buffer entry points remain deferred. SwiftUI
+cross-import overlay IDs are not in this module's public surface.
+
 Sealed gate `bash full/coremedia/tests/acceptance/test_host.sh` (this snapshot):
 
 ```
@@ -156,6 +188,10 @@ FRAMEWORK_FANOUT_REFERENCE_OK
 COREMEDIA_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=CoreMedia dylib=libCoreMedia.dylib
 ```
+
+This pass re-ran that sealed gate in the Linux environment until
+`FRAMEWORK_FANOUT_HOST_OK`. Guest stdout is marker-only; `CMTimeShow` /
+`CMTimeRangeShow` / `CMTimeMappingShow` write debug lines to stderr.
 
 The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
 is a host-inventory token, not printed by the sealed framework gate.
