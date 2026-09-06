@@ -24,6 +24,96 @@ public let MTLBufferLayoutStrideDynamic: Int = -1
 
 public var MTLCounterDontSample: Int { -1 }
 public var MTLCounterErrorValue: UInt64 { UInt64.max }
+
+/// Common GPU counter names. The CPU reference reports no counter sets;
+/// these strings exist so clients can name the documented counters.
+public struct MTLCommonCounter: RawRepresentable, Equatable, Hashable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    public static let timestamp = MTLCommonCounter(rawValue: "Timestamp")
+    public static let tessellationInputPatches = MTLCommonCounter(rawValue: "TessellationInputPatches")
+    public static let vertexInvocations = MTLCommonCounter(rawValue: "VertexInvocations")
+    public static let postTessellationVertexInvocations = MTLCommonCounter(rawValue: "PostTessellationVertexInvocations")
+    public static let clipperInvocations = MTLCommonCounter(rawValue: "ClipperInvocations")
+    public static let clipperPrimitivesOut = MTLCommonCounter(rawValue: "ClipperPrimitivesOut")
+    public static let fragmentInvocations = MTLCommonCounter(rawValue: "FragmentInvocations")
+    public static let fragmentsPassed = MTLCommonCounter(rawValue: "FragmentsPassed")
+    public static let computeKernelInvocations = MTLCommonCounter(rawValue: "ComputeKernelInvocations")
+    public static let totalCycles = MTLCommonCounter(rawValue: "TotalCycles")
+    public static let vertexCycles = MTLCommonCounter(rawValue: "VertexCycles")
+    public static let tessellationCycles = MTLCommonCounter(rawValue: "TessellationCycles")
+    public static let postTessellationVertexCycles = MTLCommonCounter(rawValue: "PostTessellationVertexCycles")
+    public static let fragmentCycles = MTLCommonCounter(rawValue: "FragmentCycles")
+    public static let renderTargetWriteCycles = MTLCommonCounter(rawValue: "RenderTargetWriteCycles")
+}
+
+public struct MTLCommonCounterSet: RawRepresentable, Equatable, Hashable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    public static let timestamp = MTLCommonCounterSet(rawValue: "timestamp")
+    public static let stageUtilization = MTLCommonCounterSet(rawValue: "stageUtilization")
+    public static let statistic = MTLCommonCounterSet(rawValue: "statistic")
+}
+
+public struct MTLCounterResultTimestamp: Equatable, Hashable, Sendable {
+    public var timestamp: UInt64
+
+    public init() {
+        self.timestamp = 0
+    }
+
+    public init(timestamp: UInt64) {
+        self.timestamp = timestamp
+    }
+}
+
+public struct MTLCounterResultStageUtilization: Equatable, Hashable, Sendable {
+    public var totalCycles: UInt64
+    public var vertexCycles: UInt64
+    public var tessellationCycles: UInt64
+    public var postTessellationVertexCycles: UInt64
+    public var fragmentCycles: UInt64
+    public var renderTargetCycles: UInt64
+
+    public init() {
+        self.totalCycles = 0
+        self.vertexCycles = 0
+        self.tessellationCycles = 0
+        self.postTessellationVertexCycles = 0
+        self.fragmentCycles = 0
+        self.renderTargetCycles = 0
+    }
+}
+
+public struct MTLCounterResultStatistic: Equatable, Hashable, Sendable {
+    public var tessellationInputPatches: UInt64
+    public var vertexInvocations: UInt64
+    public var postTessellationVertexInvocations: UInt64
+    public var clipperInvocations: UInt64
+    public var clipperPrimitivesOut: UInt64
+    public var fragmentInvocations: UInt64
+    public var fragmentsPassed: UInt64
+    public var computeKernelInvocations: UInt64
+
+    public init() {
+        self.tessellationInputPatches = 0
+        self.vertexInvocations = 0
+        self.postTessellationVertexInvocations = 0
+        self.clipperInvocations = 0
+        self.clipperPrimitivesOut = 0
+        self.fragmentInvocations = 0
+        self.fragmentsPassed = 0
+        self.computeKernelInvocations = 0
+    }
+}
 public var MTL_TENSOR_MAX_RANK: Int32 { 16 }
 
 public var MTLResourceCPUCacheModeShift: Int32 { 0 }

@@ -198,3 +198,111 @@ public struct MTLIndirectAccelerationStructureMotionInstanceDescriptor: Equatabl
         self.motionEndBorderMode = .clamp
     }
 }
+
+open class MTLMotionKeyframeData: NSObject, @unchecked Sendable {
+    public var buffer: (any MTLBuffer)?
+    public var offset: Int = 0
+
+    public override init() {
+        super.init()
+    }
+
+    public class func data() -> MTLMotionKeyframeData {
+        MTLMotionKeyframeData()
+    }
+}
+
+open class MTLAccelerationStructureGeometryDescriptor: NSObject, @unchecked Sendable {
+    public var intersectionFunctionTableOffset: Int = 0
+    public var opaque: Bool = false
+    public var allowDuplicateIntersectionFunctionInvocation: Bool = true
+    public var label: String?
+    public var primitiveDataBuffer: (any MTLBuffer)?
+    public var primitiveDataBufferOffset: Int = 0
+    public var primitiveDataStride: Int = 0
+    public var primitiveDataElementSize: Int = 0
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLAccelerationStructureCurveGeometryDescriptor: MTLAccelerationStructureGeometryDescriptor, @unchecked Sendable {
+    public var controlPointBuffer: (any MTLBuffer)?
+    public var controlPointBufferOffset: Int = 0
+    public var controlPointCount: Int = 0
+    public var controlPointFormat: MTLAttributeFormat = .float3
+    public var controlPointStride: Int = 0
+    public var radiusBuffer: (any MTLBuffer)?
+    public var radiusBufferOffset: Int = 0
+    public var radiusFormat: MTLAttributeFormat = .float
+    public var radiusStride: Int = 0
+    public var indexBuffer: (any MTLBuffer)?
+    public var indexBufferOffset: Int = 0
+    public var indexType: MTLIndexType = .uint16
+    public var segmentCount: Int = 0
+    public var segmentControlPointCount: Int = 0
+    public var curveType: MTLCurveType = .round
+    public var curveBasis: MTLCurveBasis = .bSpline
+    public var curveEndCaps: MTLCurveEndCaps = .none
+
+    public override init() {
+        super.init()
+    }
+
+    public class func descriptor() -> MTLAccelerationStructureCurveGeometryDescriptor {
+        MTLAccelerationStructureCurveGeometryDescriptor()
+    }
+}
+
+open class MTLAccelerationStructureMotionCurveGeometryDescriptor: MTLAccelerationStructureGeometryDescriptor, @unchecked Sendable {
+    public var controlPointBuffers: [MTLMotionKeyframeData] = []
+    public var controlPointCount: Int = 0
+    public var controlPointFormat: MTLAttributeFormat = .float3
+    public var controlPointStride: Int = 0
+    public var radiusBuffers: [MTLMotionKeyframeData] = []
+    public var radiusFormat: MTLAttributeFormat = .float
+    public var radiusStride: Int = 0
+    public var indexBuffer: (any MTLBuffer)?
+    public var indexBufferOffset: Int = 0
+    public var indexType: MTLIndexType = .uint16
+    public var segmentCount: Int = 0
+    public var segmentControlPointCount: Int = 0
+    public var curveType: MTLCurveType = .round
+    public var curveBasis: MTLCurveBasis = .bSpline
+    public var curveEndCaps: MTLCurveEndCaps = .none
+
+    public override init() {
+        super.init()
+    }
+
+    public class func descriptor() -> MTLAccelerationStructureMotionCurveGeometryDescriptor {
+        MTLAccelerationStructureMotionCurveGeometryDescriptor()
+    }
+}
+
+open class MTLIndirectInstanceAccelerationStructureDescriptor: MTLAccelerationStructureDescriptor, @unchecked Sendable {
+    public var instanceDescriptorBuffer: (any MTLBuffer)?
+    public var instanceDescriptorBufferOffset: Int = 0
+    public var instanceDescriptorStride: Int = 0
+    public var instanceDescriptorType: MTLAccelerationStructureInstanceDescriptorType = .indirect
+    public var maxInstanceCount: Int = 0
+    public var instanceCountBuffer: (any MTLBuffer)?
+    public var instanceCountBufferOffset: Int = 0
+    public var instanceTransformationMatrixLayout: MTLMatrixLayout = .columnMajor
+    public var motionTransformBuffer: (any MTLBuffer)?
+    public var motionTransformBufferOffset: Int = 0
+    public var motionTransformStride: Int = 0
+    public var motionTransformType: MTLTransformType = .packedFloat4x3
+    public var maxMotionTransformCount: Int = 0
+    public var motionTransformCountBuffer: (any MTLBuffer)?
+    public var motionTransformCountBufferOffset: Int = 0
+
+    public override init() {
+        super.init()
+    }
+
+    public class func descriptor() -> MTLIndirectInstanceAccelerationStructureDescriptor {
+        MTLIndirectInstanceAccelerationStructureDescriptor()
+    }
+}

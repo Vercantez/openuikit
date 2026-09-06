@@ -2,7 +2,7 @@ import Dispatch
 import Foundation
 import Metal
 
-
+// from MetalBufferTests.swift
 func testBufferStorage() {
     let device = MTLCreateSystemDefaultDevice()!
     let bytes: [UInt8] = [1, 2, 3, 4, 5]
@@ -82,7 +82,7 @@ func testBufferStorage() {
     _ = destination.device
 }
 
-
+// from MetalCommandTests.swift
 func testCommandBufferLifecycle() {
     let device = MTLCreateSystemDefaultDevice()!
     let queue = device.makeCommandQueue()!
@@ -462,7 +462,463 @@ func testResourceStateEncoder() {
     precondition((failBuffer.error as? MTLCommandBufferError)?.code == .notPermitted)
 }
 
+func testMetal4CommandEncoders() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let allocatorDesc = MTL4CommandAllocatorDescriptor()
+    allocatorDesc.label = "alloc"
+    let allocator = try! device.makeCommandAllocator(descriptor: allocatorDesc)
+    allocator.reset()
+    precondition(allocator.allocatedSize() == 0)
+    precondition(allocator.device.name == device.name)
+    _ = allocator.label
+    precondition(device.makeCommandAllocator() != nil)
 
+    let queueDesc = MTL4CommandQueueDescriptor()
+    queueDesc.label = "m4q"
+    queueDesc.feedbackQueue = nil
+    let queue = try! device.makeMTL4CommandQueue(descriptor: queueDesc)
+    precondition(queue.label == "m4q")
+    precondition(queue.device.name == device.name)
+    precondition(device.makeMTL4CommandQueue() != nil)
+    let event = device.makeSharedEvent()!
+    queue.signalEvent(event, value: 1)
+    queue.waitForEvent(event, value: 1)
+    let drawable = LinuxMTLDrawable()
+    queue.signalDrawable(drawable)
+    queue.waitForDrawable(drawable)
+    queue.addResidencySets([])
+    queue.removeResidencySets([])
+    var sparseCopy = MTL4CopySparseBufferMappingOperation(sourceRange: NSRange(location: 0, length: 0), destinationOffset: 0)
+    sparseCopy.destinationOffset = 0
+    _ = MTL4CopySparseBufferMappingOperation()
+    _ = MTL4CopySparseTextureMappingOperation()
+    _ = MTL4CopySparseTextureMappingOperation(
+        sourceRegion: MTLRegion(),
+        sourceLevel: 0,
+        sourceSlice: 0,
+        destinationOrigin: MTLOrigin(),
+        destinationLevel: 0,
+        destinationSlice: 0
+    )
+    _ = MTL4UpdateSparseBufferMappingOperation()
+    _ = MTL4UpdateSparseBufferMappingOperation(mode: .map, bufferRange: NSRange(location: 0, length: 0), heapOffset: 0)
+    _ = MTL4UpdateSparseTextureMappingOperation()
+    _ = MTL4UpdateSparseTextureMappingOperation(
+        mode: .unmap,
+        textureRegion: MTLRegion(),
+        textureLevel: 0,
+        textureSlice: 0,
+        heapOffset: 0
+    )
+    let dummyBuf = device.makeBuffer(length: 4, options: [])!
+    queue.copyMappings(sourceBuffer: dummyBuf, destinationBuffer: dummyBuf, operations: [sparseCopy])
+    let texDesc = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .r8Unorm, width: 2, height: 2, mipmapped: true)
+    texDesc.usage = [.shaderRead, .shaderWrite]
+    let texture = device.makeTexture(descriptor: texDesc)!
+    queue.copyMappings(sourceTexture: texture, destinationTexture: texture, operations: [])
+    queue.updateMappings(buffer: dummyBuf, heap: nil, operations: [])
+    queue.updateMappings(texture: texture, heap: nil, operations: [])
+
+    let commandBuffer = device.makeCommandBuffer()!
+    commandBuffer.label = "m4cb"
+    precondition(commandBuffer.label == "m4cb")
+    precondition(commandBuffer.device.name == device.name)
+    let options = MTL4CommandBufferOptions()
+    options.logState = nil
+    commandBuffer.beginCommandBuffer(allocator: allocator, options: options)
+    commandBuffer.beginCommandBuffer(allocator: allocator)
+    commandBuffer.pushDebugGroup("g")
+    commandBuffer.popDebugGroup()
+    commandBuffer.useResidencySets([])
+
+    let tableDesc = MTL4ArgumentTableDescriptor()
+    tableDesc.label = "args"
+    tableDesc.maxBufferBindCount = 4
+    tableDesc.maxTextureBindCount = 4
+    tableDesc.maxSamplerStateBindCount = 2
+    tableDesc.initializeBindings = true
+    tableDesc.supportAttributeStrides = false
+    let table = try! device.makeArgumentTable(descriptor: tableDesc)
+    table.setAddress(0, index: 0)
+    table.setAddress(8, attributeStride: 16, index: 1)
+    table.setResource(MTLResourceID(), bufferIndex: 2)
+    table.setSamplerState(MTLResourceID(), index: 0)
+    table.setTexture(MTLResourceID(), index: 0)
+    precondition(table.device.name == device.name)
+    _ = table.label
+
+    let source = device.makeBuffer(length: 4, options: [])!
+    source.contents().storeBytes(of: UInt32(0xAABBCCDD), as: UInt32.self)
+    let dest = device.makeBuffer(length: 4, options: [])!
+    let compute = commandBuffer.makeComputeCommandEncoder()!
+    compute.label = "c4"
+    compute.insertDebugSignpost("s")
+    compute.pushDebugGroup("cg")
+    compute.popDebugGroup()
+    compute.barrier(afterEncoderStages: .dispatch, beforeEncoderStages: .blit, visibilityOptions: [.device])
+    compute.barrier(afterStages: .dispatch, beforeQueueStages: .blit, visibilityOptions: [.device])
+    compute.barrier(afterQueueStages: .blit, beforeStages: .dispatch, visibilityOptions: [.device])
+    let fence = device.makeFence()!
+    compute.updateFence(fence, afterEncoderStages: .dispatch)
+    compute.waitForFence(fence, beforeEncoderStages: .dispatch)
+    compute.setArgumentTable(table)
+    compute.setThreadgroupMemoryLength(16, index: 0)
+    compute.setImageblockSize(width: 8, height: 8)
+    precondition(compute.stages().contains(.dispatch))
+    compute.copy(sourceBuffer: source, sourceOffset: 0, destinationBuffer: dest, destinationOffset: 0, size: 4)
+    let pixels: [UInt8] = [1, 2, 3, 4]
+    pixels.withUnsafeBytes { raw in
+        texture.replace(region: MTLRegionMake2D(0, 0, 2, 2), mipmapLevel: 0, withBytes: raw.baseAddress!, bytesPerRow: 2)
+    }
+    let destTex = device.makeTexture(descriptor: texDesc)!
+    compute.copy(
+        sourceTexture: texture,
+        sourceSlice: 0,
+        sourceLevel: 0,
+        sourceOrigin: MTLOrigin(),
+        sourceSize: MTLSizeMake(2, 2, 1),
+        destinationTexture: destTex,
+        destinationSlice: 0,
+        destinationLevel: 0,
+        destinationOrigin: MTLOrigin()
+    )
+    compute.copy(
+        sourceTexture: texture,
+        sourceSlice: 0,
+        sourceLevel: 0,
+        destinationTexture: destTex,
+        destinationSlice: 0,
+        destinationLevel: 0,
+        sliceCount: 1,
+        levelCount: 1
+    )
+    compute.copy(sourceTexture: texture, destinationTexture: destTex)
+    compute.generateMipmaps(texture: texture)
+    compute.optimizeContents(forCPUAccess: texture)
+    compute.optimizeContents(forCPUAccess: texture, slice: 0, level: 0)
+    compute.optimizeContents(forGPUAccess: texture)
+    compute.optimizeContents(forGPUAccess: texture, slice: 0, level: 0)
+    compute.endEncoding()
+    commandBuffer.endCommandBuffer()
+    let commitOptions = MTL4CommitOptions()
+    var feedbackSeen = false
+    commitOptions.addFeedbackHandler { feedback in
+        feedbackSeen = true
+        precondition(feedback.error == nil)
+        _ = feedback.gpuStartTime
+        _ = feedback.gpuEndTime
+    }
+    queue.commit([commandBuffer], options: commitOptions)
+    precondition(feedbackSeen)
+    precondition(dest.contents().load(as: UInt32.self) == 0xAABBCCDD)
+    var copied = [UInt8](repeating: 0, count: 4)
+    copied.withUnsafeMutableBytes { raw in
+        destTex.getBytes(raw.baseAddress!, bytesPerRow: 2, from: MTLRegionMake2D(0, 0, 2, 2), mipmapLevel: 0)
+    }
+    precondition(copied == pixels)
+
+    let drawPipeline = try! device.makeRenderPipelineState(descriptor: {
+        let d = MTLRenderPipelineDescriptor()
+        d.colorAttachments[0].pixelFormat = .rgba8Unorm
+        return d
+    }())
+    let drawBuffer = device.makeCommandBuffer()!
+    let drawAlloc = device.makeCommandAllocator()!
+    drawBuffer.beginCommandBuffer(allocator: drawAlloc)
+    let pass = MTL4RenderPassDescriptor()
+    pass.tileWidth = 8
+    pass.tileHeight = 8
+    let render = drawBuffer.makeRenderCommandEncoder(descriptor: pass, options: [.suspending])!
+    precondition(render.tileWidth == 8)
+    precondition(render.tileHeight == 8)
+    render.setViewport(MTLViewport(originX: 0, originY: 0, width: 8, height: 8, znear: 0, zfar: 1))
+    render.setViewports([MTLViewport(originX: 0, originY: 0, width: 8, height: 8, znear: 0, zfar: 1)])
+    render.setScissorRect(MTLScissorRect(x: 0, y: 0, width: 8, height: 8))
+    render.setScissorRects([MTLScissorRect(x: 0, y: 0, width: 8, height: 8)])
+    render.setCullMode(.back)
+    render.setFrontFacing(.counterClockwise)
+    render.setDepthClipMode(.clip)
+    render.setDepthBias(0, slopeScale: 0, clamp: 0)
+    render.setTriangleFillMode(.fill)
+    render.setBlendColor(red: 0, green: 0, blue: 0, alpha: 1)
+    render.setStencilReferenceValue(0)
+    render.setStencilReferenceValue(front: 0, back: 0)
+    render.setVisibilityResultMode(.disabled, offset: 0)
+    render.setColorStoreAction(.store, index: 0)
+    render.setDepthStoreAction(.dontCare)
+    render.setStencilStoreAction(.dontCare)
+    render.setColorAttachmentMap(nil)
+    render.setThreadgroupMemoryLength(0, offset: 0, index: 0)
+    render.setObjectThreadgroupMemoryLength(0, index: 0)
+    render.setArgumentTable(table, stages: .vertex)
+    render.setRenderPipelineState(drawPipeline)
+    render.setDepthStencilState(device.makeDepthStencilState(descriptor: MTLDepthStencilDescriptor()))
+    render.writeTimestamp(granularity: .precise, after: .fragment, counterHeap: try! device.makeCounterHeap(descriptor: {
+        let d = MTL4CounterHeapDescriptor()
+        d.count = 1
+        d.type = .timestamp
+        return d
+    }()), index: 0)
+    render.executeCommands(buffer: device.makeIndirectCommandBuffer(
+        descriptor: MTLIndirectCommandBufferDescriptor(),
+        maxCommandCount: 1,
+        options: []
+    )!, indirectBuffer: 0)
+    render.drawPrimitives(primitiveType: .triangle, vertexStart: 0, vertexCount: 3)
+    render.drawPrimitives(primitiveType: .triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1)
+    render.drawPrimitives(primitiveType: .triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1, baseInstance: 0)
+    render.drawPrimitives(primitiveType: .triangle, indirectBuffer: 0)
+    render.drawIndexedPrimitives(primitiveType: .triangle, indexCount: 3, indexType: .uint16, indexBuffer: 0, indexBufferLength: 6)
+    render.drawIndexedPrimitives(primitiveType: .triangle, indexCount: 3, indexType: .uint16, indexBuffer: 0, indexBufferLength: 6, instanceCount: 1)
+    render.drawIndexedPrimitives(
+        primitiveType: .triangle,
+        indexCount: 3,
+        indexType: .uint16,
+        indexBuffer: 0,
+        indexBufferLength: 6,
+        instanceCount: 1,
+        baseVertex: 0,
+        baseInstance: 0
+    )
+    render.drawIndexedPrimitives(primitiveType: .triangle, indexType: .uint16, indexBuffer: 0, indexBufferLength: 6, indirectBuffer: 0)
+    render.drawMeshThreadgroups(
+        threadgroupsPerGrid: MTLSizeMake(1, 1, 1),
+        threadsPerObjectThreadgroup: MTLSizeMake(1, 1, 1),
+        threadsPerMeshThreadgroup: MTLSizeMake(1, 1, 1)
+    )
+    render.drawMeshThreadgroups(
+        indirectBuffer: 0,
+        threadsPerObjectThreadgroup: MTLSizeMake(1, 1, 1),
+        threadsPerMeshThreadgroup: MTLSizeMake(1, 1, 1)
+    )
+    render.drawMeshThreads(
+        threadsPerGrid: MTLSizeMake(1, 1, 1),
+        threadsPerObjectThreadgroup: MTLSizeMake(1, 1, 1),
+        threadsPerMeshThreadgroup: MTLSizeMake(1, 1, 1)
+    )
+    render.dispatchThreadsPerTile(MTLSizeMake(8, 8, 1))
+    render.endEncoding()
+    drawBuffer.endCommandBuffer()
+    var sawError = false
+    let errorOptions = MTL4CommitOptions()
+    errorOptions.addFeedbackHandler { feedback in
+        sawError = true
+        let error = feedback.error as? MTL4CommandQueueError
+        precondition(error?.code == .notPermitted)
+        precondition(MTL4CommandQueueError.notPermitted ~= feedback.error!)
+    }
+    queue.commit([drawBuffer], options: errorOptions)
+    precondition(sawError)
+
+    let compilerDesc = MTL4CompilerDescriptor()
+    compilerDesc.label = "compiler"
+    compilerDesc.pipelineDataSetSerializer = nil
+    let compiler = try! device.makeCompiler(descriptor: compilerDesc)
+    precondition(compiler.device.name == device.name)
+    _ = compiler.label
+    _ = compiler.pipelineDataSetSerializer
+    do {
+        _ = try compiler.makeLibrary(descriptor: libraryDescriptorFixture())
+        fatalError("Metal 4 compile must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    do {
+        _ = try compiler.makeRenderPipelineState(
+            descriptor: MTL4RenderPipelineDescriptor(),
+            dynamicLinkingDescriptor: nil,
+            compilerTaskOptions: nil
+        )
+        fatalError("Metal 4 render pipeline must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    do {
+        _ = try compiler.makeComputePipelineState(
+            descriptor: MTL4ComputePipelineDescriptor(),
+            dynamicLinkingDescriptor: nil,
+            compilerTaskOptions: nil
+        )
+        fatalError("Metal 4 compute pipeline must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    let taskOptions = MTL4CompilerTaskOptions()
+    taskOptions.lookupArchives = []
+    let binaryDesc = MTL4BinaryFunctionDescriptor()
+    binaryDesc.name = "bin"
+    binaryDesc.options = .pipelineIndependent
+    binaryDesc.functionDescriptor = MTL4LibraryFunctionDescriptor()
+    do {
+        _ = try compiler.makeBinaryFunction(descriptor: binaryDesc, compilerTaskOptions: taskOptions)
+        fatalError("binary function compile must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    do {
+        _ = try compiler.makeDynamicLibrary(library: MTLMakeCPUBuiltinLibrary(device))
+        fatalError("dynamic library from Metal 4 compiler must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    do {
+        _ = try compiler.makeDynamicLibrary(url: URL(fileURLWithPath: "/tmp/missing.metallib"))
+        fatalError("dynamic library URL must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .fileNotFound)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    let cpuPipeline = try! device.makeRenderPipelineState(descriptor: {
+        let d = MTLRenderPipelineDescriptor()
+        d.colorAttachments[0].pixelFormat = .rgba8Unorm
+        return d
+    }())
+    do {
+        _ = try compiler.makeRenderPipelineStateBySpecialization(
+            descriptor: MTL4PipelineDescriptor(),
+            pipeline: cpuPipeline
+        )
+        fatalError("specialization must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+
+    let dispatchBuffer = device.makeCommandBuffer()!
+    dispatchBuffer.beginCommandBuffer(allocator: allocator)
+    let accel = device.makeAccelerationStructure(size: 0)!
+    precondition(accel.size == 0)
+    _ = accel.gpuResourceID
+    let computeDispatch = dispatchBuffer.makeComputeCommandEncoder()!
+    let builtin = MTLMakeCPUBuiltinLibrary(device).makeFunction(name: MTLCPUBuiltinKernel.fillUInt32.rawValue)!
+    let computeState = try! device.makeComputePipelineState(function: builtin)
+    computeDispatch.setComputePipelineState(computeState)
+    computeDispatch.dispatchThreadgroups(threadgroupsPerGrid: MTLSizeMake(1, 1, 1), threadsPerThreadgroup: MTLSizeMake(1, 1, 1))
+    computeDispatch.dispatchThreadgroups(indirectBuffer: 0, threadsPerThreadgroup: MTLSizeMake(1, 1, 1))
+    computeDispatch.dispatchThreads(threadsPerGrid: MTLSizeMake(1, 1, 1), threadsPerThreadgroup: MTLSizeMake(1, 1, 1))
+    computeDispatch.dispatchThreads(indirectBuffer: 0)
+    let icb = device.makeIndirectCommandBuffer(
+        descriptor: MTLIndirectCommandBufferDescriptor(),
+        maxCommandCount: 1,
+        options: []
+    )!
+    computeDispatch.executeCommands(buffer: icb, indirectBuffer: 0)
+    computeDispatch.build(
+        destinationAccelerationStructure: accel,
+        descriptor: MTL4AccelerationStructureDescriptor(),
+        scratchBuffer: MTL4BufferRangeMake(0, 0)
+    )
+    computeDispatch.copy(sourceAccelerationStructure: accel, destinationAccelerationStructure: accel)
+    computeDispatch.copyAndCompact(sourceAccelerationStructure: accel, destinationAccelerationStructure: accel)
+    computeDispatch.refit(
+        sourceAccelerationStructure: accel,
+        descriptor: MTL4AccelerationStructureDescriptor(),
+        destinationAccelerationStructure: accel,
+        scratchBuffer: MTL4BufferRangeMake(0, 0),
+        options: []
+    )
+    computeDispatch.writeCompactedSize(sourceAccelerationStructure: accel, destinationBuffer: MTL4BufferRangeMake(0, 0))
+    computeDispatch.endEncoding()
+    dispatchBuffer.endCommandBuffer()
+    var sawDispatchError = false
+    let dispatchOptions = MTL4CommitOptions()
+    dispatchOptions.addFeedbackHandler { feedback in
+        sawDispatchError = true
+        precondition((feedback.error as? MTL4CommandQueueError)?.code == .notPermitted)
+    }
+    queue.commit([dispatchBuffer], options: dispatchOptions)
+    precondition(sawDispatchError)
+
+    let heapDesc = MTL4CounterHeapDescriptor()
+    heapDesc.count = 2
+    heapDesc.type = .timestamp
+    let counterHeap = try! device.makeCounterHeap(descriptor: heapDesc)
+    precondition(counterHeap.count == 2)
+    precondition(counterHeap.type == .timestamp)
+    precondition(device.size(ofCounterHeapEntry: .timestamp) == 8)
+    precondition(device.size(ofCounterHeapEntry: .invalid) == 0)
+    counterHeap.label = "ts"
+    let stampBuffer = device.makeCommandBuffer()!
+    stampBuffer.beginCommandBuffer(allocator: allocator)
+    stampBuffer.writeTimestamp(counterHeap: counterHeap, index: 0)
+    let stampCompute = stampBuffer.makeComputeCommandEncoder()!
+    stampCompute.writeTimestamp(granularity: .relaxed, counterHeap: counterHeap, index: 1)
+    stampCompute.endEncoding()
+    stampBuffer.resolveCounterHeap(
+        counterHeap,
+        range: 0..<2,
+        buffer: MTL4BufferRangeMake(0, 16),
+        fenceToWait: nil,
+        fenceToUpdate: fence
+    )
+    stampBuffer.endCommandBuffer()
+    var stampOK = false
+    let stampOptions = MTL4CommitOptions()
+    stampOptions.addFeedbackHandler { feedback in
+        stampOK = feedback.error == nil
+    }
+    queue.commit([stampBuffer], options: stampOptions)
+    precondition(stampOK)
+    let resolved = try! counterHeap.resolveCounterRange(0..<2)
+    precondition(resolved != nil)
+    precondition(resolved!.count == 16)
+    counterHeap.invalidateCounterRange(0..<2)
+    let cleared = try! counterHeap.resolveCounterRange(0..<2)!
+    precondition(cleared.withUnsafeBytes { $0.load(as: UInt64.self) } == 0)
+
+    let scope = MTLCaptureManager.shared().makeCaptureScope(commandQueue: queue)
+    _ = scope.device
+    scope.begin()
+    scope.end()
+
+    do {
+        _ = try device.makeArchive(url: URL(fileURLWithPath: "/tmp/missing.mtl4archive"))
+        fatalError("archive load must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .fileNotFound)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    let serializerDesc = MTL4PipelineDataSetSerializerDescriptor()
+    serializerDesc.configuration = [.captureDescriptors]
+    let serializer = device.makePipelineDataSetSerializer(descriptor: serializerDesc)
+    do {
+        _ = try serializer.serializeAsPipelinesScript()
+        fatalError("pipeline script serialize must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    do {
+        try serializer.serializeAsArchiveAndFlush(url: URL(fileURLWithPath: "/tmp/out.archive"))
+        fatalError("archive flush must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+}
+
+private func libraryDescriptorFixture() -> MTL4LibraryDescriptor {
+    let descriptor = MTL4LibraryDescriptor()
+    descriptor.source = "not msl"
+    return descriptor
+}
+
+// from MetalComputeTests.swift
 func testCPUBuiltinCompute() {
     let device = MTLCreateSystemDefaultDevice()!
     let library = MTLMakeCPUBuiltinLibrary(device)
@@ -581,7 +1037,7 @@ func testCPUBuiltinCompute() {
     precondition(library.makeFunction(name: "kernel void k()") == nil)
 }
 
-
+// from MetalDescriptorTests.swift
 func testDescriptorValueSemantics() {
     let texture = MTLTextureDescriptor.texture2DDescriptor(
         pixelFormat: .bgra8Unorm,
@@ -876,7 +1332,243 @@ func testMeshAndTilePipelineDescriptors() {
     precondition(compute.buffers[0].mutability == .immutable)
 }
 
+func testMetal4PipelineDescriptors() {
+    let options = MTL4PipelineOptions()
+    options.shaderReflection = .bindingInfo
+    options.shaderValidation = .disabled
+    precondition(options.shaderReflection.contains(.bindingInfo))
+    let binary = MTL4RenderPipelineBinaryFunctionsDescriptor()
+    binary.vertexAdditionalBinaryFunctions = []
+    binary.fragmentAdditionalBinaryFunctions = []
+    binary.meshAdditionalBinaryFunctions = []
+    binary.objectAdditionalBinaryFunctions = []
+    binary.tileAdditionalBinaryFunctions = []
+    binary.reset()
+    precondition(binary.vertexAdditionalBinaryFunctions == nil)
 
+    let function = MTL4LibraryFunctionDescriptor()
+    function.name = "vertex_main"
+    function.library = nil
+    let specialized = MTL4SpecializedFunctionDescriptor()
+    specialized.functionDescriptor = function
+    specialized.specializedName = "spec"
+    specialized.constantValues = MTLFunctionConstantValues()
+    let linking = MTL4StaticLinkingDescriptor()
+    linking.functionDescriptors = [function]
+    linking.privateFunctionDescriptors = []
+    linking.groups = ["g": [function]]
+    precondition(linking.groups?["g"]?.count == 1)
+
+    let libraryDesc = MTL4LibraryDescriptor()
+    libraryDesc.source = "kernel void k() {}"
+    libraryDesc.name = "k"
+    libraryDesc.options = MTLCompileOptions()
+    precondition(libraryDesc.name == "k")
+
+    let color = MTL4RenderPipelineColorAttachmentDescriptor()
+    color.pixelFormat = .rgba8Unorm
+    color.blendingState = .enabled
+    color.sourceRGBBlendFactor = .one
+    color.destinationRGBBlendFactor = .zero
+    color.rgbBlendOperation = .add
+    color.sourceAlphaBlendFactor = .one
+    color.destinationAlphaBlendFactor = .zero
+    color.alphaBlendOperation = .add
+    color.writeMask = .all
+    precondition(color.pixelFormat == .rgba8Unorm)
+    color.reset()
+    precondition(color.pixelFormat == .invalid)
+    let colors = MTL4RenderPipelineColorAttachmentDescriptorArray()
+    colors[0].pixelFormat = .bgra8Unorm
+    precondition(colors[0].pixelFormat == .bgra8Unorm)
+    colors.reset()
+    precondition(colors[0].pixelFormat == .invalid)
+
+    let render = MTL4RenderPipelineDescriptor()
+    render.label = "r4"
+    render.options = options
+    render.vertexFunctionDescriptor = function
+    render.fragmentFunctionDescriptor = specialized
+    render.vertexDescriptor = MTLVertexDescriptor()
+    render.colorAttachments[0].pixelFormat = .rgba8Unorm
+    render.rasterSampleCount = 1
+    render.alphaToCoverageState = .enabled
+    render.alphaToOneState = .disabled
+    render.isRasterizationEnabled = true
+    render.maxVertexAmplificationCount = 1
+    render.inputPrimitiveTopology = .triangle
+    render.supportIndirectCommandBuffers = .disabled
+    render.supportVertexBinaryLinking = false
+    render.supportFragmentBinaryLinking = false
+    render.colorAttachmentMappingState = .identity
+    render.vertexStaticLinkingDescriptor = linking
+    render.fragmentStaticLinkingDescriptor = MTL4StaticLinkingDescriptor()
+    precondition(render.label == "r4")
+    precondition(render.colorAttachments[0].pixelFormat == .rgba8Unorm)
+    render.reset()
+    precondition(render.label == nil)
+    precondition(render.rasterSampleCount == 1)
+
+    let mesh = MTL4MeshRenderPipelineDescriptor()
+    mesh.label = "mesh4"
+    mesh.objectFunctionDescriptor = function
+    mesh.meshFunctionDescriptor = function
+    mesh.fragmentFunctionDescriptor = function
+    mesh.colorAttachments[0].pixelFormat = .rgba8Unorm
+    mesh.rasterSampleCount = 1
+    mesh.alphaToCoverageState = .disabled
+    mesh.alphaToOneState = .enabled
+    mesh.isRasterizationEnabled = true
+    mesh.maxVertexAmplificationCount = 1
+    mesh.maxTotalThreadsPerObjectThreadgroup = 32
+    mesh.maxTotalThreadsPerMeshThreadgroup = 64
+    mesh.maxTotalThreadgroupsPerMeshGrid = 4
+    mesh.payloadMemoryLength = 16
+    mesh.objectThreadgroupSizeIsMultipleOfThreadExecutionWidth = true
+    mesh.meshThreadgroupSizeIsMultipleOfThreadExecutionWidth = true
+    mesh.requiredThreadsPerObjectThreadgroup = MTLSizeMake(8, 1, 1)
+    mesh.requiredThreadsPerMeshThreadgroup = MTLSizeMake(16, 1, 1)
+    mesh.supportIndirectCommandBuffers = .enabled
+    mesh.supportObjectBinaryLinking = false
+    mesh.supportMeshBinaryLinking = false
+    mesh.supportFragmentBinaryLinking = false
+    mesh.colorAttachmentMappingState = .inherited
+    mesh.objectStaticLinkingDescriptor = MTL4StaticLinkingDescriptor()
+    mesh.meshStaticLinkingDescriptor = MTL4StaticLinkingDescriptor()
+    mesh.fragmentStaticLinkingDescriptor = MTL4StaticLinkingDescriptor()
+    precondition(mesh.maxTotalThreadsPerMeshThreadgroup == 64)
+    mesh.reset()
+    precondition(mesh.label == nil)
+
+    let compute = MTL4ComputePipelineDescriptor()
+    compute.computeFunctionDescriptor = function
+    compute.maxTotalThreadsPerThreadgroup = 64
+    compute.requiredThreadsPerThreadgroup = MTLSizeMake(8, 1, 1)
+    compute.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
+    compute.supportIndirectCommandBuffers = .disabled
+    compute.supportBinaryLinking = false
+    compute.staticLinkingDescriptor = linking
+    compute.reset()
+    precondition(compute.computeFunctionDescriptor == nil)
+
+    let tile = MTL4TileRenderPipelineDescriptor()
+    tile.tileFunctionDescriptor = function
+    tile.colorAttachments[0].pixelFormat = .rgba8Unorm
+    tile.rasterSampleCount = 1
+    tile.threadgroupSizeMatchesTileSize = true
+    tile.maxTotalThreadsPerThreadgroup = 32
+    tile.requiredThreadsPerThreadgroup = MTLSizeMake(8, 8, 1)
+    tile.supportBinaryLinking = false
+    tile.staticLinkingDescriptor = MTL4StaticLinkingDescriptor()
+    tile.reset()
+    precondition(tile.tileFunctionDescriptor == nil)
+
+    let stage = MTL4PipelineStageDynamicLinkingDescriptor()
+    stage.binaryLinkedFunctions = []
+    stage.maxCallStackDepth = 2
+    stage.preloadedLibraries = []
+    let dynamic = MTL4RenderPipelineDynamicLinkingDescriptor()
+    _ = dynamic.vertexLinkingDescriptor.maxCallStackDepth
+    _ = dynamic.fragmentLinkingDescriptor
+    _ = dynamic.meshLinkingDescriptor
+    _ = dynamic.objectLinkingDescriptor
+    _ = dynamic.tileLinkingDescriptor
+
+    let pipeline = MTLRenderPipelineDescriptor()
+    pipeline.inputPrimitiveTopology = .triangle
+    pipeline.maxTessellationFactor = 16
+    pipeline.isTessellationFactorScaleEnabled = false
+    pipeline.tessellationFactorFormat = .half
+    pipeline.tessellationControlPointIndexType = .none
+    pipeline.tessellationFactorStepFunction = .constant
+    pipeline.tessellationOutputWindingOrder = .clockwise
+    pipeline.tessellationPartitionMode = .pow2
+    pipeline.vertexPreloadedLibraries = []
+    pipeline.fragmentPreloadedLibraries = []
+    precondition(pipeline.inputPrimitiveTopology == .triangle)
+    pipeline.reset()
+    precondition(pipeline.tessellationPartitionMode == .pow2)
+
+    let argument = MTLArgument()
+    argument.name = "buf"
+    argument.type = .buffer
+    argument.access = .readOnly
+    argument.index = 1
+    argument.isActive = true
+    argument.arrayLength = 4
+    argument.bufferAlignment = 16
+    argument.bufferDataSize = 64
+    argument.bufferDataType = .float4
+    argument.bufferPointerType = MTLPointerType()
+    argument.bufferStructType = MTLStructType()
+    argument.isDepthTexture = false
+    argument.textureDataType = .none
+    argument.textureType = .type2D
+    argument.threadgroupMemoryAlignment = 16
+    argument.threadgroupMemoryDataSize = 32
+    precondition(argument.bufferAlignment == 16)
+    let members = MTLStructMember()
+    members.name = "x"
+    argument.bufferStructType?.members = [members]
+    precondition(argument.bufferStructType?.memberByName("x")?.name == "x")
+    _ = members.arrayType()
+    _ = members.pointerType()
+    _ = members.structType()
+    _ = members.textureReferenceType()
+    _ = members.tensorReferenceType()
+    members.dataType = .float
+    members.offset = 0
+    members.argumentIndex = 1
+    let array = MTLArrayType()
+    array.arrayLength = 2
+    array.stride = 16
+    array.argumentIndexStride = 1
+    array.elementType = .float
+    _ = array.element()
+    _ = array.elementPointerType()
+    _ = array.elementStructType()
+    _ = array.elementTensorReferenceType()
+    _ = array.elementTextureReferenceType()
+    let pointer = MTLPointerType()
+    pointer.access = .readOnly
+    pointer.alignment = 16
+    pointer.dataSize = 8
+    pointer.elementIsArgumentBuffer = false
+    pointer.elementType = .float
+    _ = pointer.elementArrayType()
+    _ = pointer.elementStructType()
+    let texRef = MTLTextureReferenceType()
+    texRef.access = .readOnly
+    texRef.isDepthTexture = false
+    texRef.textureDataType = .float
+    texRef.textureType = .type2D
+    _ = MTLTensorReferenceType()
+    _ = texRef.textureType
+
+    let compilerDesc = MTL4CompilerDescriptor()
+    compilerDesc.pipelineDataSetSerializer = nil
+    _ = compilerDesc.label
+    let task = MTL4CompilerTaskOptions()
+    task.lookupArchives = nil
+    _ = task.lookupArchives
+    let binaryFn = MTL4BinaryFunctionDescriptor()
+    binaryFn.name = "n"
+    binaryFn.options = []
+    binaryFn.functionDescriptor = MTL4FunctionDescriptor()
+    precondition(binaryFn.name == "n")
+    let heap = MTL4CounterHeapDescriptor()
+    heap.count = 4
+    heap.type = .timestamp
+    precondition(heap.count == 4)
+    let serializer = MTL4PipelineDataSetSerializerDescriptor()
+    serializer.configuration = [.captureBinaries, .captureDescriptors]
+    precondition(serializer.configuration.contains(.captureBinaries))
+    let argumentAccess: MTLArgumentAccess = .readWrite
+    _ = argumentAccess
+    _ = MTLArgumentAccess.readOnly
+}
+
+// from MetalDeviceTests.swift
 func testCPUDevice() {
     guard let device = MTLCreateSystemDefaultDevice() else {
         fatalError("CPU reference device must exist")
@@ -1036,7 +1728,149 @@ func testDeviceFactoryAndFailClosed() {
     }
 }
 
+func testDeviceFailClosedFactories() {
+    let device = MTLCreateSystemDefaultDevice()!
+    precondition(device.counterSets?.isEmpty == true)
+    precondition(device.queryTimestampFrequency() == 1_000_000_000)
+    let asDesc = MTLAccelerationStructureDescriptor()
+    let structure = device.makeAccelerationStructure(descriptor: asDesc)!
+    precondition(structure.size == 0)
+    let sized = device.makeAccelerationStructure(size: 32)!
+    precondition(sized.size == 32)
+    let heapAlign = device.heapAccelerationStructureSizeAndAlign(size: 48)
+    precondition(heapAlign.size == 48)
+    precondition(heapAlign.align == 16)
+    let descAlign = device.heapAccelerationStructureSizeAndAlign(descriptor: asDesc)
+    precondition(descAlign.size == 0)
+    var pixels = [MTLRegionMake2D(0, 0, 16, 16)]
+    var tiles = [MTLRegion()]
+    device.convertSparsePixelRegions(
+        &pixels,
+        toTileRegions: &tiles,
+        withTileSize: MTLSizeMake(0, 0, 1),
+        alignmentMode: .outward,
+        numRegions: 1
+    )
+    precondition(tiles[0].size.width == 0)
+    pixels = [MTLRegionMake2D(0, 0, 16, 16)]
+    device.convertSparsePixelRegions(
+        &pixels,
+        toTileRegions: &tiles,
+        withTileSize: MTLSizeMake(8, 8, 1),
+        alignmentMode: .inward,
+        numRegions: 1
+    )
+    precondition(tiles[0].size.width == 2)
+    var tileIn = [MTLRegionMake2D(1, 1, 2, 2)]
+    var pixelOut = [MTLRegion()]
+    device.convertSparseTileRegions(
+        &tileIn,
+        toPixelRegions: &pixelOut,
+        withTileSize: MTLSizeMake(8, 8, 1),
+        numRegions: 1
+    )
+    precondition(pixelOut[0].origin.x == 8)
+    precondition(pixelOut[0].size.width == 16)
 
+    var libraryDone = false
+    device.makeLibrary(source: "not msl", options: nil) { library, error in
+        libraryDone = true
+        precondition(library == nil)
+        precondition((error as? MTLLibraryError)?.code == .compileFailure)
+    }
+    precondition(libraryDone)
+
+    var stitchDone = false
+    let stitched = MTLStitchedLibraryDescriptor()
+    stitched.functions = []
+    stitched.functionGraphs = []
+    stitched.binaryArchives = nil
+    stitched.options = []
+    device.makeLibrary(stitchedDescriptor: stitched) { library, error in
+        stitchDone = true
+        precondition(library == nil)
+        precondition((error as? MTLLibraryError)?.code == .compileFailure)
+    }
+    precondition(stitchDone)
+    do {
+        _ = try device.makeLibrary(stitchedDescriptor: MTLStitchedLibraryDescriptor())
+        fatalError("stitched library must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+
+    var renderDone = false
+    let renderDesc = MTLRenderPipelineDescriptor()
+    renderDesc.colorAttachments[0].pixelFormat = .rgba8Unorm
+    device.makeRenderPipelineState(descriptor: renderDesc) { state, error in
+        renderDone = true
+        precondition(state != nil)
+        precondition(error == nil)
+    }
+    precondition(renderDone)
+
+    var computeDone = false
+    let builtin = MTLMakeCPUBuiltinLibrary(device).makeFunction(name: MTLCPUBuiltinKernel.fillUInt32.rawValue)!
+    device.makeComputePipelineState(function: builtin) { state, error in
+        computeDone = true
+        precondition(state != nil)
+        precondition(error == nil)
+    }
+    precondition(computeDone)
+
+    do {
+        _ = try device.makeIOFileHandle(url: URL(fileURLWithPath: "/tmp/missing.bin"))
+        fatalError("IO file handle must fail closed")
+    } catch let error as MTLIOError {
+        precondition(error.code == .internal)
+        precondition(MTLIOError.internal ~= error)
+        precondition(MTLIOError.errorDomain == MTLIOErrorDomain)
+    } catch {
+        fatalError("expected MTLIOError")
+    }
+    do {
+        _ = try device.makeIOFileHandle(url: URL(fileURLWithPath: "/tmp/missing.bin"), compressionMethod: .lzfse)
+        fatalError("compressed IO handle must fail closed")
+    } catch let error as MTLIOError {
+        precondition(error.code == .internal)
+    } catch {
+        fatalError("expected MTLIOError")
+    }
+    do {
+        _ = try device.makeIOHandle(url: URL(fileURLWithPath: "/tmp/missing.bin"))
+        fatalError("IO handle must fail closed")
+    } catch let error as MTLIOError {
+        precondition(error.code == .internal)
+    } catch {
+        fatalError("expected MTLIOError")
+    }
+    do {
+        _ = try device.makeIOHandle(url: URL(fileURLWithPath: "/tmp/missing.bin"), compressionMethod: .lz4)
+        fatalError("compressed IO handle alias must fail closed")
+    } catch let error as MTLIOError {
+        precondition(error.code == .internal)
+    } catch {
+        fatalError("expected MTLIOError")
+    }
+
+    let counterDesc = MTLCounterSampleBufferDescriptor()
+    counterDesc.sampleCount = 1
+    counterDesc.label = "counters"
+    counterDesc.storageMode = .shared
+    counterDesc.counterSet = nil
+    do {
+        _ = try device.makeCounterSampleBuffer(descriptor: counterDesc)
+        fatalError("counter sample buffer must fail closed")
+    } catch let error as MTLCPUValidationError {
+        precondition(error.reason.contains("counter"))
+    } catch {
+        fatalError("expected MTLCPUValidationError")
+    }
+}
+
+// from MetalEnumTests.swift
 func testMetalEnumOptionSetAndConstantValues() {
     _ = MTLArgumentBuffersTier.tier1
     precondition(MTLArgumentBuffersTier.tier1.rawValue == 0)
@@ -2881,6 +3715,162 @@ func testMetalEnumOptionSetAndConstantValues() {
     var MTLMotionBorderModeSet: Set<MTLMotionBorderMode> = [.clamp]
     MTLMotionBorderModeSet.insert(.vanish)
     precondition(MTLMotionBorderModeSet.count == 2)
+
+    metalExerciseRawEnum([
+        MTL4AlphaToCoverageState.disabled, .enabled
+    ])
+    metalExerciseRawEnum([
+        MTL4AlphaToOneState.disabled, .enabled
+    ])
+    metalExerciseRawEnum([
+        MTL4BlendState.disabled, .enabled, .unspecialized
+    ])
+    metalExerciseRawEnum([
+        MTL4IndirectCommandBufferSupportState.disabled, .enabled
+    ])
+    metalExerciseRawEnum([
+        MTL4LogicalToPhysicalColorAttachmentMappingState.identity, .inherited
+    ])
+    metalExerciseRawEnum([
+        MTL4CompilerTaskStatus.none, .scheduled, .compiling, .finished
+    ])
+    metalExerciseRawEnum([
+        MTL4TimestampGranularity.relaxed, .precise
+    ])
+    metalExerciseRawEnum([
+        MTL4CounterHeapType.invalid, .timestamp
+    ])
+    metalExerciseRawEnum([
+        MTLCurveType.round, .flat
+    ])
+    metalExerciseRawEnum([
+        MTLCurveBasis.bSpline, .linear, .bezier, .catmullRom
+    ])
+    metalExerciseRawEnum([
+        MTLCurveEndCaps.none, .disk, .sphere
+    ])
+    metalExerciseRawEnum([
+        MTLIOPriority.high, .normal, .low
+    ])
+    metalExerciseRawEnum([
+        MTLIOStatus.pending, .cancelled, .error, .complete
+    ])
+    metalExerciseRawEnum([
+        MTLIOCompressionMethod.zlib, .lzfse, .lz4, .lzma, .lzBitmap
+    ])
+    metalExerciseRawEnum([
+        MTLIOCommandQueueType.concurrent, .serial
+    ])
+    metalExerciseRawEnum([
+        MTLMatrixLayout.columnMajor, .rowMajor
+    ])
+    metalExerciseRawEnum([
+        MTLPrimitiveTopologyClass.unspecified, .point, .line, .triangle
+    ])
+    metalExerciseRawEnum([
+        MTLTessellationControlPointIndexType.none, .uint16, .uint32
+    ])
+    metalExerciseRawEnum([
+        MTLTessellationFactorFormat.half
+    ])
+    metalExerciseRawEnum([
+        MTLTessellationFactorStepFunction.constant, .perPatch, .perInstance, .perPatchAndPerInstance
+    ])
+    metalExerciseRawEnum([
+        MTLTessellationPartitionMode.pow2, .integer, .fractionalOdd, .fractionalEven
+    ])
+    metalExerciseRawEnum([
+        MTLTransformType.packedFloat4x3, .component
+    ])
+    metalExerciseRawEnum([
+        MTLAccelerationStructureInstanceDescriptorType.default, .userID, .motion, .indirect, .indirectMotion
+    ])
+    metalExerciseRawEnum([
+        MTLSparseTextureRegionAlignmentMode.outward, .inward
+    ])
+    metalExerciseRawEnum([
+        MTL4CommandQueueError.Code.none, .internal, .timeout, .notPermitted, .outOfMemory, .accessRevoked, .deviceRemoved
+    ])
+    precondition(MTL4CommandQueueError.none == .none)
+    precondition(MTL4CommandQueueError.internal == .internal)
+    precondition(MTL4CommandQueueError.timeout == .timeout)
+    precondition(MTL4CommandQueueError.notPermitted == .notPermitted)
+    precondition(MTL4CommandQueueError.outOfMemory == .outOfMemory)
+    precondition(MTL4CommandQueueError.accessRevoked == .accessRevoked)
+    precondition(MTL4CommandQueueError.deviceRemoved == .deviceRemoved)
+    precondition(MTL4CommandQueueError.errorDomain == MTL4CommandQueueErrorDomain)
+    let queueError = MTL4CommandQueueError(.notPermitted, userInfo: [NSLocalizedDescriptionKey: "cpu"])
+    precondition(queueError.code == .notPermitted)
+    precondition(queueError.errorCode == MTL4CommandQueueError.Code.notPermitted.rawValue)
+    _ = queueError.errorUserInfo
+    _ = queueError.hashValue
+    var hasher = Hasher()
+    queueError.hash(into: &hasher)
+    precondition(MTL4CommandQueueError.notPermitted ~= queueError)
+    precondition(queueError != MTL4CommandQueueError(.none))
+
+    let timestamp = MTLCommonCounter.timestamp
+    precondition(timestamp.rawValue == "Timestamp")
+    precondition(MTLCommonCounter(rawValue: "Timestamp") == timestamp)
+    precondition(MTLCommonCounter.clipperInvocations != MTLCommonCounter.clipperPrimitivesOut)
+    precondition(MTLCommonCounter.computeKernelInvocations.rawValue == "ComputeKernelInvocations")
+    precondition(MTLCommonCounter.fragmentCycles.rawValue == "FragmentCycles")
+    precondition(MTLCommonCounter.fragmentInvocations.rawValue == "FragmentInvocations")
+    precondition(MTLCommonCounter.fragmentsPassed.rawValue == "FragmentsPassed")
+    precondition(MTLCommonCounter.postTessellationVertexCycles.rawValue == "PostTessellationVertexCycles")
+    precondition(MTLCommonCounter.postTessellationVertexInvocations.rawValue == "PostTessellationVertexInvocations")
+    precondition(MTLCommonCounter.renderTargetWriteCycles.rawValue == "RenderTargetWriteCycles")
+    precondition(MTLCommonCounter.tessellationCycles.rawValue == "TessellationCycles")
+    precondition(MTLCommonCounter.tessellationInputPatches.rawValue == "TessellationInputPatches")
+    precondition(MTLCommonCounter.totalCycles.rawValue == "TotalCycles")
+    precondition(MTLCommonCounter.vertexCycles.rawValue == "VertexCycles")
+    precondition(MTLCommonCounter.vertexInvocations.rawValue == "VertexInvocations")
+    var counterSet: Set<MTLCommonCounter> = [.timestamp]
+    counterSet.insert(.totalCycles)
+    precondition(counterSet.count == 2)
+    _ = timestamp.hashValue
+    var counterHasher = Hasher()
+    timestamp.hash(into: &counterHasher)
+
+    precondition(MTLCommonCounterSet.timestamp.rawValue == "timestamp")
+    precondition(MTLCommonCounterSet.stageUtilization.rawValue == "stageUtilization")
+    precondition(MTLCommonCounterSet.statistic.rawValue == "statistic")
+    precondition(MTLCommonCounterSet(rawValue: "timestamp") == .timestamp)
+    precondition(MTLCommonCounterSet.timestamp != MTLCommonCounterSet.statistic)
+    var namedSets: Set<MTLCommonCounterSet> = [.timestamp]
+    namedSets.insert(.statistic)
+    precondition(namedSets.count == 2)
+    _ = MTLCommonCounterSet.stageUtilization.hashValue
+    var setHasher = Hasher()
+    MTLCommonCounterSet.stageUtilization.hash(into: &setHasher)
+
+    var ts = MTLCounterResultTimestamp()
+    ts.timestamp = 42
+    precondition(ts.timestamp == 42)
+    var stage = MTLCounterResultStageUtilization()
+    stage.totalCycles = 1
+    stage.vertexCycles = 2
+    stage.tessellationCycles = 3
+    stage.postTessellationVertexCycles = 4
+    stage.fragmentCycles = 5
+    stage.renderTargetCycles = 6
+    precondition(stage.totalCycles == 1)
+    precondition(stage.vertexCycles == 2)
+    precondition(stage.tessellationCycles == 3)
+    precondition(stage.postTessellationVertexCycles == 4)
+    precondition(stage.fragmentCycles == 5)
+    precondition(stage.renderTargetCycles == 6)
+    var stat = MTLCounterResultStatistic()
+    stat.clipperInvocations = 1
+    stat.clipperPrimitivesOut = 2
+    stat.computeKernelInvocations = 3
+    stat.fragmentInvocations = 4
+    stat.fragmentsPassed = 5
+    stat.postTessellationVertexInvocations = 6
+    stat.tessellationInputPatches = 7
+    stat.vertexInvocations = 8
+    precondition(stat.clipperInvocations == 1)
+    precondition(stat.vertexInvocations == 8)
 }
 
 private func metalExerciseOptionSet<T: OptionSet & Hashable>(_ first: T, _ second: T)
@@ -2924,6 +3914,26 @@ where T.RawValue: FixedWidthInteger, T.Element == T {
     _ = T(rawValue: first.rawValue)
 }
 
+private func metalExerciseRawEnum<T: RawRepresentable & Hashable>(_ values: [T])
+where T.RawValue: Equatable {
+    precondition(!values.isEmpty)
+    for value in values {
+        precondition(T(rawValue: value.rawValue) == value)
+        _ = value.hashValue
+        var hasher = Hasher()
+        value.hash(into: &hasher)
+        _ = hasher.finalize()
+    }
+    if values.count >= 2 {
+        precondition(values[0] != values[1])
+        var set = Set<T>()
+        set.insert(values[0])
+        set.insert(values[1])
+        precondition(set.count == 2)
+    }
+}
+
+// from MetalFailClosedTests.swift
 func testLibraryFailClosed() {
     let device = MTLCreateSystemDefaultDevice()!
     do {
@@ -3139,7 +4149,91 @@ func testComputeDispatchFailClosed() {
     precondition((commandBuffer.error as? MTLCommandBufferError)?.code == .notPermitted)
 }
 
+func testIOCommandBufferFailClosed() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let queueDesc = MTLIOCommandQueueDescriptor()
+    queueDesc.maxCommandBufferCount = 2
+    queueDesc.maxCommandsInFlight = 1
+    queueDesc.priority = .normal
+    queueDesc.type = .serial
+    queueDesc.scratchBufferAllocator = nil
+    let queue = try! device.makeIOCommandQueue(descriptor: queueDesc)
+    queue.label = "io"
+    precondition(queue.label == "io")
+    queue.enqueueBarrier()
+    let empty = queue.makeCommandBuffer()
+    empty.label = "empty"
+    precondition(empty.status == .pending)
+    var emptyCompleted = false
+    empty.addCompletedHandler { buffer in
+        emptyCompleted = true
+        precondition(buffer.status == .complete)
+        precondition(buffer.error == nil)
+    }
+    empty.addBarrier()
+    empty.pushDebugGroup("g")
+    empty.popDebugGroup()
+    let event = device.makeSharedEvent()!
+    empty.signalEvent(event, value: 1)
+    empty.waitForEvent(event, value: 1)
+    empty.enqueue()
+    empty.commit()
+    empty.waitUntilCompleted()
+    precondition(emptyCompleted)
+    precondition(empty.status == .complete)
+    let statusBuffer = device.makeBuffer(length: 8, options: [])!
+    empty.copyStatus(buffer: statusBuffer, offset: 0)
+    precondition(statusBuffer.contents().load(as: UInt64.self) == UInt64(MTLIOStatus.complete.rawValue))
 
+    let loaded = queue.makeCommandBufferWithUnretainedReferences()
+    let handle = MetalTestIOFileHandle()
+    handle.label = "file"
+    precondition(handle.label == "file")
+    loaded.load(device.makeBuffer(length: 4, options: [])!, offset: 0, size: 4, sourceHandle: handle, sourceHandleOffset: 0)
+    var bytes: UInt8 = 0
+    withUnsafeMutableBytes(of: &bytes) { raw in
+        loaded.loadBytes(raw.baseAddress!, size: 1, sourceHandle: handle, sourceHandleOffset: 0)
+    }
+    let tex = device.makeTexture(descriptor: MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .r8Unorm,
+        width: 1,
+        height: 1,
+        mipmapped: false
+    ))!
+    loaded.load(
+        tex,
+        slice: 0,
+        level: 0,
+        size: MTLSizeMake(1, 1, 1),
+        sourceBytesPerRow: 1,
+        sourceBytesPerImage: 1,
+        destinationOrigin: MTLOrigin(),
+        sourceHandle: handle,
+        sourceHandleOffset: 0
+    )
+    var loadCompleted = false
+    loaded.addCompletedHandler { buffer in
+        loadCompleted = true
+        precondition(buffer.status == .error)
+        let error = buffer.error as? MTLIOError
+        precondition(error?.code == .internal)
+        precondition(MTLIOError.internal ~= buffer.error!)
+    }
+    loaded.commit()
+    loaded.waitUntilCompleted()
+    precondition(loadCompleted)
+    precondition(loaded.status == .error)
+
+    let cancelled = queue.makeCommandBuffer()
+    cancelled.tryCancel()
+    precondition(cancelled.status == .cancelled)
+}
+
+private final class MetalTestIOFileHandle: NSObject, MTLIOFileHandle, @unchecked Sendable {
+    var label: String?
+}
+
+// from MetalGeometryTests.swift
 func testGeometryHelpers() {
     let origin = MTLOriginMake(1, 2, 3)
     precondition(origin.x == 1 && origin.y == 2 && origin.z == 3)
@@ -3289,7 +4383,80 @@ func testAccelerationStructureDescriptors() {
     precondition(sparsePage.width == 0)
 }
 
+func testAccelerationStructureGeometryDescriptors() {
+    let keyframe = MTLMotionKeyframeData.data()
+    keyframe.offset = 16
+    precondition(keyframe.offset == 16)
+    keyframe.buffer = nil
+    let geometry = MTLAccelerationStructureGeometryDescriptor()
+    geometry.intersectionFunctionTableOffset = 3
+    geometry.opaque = true
+    geometry.allowDuplicateIntersectionFunctionInvocation = false
+    geometry.label = "geom"
+    geometry.primitiveDataBuffer = nil
+    geometry.primitiveDataBufferOffset = 8
+    geometry.primitiveDataStride = 16
+    geometry.primitiveDataElementSize = 4
+    precondition(geometry.opaque)
+    let curve = MTLAccelerationStructureCurveGeometryDescriptor.descriptor()
+    curve.controlPointCount = 4
+    curve.controlPointBufferOffset = 0
+    curve.controlPointFormat = .float3
+    curve.controlPointStride = 12
+    curve.radiusBufferOffset = 0
+    curve.radiusFormat = .float
+    curve.radiusStride = 4
+    curve.indexBufferOffset = 0
+    curve.indexType = .uint16
+    curve.segmentCount = 1
+    curve.segmentControlPointCount = 4
+    curve.curveType = .round
+    curve.curveBasis = .bSpline
+    curve.curveEndCaps = .none
+    curve.controlPointBuffer = nil
+    curve.radiusBuffer = nil
+    curve.indexBuffer = nil
+    precondition(curve.controlPointCount == 4)
+    precondition(curve.curveBasis == .bSpline)
+    let motion = MTLAccelerationStructureMotionCurveGeometryDescriptor.descriptor()
+    motion.controlPointBuffers = [keyframe]
+    motion.controlPointCount = 4
+    motion.controlPointFormat = .float3
+    motion.controlPointStride = 12
+    motion.radiusBuffers = [keyframe]
+    motion.radiusFormat = .float
+    motion.radiusStride = 4
+    motion.indexBuffer = nil
+    motion.indexBufferOffset = 0
+    motion.indexType = .uint32
+    motion.segmentCount = 1
+    motion.segmentControlPointCount = 4
+    motion.curveType = .flat
+    motion.curveBasis = .bezier
+    motion.curveEndCaps = .sphere
+    precondition(motion.controlPointBuffers.count == 1)
+    precondition(motion.curveType == .flat)
+    let indirect = MTLIndirectInstanceAccelerationStructureDescriptor.descriptor()
+    indirect.instanceDescriptorBuffer = nil
+    indirect.instanceDescriptorBufferOffset = 0
+    indirect.instanceDescriptorStride = 64
+    indirect.instanceDescriptorType = .indirect
+    indirect.maxInstanceCount = 8
+    indirect.instanceCountBuffer = nil
+    indirect.instanceCountBufferOffset = 4
+    indirect.instanceTransformationMatrixLayout = .columnMajor
+    indirect.motionTransformBuffer = nil
+    indirect.motionTransformBufferOffset = 0
+    indirect.motionTransformStride = 48
+    indirect.motionTransformType = .packedFloat4x3
+    indirect.maxMotionTransformCount = 2
+    indirect.motionTransformCountBuffer = nil
+    indirect.motionTransformCountBufferOffset = 0
+    precondition(indirect.maxInstanceCount == 8)
+    precondition(indirect.instanceDescriptorType == .indirect)
+}
 
+// from MetalHeapTests.swift
 func testHeapFenceAndEvent() {
     let device = MTLCreateSystemDefaultDevice()!
     let heapDesc = MTLHeapDescriptor()
@@ -3380,7 +4547,7 @@ func testSharedEventHostClock() {
     _ = MTLSharedEventHandle.supportsSecureCoding
 }
 
-
+// from MetalRenderTests.swift
 func testRenderPassClearAndLoad() {
     let device = MTLCreateSystemDefaultDevice()!
     let colorDesc = MTLTextureDescriptor.texture2DDescriptor(
@@ -3740,7 +4907,55 @@ func testRenderEncoderStageBindings() {
     precondition(pixel == [0, 0, 255, 255])
 }
 
+func testRenderPipelineStateMeshProperties() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let descriptor = MTLRenderPipelineDescriptor()
+    descriptor.colorAttachments[0].pixelFormat = .rgba8Unorm
+    descriptor.supportIndirectCommandBuffers = true
+    let state = try! device.makeRenderPipelineState(descriptor: descriptor)
+    _ = state.device
+    _ = state.label
+    _ = state.gpuResourceID
+    _ = state.maxTotalThreadsPerThreadgroup
+    _ = state.threadExecutionWidth
+    _ = state.imageblockSampleLength
+    _ = state.supportIndirectCommandBuffers
+    _ = state.shaderValidation
+    precondition(state.maxTotalThreadgroupsPerMeshGrid == 0)
+    precondition(state.maxTotalThreadsPerMeshThreadgroup == 0)
+    precondition(state.maxTotalThreadsPerObjectThreadgroup == 0)
+    _ = state.meshThreadExecutionWidth
+    _ = state.objectThreadExecutionWidth
+    _ = state.requiredThreadsPerMeshThreadgroup
+    _ = state.requiredThreadsPerObjectThreadgroup
+    _ = state.requiredThreadsPerTileThreadgroup
+    _ = state.threadgroupSizeMatchesTileSize
+    precondition(state.imageblockMemoryLength(forDimensions: MTLSizeMake(8, 8, 1)) == 0)
+    let specialized = state.makeRenderPipelineDescriptorForSpecialization()
+    _ = specialized.label
+    do {
+        _ = try state.makeRenderPipelineState(
+            additionalBinaryFunctions: MTL4RenderPipelineBinaryFunctionsDescriptor()
+        )
+        fatalError("extra Metal 4 binary functions must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    do {
+        _ = try state.makeRenderPipelineState(
+            additionalBinaryFunctions: MTLRenderPipelineFunctionsDescriptor()
+        )
+        fatalError("extra binary functions must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+}
 
+// from MetalTextureTests.swift
 func testTextureBytesAndMips() {
     func roundTrip(_ format: MTLPixelFormat, bytesPerPixel: Int, pattern: [UInt8]) {
         let device = MTLCreateSystemDefaultDevice()!
@@ -4088,29 +5303,36 @@ func testTextureViewsAndDimensionalLayouts() {
     precondition(readVoxels == voxels)
 }
 
+
 testBufferStorage()
 testCommandBufferLifecycle()
 testBlitCopyFillMipmaps()
 testIndirectCommandBufferAsData()
 testResourceStateEncoder()
+testMetal4CommandEncoders()
 testCPUBuiltinCompute()
 testDescriptorValueSemantics()
 testMeshAndTilePipelineDescriptors()
+testMetal4PipelineDescriptors()
 testCPUDevice()
 testDeviceFactoryAndFailClosed()
+testDeviceFailClosedFactories()
 testMetalEnumOptionSetAndConstantValues()
 testLibraryFailClosed()
 testCaptureFailClosed()
 testArgumentEncoderAndICB()
 testPipelineDescriptorValidation()
 testComputeDispatchFailClosed()
+testIOCommandBufferFailClosed()
 testGeometryHelpers()
 testAccelerationStructureDescriptors()
+testAccelerationStructureGeometryDescriptors()
 testHeapFenceAndEvent()
 testSharedEventHostClock()
 testRenderPassClearAndLoad()
 testParallelRenderEncoderAndSamplerState()
 testRenderEncoderStageBindings()
+testRenderPipelineStateMeshProperties()
 testTextureBytesAndMips()
 testTextureViewsAndDimensionalLayouts()
 
