@@ -1018,6 +1018,8 @@ public final class NWConnection: @unchecked Sendable {
 
     public private(set) var queue: DispatchQueue?
     public private(set) var currentPath: NWPath?
+    public private(set) var localEndpoint: NWEndpoint?
+    public private(set) var remoteEndpoint: NWEndpoint?
     public var pathUpdateHandler: ((NWPath) -> Void)?
 
     private let lock = NSLock()
@@ -1169,7 +1171,16 @@ public final class NWConnection: @unchecked Sendable {
     }
 
     private func becomeReady() {
-        currentPath = NWPOSIX.makePath(required: nil, prohibited: [])
+        if fd >= 0 {
+            localEndpoint = NWPOSIX.endpointFromSocket(fd: fd, peer: false)
+            remoteEndpoint = NWPOSIX.endpointFromSocket(fd: fd, peer: true) ?? endpoint
+        }
+        currentPath = NWPOSIX.makePath(
+            required: nil,
+            prohibited: [],
+            localEndpoint: localEndpoint,
+            remoteEndpoint: remoteEndpoint
+        )
         if let path = currentPath {
             pathUpdateHandler?(path)
         }
