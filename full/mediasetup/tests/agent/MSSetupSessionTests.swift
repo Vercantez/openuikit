@@ -4,7 +4,8 @@ import MediaSetup
 func testSetupSessionIsNSObjectSubclass() {
     let account = MSServiceAccount(serviceName: "Music", accountName: "pat")
     let session = MSSetupSession(serviceAccount: account)
-    precondition(session is NSObject)
+    let asObject: NSObject = session
+    precondition(asObject === session)
     let same = session
     precondition(session == same)
     let other = MSSetupSession(serviceAccount: account)

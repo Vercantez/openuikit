@@ -3,7 +3,8 @@ import MediaSetup
 
 func testServiceAccountIsNSObjectSubclass() {
     let account = MSServiceAccount(serviceName: "Music", accountName: "pat")
-    precondition(account is NSObject)
+    let asObject: NSObject = account
+    precondition(asObject === account)
     let same = account
     precondition(account == same)
     precondition(account === same)
