@@ -15,12 +15,21 @@
 
 #if canImport(Foundation)
 import Foundation
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
 #endif
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
 import struct CoreGraphics.CGRect
 import struct CoreGraphics.CGSize
+#endif
+#if !canImport(Foundation) && canImport(FoundationEssentials)
+// Guest library route (merge_gestures47-merged.log UIDragDrop.swift:192/202):
+// `canLoadObjects` names `URL.self` for localObject; Foundation hidden,
+// URL lives on FoundationEssentials (UIPrintInteractionController sibling).
+import struct FoundationEssentials.URL
 #endif
 
 // MARK: - Drop operation / proposal
@@ -189,9 +198,11 @@ final class _UIDragSessionImpl: UIDragSession, UIDropSession {
             if let obj = item.localObject {
                 if type(of: obj) == aClass { return true }
                 if aClass == String.self, obj is String { return true }
+                // MEASURED merge_gestures47-merged.log:192/202 — URL.self
+                // needs Foundation or FoundationEssentials (import above).
                 if aClass == URL.self, obj is URL { return true }
             }
-#if os(Linux)
+#if os(Linux) || !canImport(Foundation)
             if item.itemProvider._canLoad(aClass) { return true }
 #else
             if aClass == String.self,
@@ -923,7 +934,7 @@ extension UIView: UIPasteConfigurationSupporting {
     }
 }
 
-#if !os(Linux)
+#if canImport(Foundation) && !os(Linux)
 extension NSItemProvider {
     func _openUIKitLoad<T>(_ type: T.Type) -> T? {
         if type == String.self {

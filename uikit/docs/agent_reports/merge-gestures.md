@@ -83,3 +83,59 @@ tree tarred excluding `.build` / `Package.resolved`):
 No pixel rule changed. Catalyst paths stay behind the existing iOS cut.
 Incoming measurements (pinch 110/108, rotation 0.087266465 at 10°, drag
 lift 0.325 s / 10 pt) are unchanged and still cited next to the rules.
+
+## Guest library route (2026-09-06, `agent/gestures-guest-route`)
+
+Main (≥ `a4ea6caa`) runs `uikit/scripts/guest_route_check.sh` in the
+checked merge. The operator's merge of merge-gestures was **RED**
+(`~/openuikit/scratch/merge_gestures47-merged.log`):
+
+```
+UIDragDrop.swift:109/113/905/906/910 cannot find type 'NSItemProvider' in scope
+UIDragDrop.swift:192/202 cannot find 'URL' in scope
+```
+
+Guest compile is `arm64-apple-macos` with Foundation hidden, so
+`canImport(Foundation)` is false and `os(Linux)` is false. Tail-values
+`NSItemProvider.swift` only vended the class under `#if os(Linux)`; Darwin
+Foundation's type is not on the `-I` path. `UIDragDrop.swift` named both
+types unguarded. No behaviour change on Darwin or corelibs.
+
+### Rule
+
+Sibling: `NSStringDrawing.swift` (`os(Linux) || !canImport(Foundation)`),
+`UIPrintInteractionController.swift` (FE.URL when Foundation is hidden),
+`UIGestureRecognizer.swift` (`Foundation.NSObject` else `ObjectiveC.NSObject`).
+Progress / NSError / NSLock / DispatchQueue are not named on the guest
+path — those facade types exist only after OpenUIKit is built
+(docs/agent_reports/guest-route-hygiene.md).
+
+| file | before (guest) | after |
+|---|---|---|
+| `NSItemProvider.swift` | class only `#if os(Linux)` | `#elseif !canImport(Foundation)` process-local class (`hasItemConformingToTypeIdentifier`, `registeredTypeIdentifiers`, `_canLoad`/`_load`, `init(contentsOf:)`). NSObject import form + FE.URL. |
+| `UIDragDrop.swift` | `NSItemProvider` / `URL.self` unguarded | OpenUIKit's `NSItemProvider` spelling; `URL.self` via FE.URL; `_canLoad` when Foundation is hidden; NSObject import form. `loadObjects` → `Progress` stays `#if canImport(Foundation)`. |
+
+### Proof (this Mac, `SIM_DEVICE_SUFFIX=-gestures-guest-route`)
+
+**Before:** merge_gestures47-merged.log errors above (OpenUIKit does not emit a module).
+
+**After:**
+
+```
+GUEST_ROUTE_COMPILE_OK openuikit=138 opencoregraphics=12
+GUEST_ROUTE_CHECK_OK elapsed=55s
+```
+
+| gate | result |
+|---|---|
+| Guest library compile | **GUEST_ROUTE_COMPILE_OK** 138/12 files, **55 s** |
+| `swift build --build-tests` (Mac) | Build complete (43.92 s) |
+| `swift test --filter 'PinchGestureTests\|RotationGestureTests\|HoverGestureTests\|ScreenEdge\|UIDragDropTests\|ValueTypeTailTests\|PasteboardTests'` | **42 tests, 0 failures** |
+| Catalyst | **124/124** (`/tmp/gate-gestures-guest-route`) |
+| iOS suite `SKIP_CAPTURE=1` `/tmp/suite-gestures-guest-route` | **112/113** (`corner_radius` 99.411) — main's count |
+| Real-app floors scale 3 | **99.137 / 98.535 / 98.548 / 99.469 / 98.639 / 98.133 / 97.516 / 99.65 / 82.17 / 99.86 / 99.734 / 85.393**; `realapp_focus_home_light` and `realapp_ledger_light` missing goldens (same as sibling reports) |
+| Linux `swift:6.2-noble` `--target OpenUIKitTests` | **Build of target complete (45.82 s)** |
+| Linux `swift:6.2-noble` `openrender` | green (**220.02 s**) |
+| `Package.resolved` | not committed |
+
+No pixel rule changed. `scripts/vendor_pins.sh`, `env/`, `scripts/env/` untouched.
