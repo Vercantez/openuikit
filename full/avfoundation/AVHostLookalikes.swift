@@ -71,6 +71,17 @@ public struct CMTimeRange: Hashable, Sendable {
 
     public static let zero = CMTimeRange(start: .zero, duration: .zero)
     public static let invalid = CMTimeRange(start: .invalid, duration: .invalid)
+
+    /// Half-open `[start, start+duration)` like CoreMedia `CMTimeRangeContainsTime`.
+    /// A zero-duration range matches only its start instant so `setOpacity(_:at:)` ramps can be read back.
+    public func containsTime(_ time: CMTime) -> Bool {
+        guard start.isValid, duration.isValid, time.isValid else { return false }
+        let t = time.seconds
+        let s = start.seconds
+        let d = duration.seconds
+        if d == 0 { return abs(t - s) < 1e-9 }
+        return t >= s && t < (s + d)
+    }
 }
 
 public struct CMTimeMapping: Hashable, Sendable {

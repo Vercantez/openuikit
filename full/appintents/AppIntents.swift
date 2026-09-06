@@ -1026,6 +1026,9 @@ public final class IntentParameter<Value>: @unchecked Sendable
     var storedSupportsNegativeNumbers: Bool?
     var storedRequestDisambiguationDialog: IntentDialog?
     var storedSupportedValues: [Any] = []
+    var storedCurrencyCodes: [String]?
+    var storedPersonMode: IntentPerson.ParameterMode?
+    var storedDecimalInclusiveRange: (lowerBound: Decimal, upperBound: Decimal)?
 
     public var dateKind: DateKind? { storedDateKind }
 

@@ -55,28 +55,46 @@ public struct WidgetRelevanceGroup: Hashable, Sendable {
 }
 
 public struct WidgetRelevanceAttribute<Configuration>: @unchecked Sendable {
+    @_spi(OpenUIKitHost) public let portableGroup: WidgetRelevanceGroup?
+    @_spi(OpenUIKitHost) public let portableHasContext: Bool
+    @_spi(OpenUIKitHost) public let portableHasConfiguration: Bool
+
     public init(configuration: Configuration, group: WidgetRelevanceGroup) {
         _ = configuration
-        _ = group
+        portableGroup = group
+        portableHasContext = false
+        portableHasConfiguration = true
     }
 
     public init(configuration: Configuration, context: RelevantContext) {
         _ = configuration
         _ = context
+        portableGroup = nil
+        portableHasContext = true
+        portableHasConfiguration = true
     }
 
     public init(group: WidgetRelevanceGroup) {
-        _ = group
+        portableGroup = group
+        portableHasContext = false
+        portableHasConfiguration = false
     }
 
     public init(context: RelevantContext) {
         _ = context
+        portableGroup = nil
+        portableHasContext = true
+        portableHasConfiguration = false
     }
 }
 
 public struct WidgetRelevance<Intent>: @unchecked Sendable {
+    @_spi(OpenUIKitHost) public let portableAttributeCount: Int
+    @_spi(OpenUIKitHost) public let portableGroups: [WidgetRelevanceGroup]
+
     public init(_ attributes: [WidgetRelevanceAttribute<Intent>] = []) {
-        _ = attributes
+        portableAttributeCount = attributes.count
+        portableGroups = attributes.compactMap(\.portableGroup)
     }
 }
 

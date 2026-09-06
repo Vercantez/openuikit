@@ -234,6 +234,10 @@ open class AVPlayerItem: NSObject, @unchecked Sendable {
         self.init(asset: AVURLAsset(url: url))
     }
 
+    public convenience init(URL: URL) {
+        self.init(url: URL)
+    }
+
     public convenience init(
         asset: AVAsset,
         automaticallyLoadedAssetKeys: [AVPartialAsyncProperty<AVAsset>]
@@ -258,6 +262,16 @@ open class AVPlayerItem: NSObject, @unchecked Sendable {
     var portableForwardPlaybackEndTime = CMTime.zero
     var portableReversePlaybackEndTime = CMTime.zero
     var portableAutomaticallyPreservesTimeOffsetFromLive = false
+    var portableAutomaticallyLoadedAssetKeys: [String] = []
+    var portableConfiguredTimeOffsetFromLive = CMTime.zero
+    var portableAutomaticallyHandlesInterstitialEvents = false
+    var portableTextStyleRules: [AVTextStyleRule]?
+    var portableVariantPreferences = AVVariantPreferences(rawValue: 0)
+    var portableAllowedAudioSpatializationFormats = AVAudioSpatializationFormats(rawValue: 0)
+    var portablePreferredCustomMediaSelectionSchemes: [AVCustomMediaSelectionScheme] = []
+    var portablePresentationLanguages: [ObjectIdentifier: String] = [:]
+    let portableAccessLog = AVPlayerItemAccessLog()
+    let portableErrorLog = AVPlayerItemErrorLog()
 
     func _portableSetCurrentTime(_ time: CMTime) {
         itemLock.withLock { storedTime = time }

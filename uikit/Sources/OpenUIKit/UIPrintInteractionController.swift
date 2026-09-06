@@ -13,6 +13,8 @@ import Foundation
 #if canImport(Foundation)
 import Foundation
 import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
 #endif
 
 public enum UIPrinterCutterBehavior: Int, Sendable {

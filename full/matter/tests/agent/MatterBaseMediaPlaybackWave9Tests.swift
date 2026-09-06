@@ -1,0 +1,166 @@
+import Foundation
+import Dispatch
+import Matter
+
+func testBaseMediaPlaybackClassCacheFailClosed() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    MTRBaseClusterMediaPlayback.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeAttributeList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeAttributeList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeClusterRevision(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeClusterRevision(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeCurrentState(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeCurrentState(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeDuration(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeDuration(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeFeatureMap(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeFeatureMap(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeGeneratedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeGeneratedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributePlaybackSpeed(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributePlaybackSpeed(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeSampledPosition(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeSampledPosition(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeSeekRangeEnd(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeSeekRangeEnd(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeSeekRangeStart(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeSeekRangeStart(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeStartTime(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    MTRBaseClusterMediaPlayback.readAttributeStartTime(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
+}
+
+func testBaseMediaPlaybackCommandFailClosed() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    guard let cluster = MTRBaseClusterMediaPlayback(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRBaseClusterMediaPlayback init")
+        return
+    }
+    cluster.activateAudioTrack(with: MTRMediaPlaybackClusterActivateAudioTrackParams(), completion: { err in mtrExpectInvalidState(err) })
+    cluster.activateTextTrack(with: MTRMediaPlaybackClusterActivateTextTrackParams(), completion: { err in mtrExpectInvalidState(err) })
+    cluster.deactivateTextTrack(completion: { err in mtrExpectInvalidState(err) })
+    cluster.deactivateTextTrack(with: MTRMediaPlaybackClusterDeactivateTextTrackParams(), completion: { err in mtrExpectInvalidState(err) })
+    cluster.fastForward(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.fastForward(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.fastForward(with: MTRMediaPlaybackClusterFastForwardParams(), completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.fastForward(with: MTRMediaPlaybackClusterFastForwardParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.next(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.next(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.next(with: MTRMediaPlaybackClusterNextParams(), completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.next(with: MTRMediaPlaybackClusterNextParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.pause(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.pause(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.pause(with: MTRMediaPlaybackClusterPauseParams(), completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.pause(with: MTRMediaPlaybackClusterPauseParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.play(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.play(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.play(with: MTRMediaPlaybackClusterPlayParams(), completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.play(with: MTRMediaPlaybackClusterPlayParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.previous(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.previous(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.previous(with: MTRMediaPlaybackClusterPreviousParams(), completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.previous(with: MTRMediaPlaybackClusterPreviousParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.rewind(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.rewind(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.rewind(with: MTRMediaPlaybackClusterRewindParams(), completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.rewind(with: MTRMediaPlaybackClusterRewindParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.seek(with: MTRMediaPlaybackClusterSeekParams(), completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.seek(with: MTRMediaPlaybackClusterSeekParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.skipBackward(with: MTRMediaPlaybackClusterSkipBackwardParams(), completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.skipBackward(with: MTRMediaPlaybackClusterSkipBackwardParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.skipForward(with: MTRMediaPlaybackClusterSkipForwardParams(), completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.skipForward(with: MTRMediaPlaybackClusterSkipForwardParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.startOver(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.startOver(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.startOver(with: MTRMediaPlaybackClusterStartOverParams(), completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.startOver(with: MTRMediaPlaybackClusterStartOverParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.stop(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.stop(with: MTRMediaPlaybackClusterStopPlaybackParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.stop(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.stop(with: MTRMediaPlaybackClusterStopParams(), completion: { _, err in mtrExpectInvalidState(err) })
+}
+
+func testBaseMediaPlaybackInit() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    _ = MTRBaseClusterMediaPlayback(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+    _ = MTRBaseClusterMediaPlayback(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+}
+
+func testBaseMediaPlaybackReadFailClosed() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    guard let cluster = MTRBaseClusterMediaPlayback(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRBaseClusterMediaPlayback init")
+        return
+    }
+    cluster.readAttributeAcceptedCommandList(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeAcceptedCommandList(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeAttributeList(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeAttributeList(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeClusterRevision(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeClusterRevision(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeCurrentState(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeCurrentState(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeDuration(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeDuration(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeFeatureMap(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeFeatureMap(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeGeneratedCommandList(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeGeneratedCommandList(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributePlaybackSpeed(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributePlaybackSpeed(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeSampledPosition(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeSampledPosition(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeSeekRangeEnd(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeSeekRangeEnd(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeSeekRangeStart(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeSeekRangeStart(completionHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeStartTime(completion: { _, err in mtrExpectInvalidState(err) })
+    cluster.readAttributeStartTime(completionHandler: { _, err in mtrExpectInvalidState(err) })
+}
+
+func testBaseMediaPlaybackSubscribeFailClosed() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    guard let cluster = MTRBaseClusterMediaPlayback(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRBaseClusterMediaPlayback init")
+        return
+    }
+    cluster.subscribeAttributeAcceptedCommandList(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeAcceptedCommandList(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeAttributeList(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeAttributeList(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeClusterRevision(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeClusterRevision(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeCurrentState(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeCurrentState(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeDuration(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeDuration(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeFeatureMap(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeFeatureMap(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeGeneratedCommandList(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeGeneratedCommandList(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributePlaybackSpeed(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributePlaybackSpeed(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeSampledPosition(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeSampledPosition(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeSeekRangeEnd(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeSeekRangeEnd(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeSeekRangeStart(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeSeekRangeStart(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeStartTime(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+    cluster.subscribeAttributeStartTime(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
+}

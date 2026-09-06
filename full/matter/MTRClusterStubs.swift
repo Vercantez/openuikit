@@ -2,11 +2,7 @@ import Foundation
 
 open class MTRBarrierControlClusterBarrierControlGoToPercentParams: NSObject {}
 open class MTRBarrierControlClusterBarrierControlStopParams: NSObject {}
-open class MTRBaseClusterBarrierControl: MTRGenericBaseCluster {}
-open class MTRBaseClusterBinaryInputBasic: MTRGenericBaseCluster {}
 open class MTRBaseClusterOnOffSwitchConfiguration: MTRGenericBaseCluster {}
-open class MTRClusterBarrierControl: MTRGenericCluster {}
-open class MTRClusterBinaryInputBasic: MTRGenericCluster {}
 open class MTRClusterOnOffSwitchConfiguration: MTRGenericCluster {}
 open class MTRAccessControlClusterAccessControlEntryChangedEvent: NSObject {}
 open class MTRAccessControlClusterAccessControlEntryStruct: NSObject {}
@@ -464,7 +460,6 @@ open class MTRClusterBridgedDeviceBasicInformation: MTRGenericCluster {}
 open class MTRClusterCarbonDioxideConcentrationMeasurement: MTRGenericCluster {}
 open class MTRClusterCarbonMonoxideConcentrationMeasurement: MTRGenericCluster {}
 open class MTRClusterChannel: MTRGenericCluster {}
-open class MTRClusterColorControl: MTRGenericCluster {}
 open class MTRClusterCommissionerControl: MTRGenericCluster {}
 open class MTRClusterContentAppObserver: MTRGenericCluster {}
 open class MTRClusterContentLauncher: MTRGenericCluster {}
@@ -474,13 +469,11 @@ open class MTRClusterDeviceEnergyManagementMode: MTRGenericCluster {}
 open class MTRClusterDiagnosticLogs: MTRGenericCluster {}
 open class MTRClusterDishwasherAlarm: MTRGenericCluster {}
 open class MTRClusterDishwasherMode: MTRGenericCluster {}
-open class MTRClusterDoorLock: MTRGenericCluster {}
 open class MTRClusterElectricalEnergyMeasurement: MTRGenericCluster {}
 open class MTRClusterElectricalPowerMeasurement: MTRGenericCluster {}
 open class MTRClusterEnergyEVSE: MTRGenericCluster {}
 open class MTRClusterEnergyEVSEMode: MTRGenericCluster {}
 open class MTRClusterEthernetNetworkDiagnostics: MTRGenericCluster {}
-open class MTRClusterFanControl: MTRGenericCluster {}
 open class MTRClusterFixedLabel: MTRGenericCluster {}
 open class MTRClusterFlowMeasurement: MTRGenericCluster {}
 open class MTRClusterFormaldehydeConcentrationMeasurement: MTRGenericCluster {}
@@ -500,17 +493,13 @@ open class MTRClusterLevelControl: MTRGenericCluster {}
 open class MTRClusterLocalizationConfiguration: MTRGenericCluster {}
 open class MTRClusterLowPower: MTRGenericCluster {}
 open class MTRClusterMediaInput: MTRGenericCluster {}
-open class MTRClusterMediaPlayback: MTRGenericCluster {}
 open class MTRClusterMessages: MTRGenericCluster {}
 open class MTRClusterMicrowaveOvenControl: MTRGenericCluster {}
 open class MTRClusterMicrowaveOvenMode: MTRGenericCluster {}
 open class MTRClusterModeSelect: MTRGenericCluster {}
-open class MTRClusterNetworkCommissioning: MTRGenericCluster {}
 open class MTRClusterNitrogenDioxideConcentrationMeasurement: MTRGenericCluster {}
 open class MTRClusterOTASoftwareUpdateProvider: MTRGenericCluster {}
 open class MTRClusterOTASoftwareUpdateRequestor: MTRGenericCluster {}
-open class MTRClusterOccupancySensing: MTRGenericCluster {}
-open class MTRClusterOnOff: MTRGenericCluster {}
 open class MTRClusterOperationalCredentials: MTRGenericCluster {}
 open class MTRClusterOperationalState: MTRGenericCluster {}
 open class MTRClusterOtaSoftwareUpdateProvider: MTRClusterOTASoftwareUpdateProvider {}
@@ -540,10 +529,8 @@ open class MTRClusterSwitch: MTRGenericCluster {}
 open class MTRClusterTargetNavigator: MTRGenericCluster {}
 open class MTRClusterTemperatureControl: MTRGenericCluster {}
 open class MTRClusterTemperatureMeasurement: MTRGenericCluster {}
-open class MTRClusterThermostat: MTRGenericCluster {}
 open class MTRClusterThermostatUserInterfaceConfiguration: MTRGenericCluster {}
 open class MTRClusterThreadBorderRouterManagement: MTRGenericCluster {}
-open class MTRClusterThreadNetworkDiagnostics: MTRGenericCluster {}
 open class MTRClusterThreadNetworkDirectory: MTRGenericCluster {}
 open class MTRClusterTimeFormatLocalization: MTRGenericCluster {}
 open class MTRClusterTimeSynchronization: MTRGenericCluster {}
@@ -555,7 +542,6 @@ open class MTRClusterWakeOnLAN: MTRGenericCluster {}
 open class MTRClusterWakeOnLan: MTRClusterWakeOnLAN {}
 open class MTRClusterWaterHeaterManagement: MTRGenericCluster {}
 open class MTRClusterWaterHeaterMode: MTRGenericCluster {}
-open class MTRClusterWiFiNetworkDiagnostics: MTRGenericCluster {}
 open class MTRClusterWiFiNetworkManagement: MTRGenericCluster {}
 open class MTRClusterWindowCovering: MTRGenericCluster {}
 open class MTRBaseClusterAccessControl: MTRGenericBaseCluster {}
@@ -589,7 +575,6 @@ open class MTRBaseClusterElectricalPowerMeasurement: MTRGenericBaseCluster {}
 open class MTRBaseClusterEnergyEVSE: MTRGenericBaseCluster {}
 open class MTRBaseClusterEnergyEVSEMode: MTRGenericBaseCluster {}
 open class MTRBaseClusterEthernetNetworkDiagnostics: MTRGenericBaseCluster {}
-open class MTRBaseClusterFanControl: MTRGenericBaseCluster {}
 open class MTRBaseClusterFixedLabel: MTRGenericBaseCluster {}
 open class MTRBaseClusterFlowMeasurement: MTRGenericBaseCluster {}
 open class MTRBaseClusterFormaldehydeConcentrationMeasurement: MTRGenericBaseCluster {}
@@ -608,17 +593,13 @@ open class MTRBaseClusterLaundryWasherMode: MTRGenericBaseCluster {}
 open class MTRBaseClusterLocalizationConfiguration: MTRGenericBaseCluster {}
 open class MTRBaseClusterLowPower: MTRGenericBaseCluster {}
 open class MTRBaseClusterMediaInput: MTRGenericBaseCluster {}
-open class MTRBaseClusterMediaPlayback: MTRGenericBaseCluster {}
 open class MTRBaseClusterMessages: MTRGenericBaseCluster {}
 open class MTRBaseClusterMicrowaveOvenControl: MTRGenericBaseCluster {}
 open class MTRBaseClusterMicrowaveOvenMode: MTRGenericBaseCluster {}
 open class MTRBaseClusterModeSelect: MTRGenericBaseCluster {}
-open class MTRBaseClusterNetworkCommissioning: MTRGenericBaseCluster {}
 open class MTRBaseClusterNitrogenDioxideConcentrationMeasurement: MTRGenericBaseCluster {}
 open class MTRBaseClusterOTASoftwareUpdateProvider: MTRGenericBaseCluster {}
 open class MTRBaseClusterOTASoftwareUpdateRequestor: MTRGenericBaseCluster {}
-open class MTRBaseClusterOccupancySensing: MTRGenericBaseCluster {}
-open class MTRBaseClusterOnOff: MTRGenericBaseCluster {}
 open class MTRBaseClusterOperationalCredentials: MTRGenericBaseCluster {}
 open class MTRBaseClusterOperationalState: MTRGenericBaseCluster {}
 open class MTRBaseClusterOtaSoftwareUpdateProvider: MTRBaseClusterOTASoftwareUpdateProvider {}
@@ -659,7 +640,6 @@ open class MTRBaseClusterWakeOnLAN: MTRGenericBaseCluster {}
 open class MTRBaseClusterWakeOnLan: MTRBaseClusterWakeOnLAN {}
 open class MTRBaseClusterWaterHeaterManagement: MTRGenericBaseCluster {}
 open class MTRBaseClusterWaterHeaterMode: MTRGenericBaseCluster {}
-open class MTRBaseClusterWiFiNetworkDiagnostics: MTRGenericBaseCluster {}
 open class MTRBaseClusterWiFiNetworkManagement: MTRGenericBaseCluster {}
 open class MTRAccessControlClusterAccessControlEntry: MTRAccessControlClusterAccessControlEntryStruct {}
 open class MTRApplicationBasicClusterApplicationBasicApplication: MTRApplicationBasicClusterApplicationStruct {}
