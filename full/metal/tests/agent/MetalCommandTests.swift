@@ -830,6 +830,86 @@ func testMetal4CommandEncoders() {
     }
 }
 
+func testAccelerationStructureCommandEncoder() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let queue = device.makeCommandQueue()!
+    let commandBuffer = queue.makeCommandBuffer()!
+    let accel = device.makeAccelerationStructure(size: 0)!
+    let dest = device.makeAccelerationStructure(size: 0)!
+    let scratch = device.makeBuffer(length: 16, options: .storageModeShared)!
+    let compacted = device.makeBuffer(length: 8, options: .storageModeShared)!
+    compacted.contents().storeBytes(of: UInt32(99), as: UInt32.self)
+    let heap = device.makeHeap(descriptor: {
+        let desc = MTLHeapDescriptor()
+        desc.size = 64
+        return desc
+    }())!
+    let fence = device.makeFence()!
+    let pass = MTLAccelerationStructurePassDescriptor.accelerationStructurePassDescriptor()
+    pass.sampleBufferAttachments[0].sampleBuffer = try! device.makeCounterSampleBuffer(
+        descriptor: MTLCounterSampleBufferDescriptor()
+    )
+    pass.sampleBufferAttachments[0].startOfEncoderSampleIndex = 0
+    pass.sampleBufferAttachments[0].endOfEncoderSampleIndex = 0
+    let encoder = commandBuffer.makeAccelerationStructureCommandEncoder(descriptor: pass)
+    encoder.label = "as"
+    encoder.insertDebugSignpost("build")
+    encoder.pushDebugGroup("g")
+    encoder.popDebugGroup()
+    encoder.build(
+        accelerationStructure: accel,
+        descriptor: MTLAccelerationStructureDescriptor(),
+        scratchBuffer: scratch,
+        scratchBufferOffset: 0
+    )
+    encoder.copy(sourceAccelerationStructure: accel, destinationAccelerationStructure: dest)
+    encoder.copyAndCompact(sourceAccelerationStructure: accel, destinationAccelerationStructure: dest)
+    encoder.refit(
+        sourceAccelerationStructure: accel,
+        descriptor: MTLAccelerationStructureDescriptor(),
+        destinationAccelerationStructure: dest,
+        scratchBuffer: scratch,
+        scratchBufferOffset: 0
+    )
+    encoder.refit(
+        sourceAccelerationStructure: accel,
+        descriptor: MTLAccelerationStructureDescriptor(),
+        destinationAccelerationStructure: nil,
+        scratchBuffer: nil,
+        scratchBufferOffset: 0,
+        options: .vertexData
+    )
+    encoder.writeCompactedSize(accelerationStructure: accel, buffer: compacted, offset: 0)
+    encoder.writeCompactedSize(
+        accelerationStructure: accel,
+        buffer: compacted,
+        offset: 4,
+        sizeDataType: .uint
+    )
+    encoder.useResource(scratch, usage: .read)
+    encoder.useResources([scratch], usage: .write)
+    encoder.useHeap(heap)
+    encoder.useHeaps([heap])
+    encoder.updateFence(fence)
+    encoder.waitForFence(fence)
+    let counters = try! device.makeCounterSampleBuffer(descriptor: {
+        let desc = MTLCounterSampleBufferDescriptor()
+        desc.sampleCount = 1
+        return desc
+    }())
+    encoder.sampleCounters(sampleBuffer: counters, sampleIndex: 0, barrier: false)
+    encoder.endEncoding()
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+    precondition(commandBuffer.status == .completed)
+    precondition(compacted.contents().load(as: UInt32.self) == 0)
+    let other = queue.makeCommandBuffer()!
+    precondition(other.makeAccelerationStructureCommandEncoder() != nil)
+    other.makeAccelerationStructureCommandEncoder()?.endEncoding()
+    other.commit()
+    other.waitUntilCompleted()
+}
+
 private func libraryDescriptorFixture() -> MTL4LibraryDescriptor {
     let descriptor = MTL4LibraryDescriptor()
     descriptor.source = "not msl"

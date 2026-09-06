@@ -267,7 +267,7 @@ c:@E@CTWritingDirection@kCTWritingDirectionRightToLeft	implemented	test:full/cor
 c:@Ea@cmapFontTableTag@cmapFontTableTag	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@descriptorFontTableTag@descriptorFontTableTag	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@featureFontTableTag@featureFontTableTag	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
-c:@Ea@kANKRCurrentVersion@kANKRCurrentVersion	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
+c:@Ea@kANKRCurrentVersion@kANKRCurrentVersion	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kAllTypeFeaturesOnSelector@kAllTypeFeaturesOffSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kAllTypeFeaturesOnSelector@kAllTypeFeaturesOnSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kAllTypographicFeaturesType@kAllTypographicFeaturesType	implemented	test:full/coretext/tests/agent/CoreTextTests.swift#testCoreTextVersionAndTableTags	-
@@ -289,7 +289,7 @@ c:@Ea@kAllTypographicFeaturesType@kIdeographicSpacingType	implemented	test:full/
 c:@Ea@kAllTypographicFeaturesType@kItalicCJKRomanType	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kAllTypographicFeaturesType@kKanaSpacingType	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kAllTypographicFeaturesType@kLanguageTagType	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
-c:@Ea@kAllTypographicFeaturesType@kLastFeatureType	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@kAllTypographicFeaturesType@kLastFeatureType	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kAllTypographicFeaturesType@kLetterCaseType	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kAllTypographicFeaturesType@kLigaturesType	implemented	test:full/coretext/tests/agent/CoreTextTests.swift#testCoreTextVersionAndTableTags	-
 c:@Ea@kAllTypographicFeaturesType@kLinguisticRearrangementType	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
@@ -314,21 +314,21 @@ c:@Ea@kAlternateHorizKanaOnSelector@kAlternateHorizKanaOffSelector	implemented	t
 c:@Ea@kAlternateHorizKanaOnSelector@kAlternateHorizKanaOnSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kAlternateHorizKanaOnSelector@kAlternateVertKanaOffSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kAlternateHorizKanaOnSelector@kAlternateVertKanaOnSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
-c:@Ea@kBSLNRomanBaseline@kBSLNHangingBaseline	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNRomanBaseline@kBSLNIdeographicCenterBaseline	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNRomanBaseline@kBSLNIdeographicHighBaseline	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNRomanBaseline@kBSLNIdeographicLowBaseline	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNRomanBaseline@kBSLNLastBaseline	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNRomanBaseline@kBSLNMathBaseline	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNRomanBaseline@kBSLNNoBaseline	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNRomanBaseline@kBSLNNoBaselineOverride	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNRomanBaseline@kBSLNNumBaselineClasses	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNRomanBaseline@kBSLNRomanBaseline	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNTag@kBSLNControlPointFormatNoMap	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNTag@kBSLNControlPointFormatWithMap	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNTag@kBSLNCurrentVersion	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNTag@kBSLNDistanceFormatNoMap	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kBSLNTag@kBSLNDistanceFormatWithMap	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
+c:@Ea@kBSLNRomanBaseline@kBSLNHangingBaseline	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNRomanBaseline@kBSLNIdeographicCenterBaseline	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNRomanBaseline@kBSLNIdeographicHighBaseline	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNRomanBaseline@kBSLNIdeographicLowBaseline	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNRomanBaseline@kBSLNLastBaseline	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNRomanBaseline@kBSLNMathBaseline	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNRomanBaseline@kBSLNNoBaseline	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNRomanBaseline@kBSLNNoBaselineOverride	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNRomanBaseline@kBSLNNumBaselineClasses	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNRomanBaseline@kBSLNRomanBaseline	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNTag@kBSLNControlPointFormatNoMap	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNTag@kBSLNControlPointFormatWithMap	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNTag@kBSLNCurrentVersion	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNTag@kBSLNDistanceFormatNoMap	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kBSLNTag@kBSLNDistanceFormatWithMap	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kBSLNTag@kBSLNTag	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
 c:@Ea@kCJKVerticalRomanCenteredSelector@kCJKVerticalRomanCenteredSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kCJKVerticalRomanCenteredSelector@kCJKVerticalRomanHBaselineSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
@@ -465,120 +465,120 @@ c:@Ea@kFontCopyrightName@kFontTrademarkName	implemented	test:full/coretext/tests
 c:@Ea@kFontCopyrightName@kFontUniqueName	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
 c:@Ea@kFontCopyrightName@kFontVendorURLName	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
 c:@Ea@kFontCopyrightName@kFontVersionName	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
-c:@Ea@kFontCustom8BitScript@kFontCustom16BitScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontCustom8BitScript@kFontCustom816BitScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontCustom8BitScript@kFontCustom8BitScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontEnglishLanguage@kFontAlbanianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontAmharicLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontArabicLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontArmenianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontAssameseLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontAymaraLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontAzerbaijanArLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontAzerbaijaniLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontBasqueLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontBengaliLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontBulgarianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontBurmeseLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontByelorussianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontCatalanLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontChewaLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontCroatianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontCzechLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontDanishLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontDutchLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontDzongkhaLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontEnglishLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontEsperantoLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontEstonianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontFaeroeseLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontFarsiLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontFinnishLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontFlemishLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontFrenchLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontGallaLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontGeorgianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontGermanLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontGreekLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontGuaraniLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontGujaratiLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontHebrewLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontHindiLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontHungarianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontIcelandicLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontIndonesianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontIrishLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontItalianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontJapaneseLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontJavaneseRomLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontKannadaLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontKashmiriLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontKazakhLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontKhmerLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontKirghizLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontKoreanLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontKurdishLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontLaoLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontLappishLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontLatinLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontLatvianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontLettishLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontLithuanianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontMacedonianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontMalagasyLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontMalayArabicLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontMalayRomanLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontMalayalamLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontMalteseLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontMarathiLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontMoldavianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontMongolianCyrLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontMongolianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontNepaliLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontNorwegianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontOriyaLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontOromoLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontPashtoLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontPersianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontPolishLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontPortugueseLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontPunjabiLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontQuechuaLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontRomanianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontRuandaLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontRundiLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontRussianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontSaamiskLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontSanskritLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontSerbianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontSimpChineseLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontSindhiLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontSinhaleseLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontSlovakLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontSlovenianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontSomaliLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontSpanishLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontSundaneseRomLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontSwahiliLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontSwedishLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontTagalogLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontTajikiLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontTamilLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontTatarLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontTeluguLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontThaiLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontTibetanLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontTigrinyaLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontTradChineseLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontTurkishLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontTurkmenLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontUighurLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontUkrainianLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontUrduLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontUzbekLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontVietnameseLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontWelshLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kFontEnglishLanguage@kFontYiddishLanguage	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
+c:@Ea@kFontCustom8BitScript@kFontCustom16BitScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontCustom8BitScript@kFontCustom816BitScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontCustom8BitScript@kFontCustom8BitScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontAlbanianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontAmharicLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontArabicLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontArmenianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontAssameseLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontAymaraLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontAzerbaijanArLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontAzerbaijaniLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontBasqueLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontBengaliLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontBulgarianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontBurmeseLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontByelorussianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontCatalanLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontChewaLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontCroatianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontCzechLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontDanishLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontDutchLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontDzongkhaLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontEnglishLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontEsperantoLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontEstonianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontFaeroeseLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontFarsiLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontFinnishLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontFlemishLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontFrenchLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontGallaLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontGeorgianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontGermanLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontGreekLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontGuaraniLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontGujaratiLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontHebrewLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontHindiLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontHungarianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontIcelandicLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontIndonesianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontIrishLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontItalianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontJapaneseLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontJavaneseRomLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontKannadaLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontKashmiriLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontKazakhLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontKhmerLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontKirghizLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontKoreanLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontKurdishLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontLaoLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontLappishLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontLatinLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontLatvianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontLettishLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontLithuanianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontMacedonianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontMalagasyLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontMalayArabicLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontMalayRomanLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontMalayalamLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontMalteseLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontMarathiLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontMoldavianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontMongolianCyrLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontMongolianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontNepaliLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontNorwegianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontOriyaLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontOromoLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontPashtoLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontPersianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontPolishLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontPortugueseLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontPunjabiLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontQuechuaLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontRomanianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontRuandaLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontRundiLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontRussianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontSaamiskLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontSanskritLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontSerbianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontSimpChineseLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontSindhiLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontSinhaleseLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontSlovakLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontSlovenianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontSomaliLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontSpanishLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontSundaneseRomLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontSwahiliLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontSwedishLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontTagalogLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontTajikiLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontTamilLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontTatarLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontTeluguLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontThaiLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontTibetanLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontTigrinyaLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontTradChineseLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontTurkishLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontTurkmenLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontUighurLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontUkrainianLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontUrduLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontUzbekLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontVietnameseLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontWelshLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontEnglishLanguage@kFontYiddishLanguage	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kFontMicrosoftSymbolScript@kFontMicrosoftStandardScript	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
 c:@Ea@kFontMicrosoftSymbolScript@kFontMicrosoftSymbolScript	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
 c:@Ea@kFontMicrosoftSymbolScript@kFontMicrosoftUCS4Script	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
@@ -586,45 +586,45 @@ c:@Ea@kFontNoNameCode@kFontNoNameCode	implemented	test:full/coretext/tests/agent
 c:@Ea@kFontNoPlatformCode@kFontNoLanguageCode	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
 c:@Ea@kFontNoPlatformCode@kFontNoPlatformCode	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
 c:@Ea@kFontNoPlatformCode@kFontNoScriptCode	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
-c:@Ea@kFontRomanScript@kFontAmharicScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontArabicScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontArmenianScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontBengaliScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontBurmeseScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontChineseScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontCyrillicScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontDevanagariScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontEastEuropeanRomanScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontEthiopicScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontExtendedArabicScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontGeezScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontGeorgianScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontGreekScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontGujaratiScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontGurmukhiScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontHebrewScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontJapaneseScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontKannadaScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontKhmerScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontKoreanScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontLaotianScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontMalayalamScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontMongolianScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontOriyaScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontRSymbolScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontRomanScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontRussian	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontSimpleChineseScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontSindhiScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontSinhaleseScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontSlavicScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontTamilScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontTeluguScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontThaiScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontTibetanScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontTraditionalChineseScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontUninterpretedScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kFontRomanScript@kFontVietnameseScript	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@kFontRomanScript@kFontAmharicScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontArabicScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontArmenianScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontBengaliScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontBurmeseScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontChineseScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontCyrillicScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontDevanagariScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontEastEuropeanRomanScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontEthiopicScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontExtendedArabicScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontGeezScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontGeorgianScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontGreekScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontGujaratiScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontGurmukhiScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontHebrewScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontJapaneseScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontKannadaScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontKhmerScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontKoreanScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontLaotianScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontMalayalamScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontMongolianScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontOriyaScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontRSymbolScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontRomanScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontRussian	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontSimpleChineseScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontSindhiScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontSinhaleseScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontSlavicScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontTamilScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontTeluguScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontThaiScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontTibetanScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontTraditionalChineseScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontUninterpretedScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kFontRomanScript@kFontVietnameseScript	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kFontUnicodeDefaultSemantics@kFontISO10646_1993Semantics	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
 c:@Ea@kFontUnicodeDefaultSemantics@kFontUnicodeDefaultSemantics	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
 c:@Ea@kFontUnicodeDefaultSemantics@kFontUnicodeV1_1Semantics	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
@@ -670,134 +670,134 @@ c:@Ea@kHyphensToEmDashOnSelector@kSlashedZeroOffSelector	implemented	test:full/c
 c:@Ea@kHyphensToEmDashOnSelector@kSlashedZeroOnSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kHyphensToEmDashOnSelector@kSmartQuotesOffSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kHyphensToEmDashOnSelector@kSmartQuotesOnSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
-c:@Ea@kJUSTKashidaPriority@kJUSTKashidaPriority	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTKashidaPriority@kJUSTLetterPriority	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTKashidaPriority@kJUSTNullPriority	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTKashidaPriority@kJUSTPriorityCount	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTKashidaPriority@kJUSTSpacePriority	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTOverridePriority@kJUSTOverrideLimits	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTOverridePriority@kJUSTOverridePriority	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTOverridePriority@kJUSTOverrideUnlimited	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTOverridePriority@kJUSTPriorityMask	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTOverridePriority@kJUSTUnlimited	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTTag@kJUSTCurrentVersion	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTTag@kJUSTStandardFormat	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@kJUSTKashidaPriority@kJUSTKashidaPriority	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTKashidaPriority@kJUSTLetterPriority	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTKashidaPriority@kJUSTNullPriority	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTKashidaPriority@kJUSTPriorityCount	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTKashidaPriority@kJUSTSpacePriority	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTOverridePriority@kJUSTOverrideLimits	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTOverridePriority@kJUSTOverridePriority	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTOverridePriority@kJUSTOverrideUnlimited	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTOverridePriority@kJUSTPriorityMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTOverridePriority@kJUSTUnlimited	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTTag@kJUSTCurrentVersion	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTTag@kJUSTStandardFormat	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kJUSTTag@kJUSTTag	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
-c:@Ea@kJUSTTag@kJUSTnoGlyphcode	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTTag@kJUSTpcConditionalAddAction	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTTag@kJUSTpcDecompositionAction	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTTag@kJUSTpcDuctilityAction	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTTag@kJUSTpcGlyphRepeatAddAction	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTTag@kJUSTpcGlyphStretchAction	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kJUSTTag@kJUSTpcUnconditionalAddAction	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNLineStart@kKERNCrossStreamResetNote	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNLineStart@kKERNLineEndKerning	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNLineStart@kKERNLineStart	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNLineStart@kKERNNoCrossKerning	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNLineStart@kKERNNoStakeNote	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNLineStart@kKERNNotApplied	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNLineStart@kKERNNotesRequested	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNOrderedList@kKERNIndexArray	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNOrderedList@kKERNOrderedList	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNOrderedList@kKERNSimpleArray	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNOrderedList@kKERNStateTable	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNTag@kKERNCrossStream	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNTag@kKERNCurrentVersion	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNTag@kKERNFormatMask	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNTag@kKERNResetCrossStream	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@kJUSTTag@kJUSTnoGlyphcode	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTTag@kJUSTpcConditionalAddAction	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTTag@kJUSTpcDecompositionAction	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTTag@kJUSTpcDuctilityAction	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTTag@kJUSTpcGlyphRepeatAddAction	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTTag@kJUSTpcGlyphStretchAction	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kJUSTTag@kJUSTpcUnconditionalAddAction	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNLineStart@kKERNCrossStreamResetNote	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNLineStart@kKERNLineEndKerning	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNLineStart@kKERNLineStart	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNLineStart@kKERNNoCrossKerning	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNLineStart@kKERNNoStakeNote	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNLineStart@kKERNNotApplied	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNLineStart@kKERNNotesRequested	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNOrderedList@kKERNIndexArray	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNOrderedList@kKERNOrderedList	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNOrderedList@kKERNSimpleArray	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNOrderedList@kKERNStateTable	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNTag@kKERNCrossStream	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNTag@kKERNCurrentVersion	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNTag@kKERNFormatMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNTag@kKERNResetCrossStream	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kKERNTag@kKERNTag	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
-c:@Ea@kKERNTag@kKERNUnusedBits	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNTag@kKERNVariation	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERNTag@kKERNVertical	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXActionTypeMask@kKERXActionOffsetMask	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXActionTypeMask@kKERXActionTypeAnchorPoints	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXActionTypeMask@kKERXActionTypeControlPoints	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXActionTypeMask@kKERXActionTypeCoordinates	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXActionTypeMask@kKERXActionTypeMask	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXActionTypeMask@kKERXUnusedFlags	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXLineStart@kKERXCrossStreamResetNote	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXLineStart@kKERXLineEndKerning	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXLineStart@kKERXLineStart	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXLineStart@kKERXNoCrossKerning	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXLineStart@kKERXNoStakeNote	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXLineStart@kKERXNotApplied	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXLineStart@kKERXNotesRequested	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXOrderedList@kKERXControlPoint	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXOrderedList@kKERXIndexArray	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXOrderedList@kKERXOrderedList	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXOrderedList@kKERXSimpleArray	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXOrderedList@kKERXStateTable	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXTag@kKERXCrossStream	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXTag@kKERXCurrentVersion	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXTag@kKERXDescending	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXTag@kKERXFormatMask	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXTag@kKERXResetCrossStream	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@kKERNTag@kKERNUnusedBits	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNTag@kKERNVariation	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERNTag@kKERNVertical	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXActionTypeMask@kKERXActionOffsetMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXActionTypeMask@kKERXActionTypeAnchorPoints	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXActionTypeMask@kKERXActionTypeControlPoints	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXActionTypeMask@kKERXActionTypeCoordinates	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXActionTypeMask@kKERXActionTypeMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXActionTypeMask@kKERXUnusedFlags	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXLineStart@kKERXCrossStreamResetNote	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXLineStart@kKERXLineEndKerning	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXLineStart@kKERXLineStart	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXLineStart@kKERXNoCrossKerning	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXLineStart@kKERXNoStakeNote	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXLineStart@kKERXNotApplied	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXLineStart@kKERXNotesRequested	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXOrderedList@kKERXControlPoint	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXOrderedList@kKERXIndexArray	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXOrderedList@kKERXOrderedList	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXOrderedList@kKERXSimpleArray	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXOrderedList@kKERXStateTable	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXTag@kKERXCrossStream	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXTag@kKERXCurrentVersion	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXTag@kKERXDescending	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXTag@kKERXFormatMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXTag@kKERXResetCrossStream	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kKERXTag@kKERXTag	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
-c:@Ea@kKERXTag@kKERXUnusedBits	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXTag@kKERXVariation	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXTag@kKERXVertical	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kKERXValuesAreLong@kKERXValuesAreLong	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kLCARTag@kLCARCtlPointFormat	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kLCARTag@kLCARCurrentVersion	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kLCARTag@kLCARLinearFormat	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@kKERXTag@kKERXUnusedBits	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXTag@kKERXVariation	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXTag@kKERXVertical	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kKERXValuesAreLong@kKERXValuesAreLong	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kLCARTag@kLCARCtlPointFormat	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kLCARTag@kLCARCurrentVersion	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kLCARTag@kLCARLinearFormat	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kLCARTag@kLCARTag	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
-c:@Ea@kLTAGCurrentVersion@kLTAGCurrentVersion	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@kLTAGCurrentVersion@kLTAGCurrentVersion	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kLinguisticRearrangementOnSelector@kLinguisticRearrangementOffSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kLinguisticRearrangementOnSelector@kLinguisticRearrangementOnSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kLowerCaseNumbersSelector@kLowerCaseNumbersSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kLowerCaseNumbersSelector@kUpperCaseNumbersSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
-c:@Ea@kMORTTag@kMORTContextualType	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTCoverDescending	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTCoverIgnoreVertical	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTCoverTypeMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTCoverVertical	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTCurrInsertBefore	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTCurrInsertCountMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTCurrInsertCountShift	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTCurrInsertKashidaLike	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTCurrJustTableCountMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTCurrJustTableCountShift	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTCurrentVersion	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTDoInsertionsBefore	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTInsertionType	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTInsertionsCountMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTIsSplitVowelPiece	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTLigFormOffsetMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTLigFormOffsetShift	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTLigLastAction	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTLigStoreLigature	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTLigatureType	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTMarkInsertBefore	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTMarkInsertCountMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTMarkInsertCountShift	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTMarkInsertKashidaLike	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTMarkJustTableCountMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTMarkJustTableCountShift	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTRearrangementType	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTSwashType	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
+c:@Ea@kMORTTag@kMORTContextualType	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTCoverDescending	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTCoverIgnoreVertical	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTCoverTypeMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTCoverVertical	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTCurrInsertBefore	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTCurrInsertCountMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTCurrInsertCountShift	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTCurrInsertKashidaLike	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTCurrJustTableCountMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTCurrJustTableCountShift	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTCurrentVersion	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTDoInsertionsBefore	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTInsertionType	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTInsertionsCountMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTIsSplitVowelPiece	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTLigFormOffsetMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTLigFormOffsetShift	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTLigLastAction	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTLigStoreLigature	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTLigatureType	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTMarkInsertBefore	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTMarkInsertCountMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTMarkInsertCountShift	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTMarkInsertKashidaLike	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTMarkJustTableCountMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTMarkJustTableCountShift	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTRearrangementType	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTSwashType	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kMORTTag@kMORTTag	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
-c:@Ea@kMORTTag@kMORTraCDx	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraCDxA	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraCDxAB	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraCDxBA	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraDCx	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraDCxA	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraDCxAB	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraDCxBA	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraDx	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraDxA	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraDxAB	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraDxBA	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraNoAction	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraxA	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraxAB	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORTTag@kMORTraxBA	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kMORXTag@kMORXCoverDescending	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kMORXTag@kMORXCoverIgnoreVertical	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kMORXTag@kMORXCoverLogicalOrder	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kMORXTag@kMORXCoverTypeMask	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kMORXTag@kMORXCoverVertical	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kMORXTag@kMORXCurrentVersion	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@kMORTTag@kMORTraCDx	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraCDxA	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraCDxAB	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraCDxBA	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraDCx	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraDCxA	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraDCxAB	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraDCxBA	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraDx	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraDxA	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraDxAB	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraDxBA	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraNoAction	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraxA	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraxAB	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORTTag@kMORTraxBA	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORXTag@kMORXCoverDescending	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORXTag@kMORXCoverIgnoreVertical	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORXTag@kMORXCoverLogicalOrder	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORXTag@kMORXCoverTypeMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORXTag@kMORXCoverVertical	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kMORXTag@kMORXCurrentVersion	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kMORXTag@kMORXTag	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
 c:@Ea@kMonospacedNumbersSelector@kMonospacedNumbersSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kMonospacedNumbersSelector@kProportionalNumbersSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
@@ -907,43 +907,43 @@ c:@Ea@kNormalPositionSelector@kNormalPositionSelector	implemented	test:full/core
 c:@Ea@kNormalPositionSelector@kOrdinalsSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kNormalPositionSelector@kScientificInferiorsSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kNormalPositionSelector@kSuperiorsSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
-c:@Ea@kOPBDTag@kOPBDControlPointFormat	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kOPBDTag@kOPBDCurrentVersion	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kOPBDTag@kOPBDDistanceFormat	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@kOPBDTag@kOPBDControlPointFormat	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kOPBDTag@kOPBDCurrentVersion	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kOPBDTag@kOPBDDistanceFormat	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kOPBDTag@kOPBDTag	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
-c:@Ea@kPROPLDirectionClass@kPROPALDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPANDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPBNDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPCSDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPENDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPESDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPETDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPLDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPLREDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPLRODirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPNSMDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPNumDirectionClasses	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPONDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPPDFDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPPSDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPRDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPRLEDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPRLODirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPSDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPSENDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPLDirectionClass@kPROPWSDirectionClass	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPTag@kPROPCanHangLTMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPTag@kPROPCanHangRBMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPTag@kPROPCurrentVersion	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPTag@kPROPDirectionMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPTag@kPROPIsFloaterMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPTag@kPROPPairOffsetMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPTag@kPROPPairOffsetShift	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPTag@kPROPPairOffsetSign	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPTag@kPROPRightConnectMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
+c:@Ea@kPROPLDirectionClass@kPROPALDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPANDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPBNDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPCSDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPENDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPESDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPETDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPLDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPLREDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPLRODirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPNSMDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPNumDirectionClasses	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPONDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPPDFDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPPSDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPRDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPRLEDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPRLODirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPSDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPSENDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPLDirectionClass@kPROPWSDirectionClass	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPTag@kPROPCanHangLTMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPTag@kPROPCanHangRBMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPTag@kPROPCurrentVersion	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPTag@kPROPDirectionMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPTag@kPROPIsFloaterMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPTag@kPROPPairOffsetMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPTag@kPROPPairOffsetShift	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPTag@kPROPPairOffsetSign	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPTag@kPROPRightConnectMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kPROPTag@kPROPTag	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
-c:@Ea@kPROPTag@kPROPUseRLPairMask	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
-c:@Ea@kPROPTag@kPROPZeroReserved	deferred		AAT language/mort/prop selector integers are not in the pinned symbol graph values, api-digester, or macios bindings; declaring numeric ABI would invent Apple constants.
+c:@Ea@kPROPTag@kPROPUseRLPairMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kPROPTag@kPROPZeroReserved	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kPreventOverlapOnSelector@kPreventOverlapOffSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kPreventOverlapOnSelector@kPreventOverlapOnSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kProportionalTextSelector@kAltHalfWidthTextSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
@@ -975,31 +975,31 @@ c:@Ea@kRequiredLigaturesOnSelector@kSquaredLigaturesOffSelector	implemented	test
 c:@Ea@kRequiredLigaturesOnSelector@kSquaredLigaturesOnSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kRequiredLigaturesOnSelector@kSymbolLigaturesOffSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kRequiredLigaturesOnSelector@kSymbolLigaturesOnSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
-c:@Ea@kSFNTLookupSimpleArray@kSFNTLookupSegmentArray	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSFNTLookupSimpleArray@kSFNTLookupSegmentSingle	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSFNTLookupSimpleArray@kSFNTLookupSimpleArray	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSFNTLookupSimpleArray@kSFNTLookupSingleTable	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSFNTLookupSimpleArray@kSFNTLookupTrimmedArray	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSFNTLookupSimpleArray@kSFNTLookupVector	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSTClassEndOfText@kSTClassDeletedGlyph	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSTClassEndOfText@kSTClassEndOfLine	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSTClassEndOfText@kSTClassEndOfText	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSTClassEndOfText@kSTClassOutOfBounds	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSTClassEndOfText@kSTLigActionMask	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSTClassEndOfText@kSTMarkEnd	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSTClassEndOfText@kSTNoAdvance	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSTClassEndOfText@kSTRearrVerbMask	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSTClassEndOfText@kSTSetMark	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSTKCrossStreamReset@kSTKCrossStreamReset	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@kSTXHasLigAction@kSTXHasLigAction	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@kSFNTLookupSimpleArray@kSFNTLookupSegmentArray	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSFNTLookupSimpleArray@kSFNTLookupSegmentSingle	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSFNTLookupSimpleArray@kSFNTLookupSimpleArray	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSFNTLookupSimpleArray@kSFNTLookupSingleTable	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSFNTLookupSimpleArray@kSFNTLookupTrimmedArray	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSFNTLookupSimpleArray@kSFNTLookupVector	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSTClassEndOfText@kSTClassDeletedGlyph	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSTClassEndOfText@kSTClassEndOfLine	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSTClassEndOfText@kSTClassEndOfText	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSTClassEndOfText@kSTClassOutOfBounds	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSTClassEndOfText@kSTLigActionMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSTClassEndOfText@kSTMarkEnd	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSTClassEndOfText@kSTNoAdvance	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSTClassEndOfText@kSTRearrVerbMask	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSTClassEndOfText@kSTSetMark	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSTKCrossStreamReset@kSTKCrossStreamReset	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@kSTXHasLigAction@kSTXHasLigAction	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kShowDiacriticsSelector@kDecomposeDiacriticsSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kShowDiacriticsSelector@kHideDiacriticsSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kShowDiacriticsSelector@kShowDiacriticsSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kSubstituteVerticalFormsOnSelector@kSubstituteVerticalFormsOffSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kSubstituteVerticalFormsOnSelector@kSubstituteVerticalFormsOnSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
-c:@Ea@kTRAKTag@kTRAKCurrentVersion	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@kTRAKTag@kTRAKCurrentVersion	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kTRAKTag@kTRAKTag	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
-c:@Ea@kTRAKTag@kTRAKUniformFormat	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@kTRAKTag@kTRAKUniformFormat	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@kTraditionalCharactersSelector@kExpertCharactersSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kTraditionalCharactersSelector@kHojoCharactersSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kTraditionalCharactersSelector@kJIS1978CharactersSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
@@ -1035,19 +1035,19 @@ c:@Ea@kWordInitialSwashesOnSelector@kWordFinalSwashesOnSelector	implemented	test
 c:@Ea@kWordInitialSwashesOnSelector@kWordInitialSwashesOffSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@kWordInitialSwashesOnSelector@kWordInitialSwashesOnSelector	implemented	test:full/coretext/tests/agent/CoreTextCatalogTests.swift#testCatalogIntegerConstants	-
 c:@Ea@nameFontTableTag@nameFontTableTag	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
-c:@Ea@nonGlyphID@nonGlyphID	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@nonGlyphID@nonGlyphID	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@os2FontTableTag@os2FontTableTag	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
-c:@Ea@sizeof_sfntCMapEncoding@sizeof_sfntCMapEncoding	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@sizeof_sfntCMapExtendedSubHeader@sizeof_sfntCMapExtendedSubHeader	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@sizeof_sfntCMapHeader@sizeof_sfntCMapHeader	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@sizeof_sfntCMapSubHeader@sizeof_sfntCMapSubHeader	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@sizeof_sfntDescriptorHeader@sizeof_sfntDescriptorHeader	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@sizeof_sfntDirectory@sizeof_sfntDirectory	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@sizeof_sfntInstance@sizeof_sfntInstance	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@sizeof_sfntNameHeader@sizeof_sfntNameHeader	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@sizeof_sfntNameRecord@sizeof_sfntNameRecord	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@sizeof_sfntVariationAxis@sizeof_sfntVariationAxis	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
-c:@Ea@sizeof_sfntVariationHeader@sizeof_sfntVariationHeader	deferred		No compiling Linux declaration: Apple API needs CoreGraphics, unobserved runtime behavior, or a type not representable with Foundation-only host sources.
+c:@Ea@sizeof_sfntCMapEncoding@sizeof_sfntCMapEncoding	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@sizeof_sfntCMapExtendedSubHeader@sizeof_sfntCMapExtendedSubHeader	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@sizeof_sfntCMapHeader@sizeof_sfntCMapHeader	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@sizeof_sfntCMapSubHeader@sizeof_sfntCMapSubHeader	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@sizeof_sfntDescriptorHeader@sizeof_sfntDescriptorHeader	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@sizeof_sfntDirectory@sizeof_sfntDirectory	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@sizeof_sfntInstance@sizeof_sfntInstance	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@sizeof_sfntNameHeader@sizeof_sfntNameHeader	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@sizeof_sfntNameRecord@sizeof_sfntNameRecord	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@sizeof_sfntVariationAxis@sizeof_sfntVariationAxis	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
+c:@Ea@sizeof_sfntVariationHeader@sizeof_sfntVariationHeader	implemented	test:full/coretext/tests/agent/CoreTextAATConstantTests.swift#testAATLayoutIntegerConstants	-
 c:@Ea@variationFontTableTag@variationFontTableTag	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testSFNTNamePlatformAndTableTagConstants	-
 c:@F@CTFontCollectionCopyFontAttribute	implemented	test:full/coretext/tests/agent/CoreTextLayoutBehaviorTests.swift#testOpticalBoundsCopyTraitsAndCollectionAttributes	-
 c:@F@CTFontCollectionCopyFontAttributes	implemented	test:full/coretext/tests/agent/CoreTextTests.swift#testFontDescriptorAndCollection	-
@@ -1240,9 +1240,9 @@ c:@F@_CTFontCreateForStringWithLanguage	implemented	test:full/coretext/tests/age
 c:@F@_CTFontCreateUIFont	implemented	test:full/coretext/tests/agent/CoreTextFixtureFontTests.swift#testSwiftFontInitializers	-
 c:@F@_CTFontCreateUIFontForLanguage	implemented	test:full/coretext/tests/agent/CoreTextFixtureFontTests.swift#testSwiftFontInitializers	-
 c:@F@_CTFontCreateWithFontDescriptor	implemented	test:full/coretext/tests/agent/CoreTextFixtureFontTests.swift#testSwiftFontInitializers	-
-c:@F@_CTFontCreateWithFontDescriptorAndMatrix	deferred		API depends on CoreGraphics (CGContext/CGPath/CGFont/CGGlyph/CGAffineTransform), which is not present on this Linux host.
+c:@F@_CTFontCreateWithFontDescriptorAndMatrix	implemented	test:full/coretext/tests/agent/CoreTextFixtureFontTests.swift#testFontMatrixInitsScaleAdvancesAndBounds	-
 c:@F@_CTFontCreateWithName	implemented	test:full/coretext/tests/agent/CoreTextFixtureFontTests.swift#testSwiftFontInitializers	-
-c:@F@_CTFontCreateWithNameAndMatrix	deferred		API depends on CoreGraphics (CGContext/CGPath/CGFont/CGGlyph/CGAffineTransform), which is not present on this Linux host.
+c:@F@_CTFontCreateWithNameAndMatrix	implemented	test:full/coretext/tests/agent/CoreTextFixtureFontTests.swift#testFontMatrixInitsScaleAdvancesAndBounds	-
 c:@S@ALMXGlyphEntry	implemented	test:full/coretext/tests/agent/CoreTextSFNTTableTests.swift#testSFNTMasterAnchorAndBaselineTables	-
 c:@S@ALMXGlyphEntry@FI@GlyphIndexOffset	implemented	test:full/coretext/tests/agent/CoreTextSFNTTableTests.swift#testSFNTMasterAnchorAndBaselineTables	-
 c:@S@ALMXGlyphEntry@FI@HorizontalAdvance	implemented	test:full/coretext/tests/agent/CoreTextSFNTTableTests.swift#testSFNTMasterAnchorAndBaselineTables	-

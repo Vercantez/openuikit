@@ -212,7 +212,10 @@ extension AVPartialAsyncProperty where Root: AVAsset {
 
 open class AVPersistableContentKeyRequest: AVContentKeyRequest, @unchecked Sendable {
   public override init() { super.init() }
-  public func persistableContentKey(fromKeyVendorResponse keyVendorResponse: Data, options: [String : Any]? = nil) throws -> Data { return .init() }
+  public func persistableContentKey(fromKeyVendorResponse keyVendorResponse: Data, options: [String : Any]? = nil) throws -> Data {
+    _ = (keyVendorResponse, options)
+    throw AVError(.contentKeyRequestCancelled)
+  }
 }
 
 public struct AVPixelAspectRatio: Sendable {

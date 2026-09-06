@@ -82,7 +82,8 @@ func testSparseLegacyVectorPackInner() {
     sparse_vector_add_with_scale_dense_float(2, 1, &packed, &idx, &y, 1)
     precondition(y[1] == 3)
     var denseY: [Float] = [10, 20, 30, 40]
-    precondition(abs(sparse_inner_product_dense_float(2, &packed, &idx, &denseY, 1) - 180) < 0.0001)
+    // Packed [2, 4] at indices [1, 3]: 2 * 20 + 4 * 40 = 200.
+    precondition(abs(sparse_inner_product_dense_float(2, &packed, &idx, &denseY, 1) - 200) < 0.0001)
     var sx: [Float] = [1, 2]
     var ix: [sparse_index] = [0, 2]
     var sy: [Float] = [3, 4]

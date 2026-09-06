@@ -5647,7 +5647,7 @@ s:So12SparseKind_tayABs6UInt32Vcfc	declared	source:full/accelerate/AccelerateCTy
 s:So12bnns_graph_ta4data4sizeABSvSg_Sitcfc	declared	source:full/accelerate/AccelerateCTypes.swift#bnns_graph_t	
 s:So12bnns_graph_taABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#bnns_graph_t	
 s:So13BNNSLayerDataa10AccelerateE4data0D5_type0D6_scale0D5_biasABSVSg_So12BNNSDataTypeaS2ftcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerData	
-s:So13BNNSLayerDataa10AccelerateE4zeroABvpZ	declared	source:full/accelerate/AccelerateCFunctions.swift#zero	
+s:So13BNNSLayerDataa10AccelerateE4zeroABvpZ	deferred		Overlay property is absent from the Linux implementation; requires declaration and focused behavioral evidence.
 s:So13BNNSLayerDataa10AccelerateE8indexed84data0E6_tableABSPys4Int8VGSg_SPySfGtFZ	deferred		Overlay or imported method is not declared on Linux; Apple runtime behavior is unobserved.
 s:So13BNNSLayerDataa4data0C5_type0C6_scale0C5_bias0C6_tableABSVSg_So12BNNSDataTypeaS2fSPySfGSgtcfc	declared	source:full/accelerate/Accelerate.swift#init	
 s:So13BNNSLayerDataaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerData	
@@ -5797,7 +5797,7 @@ s:So19vImage_YpCbCrToARGBV6opaqueABs5UInt8V_A127Et_tcfc	declared	source:full/acc
 s:So19vImage_YpCbCrToARGBVABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#vImage_YpCbCrToARGB	
 s:So20BNNSArithmeticBinarya3in10C5_type3in20e1_D03out0f1_D0ABSo21BNNSNDArrayDescriptora_So18BNNSDescriptorTypeaAjljLtcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticBinary	
 s:So20BNNSArithmeticBinaryaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticBinary	
-s:So20BNNSFilterParametersa10AccelerateE11deallocatorySvSgXCSgvp	declared	source:full/accelerate/AccelerateCFunctions.swift#deallocator	
+s:So20BNNSFilterParametersa10AccelerateE11deallocatorySvSgXCSgvp	deferred		Overlay property is absent from the Linux implementation; requires declaration and focused behavioral evidence.
 s:So20BNNSFilterParametersa10AccelerateE11threadCountSivp	declared	source:full/accelerate/AccelerateCTypes.swift#threadCount	
 s:So20BNNSFilterParametersa10AccelerateE7options11threadCount9allocator11deallocatorABSo9BNNSFlagsa_Sis5Int32VSpySvSgGSg_S2itXCSgyALXCSgtcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSFilterParameters	
 s:So20BNNSFilterParametersa10AccelerateE7optionsSo9BNNSFlagsavp	declared	source:full/accelerate/AccelerateCFunctions.swift#options	
@@ -6799,15 +6799,15 @@ s:s18AdditiveArithmeticPsE2seoiyyxz_xtFZ::SYNTHESIZED::s:s5UInt8V	deferred		Prot
 s:s18AdditiveArithmeticPsE2seoiyyxz_xtFZ::SYNTHESIZED::s:s6UInt16V	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
 s:s18AdditiveArithmeticPsE2seoiyyxz_xtFZ::SYNTHESIZED::s:s6UInt32V	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
 s:s18AdditiveArithmeticPsE2seoiyyxz_xtFZ::SYNTHESIZED::s:s6UInt64V	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
-s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:Si	declared	source:full/accelerate/AccelerateCFunctions.swift#zero	
+s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:Si	not-applicable		Compiler-synthesized standard-library AdditiveArithmetic.zero witness; not an Accelerate-owned declaration.
 s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:s4Int8V	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
 s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:s5Int16V	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
 s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:s5Int32V	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
-s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:s5Int64V	declared	source:full/accelerate/AccelerateCFunctions.swift#zero	
+s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:s5Int64V	not-applicable		Compiler-synthesized standard-library AdditiveArithmetic.zero witness; not an Accelerate-owned declaration.
 s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:s5UInt8V	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
 s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:s6UInt16V	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
 s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:s6UInt32V	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
-s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:s6UInt64V	declared	source:full/accelerate/AccelerateCFunctions.swift#zero	
+s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:s6UInt64V	not-applicable		Compiler-synthesized standard-library AdditiveArithmetic.zero witness; not an Accelerate-owned declaration.
 s:s27ExpressibleByIntegerLiteralPss01_ab7BuiltincD0RzrlE07integerD0xx_tcfc::SYNTHESIZED::s:Si	declared	source:full/accelerate/Accelerate.swift#init	
 s:s27ExpressibleByIntegerLiteralPss01_ab7BuiltincD0RzrlE07integerD0xx_tcfc::SYNTHESIZED::s:s4Int8V	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
 s:s27ExpressibleByIntegerLiteralPss01_ab7BuiltincD0RzrlE07integerD0xx_tcfc::SYNTHESIZED::s:s5Int16V	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.

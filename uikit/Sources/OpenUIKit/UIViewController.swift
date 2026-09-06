@@ -82,24 +82,19 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// survive lazy view loading and root-view replacement without forcing a
     /// view load at registration time.
     var _traitRegistrations: [UITraitChangeRegistration] = []
+    var _legacyTopLayoutGuide: _UILegacyLayoutSupportView?
+    var _legacyBottomLayoutGuide: _UILegacyLayoutSupportView?
 
-    /// UIKit's plain initializer is the nil/nil nib initializer. Keep it as a
-    /// designated initializer in the portable core so existing programmatic
-    /// subclasses can continue to call `super.init()` without coder churn.
-    public override init() {
-        _nibName = nil
-        _nibBundle = .main
-        _hasExplicitNibRequest = false
-        super.init()
-    }
-
-    /// Designated initializer for UIKit source compatibility. OpenUIKit has
-    /// no Interface Builder archive loader: nil/nil is the ordinary
-    /// programmatic path, while an explicit nib request remains lazy and is
-    /// rejected only if this class's default `loadView()` is ultimately used.
-    /// A subclass that overrides `loadView()` can therefore use this exact
-    /// initializer spelling without claiming that OpenUIKit loaded a nib.
-    public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    /// Designated initializer for UIKit source compatibility. Defaulted
+    /// arguments keep `UIViewController()` and `super.init()` working
+    /// (MEASURED Focus AutocompleteSettingViewController.swift:19 —
+    /// a separate parameterless `init()` made that file's `convenience
+    /// init()` an override that the unmodified source does not mark).
+    /// OpenUIKit has no Interface Builder archive loader: nil/nil is the
+    /// ordinary programmatic path, while an explicit nib request remains
+    /// lazy and is rejected only if this class's default `loadView()` is
+    /// ultimately used.
+    public init(nibName nibNameOrNil: String? = nil, bundle nibBundleOrNil: Bundle? = nil) {
         _nibName = nibNameOrNil
         _nibBundle = nibBundleOrNil ?? .main
         _hasExplicitNibRequest = nibNameOrNil != nil || nibBundleOrNil != nil
@@ -118,6 +113,8 @@ open class UIViewController: UIResponder, UIContentContainer {
 
     var _view: UIView? {
         didSet {
+            _legacyTopLayoutGuide = nil
+            _legacyBottomLayoutGuide = nil
             _view?._managingViewController = self
             _view?._additionalSafeAreaInsets = additionalSafeAreaInsets
         }
@@ -134,6 +131,40 @@ open class UIViewController: UIResponder, UIContentContainer {
 
     public var isViewLoaded: Bool { _view != nil }
     public var viewIfLoaded: UIView? { _view }
+
+    /// Deprecated iOS 7–10 layout guides. iOS 11 maps them onto the safe-area
+    /// band (`UIViewController.h`: use `safeAreaLayoutGuide`). SnapKit 5.7.0
+    /// Tests.swift:722 pins `make.top.equalTo(vc.topLayoutGuide.snp.bottom)`.
+    /// Length is `safeAreaInsets.top` / `.bottom` (0 for an unattached VC).
+    public var topLayoutGuide: UILayoutSupport {
+        if let g = _legacyTopLayoutGuide { return g }
+        let g = _UILegacyLayoutSupportView()
+        g.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(g)
+        NSLayoutConstraint.activate([
+            g.topAnchor.constraint(equalTo: view.topAnchor),
+            g.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            g.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            g.heightAnchor.constraint(equalToConstant: view.safeAreaInsets.top),
+        ])
+        _legacyTopLayoutGuide = g
+        return g
+    }
+
+    public var bottomLayoutGuide: UILayoutSupport {
+        if let g = _legacyBottomLayoutGuide { return g }
+        let g = _UILegacyLayoutSupportView()
+        g.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(g)
+        NSLayoutConstraint.activate([
+            g.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            g.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            g.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            g.heightAnchor.constraint(equalToConstant: view.safeAreaInsets.bottom),
+        ])
+        _legacyBottomLayoutGuide = g
+        return g
+    }
 
     public func loadViewIfNeeded() {
         guard _view == nil else { return }

@@ -53,6 +53,8 @@ internal final class ATAudioQueueBufferOwner {
     let dataCapacity: Int
     let packetStorage: UnsafeMutableRawPointer?
     var enqueued = false
+    var trimStartFrames: UInt32 = 0
+    var trimEndFrames: UInt32 = 0
 
     init(
         pointer: UnsafeMutablePointer<AudioQueueBuffer>,
@@ -240,9 +242,109 @@ public func AudioQueueEnqueueBuffer(
             return kAudioQueueErr_InvalidParameter
         }
         owner.enqueued = true
+        owner.trimStartFrames = 0
+        owner.trimEndFrames = 0
         if !queue.enqueued.contains(where: { $0 === owner }) {
             queue.enqueued.append(owner)
         }
+        return 0
+    }
+}
+
+public func AudioQueueEnqueueBufferWithParameters(
+    _ inAQ: AudioQueueRef?,
+    _ inBuffer: AudioQueueBufferRef?,
+    _ inNumPacketDescs: UInt32,
+    _ inPacketDescs: UnsafeRawPointer?,
+    _ inTrimFramesAtStart: UInt32,
+    _ inTrimFramesAtEnd: UInt32,
+    _ inNumParamValues: UInt32,
+    _ inParamValues: UnsafePointer<AudioQueueParameterEvent>?,
+    _ inStartTime: UnsafeRawPointer?,
+    _ outActualStartTime: UnsafeMutableRawPointer?
+) -> Int32 {
+    _ = inStartTime
+    if let outActualStartTime {
+        outActualStartTime.initializeMemory(as: UInt8.self, repeating: 0, count: 64)
+    }
+    if let inParamValues {
+        var index = 0
+        while index < Int(inNumParamValues) {
+            let event = inParamValues.advanced(by: index).pointee
+            if event.mID == kAudioQueueParam_Volume
+                || event.mID == kAudioQueueParam_Pan
+                || event.mID == kAudioQueueParam_PlayRate
+                || event.mID == kAudioQueueParam_Pitch
+                || event.mID == kAudioQueueParam_VolumeRampTime
+            {
+                let status = AudioQueueSetParameter(inAQ, event.mID, event.mValue)
+                if status != 0 {
+                    return status
+                }
+            }
+            index += 1
+        }
+    }
+    let status = AudioQueueEnqueueBuffer(inAQ, inBuffer, inNumPacketDescs, inPacketDescs)
+    if status != 0 {
+        return status
+    }
+    guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self),
+          let inBuffer
+    else {
+        return status
+    }
+    return atWithLock(queue.lock) {
+        if let owner = queue.buffers.first(where: { $0.value.pointer == inBuffer })?.value {
+            owner.trimStartFrames = inTrimFramesAtStart
+            owner.trimEndFrames = inTrimFramesAtEnd
+        }
+        return 0
+    }
+}
+
+public func AudioQueueOfflineRender(
+    _ inAQ: AudioQueueRef?,
+    _ inTimestamp: UnsafeRawPointer?,
+    _ ioBuffer: AudioQueueBufferRef?,
+    _ inNumberFrames: UInt32
+) -> Int32 {
+    _ = inTimestamp
+    guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
+        return kAudioQueueErr_QueueInvalidated
+    }
+    guard let ioBuffer else { return kAudioQueueErr_InvalidBuffer }
+    return atWithLock(queue.lock) {
+        let bytesPerFrame = max(Int(queue.format.mBytesPerFrame), 1)
+        let want = Int(inNumberFrames) * bytesPerFrame
+        if want > Int(ioBuffer.pointee.mAudioDataBytesCapacity) {
+            return kAudioQueueErr_InvalidParameter
+        }
+        guard let owner = queue.enqueued.first else {
+            memset(ioBuffer.pointee.mAudioData, 0, want)
+            ioBuffer.pointee.mAudioDataByteSize = UInt32(want)
+            return 0
+        }
+        queue.enqueued.removeFirst()
+        owner.enqueued = false
+        let startSkip = Int(owner.trimStartFrames) * bytesPerFrame
+        let endSkip = Int(owner.trimEndFrames) * bytesPerFrame
+        let sourceBytes = Int(owner.pointer.pointee.mAudioDataByteSize)
+        let available = max(sourceBytes - startSkip - endSkip, 0)
+        let copyCount = min(want, available)
+        if copyCount > 0 {
+            memcpy(
+                ioBuffer.pointee.mAudioData,
+                owner.data.advanced(by: startSkip),
+                copyCount
+            )
+        }
+        if copyCount < want {
+            memset(ioBuffer.pointee.mAudioData.advanced(by: copyCount), 0, want - copyCount)
+        }
+        ioBuffer.pointee.mAudioDataByteSize = UInt32(want)
+        let copied = Data(bytes: ioBuffer.pointee.mAudioData, count: want)
+        queue.renderedPCM.append(copied)
         return 0
     }
 }

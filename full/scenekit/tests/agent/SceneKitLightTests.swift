@@ -34,3 +34,26 @@ func testLightStores() {
     precondition(light.spotOuterAngle == 60)
     precondition(abs(light.areaExtents.x - 2) < 1e-4)
 }
+
+func testLightShadowAndAreaStores() {
+    let light = SCNLight()
+    light.iesProfileURL = URL(fileURLWithPath: "/tmp/missing.ies")
+    light.areaPolygonVertices = []
+    light.automaticallyAdjustsShadowProjection = false
+    light.doubleSided = true
+    light.drawsArea = true
+    light.forcesBackFaceCasters = true
+    light.maximumShadowDistance = 50
+    light.parallaxCorrectionEnabled = true
+    light.sampleDistributedShadowMaps = true
+    light.shadowCascadeCount = 3
+    light.shadowCascadeSplittingFactor = 0.4
+    light.shadowColor = SCNVector4(0, 0, 0, 1)
+    light.shadowMapSize = CGSize(width: 512, height: 512)
+    light.shadowSampleCount = 8
+    precondition(light.doubleSided)
+    precondition(light.drawsArea)
+    precondition(light.forcesBackFaceCasters)
+    precondition(light.shadowCascadeCount == 3)
+    precondition(light.iesProfileURL?.path.hasSuffix("missing.ies") == true)
+}

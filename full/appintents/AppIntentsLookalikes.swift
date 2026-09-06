@@ -228,8 +228,23 @@ open class CSSearchableIndex: NSObject, @unchecked Sendable {
 // MARK: - CoreLocation lookalikes
 
 #if !canImport(CoreLocation)
+/// Host-local placemark value. There is no CLGeocoder / location daemon
+/// on this Linux lane; name and address strings are stored as supplied.
 open class CLPlacemark: NSObject, @unchecked Sendable {
-    public override init() { super.init() }
+    public var name: String?
+    public var locality: String?
+    public var thoroughfare: String?
+
+    public override init() {
+        super.init()
+    }
+
+    public init(name: String? = nil, locality: String? = nil, thoroughfare: String? = nil) {
+        self.name = name
+        self.locality = locality
+        self.thoroughfare = thoroughfare
+        super.init()
+    }
 }
 #endif
 

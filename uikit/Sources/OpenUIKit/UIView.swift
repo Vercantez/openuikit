@@ -339,7 +339,7 @@ open class CALayer {
     }
 
     public init() {}
-    init(owner: UIView) {
+    public required init(owner: UIView) {
         self.owner = owner
         self.delegate = owner
     }
@@ -467,6 +467,7 @@ public final class CAGradientLayer: CALayer {
     public var endPoint = CGPoint(x: 0.5, y: 1)
 
     public override init() { super.init() }
+    public required init(owner: UIView) { super.init(owner: owner) }
 }
 
 /// Internal hierarchy policy for UIKit containers whose public contract does
@@ -585,7 +586,18 @@ open class UIView: UIResponder, CALayerDelegate {
 
     public internal(set) var superview: UIView?
     public internal(set) var subviews: [UIView] = []
-    public private(set) lazy var layer = CALayer(owner: self)
+    /// UIKit's `+layerClass`. GradientBackgroundView (Focus a2832521) returns
+    /// CAGradientLayer.self; the lazy backing layer is that class.
+    /// MEASURED `swift build --target Blockzilla` 2026-09-06: "property does
+    /// not override any property from its superclass" at
+    /// GradientBackgroundView.swift:29.
+    open class var layerClass: AnyClass { CALayer.self }
+    public private(set) lazy var layer: CALayer = {
+        if let type = Self.layerClass as? CALayer.Type {
+            return type.init(owner: self)
+        }
+        return CALayer(owner: self)
+    }()
 
     public var backgroundColor: UIColor? {
         didSet {
@@ -1383,6 +1395,8 @@ open class UIView: UIResponder, CALayerDelegate {
     /// Interactions attached to this view (M13 — `addInteraction(_:)` and
     /// the rest live in UIContextMenu.swift, which owns the protocol).
     var _interactions: [UIInteraction] = []
+    /// Process-local paste configuration (UIPasteConfigurationSupporting).
+    var _pasteConfiguration: UIPasteConfiguration?
 
     public func addGestureRecognizer(_ recognizer: UIGestureRecognizer) {
         recognizer.view?.removeGestureRecognizer(recognizer)

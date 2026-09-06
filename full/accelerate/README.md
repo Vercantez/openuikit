@@ -131,16 +131,16 @@ FRAMEWORK_FANOUT_HOST_OK module=Accelerate dylib=libAccelerate.dylib
 
 The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this snapshot fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 / linux and the sealed gate compiled with a clean product tree. Starting commit `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b` matched.
 
-## Depth pass 2026-09 (wave 8)
+## Depth pass 2026-09 (wave 18, local repair)
 
 Next depth pass for campaign `ios26.1-fwdepth-r18`, lane `medium-full`, 6856 exact IDs. Keeps earlier passes green and adds real Linear Algebra `la_*`, SparseBLAS `sparse_*` (Float/Double COO; complex fail-closed), BNNS overlay `Shape`/`DataLayout.rank`/arithmetic layers, packed-float `BNNS.gather`, and `vDSP.Biquad`.
 
 - Implemented before: **3181**
 - Implemented after: **3359**
-- Declared: 2247 (was 2425)
-- Deferred: 1250 (unchanged)
+- Declared: 2242 (was 2425 on main; 2247 on the refused cloud head)
+- Deferred: 1252 (was 1250)
 - Unavailable: 0
-- Not-applicable: 0
+- Not-applicable: 3 (compiler-synthesized standard-library `zero` witnesses)
 
 Top-5 evidence distribution (share of remaining implemented rows = 3359 − 3181 = 178):
 
@@ -152,3 +152,52 @@ Top-5 evidence distribution (share of remaining implemented rows = 3359 − 3181
    (tied with `testBNNSShapeRankSizeStride` — 12)
 
 No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling (largest is 36/178 = 20.2%). Sequential `LA_*` / `SPARSE_SUCCESS` macros stay `declared`. vImage CV/CG stays deferred. SwiftUI overlay IDs were not present. Starting commit `39dc25a2769fb88a50f0853964137a4f96d50322`.
+
+### Local repair evidence
+
+Merged current `origin/main` (`58292232`) into cloud head `291a1448` on
+`agent/fw-accelerate-r`; no conflicts, and the delta against main is confined to
+`full/accelerate/`. All **3181** implemented rows from main remain implemented;
+the depth pass adds **178**, for **3359** total across **147** synchronous,
+no-argument cited tests. The largest test accounts for 311/3359 rows (9.3%);
+the largest non-table test accounts for 202/3359 (6.0%). Among the 178 added
+rows, the largest test remains 36/178 (20.2%).
+
+The operator log `/tmp/fw_merge_gate-accelerate.log` and the reproduced baseline
+`/tmp/fw-accelerate-r-baseline.log` rejected five missing declaration anchors:
+coverage lines 5650, 5800, 6802, 6806, and 6810. `BNNSLayerData.zero` and
+`BNNSFilterParameters.deallocator` are absent, so they are now deferred rather
+than backed by unrelated source tokens. The three `::SYNTHESIZED::` witnesses
+for `Int.zero`, `Int64.zero`, and `UInt64.zero` are not applicable to this
+framework. No implemented row was downgraded.
+
+The Linux warnings-as-errors test compile also exposed mutable BNNS descriptors
+that are only read. The tests now bind descriptors immutably inside nested
+`withUnsafeMutableBufferPointer` scopes so their array pointers remain valid
+throughout each operation. The sparse packed-vector test expected 180 for
+`[2, 4]` at indices `[1, 3]` dotted with `[10, 20, 30, 40]`; its independently
+computed expectation is **200** (`2 * 20 + 4 * 40`). The numeric implementation
+is unchanged by the local repair.
+
+Validation in the operator's `uikit-linux` container (Swift 6.2.4,
+`aarch64-unknown-linux-gnu`):
+
+- Sealed gate: **PASS**, log `/tmp/fw-accelerate-r-gate.log`; baseline was five
+  missing-anchor errors. Both library and all agent tests compile with
+  `-warnings-as-errors`.
+- All **147/147** cited tests pass together and separately in fresh processes
+  (10-second per-test timeout); log `/tmp/fw-accelerate-r-isolated.log` ends
+  `ISOLATED_TESTS_OK count=147`. No test blocks.
+- Immutable reference/acceptance hashes match; no `.build`, `build`, or `scratch`
+  directory exists in the framework. No sealed files or shared gate code changed.
+
+The sealed command was `timeout 3600 bash full/accelerate/tests/acceptance/test_host.sh`
+from `/gate-codex-accelerate`, after copying the framework and shared gate inputs
+into the operator container and initializing its Git snapshot. It ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=Accelerate lane=medium-full symbols=6856
+FRAMEWORK_FANOUT_REFERENCE_OK
+ACCELERATE_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Accelerate dylib=libAccelerate.dylib
+```

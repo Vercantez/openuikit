@@ -214,3 +214,73 @@ requires `swiftc`. Active Cursor Build on this VM was
 `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (campaign listed
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). HEAD at start was
 `bff8535c68425cc39fb45cb00d447b0981b57242`.
+
+## Depth pass 2026-09 (wave 9)
+
+SDK depth for `SceneKit` in `full/scenekit/` (2611 IDs). This is a next
+behaviour pass on the wave-8 tree. It keeps the first-pass and wave-8 tests
+green and adds CPU particle emission, camera-controller math, physics fields,
+and vehicle/slider motors.
+
+**Coverage before this pass:** **1455 implemented / 274 declared / 73 deferred /
+0 unavailable / 809 not-applicable**.
+
+**Coverage after this pass:** **1728 implemented / 0 declared / 74 deferred /
+0 unavailable / 809 not-applicable**.
+
+Implemented gain vs wave 8: **+273**. `present(_:with:incomingPointOfView:)`
+moved from `declared` to `deferred` (SpriteKit `SKTransition` + async present
+cannot be exercised on the sealed synchronous gate). No `unavailable` rows.
+
+**Top-5 implemented evidence (of 1728):**
+
+| citations | evidence |
+| ---: | --- |
+| 582 | `test:full/scenekit/tests/agent/SceneKitEnumTests.swift#testEnumOptionSetAndConstantValues` |
+| 101 | `test:full/scenekit/tests/agent/SceneKitMathTests.swift#testVectorMath` |
+| 62 | `test:full/scenekit/tests/agent/SceneKitGeometryTests.swift#testPrimitiveLayouts` |
+| 61 | `test:full/scenekit/tests/agent/SceneKitPhysicsTests.swift#testPhysicsBookkeeping` |
+| 56 | `test:full/scenekit/tests/agent/SceneKitNodeTests.swift#testNodeTransforms` |
+
+The enum/option-set/C-constant table is the allowed shared value test (582).
+Of the remaining 1146 implemented rows, the largest non-enum citation is
+`testVectorMath` at 101 (8.8%, under the 40% bulk-relabel ceiling).
+
+**Behaviour added in this pass:**
+
+- `SCNParticleSystem` CPU emitter: `birthRate` spawn, life, acceleration,
+  damping, `reset()`, SoA `addModifier` / `removeModifiers` /
+  `removeAllModifiers`, `handle` birth/death/collision events, remaining
+  emission/idle/image-sequence/mass/bounce/charge properties as live data.
+- `SCNCameraController` orbit `rotateBy`, `dollyToTarget`/`dolly(by:onScreenPoint:viewport:)`,
+  `rollAroundTarget`, `frameNodes` bounding-sphere framing, `clearRoll`,
+  inertia flags/`stopInertia`.
+- `SCNPhysicsField` kinds (linear/radial/drag/vortex/spring/electric/magnetic/
+  noise/turbulence/custom) evaluated during the fixed-dt integrator, with
+  exclusive/scope/halfExtent.
+- `SCNPhysicsVehicle` engine/brake/steer applying chassis force; wheel
+  suspension/axle properties; `speedInKilometersPerHour` from velocity.
+  `SCNPhysicsSliderJoint` motor force and linear limits.
+- Geometry `insert`/`remove`/`replace` materials, `element(at:)`, tessellator
+  and LOD stores, geometry-element point-size/range.
+- Camera post-process stores, light shadow/area/IES stores, morpher/physicsField/
+  rendererDelegate, fail-closed `SCNScene(named:)`/`init(url:)`, NSCoding
+  `init(coder:)` returns nil.
+
+**Fail-closed:** Metal/EAGL/GPU render and snapshot, `.scn`/USD/DAE decode,
+async SpriteKit `present`, JavaScript actions (no JS runtime), audio playback,
+SwiftUI `SceneView`, Darwin `simd_float4x4`/`simd_quatf`, GLKit,
+precomputed lighting environments.
+
+**Tests:** `bash full/scenekit/tests/acceptance/test_host.sh`. Every cited
+`func test*()` is synchronous and lives in `tests/agent/*Tests.swift`;
+`SceneKitRuntime.swift` concatenates them for the sealed one-file guest
+runtime.
+
+**Environment:** Swift 6.2.4, `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` still fails in this snapshot
+(missing `scratch/ladder-corpus/focus-ios`). The sealed host gate only
+requires `swiftc`. Active Cursor Build on this VM was
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (campaign listed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). HEAD at start was
+`39dc25a2769fb88a50f0853964137a4f96d50322`.

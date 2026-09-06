@@ -88,6 +88,86 @@ public typealias MusicDeviceInstrumentID = UInt32
 public typealias NoteInstanceID = UInt32
 public typealias AudioCodec = AudioComponentInstance
 public typealias AudioCodecPropertyID = UInt32
+public typealias AUAudioUnitStatus = Int32
+public typealias AUNodeConnection = AudioUnitNodeConnection
+public typealias AudioUnitParameterIDName = AudioUnitParameterNameInfo
+public typealias HostCallback_GetBeatAndTempo = (
+    UnsafeMutableRawPointer?,
+    UnsafeMutablePointer<Float64>?,
+    UnsafeMutablePointer<Float64>?
+) -> Int32
+public typealias HostCallback_GetMusicalTimeLocation = (
+    UnsafeMutableRawPointer?,
+    UnsafeMutablePointer<UInt32>?,
+    UnsafeMutablePointer<Float32>?,
+    UnsafeMutablePointer<UInt32>?,
+    UnsafeMutablePointer<Float64>?
+) -> Int32
+public typealias HostCallback_GetTransportState = (
+    UnsafeMutableRawPointer?,
+    UnsafeMutablePointer<UInt8>?,
+    UnsafeMutablePointer<UInt8>?,
+    UnsafeMutablePointer<Float64>?,
+    UnsafeMutablePointer<UInt8>?,
+    UnsafeMutablePointer<Float64>?,
+    UnsafeMutablePointer<Float64>?
+) -> Int32
+public typealias HostCallback_GetTransportState2 = (
+    UnsafeMutableRawPointer?,
+    UnsafeMutablePointer<UInt8>?,
+    UnsafeMutablePointer<UInt8>?,
+    UnsafeMutablePointer<UInt8>?,
+    UnsafeMutablePointer<Float64>?,
+    UnsafeMutablePointer<UInt8>?,
+    UnsafeMutablePointer<Float64>?,
+    UnsafeMutablePointer<Float64>?
+) -> Int32
+public typealias MusicDeviceMIDIEventProc = (
+    UnsafeMutableRawPointer,
+    UInt32,
+    UInt32,
+    UInt32,
+    UInt32
+) -> Int32
+public typealias MusicDeviceSysExProc = (
+    UnsafeMutableRawPointer,
+    UnsafePointer<UInt8>,
+    UInt32
+) -> Int32
+public typealias MusicDeviceStopNoteProc = (
+    UnsafeMutableRawPointer,
+    MusicDeviceGroupID,
+    NoteInstanceID,
+    UInt32
+) -> Int32
+public typealias MusicDeviceStartNoteProc = (
+    UnsafeMutableRawPointer,
+    MusicDeviceInstrumentID,
+    MusicDeviceGroupID,
+    UnsafeMutablePointer<NoteInstanceID>,
+    UInt32,
+    UnsafePointer<MusicDeviceNoteParams>
+) -> Int32
+public typealias AudioUnitScheduleParametersProc = (
+    UnsafeMutableRawPointer,
+    UnsafePointer<AudioUnitParameterEvent>,
+    UInt32
+) -> Int32
+public typealias ScheduledAudioSliceCompletionProc = (
+    UnsafeMutableRawPointer?,
+    UnsafeMutablePointer<ScheduledAudioSlice>
+) -> Void
+public typealias ScheduledAudioFileRegionCompletionProc = (
+    UnsafeMutableRawPointer?,
+    UnsafeMutablePointer<ScheduledAudioFileRegion>,
+    Int32
+) -> Void
+public typealias AUInputSamplesInOutputCallback = (
+    UnsafeMutableRawPointer?,
+    UnsafeRawPointer?,
+    Float64,
+    Float64
+) -> Void
 
 public let kInstrumentInfoKey_LSB = "LSB"
 public let kInstrumentInfoKey_MSB = "MSB"

@@ -173,7 +173,7 @@ public struct AVFileType: RawRepresentable, Hashable, Sendable,
     public static let m4a = AVFileType(rawValue: "com.apple.m4a-audio")
 }
 
-open class AVAsset: NSObject, @unchecked Sendable {
+open class AVAsset: NSObject, AVContentKeyRecipient, @unchecked Sendable {
     let loadState = AVAssetLoadState()
 
     public override init() {
@@ -548,6 +548,14 @@ open class AVAssetExportSession: NSObject, @unchecked Sendable {
     public var shouldOptimizeForNetworkUse = false
     var portableTimeRange = CMTimeRange.zero
     var portableFileLengthLimit: Int64 = 0
+    var portableMetadata: [AVMetadataItem]?
+    var portableMetadataItemFilter: AVMetadataItemFilter?
+    var portableAudioMix: AVAudioMix?
+    var portableVideoComposition: AVVideoComposition?
+    var portableAudioTimePitchAlgorithm = AVAudioTimePitchAlgorithm(rawValue: "")
+    var portableAudioTrackGroupHandling = AVAssetTrackGroupOutputHandling(rawValue: 0)
+    var portableCanPerformMultiplePassesOverSourceMediaData = false
+    var portableDirectoryForTemporaryFiles: URL?
 
     private let stateLock = NSLock()
     private var storedStatus = Status.unknown

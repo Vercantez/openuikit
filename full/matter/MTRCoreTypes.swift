@@ -261,6 +261,9 @@ open class MTRDeviceTypeRevision: NSObject {
     public var deviceType: MTRDeviceType? {
         MTRDeviceType(forID: deviceTypeID)
     }
+
+    public var deviceTypeRevision: NSNumber { revision }
+    public var typeInformation: MTRDeviceType? { deviceType }
 }
 
 open class MTRProductIdentity: NSObject {
@@ -460,6 +463,10 @@ open class MTRCommissioningParameters: NSObject {
     public var countryCode: String?
     public var skipCommissioningComplete: Bool = false
     public var extraReadTimeout: NSNumber?
+    public var deviceAttestationDelegate: (any MTRDeviceAttestationDelegate)?
+    public var failSafeExpiryTimeoutSecs: NSNumber?
+    public var failSafeTimeout: NSNumber?
+    public var readEndpointInformation: Bool = false
 }
 
 open class MTRAccessGrant: NSObject {
@@ -477,6 +484,38 @@ open class MTRAccessGrant: NSObject {
         self.authenticationMode = authenticationMode
         super.init()
     }
+
+    public init(forAllNodesWith privilege: MTRAccessControlEntryPrivilege) {
+        self.subjectID = nil
+        self.grantedPrivilege = privilege
+        self.authenticationMode = .CASE
+        super.init()
+    }
+
+    public convenience init(forAllNodesWithPrivilege privilege: MTRAccessControlEntryPrivilege) {
+        self.init(forAllNodesWith: privilege)
+    }
+
+    public init?(forCASEAuthenticatedTag caseAuthenticatedTag: NSNumber, privilege: MTRAccessControlEntryPrivilege) {
+        self.subjectID = caseAuthenticatedTag
+        self.grantedPrivilege = privilege
+        self.authenticationMode = .CASE
+        super.init()
+    }
+
+    public init?(forGroupID groupID: NSNumber, privilege: MTRAccessControlEntryPrivilege) {
+        self.subjectID = groupID
+        self.grantedPrivilege = privilege
+        self.authenticationMode = .group
+        super.init()
+    }
+
+    public init?(forNodeID nodeID: NSNumber, privilege: MTRAccessControlEntryPrivilege) {
+        self.subjectID = nodeID
+        self.grantedPrivilege = privilege
+        self.authenticationMode = .CASE
+        super.init()
+    }
 }
 
 open class MTRFabricInfo: NSObject {
@@ -487,12 +526,23 @@ open class MTRFabricInfo: NSObject {
     public var rootPublicKey: Data = Data()
     public var vendorName: String?
     public var fabricLabel: String?
+    public var label: String {
+        get { fabricLabel ?? "" }
+        set { fabricLabel = newValue }
+    }
+    public var intermediateCertificate: Data?
+    public var intermediateCertificateTLV: Data?
+    public var operationalCertificate: Data?
+    public var operationalCertificateTLV: Data?
+    public var rootCertificate: Data?
+    public var rootCertificateTLV: Data?
 }
 
 open class MTREndpointInfo: NSObject {
     public var endpointID: NSNumber = 0
     public var deviceTypes: [MTRDeviceTypeRevision] = []
     public var partsList: [NSNumber] = []
+    public var children: [MTREndpointInfo] = []
 }
 
 open class CSRInfo: NSObject {
@@ -583,6 +633,20 @@ open class MTRCertificateInfo: NSObject {
     public var subject: MTRDistinguishedNameInfo?
     public var notBefore: Date?
     public var notAfter: Date?
+    public var publicKeyData: Data?
+
+    public override init() {
+        super.init()
+    }
+
+    public init?(tlvBytes bytes: Data) {
+        _ = bytes
+        super.init()
+    }
+
+    public convenience init?(TLVBytes bytes: Data) {
+        self.init(tlvBytes: bytes)
+    }
 }
 
 open class MTRDistinguishedNameInfo: NSObject {
@@ -614,6 +678,22 @@ open class MTROTAHeader: NSObject {
     public var vendorID: NSNumber?
     public var productID: NSNumber?
     public var payloadSize: NSNumber?
+    public var imageDigest: Data = Data()
+    public var imageDigestType: MTROTAImageDigestType = .sha256
+    public var minApplicableVersion: NSNumber?
+    public var maxApplicableVersion: NSNumber?
+    public var releaseNotesURL: String?
+    public var softwareVersion: NSNumber?
+    public var softwareVersionString: String = ""
+
+    public override init() {
+        super.init()
+    }
+
+    public init(data: Data) {
+        _ = data
+        super.init()
+    }
 }
 
 open class MTROTAHeaderParser: NSObject {

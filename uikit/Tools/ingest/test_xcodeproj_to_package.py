@@ -110,13 +110,13 @@ class MiniAppFixtureTests(unittest.TestCase):
         self.assertEqual(info["display_name"], "Mini App")
         self.assertEqual(info["keys"]["CFBundleName"], "MiniApp")
 
-    def test_snapkit_is_uikit_bound_and_webkit_has_no_port(self) -> None:
+    def test_snapkit_and_webkit_are_ported_products(self) -> None:
         spm = {row["name"]: row for row in self.manifest["spm"]}
         self.assertEqual(spm["SnapKit"]["class"], "UIKit-bound")
-        self.assertIsNone(spm["SnapKit"]["port"])
+        self.assertEqual(spm["SnapKit"]["port"], "SnapKit")
         no_port = {row["name"] for row in self.manifest["no_port"]}
-        self.assertIn("SnapKit", no_port)
-        self.assertIn("WebKit", no_port)
+        self.assertNotIn("SnapKit", no_port)
+        self.assertNotIn("WebKit", no_port)
         self.assertNotIn("UIKit", no_port)
         self.assertNotIn("Foundation", no_port)
         self.assertNotIn("Combine", no_port)
@@ -151,6 +151,22 @@ class MiniAppFixtureTests(unittest.TestCase):
             )
             self.assertIn(
                 '.product(name: "Glean", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+                text,
+            )
+            self.assertIn(
+                '.product(name: "SnapKit", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+                text,
+            )
+            self.assertIn(
+                '.product(name: "Sentry", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+                text,
+            )
+            self.assertIn(
+                '.product(name: "Fuzi", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+                text,
+            )
+            self.assertIn(
+                '.product(name: "libkern", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
                 text,
             )
             self.assertIn("-default-isolation", text)
@@ -251,7 +267,9 @@ class FocusBlockzillaTests(unittest.TestCase):
         self.assertEqual(by_name["Sentry"]["class"], "ObjC")
         # Fuzi was not one of the 30 deps the ladder classified.
         self.assertEqual(by_name["Fuzi"]["class"], "unmeasured")
-        self.assertIsNone(by_name["SnapKit"]["port"])
+        self.assertEqual(by_name["SnapKit"]["port"], "SnapKit")
+        self.assertEqual(by_name["Sentry"]["port"], "Sentry")
+        self.assertEqual(by_name["Fuzi"]["port"], "Fuzi")
         self.assertEqual(by_name["DesignSystem"]["origin"], "local")
         self.assertEqual(by_name["DesignSystem"]["relative_path"], "BlockzillaPackage")
         self.assertEqual(by_name["UIHelpers"]["package_name"], "Focus")
@@ -263,9 +281,12 @@ class FocusBlockzillaTests(unittest.TestCase):
         self.assertNotIn("ObjC sources", kinds)
         self.assertEqual(self.manifest["counts"]["objc_sources"], 0)
 
-    def test_webkit_import_has_no_port(self) -> None:
+    def test_webkit_snapkit_sentry_are_ported(self) -> None:
         names = {row["name"] for row in self.manifest["no_port"]}
-        self.assertTrue({"WebKit", "SnapKit", "Sentry"} & names)
+        self.assertNotIn("WebKit", names)
+        self.assertNotIn("SnapKit", names)
+        self.assertNotIn("Sentry", names)
+        self.assertNotIn("Fuzi", names)
 
 
 @unittest.skipUnless(_corpus_available(), f"ladder corpus missing at {CORPUS}")
@@ -362,6 +383,44 @@ class PocketCastsTests(unittest.TestCase):
         # podcasts/ABTest/ABTestProvider.swift:1 `no such module 'AutomatticTracks'`.
         names = {row["name"] for row in self.manifest["no_port"]}
         self.assertIn("AutomatticTracks", names)
+
+
+class LibkernIngestCopyTests(unittest.TestCase):
+    def test_prepends_import_libkern_for_osatomic(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "ReadWriteLock.swift"
+            dst = Path(tmp) / "out" / "ReadWriteLock.swift"
+            src.write_text(
+                "import Foundation\n"
+                "func lock(_ p: UnsafeMutablePointer<Int32>) {\n"
+                "    _ = OSAtomicCompareAndSwap32Barrier(0, 1, p)\n"
+                "    OSSpinLockLock(p)\n"
+                "}\n",
+                encoding="utf-8",
+            )
+            ingest._copy_swift_source_with_libkern(src, dst)
+            text = dst.read_text(encoding="utf-8")
+            self.assertTrue(text.startswith("import libkern\nimport Foundation\n"))
+            self.assertEqual(text.count("import libkern"), 1)
+
+    def test_leaves_unrelated_swift_alone(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "App.swift"
+            dst = Path(tmp) / "out" / "App.swift"
+            src.write_text("import Foundation\n", encoding="utf-8")
+            ingest._copy_swift_source_with_libkern(src, dst)
+            self.assertEqual(dst.read_text(encoding="utf-8"), "import Foundation\n")
+
+    def test_rewrites_import_os_log(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "NimbusWrapper.swift"
+            dst = Path(tmp) / "out" / "NimbusWrapper.swift"
+            src.write_text("import os.log\nimport Foundation\n", encoding="utf-8")
+            ingest._copy_swift_source_with_libkern(src, dst)
+            self.assertEqual(
+                dst.read_text(encoding="utf-8"),
+                "import os\nimport Foundation\n",
+            )
 
 
 if __name__ == "__main__":

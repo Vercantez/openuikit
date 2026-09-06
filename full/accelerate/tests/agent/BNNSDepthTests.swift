@@ -1,12 +1,18 @@
 import Accelerate
 import Foundation
 
-private func _desc(_ data: UnsafeMutablePointer<Float>, _ count: Int) -> BNNSNDArrayDescriptor {
-    var d = BNNSNDArrayDescriptor()
-    d.data = UnsafeMutableRawPointer(data)
-    d.data_type = BNNSDataTypeFloat32
-    d.size.0 = count
-    return d
+// Keep descriptor storage pinned for the complete operation: returning a pointer
+// obtained by passing an Array with & only keeps it alive for the helper call.
+private func _withDescriptor(
+    _ values: inout [Float], _ body: (BNNSNDArrayDescriptor) -> Void
+) {
+    values.withUnsafeMutableBufferPointer { buffer in
+        var descriptor = BNNSNDArrayDescriptor()
+        descriptor.data = UnsafeMutableRawPointer(buffer.baseAddress!)
+        descriptor.data_type = BNNSDataTypeFloat32
+        descriptor.size.0 = buffer.count
+        body(descriptor)
+    }
 }
 
 func testBNNSDataLayoutRankAndAllCases() {
@@ -50,64 +56,76 @@ func testBNNSArithmeticAllCasesAndApply() {
     precondition(BNNS.ArithmeticBinaryFunction.allCases.count == 12)
     var srcVals: [Float] = [-2, 4, 9]
     var dstVals: [Float] = [0, 0, 0]
-    var src = _desc(&srcVals, 3)
-    var dst = _desc(&dstVals, 3)
-    guard let layer = BNNS.UnaryArithmeticLayer(
-        input: src,
-        inputDescriptorType: .sample,
-        output: dst,
-        outputDescriptorType: .sample,
-        function: .abs,
-        activation: .identity,
-        filterParameters: nil
-    ) else {
-        preconditionFailure("unary layer")
+    _withDescriptor(&srcVals) { src in
+        _withDescriptor(&dstVals) { dst in
+            guard let layer = BNNS.UnaryArithmeticLayer(
+                input: src,
+                inputDescriptorType: .sample,
+                output: dst,
+                outputDescriptorType: .sample,
+                function: .abs,
+                activation: .identity,
+                filterParameters: nil
+            ) else {
+                preconditionFailure("unary layer")
+            }
+            try! layer.apply(batchSize: 1, input: src, output: dst)
+        }
     }
-    try! layer.apply(batchSize: 1, input: src, output: dst)
     precondition(dstVals == [2, 4, 9])
     var aVals: [Float] = [1, 2, 3]
     var bVals: [Float] = [4, 5, 6]
     var oVals: [Float] = [0, 0, 0]
-    var a = _desc(&aVals, 3)
-    var b = _desc(&bVals, 3)
-    var o = _desc(&oVals, 3)
-    guard let binary = BNNS.BinaryArithmeticLayer(
-        inputA: a,
-        inputADescriptorType: .sample,
-        inputB: b,
-        inputBDescriptorType: .sample,
-        output: o,
-        outputDescriptorType: .sample,
-        function: .add,
-        activation: .identity,
-        filterParameters: nil
-    ) else {
-        preconditionFailure("binary layer")
+    _withDescriptor(&aVals) { a in
+        _withDescriptor(&bVals) { b in
+            _withDescriptor(&oVals) { o in
+                guard let binary = BNNS.BinaryArithmeticLayer(
+                    inputA: a,
+                    inputADescriptorType: .sample,
+                    inputB: b,
+                    inputBDescriptorType: .sample,
+                    output: o,
+                    outputDescriptorType: .sample,
+                    function: .add,
+                    activation: .identity,
+                    filterParameters: nil
+                ) else {
+                    preconditionFailure("binary layer")
+                }
+                try! binary.apply(batchSize: 1, inputA: a, inputB: b, output: o)
+            }
+        }
     }
-    try! binary.apply(batchSize: 1, inputA: a, inputB: b, output: o)
     precondition(oVals == [5, 7, 9])
 }
 
 func testBNNSOverlayCopyClipGatherTranspose() {
     var srcVals: [Float] = [1, 2, 3, 4]
     var dstVals: [Float] = [0, 0, 0, 0]
-    var src = _desc(&srcVals, 4)
-    var dst = _desc(&dstVals, 4)
-    try! BNNS.copy(src, to: dst, filterParameters: nil)
+    _withDescriptor(&srcVals) { src in
+        _withDescriptor(&dstVals) { dst in
+            try! BNNS.copy(src, to: dst, filterParameters: nil)
+        }
+    }
     precondition(dstVals == srcVals)
     var clipSrc: [Float] = [-2, 0.5, 9]
     var clipDst: [Float] = [0, 0, 0]
-    var csrc = _desc(&clipSrc, 3)
-    var cdst = _desc(&clipDst, 3)
-    try! BNNS.clip(to: Float(0)...Float(1), input: csrc, output: cdst)
+    _withDescriptor(&clipSrc) { csrc in
+        _withDescriptor(&clipDst) { cdst in
+            try! BNNS.clip(to: Float(0)...Float(1), input: csrc, output: cdst)
+        }
+    }
     precondition(clipDst == [0, 0.5, 1])
     var gatherSrc: [Float] = [10, 20, 30]
     var gatherIdx: [Float] = [2, 0]
     var gatherDst: [Float] = [0, 0]
-    var gsrc = _desc(&gatherSrc, 3)
-    var gidx = _desc(&gatherIdx, 2)
-    var gdst = _desc(&gatherDst, 2)
-    try! BNNS.gather(input: gsrc, indices: gidx, output: gdst, axis: 0, filterParameters: nil)
+    _withDescriptor(&gatherSrc) { gsrc in
+        _withDescriptor(&gatherIdx) { gidx in
+            _withDescriptor(&gatherDst) { gdst in
+                try! BNNS.gather(input: gsrc, indices: gidx, output: gdst, axis: 0, filterParameters: nil)
+            }
+        }
+    }
     precondition(gatherDst == [30, 10])
     var tsrcVals: [Float] = [1, 2, 3, 4, 5, 6]
     var tdstVals: [Float] = [0, 0, 0, 0, 0, 0]
