@@ -1,0 +1,16 @@
+module	slug	lane	priority	risks	dependencies
+AVRouting	avrouting	leaf-full	100	media,routing,fail-closed	Foundation
+AccessorySetupKit	accessorysetupkit	medium-full	100	hardware,bluetooth,privacy,fail-closed	Foundation
+BusinessChat	businesschat	leaf-full	100	ui,messaging,fail-closed	Foundation,UIKit
+CarKey	carkey	leaf-full	100	hardware,security,fail-closed	Foundation
+ColorSync	colorsync	medium-full	100	c-abi,color,fail-closed	CoreFoundation
+DeviceDiscoveryUI	devicediscoveryui	leaf-full	100	ui,network,fail-closed	Foundation,UIKit
+DockKit	dockkit	medium-full	100	hardware,camera,fail-closed	Foundation
+EnergyKit	energykit	leaf-full	100	os-service,fail-closed	Foundation
+GameSave	gamesave	leaf-full	100	persistence,cloud,fail-closed	Foundation
+GeoToolbox	geotoolbox	leaf-full	100	location,fail-closed	Foundation
+IdentityLookupUI	identitylookupui	leaf-full	100	ui,extension,fail-closed	Foundation,IdentityLookup,UIKit
+JournalingSuggestions	journalingsuggestions	leaf-full	100	privacy,ui,fail-closed	Foundation
+LocalAuthenticationEmbeddedUI	localauthenticationembeddedui	leaf-full	100	ui,security,fail-closed	Foundation,LocalAuthentication,UIKit
+LockedCameraCapture	lockedcameracapture	leaf-full	100	extension,camera,fail-closed	Foundation
+MarketplaceKit	marketplacekit	medium-full	100	os-service,privacy,fail-closed	Foundation

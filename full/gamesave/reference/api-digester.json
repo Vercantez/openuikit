@@ -1,0 +1,1548 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "GameSave.GSSyncedDirectory",
+        "printedName": "GameSave.GSSyncedDirectory"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Double",
+            "printedName": "Swift.Double",
+            "usr": "s:Sd"
+          }
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "kind": "Var",
+        "moduleName": "GameSave",
+        "name": "GameSaveVersionNumber",
+        "printedName": "GameSaveVersionNumber",
+        "usr": "c:@GameSaveVersionNumber"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Error",
+            "printedName": "<<error type>>"
+          }
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "isLet": true,
+        "kind": "Var",
+        "moduleName": "GameSave",
+        "name": "GameSaveVersionString",
+        "printedName": "GameSaveVersionString",
+        "usr": "c:@GameSaveVersionString"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "GameSave",
+        "printedName": "GameSave"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "OSLog",
+        "printedName": "OSLog"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "UIKit",
+        "printedName": "UIKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "UniformTypeIdentifiers.UTType",
+        "printedName": "UniformTypeIdentifiers.UTType"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "UniformTypeIdentifiers",
+        "printedName": "UniformTypeIdentifiers"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "os.log",
+        "printedName": "os.log"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GameSave",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC2idSSvg",
+                "moduleName": "GameSave",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC2idSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s8GameSave0aB15SyncedDirectoryC2idSSvp",
+            "moduleName": "GameSave",
+            "name": "id",
+            "printedName": "id",
+            "usr": "s:8GameSave0aB15SyncedDirectoryC2idSSvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GameSaveSyncedDirectory",
+                "printedName": "GameSave.GameSaveSyncedDirectory",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GameSaveSyncedDirectory",
+                "printedName": "GameSave.GameSaveSyncedDirectory",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8GameSave0aB15SyncedDirectoryC2eeoiySbAC_ACtFZ",
+            "moduleName": "GameSave",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:8GameSave0aB15SyncedDirectoryC2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                            "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "URL",
+                            "printedName": "Foundation.URL",
+                            "usr": "s:10Foundation3URLV"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Foundation.URL) -> GameSave.GameSaveSyncedDirectory.State"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                            "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "GameSave.GameSaveSyncedDirectory.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(GameSave.GameSaveSyncedDirectory.State.Type) -> (Foundation.URL) -> GameSave.GameSaveSyncedDirectory.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC5StateO5readyyAE10Foundation3URLVcAEmF",
+                "moduleName": "GameSave",
+                "name": "ready",
+                "printedName": "ready",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO5readyyAE10Foundation3URLVcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                            "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "URL",
+                            "printedName": "Foundation.URL",
+                            "usr": "s:10Foundation3URLV"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Foundation.URL) -> GameSave.GameSaveSyncedDirectory.State"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                            "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "GameSave.GameSaveSyncedDirectory.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(GameSave.GameSaveSyncedDirectory.State.Type) -> (Foundation.URL) -> GameSave.GameSaveSyncedDirectory.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC5StateO7offlineyAE10Foundation3URLVcAEmF",
+                "moduleName": "GameSave",
+                "name": "offline",
+                "printedName": "offline",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO7offlineyAE10Foundation3URLVcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                            "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "URL",
+                            "printedName": "Foundation.URL",
+                            "usr": "s:10Foundation3URLV"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Foundation.URL) -> GameSave.GameSaveSyncedDirectory.State"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                            "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "GameSave.GameSaveSyncedDirectory.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(GameSave.GameSaveSyncedDirectory.State.Type) -> (Foundation.URL) -> GameSave.GameSaveSyncedDirectory.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC5StateO5localyAE10Foundation3URLVcAEmF",
+                "moduleName": "GameSave",
+                "name": "local",
+                "printedName": "local",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO5localyAE10Foundation3URLVcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "State",
+                        "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                        "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                            "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "GameSave.GameSaveSyncedDirectory.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(GameSave.GameSaveSyncedDirectory.State.Type) -> GameSave.GameSaveSyncedDirectory.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC5StateO7syncingyA2EmF",
+                "moduleName": "GameSave",
+                "name": "syncing",
+                "printedName": "syncing",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO7syncingyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                            "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "Version",
+                                    "printedName": "GameSave.GameSaveSyncedDirectory.Version",
+                                    "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC"
+                                  }
+                                ],
+                                "kind": "TypeNominal",
+                                "name": "Array",
+                                "printedName": "[GameSave.GameSaveSyncedDirectory.Version]",
+                                "usr": "s:Sa"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(versions: [GameSave.GameSaveSyncedDirectory.Version])"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "([GameSave.GameSaveSyncedDirectory.Version]) -> GameSave.GameSaveSyncedDirectory.State"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                            "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "GameSave.GameSaveSyncedDirectory.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(GameSave.GameSaveSyncedDirectory.State.Type) -> ([GameSave.GameSaveSyncedDirectory.Version]) -> GameSave.GameSaveSyncedDirectory.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC5StateO10conflictedyAESayAC7VersionCG_tcAEmF",
+                "moduleName": "GameSave",
+                "name": "conflicted",
+                "printedName": "conflicted",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO10conflictedyAESayAC7VersionCG_tcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                            "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "any Swift.Error",
+                            "usr": "s:s5ErrorP"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(any Swift.Error) -> GameSave.GameSaveSyncedDirectory.State"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                            "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "GameSave.GameSaveSyncedDirectory.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(GameSave.GameSaveSyncedDirectory.State.Type) -> (any Swift.Error) -> GameSave.GameSaveSyncedDirectory.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC5StateO5erroryAEs5Error_pcAEmF",
+                "moduleName": "GameSave",
+                "name": "error",
+                "printedName": "error",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO5erroryAEs5Error_pcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "State",
+                        "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                        "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "State",
+                            "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                            "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "GameSave.GameSaveSyncedDirectory.State.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(GameSave.GameSaveSyncedDirectory.State.Type) -> GameSave.GameSaveSyncedDirectory.State"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC5StateO6closedyA2EmF",
+                "moduleName": "GameSave",
+                "name": "closed",
+                "printedName": "closed",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO6closedyA2EmF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s8GameSave0aB15SyncedDirectoryC5StateO11descriptionSSvg",
+                    "moduleName": "GameSave",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO11descriptionSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC5StateO11descriptionSSvp",
+                "moduleName": "GameSave",
+                "name": "description",
+                "printedName": "description",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO11descriptionSSvp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss23CustomStringConvertibleP",
+                "name": "CustomStringConvertible",
+                "printedName": "CustomStringConvertible",
+                "usr": "s:s23CustomStringConvertibleP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Enum",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "kind": "TypeDecl",
+            "mangledName": "$s8GameSave0aB15SyncedDirectoryC5StateO",
+            "moduleName": "GameSave",
+            "name": "State",
+            "printedName": "State",
+            "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC2IDa",
+                "moduleName": "GameSave",
+                "name": "ID",
+                "printedName": "ID",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC2IDa"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URL",
+                        "printedName": "Foundation.URL",
+                        "usr": "s:10Foundation3URLV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC2id10Foundation3URLVvg",
+                    "moduleName": "GameSave",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC2id10Foundation3URLVvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC2id10Foundation3URLVvp",
+                "moduleName": "GameSave",
+                "name": "id",
+                "printedName": "id",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC2id10Foundation3URLVvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC7isLocalSbvg",
+                    "moduleName": "GameSave",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC7isLocalSbvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC7isLocalSbvp",
+                "moduleName": "GameSave",
+                "name": "isLocal",
+                "printedName": "isLocal",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC7isLocalSbvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC29localizedNameOfSavingComputerSSvg",
+                    "moduleName": "GameSave",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC29localizedNameOfSavingComputerSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC29localizedNameOfSavingComputerSSvp",
+                "moduleName": "GameSave",
+                "name": "localizedNameOfSavingComputer",
+                "printedName": "localizedNameOfSavingComputer",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC29localizedNameOfSavingComputerSSvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Date",
+                        "printedName": "Foundation.Date",
+                        "usr": "s:10Foundation4DateV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC12modifiedDate10Foundation0G0Vvg",
+                    "moduleName": "GameSave",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC12modifiedDate10Foundation0G0Vvg"
+                  },
+                  {
+                    "accessorKind": "set",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Date",
+                        "printedName": "Foundation.Date",
+                        "usr": "s:10Foundation4DateV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC12modifiedDate10Foundation0G0Vvs",
+                    "moduleName": "GameSave",
+                    "name": "Set",
+                    "printedName": "Set()",
+                    "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC12modifiedDate10Foundation0G0Vvs"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Date",
+                    "printedName": "Foundation.Date",
+                    "usr": "s:10Foundation4DateV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC12modifiedDate10Foundation0G0Vvp",
+                "moduleName": "GameSave",
+                "name": "modifiedDate",
+                "printedName": "modifiedDate",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC12modifiedDate10Foundation0G0Vvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URL",
+                        "printedName": "Foundation.URL",
+                        "usr": "s:10Foundation3URLV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC3url10Foundation3URLVvg",
+                    "moduleName": "GameSave",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC3url10Foundation3URLVvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC3url10Foundation3URLVvp",
+                "moduleName": "GameSave",
+                "name": "url",
+                "printedName": "url",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC3url10Foundation3URLVvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC11descriptionSSvg",
+                    "moduleName": "GameSave",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC11descriptionSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC11descriptionSSvp",
+                "moduleName": "GameSave",
+                "name": "description",
+                "printedName": "description",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC11descriptionSSvp"
+              }
+            ],
+            "conformances": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "URL",
+                            "printedName": "Foundation.URL",
+                            "usr": "s:10Foundation3URLV"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "ID",
+                        "printedName": "GameSave.GameSaveSyncedDirectory.Version.ID"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "ID",
+                    "printedName": "ID"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss12IdentifiableP",
+                "name": "Identifiable",
+                "printedName": "Identifiable",
+                "usr": "s:s12IdentifiableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss23CustomStringConvertibleP",
+                "name": "CustomStringConvertible",
+                "printedName": "CustomStringConvertible",
+                "usr": "s:s23CustomStringConvertibleP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Class",
+            "hasMissingDesignatedInitializers": true,
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "kind": "TypeDecl",
+            "mangledName": "$s8GameSave0aB15SyncedDirectoryC7VersionC",
+            "moduleName": "GameSave",
+            "name": "Version",
+            "printedName": "Version",
+            "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "State",
+                    "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                    "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s8GameSave0aB15SyncedDirectoryC5stateAC5StateOvg",
+                "moduleName": "GameSave",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC5stateAC5StateOvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "State",
+                "printedName": "GameSave.GameSaveSyncedDirectory.State",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC5StateO"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s8GameSave0aB15SyncedDirectoryC5stateAC5StateOvp",
+            "moduleName": "GameSave",
+            "name": "state",
+            "printedName": "state",
+            "usr": "s:8GameSave0aB15SyncedDirectoryC5stateAC5StateOvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "GameSaveSyncedDirectory",
+                "printedName": "GameSave.GameSaveSyncedDirectory",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8GameSave0aB15SyncedDirectoryC04openD019containerIdentifierACSSSg_tFZ",
+            "moduleName": "GameSave",
+            "name": "openDirectory",
+            "printedName": "openDirectory(containerIdentifier:)",
+            "static": true,
+            "usr": "s:8GameSave0aB15SyncedDirectoryC04openD019containerIdentifierACSSSg_tFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8GameSave0aB15SyncedDirectoryC20triggerPendingUploadSbyYaF",
+            "moduleName": "GameSave",
+            "name": "triggerPendingUpload",
+            "printedName": "triggerPendingUpload()",
+            "usr": "s:8GameSave0aB15SyncedDirectoryC20triggerPendingUploadSbyYaF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Version",
+                "printedName": "GameSave.GameSaveSyncedDirectory.Version",
+                "usr": "s:8GameSave0aB15SyncedDirectoryC7VersionC"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8GameSave0aB15SyncedDirectoryC16resolveConflicts4withyAC7VersionC_tF",
+            "moduleName": "GameSave",
+            "name": "resolveConflicts",
+            "printedName": "resolveConflicts(with:)",
+            "usr": "s:8GameSave0aB15SyncedDirectoryC16resolveConflicts4withyAC7VersionC_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UIWindow",
+                "printedName": "UIKit.UIWindow",
+                "usr": "c:objc(cs)UIWindow"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "26.0",
+            "kind": "Function",
+            "mangledName": "$s8GameSave0aB15SyncedDirectoryC13finishSyncing13statusDisplayySo8UIWindowC_tYaF",
+            "moduleName": "GameSave",
+            "name": "finishSyncing",
+            "printedName": "finishSyncing(statusDisplay:)",
+            "usr": "s:8GameSave0aB15SyncedDirectoryC13finishSyncing13statusDisplayySo8UIWindowC_tYaF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "kind": "Function",
+            "mangledName": "$s8GameSave0aB15SyncedDirectoryC13finishSyncingyyYaF",
+            "moduleName": "GameSave",
+            "name": "finishSyncing",
+            "printedName": "finishSyncing()",
+            "usr": "s:8GameSave0aB15SyncedDirectoryC13finishSyncingyyYaF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s8GameSave0aB15SyncedDirectoryC5closeyyF",
+            "moduleName": "GameSave",
+            "name": "close",
+            "printedName": "close()",
+            "usr": "s:8GameSave0aB15SyncedDirectoryC5closeyyF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s8GameSave0aB15SyncedDirectoryC2IDa",
+            "moduleName": "GameSave",
+            "name": "ID",
+            "printedName": "ID",
+            "usr": "s:8GameSave0aB15SyncedDirectoryC2IDa"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "ID",
+                    "printedName": "GameSave.GameSaveSyncedDirectory.ID"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "ID",
+                "printedName": "ID"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$ss12IdentifiableP",
+            "name": "Identifiable",
+            "printedName": "Identifiable",
+            "usr": "s:s12IdentifiableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s11Observation10ObservableP",
+            "name": "Observable",
+            "printedName": "Observable",
+            "usr": "s:11Observation10ObservableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s8GameSave0aB15SyncedDirectoryC",
+        "moduleName": "GameSave",
+        "name": "GameSaveSyncedDirectory",
+        "printedName": "GameSaveSyncedDirectory",
+        "usr": "s:8GameSave0aB15SyncedDirectoryC"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Accessor",
+            "implicit": true,
+            "kind": "Accessor",
+            "mangledName": "$s8GameSave0aB11ErrorDomainSSvg",
+            "moduleName": "GameSave",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:8GameSave0aB11ErrorDomainSSvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "String",
+            "printedName": "Swift.String",
+            "usr": "s:SS"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "HasStorage"
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "isLet": true,
+        "kind": "Var",
+        "mangledName": "$s8GameSave0aB11ErrorDomainSSvp",
+        "moduleName": "GameSave",
+        "name": "GameSaveErrorDomain",
+        "printedName": "GameSaveErrorDomain",
+        "usr": "s:8GameSave0aB11ErrorDomainSSvp"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GameSaveSyncedDirectory",
+                        "printedName": "GameSave.GameSaveSyncedDirectory",
+                        "usr": "s:8GameSave0aB15SyncedDirectoryC"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "GameSave.GameSaveSyncedDirectory?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Binding",
+                "printedName": "SwiftUI.Binding<GameSave.GameSaveSyncedDirectory?>",
+                "usr": "s:7SwiftUI7BindingV"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() -> Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : SwiftUI.View>",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s7SwiftUI4ViewP8GameSaveE04gameE12SyncingAlert9directory15finishedLoadingQrAA7BindingVyAD0dE15SyncedDirectoryCSgG_yyctF",
+            "moduleName": "GameSave",
+            "name": "gameSaveSyncingAlert",
+            "printedName": "gameSaveSyncingAlert(directory:finishedLoading:)",
+            "usr": "s:7SwiftUI4ViewP8GameSaveE04gameE12SyncingAlert9directory15finishedLoadingQrAA7BindingVyAD0dE15SyncedDirectoryCSgG_yyctF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "TypeEraser",
+          "TypeEraser",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "OriginallyDefinedIn",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self.Body : SwiftUI.View>",
+        "intro_Macosx": "10.15",
+        "intro_iOS": "13.0",
+        "intro_tvOS": "13.0",
+        "intro_watchOS": "6.0",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s7SwiftUI4ViewP",
+        "moduleName": "SwiftUICore",
+        "name": "View",
+        "printedName": "View",
+        "usr": "s:7SwiftUI4ViewP"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "GameSave",
+    "printedName": "GameSave"
+  }
+}

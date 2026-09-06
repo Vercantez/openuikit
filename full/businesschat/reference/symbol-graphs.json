@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/BusinessChat.symbols.json",
+      "relationshipCount": 64,
+      "sha256": "a25ec80b0909f8780c92600aa1871311d57b22a2abb2c3b27386b3a52b2dcc38",
+      "symbolCount": 21
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "BusinessChat",
+  "relationshipCount": 64,
+  "relationshipMultisetSHA256": "a457c27ac801fbdc5632de6ffdce84f12beb17b0e111d7edced2d62a7c43bb84",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 21,
+  "symbolMultisetSHA256": "806808380cec2e95890b83d034a7406aae07c018b6c79f1856cc889f442a8e91",
+  "target": "arm64-apple-ios26.0"
+}

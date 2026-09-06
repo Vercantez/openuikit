@@ -1,0 +1,22 @@
+precise	kind	title	path	declaration
+c:@BCParameterNameBody	swift.type.property	body	BCChatAction.Parameter.body	static let body: BCChatAction.Parameter
+c:@BCParameterNameGroup	swift.type.property	group	BCChatAction.Parameter.group	static let group: BCChatAction.Parameter
+c:@BCParameterNameIntent	swift.type.property	intent	BCChatAction.Parameter.intent	static let intent: BCChatAction.Parameter
+c:@E@BCChatButtonStyle	swift.enum	BCChatButton.Style	BCChatButton.Style	enum Style
+c:@E@BCChatButtonStyle@BCChatButtonStyleDark	swift.enum.case	BCChatButton.Style.dark	BCChatButton.Style.dark	case dark
+c:@E@BCChatButtonStyle@BCChatButtonStyleLight	swift.enum.case	BCChatButton.Style.light	BCChatButton.Style.light	case light
+c:@T@BCParameterName	swift.struct	BCChatAction.Parameter	BCChatAction.Parameter	struct Parameter
+c:objc(cs)BCChatAction	swift.class	BCChatAction	BCChatAction	class BCChatAction
+c:objc(cs)BCChatAction(cm)openTranscript:intentParameters:	swift.type.method	openTranscript(businessIdentifier:intentParameters:)	BCChatAction.openTranscript(businessIdentifier:intentParameters:)	class func openTranscript(businessIdentifier: String, intentParameters: [BCChatAction.Parameter : String])
+c:objc(cs)BCChatButton	swift.class	BCChatButton	BCChatButton	@MainActor class BCChatButton
+c:objc(cs)BCChatButton(im)initWithCoder:	swift.init	init(coder:)	BCChatButton.init(coder:)	@MainActor init?(coder: NSCoder)
+c:objc(cs)BCChatButton(im)initWithStyle:	swift.init	init(style:)	BCChatButton.init(style:)	@MainActor init(style: BCChatButton.Style)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BCChatButtonStyle	swift.func.op	!=(_:_:)	BCChatButton.Style.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@BCParameterName	swift.func.op	!=(_:_:)	BCChatAction.Parameter.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BCChatButtonStyle	swift.property	hashValue	BCChatButton.Style.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BCChatButtonStyle	swift.method	hash(into:)	BCChatButton.Style.hash(into:)	func hash(into hasher: inout Hasher)
+s:So15BCParameterNamea8rawValueABSS_tcfc	swift.init	init(rawValue:)	BCChatAction.Parameter.init(rawValue:)	init(rawValue: String)
+s:So15BCParameterNameayABSScfc	swift.init	init(_:)	BCChatAction.Parameter.init(_:)	init(_ rawValue: String)
+s:So17BCChatButtonStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	BCChatButton.Style.init(rawValue:)	init?(rawValue: Int)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@BCParameterName	swift.property	hashValue	BCChatAction.Parameter.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@BCParameterName	swift.method	hash(into:)	BCChatAction.Parameter.hash(into:)	func hash(into hasher: inout Hasher)

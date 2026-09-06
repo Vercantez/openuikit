@@ -1,0 +1,7 @@
+precise	kind	title	path	declaration
+c:objc(cs)ILClassificationUIExtensionContext	swift.class	ILClassificationUIExtensionContext	ILClassificationUIExtensionContext	class ILClassificationUIExtensionContext
+c:objc(cs)ILClassificationUIExtensionContext(py)readyForClassificationResponse	swift.property	isReadyForClassificationResponse	ILClassificationUIExtensionContext.isReadyForClassificationResponse	var isReadyForClassificationResponse: Bool { get set }
+c:objc(cs)ILClassificationUIExtensionViewController	swift.class	ILClassificationUIExtensionViewController	ILClassificationUIExtensionViewController	@MainActor class ILClassificationUIExtensionViewController
+c:objc(cs)ILClassificationUIExtensionViewController(im)classificationResponseForRequest:	swift.method	classificationResponse(for:)	ILClassificationUIExtensionViewController.classificationResponse(for:)	@MainActor func classificationResponse(for request: ILClassificationRequest) -> ILClassificationResponse
+c:objc(cs)ILClassificationUIExtensionViewController(im)prepareForClassificationRequest:	swift.method	prepare(for:)	ILClassificationUIExtensionViewController.prepare(for:)	@MainActor func prepare(for request: ILClassificationRequest)
+c:objc(cs)ILClassificationUIExtensionViewController(py)extensionContext	swift.property	extensionContext	ILClassificationUIExtensionViewController.extensionContext	@MainActor var extensionContext: ILClassificationUIExtensionContext { get }

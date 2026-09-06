@@ -1,0 +1,1848 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "LockedCameraCapture",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Double",
+            "printedName": "Swift.Double",
+            "usr": "s:Sd"
+          }
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "kind": "Var",
+        "moduleName": "LockedCameraCapture",
+        "name": "LockedCameraCaptureVersionNumber",
+        "printedName": "LockedCameraCaptureVersionNumber",
+        "usr": "c:@LockedCameraCaptureVersionNumber"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Error",
+            "printedName": "<<error type>>"
+          }
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "isLet": true,
+        "kind": "Var",
+        "moduleName": "LockedCameraCapture",
+        "name": "LockedCameraCaptureVersionString",
+        "printedName": "LockedCameraCaptureVersionString",
+        "usr": "c:@LockedCameraCaptureVersionString"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "String",
+            "printedName": "Swift.String",
+            "usr": "s:SS"
+          }
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "isLet": true,
+        "kind": "Var",
+        "moduleName": "LockedCameraCapture",
+        "name": "NSUserActivityTypeLockedCameraCapture",
+        "printedName": "NSUserActivityTypeLockedCameraCapture",
+        "usr": "c:@NSUserActivityTypeLockedCameraCapture"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "LockedCameraCapture",
+        "name": "ExtensionKit",
+        "printedName": "ExtensionKit"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "LockedCameraCapture",
+        "name": "LockedCameraCapture",
+        "printedName": "LockedCameraCapture"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "LockedCameraCapture",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "LockedCameraCapture",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "LockedCameraCapture",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "LockedCameraCapture",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "declKind": "AssociatedType",
+            "kind": "AssociatedType",
+            "mangledName": "$s19LockedCameraCapture0abC9ExtensionP4BodyQa",
+            "moduleName": "LockedCameraCapture",
+            "name": "Body",
+            "printedName": "Body",
+            "protocolReq": true,
+            "usr": "s:19LockedCameraCapture0abC9ExtensionP4BodyQa"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DependentMember",
+                    "printedName": "Self.Body"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : LockedCameraCapture.LockedCameraCaptureExtension>",
+                "kind": "Accessor",
+                "mangledName": "$s19LockedCameraCapture0abC9ExtensionP4body4BodyQzvg",
+                "moduleName": "LockedCameraCapture",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:19LockedCameraCapture0abC9ExtensionP4body4BodyQzvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DependentMember",
+                "printedName": "Self.Body"
+              }
+            ],
+            "declAttributes": [
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s19LockedCameraCapture0abC9ExtensionP4body4BodyQzvp",
+            "moduleName": "LockedCameraCapture",
+            "name": "body",
+            "printedName": "body",
+            "protocolReq": true,
+            "usr": "s:19LockedCameraCapture0abC9ExtensionP4body4BodyQzvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionSceneConfiguration",
+                    "printedName": "ExtensionKit.AppExtensionSceneConfiguration",
+                    "usr": "s:12ExtensionKit03AppA18SceneConfigurationV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : LockedCameraCapture.LockedCameraCaptureExtension>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s19LockedCameraCapture0abC9ExtensionPAAE13configuration0D3Kit03AppD18SceneConfigurationVvg",
+                "moduleName": "LockedCameraCapture",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:19LockedCameraCapture0abC9ExtensionPAAE13configuration0D3Kit03AppD18SceneConfigurationVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AppExtensionSceneConfiguration",
+                "printedName": "ExtensionKit.AppExtensionSceneConfiguration",
+                "usr": "s:12ExtensionKit03AppA18SceneConfigurationV"
+              }
+            ],
+            "declAttributes": [
+              "Custom"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s19LockedCameraCapture0abC9ExtensionPAAE13configuration0D3Kit03AppD18SceneConfigurationVvp",
+            "moduleName": "LockedCameraCapture",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:19LockedCameraCapture0abC9ExtensionPAAE13configuration0D3Kit03AppD18SceneConfigurationVvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA0P",
+            "name": "AppExtension",
+            "printedName": "AppExtension",
+            "usr": "s:19ExtensionFoundation03AppA0P"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionFoundation.AppExtension, Self.Body : LockedCameraCapture.LockedCameraCaptureExtensionScene>",
+        "intro_iOS": "18.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s19LockedCameraCapture0abC9ExtensionP",
+        "moduleName": "LockedCameraCapture",
+        "name": "LockedCameraCaptureExtension",
+        "printedName": "LockedCameraCaptureExtension",
+        "usr": "s:19LockedCameraCapture0abC9ExtensionP"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s12ExtensionKit03AppA5SceneP",
+            "name": "AppExtensionScene",
+            "printedName": "AppExtensionScene",
+            "usr": "s:12ExtensionKit03AppA5SceneP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionKit.AppExtensionScene>",
+        "intro_iOS": "18.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s19LockedCameraCapture0abC14ExtensionSceneP",
+        "moduleName": "LockedCameraCapture",
+        "name": "LockedCameraCaptureExtensionScene",
+        "printedName": "LockedCameraCaptureExtensionScene",
+        "usr": "s:19LockedCameraCapture0abC14ExtensionSceneP"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LockedCameraCaptureSession",
+                    "printedName": "LockedCameraCapture.LockedCameraCaptureSession",
+                    "usr": "s:19LockedCameraCapture0abC7SessionC"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Content where Content : SwiftUI.View>",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s19LockedCameraCapture0abC7UISceneV7sessionAA0abC7SessionCvg",
+                "moduleName": "LockedCameraCapture",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:19LockedCameraCapture0abC7UISceneV7sessionAA0abC7SessionCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "LockedCameraCaptureSession",
+                "printedName": "LockedCameraCapture.LockedCameraCaptureSession",
+                "usr": "s:19LockedCameraCapture0abC7SessionC"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "HasStorage",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_iOS": "18.0",
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s19LockedCameraCapture0abC7UISceneV7sessionAA0abC7SessionCvp",
+            "moduleName": "LockedCameraCapture",
+            "name": "session",
+            "printedName": "session",
+            "usr": "s:19LockedCameraCapture0abC7UISceneV7sessionAA0abC7SessionCvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Content"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "LockedCameraCaptureUIScene",
+                "printedName": "LockedCameraCapture.LockedCameraCaptureUIScene<Content>",
+                "usr": "s:19LockedCameraCapture0abC7UISceneV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Content"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LockedCameraCaptureSession",
+                    "printedName": "LockedCameraCapture.LockedCameraCaptureSession",
+                    "usr": "s:19LockedCameraCapture0abC7SessionC"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(LockedCameraCapture.LockedCameraCaptureSession) -> Content"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Content where Content : SwiftUI.View>",
+            "init_kind": "Designated",
+            "intro_iOS": "18.0",
+            "kind": "Constructor",
+            "mangledName": "$s19LockedCameraCapture0abC7UISceneV7contentACyxGxAA0abC7SessionCc_tcfc",
+            "moduleName": "LockedCameraCapture",
+            "name": "init",
+            "printedName": "init(content:)",
+            "usr": "s:19LockedCameraCapture0abC7UISceneV7contentACyxGxAA0abC7SessionCc_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AppExtensionScene",
+                        "printedName": "ExtensionKit.AppExtensionScene",
+                        "usr": "s:12ExtensionKit03AppA5SceneP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some ExtensionKit.AppExtensionScene"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Content where Content : SwiftUI.View>",
+                "kind": "Accessor",
+                "mangledName": "$s19LockedCameraCapture0abC7UISceneV4bodyQrvg",
+                "moduleName": "LockedCameraCapture",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:19LockedCameraCapture0abC7UISceneV4bodyQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "18.0",
+            "kind": "Var",
+            "mangledName": "$s19LockedCameraCapture0abC7UISceneV4bodyQrvp",
+            "moduleName": "LockedCameraCapture",
+            "name": "body",
+            "printedName": "body",
+            "usr": "s:19LockedCameraCapture0abC7UISceneV4bodyQrvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "genericSig": "<Content where Content : SwiftUI.View>",
+            "intro_iOS": "18.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s19LockedCameraCapture0abC7UISceneV4Bodya",
+            "moduleName": "LockedCameraCapture",
+            "name": "Body",
+            "printedName": "Body",
+            "usr": "s:19LockedCameraCapture0abC7UISceneV4Bodya"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19LockedCameraCapture0abC14ExtensionSceneP",
+            "name": "LockedCameraCaptureExtensionScene",
+            "printedName": "LockedCameraCaptureExtensionScene",
+            "usr": "s:19LockedCameraCapture0abC14ExtensionSceneP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AppExtensionScene",
+                            "printedName": "ExtensionKit.AppExtensionScene",
+                            "usr": "s:12ExtensionKit03AppA5SceneP"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "OpaqueTypeArchetype",
+                        "printedName": "some ExtensionKit.AppExtensionScene"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "LockedCameraCapture.LockedCameraCaptureUIScene<Content>.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s12ExtensionKit03AppA5SceneP",
+            "name": "AppExtensionScene",
+            "printedName": "AppExtensionScene",
+            "usr": "s:12ExtensionKit03AppA5SceneP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "genericSig": "<Content where Content : SwiftUI.View>",
+        "intro_iOS": "18.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s19LockedCameraCapture0abC7UISceneV",
+        "moduleName": "LockedCameraCapture",
+        "name": "LockedCameraCaptureUIScene",
+        "printedName": "LockedCameraCaptureUIScene",
+        "usr": "s:19LockedCameraCapture0abC7UISceneV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s19LockedCameraCapture0abC7SessionC17sessionContentURL10Foundation0G0Vvg",
+                "moduleName": "LockedCameraCapture",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:19LockedCameraCapture0abC7SessionC17sessionContentURL10Foundation0G0Vvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "18.0",
+            "kind": "Var",
+            "mangledName": "$s19LockedCameraCapture0abC7SessionC17sessionContentURL10Foundation0G0Vvp",
+            "moduleName": "LockedCameraCapture",
+            "name": "sessionContentURL",
+            "printedName": "sessionContentURL",
+            "usr": "s:19LockedCameraCapture0abC7SessionC17sessionContentURL10Foundation0G0Vvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSUserActivity",
+                "printedName": "Foundation.NSUserActivity",
+                "usr": "c:objc(cs)NSUserActivity"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "18.0",
+            "kind": "Function",
+            "mangledName": "$s19LockedCameraCapture0abC7SessionC15openApplication3forySo14NSUserActivityC_tYaKF",
+            "moduleName": "LockedCameraCapture",
+            "name": "openApplication",
+            "printedName": "openApplication(for:)",
+            "throwing": true,
+            "usr": "s:19LockedCameraCapture0abC7SessionC15openApplication3forySo14NSUserActivityC_tYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "18.0",
+            "kind": "Function",
+            "mangledName": "$s19LockedCameraCapture0abC7SessionC010invalidateD7ContentyyYaKF",
+            "moduleName": "LockedCameraCapture",
+            "name": "invalidateSessionContent",
+            "printedName": "invalidateSessionContent()",
+            "throwing": true,
+            "usr": "s:19LockedCameraCapture0abC7SessionC010invalidateD7ContentyyYaKF"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO11errorDomainSSvgZ",
+                    "moduleName": "LockedCameraCapture",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO11errorDomainSSvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "Var",
+                "intro_iOS": "18.0",
+                "kind": "Var",
+                "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO11errorDomainSSvpZ",
+                "moduleName": "LockedCameraCapture",
+                "name": "errorDomain",
+                "printedName": "errorDomain",
+                "static": true,
+                "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO11errorDomainSSvpZ"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ApplicationLaunchError",
+                        "printedName": "LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError",
+                        "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ApplicationLaunchError",
+                            "printedName": "LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError",
+                            "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError.Type) -> LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO7unknownyA2EmF",
+                "moduleName": "LockedCameraCapture",
+                "name": "unknown",
+                "printedName": "unknown",
+                "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO7unknownyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ApplicationLaunchError",
+                        "printedName": "LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError",
+                        "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ApplicationLaunchError",
+                            "printedName": "LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError",
+                            "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError.Type) -> LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO19applicationNotFoundyA2EmF",
+                "moduleName": "LockedCameraCapture",
+                "name": "applicationNotFound",
+                "printedName": "applicationNotFound",
+                "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO19applicationNotFoundyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ApplicationLaunchError",
+                        "printedName": "LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError",
+                        "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ApplicationLaunchError",
+                            "printedName": "LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError",
+                            "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError.Type) -> LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO20authenticationFailedyA2EmF",
+                "moduleName": "LockedCameraCapture",
+                "name": "authenticationFailed",
+                "printedName": "authenticationFailed",
+                "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO20authenticationFailedyA2EmF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO9errorCodeSivg",
+                    "moduleName": "LockedCameraCapture",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO9errorCodeSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "Var",
+                "intro_iOS": "18.0",
+                "kind": "Var",
+                "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO9errorCodeSivp",
+                "moduleName": "LockedCameraCapture",
+                "name": "errorCode",
+                "printedName": "errorCode",
+                "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO9errorCodeSivp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Swift.String?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO13failureReasonSSSgvg",
+                    "moduleName": "LockedCameraCapture",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO13failureReasonSSSgvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available",
+                  "Available"
+                ],
+                "declKind": "Var",
+                "intro_iOS": "18.0",
+                "kind": "Var",
+                "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO13failureReasonSSSgvp",
+                "moduleName": "LockedCameraCapture",
+                "name": "failureReason",
+                "printedName": "failureReason",
+                "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO13failureReasonSSSgvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ApplicationLaunchError",
+                    "printedName": "LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError",
+                    "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ApplicationLaunchError",
+                    "printedName": "LockedCameraCapture.LockedCameraCaptureSession.ApplicationLaunchError",
+                    "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO2eeoiySbAE_AEtFZ",
+                "moduleName": "LockedCameraCapture",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO4hash4intoys6HasherVz_tF",
+                "moduleName": "LockedCameraCapture",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO9hashValueSivg",
+                    "moduleName": "LockedCameraCapture",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO9hashValueSivp",
+                "moduleName": "LockedCameraCapture",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$s10Foundation13CustomNSErrorP",
+                "name": "CustomNSError",
+                "printedName": "CustomNSError",
+                "usr": "s:10Foundation13CustomNSErrorP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$s10Foundation14LocalizedErrorP",
+                "name": "LocalizedError",
+                "printedName": "LocalizedError",
+                "usr": "s:10Foundation14LocalizedErrorP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss5ErrorP",
+                "name": "Error",
+                "printedName": "Error",
+                "usr": "s:s5ErrorP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Enum",
+            "intro_iOS": "18.0",
+            "kind": "TypeDecl",
+            "mangledName": "$s19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO",
+            "moduleName": "LockedCameraCapture",
+            "name": "ApplicationLaunchError",
+            "printedName": "ApplicationLaunchError",
+            "usr": "s:19LockedCameraCapture0abC7SessionC22ApplicationLaunchErrorO"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Final",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "intro_iOS": "18.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s19LockedCameraCapture0abC7SessionC",
+        "moduleName": "LockedCameraCapture",
+        "name": "LockedCameraCaptureSession",
+        "printedName": "LockedCameraCaptureSession",
+        "usr": "s:19LockedCameraCapture0abC7SessionC"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SessionContentUpdate",
+                            "printedName": "LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate",
+                            "usr": "s:19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "URL",
+                                    "printedName": "Foundation.URL",
+                                    "usr": "s:10Foundation3URLV"
+                                  }
+                                ],
+                                "kind": "TypeNominal",
+                                "name": "Array",
+                                "printedName": "[Foundation.URL]",
+                                "usr": "s:Sa"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(urls: [Foundation.URL])"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "([Foundation.URL]) -> LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SessionContentUpdate",
+                            "printedName": "LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate",
+                            "usr": "s:19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate.Type) -> ([Foundation.URL]) -> LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO7initialyAESay10Foundation3URLVG_tcAEmF",
+                "moduleName": "LockedCameraCapture",
+                "name": "initial",
+                "printedName": "initial",
+                "usr": "s:19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO7initialyAESay10Foundation3URLVG_tcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SessionContentUpdate",
+                            "printedName": "LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate",
+                            "usr": "s:19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "URL",
+                                "printedName": "Foundation.URL",
+                                "usr": "s:10Foundation3URLV"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(url: Foundation.URL)"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Foundation.URL) -> LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SessionContentUpdate",
+                            "printedName": "LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate",
+                            "usr": "s:19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate.Type) -> (Foundation.URL) -> LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO5addedyAE10Foundation3URLV_tcAEmF",
+                "moduleName": "LockedCameraCapture",
+                "name": "added",
+                "printedName": "added",
+                "usr": "s:19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO5addedyAE10Foundation3URLV_tcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SessionContentUpdate",
+                            "printedName": "LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate",
+                            "usr": "s:19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "URL",
+                                "printedName": "Foundation.URL",
+                                "usr": "s:10Foundation3URLV"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(url: Foundation.URL)"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Foundation.URL) -> LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SessionContentUpdate",
+                            "printedName": "LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate",
+                            "usr": "s:19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate.Type) -> (Foundation.URL) -> LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO7removedyAE10Foundation3URLV_tcAEmF",
+                "moduleName": "LockedCameraCapture",
+                "name": "removed",
+                "printedName": "removed",
+                "usr": "s:19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO7removedyAE10Foundation3URLV_tcAEmF"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Enum",
+            "intro_iOS": "18.0",
+            "kind": "TypeDecl",
+            "mangledName": "$s19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO",
+            "moduleName": "LockedCameraCapture",
+            "name": "SessionContentUpdate",
+            "printedName": "SessionContentUpdate",
+            "usr": "s:19LockedCameraCapture0abC7ManagerC20SessionContentUpdateO"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LockedCameraCaptureManager",
+                    "printedName": "LockedCameraCapture.LockedCameraCaptureManager",
+                    "usr": "s:19LockedCameraCapture0abC7ManagerC"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s19LockedCameraCapture0abC7ManagerC6sharedACvgZ",
+                "moduleName": "LockedCameraCapture",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:19LockedCameraCapture0abC7ManagerC6sharedACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "LockedCameraCaptureManager",
+                "printedName": "LockedCameraCapture.LockedCameraCaptureManager",
+                "usr": "s:19LockedCameraCapture0abC7ManagerC"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "intro_iOS": "18.0",
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s19LockedCameraCapture0abC7ManagerC6sharedACvpZ",
+            "moduleName": "LockedCameraCapture",
+            "name": "shared",
+            "printedName": "shared",
+            "static": true,
+            "usr": "s:19LockedCameraCapture0abC7ManagerC6sharedACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URL",
+                        "printedName": "Foundation.URL",
+                        "usr": "s:10Foundation3URLV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Foundation.URL]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s19LockedCameraCapture0abC7ManagerC18sessionContentURLsSay10Foundation3URLVGvg",
+                "moduleName": "LockedCameraCapture",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:19LockedCameraCapture0abC7ManagerC18sessionContentURLsSay10Foundation3URLVGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[Foundation.URL]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "18.0",
+            "kind": "Var",
+            "mangledName": "$s19LockedCameraCapture0abC7ManagerC18sessionContentURLsSay10Foundation3URLVGvp",
+            "moduleName": "LockedCameraCapture",
+            "name": "sessionContentURLs",
+            "printedName": "sessionContentURLs",
+            "usr": "s:19LockedCameraCapture0abC7ManagerC18sessionContentURLsSay10Foundation3URLVGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AsyncSequence",
+                        "printedName": "_Concurrency.AsyncSequence",
+                        "usr": "s:Sci"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some _Concurrency.AsyncSequence<LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate, Swift.Never>"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s19LockedCameraCapture0abC7ManagerC21sessionContentUpdatesQrvg",
+                "moduleName": "LockedCameraCapture",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:19LockedCameraCapture0abC7ManagerC21sessionContentUpdatesQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AsyncSequence",
+                    "printedName": "_Concurrency.AsyncSequence",
+                    "usr": "s:Sci"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some _Concurrency.AsyncSequence<LockedCameraCapture.LockedCameraCaptureManager.SessionContentUpdate, Swift.Never>"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "18.0",
+            "kind": "Var",
+            "mangledName": "$s19LockedCameraCapture0abC7ManagerC21sessionContentUpdatesQrvp",
+            "moduleName": "LockedCameraCapture",
+            "name": "sessionContentUpdates",
+            "printedName": "sessionContentUpdates",
+            "usr": "s:19LockedCameraCapture0abC7ManagerC21sessionContentUpdatesQrvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "18.0",
+            "kind": "Function",
+            "mangledName": "$s19LockedCameraCapture0abC7ManagerC24invalidateSessionContent2aty10Foundation3URLV_tYaKF",
+            "moduleName": "LockedCameraCapture",
+            "name": "invalidateSessionContent",
+            "printedName": "invalidateSessionContent(at:)",
+            "throwing": true,
+            "usr": "s:19LockedCameraCapture0abC7ManagerC24invalidateSessionContent2aty10Foundation3URLV_tYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "18.1",
+            "kind": "Function",
+            "mangledName": "$s19LockedCameraCapture0abC7ManagerC23beginDelayingAppearanceyyF",
+            "moduleName": "LockedCameraCapture",
+            "name": "beginDelayingAppearance",
+            "printedName": "beginDelayingAppearance()",
+            "usr": "s:19LockedCameraCapture0abC7ManagerC23beginDelayingAppearanceyyF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "18.1",
+            "kind": "Function",
+            "mangledName": "$s19LockedCameraCapture0abC7ManagerC21endDelayingAppearanceyyF",
+            "moduleName": "LockedCameraCapture",
+            "name": "endDelayingAppearance",
+            "printedName": "endDelayingAppearance()",
+            "usr": "s:19LockedCameraCapture0abC7ManagerC21endDelayingAppearanceyyF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Final",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "intro_iOS": "18.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s19LockedCameraCapture0abC7ManagerC",
+        "moduleName": "LockedCameraCapture",
+        "name": "LockedCameraCaptureManager",
+        "printedName": "LockedCameraCaptureManager",
+        "usr": "s:19LockedCameraCapture0abC7ManagerC"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "LockedCameraCapture",
+    "printedName": "LockedCameraCapture"
+  }
+}

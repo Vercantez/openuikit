@@ -1,0 +1,7 @@
+precise	graphKind	graphPath	status	basis	rawCandidateCount	compatibleCandidateCount	selectedNodePath	candidateNodePaths
+c:objc(cs)ILClassificationUIExtensionContext	swift.class	["ILClassificationUIExtensionContext"]	import-name	exported-import-name	1	1	/ABIRoot/children/1	["/ABIRoot/children/1"]
+c:objc(cs)ILClassificationUIExtensionContext(py)readyForClassificationResponse	swift.property	["ILClassificationUIExtensionContext","isReadyForClassificationResponse"]	unmatched	none	0	0		[]
+c:objc(cs)ILClassificationUIExtensionViewController	swift.class	["ILClassificationUIExtensionViewController"]	import-name	exported-import-name	1	1	/ABIRoot/children/2	["/ABIRoot/children/2"]
+c:objc(cs)ILClassificationUIExtensionViewController(im)classificationResponseForRequest:	swift.method	["ILClassificationUIExtensionViewController","classificationResponse(for:)"]	unmatched	none	0	0		[]
+c:objc(cs)ILClassificationUIExtensionViewController(im)prepareForClassificationRequest:	swift.method	["ILClassificationUIExtensionViewController","prepare(for:)"]	unmatched	none	0	0		[]
+c:objc(cs)ILClassificationUIExtensionViewController(py)extensionContext	swift.property	["ILClassificationUIExtensionViewController","extensionContext"]	unmatched	none	0	0		[]

@@ -1,0 +1,208 @@
+precise	kind	title	path	declaration
+c:@M@_MarketplaceKit_UIKit@objc(cs)ActionButton	swift.class	ActionButton	ActionButton	@MainActor @objc @preconcurrency class ActionButton
+c:@M@_MarketplaceKit_UIKit@objc(cs)ActionButton(py)backgroundColor	swift.property	backgroundColor	ActionButton.backgroundColor	@MainActor @preconcurrency override dynamic var backgroundColor: UIColor? { get set }
+c:@M@_MarketplaceKit_UIKit@objc(cs)ActionButton(py)enabled	swift.property	isEnabled	ActionButton.isEnabled	@MainActor @preconcurrency override dynamic var isEnabled: Bool { get set }
+c:@M@_MarketplaceKit_UIKit@objc(cs)ActionButton(py)highlighted	swift.property	isHighlighted	ActionButton.isHighlighted	@MainActor @preconcurrency override dynamic var isHighlighted: Bool { get set }
+c:@M@_MarketplaceKit_UIKit@objc(cs)ActionButton(py)tintColor	swift.property	tintColor	ActionButton.tintColor	@MainActor @preconcurrency override dynamic var tintColor: UIColor! { get set }
+s:14MarketplaceKit0A12AppExtensionP	swift.protocol	MarketplaceAppExtension	MarketplaceAppExtension	protocol MarketplaceAppExtension : AppExtension, Sendable
+s:14MarketplaceKit0A12AppExtensionP09availableC8Versions15forAppleItemIDsSayAA0C7VersionVGSays6UInt64VG_tYaF	swift.method	availableAppVersions(forAppleItemIDs:)	MarketplaceAppExtension.availableAppVersions(forAppleItemIDs:)	func availableAppVersions(forAppleItemIDs ids: [AppleItemID]) async -> [AppVersion]
+s:14MarketplaceKit0A12AppExtensionP13requestFailed8responseSbSo17NSHTTPURLResponseC_tYaF	swift.method	requestFailed(response:)	MarketplaceAppExtension.requestFailed(response:)	func requestFailed(response: HTTPURLResponse) async -> Bool
+s:14MarketplaceKit0A12AppExtensionP16automaticUpdates3forSayAA15AutomaticUpdateVGSayAA0C7VersionVG_tYaKF	swift.method	automaticUpdates(for:)	MarketplaceAppExtension.automaticUpdates(for:)	func automaticUpdates(for installedAppVersions: [AppVersion]) async throws -> [AutomaticUpdate]
+s:14MarketplaceKit0A12AppExtensionP17additionalHeaders3for7accountSDyS2SG10Foundation10URLRequestV_SStYaF	swift.method	additionalHeaders(for:account:)	MarketplaceAppExtension.additionalHeaders(for:account:)	func additionalHeaders(for request: URLRequest, account: String) async -> [String : String]
+s:14MarketplaceKit0A12AppExtensionPAAE13configurationQrvp	swift.property	configuration	MarketplaceAppExtension.configuration	var configuration: some AppExtensionConfiguration { get }
+s:14MarketplaceKit0A22ExtensionConfigurationP	swift.protocol	MarketplaceExtensionConfiguration	MarketplaceExtensionConfiguration	@MainActor @preconcurrency protocol MarketplaceExtensionConfiguration : AppExtensionConfiguration
+s:14MarketplaceKit0A9ExtensionP	swift.protocol	MarketplaceExtension	MarketplaceExtension	protocol MarketplaceExtension : AppExtension, Sendable
+s:14MarketplaceKit0A9ExtensionP13requestFailed4withSbSo17NSHTTPURLResponseC_tF	swift.method	requestFailed(with:)	MarketplaceExtension.requestFailed(with:)	func requestFailed(with response: HTTPURLResponse) -> Bool
+s:14MarketplaceKit0A9ExtensionP16automaticUpdates3forSayAA15AutomaticUpdateVGSayAA10AppVersionVG_tYaKF	swift.method	automaticUpdates(for:)	MarketplaceExtension.automaticUpdates(for:)	func automaticUpdates(for installedAppVersions: [AppVersion]) async throws -> [AutomaticUpdate]
+s:14MarketplaceKit0A9ExtensionP17additionalHeaders3for7accountSDyS2SGSg10Foundation10URLRequestV_SStF	swift.method	additionalHeaders(for:account:)	MarketplaceExtension.additionalHeaders(for:account:)	func additionalHeaders(for request: URLRequest, account: String) -> [String : String]?
+s:14MarketplaceKit0A9ExtensionP20availableAppVersions15forAppleItemIDsSayAA0E7VersionVGSgSays6UInt64VG_tF	swift.method	availableAppVersions(forAppleItemIDs:)	MarketplaceExtension.availableAppVersions(forAppleItemIDs:)	func availableAppVersions(forAppleItemIDs ids: [AppleItemID]) -> [AppVersion]?
+s:14MarketplaceKit0A9ExtensionPAAE13configurationQrvp	swift.property	configuration	MarketplaceExtension.configuration	var configuration: some MarketplaceExtensionConfiguration { get }
+s:14MarketplaceKit0aB5ErrorO	swift.enum	MarketplaceKitError	MarketplaceKitError	enum MarketplaceKitError
+s:14MarketplaceKit0aB5ErrorO010oauthTokenC0yA2CmF	swift.enum.case	MarketplaceKitError.oauthTokenError	MarketplaceKitError.oauthTokenError	case oauthTokenError
+s:14MarketplaceKit0aB5ErrorO014installationOfA6DeniedyA2CmF	swift.enum.case	MarketplaceKitError.installationOfMarketplaceDenied	MarketplaceKitError.installationOfMarketplaceDenied	case installationOfMarketplaceDenied
+s:14MarketplaceKit0aB5ErrorO07networkC0yA2CmF	swift.enum.case	MarketplaceKitError.networkError	MarketplaceKitError.networkError	case networkError
+s:14MarketplaceKit0aB5ErrorO10invalidURLyA2CmF	swift.enum.case	MarketplaceKitError.invalidURL	MarketplaceKitError.invalidURL	case invalidURL
+s:14MarketplaceKit0aB5ErrorO11descriptionSSvp	swift.property	description	MarketplaceKitError.description	var description: String { get }
+s:14MarketplaceKit0aB5ErrorO14invalidLicenseyA2CmF	swift.enum.case	MarketplaceKitError.invalidLicense	MarketplaceKitError.invalidLicense	case invalidLicense
+s:14MarketplaceKit0aB5ErrorO15appNotInstalledyA2CmF	swift.enum.case	MarketplaceKitError.appNotInstalled	MarketplaceKitError.appNotInstalled	case appNotInstalled
+s:14MarketplaceKit0aB5ErrorO15invalidManifestyA2CmF	swift.enum.case	MarketplaceKitError.invalidManifest	MarketplaceKitError.invalidManifest	case invalidManifest
+s:14MarketplaceKit0aB5ErrorO16ratingRestrictedyA2CmF	swift.enum.case	MarketplaceKitError.ratingRestricted	MarketplaceKitError.ratingRestricted	case ratingRestricted
+s:14MarketplaceKit0aB5ErrorO18featureUnavailableyA2CmF	swift.enum.case	MarketplaceKitError.featureUnavailable	MarketplaceKitError.featureUnavailable	case featureUnavailable
+s:14MarketplaceKit0aB5ErrorO18noSupportedVariantyA2CmF	swift.enum.case	MarketplaceKitError.noSupportedVariant	MarketplaceKitError.noSupportedVariant	case noSupportedVariant
+s:14MarketplaceKit0aB5ErrorO19missingCapabilitiesyACSaySSGcACmF	swift.enum.case	MarketplaceKitError.missingCapabilities(_:)	MarketplaceKitError.missingCapabilities(_:)	case missingCapabilities([String])
+s:14MarketplaceKit0aB5ErrorO19unsupportedPlatformyA2CmF	swift.enum.case	MarketplaceKitError.unsupportedPlatform	MarketplaceKitError.unsupportedPlatform	case unsupportedPlatform
+s:14MarketplaceKit0aB5ErrorO21mismatchedInstallTypeyA2CmF	swift.enum.case	MarketplaceKitError.mismatchedInstallType	MarketplaceKitError.mismatchedInstallType	case mismatchedInstallType
+s:14MarketplaceKit0aB5ErrorO22installationRestrictedyA2CmF	swift.enum.case	MarketplaceKitError.installationRestricted	MarketplaceKitError.installationRestricted	case installationRestricted
+s:14MarketplaceKit0aB5ErrorO24insufficientStorageSpaceyAC10Foundation11MeasurementVySo017NSUnitInformationE0CGcACmF	swift.enum.case	MarketplaceKitError.insufficientStorageSpace(_:)	MarketplaceKitError.insufficientStorageSpace(_:)	case insufficientStorageSpace(Measurement<UnitInformationStorage>)
+s:14MarketplaceKit0aB5ErrorO27ageRatingExceptionNotNeededyA2CmF	swift.enum.case	MarketplaceKitError.ageRatingExceptionNotNeeded	MarketplaceKitError.ageRatingExceptionNotNeeded	case ageRatingExceptionNotNeeded
+s:14MarketplaceKit0aB5ErrorO31missingInstallVerificationTokenyA2CmF	swift.enum.case	MarketplaceKitError.missingInstallVerificationToken	MarketplaceKitError.missingInstallVerificationToken	case missingInstallVerificationToken
+s:14MarketplaceKit0aB5ErrorO32missingAgeRatingExceptionRequestyA2CmF	swift.enum.case	MarketplaceKitError.missingAgeRatingExceptionRequest	MarketplaceKitError.missingAgeRatingExceptionRequest	case missingAgeRatingExceptionRequest
+s:14MarketplaceKit0aB5ErrorO34minimumPlatformVersionNotSatisfiedyACSScACmF	swift.enum.case	MarketplaceKitError.minimumPlatformVersionNotSatisfied(_:)	MarketplaceKitError.minimumPlatformVersionNotSatisfied(_:)	case minimumPlatformVersionNotSatisfied(String)
+s:14MarketplaceKit0aB5ErrorO40invalidAlternativeDistributionPackageURLyA2CmF	swift.enum.case	MarketplaceKitError.invalidAlternativeDistributionPackageURL	MarketplaceKitError.invalidAlternativeDistributionPackageURL	case invalidAlternativeDistributionPackageURL
+s:14MarketplaceKit0aB5ErrorO46invalidAlternativeDistributionPackageSignatureyA2CmF	swift.enum.case	MarketplaceKitError.invalidAlternativeDistributionPackageSignature	MarketplaceKitError.invalidAlternativeDistributionPackageSignature	case invalidAlternativeDistributionPackageSignature
+s:14MarketplaceKit0aB5ErrorO4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	MarketplaceKitError.init(from:)	init(from decoder: any Decoder) throws
+s:14MarketplaceKit0aB5ErrorO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	MarketplaceKitError.encode(to:)	func encode(to encoder: any Encoder) throws
+s:14MarketplaceKit0aB5ErrorO7unknownyA2CmF	swift.enum.case	MarketplaceKitError.unknown	MarketplaceKitError.unknown	case unknown
+s:14MarketplaceKit0aB5ErrorO9cancelledyA2CmF	swift.enum.case	MarketplaceKitError.cancelled	MarketplaceKitError.cancelled	case cancelled
+s:14MarketplaceKit0aB9URISchemeSSvp	swift.var	MarketplaceKitURIScheme	MarketplaceKitURIScheme	let MarketplaceKitURIScheme: String
+s:14MarketplaceKit10AppLibraryC	swift.class	AppLibrary	AppLibrary	@MainActor final class AppLibrary
+s:14MarketplaceKit10AppLibraryC07requestC12Installation3for7account24installVerificationTokeny10Foundation3URLV_S2StYaKF	swift.method	requestAppInstallation(for:account:installVerificationToken:)	AppLibrary.requestAppInstallation(for:account:installVerificationToken:)	nonisolated final func requestAppInstallation(for url: URL, account: String, installVerificationToken: String) async throws
+s:14MarketplaceKit10AppLibraryC07requestC12InstallationyyAC0F7RequestVYaKF	swift.method	requestAppInstallation(_:)	AppLibrary.requestAppInstallation(_:)	nonisolated final func requestAppInstallation(_ request: AppLibrary.InstallationRequest) async throws
+s:14MarketplaceKit10AppLibraryC07requestC23InstallationFromBrowser3for8referrery10Foundation3URLV_AItYaKF	swift.method	requestAppInstallationFromBrowser(for:referrer:)	AppLibrary.requestAppInstallationFromBrowser(for:referrer:)	nonisolated final func requestAppInstallationFromBrowser(for url: URL, referrer: URL) async throws
+s:14MarketplaceKit10AppLibraryC07requestC6Update3for7account24installVerificationTokeny10Foundation3URLV_S2StYaKF	swift.method	requestAppUpdate(for:account:installVerificationToken:)	AppLibrary.requestAppUpdate(for:account:installVerificationToken:)	nonisolated final func requestAppUpdate(for url: URL, account: String, installVerificationToken: String) async throws
+s:14MarketplaceKit10AppLibraryC07requestC6UpdateyyAC19InstallationRequestVYaKF	swift.method	requestAppUpdate(_:)	AppLibrary.requestAppUpdate(_:)	nonisolated final func requestAppUpdate(_ request: AppLibrary.InstallationRequest) async throws
+s:14MarketplaceKit10AppLibraryC0C0C	swift.class	AppLibrary.App	AppLibrary.App	@MainActor final class App
+s:14MarketplaceKit10AppLibraryC0C0C10isUpdatingSbvp	swift.property	isUpdating	AppLibrary.App.isUpdating	@MainActor final var isUpdating: Bool { get }
+s:14MarketplaceKit10AppLibraryC0C0C11isInstalledSbvp	swift.property	isInstalled	AppLibrary.App.isInstalled	@MainActor final var isInstalled: Bool { get }
+s:14MarketplaceKit10AppLibraryC0C0C12InstallationV	swift.struct	AppLibrary.App.Installation	AppLibrary.App.Installation	struct Installation
+s:14MarketplaceKit10AppLibraryC0C0C12InstallationV8progressSo10NSProgressCvp	swift.property	progress	AppLibrary.App.Installation.progress	var progress: Progress { get }
+s:14MarketplaceKit10AppLibraryC0C0C12installationAE12InstallationVSgvp	swift.property	installation	AppLibrary.App.installation	@MainActor final var installation: AppLibrary.App.Installation? { get }
+s:14MarketplaceKit10AppLibraryC0C0C12isInstallingSbvp	swift.property	isInstalling	AppLibrary.App.isInstalling	@MainActor final var isInstalling: Bool { get }
+s:14MarketplaceKit10AppLibraryC0C0C17installationErrorAA0abF0OSgvp	swift.property	installationError	AppLibrary.App.installationError	@MainActor final var installationError: MarketplaceKitError? { get }
+s:14MarketplaceKit10AppLibraryC0C0C17installedMetadataAE0F0VSgvp	swift.property	installedMetadata	AppLibrary.App.installedMetadata	@MainActor final var installedMetadata: AppLibrary.App.Metadata? { get }
+s:14MarketplaceKit10AppLibraryC0C0C2IDa	swift.typealias	AppLibrary.App.ID	AppLibrary.App.ID	typealias ID = AppleItemID
+s:14MarketplaceKit10AppLibraryC0C0C2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	AppLibrary.App.==(_:_:)	nonisolated static func == (lhs: AppLibrary.App, rhs: AppLibrary.App) -> Bool
+s:14MarketplaceKit10AppLibraryC0C0C2ids6UInt64Vvp	swift.property	id	AppLibrary.App.id	nonisolated final let id: AppleItemID
+s:14MarketplaceKit10AppLibraryC0C0C39presentAgeExceptionApproveInPersonSheetyyYaKF	swift.method	presentAgeExceptionApproveInPersonSheet()	AppLibrary.App.presentAgeExceptionApproveInPersonSheet()	@MainActor final func presentAgeExceptionApproveInPersonSheet() async throws
+s:14MarketplaceKit10AppLibraryC0C0C4hash4intoys6HasherVz_tF	swift.method	hash(into:)	AppLibrary.App.hash(into:)	nonisolated final func hash(into hasher: inout Hasher)
+s:14MarketplaceKit10AppLibraryC0C0C8MetadataV	swift.struct	AppLibrary.App.Metadata	AppLibrary.App.Metadata	struct Metadata
+s:14MarketplaceKit10AppLibraryC0C0C8MetadataV12shortVersionSSvp	swift.property	shortVersion	AppLibrary.App.Metadata.shortVersion	let shortVersion: String
+s:14MarketplaceKit10AppLibraryC0C0C8MetadataV14appleVersionIDs6UInt64Vvp	swift.property	appleVersionID	AppLibrary.App.Metadata.appleVersionID	let appleVersionID: AppleVersionID
+s:14MarketplaceKit10AppLibraryC0C0C8MetadataV2eeoiySbAG_AGtFZ	swift.func.op	==(_:_:)	AppLibrary.App.Metadata.==(_:_:)	static func == (a: AppLibrary.App.Metadata, b: AppLibrary.App.Metadata) -> Bool
+s:14MarketplaceKit10AppLibraryC0C0C8MetadataV7accountSSSgvp	swift.property	account	AppLibrary.App.Metadata.account	let account: String?
+s:14MarketplaceKit10AppLibraryC0C0C8MetadataV7versionSSvp	swift.property	version	AppLibrary.App.Metadata.version	let version: String
+s:14MarketplaceKit10AppLibraryC0C0C9hashValueSivp	swift.property	hashValue	AppLibrary.App.hashValue	nonisolated final var hashValue: Int { get }
+s:14MarketplaceKit10AppLibraryC13installedAppsShyAC0C0CGvp	swift.property	installedApps	AppLibrary.installedApps	@MainActor final var installedApps: Set<AppLibrary.App> { get set }
+s:14MarketplaceKit10AppLibraryC14installingAppsShyAC0C0CGvp	swift.property	installingApps	AppLibrary.installingApps	@MainActor final var installingApps: Set<AppLibrary.App> { get set }
+s:14MarketplaceKit10AppLibraryC15didAuthenticate7accountySS_tYaF	swift.method	didAuthenticate(account:)	AppLibrary.didAuthenticate(account:)	nonisolated final func didAuthenticate(account: String) async
+s:14MarketplaceKit10AppLibraryC15searchTerritorySSSgvp	swift.property	searchTerritory	AppLibrary.searchTerritory	nonisolated final var searchTerritory: String? { get async }
+s:14MarketplaceKit10AppLibraryC16ExceptionRequestV	swift.struct	AppLibrary.ExceptionRequest	AppLibrary.ExceptionRequest	struct ExceptionRequest
+s:14MarketplaceKit10AppLibraryC16ExceptionRequestV11appleItemIDs6UInt64Vvp	swift.property	appleItemID	AppLibrary.ExceptionRequest.appleItemID	let appleItemID: AppleItemID
+s:14MarketplaceKit10AppLibraryC16ExceptionRequestV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	AppLibrary.ExceptionRequest.init(from:)	init(from decoder: any Decoder) throws
+s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6StatusO	swift.enum	AppLibrary.ExceptionRequest.Status	AppLibrary.ExceptionRequest.Status	enum Status
+s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6StatusO7pendingyA2GmF	swift.enum.case	AppLibrary.ExceptionRequest.Status.pending	AppLibrary.ExceptionRequest.Status.pending	case pending
+s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6StatusO8RawValuea	swift.typealias	AppLibrary.ExceptionRequest.Status.RawValue	AppLibrary.ExceptionRequest.Status.RawValue	typealias RawValue = Int
+s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6StatusO8approvedyA2GmF	swift.enum.case	AppLibrary.ExceptionRequest.Status.approved	AppLibrary.ExceptionRequest.Status.approved	case approved
+s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6StatusO8declinedyA2GmF	swift.enum.case	AppLibrary.ExceptionRequest.Status.declined	AppLibrary.ExceptionRequest.Status.declined	case declined
+s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6StatusO8rawValueAGSgSi_tcfc	swift.init	init(rawValue:)	AppLibrary.ExceptionRequest.Status.init(rawValue:)	init?(rawValue: Int)
+s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6StatusO8rawValueSivp	swift.property	rawValue	AppLibrary.ExceptionRequest.Status.rawValue	var rawValue: Int { get }
+s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	AppLibrary.ExceptionRequest.encode(to:)	func encode(to encoder: any Encoder) throws
+s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6statusAE6StatusOvp	swift.property	status	AppLibrary.ExceptionRequest.status	let status: AppLibrary.ExceptionRequest.Status
+s:14MarketplaceKit10AppLibraryC18setSearchTerritoryyySSSgYaF	swift.method	setSearchTerritory(_:)	AppLibrary.setSearchTerritory(_:)	nonisolated final func setSearchTerritory(_ territory: String?) async
+s:14MarketplaceKit10AppLibraryC19InstallationRequestV	swift.struct	AppLibrary.InstallationRequest	AppLibrary.InstallationRequest	struct InstallationRequest
+s:14MarketplaceKit10AppLibraryC19InstallationRequestV11appShareURL10Foundation0I0VSgvp	swift.property	appShareURL	AppLibrary.InstallationRequest.appShareURL	var appShareURL: URL?
+s:14MarketplaceKit10AppLibraryC19InstallationRequestV24installVerificationTokenSSvp	swift.property	installVerificationToken	AppLibrary.InstallationRequest.installVerificationToken	var installVerificationToken: String
+s:14MarketplaceKit10AppLibraryC19InstallationRequestV33alternativeDistributionPackageURL10Foundation0J0Vvp	swift.property	alternativeDistributionPackageURL	AppLibrary.InstallationRequest.alternativeDistributionPackageURL	var alternativeDistributionPackageURL: URL
+s:14MarketplaceKit10AppLibraryC19InstallationRequestV33alternativeDistributionPackageURL7account24installVerificationTokenAE10Foundation0J0V_S2Stcfc	swift.init	init(alternativeDistributionPackageURL:account:installVerificationToken:)	AppLibrary.InstallationRequest.init(alternativeDistributionPackageURL:account:installVerificationToken:)	init(alternativeDistributionPackageURL: URL, account: String, installVerificationToken: String)
+s:14MarketplaceKit10AppLibraryC19InstallationRequestV7accountSSvp	swift.property	account	AppLibrary.InstallationRequest.account	var account: String
+s:14MarketplaceKit10AppLibraryC21requestLicenseRenewal12appleItemIDsySays6UInt64VG_tYaKF	swift.method	requestLicenseRenewal(appleItemIDs:)	AppLibrary.requestLicenseRenewal(appleItemIDs:)	nonisolated final func requestLicenseRenewal(appleItemIDs: [UInt64]) async throws
+s:14MarketplaceKit10AppLibraryC23maximumAllowedAgeRatingSivp	swift.property	maximumAllowedAgeRating	AppLibrary.maximumAllowedAgeRating	@MainActor final var maximumAllowedAgeRating: Int { get }
+s:14MarketplaceKit10AppLibraryC27currentAgeExceptionRequestsSayAC0G7RequestVGyYaKF	swift.method	currentAgeExceptionRequests()	AppLibrary.currentAgeExceptionRequests()	nonisolated final func currentAgeExceptionRequests() async throws -> [AppLibrary.ExceptionRequest]
+s:14MarketplaceKit10AppLibraryC3app14forAppleItemIDAC0C0Cs6UInt64V_tF	swift.method	app(forAppleItemID:)	AppLibrary.app(forAppleItemID:)	@MainActor final func app(forAppleItemID appleItemID: AppleItemID) -> AppLibrary.App
+s:14MarketplaceKit10AppLibraryC7currentACvpZ	swift.type.property	current	AppLibrary.current	nonisolated static let current: AppLibrary
+s:14MarketplaceKit10AppLibraryC9isLoadingSbvp	swift.property	isLoading	AppLibrary.isLoading	@MainActor final var isLoading: Bool { get }
+s:14MarketplaceKit10AppVersionV	swift.struct	AppVersion	AppVersion	struct AppVersion
+s:14MarketplaceKit10AppVersionV05appleD2IDs6UInt64Vvp	swift.property	appleVersionID	AppVersion.appleVersionID	let appleVersionID: UInt64
+s:14MarketplaceKit10AppVersionV11appleItemID0edG0ACs6UInt64V_AGtcfc	swift.init	init(appleItemID:appleVersionID:)	AppVersion.init(appleItemID:appleVersionID:)	init(appleItemID: AppleItemID, appleVersionID: UInt64)
+s:14MarketplaceKit10AppVersionV11appleItemIDs6UInt64Vvp	swift.property	appleItemID	AppVersion.appleItemID	let appleItemID: AppleItemID
+s:14MarketplaceKit10AppVersionV11descriptionSSvp	swift.property	description	AppVersion.description	var description: String { get }
+s:14MarketplaceKit11AppleItemIDa	swift.typealias	AppleItemID	AppleItemID	typealias AppleItemID = UInt64
+s:14MarketplaceKit14AppDistributorO	swift.enum	AppDistributor	AppDistributor	enum AppDistributor
+s:14MarketplaceKit14AppDistributorO10testFlightyA2CmF	swift.enum.case	AppDistributor.testFlight	AppDistributor.testFlight	case testFlight
+s:14MarketplaceKit14AppDistributorO11marketplaceyACSScACmF	swift.enum.case	AppDistributor.marketplace(_:)	AppDistributor.marketplace(_:)	case marketplace(String)
+s:14MarketplaceKit14AppDistributorO3webyA2CmF	swift.enum.case	AppDistributor.web	AppDistributor.web	case web
+s:14MarketplaceKit14AppDistributorO5otheryA2CmF	swift.enum.case	AppDistributor.other	AppDistributor.other	case other
+s:14MarketplaceKit14AppDistributorO7currentACvpZ	swift.type.property	current	AppDistributor.current	static var current: AppDistributor { get async throws }
+s:14MarketplaceKit14AppDistributorO8appStoreyA2CmF	swift.enum.case	AppDistributor.appStore	AppDistributor.appStore	case appStore
+s:14MarketplaceKit14AppleVersionIDa	swift.typealias	AppleVersionID	AppleVersionID	typealias AppleVersionID = UInt64
+s:14MarketplaceKit15AutomaticUpdateV	swift.struct	AutomaticUpdate	AutomaticUpdate	struct AutomaticUpdate
+s:14MarketplaceKit15AutomaticUpdateV11appShareURL10Foundation0G0VSgvp	swift.property	appShareURL	AutomaticUpdate.appShareURL	var appShareURL: URL?
+s:14MarketplaceKit15AutomaticUpdateV11appleItemID30alternativeDistributionPackage7account24installVerificationTokenACs6UInt64V_10Foundation3URLVS2Stcfc	swift.init	init(appleItemID:alternativeDistributionPackage:account:installVerificationToken:)	AutomaticUpdate.init(appleItemID:alternativeDistributionPackage:account:installVerificationToken:)	init(appleItemID: AppleItemID, alternativeDistributionPackage: URL, account: String, installVerificationToken: String)
+s:14MarketplaceKit15AutomaticUpdateV11appleItemIDs6UInt64Vvp	swift.property	appleItemID	AutomaticUpdate.appleItemID	let appleItemID: AppleItemID
+s:14MarketplaceKit15AutomaticUpdateV24installVerificationTokenSSvp	swift.property	installVerificationToken	AutomaticUpdate.installVerificationToken	let installVerificationToken: String
+s:14MarketplaceKit15AutomaticUpdateV30alternativeDistributionPackage10Foundation3URLVvp	swift.property	alternativeDistributionPackage	AutomaticUpdate.alternativeDistributionPackage	let alternativeDistributionPackage: URL
+s:14MarketplaceKit15AutomaticUpdateV7accountSSvp	swift.property	account	AutomaticUpdate.account	let account: String
+s:14MarketplaceKit19InstallRequirementsV	swift.struct	InstallRequirements	InstallRequirements	struct InstallRequirements
+s:14MarketplaceKit19InstallRequirementsV08expectedC4Sizes6UInt64VSgvp	swift.property	expectedInstallSize	InstallRequirements.expectedInstallSize	var expectedInstallSize: UInt64?
+s:14MarketplaceKit19InstallRequirementsV13ageRatingRankSiSgvp	swift.property	ageRatingRank	InstallRequirements.ageRatingRank	var ageRatingRank: Int?
+s:14MarketplaceKit19InstallRequirementsV17satisfiedByDeviceSbyF	swift.method	satisfiedByDevice()	InstallRequirements.satisfiedByDevice()	func satisfiedByDevice() -> Bool
+s:14MarketplaceKit19InstallRequirementsV20minimumSystemVersionSSSgvp	swift.property	minimumSystemVersion	InstallRequirements.minimumSystemVersion	var minimumSystemVersion: String?
+s:14MarketplaceKit19InstallRequirementsV26requiredDeviceCapabilitiesShySSGSgvp	swift.property	requiredDeviceCapabilities	InstallRequirements.requiredDeviceCapabilities	var requiredDeviceCapabilities: Set<String>?
+s:14MarketplaceKit19InstallRequirementsV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	InstallRequirements.init(from:)	init(from decoder: any Decoder) throws
+s:14MarketplaceKit19InstallRequirementsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	InstallRequirements.encode(to:)	func encode(to encoder: any Encoder) throws
+s:14MarketplaceKit19InstallRequirementsVACycfc	swift.init	init()	InstallRequirements.init()	init()
+s:14MarketplaceKit20TransactionReportingO	swift.enum	TransactionReporting	TransactionReporting	enum TransactionReporting
+s:14MarketplaceKit20TransactionReportingO5token3forSSAC9TokenTypeV_tYaKFZ	swift.type.method	token(for:)	TransactionReporting.token(for:)	static func token(for tokenType: TransactionReporting.TokenType) async throws -> String
+s:14MarketplaceKit20TransactionReportingO9TokenTypeV	swift.struct	TransactionReporting.TokenType	TransactionReporting.TokenType	struct TokenType
+s:14MarketplaceKit20TransactionReportingO9TokenTypeV14coreTechnologyAEvpZ	swift.type.property	coreTechnology	TransactionReporting.TokenType.coreTechnology	static let coreTechnology: TransactionReporting.TokenType
+s:14MarketplaceKit20TransactionReportingO9TokenTypeV8RawValuea	swift.typealias	TransactionReporting.TokenType.RawValue	TransactionReporting.TokenType.RawValue	typealias RawValue = String
+s:14MarketplaceKit20TransactionReportingO9TokenTypeV8rawValueAESS_tcfc	swift.init	init(rawValue:)	TransactionReporting.TokenType.init(rawValue:)	init(rawValue: String)
+s:14MarketplaceKit20TransactionReportingO9TokenTypeV8rawValueSSvp	swift.property	rawValue	TransactionReporting.TokenType.rawValue	let rawValue: String
+s:21_MarketplaceKit_UIKit0A13DisplayOptionO	swift.enum	MarketplaceDisplayOption	MarketplaceDisplayOption	enum MarketplaceDisplayOption
+s:21_MarketplaceKit_UIKit0A13DisplayOptionO11productPageyACs6UInt64V_AFSgtcACmF	swift.enum.case	MarketplaceDisplayOption.productPage(appleItemID:appleVersionID:)	MarketplaceDisplayOption.productPage(appleItemID:appleVersionID:)	case productPage(appleItemID: AppleItemID, appleVersionID: AppleVersionID?)
+s:21_MarketplaceKit_UIKit0A13DisplayOptionO13searchResultsyACSS_tcACmF	swift.enum.case	MarketplaceDisplayOption.searchResults(query:)	MarketplaceDisplayOption.searchResults(query:)	case searchResults(query: String)
+s:21_MarketplaceKit_UIKit0A13DisplayOptionO14authenticationyACSS_tcACmF	swift.enum.case	MarketplaceDisplayOption.authentication(account:)	MarketplaceDisplayOption.authentication(account:)	case authentication(account: String)
+s:21_MarketplaceKit_UIKit0A13DisplayOptionO4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	MarketplaceDisplayOption.init(from:)	init(from decoder: any Decoder) throws
+s:21_MarketplaceKit_UIKit0A13DisplayOptionO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	MarketplaceDisplayOption.encode(to:)	func encode(to encoder: any Encoder) throws
+s:21_MarketplaceKit_UIKit0A13SceneDelegateP	swift.protocol	MarketplaceSceneDelegate	MarketplaceSceneDelegate	protocol MarketplaceSceneDelegate
+s:21_MarketplaceKit_UIKit0A13SceneDelegateP5scene_14askedToDisplayySo08UIWindowD0C_AA0aI6OptionOtF	swift.method	scene(_:askedToDisplay:)	MarketplaceSceneDelegate.scene(_:askedToDisplay:)	func scene(_ scene: UIWindowScene, askedToDisplay option: MarketplaceDisplayOption)
+s:21_MarketplaceKit_UIKit12ActionButtonC0D0O	swift.enum	ActionButton.Action	ActionButton.Action	enum Action
+s:21_MarketplaceKit_UIKit12ActionButtonC0D0O12batchInstallyAeA05BatchG13ConfigurationVcAEmF	swift.enum.case	ActionButton.Action.batchInstall(_:)	ActionButton.Action.batchInstall(_:)	case batchInstall(BatchInstallConfiguration)
+s:21_MarketplaceKit_UIKit12ActionButtonC0D0O6deleteyAEs6UInt64VcAEmF	swift.enum.case	ActionButton.Action.delete(_:)	ActionButton.Action.delete(_:)	case delete(AppleItemID)
+s:21_MarketplaceKit_UIKit12ActionButtonC0D0O6launchyAEs6UInt64VcAEmF	swift.enum.case	ActionButton.Action.launch(_:)	ActionButton.Action.launch(_:)	case launch(AppleItemID)
+s:21_MarketplaceKit_UIKit12ActionButtonC0D0O7installyAeA20InstallConfigurationVcAEmF	swift.enum.case	ActionButton.Action.install(_:)	ActionButton.Action.install(_:)	case install(InstallConfiguration)
+s:21_MarketplaceKit_UIKit12ActionButtonC0E14ImagePlacementO	swift.enum	ActionButton.ButtonImagePlacement	ActionButton.ButtonImagePlacement	enum ButtonImagePlacement
+s:21_MarketplaceKit_UIKit12ActionButtonC0E14ImagePlacementO3topyA2EmF	swift.enum.case	ActionButton.ButtonImagePlacement.top	ActionButton.ButtonImagePlacement.top	case top
+s:21_MarketplaceKit_UIKit12ActionButtonC0E14ImagePlacementO6bottomyA2EmF	swift.enum.case	ActionButton.ButtonImagePlacement.bottom	ActionButton.ButtonImagePlacement.bottom	case bottom
+s:21_MarketplaceKit_UIKit12ActionButtonC0E14ImagePlacementO7leadingyA2EmF	swift.enum.case	ActionButton.ButtonImagePlacement.leading	ActionButton.ButtonImagePlacement.leading	case leading
+s:21_MarketplaceKit_UIKit12ActionButtonC0E14ImagePlacementO8RawValuea	swift.typealias	ActionButton.ButtonImagePlacement.RawValue	ActionButton.ButtonImagePlacement.RawValue	typealias RawValue = Int
+s:21_MarketplaceKit_UIKit12ActionButtonC0E14ImagePlacementO8rawValueAESgSi_tcfc	swift.init	init(rawValue:)	ActionButton.ButtonImagePlacement.init(rawValue:)	init?(rawValue: Int)
+s:21_MarketplaceKit_UIKit12ActionButtonC0E14ImagePlacementO8rawValueSivp	swift.property	rawValue	ActionButton.ButtonImagePlacement.rawValue	var rawValue: Int { get }
+s:21_MarketplaceKit_UIKit12ActionButtonC0E14ImagePlacementO8trailingyA2EmF	swift.enum.case	ActionButton.ButtonImagePlacement.trailing	ActionButton.ButtonImagePlacement.trailing	case trailing
+s:21_MarketplaceKit_UIKit12ActionButtonC11borderColorSo7UIColorCvp	swift.property	borderColor	ActionButton.borderColor	@MainActor @preconcurrency var borderColor: UIColor { get set }
+s:21_MarketplaceKit_UIKit12ActionButtonC11borderWidth14CoreFoundation7CGFloatVvp	swift.property	borderWidth	ActionButton.borderWidth	@MainActor @preconcurrency var borderWidth: CGFloat { get set }
+s:21_MarketplaceKit_UIKit12ActionButtonC12cornerRadius14CoreFoundation7CGFloatVvp	swift.property	cornerRadius	ActionButton.cornerRadius	@MainActor @preconcurrency var cornerRadius: CGFloat { get set }
+s:21_MarketplaceKit_UIKit12ActionButtonC14imagePlacementAC0e5ImageG0Ovp	swift.property	imagePlacement	ActionButton.imagePlacement	@MainActor @preconcurrency var imagePlacement: ActionButton.ButtonImagePlacement { get set }
+s:21_MarketplaceKit_UIKit12ActionButtonC4sizeSo6CGSizeVvp	swift.property	size	ActionButton.size	@MainActor @preconcurrency var size: CGSize { get set }
+s:21_MarketplaceKit_UIKit12ActionButtonC5labelSSvp	swift.property	label	ActionButton.label	@MainActor @preconcurrency var label: String { get set }
+s:21_MarketplaceKit_UIKit12ActionButtonC6actionA2C0D0O_tcfc	swift.init	init(action:)	ActionButton.init(action:)	@MainActor @preconcurrency init(action: ActionButton.Action)
+s:21_MarketplaceKit_UIKit12ActionButtonC6actionAC0D0Ovp	swift.property	action	ActionButton.action	@MainActor @preconcurrency final let action: ActionButton.Action
+s:21_MarketplaceKit_UIKit12ActionButtonC8fontSize14CoreFoundation7CGFloatVvp	swift.property	fontSize	ActionButton.fontSize	@MainActor @preconcurrency var fontSize: CGFloat { get set }
+s:21_MarketplaceKit_UIKit12ActionButtonC9imageNameSSSgvp	swift.property	imageName	ActionButton.imageName	@MainActor @preconcurrency var imageName: String? { get set }
+s:21_MarketplaceKit_UIKit15InstallMetadataV	swift.struct	InstallMetadata	InstallMetadata	struct InstallMetadata
+s:21_MarketplaceKit_UIKit15InstallMetadataV11appShareURL10Foundation0H0VSgvp	swift.property	appShareURL	InstallMetadata.appShareURL	var appShareURL: URL?
+s:21_MarketplaceKit_UIKit15InstallMetadataV11appleItemIDs6UInt64Vvp	swift.property	appleItemID	InstallMetadata.appleItemID	let appleItemID: AppleItemID
+s:21_MarketplaceKit_UIKit15InstallMetadataV19requestAgeExceptionSbvp	swift.property	requestAgeException	InstallMetadata.requestAgeException	var requestAgeException: Bool
+s:21_MarketplaceKit_UIKit15InstallMetadataV30alternativeDistributionPackage10Foundation3URLVvp	swift.property	alternativeDistributionPackage	InstallMetadata.alternativeDistributionPackage	let alternativeDistributionPackage: URL
+s:21_MarketplaceKit_UIKit15InstallMetadataV7account11appleItemID30alternativeDistributionPackage8isUpdate11appShareURL19requestAgeExceptionACSS_s6UInt64V10Foundation0Q0VSbANSgSbtcfc	swift.init	init(account:appleItemID:alternativeDistributionPackage:isUpdate:appShareURL:requestAgeException:)	InstallMetadata.init(account:appleItemID:alternativeDistributionPackage:isUpdate:appShareURL:requestAgeException:)	init(account: String, appleItemID: AppleItemID, alternativeDistributionPackage: URL, isUpdate: Bool, appShareURL: URL?, requestAgeException: Bool = false)
+s:21_MarketplaceKit_UIKit15InstallMetadataV7account11appleItemID30alternativeDistributionPackage8isUpdateACSS_s6UInt64V10Foundation3URLVSbtcfc	swift.init	init(account:appleItemID:alternativeDistributionPackage:isUpdate:)	InstallMetadata.init(account:appleItemID:alternativeDistributionPackage:isUpdate:)	init(account: String, appleItemID: AppleItemID, alternativeDistributionPackage: URL, isUpdate: Bool)
+s:21_MarketplaceKit_UIKit15InstallMetadataV7accountSSvp	swift.property	account	InstallMetadata.account	let account: String
+s:21_MarketplaceKit_UIKit15InstallMetadataV8isUpdateSbvp	swift.property	isUpdate	InstallMetadata.isUpdate	let isUpdate: Bool
+s:21_MarketplaceKit_UIKit20InstallConfigurationV	swift.struct	InstallConfiguration	InstallConfiguration	struct InstallConfiguration
+s:21_MarketplaceKit_UIKit20InstallConfigurationV07confirmD0AA0D18ConfirmationResultOyYaYbcvp	swift.property	confirmInstall	InstallConfiguration.confirmInstall	let confirmInstall: () async -> InstallConfirmationResult
+s:21_MarketplaceKit_UIKit20InstallConfigurationV7install07confirmD0AcA0D8MetadataV_AA0D18ConfirmationResultOyYaYbctcfc	swift.init	init(install:confirmInstall:)	InstallConfiguration.init(install:confirmInstall:)	init(install: InstallMetadata, confirmInstall: @escaping () async -> InstallConfirmationResult)
+s:21_MarketplaceKit_UIKit20InstallConfigurationV7installAA0D8MetadataVvp	swift.property	install	InstallConfiguration.install	let install: InstallMetadata
+s:21_MarketplaceKit_UIKit25BatchInstallConfigurationV	swift.struct	BatchInstallConfiguration	BatchInstallConfiguration	struct BatchInstallConfiguration
+s:21_MarketplaceKit_UIKit25BatchInstallConfigurationV07confirmE0AA0dE18ConfirmationResultOyYaYbcvp	swift.property	confirmInstall	BatchInstallConfiguration.confirmInstall	let confirmInstall: () async -> BatchInstallConfirmationResult
+s:21_MarketplaceKit_UIKit25BatchInstallConfigurationV8installs07confirmE0ACSayAA0E8MetadataVG_AA0dE18ConfirmationResultOyYaYbctcfc	swift.init	init(installs:confirmInstall:)	BatchInstallConfiguration.init(installs:confirmInstall:)	init(installs: [InstallMetadata], confirmInstall: @escaping () async -> BatchInstallConfirmationResult)
+s:21_MarketplaceKit_UIKit25BatchInstallConfigurationV8installsSayAA0E8MetadataVGvp	swift.property	installs	BatchInstallConfiguration.installs	let installs: [InstallMetadata]
+s:21_MarketplaceKit_UIKit25InstallConfirmationResultO	swift.enum	InstallConfirmationResult	InstallConfirmationResult	enum InstallConfirmationResult
+s:21_MarketplaceKit_UIKit25InstallConfirmationResultO6cancelyA2CmF	swift.enum.case	InstallConfirmationResult.cancel	InstallConfirmationResult.cancel	case cancel
+s:21_MarketplaceKit_UIKit25InstallConfirmationResultO9confirmedyACSS_So9LAContextCSgtcACmF	swift.enum.case	InstallConfirmationResult.confirmed(installVerificationToken:authenticationContext:)	InstallConfirmationResult.confirmed(installVerificationToken:authenticationContext:)	case confirmed(installVerificationToken: String, authenticationContext: LAContext?)
+s:21_MarketplaceKit_UIKit30BatchInstallConfirmationResultO	swift.enum	BatchInstallConfirmationResult	BatchInstallConfirmationResult	enum BatchInstallConfirmationResult
+s:21_MarketplaceKit_UIKit30BatchInstallConfirmationResultO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	BatchInstallConfirmationResult.==(_:_:)	static func == (a: BatchInstallConfirmationResult, b: BatchInstallConfirmationResult) -> Bool
+s:21_MarketplaceKit_UIKit30BatchInstallConfirmationResultO6cancelyA2CmF	swift.enum.case	BatchInstallConfirmationResult.cancel	BatchInstallConfirmationResult.cancel	case cancel
+s:21_MarketplaceKit_UIKit30BatchInstallConfirmationResultO9confirmedyACSDys6UInt64VSSG_So9LAContextCSgtcACmF	swift.enum.case	BatchInstallConfirmationResult.confirmed(installVerificationTokens:authenticationContext:)	BatchInstallConfirmationResult.confirmed(installVerificationTokens:authenticationContext:)	case confirmed(installVerificationTokens: [AppleItemID : String], authenticationContext: LAContext?)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:14MarketplaceKit10AppLibraryC0C0C	swift.func.op	!=(_:_:)	AppLibrary.App.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:14MarketplaceKit10AppLibraryC0C0C8MetadataV	swift.func.op	!=(_:_:)	AppLibrary.App.Metadata.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6StatusO	swift.func.op	!=(_:_:)	AppLibrary.ExceptionRequest.Status.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:21_MarketplaceKit_UIKit12ActionButtonC0E14ImagePlacementO	swift.func.op	!=(_:_:)	ActionButton.ButtonImagePlacement.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:21_MarketplaceKit_UIKit30BatchInstallConfirmationResultO	swift.func.op	!=(_:_:)	BatchInstallConfirmationResult.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSERzSi8RawValueSYRtzrlE6encode2toys7Encoder_p_tKF::SYNTHESIZED::s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6StatusO	swift.method	encode(to:)	AppLibrary.ExceptionRequest.Status.encode(to:)	func encode(to encoder: any Encoder) throws
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6StatusO	swift.property	hashValue	AppLibrary.ExceptionRequest.Status.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:21_MarketplaceKit_UIKit12ActionButtonC0E14ImagePlacementO	swift.property	hashValue	ActionButton.ButtonImagePlacement.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6StatusO	swift.method	hash(into:)	AppLibrary.ExceptionRequest.Status.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:21_MarketplaceKit_UIKit12ActionButtonC0E14ImagePlacementO	swift.method	hash(into:)	ActionButton.ButtonImagePlacement.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSeRzSi8RawValueSYRtzrlE4fromxs7Decoder_p_tKcfc::SYNTHESIZED::s:14MarketplaceKit10AppLibraryC16ExceptionRequestV6StatusO	swift.init	init(from:)	AppLibrary.ExceptionRequest.Status.init(from:)	init(from decoder: any Decoder) throws
+s:So24UISceneConnectionOptionsC21_MarketplaceKit_UIKitE24marketplaceDisplayOptionAC0dhI0OSgvp	swift.property	marketplaceDisplayOption	UIScene.ConnectionOptions.marketplaceDisplayOption	@MainActor @preconcurrency var marketplaceDisplayOption: MarketplaceDisplayOption? { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:14MarketplaceKit0aB5ErrorO	swift.property	localizedDescription	MarketplaceKitError.localizedDescription	var localizedDescription: String { get }

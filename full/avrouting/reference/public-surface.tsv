@@ -1,0 +1,39 @@
+precise	kind	title	path	declaration
+c:@AVCustomRoutingControllerAuthorizedRoutesDidChangeNotification	swift.type.property	authorizedRoutesDidChange	AVCustomRoutingController.authorizedRoutesDidChange	class let authorizedRoutesDidChange: NSNotification.Name
+c:@E@AVCustomRoutingEventReason	swift.enum	AVCustomRoutingEventReason	AVCustomRoutingEventReason	enum AVCustomRoutingEventReason
+c:@E@AVCustomRoutingEventReason@AVCustomRoutingEventReasonActivate	swift.enum.case	AVCustomRoutingEventReason.activate	AVCustomRoutingEventReason.activate	case activate
+c:@E@AVCustomRoutingEventReason@AVCustomRoutingEventReasonDeactivate	swift.enum.case	AVCustomRoutingEventReason.deactivate	AVCustomRoutingEventReason.deactivate	case deactivate
+c:@E@AVCustomRoutingEventReason@AVCustomRoutingEventReasonReactivate	swift.enum.case	AVCustomRoutingEventReason.reactivate	AVCustomRoutingEventReason.reactivate	case reactivate
+c:objc(cs)AVCustomDeviceRoute	swift.class	AVCustomDeviceRoute	AVCustomDeviceRoute	class AVCustomDeviceRoute
+c:objc(cs)AVCustomDeviceRoute(py)bluetoothIdentifier	swift.property	bluetoothIdentifier	AVCustomDeviceRoute.bluetoothIdentifier	var bluetoothIdentifier: UUID? { get }
+c:objc(cs)AVCustomDeviceRoute(py)networkEndpoint	swift.property	networkEndpoint	AVCustomDeviceRoute.networkEndpoint	var networkEndpoint: nw_endpoint_t? { get }
+c:objc(cs)AVCustomRoutingActionItem	swift.class	AVCustomRoutingActionItem	AVCustomRoutingActionItem	class AVCustomRoutingActionItem
+c:objc(cs)AVCustomRoutingActionItem(py)overrideTitle	swift.property	overrideTitle	AVCustomRoutingActionItem.overrideTitle	var overrideTitle: String? { get set }
+c:objc(cs)AVCustomRoutingActionItem(py)type	swift.property	type	AVCustomRoutingActionItem.type	@NSCopying var type: UTType { get set }
+c:objc(cs)AVCustomRoutingController	swift.class	AVCustomRoutingController	AVCustomRoutingController	class AVCustomRoutingController
+c:objc(cs)AVCustomRoutingController(im)invalidateAuthorizationForRoute:	swift.method	invalidateAuthorization(for:)	AVCustomRoutingController.invalidateAuthorization(for:)	func invalidateAuthorization(for route: AVCustomDeviceRoute)
+c:objc(cs)AVCustomRoutingController(im)isRouteActive:	swift.method	isRouteActive(_:)	AVCustomRoutingController.isRouteActive(_:)	func isRouteActive(_ route: AVCustomDeviceRoute) -> Bool
+c:objc(cs)AVCustomRoutingController(im)setActive:forRoute:	swift.method	setActive(_:for:)	AVCustomRoutingController.setActive(_:for:)	func setActive(_ active: Bool, for route: AVCustomDeviceRoute)
+c:objc(cs)AVCustomRoutingController(py)authorizedRoutes	swift.property	authorizedRoutes	AVCustomRoutingController.authorizedRoutes	var authorizedRoutes: [AVCustomDeviceRoute] { get }
+c:objc(cs)AVCustomRoutingController(py)customActionItems	swift.property	customActionItems	AVCustomRoutingController.customActionItems	var customActionItems: [AVCustomRoutingActionItem] { get set }
+c:objc(cs)AVCustomRoutingController(py)delegate	swift.property	delegate	AVCustomRoutingController.delegate	weak var delegate: (any AVCustomRoutingControllerDelegate)? { get set }
+c:objc(cs)AVCustomRoutingController(py)knownRouteIPs	swift.property	knownRouteIPs	AVCustomRoutingController.knownRouteIPs	var knownRouteIPs: [AVCustomRoutingPartialIP] { get set }
+c:objc(cs)AVCustomRoutingEvent	swift.class	AVCustomRoutingEvent	AVCustomRoutingEvent	class AVCustomRoutingEvent
+c:objc(cs)AVCustomRoutingEvent(py)reason	swift.property	reason	AVCustomRoutingEvent.reason	var reason: AVCustomRoutingEventReason { get }
+c:objc(cs)AVCustomRoutingEvent(py)route	swift.property	route	AVCustomRoutingEvent.route	var route: AVCustomDeviceRoute { get }
+c:objc(cs)AVCustomRoutingPartialIP	swift.class	AVCustomRoutingPartialIP	AVCustomRoutingPartialIP	class AVCustomRoutingPartialIP
+c:objc(cs)AVCustomRoutingPartialIP(im)initWithAddress:mask:	swift.init	init(address:mask:)	AVCustomRoutingPartialIP.init(address:mask:)	init(address: Data, mask: Data)
+c:objc(cs)AVCustomRoutingPartialIP(py)address	swift.property	address	AVCustomRoutingPartialIP.address	var address: Data { get }
+c:objc(cs)AVCustomRoutingPartialIP(py)mask	swift.property	mask	AVCustomRoutingPartialIP.mask	var mask: Data { get }
+c:objc(cs)AVRoutingPlaybackArbiter	swift.class	AVRoutingPlaybackArbiter	AVRoutingPlaybackArbiter	class AVRoutingPlaybackArbiter
+c:objc(cs)AVRoutingPlaybackArbiter(cm)sharedRoutingPlaybackArbiter	swift.type.method	shared()	AVRoutingPlaybackArbiter.shared()	class func shared() -> AVRoutingPlaybackArbiter
+c:objc(cs)AVRoutingPlaybackArbiter(py)preferredParticipantForExternalPlayback	swift.property	preferredParticipantForExternalPlayback	AVRoutingPlaybackArbiter.preferredParticipantForExternalPlayback	weak var preferredParticipantForExternalPlayback: (any AVRoutingPlaybackParticipant)? { get set }
+c:objc(pl)AVCustomRoutingControllerDelegate	swift.protocol	AVCustomRoutingControllerDelegate	AVCustomRoutingControllerDelegate	protocol AVCustomRoutingControllerDelegate : NSObjectProtocol, Sendable
+c:objc(pl)AVCustomRoutingControllerDelegate(im)customRoutingController:didSelectItem:	swift.method	customRoutingController(_:didSelect:)	AVCustomRoutingControllerDelegate.customRoutingController(_:didSelect:)	optional func customRoutingController(_ controller: AVCustomRoutingController, didSelect customActionItem: AVCustomRoutingActionItem)
+c:objc(pl)AVCustomRoutingControllerDelegate(im)customRoutingController:eventDidTimeOut:	swift.method	customRoutingController(_:eventDidTimeOut:)	AVCustomRoutingControllerDelegate.customRoutingController(_:eventDidTimeOut:)	optional func customRoutingController(_ controller: AVCustomRoutingController, eventDidTimeOut event: AVCustomRoutingEvent)
+c:objc(pl)AVCustomRoutingControllerDelegate(im)customRoutingController:handleEvent:completionHandler:	swift.method	customRoutingController(_:handle:)	AVCustomRoutingControllerDelegate.customRoutingController(_:handle:)	func customRoutingController(_ controller: AVCustomRoutingController, handle event: AVCustomRoutingEvent) async -> Bool
+c:objc(pl)AVRoutingPlaybackParticipant	swift.protocol	AVRoutingPlaybackParticipant	AVRoutingPlaybackParticipant	protocol AVRoutingPlaybackParticipant
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@AVCustomRoutingEventReason	swift.func.op	!=(_:_:)	AVCustomRoutingEventReason.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVCustomRoutingEventReason	swift.property	hashValue	AVCustomRoutingEventReason.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVCustomRoutingEventReason	swift.method	hash(into:)	AVCustomRoutingEventReason.hash(into:)	func hash(into hasher: inout Hasher)
+s:So26AVCustomRoutingEventReasonV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	AVCustomRoutingEventReason.init(rawValue:)	init?(rawValue: Int)

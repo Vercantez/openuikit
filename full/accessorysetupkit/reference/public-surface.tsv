@@ -1,0 +1,278 @@
+precise	kind	title	path	declaration
+c:@ASErrorDomain	swift.var	ASErrorDomain	ASErrorDomain	let ASErrorDomain: String
+c:@ASPickerDisplaySettingsDiscoveryTimeoutLong	swift.type.property	long	ASPickerDisplaySettings.DiscoveryTimeout.long	static let long: ASPickerDisplaySettings.DiscoveryTimeout
+c:@ASPickerDisplaySettingsDiscoveryTimeoutMedium	swift.type.property	medium	ASPickerDisplaySettings.DiscoveryTimeout.medium	static let medium: ASPickerDisplaySettings.DiscoveryTimeout
+c:@ASPickerDisplaySettingsDiscoveryTimeoutShort	swift.type.property	short	ASPickerDisplaySettings.DiscoveryTimeout.short	static let short: ASPickerDisplaySettings.DiscoveryTimeout
+c:@ASPickerDisplaySettingsDiscoveryTimeoutUnbounded	swift.type.property	unbounded	ASPickerDisplaySettings.DiscoveryTimeout.unbounded	static let unbounded: ASPickerDisplaySettings.DiscoveryTimeout
+c:@E@ASAccessoryEventType	swift.enum	ASAccessoryEventType	ASAccessoryEventType	enum ASAccessoryEventType
+c:@E@ASAccessoryEventType@ASAccessoryEventTypeAccessoryAdded	swift.enum.case	ASAccessoryEventType.accessoryAdded	ASAccessoryEventType.accessoryAdded	case accessoryAdded
+c:@E@ASAccessoryEventType@ASAccessoryEventTypeAccessoryChanged	swift.enum.case	ASAccessoryEventType.accessoryChanged	ASAccessoryEventType.accessoryChanged	case accessoryChanged
+c:@E@ASAccessoryEventType@ASAccessoryEventTypeAccessoryDiscovered	swift.enum.case	ASAccessoryEventType.accessoryDiscovered	ASAccessoryEventType.accessoryDiscovered	case accessoryDiscovered
+c:@E@ASAccessoryEventType@ASAccessoryEventTypeAccessoryRemoved	swift.enum.case	ASAccessoryEventType.accessoryRemoved	ASAccessoryEventType.accessoryRemoved	case accessoryRemoved
+c:@E@ASAccessoryEventType@ASAccessoryEventTypeActivated	swift.enum.case	ASAccessoryEventType.activated	ASAccessoryEventType.activated	case activated
+c:@E@ASAccessoryEventType@ASAccessoryEventTypeInvalidated	swift.enum.case	ASAccessoryEventType.invalidated	ASAccessoryEventType.invalidated	case invalidated
+c:@E@ASAccessoryEventType@ASAccessoryEventTypeMigrationComplete	swift.enum.case	ASAccessoryEventType.migrationComplete	ASAccessoryEventType.migrationComplete	case migrationComplete
+c:@E@ASAccessoryEventType@ASAccessoryEventTypePickerDidDismiss	swift.enum.case	ASAccessoryEventType.pickerDidDismiss	ASAccessoryEventType.pickerDidDismiss	case pickerDidDismiss
+c:@E@ASAccessoryEventType@ASAccessoryEventTypePickerDidPresent	swift.enum.case	ASAccessoryEventType.pickerDidPresent	ASAccessoryEventType.pickerDidPresent	case pickerDidPresent
+c:@E@ASAccessoryEventType@ASAccessoryEventTypePickerSetupBridging	swift.enum.case	ASAccessoryEventType.pickerSetupBridging	ASAccessoryEventType.pickerSetupBridging	case pickerSetupBridging
+c:@E@ASAccessoryEventType@ASAccessoryEventTypePickerSetupFailed	swift.enum.case	ASAccessoryEventType.pickerSetupFailed	ASAccessoryEventType.pickerSetupFailed	case pickerSetupFailed
+c:@E@ASAccessoryEventType@ASAccessoryEventTypePickerSetupPairing	swift.enum.case	ASAccessoryEventType.pickerSetupPairing	ASAccessoryEventType.pickerSetupPairing	case pickerSetupPairing
+c:@E@ASAccessoryEventType@ASAccessoryEventTypePickerSetupRename	swift.enum.case	ASAccessoryEventType.pickerSetupRename	ASAccessoryEventType.pickerSetupRename	case pickerSetupRename
+c:@E@ASAccessoryEventType@ASAccessoryEventTypeUnknown	swift.enum.case	ASAccessoryEventType.unknown	ASAccessoryEventType.unknown	case unknown
+c:@E@ASAccessoryRenameOptions	swift.struct	ASAccessory.RenameOptions	ASAccessory.RenameOptions	struct RenameOptions
+c:@E@ASAccessoryRenameOptions@ASAccessoryRenameSSID	swift.type.property	ssid	ASAccessory.RenameOptions.ssid	static var ssid: ASAccessory.RenameOptions { get }
+c:@E@ASAccessoryState	swift.enum	ASAccessory.AccessoryState	ASAccessory.AccessoryState	enum AccessoryState
+c:@E@ASAccessoryState@ASAccessoryStateAuthorized	swift.enum.case	ASAccessory.AccessoryState.authorized	ASAccessory.AccessoryState.authorized	case authorized
+c:@E@ASAccessoryState@ASAccessoryStateAwaitingAuthorization	swift.enum.case	ASAccessory.AccessoryState.awaitingAuthorization	ASAccessory.AccessoryState.awaitingAuthorization	case awaitingAuthorization
+c:@E@ASAccessoryState@ASAccessoryStateUnauthorized	swift.enum.case	ASAccessory.AccessoryState.unauthorized	ASAccessory.AccessoryState.unauthorized	case unauthorized
+c:@E@ASAccessorySupportOptions	swift.struct	ASAccessory.SupportOptions	ASAccessory.SupportOptions	struct SupportOptions
+c:@E@ASAccessorySupportOptions@ASAccessorySupportBluetoothHID	swift.type.property	bluetoothHID	ASAccessory.SupportOptions.bluetoothHID	static var bluetoothHID: ASAccessory.SupportOptions { get }
+c:@E@ASAccessorySupportOptions@ASAccessorySupportBluetoothPairingLE	swift.type.property	bluetoothPairingLE	ASAccessory.SupportOptions.bluetoothPairingLE	static var bluetoothPairingLE: ASAccessory.SupportOptions { get }
+c:@E@ASAccessorySupportOptions@ASAccessorySupportBluetoothTransportBridging	swift.type.property	bluetoothTransportBridging	ASAccessory.SupportOptions.bluetoothTransportBridging	static var bluetoothTransportBridging: ASAccessory.SupportOptions { get }
+c:@E@ASDiscoveryDescriptorRange	swift.enum	ASDiscoveryDescriptor.Range	ASDiscoveryDescriptor.Range	enum Range
+c:@E@ASDiscoveryDescriptorRange@ASDiscoveryDescriptorRangeDefault	swift.enum.case	ASDiscoveryDescriptor.Range.default	ASDiscoveryDescriptor.Range.default	case `default`
+c:@E@ASDiscoveryDescriptorRange@ASDiscoveryDescriptorRangeImmediate	swift.enum.case	ASDiscoveryDescriptor.Range.immediate	ASDiscoveryDescriptor.Range.immediate	case immediate
+c:@E@ASDiscoveryDescriptorWiFiAwareServiceRole	swift.enum	ASDiscoveryDescriptor.WiFiAwareServiceRole	ASDiscoveryDescriptor.WiFiAwareServiceRole	enum WiFiAwareServiceRole
+c:@E@ASDiscoveryDescriptorWiFiAwareServiceRole@ASDiscoveryDescriptorWiFiAwareServiceRolePublisher	swift.enum.case	ASDiscoveryDescriptor.WiFiAwareServiceRole.publisher	ASDiscoveryDescriptor.WiFiAwareServiceRole.publisher	case publisher
+c:@E@ASDiscoveryDescriptorWiFiAwareServiceRole@ASDiscoveryDescriptorWiFiAwareServiceRoleSubscriber	swift.enum.case	ASDiscoveryDescriptor.WiFiAwareServiceRole.subscriber	ASDiscoveryDescriptor.WiFiAwareServiceRole.subscriber	case subscriber
+c:@E@ASErrorCode	swift.enum	ASError.Code	ASError.Code	enum Code
+c:@E@ASErrorCode@ASErrorCodeActivationFailed	swift.enum.case	ASError.Code.activationFailed	ASError.Code.activationFailed	case activationFailed
+c:@E@ASErrorCode@ASErrorCodeConnectionFailed	swift.enum.case	ASError.Code.connectionFailed	ASError.Code.connectionFailed	case connectionFailed
+c:@E@ASErrorCode@ASErrorCodeDiscoveryTimeout	swift.enum.case	ASError.Code.discoveryTimeout	ASError.Code.discoveryTimeout	case discoveryTimeout
+c:@E@ASErrorCode@ASErrorCodeExtensionNotFound	swift.enum.case	ASError.Code.extensionNotFound	ASError.Code.extensionNotFound	case extensionNotFound
+c:@E@ASErrorCode@ASErrorCodeInvalidRequest	swift.enum.case	ASError.Code.invalidRequest	ASError.Code.invalidRequest	case invalidRequest
+c:@E@ASErrorCode@ASErrorCodeInvalidated	swift.enum.case	ASError.Code.invalidated	ASError.Code.invalidated	case invalidated
+c:@E@ASErrorCode@ASErrorCodePickerAlreadyActive	swift.enum.case	ASError.Code.pickerAlreadyActive	ASError.Code.pickerAlreadyActive	case pickerAlreadyActive
+c:@E@ASErrorCode@ASErrorCodePickerRestricted	swift.enum.case	ASError.Code.pickerRestricted	ASError.Code.pickerRestricted	case pickerRestricted
+c:@E@ASErrorCode@ASErrorCodeSuccess	swift.enum.case	ASError.Code.success	ASError.Code.success	case success
+c:@E@ASErrorCode@ASErrorCodeUnknown	swift.enum.case	ASError.Code.unknown	ASError.Code.unknown	case unknown
+c:@E@ASErrorCode@ASErrorCodeUserCancelled	swift.enum.case	ASError.Code.userCancelled	ASError.Code.userCancelled	case userCancelled
+c:@E@ASErrorCode@ASErrorCodeUserRestricted	swift.enum.case	ASError.Code.userRestricted	ASError.Code.userRestricted	case userRestricted
+c:@E@ASPickerDisplayItemSetupOptions	swift.struct	ASPickerDisplayItem.SetupOptions	ASPickerDisplayItem.SetupOptions	struct SetupOptions
+c:@E@ASPickerDisplayItemSetupOptions@ASPickerDisplayItemSetupConfirmAuthorization	swift.type.property	confirmAuthorization	ASPickerDisplayItem.SetupOptions.confirmAuthorization	static var confirmAuthorization: ASPickerDisplayItem.SetupOptions { get }
+c:@E@ASPickerDisplayItemSetupOptions@ASPickerDisplayItemSetupFinishInApp	swift.type.property	finishInApp	ASPickerDisplayItem.SetupOptions.finishInApp	static var finishInApp: ASPickerDisplayItem.SetupOptions { get }
+c:@E@ASPickerDisplayItemSetupOptions@ASPickerDisplayItemSetupRename	swift.type.property	rename	ASPickerDisplayItem.SetupOptions.rename	static var rename: ASPickerDisplayItem.SetupOptions { get }
+c:@E@ASPickerDisplaySettingsOptions	swift.struct	ASPickerDisplaySettings.Options	ASPickerDisplaySettings.Options	struct Options
+c:@E@ASPickerDisplaySettingsOptions@ASPickerDisplaySettingsOptionFilterDiscoveryResults	swift.type.property	filterDiscoveryResults	ASPickerDisplaySettings.Options.filterDiscoveryResults	static var filterDiscoveryResults: ASPickerDisplaySettings.Options { get }
+c:@T@ASAccessoryWiFiAwarePairedDeviceID	swift.typealias	ASAccessory.WiFiAwarePairedDeviceID	ASAccessory.WiFiAwarePairedDeviceID	typealias WiFiAwarePairedDeviceID = UInt64
+c:@T@ASBluetoothCompanyIdentifier	swift.struct	ASBluetoothCompanyIdentifier	ASBluetoothCompanyIdentifier	struct ASBluetoothCompanyIdentifier
+c:@T@ASPickerDisplaySettingsDiscoveryTimeout	swift.struct	ASPickerDisplaySettings.DiscoveryTimeout	ASPickerDisplaySettings.DiscoveryTimeout	struct DiscoveryTimeout
+c:objc(cs)ASAccessory	swift.class	ASAccessory	ASAccessory	class ASAccessory
+c:objc(cs)ASAccessory(py)SSID	swift.property	ssid	ASAccessory.ssid	var ssid: String? { get }
+c:objc(cs)ASAccessory(py)bluetoothIdentifier	swift.property	bluetoothIdentifier	ASAccessory.bluetoothIdentifier	var bluetoothIdentifier: UUID? { get }
+c:objc(cs)ASAccessory(py)bluetoothTransportBridgingIdentifier	swift.property	bluetoothTransportBridgingIdentifier	ASAccessory.bluetoothTransportBridgingIdentifier	var bluetoothTransportBridgingIdentifier: Data? { get }
+c:objc(cs)ASAccessory(py)descriptor	swift.property	descriptor	ASAccessory.descriptor	@NSCopying var descriptor: ASDiscoveryDescriptor { get }
+c:objc(cs)ASAccessory(py)displayName	swift.property	displayName	ASAccessory.displayName	var displayName: String { get }
+c:objc(cs)ASAccessory(py)state	swift.property	state	ASAccessory.state	var state: ASAccessory.AccessoryState { get }
+c:objc(cs)ASAccessory(py)wifiAwarePairedDeviceID	swift.property	wifiAwarePairedDeviceID	ASAccessory.wifiAwarePairedDeviceID	var wifiAwarePairedDeviceID: ASAccessory.WiFiAwarePairedDeviceID { get }
+c:objc(cs)ASAccessoryEvent	swift.class	ASAccessoryEvent	ASAccessoryEvent	class ASAccessoryEvent
+c:objc(cs)ASAccessoryEvent(py)accessory	swift.property	accessory	ASAccessoryEvent.accessory	@NSCopying var accessory: ASAccessory? { get }
+c:objc(cs)ASAccessoryEvent(py)error	swift.property	error	ASAccessoryEvent.error	var error: (any Error)? { get }
+c:objc(cs)ASAccessoryEvent(py)eventType	swift.property	eventType	ASAccessoryEvent.eventType	var eventType: ASAccessoryEventType { get }
+c:objc(cs)ASAccessorySession	swift.class	ASAccessorySession	ASAccessorySession	class ASAccessorySession
+c:objc(cs)ASAccessorySession(im)activateWithQueue:eventHandler:	swift.method	activate(on:eventHandler:)	ASAccessorySession.activate(on:eventHandler:)	func activate(on queue: dispatch_queue_t, eventHandler: @escaping (ASAccessoryEvent) -> Void)
+c:objc(cs)ASAccessorySession(im)failAuthorization:completionHandler:	swift.method	failAuthorization(for:)	ASAccessorySession.failAuthorization(for:)	func failAuthorization(for accessory: ASAccessory) async throws
+c:objc(cs)ASAccessorySession(im)finishAuthorization:settings:completionHandler:	swift.method	finishAuthorization(for:settings:)	ASAccessorySession.finishAuthorization(for:settings:)	func finishAuthorization(for accessory: ASAccessory, settings: ASAccessorySettings) async throws
+c:objc(cs)ASAccessorySession(im)finishPickerDiscovery:	swift.method	finishPickerDiscovery(completionHandler:)	ASAccessorySession.finishPickerDiscovery(completionHandler:)	func finishPickerDiscovery(completionHandler: @escaping ((any Error)?) -> Void)
+c:objc(cs)ASAccessorySession(im)invalidate	swift.method	invalidate()	ASAccessorySession.invalidate()	func invalidate()
+c:objc(cs)ASAccessorySession(im)removeAccessory:completionHandler:	swift.method	removeAccessory(_:)	ASAccessorySession.removeAccessory(_:)	func removeAccessory(_ accessory: ASAccessory) async throws
+c:objc(cs)ASAccessorySession(im)renameAccessory:options:completionHandler:	swift.method	renameAccessory(_:options:)	ASAccessorySession.renameAccessory(_:options:)	func renameAccessory(_ accessory: ASAccessory, options renameOptions: ASAccessory.RenameOptions = []) async throws
+c:objc(cs)ASAccessorySession(im)showPickerForDisplayItems:completionHandler:	swift.method	showPicker(for:)	ASAccessorySession.showPicker(for:)	func showPicker(for displayItems: [ASPickerDisplayItem]) async throws
+c:objc(cs)ASAccessorySession(im)showPickerWithCompletionHandler:	swift.method	showPicker(completionHandler:)	ASAccessorySession.showPicker(completionHandler:)	func showPicker(completionHandler: @escaping ((any Error)?) -> Void)
+c:objc(cs)ASAccessorySession(im)updateAuthorization:descriptor:completionHandler:	swift.method	updateAuthorization(for:descriptor:)	ASAccessorySession.updateAuthorization(for:descriptor:)	func updateAuthorization(for accessory: ASAccessory, descriptor: ASDiscoveryDescriptor) async throws
+c:objc(cs)ASAccessorySession(im)updatePickerShowingDiscoveredDisplayItems:completionHandler:	swift.method	updatePicker(showing:)	ASAccessorySession.updatePicker(showing:)	func updatePicker(showing displayItems: [ASDiscoveredDisplayItem]) async throws
+c:objc(cs)ASAccessorySession(py)accessories	swift.property	accessories	ASAccessorySession.accessories	var accessories: [ASAccessory] { get }
+c:objc(cs)ASAccessorySession(py)pickerDisplaySettings	swift.property	pickerDisplaySettings	ASAccessorySession.pickerDisplaySettings	@NSCopying var pickerDisplaySettings: ASPickerDisplaySettings? { get set }
+c:objc(cs)ASAccessorySettings	swift.class	ASAccessorySettings	ASAccessorySettings	class ASAccessorySettings
+c:objc(cs)ASAccessorySettings(cpy)defaultSettings	swift.type.property	default	ASAccessorySettings.default	class var `default`: ASAccessorySettings { get }
+c:objc(cs)ASAccessorySettings(py)SSID	swift.property	ssid	ASAccessorySettings.ssid	var ssid: String? { get set }
+c:objc(cs)ASAccessorySettings(py)bluetoothTransportBridgingIdentifier	swift.property	bluetoothTransportBridgingIdentifier	ASAccessorySettings.bluetoothTransportBridgingIdentifier	var bluetoothTransportBridgingIdentifier: Data? { get set }
+c:objc(cs)ASDiscoveredAccessory	swift.class	ASDiscoveredAccessory	ASDiscoveredAccessory	class ASDiscoveredAccessory
+c:objc(cs)ASDiscoveredAccessory(py)bluetoothAdvertisementData	swift.property	bluetoothAdvertisementData	ASDiscoveredAccessory.bluetoothAdvertisementData	var bluetoothAdvertisementData: [AnyHashable : Any]? { get }
+c:objc(cs)ASDiscoveredDisplayItem	swift.class	ASDiscoveredDisplayItem	ASDiscoveredDisplayItem	class ASDiscoveredDisplayItem
+c:objc(cs)ASDiscoveredDisplayItem(im)initWithName:productImage:accessory:	swift.init	init(name:productImage:accessory:)	ASDiscoveredDisplayItem.init(name:productImage:accessory:)	init(name: String, productImage: UIImage, accessory: ASDiscoveredAccessory)
+c:objc(cs)ASDiscoveryDescriptor	swift.class	ASDiscoveryDescriptor	ASDiscoveryDescriptor	class ASDiscoveryDescriptor
+c:objc(cs)ASDiscoveryDescriptor(py)SSID	swift.property	ssid	ASDiscoveryDescriptor.ssid	var ssid: String? { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)SSIDPrefix	swift.property	ssidPrefix	ASDiscoveryDescriptor.ssidPrefix	var ssidPrefix: String? { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)bluetoothCompanyIdentifier	swift.property	bluetoothCompanyIdentifier	ASDiscoveryDescriptor.bluetoothCompanyIdentifier	var bluetoothCompanyIdentifier: ASBluetoothCompanyIdentifier { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)bluetoothManufacturerDataBlob	swift.property	bluetoothManufacturerDataBlob	ASDiscoveryDescriptor.bluetoothManufacturerDataBlob	var bluetoothManufacturerDataBlob: Data? { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)bluetoothManufacturerDataMask	swift.property	bluetoothManufacturerDataMask	ASDiscoveryDescriptor.bluetoothManufacturerDataMask	var bluetoothManufacturerDataMask: Data? { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)bluetoothNameSubstring	swift.property	bluetoothNameSubstring	ASDiscoveryDescriptor.bluetoothNameSubstring	var bluetoothNameSubstring: String? { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)bluetoothNameSubstringCompareOptions	swift.property	bluetoothNameSubstringCompareOptions	ASDiscoveryDescriptor.bluetoothNameSubstringCompareOptions	var bluetoothNameSubstringCompareOptions: NSString.CompareOptions { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)bluetoothRange	swift.property	bluetoothRange	ASDiscoveryDescriptor.bluetoothRange	var bluetoothRange: ASDiscoveryDescriptor.Range { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)bluetoothServiceDataBlob	swift.property	bluetoothServiceDataBlob	ASDiscoveryDescriptor.bluetoothServiceDataBlob	var bluetoothServiceDataBlob: Data? { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)bluetoothServiceDataMask	swift.property	bluetoothServiceDataMask	ASDiscoveryDescriptor.bluetoothServiceDataMask	var bluetoothServiceDataMask: Data? { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)bluetoothServiceUUID	swift.property	bluetoothServiceUUID	ASDiscoveryDescriptor.bluetoothServiceUUID	@NSCopying var bluetoothServiceUUID: CBUUID? { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)supportedOptions	swift.property	supportedOptions	ASDiscoveryDescriptor.supportedOptions	var supportedOptions: ASAccessory.SupportOptions { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)wifiAwareModelNameMatch	swift.property	wifiAwareModelNameMatch	ASDiscoveryDescriptor.wifiAwareModelNameMatch	@NSCopying var wifiAwareModelNameMatch: ASPropertyCompareString? { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)wifiAwareServiceName	swift.property	wifiAwareServiceName	ASDiscoveryDescriptor.wifiAwareServiceName	var wifiAwareServiceName: String? { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)wifiAwareServiceRole	swift.property	wifiAwareServiceRole	ASDiscoveryDescriptor.wifiAwareServiceRole	var wifiAwareServiceRole: ASDiscoveryDescriptor.WiFiAwareServiceRole { get set }
+c:objc(cs)ASDiscoveryDescriptor(py)wifiAwareVendorNameMatch	swift.property	wifiAwareVendorNameMatch	ASDiscoveryDescriptor.wifiAwareVendorNameMatch	@NSCopying var wifiAwareVendorNameMatch: ASPropertyCompareString? { get set }
+c:objc(cs)ASMigrationDisplayItem	swift.class	ASMigrationDisplayItem	ASMigrationDisplayItem	class ASMigrationDisplayItem
+c:objc(cs)ASMigrationDisplayItem(py)hotspotSSID	swift.property	hotspotSSID	ASMigrationDisplayItem.hotspotSSID	var hotspotSSID: String? { get set }
+c:objc(cs)ASMigrationDisplayItem(py)peripheralIdentifier	swift.property	peripheralIdentifier	ASMigrationDisplayItem.peripheralIdentifier	var peripheralIdentifier: UUID? { get set }
+c:objc(cs)ASMigrationDisplayItem(py)wifiAwarePairedDeviceID	swift.property	wifiAwarePairedDeviceID	ASMigrationDisplayItem.wifiAwarePairedDeviceID	var wifiAwarePairedDeviceID: ASAccessory.WiFiAwarePairedDeviceID { get set }
+c:objc(cs)ASPickerDisplayItem	swift.class	ASPickerDisplayItem	ASPickerDisplayItem	class ASPickerDisplayItem
+c:objc(cs)ASPickerDisplayItem(im)initWithName:productImage:descriptor:	swift.init	init(name:productImage:descriptor:)	ASPickerDisplayItem.init(name:productImage:descriptor:)	init(name: String, productImage: UIImage, descriptor: ASDiscoveryDescriptor)
+c:objc(cs)ASPickerDisplayItem(py)descriptor	swift.property	descriptor	ASPickerDisplayItem.descriptor	@NSCopying var descriptor: ASDiscoveryDescriptor { get }
+c:objc(cs)ASPickerDisplayItem(py)name	swift.property	name	ASPickerDisplayItem.name	var name: String { get }
+c:objc(cs)ASPickerDisplayItem(py)productImage	swift.property	productImage	ASPickerDisplayItem.productImage	@NSCopying var productImage: UIImage { get }
+c:objc(cs)ASPickerDisplayItem(py)renameOptions	swift.property	renameOptions	ASPickerDisplayItem.renameOptions	var renameOptions: ASAccessory.RenameOptions { get set }
+c:objc(cs)ASPickerDisplayItem(py)setupOptions	swift.property	setupOptions	ASPickerDisplayItem.setupOptions	var setupOptions: ASPickerDisplayItem.SetupOptions { get set }
+c:objc(cs)ASPickerDisplaySettings	swift.class	ASPickerDisplaySettings	ASPickerDisplaySettings	class ASPickerDisplaySettings
+c:objc(cs)ASPickerDisplaySettings(cpy)defaultSettings	swift.type.property	default	ASPickerDisplaySettings.default	class var `default`: ASPickerDisplaySettings { get }
+c:objc(cs)ASPickerDisplaySettings(py)discoveryTimeout	swift.property	discoveryTimeout	ASPickerDisplaySettings.discoveryTimeout	var discoveryTimeout: ASPickerDisplaySettings.DiscoveryTimeout { get set }
+c:objc(cs)ASPickerDisplaySettings(py)options	swift.property	options	ASPickerDisplaySettings.options	var options: ASPickerDisplaySettings.Options { get set }
+c:objc(cs)ASPropertyCompareString	swift.class	ASPropertyCompareString	ASPropertyCompareString	class ASPropertyCompareString
+c:objc(cs)ASPropertyCompareString(im)initWithString:compareOptions:	swift.init	init(string:compareOptions:)	ASPropertyCompareString.init(string:compareOptions:)	init(string: String, compareOptions: NSString.CompareOptions = [])
+c:objc(cs)ASPropertyCompareString(py)compareOptions	swift.property	compareOptions	ASPropertyCompareString.compareOptions	var compareOptions: NSString.CompareOptions { get }
+c:objc(cs)ASPropertyCompareString(py)string	swift.property	string	ASPropertyCompareString.string	var string: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@ASErrorCode	swift.type.property	errorDomain	ASError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ASErrorCode	swift.property	errorUserInfo	ASError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ASErrorCode	swift.property	errorCode	ASError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@ASErrorCode	swift.func.op	~=(_:_:)	ASError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ASErrorCode	swift.property	errorUserInfo	ASError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@ASErrorCode	swift.func.op	==(_:_:)	ASError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@ASErrorCode	swift.property	code	ASError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ASErrorCode	swift.method	hash(into:)	ASError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@ASErrorCode	swift.property	userInfo	ASError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ASErrorCode	swift.property	errorCode	ASError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@ASErrorCode	swift.property	hashValue	ASError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@ASErrorCode	swift.init	init(_:userInfo:)	ASError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC11ASErrorCodeLeV	swift.struct	ASError	ASError	struct ASError
+s:SC11ASErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	ASError.errorDomain	static var errorDomain: String { get }
+s:SC11ASErrorCodeLeV11invalidatedSoAAVvpZ	swift.type.property	invalidated	ASError.invalidated	static var invalidated: ASError.Code { get }
+s:SC11ASErrorCodeLeV13userCancelledSoAAVvpZ	swift.type.property	userCancelled	ASError.userCancelled	static var userCancelled: ASError.Code { get }
+s:SC11ASErrorCodeLeV14invalidRequestSoAAVvpZ	swift.type.property	invalidRequest	ASError.invalidRequest	static var invalidRequest: ASError.Code { get }
+s:SC11ASErrorCodeLeV14userRestrictedSoAAVvpZ	swift.type.property	userRestricted	ASError.userRestricted	static var userRestricted: ASError.Code { get }
+s:SC11ASErrorCodeLeV16activationFailedSoAAVvpZ	swift.type.property	activationFailed	ASError.activationFailed	static var activationFailed: ASError.Code { get }
+s:SC11ASErrorCodeLeV16connectionFailedSoAAVvpZ	swift.type.property	connectionFailed	ASError.connectionFailed	static var connectionFailed: ASError.Code { get }
+s:SC11ASErrorCodeLeV16discoveryTimeoutSoAAVvpZ	swift.type.property	discoveryTimeout	ASError.discoveryTimeout	static var discoveryTimeout: ASError.Code { get }
+s:SC11ASErrorCodeLeV16pickerRestrictedSoAAVvpZ	swift.type.property	pickerRestricted	ASError.pickerRestricted	static var pickerRestricted: ASError.Code { get }
+s:SC11ASErrorCodeLeV17extensionNotFoundSoAAVvpZ	swift.type.property	extensionNotFound	ASError.extensionNotFound	static var extensionNotFound: ASError.Code { get }
+s:SC11ASErrorCodeLeV19pickerAlreadyActiveSoAAVvpZ	swift.type.property	pickerAlreadyActive	ASError.pickerAlreadyActive	static var pickerAlreadyActive: ASError.Code { get }
+s:SC11ASErrorCodeLeV7successSoAAVvpZ	swift.type.property	success	ASError.success	static var success: ASError.Code { get }
+s:SC11ASErrorCodeLeV7unknownSoAAVvpZ	swift.type.property	unknown	ASError.unknown	static var unknown: ASError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ASAccessoryEventType	swift.func.op	!=(_:_:)	ASAccessoryEventType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.func.op	!=(_:_:)	ASAccessory.RenameOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ASAccessoryState	swift.func.op	!=(_:_:)	ASAccessory.AccessoryState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.func.op	!=(_:_:)	ASAccessory.SupportOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ASDiscoveryDescriptorRange	swift.func.op	!=(_:_:)	ASDiscoveryDescriptor.Range.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ASDiscoveryDescriptorWiFiAwareServiceRole	swift.func.op	!=(_:_:)	ASDiscoveryDescriptor.WiFiAwareServiceRole.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ASErrorCode	swift.func.op	!=(_:_:)	ASError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.func.op	!=(_:_:)	ASPickerDisplayItem.SetupOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.func.op	!=(_:_:)	ASPickerDisplaySettings.Options.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ASBluetoothCompanyIdentifier	swift.func.op	!=(_:_:)	ASBluetoothCompanyIdentifier.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ASPickerDisplaySettingsDiscoveryTimeout	swift.func.op	!=(_:_:)	ASPickerDisplaySettings.DiscoveryTimeout.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ASAccessoryEventType	swift.property	hashValue	ASAccessoryEventType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ASAccessoryState	swift.property	hashValue	ASAccessory.AccessoryState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ASDiscoveryDescriptorRange	swift.property	hashValue	ASDiscoveryDescriptor.Range.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ASDiscoveryDescriptorWiFiAwareServiceRole	swift.property	hashValue	ASDiscoveryDescriptor.WiFiAwareServiceRole.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ASErrorCode	swift.property	hashValue	ASError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ASAccessoryEventType	swift.method	hash(into:)	ASAccessoryEventType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ASAccessoryState	swift.method	hash(into:)	ASAccessory.AccessoryState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ASDiscoveryDescriptorRange	swift.method	hash(into:)	ASDiscoveryDescriptor.Range.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ASDiscoveryDescriptorWiFiAwareServiceRole	swift.method	hash(into:)	ASDiscoveryDescriptor.WiFiAwareServiceRole.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ASErrorCode	swift.method	hash(into:)	ASError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11ASErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ASError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So16ASAccessoryStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ASAccessory.AccessoryState.init(rawValue:)	init?(rawValue: Int)
+s:So20ASAccessoryEventTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ASAccessoryEventType.init(rawValue:)	init?(rawValue: Int)
+s:So21ASDiscoveredAccessoryC0B8SetupKitE13bluetoothRSSISiSgvp	swift.property	bluetoothRSSI	ASDiscoveredAccessory.bluetoothRSSI	var bluetoothRSSI: Int? { get }
+s:So24ASAccessoryRenameOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	ASAccessory.RenameOptions.init(rawValue:)	init(rawValue: UInt)
+s:So25ASAccessorySupportOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	ASAccessory.SupportOptions.init(rawValue:)	init(rawValue: UInt)
+s:So26ASDiscoveryDescriptorRangeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ASDiscoveryDescriptor.Range.init(rawValue:)	init?(rawValue: Int)
+s:So28ASBluetoothCompanyIdentifiera8rawValueABs6UInt16V_tcfc	swift.init	init(rawValue:)	ASBluetoothCompanyIdentifier.init(rawValue:)	init(rawValue: UInt16)
+s:So28ASBluetoothCompanyIdentifierayABs6UInt16Vcfc	swift.init	init(_:)	ASBluetoothCompanyIdentifier.init(_:)	init(_ rawValue: UInt16)
+s:So30ASPickerDisplaySettingsOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	ASPickerDisplaySettings.Options.init(rawValue:)	init(rawValue: UInt)
+s:So31ASPickerDisplayItemSetupOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	ASPickerDisplayItem.SetupOptions.init(rawValue:)	init(rawValue: UInt)
+s:So39ASPickerDisplaySettingsDiscoveryTimeouta8rawValueABSd_tcfc	swift.init	init(rawValue:)	ASPickerDisplaySettings.DiscoveryTimeout.init(rawValue:)	init(rawValue: TimeInterval)
+s:So41ASDiscoveryDescriptorWiFiAwareServiceRoleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ASDiscoveryDescriptor.WiFiAwareServiceRole.init(rawValue:)	init?(rawValue: Int)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.init	init(arrayLiteral:)	ASAccessory.RenameOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.init	init(arrayLiteral:)	ASAccessory.SupportOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.init	init(arrayLiteral:)	ASPickerDisplayItem.SetupOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.init	init(arrayLiteral:)	ASPickerDisplaySettings.Options.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	isDisjoint(with:)	ASAccessory.RenameOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	isDisjoint(with:)	ASAccessory.SupportOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	isDisjoint(with:)	ASPickerDisplayItem.SetupOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	isDisjoint(with:)	ASPickerDisplaySettings.Options.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	isSuperset(of:)	ASAccessory.RenameOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	isSuperset(of:)	ASAccessory.SupportOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	isSuperset(of:)	ASPickerDisplayItem.SetupOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	isSuperset(of:)	ASPickerDisplaySettings.Options.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	subtracting(_:)	ASAccessory.RenameOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	subtracting(_:)	ASAccessory.SupportOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	subtracting(_:)	ASPickerDisplayItem.SetupOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	subtracting(_:)	ASPickerDisplaySettings.Options.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	isStrictSubset(of:)	ASAccessory.RenameOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	isStrictSubset(of:)	ASAccessory.SupportOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	isStrictSubset(of:)	ASPickerDisplayItem.SetupOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	isStrictSubset(of:)	ASPickerDisplaySettings.Options.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	isStrictSuperset(of:)	ASAccessory.RenameOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	isStrictSuperset(of:)	ASAccessory.SupportOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	isStrictSuperset(of:)	ASPickerDisplayItem.SetupOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	isStrictSuperset(of:)	ASPickerDisplaySettings.Options.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.property	isEmpty	ASAccessory.RenameOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.property	isEmpty	ASAccessory.SupportOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.property	isEmpty	ASPickerDisplayItem.SetupOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.property	isEmpty	ASPickerDisplaySettings.Options.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	isSubset(of:)	ASAccessory.RenameOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	isSubset(of:)	ASAccessory.SupportOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	isSubset(of:)	ASPickerDisplayItem.SetupOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	isSubset(of:)	ASPickerDisplaySettings.Options.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	subtract(_:)	ASAccessory.RenameOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	subtract(_:)	ASAccessory.SupportOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	subtract(_:)	ASPickerDisplayItem.SetupOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	subtract(_:)	ASPickerDisplaySettings.Options.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.init	init(_:)	ASAccessory.RenameOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.init	init(_:)	ASAccessory.SupportOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.init	init(_:)	ASPickerDisplayItem.SetupOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.init	init(_:)	ASPickerDisplaySettings.Options.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ASBluetoothCompanyIdentifier	swift.property	hashValue	ASBluetoothCompanyIdentifier.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ASPickerDisplaySettingsDiscoveryTimeout	swift.property	hashValue	ASPickerDisplaySettings.DiscoveryTimeout.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ASBluetoothCompanyIdentifier	swift.method	hash(into:)	ASBluetoothCompanyIdentifier.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ASPickerDisplaySettingsDiscoveryTimeout	swift.method	hash(into:)	ASPickerDisplaySettings.DiscoveryTimeout.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@ASErrorCode	swift.property	localizedDescription	ASError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	insert(_:)	ASAccessory.RenameOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	insert(_:)	ASAccessory.SupportOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	insert(_:)	ASPickerDisplayItem.SetupOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	insert(_:)	ASPickerDisplaySettings.Options.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	remove(_:)	ASAccessory.RenameOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	remove(_:)	ASAccessory.SupportOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	remove(_:)	ASPickerDisplayItem.SetupOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	remove(_:)	ASPickerDisplaySettings.Options.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	update(with:)	ASAccessory.RenameOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	update(with:)	ASAccessory.SupportOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	update(with:)	ASPickerDisplayItem.SetupOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	update(with:)	ASPickerDisplaySettings.Options.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	contains(_:)	ASAccessory.RenameOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	contains(_:)	ASAccessory.SupportOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	contains(_:)	ASPickerDisplayItem.SetupOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	contains(_:)	ASPickerDisplaySettings.Options.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	intersection(_:)	ASAccessory.RenameOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	intersection(_:)	ASAccessory.SupportOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	intersection(_:)	ASPickerDisplayItem.SetupOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	intersection(_:)	ASPickerDisplaySettings.Options.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	symmetricDifference(_:)	ASAccessory.RenameOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	symmetricDifference(_:)	ASAccessory.SupportOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	symmetricDifference(_:)	ASPickerDisplayItem.SetupOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	symmetricDifference(_:)	ASPickerDisplaySettings.Options.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	union(_:)	ASAccessory.RenameOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	union(_:)	ASAccessory.SupportOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	union(_:)	ASPickerDisplayItem.SetupOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	union(_:)	ASPickerDisplaySettings.Options.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	formIntersection(_:)	ASAccessory.RenameOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	formIntersection(_:)	ASAccessory.SupportOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	formIntersection(_:)	ASPickerDisplayItem.SetupOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	formIntersection(_:)	ASPickerDisplaySettings.Options.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	formSymmetricDifference(_:)	ASAccessory.RenameOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	formSymmetricDifference(_:)	ASAccessory.SupportOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	formSymmetricDifference(_:)	ASPickerDisplayItem.SetupOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	formSymmetricDifference(_:)	ASPickerDisplaySettings.Options.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.method	formUnion(_:)	ASAccessory.RenameOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.method	formUnion(_:)	ASAccessory.SupportOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.method	formUnion(_:)	ASPickerDisplayItem.SetupOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.method	formUnion(_:)	ASPickerDisplaySettings.Options.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@ASAccessoryRenameOptions	swift.init	init()	ASAccessory.RenameOptions.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@ASAccessorySupportOptions	swift.init	init()	ASAccessory.SupportOptions.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@ASPickerDisplayItemSetupOptions	swift.init	init()	ASPickerDisplayItem.SetupOptions.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@ASPickerDisplaySettingsOptions	swift.init	init()	ASPickerDisplaySettings.Options.init()	init()
