@@ -97,6 +97,9 @@ open class SCNScene: NSObject, NSSecureCoding {
     public func linux_advanceTime(_ dt: TimeInterval) {
         if isPaused { return }
         rootNode.linux_advanceTime(dt)
+        for (system, _) in _particleSystems {
+            system.linux_advance(dt)
+        }
         physicsWorld._linuxStep(dt)
     }
 

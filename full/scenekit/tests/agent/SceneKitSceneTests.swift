@@ -55,3 +55,31 @@ func testSceneSourceMetadata() {
     precondition(sawError)
     try? FileManager.default.removeItem(at: tmp)
 }
+
+func testSceneNamedFailClosedAndFog() {
+    precondition(SCNScene(named: "missing.scn") == nil)
+    precondition(SCNScene(named: "missing.scn", inDirectory: "Scenes", options: nil) == nil)
+    do {
+        _ = try SCNScene(url: URL(fileURLWithPath: "/tmp/missing-scenekit.scn"), options: nil)
+        precondition(false, "URL load must fail-close")
+    } catch {
+        _ = error
+    }
+    let scene = SCNScene()
+    scene.fogColor = SCNVector4(0.2, 0.2, 0.3, 1)
+    scene.screenSpaceReflectionMaximumDistance = 40
+    scene.screenSpaceReflectionSampleCount = 8
+    scene.screenSpaceReflectionStride = 2
+    precondition(scene.screenSpaceReflectionSampleCount == 8)
+    let policy = SCNSceneSource.AnimationImportPolicy.doNotPlay
+    precondition(policy != .playRepeatedly)
+    _ = SCNSceneSource.AnimationImportPolicy.playUsingSceneTimeBase
+    _ = SCNSceneSource.AnimationImportPolicy.self
+    _ = SCNSceneSource.AnimationImportPolicy.playRepeatedly.hashValue
+    var hasher = Hasher()
+    SCNSceneSource.AnimationImportPolicy.doNotPlay.hash(into: &hasher)
+    let _: SCNSceneExportProgressHandler = { _, _, _ in }
+    let _: SCNSceneSourceStatusHandler = { _, _, _, _ in }
+    let src = SCNSceneSource(data: Data(), options: nil)
+    precondition((try? src?.scene(options: [.flattenScene: true])) == nil)
+}

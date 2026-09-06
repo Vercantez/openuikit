@@ -38,6 +38,12 @@ func testHitTestSegment() {
     precondition(ignoreHidden.isEmpty)
 }
 
+func testHitTestResultBoneNode() {
+    let result = SCNHitTestResult()
+    precondition(result.boneNode == nil)
+    _ = SCNHitTestResult.self
+}
+
 func testHitTestFailClosedWithoutScene() {
     let renderer = SCNRenderer()
     renderer.scene = nil

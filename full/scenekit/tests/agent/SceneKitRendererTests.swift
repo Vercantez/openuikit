@@ -67,3 +67,25 @@ func testCPURasterizer() {
     _ = renderer.usesReverseZ
     _ = renderer.context
 }
+
+func testRendererNextFrameAndProbes() {
+    let renderer = SCNRenderer()
+    renderer.nextFrameTime = 1.0 / 60.0
+    precondition(abs(renderer.nextFrameTime - 1.0 / 60.0) < 1e-6)
+    let probe = SCNNode()
+    probe.light = SCNLight()
+    renderer.updateProbes([probe], atTime: 0.5)
+    precondition(abs(renderer.sceneTime - 0.5) < 1e-6)
+    renderer.audioListener = probe
+    renderer.isJitteringEnabled = true
+    renderer.isTemporalAntialiasingEnabled = true
+    renderer.overlaySKScene = nil
+    precondition(renderer.isJitteringEnabled)
+    precondition(renderer.audioListener === probe)
+    let view = SCNView(frame: CGRect(x: 0, y: 0, width: 16, height: 16), options: nil)
+    view.audioListener = probe
+    view.isJitteringEnabled = true
+    view.isTemporalAntialiasingEnabled = false
+    view.overlaySKScene = "none"
+    precondition(view.audioListener === probe)
+}
