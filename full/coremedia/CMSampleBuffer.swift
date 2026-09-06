@@ -639,7 +639,10 @@ public func CMCopyDictionaryOfAttachments(
 }
 
 private func cmTotalDuration(_ timings: [CMSampleTimingInfo], count: Int) -> CMTime {
-    guard count > 0, let first = timings.first else { return .invalid }
+    guard let first = timings.first else { return .invalid }
+    if count <= 0 {
+        return first.duration
+    }
     if timings.count == 1 {
         return CMTimeMultiply(first.duration, multiplier: Int32(count))
     }
