@@ -16,13 +16,18 @@ func testShieldConfigurationDataSourceClass() {
     let source = ShieldConfigurationDataSource()
     let asObject: NSObject = source
     precondition(asObject === source)
-    precondition(source is ShieldConfigurationDataSource)
     precondition(type(of: source) == ShieldConfigurationDataSource.self)
+    precondition(
+        String(reflecting: type(of: source)).contains("ShieldConfigurationDataSource")
+    )
 }
 
 func testShieldConfigurationDataSourceInit() {
     ManagedSettingsUIHostControl.reset()
-    let source = ShieldConfigurationDataSource()
+    let first = ShieldConfigurationDataSource()
+    let second = ShieldConfigurationDataSource()
+    precondition(first !== second)
+    precondition(type(of: first) == ShieldConfigurationDataSource.self)
     precondition(ManagedSettingsUIHostControl.lastShieldingRequest() == nil)
     precondition(!ManagedSettingsUIHostControl.didPresentShield())
 

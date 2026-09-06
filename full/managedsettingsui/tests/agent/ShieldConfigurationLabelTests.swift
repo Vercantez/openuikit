@@ -27,7 +27,7 @@ func testShieldConfigurationLabelText() {
     let label = ShieldConfiguration.Label(text: "This app is restricted", color: color)
     let text: String = label.text
     precondition(text == "This app is restricted")
-    precondition(text.count == 24)
+    precondition(text.count == 22)
 
     let unicode = ShieldConfiguration.Label(text: "制限されています", color: color)
     precondition(unicode.text == "制限されています")
