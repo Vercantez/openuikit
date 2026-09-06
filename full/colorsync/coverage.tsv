@@ -1,0 +1,208 @@
+precise	status	evidence	notes
+c:@E@ColorSyncAlphaInfo	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	struct ColorSyncAlphaInfo
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaFirst	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	AlphaInfo member raw value
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaLast	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	AlphaInfo member raw value
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaNone	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	AlphaInfo member raw value
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaNoneSkipFirst	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	AlphaInfo member raw value
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaNoneSkipLast	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	AlphaInfo member raw value
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaPremultipliedFirst	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	AlphaInfo member raw value
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaPremultipliedLast	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	AlphaInfo member raw value
+c:@E@ColorSyncDataDepth	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	struct ColorSyncDataDepth
+c:@E@ColorSyncDataDepth@kColorSync10BitInteger	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	DataDepth member raw value
+c:@E@ColorSyncDataDepth@kColorSync16BitFloat	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	DataDepth member raw value
+c:@E@ColorSyncDataDepth@kColorSync16BitInteger	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	DataDepth member raw value
+c:@E@ColorSyncDataDepth@kColorSync1BitGamut	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	DataDepth member raw value
+c:@E@ColorSyncDataDepth@kColorSync32BitFloat	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	DataDepth member raw value
+c:@E@ColorSyncDataDepth@kColorSync32BitInteger	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	DataDepth member raw value
+c:@E@ColorSyncDataDepth@kColorSync32BitNamedColorIndex	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	DataDepth member raw value
+c:@E@ColorSyncDataDepth@kColorSync8BitInteger	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	DataDepth member raw value
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncAlphaInfoMask	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncByteOrderMasks	byte-order / alpha mask
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncByteOrder16Big	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncByteOrderMasks	byte-order / alpha mask
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncByteOrder16Little	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncByteOrderMasks	byte-order / alpha mask
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncByteOrder32Big	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncByteOrderMasks	byte-order / alpha mask
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncByteOrder32Little	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncByteOrderMasks	byte-order / alpha mask
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncByteOrderDefault	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncByteOrderMasks	byte-order / alpha mask
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncByteOrderMask	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncByteOrderMasks	byte-order / alpha mask
+c:@F@ColorSyncAPIVersion	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncVersionMacros	ColorSyncAPIVersion matches COLORSYNC_API_VERSION
+c:@F@ColorSyncCreateCodeFragment	implemented	test:full/colorsync/tests/agent/ColorSyncTransformTests.swift#testColorSyncCreateCodeFragmentFailClosed	Apple CMM code fragments fail closed
+c:@F@ColorSyncIterateInstalledProfiles	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncIterateInstalledProfilesSeed	iterates built-in named profiles
+c:@F@ColorSyncProfileContainsTag	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateWithNameSRGB	ContainsTag on named sRGB
+c:@F@ColorSyncProfileCopyData	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateFromData	CopyData round-trips ICC bytes
+c:@F@ColorSyncProfileCopyDescriptionString	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateWithNameSRGB	description of named sRGB
+c:@F@ColorSyncProfileCopyHeader	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCopyHeaderAndSetHeader	host-endian 128-byte header
+c:@F@ColorSyncProfileCopyTag	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateMutableAndTags	CopyTag after SetTag
+c:@F@ColorSyncProfileCopyTagSignatures	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCopyTagSignatures	signature array matches tag count
+c:@F@ColorSyncProfileCreate	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateFromData	Create from ICC data
+c:@F@ColorSyncProfileCreateLink	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateLinkMatrix	link of two matrix RGB profiles
+c:@F@ColorSyncProfileCreateMutable	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateMutableAndTags	empty mutable profile
+c:@F@ColorSyncProfileCreateMutableCopy	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateMutableCopy	mutable copy is independent
+c:@F@ColorSyncProfileCreateWithName	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateWithNameSRGB	CreateWithName sRGB
+c:@F@ColorSyncProfileCreateWithURL	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateWithURLRoundTrip	CreateWithURL round-trip
+c:@F@ColorSyncProfileCreateWithURLAndOptions	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateWithURLAndOptionsMissing	missing URL fail-closed
+c:@F@ColorSyncProfileEstimateGamma	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileEstimateGammaGray	gray gamma 2.2
+c:@F@ColorSyncProfileGetMD5	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileGetMD5Stable	ICC Profile ID MD5
+c:@F@ColorSyncProfileGetTagCount	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateMutableAndTags	tag count after set/remove
+c:@F@ColorSyncProfileGetTypeID	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncProfileTypeID	distinct CFTypeIDs
+c:@F@ColorSyncProfileGetURL	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateWithURLRoundTrip	URL retained from CreateWithURL
+c:@F@ColorSyncProfileIsHLGBased	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileIsFlags	sRGB is not HLG
+c:@F@ColorSyncProfileIsMatrixBased	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileIsFlags	matrix vs gray
+c:@F@ColorSyncProfileIsPQBased	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileIsFlags	sRGB is not PQ
+c:@F@ColorSyncProfileIsWideGamut	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileIsFlags	Display P3 is wide
+c:@F@ColorSyncProfileRemoveTag	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateMutableAndTags	RemoveTag
+c:@F@ColorSyncProfileSetHeader	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCopyHeaderAndSetHeader	SetHeader host endian
+c:@F@ColorSyncProfileSetTag	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateMutableAndTags	SetTag
+c:@F@ColorSyncProfileVerify	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileVerifyValid	valid named Adobe RGB
+c:@F@ColorSyncTransformConvert	implemented	test:full/colorsync/tests/agent/ColorSyncTransformTests.swift#testColorSyncTransformConvertIdentity	8-bit identity RGB convert
+c:@F@ColorSyncTransformCopyProperty	implemented	test:full/colorsync/tests/agent/ColorSyncTransformTests.swift#testColorSyncTransformCopyAndSetProperty	CopyProperty
+c:@F@ColorSyncTransformCreate	implemented	test:full/colorsync/tests/agent/ColorSyncTransformTests.swift#testColorSyncTransformCreateAndSequence	create from profile sequence
+c:@F@ColorSyncTransformGetProfileSequence	implemented	test:full/colorsync/tests/agent/ColorSyncTransformTests.swift#testColorSyncTransformCreateAndSequence	sequence round-trip
+c:@F@ColorSyncTransformGetTypeID	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncTransformHashable	transform type ID
+c:@F@ColorSyncTransformSetProperty	implemented	test:full/colorsync/tests/agent/ColorSyncTransformTests.swift#testColorSyncTransformCopyAndSetProperty	SetProperty
+c:@SA@ColorSyncMD5	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncMD5Init	ColorSyncMD5
+c:@SA@ColorSyncMD5@FI@digest	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncMD5Init	digest tuple
+c:@T@ColorSyncDataLayout	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataLayoutAlias	typealias ColorSyncDataLayout
+c:@T@ColorSyncMutableProfileRef	implemented	test:full/colorsync/tests/agent/ColorSyncProfileTests.swift#testColorSyncProfileCreateMutableAndTags	ColorSyncMutableProfile
+c:@T@ColorSyncProfileIterateCallback	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncIterateCallbackType	iterate callback typealias
+c:@T@ColorSyncProfileRef	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncProfileHashable	ColorSyncProfile class
+c:@T@ColorSyncTransformRef	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncTransformHashable	ColorSyncTransform class
+c:@kColorSyncACESCGLinearProfile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncAdobeRGB1998Profile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncBestQuality	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncBlackPointCompensation	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncConversion1DLut	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConversion3DLut	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConversionBPC	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConversionChannelID	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConversionGridPoints	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConversionInpChan	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConversionMatrix	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConversionNDLut	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConversionOutChan	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConversionParamCurve0	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConversionParamCurve1	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConversionParamCurve2	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConversionParamCurve3	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConversionParamCurve4	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncConvertQuality	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncConvertUseExtendedRange	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncDCIP3Profile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncDisplayP3Profile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncDoNotSubstituteProfiles	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncDraftQuality	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncExtendedRange	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncFixedPointRange	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncGenericCMYKProfile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncGenericGrayGamma22Profile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncGenericGrayProfile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncGenericLabProfile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncGenericRGBProfile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncGenericXYZProfile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncHDRDerivative	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncHLGDerivative	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncITUR2020Profile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncITUR709Profile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncNormalQuality	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncPQDerivative	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncPreferredCMM	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncProfile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncProfileCacheSeed	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testProfileInfoKeyConstantPayloads	profile-info CFString key
+c:@kColorSyncProfileClass	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testProfileInfoKeyConstantPayloads	profile-info CFString key
+c:@kColorSyncProfileColorSpace	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testProfileInfoKeyConstantPayloads	profile-info CFString key
+c:@kColorSyncProfileDescription	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testProfileInfoKeyConstantPayloads	profile-info CFString key
+c:@kColorSyncProfileHeader	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testProfileInfoKeyConstantPayloads	profile-info CFString key
+c:@kColorSyncProfileIsValid	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testProfileInfoKeyConstantPayloads	profile-info CFString key
+c:@kColorSyncProfileMD5Digest	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testProfileInfoKeyConstantPayloads	profile-info CFString key
+c:@kColorSyncProfilePCS	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testProfileInfoKeyConstantPayloads	profile-info CFString key
+c:@kColorSyncProfileURL	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testProfileInfoKeyConstantPayloads	profile-info CFString key
+c:@kColorSyncROMMRGBProfile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncRenderingIntent	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncRenderingIntentAbsolute	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncRenderingIntentPerceptual	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncRenderingIntentRelative	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncRenderingIntentSaturation	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncRenderingIntentUseProfileHeader	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncSRGBProfile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@kColorSyncSigAToB0Tag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigAToB1Tag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigAToB2Tag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigAbstractClass	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigBToA0Tag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigBToA1Tag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigBToA2Tag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigBlueColorantTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigBlueTRCTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigCmykData	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigColorSpaceClass	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigCopyrightTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigDeviceMfgDescTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigDeviceModelDescTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigDisplayClass	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigGamutTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigGrayData	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigGrayTRCTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigGreenColorantTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigGreenTRCTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigInputClass	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigLabData	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigLinkClass	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigMediaBlackPointTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigMediaWhitePointTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigNamedColor2Tag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigNamedColorClass	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigOutputClass	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigPreview0Tag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigPreview1Tag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigPreview2Tag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigProfileDescriptionTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigProfileSequenceDescTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigRedColorantTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigRedTRCTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigRgbData	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigTechnologyTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigViewingCondDescTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigViewingConditionsTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncSigXYZData	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testICCSignatureConstantPayloads	ICC four-char CFString
+c:@kColorSyncTransformCodeFragmentMD5	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncTransformCodeFragmentType	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncTransformCreator	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncTransformDeviceToDevice	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncTransformDeviceToPCS	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncTransformDstSpace	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncTransformFullConversionData	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncTransformGamutCheck	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncTransformInfo	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncTransformPCSToDevice	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncTransformPCSToPCS	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncTransformParametricConversionData	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncTransformProfileSequnce	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncTransformSimplifiedConversionData	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testCMMCodeFragmentConstantPayloads	CMM CFString key
+c:@kColorSyncTransformSrcSpace	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncTransformTag	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncTransformUseITU709OETF	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testTransformKeyConstantPayloads	transform option CFString
+c:@kColorSyncWebSafeColorsProfile	implemented	test:full/colorsync/tests/agent/ColorSyncConstantTests.swift#testNamedProfileConstantPayloads	named profile CFString
+c:@macro@COLORSYNC_API_VERSION	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncVersionMacros	COLORSYNC_API_VERSION
+c:@macro@COLORSYNC_MD5_LENGTH	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncVersionMacros	COLORSYNC_MD5_LENGTH
+c:@macro@icVersion4Number	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncVersionMacros	icVersion4Number
+c:@macro@icVersion4Point4Number	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncVersionMacros	icVersion4Point4Number
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@ColorSyncProfileRef	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncProfileHashable	profile ==
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@ColorSyncTransformRef	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncTransformHashable	transform ==
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ColorSyncProfileRef	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncProfileHashable	profile hash(into:)
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ColorSyncTransformRef	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncTransformHashable	transform hash(into:)
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@ColorSyncProfileRef	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncProfileHashable	profile hashValue
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@ColorSyncTransformRef	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncTransformHashable	transform hashValue
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ColorSyncAlphaInfo	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	AlphaInfo !=
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ColorSyncDataDepth	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	DataDepth !=
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ColorSyncProfileRef	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncProfileHashable	profile !=
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ColorSyncTransformRef	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncTransformHashable	transform !=
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ColorSyncAlphaInfo	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	AlphaInfo hashValue
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ColorSyncDataDepth	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	DataDepth hashValue
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ColorSyncAlphaInfo	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	AlphaInfo hash(into:)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ColorSyncDataDepth	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	DataDepth hash(into:)
+s:So12ColorSyncMD5a6digestABs5UInt8V_A15Et_tcfc	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncMD5Init	init(digest:)
+s:So12ColorSyncMD5aABycfc	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncMD5Init	init()
+s:So18ColorSyncAlphaInfoV8rawValueABs6UInt32V_tcfc	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	init(rawValue:)
+s:So18ColorSyncAlphaInfoV8rawValues6UInt32Vvp	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	rawValue
+s:So18ColorSyncAlphaInfoVyABs6UInt32Vcfc	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncAlphaInfoRawValues	init(_:)
+s:So18ColorSyncDataDepthV8rawValueABs6UInt32V_tcfc	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	init(rawValue:)
+s:So18ColorSyncDataDepthV8rawValues6UInt32Vvp	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	rawValue
+s:So18ColorSyncDataDepthVyABs6UInt32Vcfc	implemented	test:full/colorsync/tests/agent/ColorSyncTypeTests.swift#testColorSyncDataDepthRawValues	init(_:)
