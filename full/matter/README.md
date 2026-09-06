@@ -217,8 +217,14 @@ there is no Matter radio.
 
 **Coverage before:** 19372 implemented / 834 declared / 8216 deferred / 40 unavailable / 0 not-applicable
 
-**Coverage after:** 22582 implemented / 815 declared / 5025 deferred / 40 unavailable / 0 not-applicable
-(+3210 implemented; 23397 nondeferred; floor 150). Unique implemented tests: 474.
+**Coverage after:** 22586 implemented / 811 declared / 5025 deferred / 40 unavailable / 0 not-applicable
+(+3214 implemented; 23397 nondeferred; floor 150). Unique implemented tests: 474.
+
+Host-gate repair after the first wave-10 ledger: three `MTRError` operator
+rows had been recast to `declared` with a missing `MTRClustersWave10.swift#MTRError`
+anchor. They now cite `MatterErrorTests.swift#testErrorOverlay`, which already
+exercises `~=`, `==`, and `!=`. Matching `MTRInteractionError` operator rows
+use the same test.
 
 **Top-5 implemented evidence distribution**
 
@@ -230,7 +236,7 @@ there is no Matter radio.
 | 906 | 4.0% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetRawValues` |
 | 906 | 4.0% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumHashable` |
 
-**Top remaining (non table-driven) evidence** — 11136 rows after excluding
+**Top remaining (non table-driven) evidence** — 11140 rows after excluding
 enum/option-set/C-constant table tests; largest share 2.5% (cap 40%):
 
 | rows | share | evidence |

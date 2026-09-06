@@ -125,6 +125,9 @@ func testErrorOverlay() {
     mtrRequire(MTRInteractionError.errorDomain == MTRInteractionErrorDomain, "im domain")
     mtrRequire(MTRInteractionError.Code.unsupportedCluster ~= im, "im pattern")
     mtrRequire(err != MTRError(.notFound), "neq")
+    let imOther = MTRInteractionError(.unsupportedCluster)
+    mtrRequire(im == imOther, "im eq")
+    mtrRequire(im != MTRInteractionError(.failure), "im neq")
     _ = err.hashValue
     _ = im.hashValue
 }
