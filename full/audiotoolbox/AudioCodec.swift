@@ -149,7 +149,7 @@ public struct AudioCodecPrimeInfo: Equatable, Hashable, Sendable {
 }
 
 @frozen
-public struct AudioCodecMagicCookieInfo: Equatable, Hashable, Sendable {
+public struct AudioCodecMagicCookieInfo: Equatable {
     public var mMagicCookieSize: UInt32
     public var mMagicCookie: UnsafeRawPointer?
 

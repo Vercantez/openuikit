@@ -93,7 +93,7 @@ internal final class ATAudioUnitObject: ATObject {
     var connections: [UInt32: ATUnitConnection] = [:]
     var inputCallbacks: [UInt32: AURenderCallbackStruct] = [:]
     var renderCallback = AURenderCallbackStruct()
-    var renderNotifies: [AURenderCallbackStruct] = [:]
+    var renderNotifies: [AURenderCallbackStruct] = []
     var sampleCounter: Int64 = 0
 
     func parameterKey(scope: AudioUnitScope, element: AudioUnitElement, id: AudioUnitParameterID) -> UInt64 {

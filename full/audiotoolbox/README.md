@@ -175,6 +175,17 @@ No non-table test exceeds 40% of implemented rows (`testMixerVolumeAffectsMix` i
 ### Tests and gate
 
 - Agent tests: `AudioToolboxCoreTests.swift`, `AudioToolboxDepthTests.swift`, `AudioToolboxWave2Tests.swift`, `AudioToolboxWave3Tests.swift`.
-- Sealed host gate: `bash full/audiotoolbox/tests/acceptance/test_host.sh`.
+- Sealed host gate: `bash full/audiotoolbox/tests/acceptance/test_host.sh`. Exact marker output from the green wave-9 run:
 
-Exact marker output from the green wave-9 run is recorded after the sealed gate in this environment.
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AudioToolbox lane=large-partitioned symbols=3234
+FRAMEWORK_FANOUT_REFERENCE_OK
+AUDIOTOOLBOX_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AudioToolbox dylib=libAudioToolbox.dylib
+```
+
+Swift `6.2.4` / `x86_64-unknown-linux-gnu` compiled `libAudioToolbox.dylib`. `.cursor/verify-cloud-environment.sh` still cannot print `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` because `scratch/ladder-corpus/focus-ios` is missing on this snapshot.
+
+### Unresolved behavioral questions
+
+See `oracle-questions.tsv`. New items this pass: mixer volume versus `SetRenderCallback`, AudioCodec null `OSStatus`, MusicDevice MIDI on non-music-device units, processing-tap/timeline fail-closed codes, and CAF packet-table flexible-array layout.

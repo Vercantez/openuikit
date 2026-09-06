@@ -358,7 +358,7 @@ internal func atPumpAudioQueue(_ queue: ATAudioQueueObject) {
                         inputs: [
                             (
                                 format: queue.format,
-                                bytes: owner.data,
+                                bytes: UnsafeRawPointer(owner.data),
                                 byteCount: count,
                                 gain: queue.volume
                             )

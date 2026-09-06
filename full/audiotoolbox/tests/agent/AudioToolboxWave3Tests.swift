@@ -589,8 +589,8 @@ func testAudioQueueParameterPrimeAndTime() {
     atW3Expect(AudioQueueAllocateBuffer(queue, 8, &buffer) == 0, "alloc")
     buffer!.pointee.mAudioDataByteSize = 8
     let src: [Int16] = [1000, 2000, 3000, 4000]
-    src.withUnsafeBytes { raw in
-        memcpy(buffer!.pointee.mAudioData, raw.baseAddress, 8)
+    _ = src.withUnsafeBytes { raw in
+        memcpy(buffer!.pointee.mAudioData, raw.baseAddress!, 8)
     }
     atW3Expect(AudioQueueEnqueueBuffer(queue, buffer, 0, nil) == 0, "enqueue")
     atW3Expect(AudioQueueStart(queue, nil) == 0, "start")
