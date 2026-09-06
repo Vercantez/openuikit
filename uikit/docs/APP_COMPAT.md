@@ -33,8 +33,8 @@ records the corresponding native iOS 26.1 surface and behavior.
 The boundary is deliberately narrower than complete UIKit. Table diffable
 reload markers currently rebuild the visible table, and collection-view
 diffable data sources remain absent. Zoom is programmatic; pinch-driven zoom
-is not implemented. Property animators support queued animations, start, and
-completion but not pause/scrubbing/reversal. `show` does not model split-view
+is not implemented. Property animators support the measured iOS 26.1 state machine
+(pause, scrub, stop/finish, continue, reverse) plus cubic and spring timing. `show` does not model split-view
 routing. Snapshot views are static portable rasters. Impact feedback emits a
 deterministic host event and has no hardware backend; selection and
 notification feedback generators remain open.
