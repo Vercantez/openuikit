@@ -351,13 +351,22 @@ open class UITableView: UIScrollView {
         // MEASURED Forms t200, iPhone SE 2x, iOS 26.1: a `.grouped` table
         // (no card — cells are full-bleed 375) puts the section header
         // label at x = 16, the window's system margin. `insetGroupedSideInset
-        // + 16` is the insetGrouped reading (card at 16, header at 32) and
-        // stays the rule for `.insetGrouped` / Catalyst, except pad
-        // inset-grouped which adds 20 (table_inset_nav header abs 40 =
-        // card 20 + 20).
+        // + inner` is the insetGrouped reading. Phone regular-height inner
+        // stays **16** even when the card is 20: realapp_focus_settings_light
+        // iPhone 16 @3x "General" abs.x **36** = card 20 + 16. Compact-height
+        // inner is 20: MEASURED Notes t200.landscape All Notes abs.x **40**
+        // = card 20 + 20 (`iOSSystemMargin` at 667). Pad inset-grouped adds
+        // 20 (table_inset_nav header abs 40 = card 20 + 20). Catalyst
+        // keeps inner 16.
         if style == .grouped, UITableView.isIOSChrome { return iOSMargin }
-        let inner = (style == .insetGrouped && UITableView.isPadChrome)
-            ? UITableView.iOSPadInsetGroupedInnerInset : 16
+        let inner: CGFloat
+        if style == .insetGrouped && UITableView.isPadChrome {
+            inner = UITableView.iOSPadInsetGroupedInnerInset
+        } else if UITableView.isIOSChrome, UINavigationBar.isCompactHeight {
+            inner = 20
+        } else {
+            inner = 16
+        }
         return insetGroupedSideInset + inner
     }
 

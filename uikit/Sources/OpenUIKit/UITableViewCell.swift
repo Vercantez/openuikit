@@ -164,23 +164,27 @@ final class UITableCellAccessoryView: UIView {
         switch accessoryType {
         case .none:
             break
-        case .disclosureIndicator:
-            // 10.5x14 box; ink fitted to the golden chevron (2 pt stroke,
-            // round caps, apex right of center). RTL (MEASURED /tmp/rtlprobe,
-            // iPhone SE 2x / iOS 26.1, disclosure abs.x = 16): the chevron
-            // points toward trailing (left), mirrored in the 10.5 box.
-            let color = UIColor.tertiaryLabel.resolvedCGColor(with: traitCollection)
-            let points: [CGPoint]
-            if _layoutIsRTL {
-                points = [CGPoint(x: 7.3, y: 1.1),
-                          CGPoint(x: 2.5, y: 5.85),
-                          CGPoint(x: 7.3, y: 10.6)]
-            } else {
-                points = [CGPoint(x: 3.2, y: 1.1),
-                          CGPoint(x: 8.0, y: 5.85),
-                          CGPoint(x: 3.2, y: 10.6)]
-            }
-            strokePolyline(points, width: 2, in: canvas, color: color)
+            case .disclosureIndicator:
+                // Fitted in the 10.5×14 `.large` box (2 pt stroke, round
+                // caps, apex right of center). Scaled into the measured
+                // ax1 20×28.5 / xxxl 14×19.5 boxes (Notes t200.ax1 /
+                // t200.xxxl). RTL (MEASURED /tmp/rtlprobe, iPhone SE 2x
+                // / iOS 26.1, disclosure abs.x = 16): the chevron points
+                // toward trailing (left), mirrored in the box.
+                let color = UIColor.tertiaryLabel.resolvedCGColor(with: traitCollection)
+                let sx = bounds.width / 10.5
+                let sy = bounds.height / 14
+                let points: [CGPoint]
+                if _layoutIsRTL {
+                    points = [CGPoint(x: 7.3 * sx, y: 1.1 * sy),
+                              CGPoint(x: 2.5 * sx, y: 5.85 * sy),
+                              CGPoint(x: 7.3 * sx, y: 10.6 * sy)]
+                } else {
+                    points = [CGPoint(x: 3.2 * sx, y: 1.1 * sy),
+                              CGPoint(x: 8.0 * sx, y: 5.85 * sy),
+                              CGPoint(x: 3.2 * sx, y: 10.6 * sy)]
+                }
+                strokePolyline(points, width: 2 * (sx + sy) / 2, in: canvas, color: color)
         case .checkmark:
             // 19x18 box; tintColor stroke fitted to the golden checkmark.
             let color = tintColor.resolvedCGColor(with: traitCollection)
@@ -571,8 +575,23 @@ open class UITableViewCell: UIView, ReusableView {
     static var detailTrailingMargin: CGFloat { isIOSChrome ? 16 : 16 }
     /// iOS: the chevron symbol is 10.333 wide at 3x and 10.5 at 2x — a
     /// width in (10, 10.333] rounded up to the device pixel; 14 tall on both.
+    /// MEASURED Notes t200.ax1 / t200.xxxl, iPhone SE 2x / iOS 26.1:
+    /// `_UITableCellAccessoryButton` is **20×28.5** at ax1 (contentView
+    /// 307 = 343−16−20, labels 283) and **14×19.5** at xxxl (contentView
+    /// 313). `.large` stays 10.5×14 (contentView 316.5).
     static var disclosureSize: CGSize {
-        isIOSChrome ? CGSize(width: UITableView.iOSCeilToPixel(10.2), height: 14) : CGSize(width: 10.5, height: 14)
+        disclosureSize(compatibleWith: UITraitCollection.current)
+    }
+    static func disclosureSize(compatibleWith traits: UITraitCollection) -> CGSize {
+        guard isIOSChrome else { return CGSize(width: 10.5, height: 14) }
+        switch traits.preferredContentSizeCategory {
+        case .accessibilityLarge:
+            return CGSize(width: 20, height: 28.5)
+        case .extraExtraExtraLarge:
+            return CGSize(width: 14, height: 19.5)
+        default:
+            return CGSize(width: UITableView.iOSCeilToPixel(10.2), height: 14)
+        }
     }
     /// iOS: 19 x 17.333 at 3x, 19 x 18 at 2x (measured; no single rounding
     /// of one value gives both, so the two readings are carried as such).
@@ -946,7 +965,7 @@ open class UITableViewCell: UIView, ReusableView {
             return available
         case .disclosureIndicator:
             return max(0, available - trailingMargin
-                       - UITableViewCell.disclosureSize.width)
+                       - UITableViewCell.disclosureSize(compatibleWith: traitCollection).width)
         case .checkmark:
             return max(0, available - checkmarkTrailingMargin
                        - UITableViewCell.checkmarkSize.width
@@ -1066,7 +1085,7 @@ open class UITableViewCell: UIView, ReusableView {
                 _accessoryGlyphView.isHidden = true
             case .disclosureIndicator:
                 _accessoryGlyphView.isHidden = false
-                let s = UITableViewCell.disclosureSize
+                let s = UITableViewCell.disclosureSize(compatibleWith: traitCollection)
                 _accessoryGlyphView.frame = CGRect(
                     x: w - trailingMargin - s.width,
                     y: pad + UITableViewCell.ceilHalf((h - s.height) / 2),

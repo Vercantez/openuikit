@@ -183,10 +183,29 @@ public class UIBarButtonItem {
     }
     public var _isFlexibleSpace: Bool { systemItem == .flexibleSpace }
 
-    /// The vector glyph this item draws, if any.
+    /// The vector glyph this item draws, if any. The item view prefers a
+    /// harvested SF stamp when `iOSHarvestedSystemImageName` stamps
+    /// (Notes `.trash` 24×28); this vector is the fallback when the
+    /// stamp is nil (unharvested scale / Catalyst).
     var _symbol: _BarSymbol? {
         guard let systemItem, title == nil, image == nil else { return nil }
         return _BarSymbol.forSystemItem(systemItem)
+    }
+
+    /// MEASURED Notes t200 / t6000, iPhone SE 2x / iOS 26.1: `.trash`
+    /// `_UIModernBarButton` `UIImageView` is **24×28** at
+    /// `[324.817, 16.817]` (landscape `[594.817, 30.817]`). Harvested
+    /// `trash` at 17/medium/large (nav-button config, symbols-harvest) is
+    /// 48×56 px = 24×28; golden crop at px (650, 34) correlates
+    /// **0.999999** with that F0 mask. `_BarSymbol.trash` is 19×20.667
+    /// and was blob 111 at `[326.5, 19, 21, 23]`. ax1/xxxl image is
+    /// 30×35 (21 pt bar-capped body) — no 21|medium|large harvest, so
+    /// those axes still get the 17 pt stamp (OPEN).
+    var iOSHarvestedSystemImageName: String? {
+        guard OpenUIKitRuntime.systemFontCut == .iOS,
+              title == nil, image == nil,
+              systemItem == .trash else { return nil }
+        return "trash"
     }
 }
 
@@ -212,8 +231,19 @@ public enum _UIBarMetrics {
     /// (y 6.1 … 41.9 for a 48/24 capsule; a 44/22 one would give 1.5 … 42.5).
     public static let toolbarPlatterHeight: CGFloat = 48
     public static var platterRadius: CGFloat { platterHeight / 2 }
-    /// Leading / trailing margin from the bar's edge.
+    /// Leading / trailing margin from the bar's edge (portrait / unspecified).
     public static let sideMargin: CGFloat = 16
+    /// Compact-height nav-bar item inset. MEASURED Notes t200.landscape
+    /// platter `[585, 24, 44, 44]`: 667 − 44 − 585 = **38**. Same trailing
+    /// inset on NavFlow t200.landscape Filter `[557.5, 24, 71.5, 44]`
+    /// (667−71.5−557.5=38) and TableEditor t200.landscape Edit
+    /// `[566.5, 24, 62.5, 44]` (667−62.5−566.5=38). Portrait SE keeps 16
+    /// (375−44−315=16). Guard: `UINavigationBar.isCompactHeight`.
+    public static let compactHeightSideMargin: CGFloat = 38
+    /// Portrait 16; compact-height 38.
+    public static var itemSideMargin: CGFloat {
+        UINavigationBar.isCompactHeight ? compactHeightSideMargin : sideMargin
+    }
     /// Gap between adjacent platters.
     public static let gap: CGFloat = 12
     /// Horizontal inset from the platter edge to the content.
@@ -364,14 +394,31 @@ final class _UIBarButtonItemView: UIControl {
         return item.tintColor ?? .label
     }
 
+    /// Harvested SF stamp for `.trash` (24×28 at 17/medium/large). See
+    /// `UIBarButtonItem.iOSHarvestedSystemImageName`. ax1/xxxl dump
+    /// 30×35 (21 pt bar-capped body) — no 21|medium|large harvest, so
+    /// those categories keep `_BarSymbol`.
+    var harvestedSystemImage: UIImage? {
+        guard let name = item.iOSHarvestedSystemImageName else { return nil }
+        let cat = traitCollection.preferredContentSizeCategory
+        if cat.isAccessibilityCategory || cat == .extraExtraExtraLarge {
+            return nil
+        }
+        let config = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium,
+                                                scale: .large)
+        return UIImage(systemName: name, withConfiguration: config)
+    }
+
     func applyColors() {
         let color = contentColor
         titleLabel.textColor = color
         symbolView.color = color
         symbolView.symbol = item._symbol
-        if let image = item.image {
+        if let image = item.image ?? harvestedSystemImage {
             imageView.image = UITabBar.templateImage(
                 image, tint: color.resolvedColor(with: UITraitCollection.current))
+        } else {
+            imageView.image = nil
         }
         // The content is a subview of the platter, so a grouped item's own
         // platter goes transparent (fill, shadow, band) rather than hidden.
@@ -402,7 +449,8 @@ final class _UIBarButtonItemView: UIControl {
     /// view): iOS 26 merges runs of these into one platter.
     var isImageOnly: Bool {
         item.customView == nil && item.title == nil && !item._isSpace
-            && (item.image != nil || item._symbol != nil)
+            && (item.image != nil || item._symbol != nil
+                || item.iOSHarvestedSystemImageName != nil)
     }
     /// Set by the bar for the members of a merged run (their platter is
     /// the bar's `_UIBarSharedPlatterView`).
@@ -418,6 +466,7 @@ final class _UIBarButtonItemView: UIControl {
         }
         if item.title != nil { return titleLabel.intrinsicContentSize }
         if let image = item.image { return image.size }
+        if let harvested = harvestedSystemImage { return harvested.size }
         if let symbol = item._symbol { return symbol.size }
         return .zero
     }
@@ -425,6 +474,12 @@ final class _UIBarButtonItemView: UIControl {
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         if item.customView != nil {
             return CGSize(width: contentSize.width, height: platterHeight)
+        }
+        if item.iOSHarvestedSystemImageName != nil {
+            // MEASURED Notes t200 platter `[315, 10, 44, 44]`: the 24×28
+            // trash stamp sits inside the 36×36 item (4 pt platter pad),
+            // not 24+2×11 = 46. ax1 30×35 is still the 44 platter.
+            return CGSize(width: platterHeight, height: platterHeight)
         }
         if item.title == nil, item.image != nil || item._symbol != nil {
             // Image / symbol items: see `_UIBarMetrics.imageContentMinWidth`.
@@ -462,15 +517,23 @@ final class _UIBarButtonItemView: UIControl {
             return
         }
         let s = contentSize
-        let f = CGRect(x: ((bounds.width - s.width) / 2).rounded() ,
+        var f = CGRect(x: ((bounds.width - s.width) / 2).rounded() ,
                        y: ((bounds.height - s.height) / 2).rounded(),
                        width: s.width, height: s.height)
+        // MEASURED Notes t200 UIImageView abs [324.817, 16.817, 24, 28]
+        // in platter [315, 10, 44, 44] → local (10, 7) after the 0.183
+        // glass offset. Centered y is 8; px (650, 34) = (325, 17)
+        // correlates 0.999999 with harvested trash 17|medium|large F0.
+        if item.iOSHarvestedSystemImageName != nil, platterHeight == 44,
+           s.width == 24, s.height == 28 {
+            f.origin.y = 7
+        }
         titleLabel.frame = f
         imageView.frame = f
         symbolView.frame = f
         titleLabel.isHidden = item.title == nil
-        imageView.isHidden = item.image == nil
-        symbolView.isHidden = item._symbol == nil
+        imageView.isHidden = item.image == nil && harvestedSystemImage == nil
+        symbolView.isHidden = item._symbol == nil || harvestedSystemImage != nil
     }
 
     /// Pressed feedback: the same measured dimming plain system buttons use.
