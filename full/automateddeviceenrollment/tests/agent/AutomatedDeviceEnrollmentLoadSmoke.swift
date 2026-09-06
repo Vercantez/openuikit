@@ -1,0 +1,3 @@
+import AutomatedDeviceEnrollment
+
+let frameworkLoadSmokeMarker = "AUTOMATEDDEVICEENROLLMENT_AGENT_RUNTIME_OK"
