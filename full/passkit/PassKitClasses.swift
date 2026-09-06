@@ -835,6 +835,10 @@ public extension PKAddPaymentPassViewControllerDelegate {
         _ = (controller, certificates, nonce, nonceSignature)
         return PKAddPaymentPassRequest()
     }
+    func addPaymentPassViewController(_ controller: PKAddPaymentPassViewController, generateRequestWithCertificateChain certificates: [Data], nonce: Data, nonceSignature: Data, completionHandler handler: @escaping (PKAddPaymentPassRequest) -> Void) {
+        _ = (controller, certificates, nonce, nonceSignature)
+        handler(PKAddPaymentPassRequest())
+    }
 }
 
 public protocol PKAddSecureElementPassViewControllerDelegate: AnyObject {

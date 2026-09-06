@@ -618,16 +618,18 @@ func testPaymentAuthorizationViewControllerDelegateDefaults() {
         }
         precondition(shipStatus == .failure)
         probe.paymentAuthorizationViewControllerWillAuthorizePayment(controller)
-        waitFor { done in
-            Task { @MainActor in
-                _ = await probe.paymentAuthorizationViewController(controller, didAuthorizePayment: payment)
-                _ = await probe.paymentAuthorizationViewController(controller, didChangeCouponCode: "SAVE")
-                _ = await probe.paymentAuthorizationViewController(controller, didSelect: PKPaymentMethod())
-                _ = await probe.paymentAuthorizationViewController(controller, didSelectShippingContact: PKContact())
-                _ = await probe.paymentAuthorizationViewController(controller, didSelect: PKShippingMethod())
-                done()
-            }
-        }
+        var couponUpdate: PKPaymentRequestCouponCodeUpdate?
+        probe.paymentAuthorizationViewController(controller, didChangeCouponCode: "SAVE") { couponUpdate = $0 }
+        precondition(couponUpdate != nil)
+        var methodUpdate: PKPaymentRequestPaymentMethodUpdate?
+        probe.paymentAuthorizationViewController(controller, didSelect: PKPaymentMethod()) { methodUpdate = $0 }
+        precondition(methodUpdate != nil)
+        var contactUpdate: PKPaymentRequestShippingContactUpdate?
+        probe.paymentAuthorizationViewController(controller, didSelectShippingContact: PKContact()) { contactUpdate = $0 }
+        precondition(contactUpdate != nil)
+        var shipUpdate: PKPaymentRequestShippingMethodUpdate?
+        probe.paymentAuthorizationViewController(controller, didSelect: PKShippingMethod()) { shipUpdate = $0 }
+        precondition(shipUpdate != nil)
     }
 }
 
@@ -636,18 +638,15 @@ func testAddPaymentPassViewControllerDelegateDefaults() {
         let probe = AddPaymentPassDelegateProbe()
         let controller = PKAddPaymentPassViewController()
         probe.addPaymentPassViewController(controller, didFinishAdding: nil, error: PKPassKitError(.notEntitledError))
-        waitFor { done in
-            Task { @MainActor in
-                let request = await probe.addPaymentPassViewController(
-                    controller,
-                    generateRequestWithCertificateChain: [],
-                    nonce: Data(),
-                    nonceSignature: Data()
-                )
-                _ = request
-                done()
-            }
-        }
+        var generated: PKAddPaymentPassRequest?
+        probe.addPaymentPassViewController(
+            controller,
+            generateRequestWithCertificateChain: [],
+            nonce: Data(),
+            nonceSignature: Data(),
+            completionHandler: { generated = $0 }
+        )
+        precondition(generated != nil)
     }
 }
 

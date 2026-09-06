@@ -717,6 +717,48 @@ public extension PKPaymentAuthorizationViewControllerDelegate {
 
     func paymentAuthorizationViewController(
         _ controller: PKPaymentAuthorizationViewController,
+        didChangeCouponCode couponCode: String,
+        handler: @escaping (PKPaymentRequestCouponCodeUpdate) -> Void
+    ) {
+        _ = (controller, couponCode)
+        handler(PKPaymentRequestCouponCodeUpdate(paymentSummaryItems: []))
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didSelect paymentMethod: PKPaymentMethod,
+        handler: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
+    ) {
+        _ = (controller, paymentMethod)
+        handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didSelectShippingContact contact: PKContact,
+        handler: @escaping (PKPaymentRequestShippingContactUpdate) -> Void
+    ) {
+        _ = (controller, contact)
+        handler(
+            PKPaymentRequestShippingContactUpdate(
+                errors: [PassKitPortableError(.paymentsUnavailable)],
+                paymentSummaryItems: [],
+                shippingMethods: []
+            )
+        )
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didSelect shippingMethod: PKShippingMethod,
+        handler: @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
+    ) {
+        _ = (controller, shippingMethod)
+        handler(PKPaymentRequestShippingMethodUpdate(paymentSummaryItems: []))
+    }
+
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
         didChangeCouponCode couponCode: String
     ) async -> PKPaymentRequestCouponCodeUpdate {
         _ = (controller, couponCode)
