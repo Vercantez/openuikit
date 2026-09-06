@@ -1,0 +1,3 @@
+import LightweightCodeRequirements
+
+let frameworkLoadSmokeMarker = "LIGHTWEIGHTCODEREQUIREMENTS_AGENT_RUNTIME_OK"
