@@ -135,20 +135,42 @@ public protocol SubscriptionStoreControlStyle {
     func makeBody(configuration: Self.Configuration) -> Self.Body
 }
 
-public protocol SubscriptionStoreControlPlacement: RawRepresentable where RawValue == SubscriptionStoreControlPlacementKey {}
+public protocol SubscriptionStoreControlPlacement: RawRepresentable where RawValue == SubscriptionStoreControlPlacementKey {
+    static var automatic: Self { get }
+}
 
 public protocol SubscriptionOptionGroupStyle {}
 
 public struct SubscriptionStoreControlPlacementKey: Hashable, Sendable, RawRepresentable {
     public var rawValue: String
     public init(rawValue: String) { self.rawValue = rawValue }
+    public static var scrollView: SubscriptionStoreControlPlacementKey {
+        SubscriptionStoreControlPlacementKey(rawValue: "scrollView")
+    }
+    public static var bottomBar: SubscriptionStoreControlPlacementKey {
+        SubscriptionStoreControlPlacementKey(rawValue: "bottomBar")
+    }
+    public static var buttonsInBottomBar: SubscriptionStoreControlPlacementKey {
+        SubscriptionStoreControlPlacementKey(rawValue: "buttonsInBottomBar")
+    }
 }
 
 public struct AutomaticSubscriptionStoreControlPlacement: SubscriptionStoreControlPlacement {
-    public var rawValue: SubscriptionStoreControlPlacementKey { SubscriptionStoreControlPlacementKey(rawValue: "automatic") }
-    public static var automatic: AutomaticSubscriptionStoreControlPlacement { AutomaticSubscriptionStoreControlPlacement() }
-    public init() {}
-    public init?(rawValue: SubscriptionStoreControlPlacementKey) { _ = rawValue }
+    public var rawValue: SubscriptionStoreControlPlacementKey
+    public static var automatic: AutomaticSubscriptionStoreControlPlacement {
+        AutomaticSubscriptionStoreControlPlacement(rawValue: SubscriptionStoreControlPlacementKey(rawValue: "automatic"))
+    }
+    public static var scrollView: AutomaticSubscriptionStoreControlPlacement {
+        AutomaticSubscriptionStoreControlPlacement(rawValue: .scrollView)
+    }
+    public static var bottomBar: AutomaticSubscriptionStoreControlPlacement {
+        AutomaticSubscriptionStoreControlPlacement(rawValue: .bottomBar)
+    }
+    public static var buttonsInBottomBar: AutomaticSubscriptionStoreControlPlacement {
+        AutomaticSubscriptionStoreControlPlacement(rawValue: .buttonsInBottomBar)
+    }
+    public init() { self.rawValue = SubscriptionStoreControlPlacementKey(rawValue: "automatic") }
+    public init(rawValue: SubscriptionStoreControlPlacementKey) { self.rawValue = rawValue }
 }
 
 public struct SubscriptionStorePolicyKind: Hashable, Sendable {
@@ -164,31 +186,47 @@ public struct SubscriptionStoreButtonLabel: Hashable, Sendable {
     public static let price = SubscriptionStoreButtonLabel(id: "price")
     public static let displayName = SubscriptionStoreButtonLabel(id: "displayName")
     public static let singleLine = SubscriptionStoreButtonLabel(id: "singleLine")
+    public static let multiline = SubscriptionStoreButtonLabel(id: "multiline")
     public var action: SubscriptionStoreButtonLabel { .action }
     public var price: SubscriptionStoreButtonLabel { .price }
     public var displayName: SubscriptionStoreButtonLabel { .displayName }
     public var singleLine: SubscriptionStoreButtonLabel { .singleLine }
+    public var multiline: SubscriptionStoreButtonLabel { .multiline }
     private var id: String
     private init(id: String) { self.id = id }
 }
 
 public struct StoreButtonKind: Hashable, Sendable {
     public static let restore = StoreButtonKind(id: "restore")
+    public static let restorePurchases = StoreButtonKind(id: "restorePurchases")
     public static let redeemCode = StoreButtonKind(id: "redeemCode")
     public static let policies = StoreButtonKind(id: "policies")
     public static let cancellation = StoreButtonKind(id: "cancellation")
+    public static let signIn = StoreButtonKind(id: "signIn")
     private var id: String
     private init(id: String) { self.id = id }
 }
 
 public struct SubscriptionOfferViewButtonKind: Hashable, Sendable {
     public static let redeemCode = SubscriptionOfferViewButtonKind(id: "redeemCode")
+    public static let detailLink = SubscriptionOfferViewButtonKind(id: "detailLink")
     private var id: String
     private init(id: String) { self.id = id }
 }
 
 public struct SubscriptionStoreControlBackground: Hashable, Sendable {
-    public init() {}
+    private var id: String
+    public init() { self.id = "automatic" }
+    private init(id: String) { self.id = id }
+    public static var automatic: SubscriptionStoreControlBackground {
+        SubscriptionStoreControlBackground(id: "automatic")
+    }
+    public static var gradientMaterial: SubscriptionStoreControlBackground {
+        SubscriptionStoreControlBackground(id: "gradientMaterial")
+    }
+    public static var gradientMaterialOnScroll: SubscriptionStoreControlBackground {
+        SubscriptionStoreControlBackground(id: "gradientMaterialOnScroll")
+    }
 }
 
 public struct IdentifiedStoreContent<IdentifiedView: View> {
@@ -199,6 +237,11 @@ public struct IdentifiedStoreContent<IdentifiedView: View> {
 public struct StoreContentBuilder {
     public static func buildBlock() -> EmptyStoreContent { EmptyStoreContent() }
     public static func buildBlock<Content: StoreContent>(_ content: Content) -> Content { content }
+    public static func buildIf<Content: StoreContent>(_ section: Content?) -> Content? { section }
+    public static func buildLimitedAvailability(_ content: any StoreContent) -> some StoreContent {
+        _ = content
+        return EmptyStoreContent()
+    }
 }
 
 public struct EmptyStoreContent: StoreContent {
@@ -212,32 +255,143 @@ public struct TupleStoreContent<each Content>: StoreContent {
 }
 
 public struct SubscriptionStoreControlStyleConfiguration {
-    public struct Icon: View { public var body: some View { EmptyView() } }
-    @dynamicMemberLookup
-    public struct Option {
-        public subscript<T>(dynamicMember keyPath: KeyPath<Product, T>) -> T {
-            Product(id: "")[keyPath: keyPath]
-        }
-        public subscript<T>(dynamicMember keyPath: KeyPath<Product.SubscriptionInfo, T>) -> T? { nil }
-        public subscript<T>(dynamicMember keyPath: KeyPath<Product.SubscriptionInfo, T?>) -> T? { nil }
+    public struct Icon: View {
+        public var body: some View { EmptyView() }
+        public init() {}
     }
+
     @dynamicMemberLookup
-    public struct PickerOption {
-        public subscript<T>(dynamicMember keyPath: KeyPath<Product, T>) -> T {
-            Product(id: "")[keyPath: keyPath]
+    public struct Option: Hashable {
+        public typealias ID = Product.ID
+        public var subscription: Product
+        public var activeOffer: Product.SubscriptionOffer? { nil }
+        public var icon: Icon? { nil }
+        public var id: Product.ID { subscription.id }
+        public func subscribe() {}
+        public init(subscription: Product = Product(id: "")) {
+            self.subscription = subscription
         }
-        public subscript<T>(dynamicMember keyPath: KeyPath<Product.SubscriptionInfo, T>) -> T? { nil }
-        public subscript<T>(dynamicMember keyPath: KeyPath<Product.SubscriptionInfo, T?>) -> T? { nil }
+        public static func == (lhs: Option, rhs: Option) -> Bool {
+            lhs.subscription == rhs.subscription
+        }
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(subscription)
+        }
+        public subscript<T>(dynamicMember keyPath: KeyPath<Product, T>) -> T {
+            subscription[keyPath: keyPath]
+        }
+        public subscript<T>(dynamicMember keyPath: KeyPath<Product.SubscriptionInfo, T>) -> T? {
+            subscription.subscription?[keyPath: keyPath]
+        }
+        public subscript<T>(dynamicMember keyPath: KeyPath<Product.SubscriptionInfo, T?>) -> T? {
+            subscription.subscription?[keyPath: keyPath]
+        }
     }
+
+    @dynamicMemberLookup
+    public struct PickerOption: Hashable {
+        public typealias ID = Product.ID
+        public var isSelected: Bool
+        public var subscription: Product
+        public var activeOffer: Product.SubscriptionOffer? { nil }
+        public var icon: Icon? { nil }
+        public var id: Product.ID { subscription.id }
+        public init(subscription: Product = Product(id: ""), isSelected: Bool = false) {
+            self.subscription = subscription
+            self.isSelected = isSelected
+        }
+        public static func == (lhs: PickerOption, rhs: PickerOption) -> Bool {
+            lhs.subscription == rhs.subscription && lhs.isSelected == rhs.isSelected
+        }
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(subscription)
+            hasher.combine(isSelected)
+        }
+        public subscript<T>(dynamicMember keyPath: KeyPath<Product, T>) -> T {
+            subscription[keyPath: keyPath]
+        }
+        public subscript<T>(dynamicMember keyPath: KeyPath<Product.SubscriptionInfo, T>) -> T? {
+            subscription.subscription?[keyPath: keyPath]
+        }
+        public subscript<T>(dynamicMember keyPath: KeyPath<Product.SubscriptionInfo, T?>) -> T? {
+            subscription.subscription?[keyPath: keyPath]
+        }
+    }
+
     public struct Section {
-        public struct ID: Hashable, Sendable { public init() {} }
-        public struct Header: View { public var body: some View { EmptyView() } }
-        public struct Footer: View { public var body: some View { EmptyView() } }
+        public struct ID: Hashable, Sendable {
+            public init() {}
+        }
+        public struct Header: View {
+            public var body: some View { EmptyView() }
+            public init() {}
+        }
+        public struct Footer: View {
+            public var body: some View { EmptyView() }
+            public init() {}
+        }
+        public var id: ID
+        public var header: Header?
+        public var footer: Footer?
+        public var options: [Option]
+        public init(
+            id: ID = ID(),
+            header: Header? = nil,
+            footer: Footer? = nil,
+            options: [Option] = []
+        ) {
+            self.id = id
+            self.header = header
+            self.footer = footer
+            self.options = options
+        }
+    }
+
+    public var options: [Option]
+    public var sections: [Section]
+    public var groupDisplayName: String
+    public var autoRenewPreference: Product?
+    public var descriptionVisibility: Visibility
+    public var allOptions: [Product] { options.map(\.subscription) }
+    public init(
+        options: [Option] = [],
+        sections: [Section] = [],
+        groupDisplayName: String = "",
+        autoRenewPreference: Product? = nil,
+        descriptionVisibility: Visibility = .automatic
+    ) {
+        self.options = options
+        self.sections = sections
+        self.groupDisplayName = groupDisplayName
+        self.autoRenewPreference = autoRenewPreference
+        self.descriptionVisibility = descriptionVisibility
     }
 }
 
 public struct ProductViewStyleConfiguration {
-    public struct Icon: View { public var body: some View { EmptyView() } }
+    public struct Icon: View {
+        public var body: some View { EmptyView() }
+        public init() {}
+    }
+    public var icon: Icon
+    public var product: Product?
+    public var state: Product.TaskState
+    public var descriptionVisibility: Visibility
+    public var hasCurrentEntitlement: Bool
+    public func purchase() {}
+    public init(
+        icon: Icon = Icon(),
+        product: Product? = nil,
+        state: Product.TaskState = .loading,
+        descriptionVisibility: Visibility = .automatic,
+        hasCurrentEntitlement: Bool = false
+    ) {
+        self.icon = icon
+        self.product = product
+        self.state = state
+        self.descriptionVisibility = descriptionVisibility
+        self.hasCurrentEntitlement = hasCurrentEntitlement
+    }
 }
 
 public struct SubscriptionOfferViewStyleConfiguration {
@@ -272,50 +426,60 @@ public struct AutomaticSubscriptionOfferViewStyle: SubscriptionOfferViewStyle {
 
 public struct PickerSubscriptionStoreControlStyle: SubscriptionStoreControlStyle {
     public struct Placement: SubscriptionStoreControlPlacement {
-        public var rawValue: SubscriptionStoreControlPlacementKey { SubscriptionStoreControlPlacementKey(rawValue: "picker") }
-        public static var automatic: Placement { Placement() }
-        public init() {}
-        public init?(rawValue: SubscriptionStoreControlPlacementKey) { _ = rawValue }
+        public var rawValue: SubscriptionStoreControlPlacementKey
+        public static var automatic: Placement { Placement(rawValue: SubscriptionStoreControlPlacementKey(rawValue: "picker")) }
+        public static var scrollView: Placement { Placement(rawValue: .scrollView) }
+        public static var buttonsInBottomBar: Placement { Placement(rawValue: .buttonsInBottomBar) }
+        public init() { self.rawValue = SubscriptionStoreControlPlacementKey(rawValue: "picker") }
+        public init(rawValue: SubscriptionStoreControlPlacementKey) { self.rawValue = rawValue }
     }
     public init() {}
     public func makeBody(configuration: Configuration) -> EmptyView { EmptyView() }
 }
 public struct ButtonsSubscriptionStoreControlStyle: SubscriptionStoreControlStyle {
     public struct Placement: SubscriptionStoreControlPlacement {
-        public var rawValue: SubscriptionStoreControlPlacementKey { SubscriptionStoreControlPlacementKey(rawValue: "buttons") }
-        public static var automatic: Placement { Placement() }
-        public init() {}
-        public init?(rawValue: SubscriptionStoreControlPlacementKey) { _ = rawValue }
+        public var rawValue: SubscriptionStoreControlPlacementKey
+        public static var automatic: Placement { Placement(rawValue: SubscriptionStoreControlPlacementKey(rawValue: "buttons")) }
+        public static var scrollView: Placement { Placement(rawValue: .scrollView) }
+        public static var bottomBar: Placement { Placement(rawValue: .bottomBar) }
+        public init() { self.rawValue = SubscriptionStoreControlPlacementKey(rawValue: "buttons") }
+        public init(rawValue: SubscriptionStoreControlPlacementKey) { self.rawValue = rawValue }
     }
     public init() {}
     public func makeBody(configuration: Configuration) -> EmptyView { EmptyView() }
 }
 public struct AutomaticSubscriptionStoreControlStyle: SubscriptionStoreControlStyle {
     public struct Placement: SubscriptionStoreControlPlacement {
-        public var rawValue: SubscriptionStoreControlPlacementKey { SubscriptionStoreControlPlacementKey(rawValue: "automatic") }
-        public static var automatic: Placement { Placement() }
-        public init() {}
-        public init?(rawValue: SubscriptionStoreControlPlacementKey) { _ = rawValue }
+        public var rawValue: SubscriptionStoreControlPlacementKey
+        public static var automatic: Placement { Placement(rawValue: SubscriptionStoreControlPlacementKey(rawValue: "automatic")) }
+        public init() { self.rawValue = SubscriptionStoreControlPlacementKey(rawValue: "automatic") }
+        public init(rawValue: SubscriptionStoreControlPlacementKey) { self.rawValue = rawValue }
     }
     public init() {}
     public func makeBody(configuration: Configuration) -> EmptyView { EmptyView() }
 }
 public struct PagedPickerSubscriptionStoreControlStyle: SubscriptionStoreControlStyle {
     public struct Placement: SubscriptionStoreControlPlacement {
-        public var rawValue: SubscriptionStoreControlPlacementKey { SubscriptionStoreControlPlacementKey(rawValue: "paged") }
-        public static var automatic: Placement { Placement() }
-        public init() {}
-        public init?(rawValue: SubscriptionStoreControlPlacementKey) { _ = rawValue }
+        public var rawValue: SubscriptionStoreControlPlacementKey
+        public static var automatic: Placement { Placement(rawValue: SubscriptionStoreControlPlacementKey(rawValue: "paged")) }
+        public static var scrollView: Placement { Placement(rawValue: .scrollView) }
+        public static var buttonsInBottomBar: Placement { Placement(rawValue: .buttonsInBottomBar) }
+        public static var bottomBar: Placement { Placement(rawValue: .bottomBar) }
+        public init() { self.rawValue = SubscriptionStoreControlPlacementKey(rawValue: "paged") }
+        public init(rawValue: SubscriptionStoreControlPlacementKey) { self.rawValue = rawValue }
     }
     public init() {}
     public func makeBody(configuration: Configuration) -> EmptyView { EmptyView() }
 }
 public struct CompactPickerSubscriptionStoreControlStyle: SubscriptionStoreControlStyle {
     public struct Placement: SubscriptionStoreControlPlacement {
-        public var rawValue: SubscriptionStoreControlPlacementKey { SubscriptionStoreControlPlacementKey(rawValue: "compact") }
-        public static var automatic: Placement { Placement() }
-        public init() {}
-        public init?(rawValue: SubscriptionStoreControlPlacementKey) { _ = rawValue }
+        public var rawValue: SubscriptionStoreControlPlacementKey
+        public static var automatic: Placement { Placement(rawValue: SubscriptionStoreControlPlacementKey(rawValue: "compact")) }
+        public static var scrollView: Placement { Placement(rawValue: .scrollView) }
+        public static var buttonsInBottomBar: Placement { Placement(rawValue: .buttonsInBottomBar) }
+        public static var bottomBar: Placement { Placement(rawValue: .bottomBar) }
+        public init() { self.rawValue = SubscriptionStoreControlPlacementKey(rawValue: "compact") }
+        public init(rawValue: SubscriptionStoreControlPlacementKey) { self.rawValue = rawValue }
     }
     public init() {}
     public func makeBody(configuration: Configuration) -> EmptyView { EmptyView() }
@@ -436,6 +600,44 @@ extension SubscriptionStoreControlStyle where Self == AutomaticSubscriptionStore
     }
 }
 
+extension SubscriptionStoreControlStyle where Self == PickerSubscriptionStoreControlStyle {
+    public static var picker: PickerSubscriptionStoreControlStyle { PickerSubscriptionStoreControlStyle() }
+}
+
+extension SubscriptionStoreControlStyle where Self == ButtonsSubscriptionStoreControlStyle {
+    public static var buttons: ButtonsSubscriptionStoreControlStyle { ButtonsSubscriptionStoreControlStyle() }
+}
+
+extension SubscriptionStoreControlStyle where Self == CompactPickerSubscriptionStoreControlStyle {
+    public static var compactPicker: CompactPickerSubscriptionStoreControlStyle {
+        CompactPickerSubscriptionStoreControlStyle()
+    }
+}
+
+extension SubscriptionStoreControlStyle where Self == PagedPickerSubscriptionStoreControlStyle {
+    public static var pagedPicker: PagedPickerSubscriptionStoreControlStyle {
+        PagedPickerSubscriptionStoreControlStyle()
+    }
+}
+
+extension SubscriptionStoreControlStyle where Self == ProminentPickerSubscriptionStoreControlStyle {
+    public static var prominentPicker: ProminentPickerSubscriptionStoreControlStyle {
+        ProminentPickerSubscriptionStoreControlStyle()
+    }
+}
+
+extension SubscriptionStoreControlStyle where Self == PagedProminentPickerSubscriptionStoreControlStyle {
+    public static var pagedProminentPicker: PagedProminentPickerSubscriptionStoreControlStyle {
+        PagedProminentPickerSubscriptionStoreControlStyle()
+    }
+}
+
+extension SubscriptionStoreControlStyle {
+    public typealias SubscriptionPickerOption = SubscriptionStorePickerOption
+    public typealias SubscriptionPicker = SubscriptionStorePicker
+    public typealias SubscribeButton = SubscriptionStoreButton
+}
+
 extension ProductViewStyle where Self == LargeProductViewStyle {
     public static var large: LargeProductViewStyle { LargeProductViewStyle() }
 }
@@ -448,15 +650,44 @@ extension ProductViewStyle where Self == AutomaticProductViewStyle {
     public static var automatic: AutomaticProductViewStyle { AutomaticProductViewStyle() }
 }
 
+extension ProductViewStyle where Self == CompactProductViewStyle {
+    public static var compact: CompactProductViewStyle { CompactProductViewStyle() }
+}
+
 extension SubscriptionOfferViewStyle where Self == AutomaticSubscriptionOfferViewStyle {
     public static var automatic: AutomaticSubscriptionOfferViewStyle {
         AutomaticSubscriptionOfferViewStyle()
     }
 }
 
+extension SubscriptionOfferViewStyle where Self == CompactSubscriptionOfferViewStyle {
+    public static var compact: CompactSubscriptionOfferViewStyle {
+        CompactSubscriptionOfferViewStyle()
+    }
+}
+
 extension SubscriptionOptionGroupStyle where Self == AutomaticSubscriptionOptionGroupStyle {
     public static var automatic: AutomaticSubscriptionOptionGroupStyle {
         AutomaticSubscriptionOptionGroupStyle()
+    }
+}
+
+extension SubscriptionOptionGroupStyle where Self == TabsSubscriptionOptionGroupStyle {
+    public static var tabs: TabsSubscriptionOptionGroupStyle { TabsSubscriptionOptionGroupStyle() }
+}
+
+extension SubscriptionOptionGroupStyle where Self == LinksSubscriptionOptionGroupStyle {
+    public static var links: LinksSubscriptionOptionGroupStyle { LinksSubscriptionOptionGroupStyle() }
+}
+
+extension EntitlementTaskState where Value == VerificationResult<Transaction>? {
+    public var transaction: VerificationResult<Transaction>? {
+        switch self {
+        case .success(let value):
+            return value
+        case .loading, .failure:
+            return nil
+        }
     }
 }
 

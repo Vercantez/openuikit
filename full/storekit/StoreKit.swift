@@ -856,6 +856,7 @@ open class SKAdImpression: NSObject {
     public var signature: String
     public var version: String
     public var sourceIdentifier: NSNumber?
+    public var adType: String?
 
     public override init() {
         sourceAppStoreItemIdentifier = 0

@@ -845,3 +845,19 @@ public typealias SubscriptionPeriod = Product.SubscriptionPeriod
 public typealias SubscriptionStatus = Product.SubscriptionInfo.Status
 public typealias SubscriptionRenewalInfo = Product.SubscriptionInfo.RenewalInfo
 public typealias SubscriptionRenewalState = Product.SubscriptionInfo.RenewalState
+
+extension DateComponents {
+    public init(subscriptionPeriod period: Product.SubscriptionPeriod) {
+        self.init()
+        switch period.unit {
+        case .day:
+            day = period.value
+        case .week:
+            weekOfYear = period.value
+        case .month:
+            month = period.value
+        case .year:
+            year = period.value
+        }
+    }
+}

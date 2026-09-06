@@ -14,16 +14,16 @@ seed `7147ef0e`, PR #115). Immutable seed files were not rewritten.
 
 ## Coverage (measured)
 
-| status | first pass | after 2026-09 wave 8 | after depth pass 3 | after depth pass 4 | after NA repair |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| implemented | 824 | 933 | 1107 | 1298 | 1370 |
-| declared | 14483 | 14352 | 6893 | 6759 | 6753 |
-| deferred | 368 | 348 | 310 | 253 | 271 |
-| unavailable | 0 | 0 | 0 | 0 | 0 |
-| not-applicable | 20 | 62 | 7385 | 7385 | 7301 |
+| status | first pass | after 2026-09 wave 8 | after depth pass 3 | after depth pass 4 | after NA repair | after depth pass 6 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| implemented | 824 | 933 | 1107 | 1298 | 1370 | 1541 |
+| declared | 14483 | 14352 | 6893 | 6759 | 6753 | 6673 |
+| deferred | 368 | 348 | 310 | 253 | 271 | 180 |
+| unavailable | 0 | 0 | 0 | 0 | 0 | 0 |
+| not-applicable | 20 | 62 | 7385 | 7385 | 7301 | 7301 |
 
 Floor of 7848 nondeferred (`implemented` + `declared`) remains met
-(8123). CryptoKit `P256` JWS `signature` stays deferred.
+(8214). CryptoKit `P256` JWS `signature` stays deferred.
 
 ## Depth pass 2026-09 (wave 8)
 
@@ -230,6 +230,75 @@ That campaign token is the host-inventory stamp; the sealed framework gate
 prints the four lines above. The verify script's success line on a complete
 image is `products=scratch-corpus`, not `products=clean`. Starting commit
 was `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b`.
+
+## Depth pass 2026-09 (wave 8, pass 6)
+
+Checked merge of `5b834b48` refused the branch for **no depth gain**
+(implemented 1370 → 1370). Reclassifying remaining `s:7SwiftUI4View…`
+overlay rows to not-applicable is bookkeeping; this pass implements real
+behaviour and cites a focused synchronous `func test*()` per family.
+
+New model-level APIs exercised by `StoreKitDepthPass6Tests.swift`:
+
+- `NSNotification.Name` StoreKit storefront/cloud-service names and the
+  matching `SK*Notification` lets
+- `SKAdImpression.adType`
+- `DateComponents.init(subscriptionPeriod:)`
+- `SKDownloadState` / `SKOverlay.Position` /
+  `SKCloudServiceCapability` / `SKCloudServiceAuthorizationStatus`
+  `init(rawValue:)` (table-driven enum / option-set values)
+- Subscription store button labels, policy kinds, store-button kinds,
+  offer-view button kinds, control backgrounds, and placement keys
+- Control-placement statics including protocol `.automatic`
+- Control / product / offer / option-group style statics
+  (`.picker`, `.buttons`, `.compactPicker`, `.pagedPicker`,
+  `.prominentPicker`, `.pagedProminentPicker`, `.compact`, `.tabs`,
+  `.links`)
+- `SubscriptionStoreControlStyle` `SubscribeButton` /
+  `SubscriptionPicker` / `SubscriptionPickerOption` typealiases
+- `StoreContentBuilder.buildIf` / `buildLimitedAvailability`
+- `SubscriptionStoreControlStyleConfiguration` option / picker-option /
+  section / icon / configuration values (split tests, one family each)
+- `ProductViewStyleConfiguration` model fields and `purchase()`
+- `EntitlementTaskState.transaction` when `Value == VerificationResult<Transaction>?`
+
+Remaining `s:7SwiftUI4View…` overlay re-exports stay `not-applicable`
+(7301). Optional/Never `StoreContent` witnesses stay `deferred`.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before (NA repair / refused merge `5b834b48`) | 1370 | 6753 | 271 | 0 | 7301 |
+| after depth pass 6 | 1541 | 6673 | 180 | 0 | 7301 |
+
+Nondeferred: **8214** (floor 7848). Unique `implemented` evidence tests:
+117. Top-5 evidence distribution (of 1541 implemented rows):
+
+1. `testOfferAndTaskStates` — 115 (7.5%)
+2. `testAdvancedCommerceTypes` — 111 (7.2%)
+3. `testJWSUnverifiedFields` — 67 (4.3%)
+4. `testHashableRawRepresentableMixing` — 48 (3.1%)
+5. `testSKCloudServiceEnumsAndConstants` — 41 (2.7%)
+
+No cited test covers more than 40% of implemented rows. Enum / option-set
+members and C `k…`/`err…` constants still share table-driven value tests.
+Every other new family has its own `test*` function; the largest new
+family is 15 rows (`testSubscriptionStoreButtonLabelValues`,
+`testControlPlacementStatics`,
+`testControlStyleConfigurationSectionMembers`). Every `implemented` row
+cites `test:full/storekit/tests/agent/<File>Tests.swift#testName` for a
+real top-level synchronous `func testName()` that exercises that
+identifier.
+
+The sealed host gate is `bash full/storekit/tests/acceptance/test_host.sh`.
+Depth pass 6 gate markers are recorded after that command ends
+`FRAMEWORK_FANOUT_HOST_OK`.
+
+`swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` fails on this snapshot with
+`missing corpus checkout: scratch/ladder-corpus/focus-ios` and therefore
+does not print
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`.
+Starting commit was `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b`.
 
 ## What is real (isolated host)
 
