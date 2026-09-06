@@ -87,8 +87,8 @@ func inLinuxApplyCoder(_ object: NSObject, _ coder: NSCoder) {
     }
     if let value = object as? INBalanceAmount {
         value.currencyCode = inDecodeString(coder, "currencyCode")
-        if let amount = coder.decodeObject(of: NSDecimalNumber.self, forKey: "amount") {
-            value.amount = amount
+        if let amount = inDecodeString(coder, "amount"), let parsed = Double(amount) {
+            value.amount = NSDecimalNumber(value: parsed)
         }
         if coder.containsValue(forKey: "balanceType") {
             value.balanceType = INBalanceType(rawValue: Int(coder.decodeInt64(forKey: "balanceType")))
@@ -98,8 +98,8 @@ func inLinuxApplyCoder(_ object: NSObject, _ coder: NSCoder) {
     if let value = object as? INRideFareLineItem {
         if let decoded = inDecodeString(coder, "title") { value.title = decoded }
         if let decoded = inDecodeString(coder, "currencyCode") { value.currencyCode = decoded }
-        if let price = coder.decodeObject(of: NSDecimalNumber.self, forKey: "price") {
-            value.price = price
+        if let price = inDecodeString(coder, "price"), let parsed = Double(price) {
+            value.price = NSDecimalNumber(value: parsed)
         }
         return
     }
@@ -326,8 +326,10 @@ extension INAirportGate: NSSecureCoding {
 extension INBalanceAmount: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        inLinuxEncodeStrings(coder, [("currencyCode", currencyCode)])
-        coder.encode(amount, forKey: "amount")
+        inLinuxEncodeStrings(coder, [
+            ("currencyCode", currencyCode),
+            ("amount", amount?.stringValue),
+        ])
         if let balanceType {
             coder.encode(Int64(balanceType.rawValue), forKey: "balanceType")
         }
@@ -699,8 +701,11 @@ extension INRideCompletionStatus: NSSecureCoding {
 extension INRideFareLineItem: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        inLinuxEncodeStrings(coder, [("title", title), ("currencyCode", currencyCode)])
-        coder.encode(price, forKey: "price")
+        inLinuxEncodeStrings(coder, [
+            ("title", title),
+            ("currencyCode", currencyCode),
+            ("price", price?.stringValue),
+        ])
     }
 }
 
