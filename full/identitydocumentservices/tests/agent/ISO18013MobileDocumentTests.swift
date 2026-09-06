@@ -80,6 +80,10 @@ func testISO18013MobileDocumentResponseStoresData() {
     let payload = Data([0xA0, 0x01, 0x02])
     let response = ISO18013MobileDocumentResponse(responseData: payload)
     precondition(response.responseData == payload)
+}
+
+func testISO18013MobileDocumentResponseConformsToWebPresentment() {
+    let response = ISO18013MobileDocumentResponse(responseData: Data())
     let asProtocol: any IdentityDocumentWebPresentmentResponse = response
     _ = asProtocol
 }

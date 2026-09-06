@@ -48,9 +48,15 @@ validation and provider registration never report success.
 
 ## Depth pass 2026-09
 
-Implemented **99** of 106 exact IDs (4 `declared` async store members,
-3 `not-applicable` synthesized Actor isolation witnesses). Nondeferred
-count 103, above the medium-full floor of 53.
+Before the merge-ledger repair: **99 implemented** / **4 declared** /
+**3 not-applicable**. Operator merge refused the `not-applicable` Actor
+isolation rows (they are not SwiftUI cross-import overlay IDs).
+
+After: **99 implemented** / **7 declared** / **0 not-applicable**.
+Nondeferred count 106, above the medium-full floor of 53. The three
+`Actor` isolation witnesses (`assertIsolated`, `assumeIsolated`,
+`preconditionIsolated`) are `declared`; calling them off the actor
+traps and the isolated runner cannot hop.
 
 Top-5 `implemented` evidence distribution:
 

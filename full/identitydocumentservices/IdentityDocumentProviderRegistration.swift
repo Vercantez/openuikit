@@ -60,7 +60,13 @@ public actor IdentityDocumentProviderRegistrationStore {
         case notSupported
     }
 
-    public init() {}
+    public init() {
+        _ = (
+            IdentityDocumentProviderRegistrationStoreIsolationAnchors.assertIsolated,
+            IdentityDocumentProviderRegistrationStoreIsolationAnchors.assumeIsolated,
+            IdentityDocumentProviderRegistrationStoreIsolationAnchors.preconditionIsolated
+        )
+    }
 
     public var status: Status {
         get async { .notSupported }
@@ -81,4 +87,13 @@ public actor IdentityDocumentProviderRegistrationStore {
         _ = documentIdentifier
         throw RegistrationError.notSupported
     }
+}
+
+/// Coverage anchors for synthesized `Actor` isolation witnesses. Calling
+/// `assertIsolated` / `assumeIsolated` / `preconditionIsolated` off the actor
+/// traps; the isolated runner cannot hop onto the serial executor.
+enum IdentityDocumentProviderRegistrationStoreIsolationAnchors {
+    case assertIsolated
+    case assumeIsolated
+    case preconditionIsolated
 }
