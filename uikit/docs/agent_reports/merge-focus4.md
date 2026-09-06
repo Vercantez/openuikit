@@ -135,6 +135,7 @@ Mac (`SIM_DEVICE_SUFFIX=-merge-focus4`):
 - `swift package describe`: **0.953 s**
 - `swift build -c release --product openrender`: **183.75 s**
 - `swift build --target OpenUIKitTests`: **24.47 s**, 0 `error:`
+- `swift build -c release --target ConformanceApps`: **168.85 s**
 
 Darwin `blockzillaTargets` is `#if !os(Linux)`. The Network dependency
 does not change the Linux / guest graph. `full/scripts/build_full.sh`
