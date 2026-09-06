@@ -21,10 +21,12 @@ public struct HKSamplePredicate<Sample: HKSample>: Hashable, Sendable {
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(sampleType.identifier)
+        hasher.combine(nsPredicate != nil)
     }
 
     public static func == (a: HKSamplePredicate<Sample>, b: HKSamplePredicate<Sample>) -> Bool {
         a.sampleType.identifier == b.sampleType.identifier
+            && (a.nsPredicate == nil) == (b.nsPredicate == nil)
     }
 
     public static func sample(type sampleType: HKSampleType, predicate: NSPredicate? = nil) -> HKSamplePredicate<HKSample> {
@@ -176,6 +178,7 @@ public struct HKAnchoredObjectQueryDescriptor<Sample: HKSample>: HKAsyncQuery, H
     public var anchor: HKQueryAnchor?
     public var limit: Int?
     public typealias Output = Result
+    public typealias Sequence = Results
 
     public struct Result: Sendable {
         public var addedSamples: [Sample]
@@ -205,6 +208,19 @@ public struct HKAnchoredObjectQueryDescriptor<Sample: HKSample>: HKAsyncQuery, H
     }
 
     public func result(for healthStore: HKHealthStore) async throws -> Result {
+        try resultSync(healthStore)
+    }
+
+    public func results(for healthStore: HKHealthStore) -> Results {
+        let snapshot = (try? resultSync(healthStore)) ?? Result(
+            addedSamples: [],
+            deletedObjects: healthStore.hkDeleted(),
+            newAnchor: HKQueryAnchor(fromValue: 0)
+        )
+        return Results(items: [snapshot])
+    }
+
+    func resultSync(_ healthStore: HKHealthStore) throws -> Result {
         var added: [Sample] = []
         for predicate in predicates {
             let samples = try healthStore.hkSamples(
@@ -221,15 +237,6 @@ public struct HKAnchoredObjectQueryDescriptor<Sample: HKSample>: HKAsyncQuery, H
             newAnchor: HKQueryAnchor(fromValue: HKHealthStorePortable.loadState().nextAnchor)
         )
     }
-
-    public func results(for healthStore: HKHealthStore) -> Results {
-        let value = Result(
-            addedSamples: [],
-            deletedObjects: healthStore.hkDeleted(),
-            newAnchor: HKQueryAnchor(fromValue: 0)
-        )
-        return Results(items: [value])
-    }
 }
 
 public struct HKStatisticsCollectionQueryDescriptor: HKAsyncQuery, HKAsyncSequenceQuery {
@@ -238,6 +245,7 @@ public struct HKStatisticsCollectionQueryDescriptor: HKAsyncQuery, HKAsyncSequen
     public var anchorDate: Date
     public var intervalComponents: DateComponents
     public typealias Output = HKStatisticsCollection
+    public typealias Sequence = Results
 
     public struct Result: Sendable {
         public let statisticsCollection: HKStatisticsCollection
@@ -272,6 +280,21 @@ public struct HKStatisticsCollectionQueryDescriptor: HKAsyncQuery, HKAsyncSequen
     }
 
     public func result(for healthStore: HKHealthStore) async throws -> HKStatisticsCollection {
+        try collectionSync(healthStore)
+    }
+
+    public func results(for healthStore: HKHealthStore) -> Results {
+        let collection = (try? collectionSync(healthStore)) ?? HKStatisticsCollection.build(
+            quantityType: predicate.sampleType as? HKQuantityType ?? HKQuantityType(identifier: ""),
+            samples: [],
+            options: options,
+            anchorDate: anchorDate,
+            intervalComponents: intervalComponents
+        )
+        return Results(items: [Result(statisticsCollection: collection, updatedStatistics: nil)])
+    }
+
+    func collectionSync(_ healthStore: HKHealthStore) throws -> HKStatisticsCollection {
         guard let type = predicate.sampleType as? HKQuantityType else {
             throw hkError(.errorInvalidArgument, reason: "collection descriptor requires a quantity type")
         }
@@ -289,31 +312,20 @@ public struct HKStatisticsCollectionQueryDescriptor: HKAsyncQuery, HKAsyncSequen
             intervalComponents: intervalComponents
         )
     }
-
-    public func results(for healthStore: HKHealthStore) -> Results {
-        _ = healthStore
-        let collection = HKStatisticsCollection.build(
-            quantityType: predicate.sampleType as? HKQuantityType ?? HKQuantityType(identifier: ""),
-            samples: [],
-            options: options,
-            anchorDate: anchorDate,
-            intervalComponents: intervalComponents
-        )
-        return Results(items: [Result(statisticsCollection: collection, updatedStatistics: nil)])
-    }
 }
 
 public struct HKActivitySummaryQueryDescriptor: HKAsyncQuery, HKAsyncSequenceQuery {
     public var predicate: NSPredicate?
     public typealias Output = [HKActivitySummary]
+    public typealias Sequence = Results
     public struct Results: AsyncSequence, Sendable {
-        public typealias Element = HKActivitySummary
-        public let items: [HKActivitySummary]
+        public typealias Element = [HKActivitySummary]
+        public let items: [[HKActivitySummary]]
         public func makeAsyncIterator() -> Iterator { Iterator(items: items) }
         public struct Iterator: AsyncIteratorProtocol {
-            var items: [HKActivitySummary]
+            var items: [[HKActivitySummary]]
             var index = 0
-            public mutating func next() async throws -> HKActivitySummary? {
+            public mutating func next() async throws -> [HKActivitySummary]? {
                 guard index < items.count else { return nil }
                 defer { index += 1 }
                 return items[index]
@@ -327,21 +339,24 @@ public struct HKActivitySummaryQueryDescriptor: HKAsyncQuery, HKAsyncSequenceQue
 
     public func result(for healthStore: HKHealthStore) async throws -> [HKActivitySummary] {
         _ = healthStore
-        return HKHealthStorePortable.loadState().summaries.map { HKActivitySummary(stored: $0) }
-            .filter { hkEvaluatePredicate(predicate, object: $0) }
+        return summariesSync()
     }
 
     public func results(for healthStore: HKHealthStore) -> Results {
         _ = healthStore
-        let items = HKHealthStorePortable.loadState().summaries.map { HKActivitySummary(stored: $0) }
+        return Results(items: [summariesSync()])
+    }
+
+    func summariesSync() -> [HKActivitySummary] {
+        HKHealthStorePortable.loadState().summaries.map { HKActivitySummary(stored: $0) }
             .filter { hkEvaluatePredicate(predicate, object: $0) }
-        return Results(items: items)
     }
 }
 
 public struct HKWorkoutRouteQueryDescriptor: HKAsyncQuery, HKAsyncSequenceQuery {
     public var predicate: HKSamplePredicate<HKWorkoutRoute>
     public typealias Output = [HKWorkoutRoute]
+    public typealias Sequence = Results
     public struct Results: AsyncSequence, Sendable {
         public typealias Element = [CLLocation]
         public let items: [[CLLocation]]
@@ -359,6 +374,10 @@ public struct HKWorkoutRouteQueryDescriptor: HKAsyncQuery, HKAsyncSequenceQuery 
 
     public init(predicate: HKSamplePredicate<HKWorkoutRoute>) {
         self.predicate = predicate
+    }
+
+    public init(_ workoutRoute: HKWorkoutRoute) {
+        self.predicate = HKSamplePredicate.workoutRoute(HKQuery.predicateForObject(with: workoutRoute.uuid))
     }
 
     public func result(for healthStore: HKHealthStore) async throws -> [HKWorkoutRoute] {
@@ -384,7 +403,17 @@ public struct HKWorkoutRouteQueryDescriptor: HKAsyncQuery, HKAsyncSequenceQuery 
 public struct HKHeartbeatSeriesQueryDescriptor: HKAsyncQuery, HKAsyncSequenceQuery {
     public struct Heartbeat: Hashable, Sendable {
         public var precededByGap: Bool
-        public var timeSinceSeriesStart: TimeInterval
+        public var timeIntervalSinceStart: TimeInterval
+
+        public static func == (a: Heartbeat, b: Heartbeat) -> Bool {
+            a.precededByGap == b.precededByGap
+                && abs(a.timeIntervalSinceStart - b.timeIntervalSinceStart) < 1e-9
+        }
+
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(precededByGap)
+            hasher.combine(timeIntervalSinceStart)
+        }
     }
 
     public struct Results: AsyncSequence, Sendable {
@@ -402,26 +431,35 @@ public struct HKHeartbeatSeriesQueryDescriptor: HKAsyncQuery, HKAsyncSequenceQue
         }
     }
 
-    public var predicate: HKSamplePredicate<HKHeartbeatSeriesSample>
+    public var sample: HKHeartbeatSeriesSample
     public typealias Output = [Heartbeat]
+    public typealias Sequence = Results
 
-    public init(predicate: HKSamplePredicate<HKHeartbeatSeriesSample>) {
-        self.predicate = predicate
+    public init(_ sample: HKHeartbeatSeriesSample) {
+        self.sample = sample
     }
 
     public func result(for healthStore: HKHealthStore) async throws -> [Heartbeat] {
-        _ = try healthStore.hkSamples(of: predicate.sampleType, predicate: predicate.nsPredicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil)
-        return []
+        _ = healthStore
+        return heartbeatsSync()
     }
 
     public func results(for healthStore: HKHealthStore) -> Results {
-        Results(items: [])
+        _ = healthStore
+        return Results(items: heartbeatsSync())
+    }
+
+    func heartbeatsSync() -> [Heartbeat] {
+        HKHealthStorePortable.heartbeatPoints(for: sample.uuid).map {
+            Heartbeat(precededByGap: $0.precededByGap, timeIntervalSinceStart: $0.timeIntervalSinceStart)
+        }
     }
 }
 
 public struct HKElectrocardiogramQueryDescriptor: HKAsyncQuery, HKAsyncSequenceQuery {
-    public var predicate: HKSamplePredicate<HKElectrocardiogram>
+    public var electrocardiogram: HKElectrocardiogram
     public typealias Output = [HKElectrocardiogram.VoltageMeasurement]
+    public typealias Sequence = Results
     public struct Results: AsyncSequence, Sendable {
         public typealias Element = HKElectrocardiogram.VoltageMeasurement
         public let items: [HKElectrocardiogram.VoltageMeasurement]
@@ -437,31 +475,46 @@ public struct HKElectrocardiogramQueryDescriptor: HKAsyncQuery, HKAsyncSequenceQ
         }
     }
 
-    public init(predicate: HKSamplePredicate<HKElectrocardiogram>) {
-        self.predicate = predicate
+    public init(_ electrocardiogram: HKElectrocardiogram) {
+        self.electrocardiogram = electrocardiogram
     }
 
     public func result(for healthStore: HKHealthStore) async throws -> [HKElectrocardiogram.VoltageMeasurement] {
         _ = healthStore
-        return []
+        return HKHealthStorePortable.voltageMeasurements(for: electrocardiogram.uuid)
     }
 
     public func results(for healthStore: HKHealthStore) -> Results {
-        Results(items: [])
+        Results(items: HKHealthStorePortable.voltageMeasurements(for: electrocardiogram.uuid))
     }
 }
 
 public struct HKQuantitySeriesSampleQueryDescriptor: HKAsyncQuery, HKAsyncSequenceQuery {
-    public struct Options: OptionSet, Sendable {
-        public let rawValue: UInt
-        public init(rawValue: UInt) { self.rawValue = rawValue }
-        public static let includeQuantities = Options(rawValue: 1 << 0)
+    public struct Options: OptionSet, Sendable, Hashable {
+        public let rawValue: Int
+        public init(rawValue: Int) { self.rawValue = rawValue }
+        public static let includeSample = Options(rawValue: 1 << 0)
+        public static let orderByQuantitySampleStartDate = Options(rawValue: 1 << 1)
     }
 
-    public struct Result: Sendable {
-        public var quantity: HKQuantity?
-        public var date: Date?
-        public var sample: HKQuantitySample?
+    public struct Result: Hashable, Sendable {
+        public let quantity: HKQuantity
+        public let dateInterval: DateInterval
+        public let sample: HKQuantitySample?
+
+        public static func == (a: Result, b: Result) -> Bool {
+            a.quantity.isEqual(b.quantity)
+                && a.dateInterval == b.dateInterval
+                && a.sample?.uuid == b.sample?.uuid
+        }
+
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(quantity.doubleValue)
+            hasher.combine(quantity.unit.unitString)
+            hasher.combine(dateInterval.start)
+            hasher.combine(dateInterval.duration)
+            hasher.combine(sample?.uuid)
+        }
     }
 
     public struct Results: AsyncSequence, Sendable {
@@ -482,6 +535,7 @@ public struct HKQuantitySeriesSampleQueryDescriptor: HKAsyncQuery, HKAsyncSequen
     public var predicate: HKSamplePredicate<HKQuantitySample>
     public var options: Options
     public typealias Output = [Result]
+    public typealias Sequence = Results
 
     public init(predicate: HKSamplePredicate<HKQuantitySample>, options: Options = []) {
         self.predicate = predicate
@@ -489,23 +543,48 @@ public struct HKQuantitySeriesSampleQueryDescriptor: HKAsyncQuery, HKAsyncSequen
     }
 
     public func result(for healthStore: HKHealthStore) async throws -> [Result] {
-        let samples = try healthStore.hkSamples(
+        try seriesSync(healthStore)
+    }
+
+    public func results(for healthStore: HKHealthStore) -> Results {
+        Results(items: (try? seriesSync(healthStore)) ?? [])
+    }
+
+    func seriesSync(_ healthStore: HKHealthStore) throws -> [Result] {
+        var samples = try healthStore.hkSamples(
             of: predicate.sampleType,
             predicate: predicate.nsPredicate,
             limit: HKObjectQueryNoLimit,
             sortDescriptors: nil
         ).compactMap { $0 as? HKQuantitySample }
-        return samples.map { Result(quantity: $0.quantity, date: $0.startDate, sample: $0) }
-    }
-
-    public func results(for healthStore: HKHealthStore) -> Results {
-        let samples = (try? healthStore.hkSamples(
-            of: predicate.sampleType,
-            predicate: predicate.nsPredicate,
-            limit: HKObjectQueryNoLimit,
-            sortDescriptors: nil
-        ).compactMap { $0 as? HKQuantitySample }) ?? []
-        return Results(items: samples.map { Result(quantity: $0.quantity, date: $0.startDate, sample: $0) })
+        if options.contains(.orderByQuantitySampleStartDate) {
+            samples.sort { $0.startDate < $1.startDate }
+        }
+        var collected: [Result] = []
+        for sample in samples {
+            let points = HKHealthStorePortable.quantitySeriesPoints(for: sample.uuid)
+            let includeSample = options.contains(.includeSample) ? sample : nil
+            if points.isEmpty {
+                collected.append(
+                    Result(
+                        quantity: sample.quantity,
+                        dateInterval: DateInterval(start: sample.startDate, end: sample.endDate),
+                        sample: includeSample
+                    )
+                )
+            } else {
+                for point in points {
+                    collected.append(
+                        Result(
+                            quantity: point.quantity,
+                            dateInterval: point.dateInterval,
+                            sample: includeSample
+                        )
+                    )
+                }
+            }
+        }
+        return collected
     }
 }
 
@@ -520,12 +599,33 @@ public struct HKUserAnnotatedMedicationQueryDescriptor: HKAsyncQuery {
 }
 
 public struct HKVerifiableClinicalRecordQueryDescriptor: HKAsyncQuery {
+    public var recordTypes: [HKVerifiableClinicalRecordCredentialType]
+    public var sourceTypes: [HKVerifiableClinicalRecordSourceType]
     public var predicate: NSPredicate?
     public typealias Output = [HKVerifiableClinicalRecord]
-    public init(predicate: NSPredicate?) { self.predicate = predicate }
+
+    public init(
+        recordTypes: [HKVerifiableClinicalRecordCredentialType],
+        sourceTypes: [HKVerifiableClinicalRecordSourceType],
+        predicate: NSPredicate? = nil
+    ) {
+        self.recordTypes = recordTypes
+        self.sourceTypes = sourceTypes
+        self.predicate = predicate
+    }
+
     public func result(for healthStore: HKHealthStore) async throws -> [HKVerifiableClinicalRecord] {
-        _ = (healthStore, predicate)
-        return []
+        recordsSync(healthStore)
+    }
+
+    func recordsSync(_ healthStore: HKHealthStore) -> [HKVerifiableClinicalRecord] {
+        let wanted = Set(recordTypes.map(\.rawValue))
+        let sources = Set(sourceTypes.map(\.rawValue))
+        return healthStore.hkAllSamples().compactMap { $0 as? HKVerifiableClinicalRecord }.filter { record in
+            let typeOK = wanted.isEmpty || record.recordTypes.contains(where: { wanted.contains($0) })
+            let sourceOK = sources.isEmpty || (record.sourceType.map { sources.contains($0.rawValue) } ?? false)
+            return typeOK && sourceOK && hkEvaluatePredicate(predicate, object: record)
+        }
     }
 }
 
@@ -534,6 +634,7 @@ public struct HKWorkoutEffortRelationshipQueryDescriptor: HKAsyncQuery, HKAsyncS
     public var anchor: HKQueryAnchor?
     public var option: HKWorkoutEffortRelationshipQueryOptions
     public typealias Output = Result
+    public typealias Sequence = Results
     public struct Result: Sendable {
         public var relationships: [HKWorkoutEffortRelationship]
         public var newAnchor: HKQueryAnchor
@@ -561,11 +662,25 @@ public struct HKWorkoutEffortRelationshipQueryDescriptor: HKAsyncQuery, HKAsyncS
 
     public func result(for healthStore: HKHealthStore) async throws -> Result {
         _ = healthStore
-        return Result(relationships: [], newAnchor: HKQueryAnchor(fromValue: 0))
+        return resultSync()
     }
 
     public func results(for healthStore: HKHealthStore) -> Results {
-        Results(items: [])
+        _ = healthStore
+        return Results(items: [resultSync()])
+    }
+
+    func resultSync() -> Result {
+        var rows = HKHealthStorePortable.effortRelationshipsLocked().filter {
+            hkEvaluatePredicate(predicate, object: $0)
+        }
+        if option == .mostRelevant, let last = rows.last {
+            rows = [last]
+        }
+        return Result(
+            relationships: rows,
+            newAnchor: HKQueryAnchor(fromValue: HKHealthStorePortable.loadState().nextAnchor)
+        )
     }
 }
 

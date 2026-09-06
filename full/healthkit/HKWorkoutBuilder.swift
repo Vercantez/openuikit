@@ -306,17 +306,77 @@ open class HKSeriesBuilder: NSObject, @unchecked Sendable {
 }
 
 open class HKHeartbeatSeriesBuilder: HKSeriesBuilder, @unchecked Sendable {
+    public static var maximumCount: Int { 100 }
+
+    private let healthStore: HKHealthStore
+    private let seriesStart: Date
+    private var beats: [(TimeInterval, Bool)] = []
+    private var metadata: [String: Any] = [:]
+    private var discarded = false
+
     public init(healthStore: HKHealthStore, device: HKDevice?, start startDate: Date) {
-        _ = startDate
+        self.healthStore = healthStore
+        self.seriesStart = startDate
         super.init(healthStore: healthStore, device: device, seriesType: .heartbeat())
     }
 
-    public func addHeartbeat(at date: Date, precededByGap: Bool) async throws {
-        _ = (date, precededByGap)
+    public convenience init(healthStore: HKHealthStore, device: HKDevice?, startDate: Date) {
+        self.init(healthStore: healthStore, device: device, start: startDate)
+    }
+
+    public func addHeartbeat(at timeIntervalSinceStart: TimeInterval, precededByGap: Bool) async throws {
+        try addHeartbeatSync(at: timeIntervalSinceStart, precededByGap: precededByGap)
+    }
+
+    func addHeartbeatSync(at timeIntervalSinceStart: TimeInterval, precededByGap: Bool) throws {
+        if discarded {
+            throw hkError(.errorInvalidArgument, reason: "heartbeat builder was discarded")
+        }
+        if beats.count >= Self.maximumCount {
+            throw hkError(.errorDataSizeExceeded, reason: "heartbeat series exceeds maximumCount")
+        }
+        beats.append((timeIntervalSinceStart, precededByGap))
+    }
+
+    public func addMetadata(_ metadata: [String: Any]) async throws {
+        for (key, value) in metadata {
+            self.metadata[key] = value
+        }
+    }
+
+    public func finishSeries(completion: @escaping (HKHeartbeatSeriesSample?, (any Error)?) -> Void) {
+        if discarded {
+            completion(nil, hkError(.errorInvalidArgument, reason: "heartbeat builder was discarded"))
+            return
+        }
+        let end = seriesStart.addingTimeInterval(beats.last?.0 ?? 0)
+        let sample = HKHeartbeatSeriesSample(start: seriesStart, end: end)
+        HKHealthStorePortable._setHeartbeats(beats, for: sample)
+        do {
+            try healthStore.hkSave([sample])
+            completion(sample, nil)
+        } catch {
+            completion(nil, error)
+        }
     }
 
     public func finishSeries() async throws -> HKHeartbeatSeriesSample {
-        HKHeartbeatSeriesSample(start: Date(), end: Date())
+        try await withCheckedThrowingContinuation { cont in
+            finishSeries { sample, error in
+                if let error {
+                    cont.resume(throwing: error)
+                } else if let sample {
+                    cont.resume(returning: sample)
+                } else {
+                    cont.resume(throwing: hkError(.errorNoData, reason: "heartbeat series was empty"))
+                }
+            }
+        }
+    }
+
+    public override func discard() {
+        discarded = true
+        beats.removeAll()
     }
 }
 
@@ -324,30 +384,62 @@ open class HKQuantitySeriesSampleBuilder: NSObject, @unchecked Sendable {
     public let quantityType: HKQuantityType
     public let startDate: Date
     public let device: HKDevice?
-    private var quantities: [(HKQuantity, Date)] = []
+    private let healthStore: HKHealthStore
+    private var quantities: [(HKQuantity, DateInterval)] = []
+    private var discarded = false
 
     public init(healthStore: HKHealthStore, quantityType: HKQuantityType, startDate: Date, device: HKDevice?) {
-        _ = healthStore
+        self.healthStore = healthStore
         self.quantityType = quantityType
         self.startDate = startDate
         self.device = device
         super.init()
     }
 
-    public func insert(_ quantity: HKQuantity, date: Date) async throws {
+    public func insert(_ quantity: HKQuantity, at date: Date) throws {
+        try insert(quantity, for: DateInterval(start: date, duration: 0))
+    }
+
+    public func insert(_ quantity: HKQuantity, for dateInterval: DateInterval) throws {
+        if discarded {
+            throw hkError(.errorInvalidArgument, reason: "quantity series builder was discarded")
+        }
         if !quantityType.`is`(compatibleWith: quantity.unit) {
             throw hkError(.errorInvalidArgument, reason: "quantity unit is not compatible")
         }
-        quantities.append((quantity, date))
+        quantities.append((quantity, dateInterval))
     }
 
     public func finishSeries(metadata: [String: Any]?) async throws -> [HKQuantitySample] {
-        quantities.map { quantity, date in
-            HKQuantitySample(type: quantityType, quantity: quantity, start: date, end: date, device: device, metadata: metadata)
+        try finishSeriesSync(metadata: metadata, endDate: nil)
+    }
+
+    public func finishSeries(metadata: [String: Any]?, endDate: Date?) async throws -> [HKQuantitySample] {
+        try finishSeriesSync(metadata: metadata, endDate: endDate)
+    }
+
+    func finishSeriesSync(metadata: [String: Any]?, endDate: Date?) throws -> [HKQuantitySample] {
+        if discarded {
+            throw hkError(.errorInvalidArgument, reason: "quantity series builder was discarded")
         }
+        let lastEnd = quantities.map(\.1.end).max() ?? endDate ?? startDate
+        let sampleEnd = endDate ?? lastEnd
+        let sample = HKQuantitySample(
+            type: quantityType,
+            quantity: quantities.last?.0 ?? HKQuantity(unit: quantityType.canonicalUnit, doubleValue: 0),
+            start: startDate,
+            end: sampleEnd,
+            device: device,
+            metadata: metadata
+        )
+        HKHealthStorePortable._setQuantitySeries(quantities, for: sample)
+        try healthStore.hkSave([sample])
+        discarded = true
+        return [sample]
     }
 
     public func discard() {
+        discarded = true
         quantities.removeAll()
     }
 }

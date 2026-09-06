@@ -88,6 +88,13 @@ func testQuantitySeriesOptionsAlgebra() {
     _ = options.isEmpty
     options.formUnion([])
     _ = HKQuantitySeriesSampleQueryDescriptor.Options(rawValue: 0)
+    let include = HKQuantitySeriesSampleQueryDescriptor.Options.includeSample
+    let ordered = HKQuantitySeriesSampleQueryDescriptor.Options.orderByQuantitySampleStartDate
+    hkRequire(include.rawValue == 1)
+    hkRequire(ordered.rawValue == 1 << 1)
+    let unionedOptions: HKQuantitySeriesSampleQueryDescriptor.Options = [.includeSample, .orderByQuantitySampleStartDate]
+    hkRequire(unionedOptions.contains(.includeSample) && unionedOptions.contains(.orderByQuantitySampleStartDate))
+    hkRequire(include.isDisjoint(with: ordered))
     let unioned = options.union([])
     _ = unioned.intersection([])
     _ = unioned.symmetricDifference([])
