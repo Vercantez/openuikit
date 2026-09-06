@@ -17,8 +17,8 @@ final class MediaSetupTestPresentationContext: NSObject, MSAuthenticationPresent
 func testAuthenticationPresentationContextConformance() {
     let context = MediaSetupTestPresentationContext()
     let asProtocol: any MSAuthenticationPresentationContext = context
-    let asObject = asProtocol as NSObject
-    precondition(asObject === context)
+    precondition((asProtocol as AnyObject) === context)
+    precondition(asProtocol.presentationAnchor() == nil)
 }
 
 func testPresentationAnchorReturnsOptionalWindow() {
