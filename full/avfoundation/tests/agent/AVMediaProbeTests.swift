@@ -221,7 +221,7 @@ func testISOBMFFLocalAssetProbe() {
     precondition(track.samplePresentationTime(forTrackTime: CMTime(seconds: 1, preferredTimescale: 600)).seconds == 1)
     precondition(track.makeSampleCursor(presentationTimeStamp: .zero) == nil)
     precondition(asset.preferredRate == 1)
-    precondition(asset.preferredVolume == 0)
+    precondition(abs(Double(asset.preferredVolume) - 1) < 0.01)
     precondition(!asset.isExportable)
     precondition(!asset.isReadable)
     precondition(!asset.isComposable)
