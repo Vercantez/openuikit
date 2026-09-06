@@ -42,12 +42,6 @@ public final class WebPage {
         case finished
     }
 
-    public struct BackForwardList {
-        public var currentItem: WKBackForwardListItem? { nil }
-        public var backList: [WKBackForwardListItem] { [] }
-        public var forwardList: [WKBackForwardListItem] { [] }
-    }
-
     @MainActor
     public struct Configuration {
         public enum MediaPlaybackBehavior: Hashable, Sendable {
@@ -131,14 +125,152 @@ public final class WebPage {
         isLoading = false
     }
 
-    public func load(_ request: URLRequest) {
-        url = request.url
-        isLoading = false
+    // Local-only navigation completes synchronously on the host and buffers
+    // its events. No Web Content process, script execution, or fetch is implied.
+    // Native 26.1 oracle: simulated A emits started/committed/finished, title
+    // Alpha, progress 1, and one history entry; plain HTML/data add no entry.
+    @discardableResult
+    public func load(simulatedRequest request: URLRequest, responseHTML htmlString: String)
+        -> some AsyncSequence<NavigationEvent, any Error> {
+        guard let url = request.url else { return failedNavigation(.invalidURL) }
+        return commitLocal(htmlString, mimeType: "text/html", url: url, addsHistory: true)
     }
 
-    public func reload() {}
-    public func goBack() {}
-    public func goForward() {}
+    @discardableResult
+    public func load(simulatedRequest request: URLRequest, response: URLResponse, responseData: Data)
+        -> some AsyncSequence<NavigationEvent, any Error> {
+        guard let url = request.url else { return failedNavigation(.invalidURL) }
+        let encoding: String.Encoding
+        switch response.textEncodingName?.lowercased() {
+        case "utf-8", "utf8": encoding = .utf8
+        case "utf-16", "utf16": encoding = .utf16
+        case nil, "iso-8859-1", "windows-1252": encoding = .windowsCP1252
+        default: return unavailableNavigation("WebPage.load unsupported text encoding")
+        }
+        guard let document = decodeLocalText(responseData, encoding: encoding) else {
+            return unavailableNavigation("WebPage.load invalid text data")
+        }
+        // The native response-URL mismatch probe retains the request URL in
+        // page.url, Item.url, and Item.initialURL (A, not response URL B).
+        return commitLocal(document, mimeType: response.mimeType ?? "application/octet-stream",
+                           url: url, addsHistory: true)
+    }
+
+    @discardableResult
+    public func load(html: String, baseURL: URL = URL(string: "about:blank")!)
+        -> some AsyncSequence<NavigationEvent, any Error> {
+        commitLocal(html, mimeType: "text/html", url: baseURL, addsHistory: false)
+    }
+
+    @discardableResult
+    public func load(_ data: Data, mimeType: String, characterEncoding: String.Encoding, baseURL: URL)
+        -> some AsyncSequence<NavigationEvent, any Error> {
+        guard let document = decodeLocalText(data, encoding: characterEncoding) else {
+            return unavailableNavigation("WebPage.load invalid text data")
+        }
+        return commitLocal(document, mimeType: mimeType, url: baseURL, addsHistory: false)
+    }
+
+    @discardableResult
+    public func load(_ item: BackForwardList.Item)
+        -> some AsyncSequence<NavigationEvent, any Error> {
+        guard let storage = backForwardList.storage,
+              let index = storage.entries.firstIndex(where: { $0.token == item.entryToken }) else {
+            return failedNavigation(.invalidURL)
+        }
+        storage.index = index
+        let entry = storage.entries[index]
+        return commitLocal(entry.document, mimeType: entry.mimeType, url: entry.url, addsHistory: false)
+    }
+
+    @discardableResult
+    public func load(_ request: URLRequest) -> some AsyncSequence<NavigationEvent, any Error> {
+        guard request.url != nil else { return failedNavigation(.invalidURL) }
+        return unavailableNavigation("WebPage.load requires a Web Content process")
+    }
+
+    @discardableResult
+    public func load(_ url: URL?) -> some AsyncSequence<NavigationEvent, any Error> {
+        guard url != nil else { return failedNavigation(.invalidURL) }
+        return unavailableNavigation("WebPage.load requires a Web Content process")
+    }
+
+    @discardableResult
+    public func reload(fromOrigin: Bool = false) -> some AsyncSequence<NavigationEvent, any Error> {
+        unavailableNavigation("WebPage.reload requires a Web Content process")
+    }
+
+    public func goBack() {
+        if let item = backForwardList[-1] { load(item) }
+    }
+    public func goForward() {
+        if let item = backForwardList[1] { load(item) }
+    }
+
+    private func failedNavigation(_ error: NavigationError) -> AsyncThrowingStream<NavigationEvent, any Error> {
+        AsyncThrowingStream { $0.finish(throwing: error) }
+    }
+
+    private func unavailableNavigation(_ operation: String) -> AsyncThrowingStream<NavigationEvent, any Error> {
+        failedNavigation(.failedProvisionalNavigation(WKPortableUnknown(operation)))
+    }
+
+    private func decodeLocalText(_ data: Data, encoding: String.Encoding) -> String? {
+        guard encoding == .isoLatin1 || encoding == .windowsCP1252 else {
+            return String(data: data, encoding: encoding)
+        }
+        // iPhone 17 Pro / iOS 26.1 legacy encoding probe: nil, iso-8859-1,
+        // and windows-1252 all map bytes 0x80...0x9f to these 32 scalars.
+        // Undefined CP1252 positions retain C1 controls; Linux Foundation's
+        // strict decoder rejects those bytes, so preserve the measured values.
+        let c1: [UInt32] = [
+            8364, 129, 8218, 402, 8222, 8230, 8224, 8225,
+            710, 8240, 352, 8249, 338, 141, 381, 143,
+            144, 8216, 8217, 8220, 8221, 8226, 8211, 8212,
+            732, 8482, 353, 8250, 339, 157, 382, 376
+        ]
+        var result = ""
+        for byte in data {
+            let scalar = (0x80...0x9f).contains(byte) ? c1[Int(byte) - 0x80] : UInt32(byte)
+            result.unicodeScalars.append(UnicodeScalar(scalar)!)
+        }
+        return result
+    }
+
+    private func commitLocal(_ document: String, mimeType: String, url: URL, addsHistory: Bool)
+        -> AsyncThrowingStream<NavigationEvent, any Error> {
+        let mime = mimeType.lowercased()
+        guard mime == "text/html" || mime == "text/plain" else {
+            return unavailableNavigation("WebPage.load unsupported MIME type")
+        }
+        let parsedTitle = mime == "text/html" ? WKPortableHTMLTitle(document) : nil
+        self.url = url
+        title = parsedTitle ?? ""
+        estimatedProgress = 1
+        isLoading = false
+        // Only the supplied local document is modelled. Subresource loading,
+        // redirects, JavaScript, and rendering remain unsupported.
+        hasOnlySecureContent = url.scheme?.lowercased() == "https"
+        if addsHistory {
+            let entry = WebPageHistoryEntry(url: url, title: parsedTitle,
+                                            document: document, mimeType: mime)
+            if let storage = backForwardList.storage {
+                storage.append(entry)
+            } else {
+                backForwardList = BackForwardList(storage: WebPageHistoryStorage(first: entry))
+            }
+        } else if let storage = backForwardList.storage {
+            // Native HTML-after-back probe: keep history URL/forward entries,
+            // update its title, and restore the original document on revisit.
+            storage.entries[storage.index].title = parsedTitle
+        }
+        return AsyncThrowingStream { continuation in
+            continuation.yield(.startedProvisionalNavigation)
+            continuation.yield(.committed)
+            continuation.yield(.finished)
+            continuation.finish()
+        }
+    }
 
     public func callJavaScript(
         _ javaScriptString: String,
