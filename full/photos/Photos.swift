@@ -263,21 +263,15 @@ public final class PHAsset: PHObject, @unchecked Sendable {
                 options: options
             )
         }
-        if let live = PhotosLibraryStore.album(identifier: assetCollection.localIdentifier) {
-            let identifiers = Set(live.transientAssetIdentifiers)
-            return photosFetchAssets(
-                matching: { identifiers.contains($0.localIdentifier) },
-                options: options
-            )
+        let albumIdentifier = assetCollection.localIdentifier
+        if PhotosLibraryStore.album(identifier: albumIdentifier) != nil {
+            return photosFetchAssetsInAlbum(identifier: albumIdentifier, options: options)
         }
-        let identifiers = Set(assetCollection.transientAssetIdentifiers)
+        let identifiers = assetCollection.transientAssetIdentifiers
         if identifiers.isEmpty {
             return photosFetchAssets(matching: { _ in false }, options: options)
         }
-        return photosFetchAssets(
-            matching: { identifiers.contains($0.localIdentifier) },
-            options: options
-        )
+        return photosFetchAssetsInOrder(identifiers, options: options)
     }
 
     public static func fetchKeyAssets(

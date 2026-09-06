@@ -30,14 +30,18 @@ open class PHCollection: PHObject, @unchecked Sendable {
         guard photosReadAccessGranted() else {
             return PHFetchResult([])
         }
-        let wanted = Set(collectionList.childIdentifiers)
+        let wanted = collectionList.childIdentifiers
+        let rank = Dictionary(uniqueKeysWithValues: wanted.enumerated().map { ($1, $0) })
         let albums: [PHCollection] = PhotosLibraryStore.userAlbums().filter {
-            wanted.contains($0.localIdentifier)
+            rank[$0.localIdentifier] != nil
         }
         let lists: [PHCollection] = PhotosLibraryStore.userLists().filter {
-            wanted.contains($0.localIdentifier)
+            rank[$0.localIdentifier] != nil
         }
-        return PHFetchResult(albums + lists)
+        let combined = (albums + lists).sorted {
+            (rank[$0.localIdentifier] ?? Int.max) < (rank[$1.localIdentifier] ?? Int.max)
+        }
+        return PHFetchResult(combined)
     }
 
     public static func fetchTopLevelUserCollections(

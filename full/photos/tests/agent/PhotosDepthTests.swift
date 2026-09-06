@@ -54,8 +54,8 @@ func testAlbumMembershipInsertMoveRemoveReplace() {
         let change = PHAssetCollectionChangeRequest(for: movedAlbum)!
         change.removeAssets(at: IndexSet(integer: 2))
         change.insertAssets([assets[0]], at: IndexSet(integer: 0))
-        change.replaceAssets(at: IndexSet(integer: 1), withAssets: [assets[2]])
-        change.removeAssets([assets[2]])
+        change.replaceAssets(at: IndexSet(integer: 2), withAssets: [assets[2]])
+        change.removeAssets([assets[1]])
     }
     let finalAlbum = PHAssetCollection.fetchAssetCollections(
         withLocalIdentifiers: [albumID!],
@@ -64,6 +64,7 @@ func testAlbumMembershipInsertMoveRemoveReplace() {
     let finalOrder = PHAsset.fetchAssets(in: finalAlbum, options: nil)
     precondition(finalOrder.count == 2)
     precondition(finalOrder[0].localIdentifier == assets[0].localIdentifier)
+    precondition(finalOrder[1].localIdentifier == assets[2].localIdentifier)
 }
 
 func testAlbumChangeRequestFromFetchResultSeedsMembership() {
@@ -167,8 +168,8 @@ func testCollectionListChildrenMutations() {
         change.moveChildCollections(at: IndexSet(integer: 0), to: 2)
         change.removeChildCollections(at: IndexSet(integer: 2))
         change.insertChildCollections([albums[0]], at: IndexSet(integer: 0))
-        change.replaceChildCollections(at: IndexSet(integer: 1), withChildCollections: [albums[2]])
-        change.removeChildCollections([albums[2]])
+        change.replaceChildCollections(at: IndexSet(integer: 2), withChildCollections: [albums[2]])
+        change.removeChildCollections([albums[1]])
     }
     live = PHCollectionList.fetchCollectionLists(
         withLocalIdentifiers: [listID!],
@@ -177,6 +178,7 @@ func testCollectionListChildrenMutations() {
     children = PHCollection.fetchCollections(in: live, options: nil)
     precondition(children.count == 2)
     precondition(children[0].localIdentifier == albums[0].localIdentifier)
+    precondition(children[1].localIdentifier == albums[2].localIdentifier)
 }
 
 func testCollectionListChangeRequestFromChildrenAndContaining() {
@@ -264,10 +266,10 @@ func testObjectChangeDetailsFavoriteAndDelete() {
     let observer = PhotosSynchronousObserver()
     PHPhotoLibrary.shared().register(observer)
     let before = assets[0]
+    _ = PHAssetChangeRequest(forAsset: before)
     try! PHPhotoLibrary.shared().performChangesAndWait {
         let change = PHAssetChangeRequest(for: before)
         change.isFavorite = true
-        _ = PHAssetChangeRequest(forAsset: before)
     }
     let favoriteChange = observer.lastChange
     precondition(favoriteChange != nil)
@@ -317,7 +319,6 @@ func testPersistentObjectChangeDetailsUpdatedAndDeleted() {
         PHAssetCollectionChangeRequest.deleteAssetCollections([album])
     }
     let result = try! PHPhotoLibrary.shared().fetchPersistentChanges(since: token)
-    precondition(result is PHPersistentChangeFetchResult)
     let iterator = PHPersistentChangeFetchResult.Iterator(fetchResult: result)
     let change = iterator.next()
     precondition(change != nil)
@@ -477,30 +478,30 @@ func testNSCodingInitsFailClosed() {
 
 func testChangeRequestBaseAndEmptyChange() {
     let changeRequest = PHChangeRequest()
-    precondition(changeRequest is NSObject)
+    precondition(changeRequest.hash == changeRequest.hash)
     let created = PHAssetChangeRequest.creationRequestForAsset(from: UIImage())
-    precondition(created is PHChangeRequest)
+    precondition(created.placeholderForCreatedAsset != nil)
     let empty = PHChange()
     let asset = PHAsset(localIdentifier: "none", mediaType: .image)
     precondition(empty.changeDetails(for: asset) == nil)
 }
 
 func testTypealiasHandlersAndRequestIDs() {
-    var imageProgress: PHAssetImageProgressHandler = { _, _, stop, _ in
+    let imageProgress: PHAssetImageProgressHandler = { _, _, stop, _ in
         stop.pointee = false
     }
     var stop = ObjCBool(false)
     imageProgress(0.5, nil, &stop, nil)
     precondition(stop.boolValue == false)
 
-    var videoProgress: PHAssetVideoProgressHandler = { fraction, _, _, _ in
+    let videoProgress: PHAssetVideoProgressHandler = { fraction, _, _, _ in
         precondition(fraction == 0.25)
     }
     videoProgress(0.25, nil, &stop, nil)
     let video = PHVideoRequestOptions()
     video.progressHandler = videoProgress
 
-    var resourceProgress: PHAssetResourceProgressHandler = { value in
+    let resourceProgress: PHAssetResourceProgressHandler = { value in
         precondition(value == 0.75)
     }
     resourceProgress(0.75)
@@ -520,7 +521,7 @@ func testPhotosErrorPatternMatchAndEquality() {
     precondition(left != PHPhotosError(.accessUserDenied))
     let error: any Error = left
     precondition(PHPhotosError.Code.userCancelled ~= error)
-    precondition(PHPhotosError.Code.accessUserDenied ~= error == false)
+    precondition((PHPhotosError.Code.accessUserDenied ~= error) == false)
 }
 
 func testOptionSetSynthesizedAlgebra() {
@@ -532,8 +533,8 @@ func testOptionSetSynthesizedAlgebra() {
     precondition(emptySource.isEmpty)
 
     var burst: PHAssetBurstSelectionType = [.autoPick]
-    let replaced = burst.update(with: .userPick)
-    precondition(replaced == .autoPick)
+    precondition(burst.update(with: .autoPick) == .autoPick)
+    precondition(burst.update(with: .userPick) == nil)
     precondition(burst.contains(.userPick))
     burst.subtract(.userPick)
     precondition(burst.contains(.userPick) == false)

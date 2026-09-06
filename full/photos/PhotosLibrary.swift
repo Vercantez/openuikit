@@ -1085,6 +1085,41 @@ func photosFetchAssets(
     }
 }
 
+func photosFetchAssetsInAlbum(
+    identifier: String,
+    options: PHFetchOptions?
+) -> PHFetchResult<PHAsset> {
+    let apply = { () -> [PHAsset] in
+        let ordered = PhotosLibraryStore.album(identifier: identifier)?.transientAssetIdentifiers ?? []
+        return photosApplyFetchInOrder(ordered, options: options)
+    }
+    return PHFetchResult(apply(), refetch: apply)
+}
+
+func photosFetchAssetsInOrder(
+    _ identifiers: [String],
+    options: PHFetchOptions?
+) -> PHFetchResult<PHAsset> {
+    let objects = photosApplyFetchInOrder(identifiers, options: options)
+    return PHFetchResult(objects) {
+        photosApplyFetchInOrder(identifiers, options: options)
+    }
+}
+
+func photosApplyFetchInOrder(
+    _ identifiers: [String],
+    options: PHFetchOptions?
+) -> [PHAsset] {
+    let rank = Dictionary(uniqueKeysWithValues: identifiers.enumerated().map { ($1, $0) })
+    let fetched = photosApplyFetch(
+        matching: { rank[$0.localIdentifier] != nil },
+        options: options
+    )
+    return fetched.sorted {
+        (rank[$0.localIdentifier] ?? Int.max) < (rank[$1.localIdentifier] ?? Int.max)
+    }
+}
+
 func photosNotifyObservers(_ applied: PhotosAppliedChange) {
     guard !applied.isEmpty else { return }
     let change = PHChange(applied: applied)
