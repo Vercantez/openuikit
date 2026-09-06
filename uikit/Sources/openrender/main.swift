@@ -121,11 +121,15 @@ try MainActor.assumeIsolated {
            let s = Double(v), s > 0 { realAppScale = CGFloat(s) }
         try FileManager.default.createDirectory(atPath: outdir, withIntermediateDirectories: true)
         for variant in realAppVariants {
+            if let only = ProcessInfo.processInfo.environment["OPENUIKIT_REALAPP_ONLY"],
+               !only.isEmpty, variant.name != only {
+                continue
+            }
             let result = runRealApp(variant, assets: assets)
-            try writeJSONFile(result.layout, path: "\(outdir)/\(result.name).layout.json")
             for (file, data) in result.pngs {
                 try writeBinaryFile(data, path: "\(outdir)/\(file)")
             }
+            try writeJSONFile(result.layout, path: "\(outdir)/\(result.name).layout.json")
             print("rendered \(result.name)")
         }
         if let inkLogPath {

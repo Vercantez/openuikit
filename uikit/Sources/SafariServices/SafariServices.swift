@@ -29,6 +29,8 @@
 //     95.279 → 94.781. OPEN.
 import UIKit
 
+@_exported import UIKit
+
 // MARK: - Content blocker
 
 public final class SFContentBlockerState: NSObject {

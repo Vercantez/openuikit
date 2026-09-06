@@ -88,8 +88,14 @@ open class UIPrintInfo: NSObject {
 
     public class func printInfo() -> UIPrintInfo { UIPrintInfo() }
     public class func printInfo(dictionary: [AnyHashable: Any]?) -> UIPrintInfo {
+        UIPrintInfo(dictionary: dictionary)
+    }
+
+    /// Focus OpenUtils.swift:19 `UIPrintInfo(dictionary: nil)`. Convenience
+    /// so NSObject.init() stays inherited for `printInfo()`.
+    public convenience init(dictionary: [AnyHashable: Any]?) {
+        self.init()
         _ = dictionary
-        return UIPrintInfo()
     }
 }
 
@@ -106,6 +112,11 @@ open class UIPrintPageRenderer: NSObject {
     public var paperRect: CGRect = .zero
     public var printableRect: CGRect = .zero
     public var numberOfPages: Int { 0 }
+
+    /// Focus OpenUtils.swift:25. Fail-closed: no spooler.
+    open func addPrintFormatter(_ formatter: UIPrintFormatter, startingAtPageAt pageIndex: Int) {
+        _ = (formatter, pageIndex)
+    }
 }
 
 @preconcurrency @MainActor
@@ -185,6 +196,11 @@ open class UIPrintInteractionController: NSObject {
     }
 
     public func dismiss(animated: Bool) {}
+}
+
+extension UIView {
+    /// Focus WebViewController.swift:87 `browserView.viewPrintFormatter()`.
+    open func viewPrintFormatter() -> UIPrintFormatter { UIPrintFormatter() }
 }
 
 @preconcurrency @MainActor

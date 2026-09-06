@@ -34,6 +34,8 @@
 #endif
 #if canImport(ObjectiveC)
 @_exported import ObjectiveC
+#elseif canImport(OpenUIKitObjectiveC)
+@_exported import OpenUIKitObjectiveC
 #endif
 @_exported import OpenUIKit
 
@@ -306,6 +308,7 @@ public typealias NSNotification = OpenUIKit.NSNotification
 #endif
 public typealias NotificationCenter = OpenUIKit.NotificationCenter
 public typealias OperationQueue = OpenUIKit.OperationQueue
+public typealias Timer = OpenUIKit.Timer
 
 // Foundation/AppKit also ships an NSDiffableDataSourceSnapshot declaration.
 // UIKit applications must resolve the snapshot paired with this shim's

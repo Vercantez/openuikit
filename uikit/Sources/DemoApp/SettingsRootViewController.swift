@@ -148,7 +148,7 @@ public final class SettingsRootViewController: UIViewController,
     /// showcase app's floating tab bar). Set before the view loads.
     public var extraBottomInset: CGFloat = 0
 
-    public override init() { super.init() }
+    public init() { super.init() }
 
     public override func viewDidLoad() {
         title = "Settings"

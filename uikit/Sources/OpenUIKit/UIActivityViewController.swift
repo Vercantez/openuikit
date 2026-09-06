@@ -117,6 +117,17 @@ open class UIActivityItemProvider: Operation, UIActivityItemSource, @unchecked S
 
     open var item: Any { placeholderItem as Any }
 
+    /// Focus TitleActivityItemProvider.swift:30 overrides this. Protocol
+    /// default on UIActivityItemSource is not `override`-able from a
+    /// subclass (MEASURED merge-focus3 Blockzilla).
+    open func activityViewController(
+        _ activityViewController: UIActivityViewController,
+        subjectForActivityType activityType: UIActivity.ActivityType?
+    ) -> String {
+        _ = (activityViewController, activityType)
+        return placeholderItem as? String ?? ""
+    }
+
     public func activityViewControllerPlaceholderItem(
         _ activityViewController: UIActivityViewController
     ) -> Any {
