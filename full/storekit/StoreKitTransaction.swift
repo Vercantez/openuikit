@@ -629,19 +629,32 @@ public struct Storefront: Hashable, Sendable, Identifiable {
 
     public struct Storefronts: AsyncSequence {
         public typealias Element = Storefront
+        let snapshot: [Storefront]
+        public init(snapshot: [Storefront] = []) {
+            self.snapshot = snapshot
+        }
         public struct AsyncIterator: AsyncIteratorProtocol {
-            var emitted = false
+            var snapshot: [Storefront]
+            var index = 0
             public mutating func next() async -> Storefront? {
-                if emitted { return nil }
-                emitted = true
-                return await Storefront.current
+                guard index < snapshot.count else { return nil }
+                let value = snapshot[index]
+                index += 1
+                return value
             }
         }
-        public func makeAsyncIterator() -> AsyncIterator { AsyncIterator() }
+        public func makeAsyncIterator() -> AsyncIterator {
+            AsyncIterator(snapshot: snapshot)
+        }
     }
 
     public static var current: Storefront? {
         get async { LocalTestingStore.shared.currentStorefront }
     }
-    public static var updates: Storefronts { Storefronts() }
+    public static var updates: Storefronts {
+        if let current = LocalTestingStore.shared.currentStorefront {
+            return Storefronts(snapshot: [current])
+        }
+        return Storefronts(snapshot: [])
+    }
 }

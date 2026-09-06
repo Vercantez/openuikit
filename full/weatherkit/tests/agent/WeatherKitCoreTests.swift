@@ -139,6 +139,8 @@ func testWeatherErrorLocalizedAndHashable() {
     precondition(unknown.helpAnchor == nil)
     precondition(denied.localizedDescription == denied.errorDescription)
     precondition(unknown.localizedDescription == unknown.errorDescription)
+    let asError: Error = unknown
+    precondition(asError.localizedDescription == unknown.errorDescription)
     var hasher = Hasher()
     denied.hash(into: &hasher)
     unknown.hash(into: &hasher)

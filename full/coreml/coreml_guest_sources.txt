@@ -6,3 +6,4 @@ full/coreml/MLModelIO.swift
 full/coreml/MLMultiArray.swift
 full/coreml/MLShapedArray.swift
 full/coreml/MLTasks.swift
+full/coreml/MLTensor.swift

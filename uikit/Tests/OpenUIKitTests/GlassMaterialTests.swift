@@ -51,6 +51,23 @@ final class GlassMaterialTests: XCTestCase {
         XCTAssertLessThanOrEqual(abs(p.b - 220), 2, "\(p)")
     }
 
+    func testIOSMixOverRedAndYellowClosesChroma() {
+        // MEASURED /tmp/materials-probe tab-bar, SE 2x / iOS 26.1.
+        // Unclamped sat 5.651; clamp-before-tint left yellow B at 220.
+        let red = UIColor(red: 255.0 / 255.0, green: 56.0 / 255.0,
+                          blue: 60.0 / 255.0, alpha: 1)
+        let rp = px(renderGlass(over: red, cut: .iOS), 100, 80)
+        XCTAssertLessThanOrEqual(abs(rp.r - 255), 2, "\(rp)")
+        XCTAssertLessThanOrEqual(abs(rp.g - 201), 2, "\(rp)")
+        XCTAssertLessThanOrEqual(abs(rp.b - 204), 2, "\(rp)")
+        let yellow = UIColor(red: 242.0 / 255.0, green: 179.0 / 255.0,
+                             blue: 64.0 / 255.0, alpha: 1)
+        let yp = px(renderGlass(over: yellow, cut: .iOS), 100, 80)
+        XCTAssertLessThanOrEqual(abs(yp.r - 255), 2, "\(yp)")
+        XCTAssertLessThanOrEqual(abs(yp.g - 240), 2, "\(yp)")
+        XCTAssertLessThanOrEqual(abs(yp.b - 156), 2, "\(yp)")
+    }
+
     func testDarkFloatingGlassMixOverBlackIs57() {
         // MEASURED /tmp/sheetfill_dark medium_black, SE 2x / iOS 26.1:
         // α=203/255, T=57/203 over black → 57.

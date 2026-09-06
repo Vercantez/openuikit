@@ -256,7 +256,12 @@ open class MPSImage: NSObject {
         readBytes(
             dataBytes,
             dataLayout: dataLayout,
-            bytesPerRow: width * mpsHostBytesPerChannel(featureChannelFormat) * featureChannels,
+            bytesPerRow: mpsHostBytesPerRow(
+                width: width,
+                featureChannels: featureChannels,
+                format: featureChannelFormat,
+                layout: dataLayout
+            ),
             region: MTLRegion.make2D(0, 0, width, height),
             featureChannelInfo: params,
             imageIndex: imageIndex
@@ -291,11 +296,12 @@ open class MPSImage: NSObject {
         featureChannelInfo: MPSImageReadWriteParams,
         imageIndex: Int
     ) {
-        _ = (dataLayout, bytesPerImage, imageIndex)
+        _ = (bytesPerImage, imageIndex)
         copyRegion(
             region,
             featureChannelInfo: featureChannelInfo,
             bytesPerRow: bytesPerRow,
+            dataLayout: dataLayout,
             destination: dataBytes,
             writing: false
         )
@@ -313,7 +319,12 @@ open class MPSImage: NSObject {
         writeBytes(
             dataBytes,
             dataLayout: dataLayout,
-            bytesPerRow: width * mpsHostBytesPerChannel(featureChannelFormat) * featureChannels,
+            bytesPerRow: mpsHostBytesPerRow(
+                width: width,
+                featureChannels: featureChannels,
+                format: featureChannelFormat,
+                layout: dataLayout
+            ),
             region: MTLRegion.make2D(0, 0, width, height),
             featureChannelInfo: params,
             imageIndex: imageIndex
@@ -348,11 +359,12 @@ open class MPSImage: NSObject {
         featureChannelInfo: MPSImageReadWriteParams,
         imageIndex: Int
     ) {
-        _ = (dataLayout, bytesPerImage, imageIndex)
+        _ = (bytesPerImage, imageIndex)
         copyRegion(
             region,
             featureChannelInfo: featureChannelInfo,
             bytesPerRow: bytesPerRow,
+            dataLayout: dataLayout,
             destination: UnsafeMutableRawPointer(mutating: dataBytes),
             writing: true
         )
@@ -384,11 +396,13 @@ open class MPSImage: NSObject {
         _ region: MTLRegion,
         featureChannelInfo: MPSImageReadWriteParams,
         bytesPerRow: Int,
+        dataLayout: MPSDataLayout,
         destination: UnsafeMutableRawPointer,
         writing: Bool
     ) {
         let channelBytes = mpsHostBytesPerChannel(featureChannelFormat)
         let channels = max(featureChannelInfo.numberOfFeatureChannelsToReadWrite, 1)
+        let channelOffset = featureChannelInfo.featureChannelOffset
         let x0 = max(region.origin.x, 0)
         let y0 = max(region.origin.y, 0)
         let rw = min(region.size.width, width - x0)
@@ -396,20 +410,41 @@ open class MPSImage: NSObject {
         guard rw > 0, rh > 0 else { return }
         hostStorage.withUnsafeMutableBytes { buffer in
             guard let base = buffer.baseAddress else { return }
-            for row in 0..<rh {
-                let imageRow = (y0 + row) * width * featureChannels * channelBytes
-                    + x0 * featureChannels * channelBytes
-                    + featureChannelInfo.featureChannelOffset * channelBytes
-                let externalRow = row * max(bytesPerRow, rw * channels * channelBytes)
-                let length = rw * channels * channelBytes
-                if writing {
-                    let src = UnsafeRawPointer(destination).advanced(by: externalRow)
-                    base.advanced(by: imageRow).copyMemory(from: src, byteCount: length)
-                } else {
-                    destination.advanced(by: externalRow).copyMemory(
-                        from: UnsafeRawPointer(base.advanced(by: imageRow)),
-                        byteCount: length
-                    )
+            if dataLayout == .featureChannelsxHeightxWidth {
+                let rowBytes = max(bytesPerRow, rw * channelBytes)
+                let planeBytes = rowBytes * rh
+                for c in 0..<channels {
+                    let imageChannel = channelOffset + c
+                    for row in 0..<rh {
+                        for col in 0..<rw {
+                            let imageIndex = ((y0 + row) * width + (x0 + col)) * featureChannels + imageChannel
+                            let externalIndex = c * planeBytes + row * rowBytes + col * channelBytes
+                            let imagePtr = base.advanced(by: imageIndex * channelBytes)
+                            let externalPtr = destination.advanced(by: externalIndex)
+                            if writing {
+                                imagePtr.copyMemory(from: UnsafeRawPointer(externalPtr), byteCount: channelBytes)
+                            } else {
+                                externalPtr.copyMemory(from: UnsafeRawPointer(imagePtr), byteCount: channelBytes)
+                            }
+                        }
+                    }
+                }
+            } else {
+                for row in 0..<rh {
+                    let imageRow = (y0 + row) * width * featureChannels * channelBytes
+                        + x0 * featureChannels * channelBytes
+                        + channelOffset * channelBytes
+                    let externalRow = row * max(bytesPerRow, rw * channels * channelBytes)
+                    let length = rw * channels * channelBytes
+                    if writing {
+                        let src = UnsafeRawPointer(destination).advanced(by: externalRow)
+                        base.advanced(by: imageRow).copyMemory(from: src, byteCount: length)
+                    } else {
+                        destination.advanced(by: externalRow).copyMemory(
+                            from: UnsafeRawPointer(base.advanced(by: imageRow)),
+                            byteCount: length
+                        )
+                    }
                 }
             }
         }
@@ -570,4 +605,17 @@ func mpsHostBytesPerChannel(_ format: MPSImageFeatureChannelFormat) -> Int {
     default:
         return 1
     }
+}
+
+func mpsHostBytesPerRow(
+    width: Int,
+    featureChannels: Int,
+    format: MPSImageFeatureChannelFormat,
+    layout: MPSDataLayout
+) -> Int {
+    let channelBytes = mpsHostBytesPerChannel(format)
+    if layout == .featureChannelsxHeightxWidth {
+        return max(width, 1) * channelBytes
+    }
+    return max(width, 1) * max(featureChannels, 1) * channelBytes
 }

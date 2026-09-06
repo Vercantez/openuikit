@@ -46,6 +46,21 @@ enum CoreMLWire {
         key(field, wire: 0) + varint(value)
     }
 
+    static func float64(_ field: UInt64, _ value: Double) -> [UInt8] {
+        var bits = value.bitPattern.littleEndian
+        let bytes = withUnsafeBytes(of: &bits) { Array($0) }
+        return key(field, wire: 1) + bytes
+    }
+
+    static func packedDoubles(_ field: UInt64, _ values: [Double]) -> [UInt8] {
+        var payload: [UInt8] = []
+        for value in values {
+            var bits = value.bitPattern.littleEndian
+            payload += withUnsafeBytes(of: &bits) { Array($0) }
+        }
+        return message(field, payload)
+    }
+
     static func bool(_ field: UInt64, _ value: Bool) -> [UInt8] {
         value ? uint64(field, 1) : []
     }
@@ -134,6 +149,20 @@ struct CoreMLProtoReader {
     static func int64(_ payload: [UInt8]) -> Int64 {
         Int64(bitPattern: varint(payload))
     }
+
+    static func float64(_ payload: [UInt8]) -> Double {
+        guard payload.count >= 8 else { return 0 }
+        let bits = payload.prefix(8).enumerated().reduce(UInt64(0)) { partial, item in
+            partial | (UInt64(item.element) << (UInt64(item.offset) * 8))
+        }
+        return Double(bitPattern: bits)
+    }
+
+    static func packedFloat64(_ payload: [UInt8]) -> [Double] {
+        stride(from: 0, to: payload.count, by: 8).map { offset in
+            float64(Array(payload[offset..<min(offset + 8, payload.count)]))
+        }
+    }
 }
 
 // MARK: - Compiled program
@@ -141,6 +170,7 @@ struct CoreMLProtoReader {
 enum CoreMLProgram {
     case identity
     case dictVectorizer(stringToIndex: [String], int64ToIndex: [Int64])
+    case glmRegressor(weights: [[Double]], offset: [Double], transform: Int32)
     case pipeline([CoreMLCompiledModel])
     case customLayer
     case customModel
@@ -187,6 +217,9 @@ enum CoreMLModelCodec {
         let metadataURL = url.appendingPathComponent("metadata.json")
         let json = try JSONSerialization.data(withJSONObject: metadata, options: [.prettyPrinted, .sortedKeys])
         try json.write(to: metadataURL)
+        let plistURL = url.appendingPathComponent("metadata.plist")
+        let plist = try PropertyListSerialization.data(fromPropertyList: metadata, format: .xml, options: 0)
+        try plist.write(to: plistURL)
     }
 
     static func loadCompiledDirectory(_ url: URL) throws -> CoreMLCompiledModel {
@@ -194,22 +227,18 @@ enum CoreMLModelCodec {
         if FileManager.default.fileExists(atPath: specificationURL.path) {
             let data = try Data(contentsOf: specificationURL)
             var spec = try decodeModel(data)
-            if let metadataURL = optionalFile(url.appendingPathComponent("metadata.json")),
-               let json = try? Data(contentsOf: metadataURL),
-               let object = try? JSONSerialization.jsonObject(with: json) as? [String: Any] {
+            if let object = try? loadMetadataObject(from: url) {
                 spec.description = mergeMetadata(spec.description, json: object)
             }
             return spec
         }
-        if let metadataURL = optionalFile(url.appendingPathComponent("metadata.json")),
-           let json = try? Data(contentsOf: metadataURL),
-           let object = try? JSONSerialization.jsonObject(with: json) as? [String: Any] {
+        if let object = try? loadMetadataObject(from: url) {
             var spec = CoreMLCompiledModel(
                 specificationVersion: 1,
                 isUpdatable: object["isUpdatable"] as? Bool ?? false,
                 description: description(fromMetadataJSON: object),
                 program: .unsupported(field: 0),
-                specificationData: json
+                specificationData: Data()
             )
             spec.description = mergeMetadata(spec.description, json: object)
             return spec
@@ -219,6 +248,20 @@ enum CoreMLModelCodec {
 
     private static func optionalFile(_ url: URL) -> URL? {
         FileManager.default.fileExists(atPath: url.path) ? url : nil
+    }
+
+    static func loadMetadataObject(from directory: URL) throws -> [String: Any] {
+        if let plistURL = optionalFile(directory.appendingPathComponent("metadata.plist")),
+           let data = try? Data(contentsOf: plistURL),
+           let object = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any] {
+            return object
+        }
+        if let jsonURL = optionalFile(directory.appendingPathComponent("metadata.json")),
+           let json = try? Data(contentsOf: jsonURL),
+           let object = try? JSONSerialization.jsonObject(with: json) as? [String: Any] {
+            return object
+        }
+        throw coreMLNoModelIO("compiled model is missing metadata.plist and metadata.json")
     }
 
     static func decodeModel(_ data: Data) throws -> CoreMLCompiledModel {
@@ -248,6 +291,9 @@ enum CoreMLModelCodec {
                 sawType = true
             case 502:
                 program = .neuralNetwork
+                sawType = true
+            case 300:
+                program = try decodeGLMRegressor(field.payload)
                 sawType = true
             case 555:
                 program = .customModel
@@ -614,6 +660,48 @@ enum CoreMLModelCodec {
         return .dictVectorizer(stringToIndex: strings, int64ToIndex: ints)
     }
 
+    static func decodeGLMRegressor(_ payload: [UInt8]) throws -> CoreMLProgram {
+        var reader = CoreMLProtoReader(payload)
+        var weights: [[Double]] = []
+        var offset: [Double] = []
+        var transform: Int32 = 0
+        while let field = try reader.next() {
+            switch field.field {
+            case 1:
+                weights.append(try decodeDoubleArray(field.payload, wire: field.wire))
+            case 2:
+                if field.wire == 2 {
+                    offset.append(contentsOf: CoreMLProtoReader.packedFloat64(field.payload))
+                } else {
+                    offset.append(CoreMLProtoReader.float64(field.payload))
+                }
+            case 3:
+                transform = CoreMLProtoReader.int32(field.payload)
+            default:
+                break
+            }
+        }
+        return .glmRegressor(weights: weights, offset: offset, transform: transform)
+    }
+
+    static func decodeDoubleArray(_ payload: [UInt8], wire: UInt64) throws -> [Double] {
+        if wire == 1 {
+            return [CoreMLProtoReader.float64(payload)]
+        }
+        var reader = CoreMLProtoReader(payload)
+        var values: [Double] = []
+        while let field = try reader.next() {
+            if field.field == 1 {
+                if field.wire == 2 {
+                    values.append(contentsOf: CoreMLProtoReader.packedFloat64(field.payload))
+                } else {
+                    values.append(CoreMLProtoReader.float64(field.payload))
+                }
+            }
+        }
+        return values
+    }
+
     static func decodeStringVector(_ payload: [UInt8]) throws -> [String] {
         var reader = CoreMLProtoReader(payload)
         var values: [String] = []
@@ -776,6 +864,7 @@ enum CoreMLModelCodec {
         switch program {
         case .identity: return "identity"
         case .dictVectorizer: return "dictVectorizer"
+        case .glmRegressor: return "glmRegressor"
         case .pipeline: return "pipeline"
         case .customLayer: return "customLayer"
         case .customModel: return "customModel"
@@ -940,6 +1029,41 @@ public enum CoreMLSpecification {
         return Data(model)
     }
 
+    public static func glmRegressorModel(
+        inputName: String = "x",
+        outputName: String = "y",
+        weights: [Double],
+        offset: Double,
+        author: String = "depth-pass"
+    ) -> Data {
+        let input = feature(name: inputName, type: .multiArray, shape: [weights.count], dataType: .double)
+        let output = feature(name: outputName, type: .multiArray, shape: [1], dataType: .double)
+        var weightRow: [UInt8] = []
+        for value in weights {
+            weightRow += CoreMLWire.float64(1, value)
+        }
+        var glm: [UInt8] = []
+        glm += CoreMLWire.message(1, weightRow)
+        glm += CoreMLWire.float64(2, offset)
+        var model: [UInt8] = []
+        model += CoreMLWire.int32(1, 1)
+        model += CoreMLWire.message(
+            2,
+            description(
+                inputs: [input],
+                outputs: [output],
+                metadata: metadata(
+                    author: author,
+                    description: "glm",
+                    version: "1.0",
+                    license: "BSD"
+                )
+            )
+        )
+        model += CoreMLWire.message(300, glm)
+        return Data(model)
+    }
+
     public static func pipelineModel(models: [Data], names: [String] = []) -> Data {
         var pipeline: [UInt8] = []
         for nested in models {
@@ -1020,6 +1144,14 @@ func coreMLPredict(
         return try coreMLIdentityPredict(spec, from: input)
     case .dictVectorizer(let strings, let ints):
         return try coreMLDictVectorizerPredict(spec, from: input, stringToIndex: strings, int64ToIndex: ints)
+    case .glmRegressor(let weights, let offset, let transform):
+        return try coreMLGLMPredict(
+            spec,
+            from: input,
+            weights: weights,
+            offset: offset,
+            transform: transform
+        )
     case .pipeline(let models):
         var current: any MLFeatureProvider = input
         for model in models {
@@ -1092,4 +1224,38 @@ private func coreMLDictVectorizerPredict(
     }
     let outputName = spec.description.outputDescriptionsByName.keys.sorted().first ?? "output"
     return try MLDictionaryFeatureProvider(dictionary: [outputName: MLFeatureValue(multiArray: array)])
+}
+
+private func coreMLGLMPredict(
+    _ spec: CoreMLCompiledModel,
+    from input: any MLFeatureProvider,
+    weights: [[Double]],
+    offset: [Double],
+    transform: Int32
+) throws -> any MLFeatureProvider {
+    guard transform == 0 else {
+        throw coreMLError(
+            .generic,
+            "neural network layers not implemented (GLM post-evaluation transform \(transform))"
+        )
+    }
+    let inputName = spec.description.inputDescriptionsByName.keys.sorted().first
+        ?? input.featureNames.sorted().first
+    guard let inputName, let feature = input.featureValue(for: inputName), let array = feature.multiArrayValue else {
+        throw coreMLError(.featureType, "GLMRegressor missing multi-array input.")
+    }
+    let outputs = max(weights.count, 1)
+    let result = try MLMultiArray(shape: [NSNumber(value: outputs)], dataType: .double)
+    for (rowIndex, row) in weights.enumerated() {
+        var dot = offset.indices.contains(rowIndex) ? offset[rowIndex] : (offset.first ?? 0)
+        for (column, weight) in row.enumerated() where column < array.count {
+            dot += weight * array[column].doubleValue
+        }
+        result[rowIndex] = NSNumber(value: dot)
+    }
+    if weights.isEmpty {
+        result[0] = NSNumber(value: offset.first ?? 0)
+    }
+    let outputName = spec.description.outputDescriptionsByName.keys.sorted().first ?? "y"
+    return try MLDictionaryFeatureProvider(dictionary: [outputName: MLFeatureValue(multiArray: result)])
 }

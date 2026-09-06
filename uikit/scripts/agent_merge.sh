@@ -72,9 +72,10 @@ fi
 # route the same way (verify66 @ 302e119b: NSUbiquitousKeyValueStore.swift). The
 # siblings guard it: `#if canImport(Foundation)` / `#elseif canImport(Foundation)`
 # on the line before. Refuse an added `import Foundation` whose previous diff
-# line does not name canImport(Foundation).
+# line does not name canImport(Foundation). Removed lines (`-…`) are not context:
+# a guarded import that REPLACES `import struct Foundation.URL` was refused once.
 if git diff main..."$BR" -- 'uikit/Sources/OpenUIKit/*.swift' 'uikit/Sources/CQuartz/*' \
-   | awk '/^\+import Foundation$/ { if (prev !~ /canImport\(Foundation\)/) { bad=1 } } { prev=$0 } END { exit !bad }'; then
+   | awk '/^\+import Foundation$/ { if (prev !~ /canImport\(Foundation\)/) { bad=1 } } !/^-/ { prev=$0 } END { exit !bad }'; then
   echo "REFUSED: the branch adds an unguarded 'import Foundation' to a library source (guest library route has no Foundation module) — guard it with #if canImport(Foundation) like its siblings"; exit 3
 fi
 

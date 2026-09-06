@@ -62,6 +62,34 @@ public protocol VisionRequest: CustomStringConvertible, Hashable, Sendable {
     var descriptor: RequestDescriptor { get }
     func computeDevice(for computeStage: ComputeStage) -> MLComputeDevice?
     mutating func setComputeDevice(_ computeDevice: MLComputeDevice?, for computeStage: ComputeStage)
+    var supportedComputeStageDevices: [ComputeStage: [MLComputeDevice]] { get }
+}
+
+extension VisionRequest {
+    /// Linux exposes only the CPU lookalike. Neural Engine / GPU devices are unobserved.
+    public var supportedComputeStageDevices: [ComputeStage: [MLComputeDevice]] {
+        [.main: [MLComputeDevice.cpu], .postProcessing: [MLComputeDevice.cpu]]
+    }
+}
+
+func visionPrepareOverlayPerform(handler: VNImageRequestHandler, roi: NormalizedRect) throws {
+    do {
+        try visionValidateNormalizedROI(roi.cgRect)
+    } catch let error as NSError {
+        throw visionNSErrorToVisionError(error)
+    }
+    if handler.raster.width == 0 || handler.raster.height == 0 {
+        throw VisionError.invalidImage("image could not be decoded")
+    }
+}
+
+func visionOverlayFailClosed(
+    handler: VNImageRequestHandler,
+    roi: NormalizedRect,
+    descriptor: RequestDescriptor
+) throws -> Never {
+    try visionPrepareOverlayPerform(handler: handler, roi: roi)
+    throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
 }
 
 public protocol ImageProcessingRequest: VisionRequest {
@@ -300,7 +328,43 @@ public enum RequestDescriptor: Codable, Hashable, Sendable, CustomStringConverti
     case trackOpticalFlowRequest(TrackOpticalFlowRequest.Revision)
     case trackHomographicImageRegistrationRequest(TrackHomographicImageRegistrationRequest.Revision)
     case trackTranslationalImageRegistrationRequest(TrackTranslationalImageRegistrationRequest.Revision)
-    public var description: String { String(describing: self) }
+    public var description: String {
+        switch self {
+        case .detectBarcodesRequest: return "detectBarcodesRequest"
+        case .detectRectanglesRequest: return "detectRectanglesRequest"
+        case .detectContoursRequest: return "detectContoursRequest"
+        case .generateImageFeaturePrintRequest: return "generateImageFeaturePrintRequest"
+        case .classifyImageRequest: return "classifyImageRequest"
+        case .recognizeTextRequest: return "recognizeTextRequest"
+        case .detectFaceRectanglesRequest: return "detectFaceRectanglesRequest"
+        case .detectHumanBodyPoseRequest: return "detectHumanBodyPoseRequest"
+        case .detectHorizonRequest: return "detectHorizonRequest"
+        case .detectLensSmudgeRequest: return "detectLensSmudgeRequest"
+        case .recognizeAnimalsRequest: return "recognizeAnimalsRequest"
+        case .detectTrajectoriesRequest: return "detectTrajectoriesRequest"
+        case .recognizeDocumentsRequest: return "recognizeDocumentsRequest"
+        case .detectFaceLandmarksRequest: return "detectFaceLandmarksRequest"
+        case .detectHumanHandPoseRequest: return "detectHumanHandPoseRequest"
+        case .detectAnimalBodyPoseRequest: return "detectAnimalBodyPoseRequest"
+        case .detectTextRectanglesRequest: return "detectTextRectanglesRequest"
+        case .detectHumanRectanglesRequest: return "detectHumanRectanglesRequest"
+        case .detectFaceCaptureQualityRequest: return "detectFaceCaptureQualityRequest"
+        case .detectDocumentSegmentationRequest: return "detectDocumentSegmentationRequest"
+        case .generatePersonInstanceMaskRequest: return "generatePersonInstanceMaskRequest"
+        case .generatePersonSegmentationRequest: return "generatePersonSegmentationRequest"
+        case .calculateImageAestheticsScoresRequest: return "calculateImageAestheticsScoresRequest"
+        case .generateForegroundInstanceMaskRequest: return "generateForegroundInstanceMaskRequest"
+        case .generateAttentionBasedSaliencyImageRequest: return "generateAttentionBasedSaliencyImageRequest"
+        case .generateObjectnessBasedSaliencyImageRequest: return "generateObjectnessBasedSaliencyImageRequest"
+        case .detectHumanBodyPose3DRequest: return "detectHumanBodyPose3DRequest"
+        case .coreMLRequest: return "coreMLRequest"
+        case .trackObjectRequest: return "trackObjectRequest"
+        case .trackRectangleRequest: return "trackRectangleRequest"
+        case .trackOpticalFlowRequest: return "trackOpticalFlowRequest"
+        case .trackHomographicImageRegistrationRequest: return "trackHomographicImageRegistrationRequest"
+        case .trackTranslationalImageRegistrationRequest: return "trackTranslationalImageRegistrationRequest"
+        }
+    }
 }
 
 
@@ -333,32 +397,33 @@ public struct DetectBarcodesRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
         let request = VNDetectBarcodesRequest()
         request.symbologies = symbologies.map { overlaySymbologyToVN($0) }
         request.coalesceCompositeSymbologies = coalescesCompositeSymbologies
         request.regionOfInterest = regionOfInterest.cgRect
         try handler.perform([request])
         return (request.results ?? []).compactMap { $0 as? VNBarcodeObservation }.map(BarcodeObservation.init)
-
     }
 }
 
@@ -393,25 +458,27 @@ public struct DetectRectanglesRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
         let request = VNDetectRectanglesRequest()
         request.minimumSize = minimumSize
         request.minimumConfidence = minimumConfidence
@@ -455,25 +522,27 @@ public struct DetectContoursRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
         let request = VNDetectContoursRequest()
         request.contrastPivot = contrastPivot.map { NSNumber(value: $0) }
         request.contrastAdjustment = contrastAdjustment
@@ -515,25 +584,27 @@ public struct GenerateImageFeaturePrintRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
         let request = VNGenerateImageFeaturePrintRequest()
         request.regionOfInterest = regionOfInterest.cgRect
         try handler.perform([request])
@@ -570,26 +641,27 @@ public struct ClassifyImageRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -631,26 +703,27 @@ public struct RecognizeTextRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -680,26 +753,27 @@ public struct DetectFaceRectanglesRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -729,26 +803,27 @@ public struct DetectHumanBodyPoseRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -778,26 +853,27 @@ public struct DetectHorizonRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -827,26 +903,27 @@ public struct DetectLensSmudgeRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -876,26 +953,27 @@ public struct RecognizeAnimalsRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -925,26 +1003,27 @@ public struct DetectTrajectoriesRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -956,11 +1035,85 @@ public struct RecognizeDocumentsRequest: ImageProcessingRequest {
         public static func < (a: Self, b: Self) -> Bool { a.rawValue < b.rawValue }
     }
 
+    public struct TextRecognitionOptions: Hashable, Sendable, Codable {
+        public var minimumTextHeightFraction: Float = 0
+        public var customWords: [String] = []
+        public var recognitionLanguages: [Locale.Language] = []
+        public var maximumCandidateCount: Int = 1
+        public var useLanguageCorrection: Bool = true
+        public var automaticallyDetectLanguage: Bool = true
+
+        public init(
+            minimumTextHeightFraction: Float = 0,
+            customWords: [String] = [],
+            recognitionLanguages: [Locale.Language] = [],
+            maximumCandidateCount: Int = 1,
+            useLanguageCorrection: Bool = true,
+            automaticallyDetectLanguage: Bool = true
+        ) {
+            self.minimumTextHeightFraction = minimumTextHeightFraction
+            self.customWords = customWords
+            self.recognitionLanguages = recognitionLanguages
+            self.maximumCandidateCount = maximumCandidateCount
+            self.useLanguageCorrection = useLanguageCorrection
+            self.automaticallyDetectLanguage = automaticallyDetectLanguage
+        }
+
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            minimumTextHeightFraction = try container.decode(Float.self, forKey: .minimumTextHeightFraction)
+            customWords = try container.decode([String].self, forKey: .customWords)
+            let codes = try container.decode([String].self, forKey: .recognitionLanguages)
+            recognitionLanguages = codes.map { Locale.Language(identifier: $0) }
+            maximumCandidateCount = try container.decode(Int.self, forKey: .maximumCandidateCount)
+            useLanguageCorrection = try container.decode(Bool.self, forKey: .useLanguageCorrection)
+            automaticallyDetectLanguage = try container.decode(Bool.self, forKey: .automaticallyDetectLanguage)
+        }
+
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(minimumTextHeightFraction, forKey: .minimumTextHeightFraction)
+            try container.encode(customWords, forKey: .customWords)
+            try container.encode(recognitionLanguages.map(\.maximalIdentifier), forKey: .recognitionLanguages)
+            try container.encode(maximumCandidateCount, forKey: .maximumCandidateCount)
+            try container.encode(useLanguageCorrection, forKey: .useLanguageCorrection)
+            try container.encode(automaticallyDetectLanguage, forKey: .automaticallyDetectLanguage)
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case minimumTextHeightFraction, customWords, recognitionLanguages
+            case maximumCandidateCount, useLanguageCorrection, automaticallyDetectLanguage
+        }
+    }
+
+    public struct BarcodeDetectionOptions: Hashable, Sendable, Codable {
+        public var symbologies: [BarcodeSymbology] = BarcodeSymbology.allCases
+        public var coalesceCompositeSymbologies: Bool = false
+        public var enabled: Bool = false
+
+        public init(
+            symbologies: [BarcodeSymbology] = BarcodeSymbology.allCases,
+            coalesceCompositeSymbologies: Bool = false,
+            enabled: Bool = false
+        ) {
+            self.symbologies = symbologies
+            self.coalesceCompositeSymbologies = coalesceCompositeSymbologies
+            self.enabled = enabled
+        }
+    }
+
     public let revision: Revision
     public var regionOfInterest: NormalizedRect = .fullImage
     private var devices: [ComputeStage: MLComputeDevice] = [:]
     public static let supportedRevisions: [Revision] = [.revision1]
     public var descriptor: RequestDescriptor { .recognizeDocumentsRequest(revision) }
+    public var textRecognitionOptions = TextRecognitionOptions()
+    public var barcodeDetectionOptions = BarcodeDetectionOptions()
+    public var supportedBarcodeSymbologies: [BarcodeSymbology] { BarcodeSymbology.allCases }
+    public var supportedRecognitionLanguages: [Locale.Language] { [] }
+    public var supportedComputeStageDevices: [ComputeStage: [MLComputeDevice]] {
+        [.main: [MLComputeDevice.cpu], .postProcessing: [MLComputeDevice.cpu]]
+    }
     public init(_ revision: Revision? = nil) { self.revision = revision ?? .revision1 }
 
     public func computeDevice(for computeStage: ComputeStage) -> MLComputeDevice? {
@@ -970,30 +1123,41 @@ public struct RecognizeDocumentsRequest: ImageProcessingRequest {
         devices[computeStage] = computeDevice
     }
     public var description: String { String(describing: descriptor) }
-    public func hash(into hasher: inout Hasher) { hasher.combine(descriptor) }
-    public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(descriptor)
+        hasher.combine(regionOfInterest)
+        hasher.combine(textRecognitionOptions)
+        hasher.combine(barcodeDetectionOptions)
+    }
+    public static func == (a: Self, b: Self) -> Bool {
+        a.descriptor == b.descriptor
+            && a.regionOfInterest == b.regionOfInterest
+            && a.textRecognitionOptions == b.textRecognitionOptions
+            && a.barcodeDetectionOptions == b.barcodeDetectionOptions
+    }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1023,26 +1187,27 @@ public struct DetectFaceLandmarksRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1072,26 +1237,27 @@ public struct DetectHumanHandPoseRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1121,26 +1287,27 @@ public struct DetectAnimalBodyPoseRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1170,26 +1337,27 @@ public struct DetectTextRectanglesRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1219,26 +1387,27 @@ public struct DetectHumanRectanglesRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1268,26 +1437,27 @@ public struct DetectFaceCaptureQualityRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1317,26 +1487,27 @@ public struct DetectDocumentSegmentationRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1366,26 +1537,27 @@ public struct GeneratePersonInstanceMaskRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1422,26 +1594,27 @@ public struct GeneratePersonSegmentationRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1471,26 +1644,27 @@ public struct CalculateImageAestheticsScoresRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1520,26 +1694,27 @@ public struct GenerateForegroundInstanceMaskRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1569,26 +1744,27 @@ public struct GenerateAttentionBasedSaliencyImageRequest: ImageProcessingRequest
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1618,26 +1794,27 @@ public struct GenerateObjectnessBasedSaliencyImageRequest: ImageProcessingReques
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1667,26 +1844,27 @@ public struct DetectHumanBodyPose3DRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1716,26 +1894,27 @@ public struct CoreMLRequest: ImageProcessingRequest {
     public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
 
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
-        try await performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
-    func performOnHandler(_ handler: VNImageRequestHandler) async throws -> Result {
-        throw VisionError.invalidModel("Linux has no Apple model for \(String(describing: descriptor))")
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
 
 }
@@ -1773,24 +1952,25 @@ public final class TrackObjectRequest: @unchecked Sendable {
     public func hash(into hasher: inout Hasher) { hasher.combine(descriptor) }
     public static func == (lhs: TrackObjectRequest, rhs: TrackObjectRequest) -> Bool { lhs.descriptor == rhs.descriptor }
     public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
-        try await run(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+        try run(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
-        try await run(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+        try run(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
-        try await run(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+        try run(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
-        try await run(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+        try run(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
-        try await run(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+        try run(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
     public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
-        try await run(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+        try run(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
-    private func run(_ handler: VNImageRequestHandler) async throws -> Result {
+    private func run(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
         try handler.perform([inner])
         guard let obs = inner.results?.first as? VNDetectedObjectObservation else { return nil }
         return DetectedObjectObservation(obs)
@@ -1806,14 +1986,77 @@ public struct TrackRectangleRequest: Hashable, Sendable {
     public let revision: Revision
     public init(_ revision: Revision? = nil) { self.revision = revision ?? .revision1 }
 }
-public struct TrackOpticalFlowRequest: Hashable, Sendable {
+public final class TrackOpticalFlowRequest: ImageProcessingRequest, StatefulRequest, @unchecked Sendable {
+    public typealias Result = OpticalFlowObservation?
     public enum Revision: Int, Codable, Hashable, Sendable, Comparable {
         case revision1
         public static func < (a: Self, b: Self) -> Bool { a.rawValue < b.rawValue }
     }
-    public enum ComputationAccuracy: UInt, Hashable, Sendable { case low, medium, high, veryHigh }
+    public enum ComputationAccuracy: UInt, Codable, Hashable, Sendable, CaseIterable {
+        case low, medium, high, veryHigh
+    }
+
     public let revision: Revision
-    public init(_ revision: Revision? = nil) { self.revision = revision ?? .revision1 }
+    public let frameAnalysisSpacing: CMTime
+    public var regionOfInterest: NormalizedRect = .fullImage
+    public var minimumLatencyFrameCount: Int { 1 }
+    public var computationAccuracy: ComputationAccuracy = .medium
+    public var outputPixelFormatType: OSType = kCVPixelFormatType_32BGRA
+    public var supportedOutputPixelFormatTypes: [OSType] { [kCVPixelFormatType_32BGRA] }
+    public static let supportedRevisions: [Revision] = [.revision1]
+    public var descriptor: RequestDescriptor { .trackOpticalFlowRequest(revision) }
+    public var description: String { String(describing: descriptor) }
+    public var hashValue: Int { descriptor.hashValue }
+    private var devices: [ComputeStage: MLComputeDevice] = [:]
+
+    public init(_ revision: Revision? = nil, frameAnalysisSpacing: CMTime? = nil) {
+        self.revision = revision ?? .revision1
+        self.frameAnalysisSpacing = frameAnalysisSpacing ?? .zero
+    }
+
+    public func computeDevice(for computeStage: ComputeStage) -> MLComputeDevice? {
+        devices[computeStage]
+    }
+    public func setComputeDevice(_ computeDevice: MLComputeDevice?, for computeStage: ComputeStage) {
+        devices[computeStage] = computeDevice
+    }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(descriptor)
+        hasher.combine(frameAnalysisSpacing)
+        hasher.combine(computationAccuracy)
+        hasher.combine(outputPixelFormatType)
+    }
+    public static func == (lhs: TrackOpticalFlowRequest, rhs: TrackOpticalFlowRequest) -> Bool {
+        lhs.descriptor == rhs.descriptor
+            && lhs.frameAnalysisSpacing == rhs.frameAnalysisSpacing
+            && lhs.computationAccuracy == rhs.computationAccuracy
+            && lhs.outputPixelFormatType == rhs.outputPixelFormatType
+            && lhs.regionOfInterest == rhs.regionOfInterest
+    }
+
+    public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+    }
+    public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+    }
+    public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+    }
+    public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+    }
+    public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+    }
+    public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+    }
+
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
+    }
 }
 public struct TrackHomographicImageRegistrationRequest: Hashable, Sendable {
     public enum Revision: Int, Codable, Hashable, Sendable, Comparable {

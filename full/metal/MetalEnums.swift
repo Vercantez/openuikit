@@ -310,6 +310,11 @@ public enum MTLSparsePageSize: Int, Equatable, Hashable, Sendable {
     case size256 = 256
 }
 
+public enum MTLSparseTextureMappingMode: UInt, Equatable, Hashable, Sendable {
+    case map = 0
+    case unmap = 1
+}
+
 public enum MTLBufferSparseTier: Int, Equatable, Hashable, Sendable {
     case tierNone = 0
     case tier1 = 1
@@ -626,4 +631,15 @@ public enum MTLVertexFormat: UInt, Equatable, Hashable, Sendable {
     case half = 53
     case floatRG11B10 = 54
     case floatRGB9E5 = 55
+}
+
+public enum MTLMutability: UInt, Equatable, Hashable, Sendable {
+    case `default` = 0
+    case mutable = 1
+    case immutable = 2
+}
+
+public enum MTLMotionBorderMode: UInt32, Equatable, Hashable, Sendable {
+    case clamp = 0
+    case vanish = 1
 }

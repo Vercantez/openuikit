@@ -27,6 +27,11 @@ public protocol MTLCommandBuffer: AnyObject {
     var label: String? { get set }
 }
 
+public protocol MTLComputeCommandEncoder: AnyObject {
+    var device: any MTLDevice { get }
+    var label: String? { get set }
+}
+
 public protocol MTLTexture: MTLResource {
     var device: any MTLDevice { get }
     var width: Int { get }
@@ -137,6 +142,17 @@ public enum MTLTextureType: UInt, Sendable, Hashable {
     case typeCube = 5
     case typeCubeArray = 6
     case type3D = 7
+}
+
+public enum MTLCullMode: UInt, Sendable, Hashable {
+    case none = 0
+    case front = 1
+    case back = 2
+}
+
+public enum MTLWinding: UInt, Sendable, Hashable {
+    case clockwise = 0
+    case counterClockwise = 1
 }
 
 public final class MTLTextureDescriptor: NSObject {

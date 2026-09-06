@@ -22,10 +22,9 @@
 // Focus also reads `.general.string` on a background Dispatch queue. The
 // opaque CPortableIO mutex is used instead of Foundation.NSLock so this exact
 // implementation remains safe in the Foundation-free Mach-O build.
-// Notification constants are provided for source compatibility, but this
-// process-local backend does not post them yet: OpenUIKit's shared
-// NotificationCenter is not currently safe to call from these background
-// setters.
+// MEASURED ValuesProbe3, iPhone SE 3rd gen / iOS 26.1: every mutation posts
+// `changedNotification` twice when types change (nil userInfo, then added/
+// removed keys) on the setter's thread, including a background queue.
 // Foundation builds round-trip supplied Data and encode image objects, but do
 // not reproduce UIKit's opaque keyed-archive bytes for URL or color objects.
 // Representation recognition covers the measured concrete text/image/URL/
@@ -35,8 +34,10 @@
 import CPortableIO
 
 #if canImport(Foundation)
-import struct Foundation.Data
-import struct Foundation.URL
+import Foundation
+#endif
+#if canImport(Dispatch)
+import Dispatch
 #endif
 
 private final class UIPasteboardMutex: @unchecked Sendable {
@@ -65,12 +66,30 @@ private final class UIPasteboardStorage: @unchecked Sendable {
     var isPersistent = false
 }
 
+private final class WeakPasteboard {
+    weak var board: UIPasteboard?
+    init(_ board: UIPasteboard) { self.board = board }
+}
+
 private final class UIPasteboardRegistry: @unchecked Sendable {
     static let shared = UIPasteboardRegistry()
 
     private let lock = UIPasteboardMutex()
     private var stores: [UIPasteboard.Name: UIPasteboardStorage] = [:]
     private var nextUniqueID = 0
+    private var handles: [UIPasteboard.Name: WeakPasteboard] = [:]
+
+    func remember(_ board: UIPasteboard) {
+        lock.withLock {
+            if handles[board.name]?.board == nil {
+                handles[board.name] = WeakPasteboard(board)
+            }
+        }
+    }
+
+    func remembered(named name: UIPasteboard.Name) -> UIPasteboard? {
+        lock.withLock { handles[name]?.board }
+    }
 
     func storage(named name: UIPasteboard.Name, create: Bool) -> UIPasteboardStorage? {
         lock.withLock {
@@ -121,9 +140,11 @@ private final class UIPasteboardRegistry: @unchecked Sendable {
 
     func remove(_ name: UIPasteboard.Name) {
         var retiredItems: [[String: Any]] = []
+        let handle = remembered(named: name)
         lock.withLock {
             let removed = name == .general
                 ? stores[name] : stores.removeValue(forKey: name)
+            handles.removeValue(forKey: name)
             guard let removed else { return }
             removed.lock.withLock {
                 retiredItems = removed.items
@@ -136,6 +157,14 @@ private final class UIPasteboardRegistry: @unchecked Sendable {
             }
         }
         withExtendedLifetime(retiredItems) {}
+        // MEASURED ValuesProbe2, iPhone SE 3rd gen / iOS 26.1: remove posts
+        // `removedNotification` once with the live handle as `object`, and
+        // does not post `changedNotification`.
+        if let handle {
+            NotificationCenter.default.post(
+                name: UIPasteboard.removedNotification, object: handle
+            )
+        }
     }
 }
 
@@ -186,6 +215,7 @@ open class UIPasteboard: @unchecked Sendable {
     private init(name: Name, storage: UIPasteboardStorage) {
         self.name = name
         self.storage = storage
+        UIPasteboardRegistry.shared.remember(self)
     }
 
     public convenience init?(name pasteboardName: Name, create: Bool) {
@@ -250,10 +280,16 @@ open class UIPasteboard: @unchecked Sendable {
 
     open func addItems(_ newItems: [[String: Any]]) {
         let normalized = newItems.map(Self.normalizedItem)
+        var oldTypes = Set<String>()
+        var newTypes = Set<String>()
         mutate { storage in
+            oldTypes = Self.typeUnion(storage.items)
             storage.items.append(contentsOf: normalized)
+            newTypes = Self.typeUnion(storage.items)
             storage.changeCount += 1
         }
+        postChanged(added: newTypes.subtracting(oldTypes),
+                    removed: oldTypes.subtracting(newTypes))
     }
 
     /// `localOnly` is inherent to a process-local pasteboard. Expiration is
@@ -407,6 +443,37 @@ open class UIPasteboard: @unchecked Sendable {
     }
     open var hasColors: Bool { hasItem(withAnyType: [ItemType.color]) }
 
+#if canImport(Foundation)
+    // MEASURED ValuesProbe, iPhone SE 3rd gen / iOS 26.1: assigning
+    // `itemProviders = [NSItemProvider(object: "provider-text" as NSString)]`
+    // populates `string` synchronously, posts changedNotification, and
+    // `types` becomes public.utf8-plain-text.
+    open var itemProviders: [NSItemProvider] {
+        get { providersFromItems() }
+        set { setItemProviders(newValue, localOnly: true, expirationDate: nil) }
+    }
+
+    open func setItemProviders(_ itemProviders: [NSItemProvider],
+                               localOnly: Bool,
+                               expirationDate: Date?) {
+        _ = localOnly
+        _ = expirationDate
+        replaceItems(Self.items(from: itemProviders))
+    }
+
+    open func setObjects(_ objects: [Any]) {
+        setItemProviders(Self.providers(fromObjects: objects),
+                         localOnly: true, expirationDate: nil)
+    }
+
+    open func setObjects(_ objects: [Any],
+                         localOnly: Bool,
+                         expirationDate: Date?) {
+        setItemProviders(Self.providers(fromObjects: objects),
+                         localOnly: localOnly, expirationDate: expirationDate)
+    }
+#endif
+
     // MARK: - UIKit constants
 
     public static let changedNotification =
@@ -445,15 +512,53 @@ open class UIPasteboard: @unchecked Sendable {
     private func replaceItems(_ newItems: [[String: Any]]) {
         let normalized = newItems.map(Self.normalizedItem)
         var retiredItems: [[String: Any]] = []
+        var oldTypes = Set<String>()
+        var newTypes = Set<String>()
         mutate { storage in
+            oldTypes = Self.typeUnion(storage.items)
             retiredItems = storage.items
             storage.items = normalized
+            newTypes = Self.typeUnion(storage.items)
             storage.changeCount += 1
         }
         // Releasing an arbitrary `Any` value can run its deinitializer. Keep
         // old values alive until after the nonrecursive storage mutex unlocks
         // so a deinitializer may safely call back into this pasteboard.
         withExtendedLifetime(retiredItems) {}
+        postChanged(added: newTypes.subtracting(oldTypes),
+                    removed: oldTypes.subtracting(newTypes))
+    }
+
+    /// MEASURED ValuesProbe3, iPhone SE 3rd gen / iOS 26.1: every mutation
+    /// posts `changedNotification` with `userInfo == nil` first, on the
+    /// setter's thread (including a background queue). If the union of item
+    /// type keys changed, a second post follows with `changedTypesAddedKey`
+    /// / `changedTypesRemovedKey` listing the symmetric difference. A
+    /// no-op type change (same string set twice) is only the nil-userInfo
+    /// post.
+    private func postChanged(added: Set<String>, removed: Set<String>) {
+        NotificationCenter.default.post(
+            name: Self.changedNotification, object: self, userInfo: nil
+        )
+        if added.isEmpty && removed.isEmpty { return }
+        var info: [AnyHashable: Any] = [:]
+        if !added.isEmpty {
+            info[Self.changedTypesAddedUserInfoKey] = added.sorted()
+        }
+        if !removed.isEmpty {
+            info[Self.changedTypesRemovedUserInfoKey] = removed.sorted()
+        }
+        NotificationCenter.default.post(
+            name: Self.changedNotification, object: self, userInfo: info
+        )
+    }
+
+    private static func typeUnion(_ items: [[String: Any]]) -> Set<String> {
+        var result = Set<String>()
+        for item in items {
+            for key in item.keys { result.insert(key) }
+        }
+        return result
     }
 
     private func selectedIndexes(_ itemSet: IndexSet?, count: Int) -> [Int] {
@@ -566,4 +671,152 @@ open class UIPasteboard: @unchecked Sendable {
         result[typeAutomatic] = automatic
         return result
     }
+
+#if canImport(Foundation)
+    private func providersFromItems() -> [NSItemProvider] {
+        items.map { item in
+            let provider = NSItemProvider()
+            for (type, value) in item {
+                if let text = value as? String {
+                    provider.registerDataRepresentation(
+                        forTypeIdentifier: type, visibility: .all
+                    ) { completion in
+                        completion(Data(text.utf8), nil)
+                        return nil
+                    }
+                } else if let data = value as? Data {
+                    provider.registerDataRepresentation(
+                        forTypeIdentifier: type, visibility: .all
+                    ) { completion in
+                        completion(data, nil)
+                        return nil
+                    }
+                } else if let url = value as? URL {
+                    provider.registerDataRepresentation(
+                        forTypeIdentifier: type, visibility: .all
+                    ) { completion in
+                        completion(Data(url.absoluteString.utf8), nil)
+                        return nil
+                    }
+                } else if let image = value as? UIImage {
+                    provider.registerDataRepresentation(
+                        forTypeIdentifier: type, visibility: .all
+                    ) { completion in
+                        completion(image._itemProviderData(for: type), nil)
+                        return nil
+                    }
+                } else if let color = value as? UIColor {
+                    provider.registerDataRepresentation(
+                        forTypeIdentifier: type, visibility: .all
+                    ) { completion in
+                        completion(color._itemProviderData(), nil)
+                        return nil
+                    }
+                }
+            }
+            return provider
+        }
+    }
+
+    private static func items(from providers: [NSItemProvider]) -> [[String: Any]] {
+        providers.map { provider in
+            var item: [String: Any] = [:]
+            if let text = syncString(provider) {
+                item[ItemType.text] = text
+                if let url = URL(string: text), url.scheme != nil {
+                    item[ItemType.url] = url
+                }
+            }
+            if item[ItemType.url] == nil, let url = syncURL(provider) {
+                item[ItemType.url] = url
+                if item[ItemType.text] == nil {
+                    item[ItemType.text] = url.absoluteString
+                }
+            }
+            return item.isEmpty ? fallbackItem(from: provider) : item
+        }
+        .filter { !$0.isEmpty }
+    }
+
+    private static func fallbackItem(from provider: NSItemProvider) -> [String: Any] {
+        var item: [String: Any] = [:]
+        for type in provider.registeredTypeIdentifiers {
+            if let data = syncData(provider, type: type) {
+                item[type] = data
+            }
+        }
+        return item
+    }
+
+    private static func providers(fromObjects objects: [Any]) -> [NSItemProvider] {
+        objects.map { object in
+            if let provider = object as? NSItemProvider { return provider }
+            if let image = object as? UIImage { return NSItemProvider(object: image) }
+            if let color = object as? UIColor { return NSItemProvider(object: color) }
+#if os(Linux)
+            if let writer = object as? any NSItemProviderWriting {
+                return NSItemProvider(object: writer)
+            }
+            if let text = object as? String {
+                return NSItemProvider(object: text)
+            }
+#else
+            if let writing = object as? NSItemProviderWriting {
+                return NSItemProvider(object: writing)
+            }
+            if let text = object as? String {
+                return NSItemProvider(object: text as NSString)
+            }
+#endif
+            return NSItemProvider()
+        }
+    }
+
+    private static func syncString(_ provider: NSItemProvider) -> String? {
+#if os(Linux)
+        guard provider.canLoadObject(ofClass: String.self) else { return nil }
+        var result: String?
+        let done = DispatchSemaphore(value: 0)
+        _ = provider.loadObject(ofClass: String.self) { object, _ in
+            result = object
+            done.signal()
+        }
+        _ = done.wait(timeout: .now() + 1)
+        return result
+#else
+        guard provider.canLoadObject(ofClass: NSString.self) else { return nil }
+        var result: String?
+        let done = DispatchSemaphore(value: 0)
+        _ = provider.loadObject(ofClass: NSString.self) { object, _ in
+            result = object as? String
+            done.signal()
+        }
+        _ = done.wait(timeout: .now() + 1)
+        return result
+#endif
+    }
+
+    private static func syncURL(_ provider: NSItemProvider) -> URL? {
+        guard provider.canLoadObject(ofClass: URL.self) else { return nil }
+        var result: URL?
+        let done = DispatchSemaphore(value: 0)
+        _ = provider.loadObject(ofClass: URL.self) { object, _ in
+            result = object
+            done.signal()
+        }
+        _ = done.wait(timeout: .now() + 1)
+        return result
+    }
+
+    private static func syncData(_ provider: NSItemProvider, type: String) -> Data? {
+        var result: Data?
+        let done = DispatchSemaphore(value: 0)
+        _ = provider.loadDataRepresentation(forTypeIdentifier: type) { data, _ in
+            result = data
+            done.signal()
+        }
+        _ = done.wait(timeout: .now() + 1)
+        return result
+    }
+#endif
 }

@@ -53,6 +53,35 @@ public let kAudioCodecQuality_Min: UInt32 = 0
 public let kAudioCodecPropertyNameCFString: AudioCodecPropertyID = atFourCC("lnam")
 public let kAudioCodecPropertyManufacturerCFString: AudioCodecPropertyID = atFourCC("lmak")
 public let kAudioCodecPropertyFormatCFString: AudioCodecPropertyID = atFourCC("lfor")
+public let kAudioCodecPropertySupportedInputFormats: AudioCodecPropertyID = atFourCC("ifm#")
+public let kAudioCodecPropertySupportedOutputFormats: AudioCodecPropertyID = atFourCC("ofm#")
+public let kAudioCodecPropertyAvailableInputSampleRates: AudioCodecPropertyID = atFourCC("aisr")
+public let kAudioCodecPropertyAvailableOutputSampleRates: AudioCodecPropertyID = atFourCC("aosr")
+public let kAudioCodecPropertyAvailableBitRateRange: AudioCodecPropertyID = atFourCC("abrt")
+public let kAudioCodecPropertyMinimumNumberInputPackets: AudioCodecPropertyID = atFourCC("mnip")
+public let kAudioCodecPropertyMinimumNumberOutputPackets: AudioCodecPropertyID = atFourCC("mnop")
+public let kAudioCodecPropertyAvailableNumberChannels: AudioCodecPropertyID = atFourCC("cmnc")
+public let kAudioCodecPropertyDoesSampleRateConversion: AudioCodecPropertyID = atFourCC("lmrc")
+public let kAudioCodecDoesSampleRateConversion: AudioCodecPropertyID = kAudioCodecPropertyDoesSampleRateConversion
+public let kAudioCodecPropertyAvailableInputChannelLayoutTags: AudioCodecPropertyID = atFourCC("ailt")
+public let kAudioCodecPropertyAvailableOutputChannelLayoutTags: AudioCodecPropertyID = atFourCC("aolt")
+public let kAudioCodecPropertyFormatInfo: AudioCodecPropertyID = atFourCC("acfi")
+public let kAudioCodecPropertyRequiresPacketDescription: AudioCodecPropertyID = atFourCC("pakd")
+public let kAudioCodecPropertyInputChannelLayout: AudioCodecPropertyID = atFourCC("icl ")
+public let kAudioCodecPropertyOutputChannelLayout: AudioCodecPropertyID = atFourCC("ocl ")
+public let kAudioCodecPropertyInputFormatsForOutputFormat: AudioCodecPropertyID = atFourCC("if4o")
+public let kAudioCodecPropertyOutputFormatsForInputFormat: AudioCodecPropertyID = atFourCC("of4i")
+public let kAudioCodecInputFormatsForOutputFormat: AudioCodecPropertyID = kAudioCodecPropertyInputFormatsForOutputFormat
+public let kAudioCodecOutputFormatsForInputFormat: AudioCodecPropertyID = kAudioCodecPropertyOutputFormatsForInputFormat
+public let kAudioCodecPropertyAvailableBitRates: AudioCodecPropertyID = atFourCC("brt#")
+public let kAudioCodecPropertyAvailableInputChannelLayouts: AudioCodecPropertyID = atFourCC("icl#")
+public let kAudioCodecPropertyAvailableOutputChannelLayouts: AudioCodecPropertyID = atFourCC("ocl#")
+public let kAudioCodecPropertyZeroFramesPadded: AudioCodecPropertyID = atFourCC("pad0")
+public let kAudioCodecPropertyMinimumDelayMode: AudioCodecPropertyID = atFourCC("mdel")
+public let kAudioCodecBitRateFormat: AudioCodecPropertyID = atFourCC("cbrf")
+public let kAudioCodecExtendFrequencies: AudioCodecPropertyID = atFourCC("acef")
+public let kAudioCodecOutputPrecedence: AudioCodecPropertyID = atFourCC("oppr")
+public let kAudioCodecUseRecommendedSampleRate: AudioCodecPropertyID = atFourCC("ursr")
 
 public let kAudioCodecNoError: Int32 = 0
 public let kAudioCodecUnspecifiedError: Int32 = atSignedFourCC("what")
@@ -360,6 +389,19 @@ public func MusicDeviceSysEx(
 ) -> Int32 {
     _ = inData
     _ = inLength
+    guard ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) != nil else {
+        return kAudioUnitErr_InvalidElement
+    }
+    return kAudioUnitErr_CannotDoInCurrentContext
+}
+
+public func MusicDeviceMIDIEventList(
+    _ inUnit: MusicDeviceComponent?,
+    _ inOffsetSampleFrame: UInt32,
+    _ evtList: UnsafeRawPointer?
+) -> Int32 {
+    _ = inOffsetSampleFrame
+    _ = evtList
     guard ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) != nil else {
         return kAudioUnitErr_InvalidElement
     }

@@ -5,3 +5,4 @@ full/network/NetworkCTypes.swift
 full/network/NetworkOverlay.swift
 full/network/NetworkPOSIX.swift
 full/network/NetworkTXT.swift
+full/network/NetworkTyped.swift
