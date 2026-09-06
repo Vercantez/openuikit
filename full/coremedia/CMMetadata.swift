@@ -184,11 +184,14 @@ public func CMMetadataFormatDescriptionCreateWithKeys(
     keys: CFArray?,
     formatDescriptionOut: UnsafeMutablePointer<CMMetadataFormatDescription?>
 ) -> OSStatus {
-    _ = keys
+    _ = allocator
     do {
         let desc = try CMFormatDescription(
             metadataFormatType: CMFormatDescription.MediaSubType(rawValue: metadataType)
         )
+        if let keys {
+            desc.metadataIdentifiers = cmMetadataIdentifiers(from: keys)
+        }
         formatDescriptionOut.pointee = desc
         return 0
     } catch {
@@ -200,8 +203,39 @@ public func CMMetadataFormatDescriptionCreateWithKeys(
 public func CMMetadataFormatDescriptionGetIdentifiers(
     _ desc: CMMetadataFormatDescription
 ) -> CFArray? {
-    _ = desc
-    return nil
+    if desc.metadataIdentifiers.isEmpty { return nil }
+    let mutable = CFArrayCreateMutable(
+        kCFAllocatorDefault,
+        CFIndex(desc.metadataIdentifiers.count),
+        nil
+    )!
+    for identifier in desc.metadataIdentifiers {
+        CFArrayAppendValue(mutable, unsafeBitCast(identifier, to: UnsafeRawPointer.self))
+    }
+    return mutable
+}
+
+private func cmMetadataIdentifiers(from keys: CFArray) -> [CFString] {
+    var identifiers: [CFString] = []
+    let count = CFArrayGetCount(keys)
+    var index: CFIndex = 0
+    while index < count {
+        defer { index += 1 }
+        guard let raw = CFArrayGetValueAtIndex(keys, index) else { continue }
+        let object = unsafeBitCast(raw, to: CFTypeRef.self)
+        if CFGetTypeID(object) == CFStringGetTypeID() {
+            identifiers.append(unsafeBitCast(object, to: CFString.self))
+        } else if CFGetTypeID(object) == CFDictionaryGetTypeID() {
+            let dict = unsafeBitCast(object, to: CFDictionary.self)
+            if let ident = cmCFDictionaryValue(
+                dict,
+                key: kCMMetadataFormatDescriptionMetadataSpecificationKey_Identifier
+            ) {
+                identifiers.append(unsafeBitCast(ident, to: CFString.self))
+            }
+        }
+    }
+    return identifiers
 }
 
 private func cmFirstIndex(of needle: Character, in text: String) -> String.Index? {

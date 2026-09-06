@@ -105,3 +105,14 @@ func testCMVideoDimensionsFields() {
     precondition(empty.width == 0)
     precondition(empty.height == 0)
 }
+
+func testCMTimeRangeShowAndCopyDescription() {
+    let range = CMTimeRangeMake(start: .zero, duration: CMTime(value: 1, timescale: 1))
+    CMTimeRangeShow(range)
+    let description = CMTimeRangeCopyDescription(allocator: nil, range: range)
+    precondition(description != nil)
+    let mapping = CMTimeMapping(source: range, target: range)
+    CMTimeMappingShow(mapping)
+    let mapped = CMTimeMappingCopyDescription(allocator: nil, mapping: mapping)
+    precondition(mapped != nil)
+}

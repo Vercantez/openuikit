@@ -101,3 +101,69 @@ func testCMTimebaseTimerFailClosed() {
     precondition(CMTimebase.farFuture > 1.0e50)
     precondition(CMTimebase.veryLongTimeInterval > 1.0e50)
 }
+
+func testCMClockInvalidateAndSyncRelativeRate() {
+    let host = CMClockGetHostTimeClock()
+    let frozen = CMClock(referencing: host)
+    CMClockInvalidate(frozen)
+    var rate: Float64 = 0
+    var anchor = CMTime.invalid
+    var relative = CMTime.invalid
+    precondition(
+        CMSyncGetRelativeRateAndAnchorTime(
+            host,
+            relativeTo: host,
+            relativeRateOut: &rate,
+            anchorTimeOut: &anchor,
+            relativeToAnchorTimeOut: &relative
+        ) == 0
+    )
+    precondition(rate == 1)
+    precondition(CMSyncGetRelativeRate(host, relativeTo: host) == 1)
+    precondition(!CMSyncMightDrift(host, host))
+}
+
+func testCMTimebaseCopyMasterAndAnchor() {
+    let clock = CMClockGetHostTimeClock()
+    var timebase: CMTimebase?
+    precondition(CMTimebaseCreateWithMasterClock(allocator: nil, masterClock: clock, timebaseOut: &timebase) == 0)
+    let tb = timebase!
+    precondition(CMTimebaseCopyMasterClock(tb) === clock)
+    precondition(CMTimebaseGetMasterClock(tb) === clock)
+    precondition(CMTimebaseCopySource(tb) as? CMClock === clock)
+    precondition(CMTimebaseCopyMaster(tb) as? CMClock === clock)
+    precondition(CMTimebaseGetMaster(tb) as? CMClock === clock)
+    precondition(CMTimebaseCopyUltimateMasterClock(tb) === clock)
+    precondition(CMTimebaseGetUltimateMasterClock(tb) === clock)
+    precondition(CMTimebaseCopySourceTimebase(tb) == nil)
+    precondition(CMTimebaseGetSourceTimebase(tb) == nil)
+    precondition(CMTimebaseGetMasterTimebase(tb) == nil)
+    precondition(CMTimebaseCopyMasterTimebase(tb) == nil)
+    var time = CMTime.invalid
+    var rate: Float64 = -1
+    precondition(CMTimebaseGetTimeAndRate(tb, timeOut: &time, rateOut: &rate) == 0)
+    precondition(rate == 0)
+    precondition(
+        CMTimebaseSetAnchorTime(
+            tb,
+            timebaseTime: CMTime(value: 1, timescale: 1),
+            immediateSourceTime: CMTime(value: 2, timescale: 1)
+        ) == 0
+    )
+    precondition(CMTimebaseSetSourceClock(tb, clock) == 0)
+    precondition(CMTimebaseSetMasterClock(tb, clock) == 0)
+    var child: CMTimebase?
+    precondition(
+        CMTimebaseCreateWithMasterTimebase(allocator: nil, masterTimebase: tb, timebaseOut: &child) == 0
+    )
+    precondition(CMTimebaseSetSourceTimebase(child!, tb) == 0)
+    precondition(CMTimebaseSetMasterTimebase(child!, tb) == 0)
+    precondition(CMTimebaseNotificationBarrier(tb) == 0)
+    let timer = Timer(timeInterval: 1, repeats: false) { _ in }
+    precondition(CMTimebaseRemoveTimer(tb, timer: timer) == kCMTimebaseError_TimerIntervalTooShort)
+    precondition(
+        CMTimebaseSetTimerNextFireTime(tb, timer: timer, fireTime: .zero, flags: 0)
+            == kCMTimebaseError_TimerIntervalTooShort
+    )
+    precondition(CMTimebaseSetTimerToFireImmediately(tb, timer: timer) == kCMTimebaseError_TimerIntervalTooShort)
+}

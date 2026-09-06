@@ -38,6 +38,8 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
 
     private let lock = CMUnfairLock()
     private var storage: [UInt8]
+    private var pointerCache: UnsafeMutableRawPointer?
+    private var pointerCacheCount: Int = 0
     public var attachments = CMAttachmentBearerAttachments()
     public var startIndex: Int { 0 }
 
@@ -71,8 +73,47 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
         self.attachments = object.attachments
     }
 
+    deinit {
+        pointerCache?.deallocate()
+    }
+
+    fileprivate func absorbPointerCacheLocked() {
+        guard let pointerCache, pointerCacheCount == storage.count, !storage.isEmpty else { return }
+        for index in storage.indices {
+            storage[index] = pointerCache.load(fromByteOffset: index, as: UInt8.self)
+        }
+    }
+
+    fileprivate func invalidatePointerCacheLocked() {
+        pointerCache?.deallocate()
+        pointerCache = nil
+        pointerCacheCount = 0
+    }
+
+    fileprivate func materializePointerCacheLocked() {
+        absorbPointerCacheLocked()
+        if pointerCache != nil, pointerCacheCount == storage.count { return }
+        invalidatePointerCacheLocked()
+        if storage.isEmpty { return }
+        let pointer = UnsafeMutableRawPointer.allocate(byteCount: storage.count, alignment: 1)
+        storage.withUnsafeBytes { source in
+            pointer.copyMemory(from: source.baseAddress!, byteCount: storage.count)
+        }
+        pointerCache = pointer
+        pointerCacheCount = storage.count
+    }
+
+    internal func dataPointer(at offset: Int) -> UnsafeMutablePointer<CChar>? {
+        lock.locked {
+            materializePointerCacheLocked()
+            guard let pointerCache, offset >= 0, offset <= storage.count else { return nil }
+            return pointerCache.advanced(by: offset).assumingMemoryBound(to: CChar.self)
+        }
+    }
+
     public func copyDataBytes(to destination: UnsafeMutableRawBufferPointer) throws {
         try lock.locked {
+            absorbPointerCacheLocked()
             if destination.count < storage.count {
                 throw Error.insufficientSpace
             }
@@ -87,7 +128,10 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
     }
 
     public func dataBytes() throws -> Data {
-        lock.locked { Data(storage) }
+        lock.locked {
+            absorbPointerCacheLocked()
+            return Data(storage)
+        }
     }
 
     public func copyDataBytes(
@@ -96,6 +140,7 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
         destination: UnsafeMutableRawPointer
     ) throws {
         try lock.locked {
+            absorbPointerCacheLocked()
             if offset < 0 { throw Error.badOffsetParameter }
             if length < 0 { throw Error.badLengthParameter }
             if offset > storage.count || length > storage.count - offset {
@@ -116,6 +161,7 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
         _ body: (UnsafeMutableRawBufferPointer) throws -> R
     ) throws -> R {
         try lock.locked {
+            absorbPointerCacheLocked()
             if offset < 0 || offset > storage.count {
                 throw Error.badOffsetParameter
             }
@@ -129,6 +175,7 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
 
     public func fillDataBytes(with fillByte: UInt8) throws {
         lock.locked {
+            absorbPointerCacheLocked()
             for index in storage.indices {
                 storage[index] = fillByte
             }
@@ -137,6 +184,7 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
 
     public func replaceDataBytes(with sourceBytes: UnsafeRawBufferPointer) throws {
         try lock.locked {
+            absorbPointerCacheLocked()
             if sourceBytes.count > storage.count {
                 throw Error.insufficientSpace
             }
@@ -149,8 +197,92 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
     public func append(length: Int) throws {
         if length < 0 { throw Error.badLengthParameter }
         lock.locked {
+            absorbPointerCacheLocked()
             storage.append(contentsOf: Array(repeating: 0, count: length))
+            invalidatePointerCacheLocked()
         }
+    }
+
+    public func append(bufferReference: CMBlockBuffer, flags: Flags = []) throws {
+        _ = flags
+        let status = CMBlockBufferAppendBufferReference(
+            self,
+            targetBBuf: bufferReference,
+            offsetToData: 0,
+            dataLength: 0,
+            flags: flags.rawValue
+        )
+        if status != 0 { throw cmNSError(code: Int(status)) }
+    }
+
+    public func append(
+        buffer: UnsafeMutableRawBufferPointer,
+        deallocator: @escaping CustomBlockDeallocator,
+        flags: Flags = []
+    ) throws {
+        _ = deallocator
+        let status = buffer.baseAddress.map { address in
+            CMBlockBufferAppendMemoryBlock(
+                self,
+                memoryBlock: address,
+                length: buffer.count,
+                blockAllocator: nil,
+                customBlockSource: nil,
+                offsetToData: 0,
+                dataLength: buffer.count,
+                flags: flags.rawValue
+            )
+        } ?? kCMBlockBufferBadPointerParameterErr
+        if status != 0 { throw cmNSError(code: Int(status)) }
+    }
+
+    public func append(
+        buffer: Slice<UnsafeMutableRawBufferPointer>,
+        deallocator: @escaping CustomBlockDeallocator,
+        flags: Flags = []
+    ) throws {
+        let copy = UnsafeMutableRawBufferPointer(rebasing: buffer)
+        try append(buffer: copy, deallocator: deallocator, flags: flags)
+    }
+
+    public func append(
+        buffer: UnsafeMutableRawBufferPointer,
+        allocator: CFAllocator? = kCFAllocatorDefault,
+        flags: Flags = []
+    ) throws {
+        _ = allocator
+        try append(buffer: buffer, deallocator: { _, _ in }, flags: flags)
+    }
+
+    public func append(
+        buffer: Slice<UnsafeMutableRawBufferPointer>,
+        allocator: CFAllocator? = kCFAllocatorDefault,
+        flags: Flags = []
+    ) throws {
+        let copy = UnsafeMutableRawBufferPointer(rebasing: buffer)
+        try append(buffer: copy, allocator: allocator, flags: flags)
+    }
+
+    public func append(
+        length: Int,
+        allocator: @escaping CustomBlockAllocator,
+        deallocator: @escaping CustomBlockDeallocator,
+        range: Range<Int>? = nil,
+        flags: Flags = []
+    ) throws {
+        _ = (allocator, deallocator, range)
+        try append(length: length)
+        _ = flags
+    }
+
+    public func append(
+        length: Int,
+        allocator: CFAllocator? = kCFAllocatorDefault,
+        range: Range<Int>? = nil,
+        flags: Flags = []
+    ) throws {
+        _ = (allocator, range, flags)
+        try append(length: length)
     }
 }
 
@@ -417,7 +549,9 @@ public func CMBlockBufferAppendBufferReference(
 extension CMBlockBuffer {
     fileprivate func lockAppend(_ bytes: UnsafeRawBufferPointer) throws {
         lock.locked {
+            absorbPointerCacheLocked()
             storage.append(contentsOf: bytes)
+            invalidatePointerCacheLocked()
         }
     }
 }
